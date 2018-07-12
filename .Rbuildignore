@@ -1,0 +1,7 @@
+^.*\.Rproj$
+^\.Rproj\.user$
+^\.Rprofile$
+^NEWS\.rmd$
+^NEWS\.md$
+^NEWS\.html$
+^tmp$
