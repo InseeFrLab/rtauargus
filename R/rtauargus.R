@@ -8,17 +8,50 @@ param_function <- function(f, list_param) {
   list_param[f_param_names]
 }
 
-
+#' Secrétise des tableaux à partir de microdonnées
+#'
+#' Secrétise des tableaux construits à partir de microdonnées et des
+#' spécifications des croisements. La fonction permet d'effectuer le processus
+#' complet, à savoir la création des fichiers asc et rda, la construction
+#' du fichier arb, le lancement effectif de Tau Argus et la récupération
+#' éventuelle des résultats dans R.
+#'
+#' La fonction exécute séquentiellement les fonctions : \itemize{
+#'   \item{
+#'     \code{\link{micro_asc_rda}} \code{->}
+#'     \code{\link{micro_arb}} \code{->}
+#'     \code{\link{run_tauargus}}
+#'   }
+#' }
+#'
+#' Les fichiers intermédiaires sans nom renseigné (\code{asc_filename}...) seront
+#' créés dans un dossier temporaire (avec des noms générés aléatoirement). Ceci
+#' permet à l'utilisateur de s'abstraire de la préparation des données propre à
+#' Tau Argus et de maintenir l'intégralité de la chaîne de traitements dans R.
+#'
+#' @inheritParams micro_asc_rda
+#' @inheritParams micro_arb
+#' @param ... paramètres optionnels pour \code{micro_asc_rda}, \code{micro_arb}
+#'    et \code{run_tauargus}. Voir l'aide de ces fonctions.
+#'
+#' @return Si \code{import = TRUE}, une liste de data.frames (tableaux
+#'   secrétisés), \code{NULL} sinon.
+#'
+#' @examples
+#' rtauargus(
+#'   microdata = data.frame(V1 = c("A", "A", "B", "C", "A"), V2 = "Z"),
+#'   explanatory_vars = c("V1", "V2"),
+#'   safety_rules = "FREQ(3,10)",
+#'   suppress = "GH(.,100)",
+#'   output_options = "AS+" # (exemple de parametre optionnel pour micro_arb)
+#' )
 #' @export
 
-rtauargus <- function(...) {
-
-  # obligatoire :
-  ## microdata
-  ## explanatory_vars
-  ## safety_rules
-  ## suppress
-  ## ... autres parametres à passer aux fonctions du package (cf details)
+rtauargus <- function(microdata,
+                      explanatory_vars,
+                      safety_rules,
+                      suppress,
+                      ...) {
 
   ## 0. VERIFS .............................
 
