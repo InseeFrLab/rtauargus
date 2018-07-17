@@ -89,12 +89,11 @@ micro_df <- data.frame(
       CA = c(100, 0, 7)
   )
 # cree les inputs asc et rda (dans dossier temporaire)
-tmp_asc_file <- tempfile(fileext = ".asc")
-micro_asc_rda(micro_df, asc_filename = tmp_asc_file)
+tmp <- micro_asc_rda(micro_df)
 
-# cree fichier arb (arb_filename pas renseigne, output console)
-micro_arb(
-  asc_filename = tmp_asc_file,
+# cree fichier arb
+infos_arb <- micro_arb(
+  asc_filename = tmp$asc_filename,
   explanatory_vars = list(c("REGION", "CJ"), c("REGION")),
   response_var = c("CA", "<freq>"),
   safety_rules = c("NK(1,85)|FREQ(3,10)", "FREQ(3,10)"),
@@ -103,4 +102,7 @@ micro_arb(
   output_options = c("AS+SE+", "SE+"),
   output_type = 2
 )
+
+# Visualisation du fichier batch dans la console
+file.show(infos_arb$arb_filename, pager = "console")
 }
