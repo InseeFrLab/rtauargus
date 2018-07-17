@@ -7,7 +7,9 @@
 #'
 #' @param arb_filename nom du fichier batch à exécuter.
 #' @param logbook nom du fichier de log (optionnel).
-#' @param ... paramètres supplémentaires pour system().
+#' @param ... paramètres supplémentaires pour \code{system()}. Par exemple,
+#'   \code{show.output.on.console} = \code{FALSE}, pour ne pas afficher la log
+#'   dans la console.
 #'
 #' @export
 

@@ -11,7 +11,9 @@ run_tauargus(arb_filename, logbook = NULL, ...)
 
 \item{logbook}{nom du fichier de log (optionnel).}
 
-\item{...}{paramètres supplémentaires pour system().}
+\item{...}{paramètres supplémentaires pour \code{system()}. Par exemple,
+\code{show.output.on.console} = \code{FALSE}, pour ne pas afficher la log
+dans la console.}
 }
 \description{
 Exécute les instructions contenues dans un fichier .arb pour Tau Argus.
