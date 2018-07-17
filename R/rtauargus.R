@@ -31,6 +31,7 @@ rtauargus <- function(...) {
 
   # parametres
   param_asc_rda <- param_function(micro_asc_rda, list(...))
+  param_asc_rda$microdata <- microdata
 
   # appel (+ récuperation noms asc et rda)
   input <- do.call(micro_asc_rda, param_asc_rda)
@@ -41,6 +42,9 @@ rtauargus <- function(...) {
   param_arb <- param_function(micro_arb, list(...))
   param_arb$asc_filename <- input$asc_filename
   param_arb$rda_filename <- input$rda_filename
+  param_arb$explanatory_vars <- explanatory_vars
+  param_arb$safety_rules <- safety_rules
+  param_arb$suppress <- suppress
 
   # appel (+ récupération nom batch)
   batch <- do.call(micro_arb, param_arb)
