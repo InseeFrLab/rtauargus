@@ -2,6 +2,7 @@
 
 export(micro_arb)
 export(micro_asc_rda)
+export(rtauargus)
 export(run_tauargus)
 export(set_tauargus_exe)
 export(tauargus_info)
