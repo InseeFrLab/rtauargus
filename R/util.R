@@ -35,3 +35,12 @@ output_extensions <- c(
   "5" = ".txt",
   "6" = ".txt"
 )
+
+output_description <- c(
+  "1" = "(1) csv file ",
+  "2" = "(2) csv file for pivot-table",
+  "3" = "(3) code-value file",
+  "4" = "(4) SBS output-format",
+  "5" = "(5) intermediate file",
+  "6" = "(6) JJ format file"
+)

@@ -4,16 +4,27 @@
 \alias{run_tauargus}
 \title{Exécute un batch Tau Argus}
 \usage{
-run_tauargus(arb_filename, logbook = NULL, ...)
+run_tauargus(arb_filename, logbook = NULL, import = TRUE, ...)
 }
 \arguments{
 \item{arb_filename}{nom du fichier batch à exécuter.}
 
-\item{logbook}{nom du fichier de log (optionnel).}
+\item{logbook}{nom du fichier où est enregistré le journal d'erreurs
+(optionnel).}
+
+\item{import}{pour importer dans R les fichiers produits, \code{TRUE} par
+défaut.}
 
 \item{...}{paramètres supplémentaires pour \code{system()}. Par exemple,
-\code{show.output.on.console} = \code{FALSE}, pour ne pas afficher la log
-dans la console.}
+\code{show.output.on.console} = \code{FALSE}, pour ne pas afficher le
+déroulement du batch dans la console.}
+}
+\value{
+\itemize{
+  \item{une liste de data.frame contenant les résultats si
+    \code{import = TRUE} (via la fonction \code{\link{import}})} ;
+  \item{\code{NULL} sinon}.
+}
 }
 \description{
 Exécute les instructions contenues dans un fichier .arb pour Tau Argus.

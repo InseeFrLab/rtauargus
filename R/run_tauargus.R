@@ -6,14 +6,26 @@
 #' chargement du package et modifiable par \code{\link{set_tauargus_exe}}.
 #'
 #' @param arb_filename nom du fichier batch à exécuter.
-#' @param logbook nom du fichier de log (optionnel).
+#' @param logbook nom du fichier où est enregistré le journal d'erreurs
+#'   (optionnel).
+#' @param import pour importer dans R les fichiers produits, \code{TRUE} par
+#'   défaut.
 #' @param ... paramètres supplémentaires pour \code{system()}. Par exemple,
-#'   \code{show.output.on.console} = \code{FALSE}, pour ne pas afficher la log
-#'   dans la console.
+#'   \code{show.output.on.console} = \code{FALSE}, pour ne pas afficher le
+#'   déroulement du batch dans la console.
+#'
+#' @return \itemize{
+#'   \item{une liste de data.frame contenant les résultats si
+#'     \code{import = TRUE} (via la fonction \code{\link{import}})} ;
+#'   \item{\code{NULL} sinon}.
+#' }
 #'
 #' @export
 
-run_tauargus <- function(arb_filename, logbook = NULL, ...) {
+run_tauargus <- function(arb_filename,
+                         logbook = NULL,
+                         import = TRUE,
+                         ...) {
 
   arb_full <- normalizePath(arb_filename)
   tau_full <- normalizePath(getOption("rtauargus_exe"))
@@ -33,5 +45,7 @@ run_tauargus <- function(arb_filename, logbook = NULL, ...) {
   )
 
   system(commande, ...)
+
+  if (import) import(arb_filename) else invisible(NULL)
 
 }

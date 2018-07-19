@@ -6,7 +6,8 @@ Depends: R (>= 3.3)
 Imports:
     purrr (>= 0.2),
     dplyr (>= 0.7),
-    gdata
+    gdata,
+    stringr
 Suggests:
     testthat
 Authors@R:
