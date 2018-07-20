@@ -63,6 +63,10 @@ Les chiffres après la virgule peuvent être incorrects si le nombre total de
 chiffres (avant ou après le séparateur décimal) est supérieur à 15. Voir
 \code{\link[gdata]{write.fwf}} (fonction utilisée pour écrire le fichier asc)
 pour plus de détails.
+
+Les colonnes vides (\code{NA} ou chaînes de caractère vide) ne seront pas
+exportées dans le fichier asc. Un message d'avertissement listera les
+colonnes concernées.
 }
 \examples{
 # donnees fictives temporaires

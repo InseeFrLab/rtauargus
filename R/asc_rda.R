@@ -48,6 +48,10 @@ write_rda <- function(info_var, chemin = getwd()) {
 #' \code{\link[gdata]{write.fwf}} (fonction utilisée pour écrire le fichier asc)
 #' pour plus de détails.
 #'
+#' Les colonnes vides (\code{NA} ou chaînes de caractère vide) ne seront pas
+#' exportées dans le fichier asc. Un message d'avertissement listera les
+#' colonnes concernées.
+#'
 #' @param microdata [\strong{obligatoire}] data.frame contenant les microdonnées.
 #' @param asc_filename nom du fichier asc (avec extension). Si non renseigné, un
 #'   fichier temporaire.
@@ -113,6 +117,16 @@ micro_asc_rda <- function(microdata,
                           request_code = NULL) {
 
   microdata <- as.data.frame(microdata) # (probleme avec tibble notamment)
+
+  # ignore colonnes de longueurs nulles
+  colvides <- sapply(microdata, function(x) all(is.na(x)) | all(x == ""))
+  if (any(colvides)) {
+    warning(
+      "Colonnes vides non exportees en asc : ",
+      paste(names(microdata)[colvides], collapse = ", ")
+    )
+    microdata <- microdata[!colvides]
+  }
 
   # parametres non renseignés
   if (is.null(asc_filename)) asc_filename <- tempfile(fileext = ".asc")
