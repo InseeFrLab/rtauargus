@@ -1,8 +1,17 @@
 #' @importFrom dplyr %>%
 
-write_rda <- function(info_var, chemin = getwd()) {
+write_rda <- function(info_var) {
 
   # info_var est une liste contenant les infos pour chaque variable
+
+  info_var <-
+    lapply(
+      info_var,
+      function(x) {
+        if (!is.na(x$hiercodelist)) x$hiercodelist <- normPath2(x$hiercodelist)
+        x
+      }
+    )
 
   sapply(
     info_var,
@@ -17,7 +26,7 @@ write_rda <- function(info_var, chemin = getwd()) {
         if (!is.na(x$hierleadstring))
           paste0("  <HIERLEADSTRING> \"", x$hierleadstring, "\""),
         if (!is.na(x$hiercodelist))
-          paste0("  <HIERCODELIST> \"", chemin, "/", x$hiercodelist, "\""),
+          paste0("  <HIERCODELIST> \"", x$hiercodelist, "\""),
         if (!is.na(x$hierlevels))
           paste0("  <HIERLEVELS> ", x$hierlevels),
         if (x$type_var %in% c("NUMERIC", "WEIGHT"))
