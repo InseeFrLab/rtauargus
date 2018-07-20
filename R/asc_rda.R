@@ -127,7 +127,8 @@ micro_asc_rda <- function(microdata,
       colnames = FALSE,
       justify = "right", # pour les variables caractères uniquement
       digits = 15, # max ? voir aide de format
-      nsmall = decimals
+      nsmall = decimals,
+      scientific = FALSE
     )
 
   num <- vapply(microdata, is.numeric, logical(1))
