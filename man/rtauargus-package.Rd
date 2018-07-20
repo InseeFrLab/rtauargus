@@ -22,32 +22,48 @@ Ses fonctionnalités principales sont les suivantes :\itemize{
  \item{lancer le batch Tau Argus en ligne de commande ;}
  \item{récupérer les résultats dans R.}
 }
-Ces différentes étapes peuvent être appelées de manière modulaire ou en une
-seule fois.
+Ces différentes étapes peuvent être appelées en une seule fois, ou de manière
+modulaire.
 
 }
 
-\section{TauArgus.exe}{
+\section{Emplacement de TauArgus.exe}{
 
 La fonction \code{\link{run_tauargus}} doit connaître l'emplacement du
 programme Tau Argus sur le disque. Cet emplacement est renseigné de manière
-globale via l'option \code{rtauargus_exe}. Il perdure ainsi pour la session R
-courante.
+globale via l'option \code{rtauargus.tauargus_exe}. Il perdure ainsi pour la
+session R courante.
 
-Au chargement du package, si \code{rtauargus_exe} n'est pas déjà renseigné, une
-valeur par défaut lui est attribuée: l'emplacement de la version portable open
-source sur AUS (\code{Y:/Logiciels/Tau/TauArgus.exe}). Utiliser
-\code{\link{set_tauargus_exe}} pour changer cet emplacement (pour la durée de la
-session R).
+Au chargement du package, si \code{rtauargus.tauargus_exe} n'est pas déjà
+renseigné, une valeur par défaut lui est attribuée (l'emplacement de la version
+portable open source sur AUS). Pour changer cet emplacement, exécuter
+l'instruction :
 
-Pour définir un emplacement qui sera conservé pour un utilisateur, il est
-possible de placer une instruction
-\code{options(rtauargus_exe = "chemin/vers/TauArgus.exe")}
-dans un fichier de configuration de R (.Rprofile...).
+\code{options(rtauargus.tauargus_exe = "chemin/vers/TauArgus.exe")}
 
-La fonction (expérimentatle) \code{\link{tauargus_info}} tente de récupérer
-certaines infos associées au programme Tau Argus.
+Placer cette instruction dans un programme pour que l'emplacement soit conservé
+uniquement pour la session. Pour qu'il soit conservé de manière permanente pour
+un utilisateur, placer l'instruction dans un fichier de configuration de R
+(.Rprofile...).
 
+La fonction (expérimentale) \code{\link{tauargus_info}} tente de récupérer
+le numéro de version et la date de parution du programme Tau Argus utilisé par
+rtauargus.
+
+}
+
+\section{Autres options}{
+
+En plus de \code{rtauargus.tauargus_exe}, d'autres options permettent de
+paramétrer des comportements par défaut.
+
+Leurs noms commencent par \code{"rtauargus."}. La partie après le préfixe
+correspond à un nom de paramètre d'une fonction. Par exemple,
+\code{rtauargus.decimals} sera la valeur utilisée si le paramètre
+\code{decimals} de la fonction \code{micro_asc_rda} n'est pas renseigné par
+l'utilisateur.
+
+Voir \code{\link{rtauargus_options}} pour plus de détails.
 }
 
 \references{

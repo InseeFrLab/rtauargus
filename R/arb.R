@@ -20,11 +20,11 @@ specify_tables_one <- function(expl, resp, shad, cost) {
 
 # Genere partie SPECIFYTABLE et SAFETYRULE
 specif_safety <- function(explanatory_vars,
-                          response_var = "<freq>",
-                          shadow_var = "",
-                          cost_var = "",
+                          response_var,
+                          shadow_var,
+                          cost_var,
                           safety_rules,
-                          weighted = FALSE) {
+                          weighted) {
 
   specify_tables <-
     mapply(
@@ -161,20 +161,20 @@ suppr_writetable <- function(suppress,
 #' file.show(infos_arb$arb_filename, pager = "console")
 #' @export
 
-micro_arb <- function(arb_filename = NULL,
+micro_arb <- function(arb_filename     = NULL,
                       asc_filename,
-                      rda_filename = NULL,
+                      rda_filename     = NULL,
                       explanatory_vars,
-                      response_var = "<freq>",
-                      shadow_var = NULL,
-                      cost_var = NULL,
+                      response_var     = getOption("rtauargus.response_var"),
+                      shadow_var       = NULL,
+                      cost_var         = NULL,
                       safety_rules,
-                      weighted = FALSE,
+                      weighted         = getOption("rtauargus.weighted"),
                       suppress,
-                      output_names = NULL,
-                      output_type = 2,
-                      output_options = NULL,
-                      gointeractive = FALSE) {
+                      output_names     = NULL,
+                      output_type      = getOption("rtauargus.output_type"),
+                      output_options   = getOption("rtauargus.output_options"),
+                      gointeractive    = FALSE) {
 
   # si une seule tabulation, vecteur autorisé
   if (is.atomic(explanatory_vars)) explanatory_vars <- list(explanatory_vars)

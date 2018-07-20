@@ -5,9 +5,11 @@
 \title{Crée les fichiers asc et rda à partir de microdonnées}
 \usage{
 micro_asc_rda(microdata, asc_filename = NULL, rda_filename = NULL,
-  weight = NULL, holding = NULL, hrc = NULL, decimals = 0,
-  totcode = "Total", missing = NULL, codelist = NULL, request = NULL,
-  request_code = NULL)
+  weight = NULL, holding = NULL, hrc = NULL,
+  decimals = getOption("rtauargus.decimals"),
+  totcode = getOption("rtauargus.totcode"),
+  missing = getOption("rtauargus.missing"), codelist = NULL,
+  request = NULL, request_code = NULL)
 }
 \arguments{
 \item{microdata}{[\strong{obligatoire}] data.frame contenant les microdonnées.}

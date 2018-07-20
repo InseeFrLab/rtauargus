@@ -5,9 +5,11 @@
 \title{Crée un fichier batch (.arb) pour microdonnées}
 \usage{
 micro_arb(arb_filename = NULL, asc_filename, rda_filename = NULL,
-  explanatory_vars, response_var = "<freq>", shadow_var = NULL,
-  cost_var = NULL, safety_rules, weighted = FALSE, suppress,
-  output_names = NULL, output_type = 2, output_options = NULL,
+  explanatory_vars, response_var = getOption("rtauargus.response_var"),
+  shadow_var = NULL, cost_var = NULL, safety_rules,
+  weighted = getOption("rtauargus.weighted"), suppress, output_names = NULL,
+  output_type = getOption("rtauargus.output_type"),
+  output_options = getOption("rtauargus.output_options"),
   gointeractive = FALSE)
 }
 \arguments{

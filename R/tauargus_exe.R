@@ -1,29 +1,3 @@
-#' Spécifie l'emplacement de Tau Argus
-#'
-#' Modifie l'option \code{rtauargus_exe}. Si le paramètre n'est pas renseigné,
-#' revient à l'emplacement par défaut (version portable sur AUS).
-#'
-#' La fonction ne vérifie pas si le chemin existe réellement ou si l'exécutable
-#' est bien présent.
-#'
-#' @param path_exe chemin complet et nom du programme Tau Argus.
-#' @param quiet \code{TRUE} pour opérer de manière silencieuse.
-#'
-#' @export
-
-set_tauargus_exe <- function(path_exe = "Y:/Logiciels/Tau/TauArgus.exe",
-                             quiet = FALSE) {
-
-  if (!grepl("\\.exe", path_exe)) {
-    stop("Inclure le nom du programme avec l'extension .exe")
-  }
-
-  options(rtauargus_exe = path_exe)
-
-  if (!quiet) message('Tau Argus : "', getOption("rtauargus_exe"), '"')
-
-}
-
 #' Informations sur Tau Argus
 #'
 #' Recherche des informations sur la version de Tau Argus utilisée. Cette
@@ -41,7 +15,7 @@ set_tauargus_exe <- function(path_exe = "Y:/Logiciels/Tau/TauArgus.exe",
 
 tauargus_info <- function() {
 
-  ta_path <- dirname(getOption("rtauargus_exe"))
+  ta_path <- dirname(getOption("rtauargus.tauargus_exe"))
 
   ta_news <- file.path(ta_path, "TauNews.html")
   if (!file.exists(ta_news)) {

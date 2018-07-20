@@ -4,20 +4,26 @@
 \alias{run_tauargus}
 \title{Exécute un batch Tau Argus}
 \usage{
-run_tauargus(arb_filename, logbook = NULL, import = TRUE, ...)
+run_tauargus(arb_filename, tauargus_exe = getOption("rtauargus.tauargus_exe"),
+  logbook = NULL,
+  show_batch_console = getOption("rtauargus.show_batch_console"),
+  import = getOption("rtauargus.import"), ...)
 }
 \arguments{
 \item{arb_filename}{nom du fichier batch à exécuter.}
 
+\item{tauargus_exe}{répertoire et nom du logiciel Tau Argus.}
+
 \item{logbook}{nom du fichier où est enregistré le journal d'erreurs
 (optionnel).}
+
+\item{show_batch_console}{pour afficher le déroulement du batch dans la
+console.}
 
 \item{import}{pour importer dans R les fichiers produits, \code{TRUE} par
 défaut.}
 
-\item{...}{paramètres supplémentaires pour \code{system()}. Par exemple,
-\code{show.output.on.console} = \code{FALSE}, pour ne pas afficher le
-déroulement du batch dans la console.}
+\item{...}{paramètres supplémentaires pour \code{system()}.}
 }
 \value{
 \itemize{
@@ -31,5 +37,5 @@ Exécute les instructions contenues dans un fichier .arb pour Tau Argus.
 }
 \details{
 L'emplacement du programme TauArgus.exe est défini de manière globale au
-chargement du package et modifiable par \code{\link{set_tauargus_exe}}.
+chargement du package. Pour le modifier, voir \code{\link{rtauargus_options}}.
 }

@@ -115,14 +115,14 @@ write_rda <- function(info_var) {
 micro_asc_rda <- function(microdata,
                           asc_filename = NULL,
                           rda_filename = NULL,
-                          weight = NULL,
-                          holding = NULL,
-                          hrc = NULL,
-                          decimals = 0,
-                          totcode = "Total",
-                          missing = NULL,
-                          codelist = NULL,
-                          request = NULL,
+                          weight       = NULL,
+                          holding      = NULL,
+                          hrc          = NULL,
+                          decimals     = getOption("rtauargus.decimals"),
+                          totcode      = getOption("rtauargus.totcode"),
+                          missing      = getOption("rtauargus.missing"),
+                          codelist     = NULL,
+                          request      = NULL,
                           request_code = NULL) {
 
   microdata <- as.data.frame(microdata) # (probleme avec tibble notamment)
