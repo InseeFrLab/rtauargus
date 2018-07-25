@@ -53,17 +53,25 @@ rtauargus <- function(microdata,
                       suppress,
                       ...) {
 
+  .dots <- list(...)
+
   ## 0. VERIFS .............................
 
-  # verif poids
-  # if (!is.null(weighted)) {
-  #   if (is.null(weight)) stop("Définir une variable de pondération")
-  # }
+  # weighted_var necessaire si un weighted = TRUE
+  any_weighted <- any(getOption("rtauargus.weighted"))
+  if (!is.null(.dots[["weighted"]])) any_weighted <- any(.dots[["weighted"]])
+  if (any_weighted & is.null(.dots[["weight_var"]])) {
+    stop(
+      "\nIncoherence parametres :\n",
+      "Definir une variable de ponderation (weight_var)\n",
+      "ou mettre a FALSE l'indicatrice de ponderation (weighted)"
+    )
+  }
 
   ## 1. MICRO_ASC_RDA  .....................
 
   # parametres
-  param_asc_rda <- param_function(micro_asc_rda, list(...))
+  param_asc_rda <- param_function(micro_asc_rda, .dots)
   param_asc_rda$microdata <- microdata
 
   # appel (+ récuperation noms asc et rda)
@@ -72,7 +80,7 @@ rtauargus <- function(microdata,
   ## 2. MICRO_ARB .........................
 
   # parametres
-  param_arb <- param_function(micro_arb, list(...))
+  param_arb <- param_function(micro_arb, .dots)
   param_arb$asc_filename <- input$asc_filename
   param_arb$rda_filename <- input$rda_filename
   param_arb$explanatory_vars <- explanatory_vars
@@ -85,8 +93,8 @@ rtauargus <- function(microdata,
   ## 3. RUN_TAUARGUS ......................
 
   # parametres
-  param_run0 <- param_function(run_tauargus, list(...))
-  param_system <- param_function(system, list(...))
+  param_run0 <- param_function(run_tauargus, .dots)
+  param_system <- param_function(system, .dots)
   param_run <- c(param_run0, param_system)
   param_run$arb_filename <- batch$arb_filename
 
