@@ -66,8 +66,8 @@ write_rda <- function(info_var) {
 #'   fichier temporaire.
 #' @param rda_filename nom du fichier rda (avec extension). Si non renseigné,
 #'   \code{asc_filename} avec l'extension "rda" à la place de "asc").
-#' @param weight nom de la variable de poids.
-#' @param holding nom de la variable de holding.
+#' @param weight_var nom de la variable de poids.
+#' @param holding_var nom de la variable de holding.
 #' @param hrc informations des variables hiérarchiques. Une liste dont les noms
 #'   sont les variables concernées et les éléments sont les informations.
 #'   Exemple :
@@ -80,7 +80,7 @@ write_rda <- function(info_var) {
 #' @param totcode (pas encore implémenté)
 #' @param missing (pas encore implémenté)
 #' @param codelist (pas encore implémenté)
-#' @param request (pas encore implémenté)
+#' @param request_var (pas encore implémenté)
 #' @param request_code (pas encore implémenté)
 #'
 #' @return Renvoie les noms des fichiers asc et rda sous forme de liste (de
@@ -96,7 +96,7 @@ write_rda <- function(info_var) {
 #'
 #' res <- micro_asc_rda(
 #'   micro_df,
-#'   weight = "POIDS",
+#'   weight_var = "POIDS",
 #'   decimals = 1,
 #'   hrc = list(ARRONDISSEMENT = c(hierlevels = "2 1"))
 #' )
@@ -115,14 +115,14 @@ write_rda <- function(info_var) {
 micro_asc_rda <- function(microdata,
                           asc_filename = NULL,
                           rda_filename = NULL,
-                          weight       = NULL,
-                          holding      = NULL,
+                          weight_var   = NULL,
+                          holding_var  = NULL,
                           hrc          = NULL,
                           decimals     = getOption("rtauargus.decimals"),
                           totcode      = getOption("rtauargus.totcode"),
                           missing      = getOption("rtauargus.missing"),
                           codelist     = NULL,
-                          request      = NULL,
+                          request_var  = NULL,
                           request_code = NULL) {
 
   microdata <- as.data.frame(microdata) # (probleme avec tibble notamment)
@@ -165,12 +165,12 @@ micro_asc_rda <- function(microdata,
 
   # modifier fwf_info en ajoutant donnees contenues dans weight, holding et hrc
 
-  if (!is.null(weight)) {
-    fwf_info$type_var[fwf_info$colname == weight] <- "WEIGHT"
+  if (!is.null(weight_var)) {
+    fwf_info$type_var[fwf_info$colname == weight_var] <- "WEIGHT"
   }
 
-  if (!is.null(holding)) {
-    fwf_info$type_var[fwf_info$colname == holding] <- "HOLDING"
+  if (!is.null(holding_var)) {
+    fwf_info$type_var[fwf_info$colname == holding_var] <- "HOLDING"
   }
 
   if (!is.null(hrc)) {

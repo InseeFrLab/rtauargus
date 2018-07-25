@@ -5,11 +5,11 @@
 \title{Crée les fichiers asc et rda à partir de microdonnées}
 \usage{
 micro_asc_rda(microdata, asc_filename = NULL, rda_filename = NULL,
-  weight = NULL, holding = NULL, hrc = NULL,
+  weight_var = NULL, holding_var = NULL, hrc = NULL,
   decimals = getOption("rtauargus.decimals"),
   totcode = getOption("rtauargus.totcode"),
   missing = getOption("rtauargus.missing"), codelist = NULL,
-  request = NULL, request_code = NULL)
+  request_var = NULL, request_code = NULL)
 }
 \arguments{
 \item{microdata}{[\strong{obligatoire}] data.frame contenant les microdonnées.}
@@ -20,9 +20,9 @@ fichier temporaire.}
 \item{rda_filename}{nom du fichier rda (avec extension). Si non renseigné,
 \code{asc_filename} avec l'extension "rda" à la place de "asc").}
 
-\item{weight}{nom de la variable de poids.}
+\item{weight_var}{nom de la variable de poids.}
 
-\item{holding}{nom de la variable de holding.}
+\item{holding_var}{nom de la variable de holding.}
 
 \item{hrc}{informations des variables hiérarchiques. Une liste dont les noms
 sont les variables concernées et les éléments sont les informations.
@@ -41,7 +41,7 @@ section 'Details').}
 
 \item{codelist}{(pas encore implémenté)}
 
-\item{request}{(pas encore implémenté)}
+\item{request_var}{(pas encore implémenté)}
 
 \item{request_code}{(pas encore implémenté)}
 }
@@ -80,7 +80,7 @@ micro_df <- data.frame(
 
 res <- micro_asc_rda(
   micro_df,
-  weight = "POIDS",
+  weight_var = "POIDS",
   decimals = 1,
   hrc = list(ARRONDISSEMENT = c(hierlevels = "2 1"))
 )
