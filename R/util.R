@@ -1,3 +1,14 @@
+cite <- function(x, guillemet = "\"", ignore_vide = TRUE) {
+
+  # met entre guillemet les elements d'un vecteur (sauf si chaîne vide)
+  ifelse(
+    x == "" & ignore_vide,
+    x,
+    paste0(guillemet, x, guillemet)
+  )
+
+}
+
 # fonction transformant une liste de parametres associes a des
 # variables en un data.frame
 

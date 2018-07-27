@@ -1,14 +1,3 @@
-cite <- function(x, guillemet = "\"") {
-
-  # met entre guillemet les elements d'un vecteur (sauf si chaîne vide)
-  ifelse(
-    x == "",
-    x,
-    paste0(guillemet, x, guillemet)
-  )
-
-}
-
 specify_tables_one <- function(expl, resp, shad, cost) {
   paste0(
     paste(cite(expl), collapse = ""), '|',
