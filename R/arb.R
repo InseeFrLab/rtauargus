@@ -245,9 +245,11 @@ micro_arb <- function(arb_filename     = NULL,
   writeLines(res, arb_filename)
 
   # valeurs en sortie
-  list(
-    arb_filename = normPath2(arb_filename),
-    output_names = normPath2(output_names)
+  invisible(
+    list(
+      arb_filename = normPath2(arb_filename),
+      output_names = normPath2(output_names)
+    )
   )
 
 }
