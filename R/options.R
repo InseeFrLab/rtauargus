@@ -10,6 +10,7 @@ op.rtauargus <- list(
   # arb --------------------------------------------------------- #
   rtauargus.response_var       = "<freq>",
   rtauargus.weighted           = FALSE,
+  rtauargus.linked             = FALSE,
   rtauargus.output_type        = "2",
   rtauargus.output_options     = "",
   # run_tauargus ------------------------------------------------ #
@@ -46,20 +47,21 @@ op.rtauargus <- list(
 #'
 #' @section Liste des options:
 #' \tabular{lll}{
-#'  \strong{Option}                  \tab \strong{Valeur par défaut}                                            \tab \strong{Fonction}   \cr
-#'  \code{------------------------}  \tab  \code{---------------------------------}                             \tab \code{-------------}\cr
-#'  rtauargus.decimals               \tab  \code{\Sexpr{rtauargus:::op.rtauargus$rtauargus.decimals}}           \tab \link{micro_asc_rda}\cr
-#'  rtauargus.totcode                \tab "\code{\Sexpr{rtauargus:::op.rtauargus$rtauargus.totcode}}"           \tab                     \cr
-#'  rtauargus.missing                \tab "\code{\Sexpr{rtauargus:::op.rtauargus$rtauargus.missing}}"           \tab                     \cr
-#'  \code{------------------------}  \tab  \code{---------------------------------}                             \tab \code{-------------}\cr
-#'  rtauargus.response_var           \tab "\code{\Sexpr{rtauargus:::op.rtauargus$rtauargus.response_var}}"      \tab \link{micro_arb}    \cr
-#'  rtauargus.weighted               \tab  \code{\Sexpr{rtauargus:::op.rtauargus$rtauargus.weighted}}           \tab                     \cr
-#'  rtauargus.output_type            \tab "\code{\Sexpr{rtauargus:::op.rtauargus$rtauargus.output_type}}"       \tab                     \cr
-#'  rtauargus.output_options         \tab "\code{\Sexpr{rtauargus:::op.rtauargus$rtauargus.output_options}}"    \tab                     \cr
-#'  \code{------------------------}  \tab  \code{---------------------------------}                             \tab \code{-------------}\cr
-#'  rtauargus.tauargus_exe           \tab "\code{\Sexpr{rtauargus:::op.rtauargus$rtauargus.tauargus_exe}}"      \tab \link{run_tauargus} \cr
-#'  rtauargus.show_batch_console     \tab  \code{\Sexpr{rtauargus:::op.rtauargus$rtauargus.show_batch_console}} \tab                     \cr
-#'  rtauargus.import                 \tab  \code{\Sexpr{rtauargus:::op.rtauargus$rtauargus.import}}             \tab
+#'  \strong{Option}                  \tab  \strong{Valeur par défaut}                                    \tab \strong{Fonction}   \cr
+#'  \code{------------------------}  \tab  \code{---------------------------------}                      \tab \code{-------------}\cr
+#'  rtauargus.decimals               \tab  \Sexpr{rtauargus:::op.rtauargus$rtauargus.decimals}           \tab \link{micro_asc_rda}\cr
+#'  rtauargus.totcode                \tab "\Sexpr{rtauargus:::op.rtauargus$rtauargus.totcode}"           \tab                     \cr
+#'  rtauargus.missing                \tab "\Sexpr{rtauargus:::op.rtauargus$rtauargus.missing}"           \tab                     \cr
+#'  \code{------------------------}  \tab  \code{---------------------------------}                      \tab \code{-------------}\cr
+#'  rtauargus.response_var           \tab "\Sexpr{rtauargus:::op.rtauargus$rtauargus.response_var}"      \tab \link{micro_arb}    \cr
+#'  rtauargus.weighted               \tab  \Sexpr{rtauargus:::op.rtauargus$rtauargus.weighted}           \tab                     \cr
+#'  rtauargus.linked                 \tab  \Sexpr{rtauargus:::op.rtauargus$rtauargus.linked}             \tab                     \cr
+#'  rtauargus.output_type            \tab "\Sexpr{rtauargus:::op.rtauargus$rtauargus.output_type}"       \tab                     \cr
+#'  rtauargus.output_options         \tab "\Sexpr{rtauargus:::op.rtauargus$rtauargus.output_options}"    \tab                     \cr
+#'  \code{------------------------}  \tab  \code{---------------------------------}                      \tab \code{-------------}\cr
+#'  rtauargus.tauargus_exe           \tab "\Sexpr{rtauargus:::op.rtauargus$rtauargus.tauargus_exe}"      \tab \link{run_tauargus} \cr
+#'  rtauargus.show_batch_console     \tab  \Sexpr{rtauargus:::op.rtauargus$rtauargus.show_batch_console} \tab                     \cr
+#'  rtauargus.import                 \tab  \Sexpr{rtauargus:::op.rtauargus$rtauargus.import}             \tab
 #' }
 #'
 #' @examples

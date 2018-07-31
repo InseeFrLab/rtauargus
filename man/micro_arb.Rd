@@ -7,7 +7,8 @@
 micro_arb(arb_filename = NULL, asc_filename, rda_filename = NULL,
   explanatory_vars, response_var = getOption("rtauargus.response_var"),
   shadow_var = NULL, cost_var = NULL, safety_rules,
-  weighted = getOption("rtauargus.weighted"), suppress, output_names = NULL,
+  weighted = getOption("rtauargus.weighted"), suppress,
+  linked = getOption("rtauargus.linked"), output_names = NULL,
   output_type = getOption("rtauargus.output_type"),
   output_options = getOption("rtauargus.output_options"),
   gointeractive = FALSE)
@@ -49,6 +50,8 @@ pondération).}
 secondaire (syntaxe batch de Tau Argus). Si la méthode est la même pour
 chaque tabulation, le premier paramètre (numéro du tableau) sera ignoré et
 rempli automatiquement.}
+
+\item{linked}{[pas encore implémenté]}
 
 \item{output_names}{noms des fichiers en sortie. Si renseigné,
 obligatoirement autant de noms de fichiers que de tabulations. Si laissé

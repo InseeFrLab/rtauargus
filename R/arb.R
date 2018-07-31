@@ -122,6 +122,7 @@ suppr_writetable <- function(suppress,
 #'   secondaire (syntaxe batch de Tau Argus). Si la méthode est la même pour
 #'   chaque tabulation, le premier paramètre (numéro du tableau) sera ignoré et
 #'   rempli automatiquement.
+#' @param linked [pas encore implémenté]
 #' @param output_names noms des fichiers en sortie. Si renseigné,
 #'   obligatoirement autant de noms de fichiers que de tabulations. Si laissé
 #'   vide, autant de fichiers temporaires que de tabulations.
@@ -171,6 +172,7 @@ micro_arb <- function(arb_filename     = NULL,
                       safety_rules,
                       weighted         = getOption("rtauargus.weighted"),
                       suppress,
+                      linked           = getOption("rtauargus.linked"),
                       output_names     = NULL,
                       output_type      = getOption("rtauargus.output_type"),
                       output_options   = getOption("rtauargus.output_options"),
