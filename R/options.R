@@ -19,6 +19,49 @@ op.rtauargus <- list(
   rtauargus.import             = TRUE
 )
 
+df_op.rtauargus <- function(html = FALSE) {
+
+  # convertit la liste en un data.frame (pour la documentation)
+
+  op <- op.rtauargus
+
+  val <- data.frame(
+    option = names(op),
+    val = unlist(op),
+    ordre = seq_along(op),
+    type = vapply(op, typeof, character(1)),
+    stringsAsFactors = FALSE
+  )
+
+  fun_names <- c("micro_asc_rda", "micro_arb", "run_tauargus")
+
+  param_names <- lapply(fun_names, function(x) names(formals(get(x))))
+  func <- data.frame(
+    option = paste0("rtauargus.", unlist(param_names)),
+    func = rep(fun_names, vapply(param_names, length, 1L))
+  )
+
+  res <- merge(val, func, by = "option")
+  res <- res[order(res$ordre), ]
+  res$ordre <- NULL
+  row.names(res) <- NULL
+
+  res$val <-
+    ifelse(
+      res$type == "character",
+      cite(res$val, ignore_vide = FALSE),
+      res$val
+    )
+
+  if (html) {
+    res$val <- gsub("<", "&lt;", res$val)
+    res$val <- gsub(">", "&gt;", res$val)
+  }
+
+  res
+
+}
+
 
 #' Options du package rtauargus
 #'
