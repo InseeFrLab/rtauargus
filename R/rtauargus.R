@@ -13,7 +13,7 @@ param_function <- function(f, list_param) {
 #' Secrétise des tableaux construits à partir de microdonnées et des
 #' spécifications des croisements. La fonction permet d'effectuer le processus
 #' complet, à savoir la création des fichiers asc et rda, la construction
-#' du fichier arb, le lancement effectif de Tau Argus et la récupération
+#' du fichier arb, le lancement effectif de Tau-Argus et la récupération
 #' éventuelle des résultats dans R.
 #'
 #' La fonction exécute séquentiellement les fonctions : \itemize{
@@ -25,9 +25,10 @@ param_function <- function(f, list_param) {
 #' }
 #'
 #' Les fichiers intermédiaires sans nom renseigné (\code{asc_filename}...) seront
-#' créés dans un dossier temporaire (avec des noms générés aléatoirement). Ceci
-#' permet à l'utilisateur de s'abstraire de la préparation des données propre à
-#' Tau Argus et de maintenir l'intégralité de la chaîne de traitements dans R.
+#' créés dans un dossier temporaire, avec des noms générés aléatoirement. Ce
+#' mécanisme permet à l'utilisateur de s'abstraire de la préparation des données
+#' propre à Tau-Argus et de maintenir l'intégralité de la chaîne de traitements
+#' dans R.
 #'
 #' @inheritParams micro_asc_rda
 #' @inheritParams micro_arb

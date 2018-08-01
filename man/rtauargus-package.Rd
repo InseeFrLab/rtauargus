@@ -1,43 +1,56 @@
 \docType{package}
 \name{rtauargus-package}
 \alias{rtauargus-package}
-\title{Package 'rtauargus' : Tau Argus depuis R}
+\title{Package 'rtauargus' : Tau-Argus depuis R}
 
 \description{
 
-Le package \strong{rtauargus} permet de secrétiser des données tabulées avec
-Tau Argus depuis R.
+Le package \emph{rtauargus} offre une interface \strong{R} pour
+\strong{Tau-Argus}.
 
 }
 
 \details{
 
-Le package a été développé sur la base des versions open source de Tau Argus
-(versions 4.1 et supérieures).
+Le package permet d'intégrer à une chaîne de traitement R les tâches réalisées
+par Tau-Argus. Ses fonctionnalités principales sont de :
 
-Ses fonctionnalités principales sont les suivantes :\itemize{
- \item{créer les inputs (fichiers asc et rda) ;}
- \item{générer la séquence d'instructions à exécuter en mode batch
-   (fichier arb) ;}
- \item{lancer le batch Tau Argus en ligne de commande ;}
- \item{récupérer les résultats dans R.}
+\itemize{
+  \item{créer les inputs (fichiers asc et rda) à partir de données au format
+     R ;}
+  \item{générer la séquence d'instructions à exécuter en mode batch
+    (fichier arb) ;}
+  \item{lancer le batch Tau-Argus en ligne de commande ;}
+  \item{récupérer les résultats dans R.}
 }
-Ces différentes étapes peuvent être appelées en une seule fois, ou de manière
-modulaire.
+
+Ces différentes opérations peuvent être exécutées en une seule fois, mais aussi
+de manière modulaire.
+
+}
+
+\section{Précautions d'usage}{
+
+Le package a été développé sur la base des versions open source de Tau-Argus
+(versions 4.1 et supérieures), en particulier la dernière version disponible
+lors du développement (4.1.7). \strong{Il n'est pas compatible avec la version
+3.5.}
+
+Pour l'instant, \strong{seules les microdonnées sont acceptées} en entrée
+(pas les données déjà tabulées).
 
 }
 
 \section{Emplacement de TauArgus.exe}{
 
 La fonction \code{\link{run_tauargus}} doit connaître l'emplacement du
-programme Tau Argus sur le disque. Cet emplacement est renseigné de manière
+programme Tau-Argus sur le disque. Cet emplacement est renseigné de manière
 globale via l'option \code{rtauargus.tauargus_exe}. Il perdure ainsi pour la
 session R courante.
 
 Au chargement du package, si \code{rtauargus.tauargus_exe} n'est pas déjà
-renseigné, une valeur par défaut lui est attribuée (l'emplacement de la version
-portable open source sur AUS). Pour changer cet emplacement, exécuter
-l'instruction :
+renseigné, une valeur par défaut lui est attribuée. Pour changer cet
+emplacement, exécuter l'instruction :
 
 \code{options(rtauargus.tauargus_exe = "chemin/vers/TauArgus.exe")}
 
@@ -47,7 +60,7 @@ un utilisateur, placer l'instruction dans un fichier de configuration de R
 (.Rprofile...).
 
 La fonction (expérimentale) \code{\link{tauargus_info}} tente de récupérer
-le numéro de version et la date de parution du programme Tau Argus utilisé par
+le numéro de version et la date de parution du programme Tau-Argus utilisé par
 rtauargus.
 
 }
@@ -68,7 +81,7 @@ Voir \code{\link{rtauargus_options}} pour plus de détails.
 
 \references{
 
-Tau Argus : \itemize{
+Tau-Argus : \itemize{
 
   \item{\href{http://neon.vb.cbs.nl/casc/tau.htm}{téléchargement et documentation}
   (sur le site de l'office néerlandais de statistiques)}

@@ -2,7 +2,7 @@
 % Please edit documentation in R/import.R
 \name{import}
 \alias{import}
-\title{Importe les résultats de Tau Argus}
+\title{Importe les résultats de Tau-Argus}
 \usage{
 import(arb_filename)
 }
@@ -12,9 +12,28 @@ informations nécessaires à l'import.}
 }
 \value{
 Une liste d'un ou plusieurs data.frames. Chaque data.frame correspond
-  au résultat d'une tabulation. À chaque data.frame est associé un ensemble
-  d'attributs (métadonnées) peremttant de conserver une trace des
-  spécifications passées à Tau Argus.
+  au résultat d'une tabulation.
+}
+\description{
+Importe les résultats générés par Tau-Argus à partir des informations
+contenues dans un fichier arb.
+}
+\details{
+Nécessite que le batch ait été exécuté et se soit terminé sans erreur. Afin
+d'importer immédiatement après exécution du batch, cette fonction sera ainsi
+le plus souvent appelée via \code{\link{run_tauargus}} (en paramétrant
+\code{import = TRUE}).
+
+Il n'est possible (pour l'instant) que d'importer les résultats de type "2"
+(csv for pivot-table) et "4" (sbs). En cas d'impossibilité de l'import pour
+une tabulation donnée, un data.frame vide est retourné (avec un message
+d'avertissement).
+}
+\section{Attribus}{
+
+
+À chaque data.frame est associé un ensemble d'attributs (métadonnées)
+permettant de conserver une trace des spécifications passées à Tau-Argus.
 
 Attributs systématiquement présents :
 \itemize{
@@ -32,18 +51,4 @@ l'utilisateur :
   \item{\code{output_options}}
 }
 }
-\description{
-Importe les résultats générés par Tau Argus à partir des informations
-contenues dans un fichier arb.
-}
-\details{
-Nécessite que le batch ait été exécuté et se soit terminé sans erreur. Afin
-d'importer immédiatement après exécution du batch, cette fonction sera ainsi
-le plus souvent appelée via \code{\link{run_tauargus}} (en paramétrant
-\code{import = TRUE}).
 
-Il n'est possible (pour l'instant) que d'importer les résultats de type "2"
-(csv for pivot-table) et "4" (sbs). En cas d'impossibilité de l'import pour
-une tabulation donnée, un data.frame vide est retourné (avec un message
-d'avertissement).
-}

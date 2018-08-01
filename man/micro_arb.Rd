@@ -28,61 +28,61 @@ noms de variables indiquant une tabulation.
 Exemple : \code{list(c("CJ", "A21"), c("SEXE", "REGION"))} pour le premier
 tableau croisant \code{CJ} par \code{A21} et le deuxième tableau croisant
 \code{SEXE} par \code{REGION}.
-Si une seule tabulation, un vecteur des variables à croiser est accepté.}
+Si une seule tabulation, un simple vecteur des variables à croiser est
+accepté.}
 
-\item{response_var}{variable de réponse, par défaut \code{"<freq>"}
-(comptage).}
+\item{response_var}{variable de réponse à sommer, ou comptage si
+\code{"<freq>"}.}
 
-\item{shadow_var}{variable(s) pour l'application du
-secret primaire. Si non renseigné, \code{response_var} sera utilisé par Tau
-Argus.}
+\item{shadow_var}{variable(s) pour l'application du secret primaire. Si non
+renseigné, \code{response_var} sera utilisé par Tau-Argus.}
 
-\item{cost_var}{variable(s) de coût pour le secret
-secondaire.}
+\item{cost_var}{variable(s) de coût pour le secret secondaire.}
 
 \item{safety_rules}{[\strong{obligatoire}] règle(s) de secret primaire (hors
-pondération).}
+pondération). Chaîne de caractères en syntaxe batch Tau-Argus.}
 
-\item{weighted}{indicatrice(s) de pondération
-(\code{FALSE} par défaut).}
+\item{weighted}{indicatrice(s) de pondération (booléen).}
 
 \item{suppress}{[\strong{obligatoire}] méthode(s) de gestion du secret
-secondaire (syntaxe batch de Tau Argus). Si la méthode est la même pour
+secondaire (syntaxe batch de Tau-Argus). Si la méthode est la même pour
 chaque tabulation, le premier paramètre (numéro du tableau) sera ignoré et
 rempli automatiquement.}
 
-\item{linked}{[pas encore implémenté]}
+\item{linked}{(pas encore implémenté)}
 
 \item{output_names}{noms des fichiers en sortie. Si renseigné,
 obligatoirement autant de noms de fichiers que de tabulations. Si laissé
-vide, autant de fichiers temporaires que de tabulations.}
+vide, autant de noms de fichiers temporaires que de tabulations seront
+générés.}
 
-\item{output_type}{format des fichiers en sortie (codification Tau Argus).
-Par défaut, \code{2}.}
+\item{output_type}{format des fichiers en sortie (codification Tau-Argus).
+Valeur par défaut du package : \code{"2"} (csv for pivot-table).}
 
-\item{output_options}{options supplémentaires des fichiers en sortie, par
-exemple \code{"AS+SE+"} (vide par défaut).}
+\item{output_options}{options supplémentaires des fichiers en sortie. Valeur
+par défaut du package : \code{"AS+"} (affichage du statut). Pour ne
+spécifier aucune option, \code{""}.}
 
 \item{gointeractive}{pour avoir la possibilité de lancer le batch depuis le
-menu de Tau Argus (\code{FALSE} par défaut).}
+menu de Tau-Argus (\code{FALSE} par défaut).}
 }
 \value{
 Une liste de deux éléments : le nom du fichier arb, les noms des
-  fichiers en sortie.
+  fichiers en sortie (utile pour récupérer les noms générés aléatoirement).
 }
 \description{
-Crée un fichier batch pour microdonnées, exécutable par Tau Argus en ligne de
+Crée un fichier batch pour microdonnées, exécutable par Tau-Argus en ligne de
 commande.
 }
 \details{
-Tau Argus peut traiter jusqu'à 10 tabulations pour un même jeu de
+Tau-Argus peut traiter jusqu'à 10 tabulations pour un même jeu de
 microdonnées. Passer une seule valeur pour une option appliquera le même
 traitement à chaque tabulation. Pour des options différenciées, passer un
 vecteur contenant autant de valeurs que de tabulations. Si les longueurs ne
 correspondent pas (déconseillé), un recyclage est effectué.
 
 Sauf mention contraire, utiliser la syntaxe mentionnée dans la documentation
-de Tau Argus.
+de Tau-Argus.
 
 La fonction ne vérifie pas si les fichiers asc et rda existent.
 }

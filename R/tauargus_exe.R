@@ -1,6 +1,6 @@
-#' Informations sur Tau Argus
+#' Informations sur Tau-Argus
 #'
-#' Recherche des informations sur la version de Tau Argus utilisée. Cette
+#' Recherche des informations sur la version de Tau-Argus utilisée. Cette
 #' fonction est expérimentale.
 #'
 #' La fonction lit le contenu d'un éventuel fichier TauNews.html (historique des

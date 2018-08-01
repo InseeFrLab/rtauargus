@@ -1,12 +1,14 @@
-#' Exécute un batch Tau Argus
+#' Exécute un batch Tau-Argus
 #'
-#' Exécute les instructions contenues dans un fichier .arb pour Tau Argus.
+#' Exécute les instructions contenues dans un fichier .arb pour Tau-Argus.
 #'
 #' L'emplacement du programme TauArgus.exe est défini de manière globale au
-#' chargement du package. Pour le modifier, voir \code{\link{rtauargus_options}}.
+#' chargement du package. De fait, l'argument \code{tauargus_exe} n'aura
+#' normalement pas à être spécifié (sauf pour surcharger l'option globale le
+#' temps de l'exécution de la foncion).
 #'
 #' @param arb_filename nom du fichier batch à exécuter.
-#' @param tauargus_exe répertoire et nom du logiciel Tau Argus.
+#' @param tauargus_exe répertoire et nom du logiciel Tau-Argus.
 #' @param logbook nom du fichier où est enregistré le journal d'erreurs
 #'   (optionnel).
 #' @param show_batch_console pour afficher le déroulement du batch dans la

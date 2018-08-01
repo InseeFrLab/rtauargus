@@ -61,7 +61,8 @@ write_rda <- function(info_var) {
 #' exportées dans le fichier asc. Un message d'avertissement listera les
 #' colonnes concernées.
 #'
-#' @param microdata [\strong{obligatoire}] data.frame contenant les microdonnées.
+#' @param microdata [\strong{obligatoire}] data.frame contenant les
+#'   microdonnées.
 #' @param asc_filename nom du fichier asc (avec extension). Si non renseigné, un
 #'   fichier temporaire.
 #' @param rda_filename nom du fichier rda (avec extension). Si non renseigné,
@@ -75,7 +76,7 @@ write_rda <- function(info_var) {
 #'   \code{VAR1 = c(hierleadstring = "@", hiercodelist = "hrc/var1.hrc"),}
 #'   \code{VAR3 = c(hierlevels = "3 1 0")}
 #'   \code{)}
-#' @param decimals nombre de décimales minimum à afficher, par défaut 0 (cf.
+#' @param decimals nombre minimum de décimales à afficher, par défaut 0 (cf.
 #'   section 'Details').
 #' @param totcode (pas encore implémenté)
 #' @param missing (pas encore implémenté)
@@ -88,23 +89,24 @@ write_rda <- function(info_var) {
 #'
 #' @examples
 #' # donnees fictives temporaires
-#' micro_df <- data.frame(
-#'   ARRONDISSEMENT = c("443", "541", "543"),
-#'               CA = c(100, 0, 7),
-#'            POIDS = c(1, 2.71, 4.2)
-#' )
+#' micro_df <-
+#'   data.frame(
+#'     GEO   = c("443", "541", "543"),
+#'     CA    = c(100, 0, 7),
+#'     POIDS = c(1, 2.71, 4.2)
+#'   )
 #'
 #' res <- micro_asc_rda(
-#'   micro_df,
+#'   microdata  = micro_df,
 #'   weight_var = "POIDS",
-#'   decimals = 1,
-#'   hrc = list(ARRONDISSEMENT = c(hierlevels = "2 1"))
+#'   decimals   = 1,
+#'   hrc        = list(GEO = c(hierlevels = "2 1"))
 #' )
 #'
 #' # visualisation des fichiers produits
 #' res # (noms des fichiers)
-#' file.show(res$asc_filename, pager = "internal", title = "asc")
-#' file.show(res$rda_filename, pager = "internal", title = "rda")
+#' file.show(res$asc_filename, pager = "internal", title = "fichier asc")
+#' file.show(res$rda_filename, pager = "internal", title = "fichier rda")
 #' @importFrom dplyr %>%
 #' @importFrom dplyr mutate
 #' @importFrom dplyr arrange

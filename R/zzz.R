@@ -17,7 +17,7 @@
 
   packageStartupMessage(
     '\n',
-    'Tau Argus : "', getOption("rtauargus.tauargus_exe"), '"\n\n',
+    'Tau-Argus : "', getOption("rtauargus.tauargus_exe"), '"\n\n',
     '  Pour changer ce repertoire :\n',
     '    options(rtauargus.tauargus_exe = "chemin/vers/TauArgus.exe")\n\n',
     '  Pour revenir a l\'emplacement par defaut :\n',

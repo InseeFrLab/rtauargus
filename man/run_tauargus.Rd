@@ -2,7 +2,7 @@
 % Please edit documentation in R/run_tauargus.R
 \name{run_tauargus}
 \alias{run_tauargus}
-\title{Exécute un batch Tau Argus}
+\title{Exécute un batch Tau-Argus}
 \usage{
 run_tauargus(arb_filename, tauargus_exe = getOption("rtauargus.tauargus_exe"),
   logbook = NULL,
@@ -12,7 +12,7 @@ run_tauargus(arb_filename, tauargus_exe = getOption("rtauargus.tauargus_exe"),
 \arguments{
 \item{arb_filename}{nom du fichier batch à exécuter.}
 
-\item{tauargus_exe}{répertoire et nom du logiciel Tau Argus.}
+\item{tauargus_exe}{répertoire et nom du logiciel Tau-Argus.}
 
 \item{logbook}{nom du fichier où est enregistré le journal d'erreurs
 (optionnel).}
@@ -33,9 +33,11 @@ défaut.}
 }
 }
 \description{
-Exécute les instructions contenues dans un fichier .arb pour Tau Argus.
+Exécute les instructions contenues dans un fichier .arb pour Tau-Argus.
 }
 \details{
 L'emplacement du programme TauArgus.exe est défini de manière globale au
-chargement du package. Pour le modifier, voir \code{\link{rtauargus_options}}.
+chargement du package. De fait, l'argument \code{tauargus_exe} n'aura
+normalement pas à être spécifié (sauf pour surcharger l'option globale le
+temps de l'exécution de la foncion).
 }

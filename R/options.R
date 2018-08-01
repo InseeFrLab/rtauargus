@@ -84,7 +84,8 @@ df_op.rtauargus <- function(html = FALSE) {
 #' l’utilisateur.}
 #'
 #' Au chargement, le package attribue une valeur par défaut à toutes les options
-#' de rtauargus qui ne sont pas encore déclarées.
+#' de rtauargus qui ne sont pas encore déclarées. Les options déjà définies par
+#' l'utilisateur gardent leurs valeurs.
 #'
 #' Elles peuvent être redéfinies pour une session par une instruction
 #' \code{options(rtauargus.}...\code{ = }...\code{)}, ou de manière globale si

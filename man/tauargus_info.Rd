@@ -2,7 +2,7 @@
 % Please edit documentation in R/tauargus_exe.R
 \name{tauargus_info}
 \alias{tauargus_info}
-\title{Informations sur Tau Argus}
+\title{Informations sur Tau-Argus}
 \usage{
 tauargus_info()
 }
@@ -11,7 +11,7 @@ Un vecteur caractère contenant trois composantes : path, version et
   date.
 }
 \description{
-Recherche des informations sur la version de Tau Argus utilisée. Cette
+Recherche des informations sur la version de Tau-Argus utilisée. Cette
 fonction est expérimentale.
 }
 \details{

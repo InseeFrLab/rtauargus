@@ -6,7 +6,7 @@ read_fixheader <- function(file,
                            ...) {
 
   ## lit un fichier avec potentiellement une colonne vide de trop
-  ## dans l'en-tete (bug de Tau Argus 4.1.4 notamment)
+  ## dans l'en-tete (bug de Tau-Argus 4.1.4 notamment)
   ## si en-tete corrigé non fourni, le déduit de la première ligne du fichier
 
   if (is.null(fixed_header)) {
@@ -87,7 +87,7 @@ my_readcsv <-
 
 read_ta_output <- function(file, type, expl_resp) {
 
-  ## lit une sortie de Tau Argus en fonction du type et des options
+  ## lit une sortie de Tau-Argus en fonction du type et des options
   ## renseignées
 
   if (type == "2") {
@@ -151,9 +151,9 @@ meta_import <- function(data,
 
 # Fonction exportée -----------------------------------------------------------
 
-#' Importe les résultats de Tau Argus
+#' Importe les résultats de Tau-Argus
 #'
-#' Importe les résultats générés par Tau Argus à partir des informations
+#' Importe les résultats générés par Tau-Argus à partir des informations
 #' contenues dans un fichier arb.
 #'
 #' Nécessite que le batch ait été exécuté et se soit terminé sans erreur. Afin
@@ -170,9 +170,12 @@ meta_import <- function(data,
 #'   informations nécessaires à l'import.
 #'
 #' @return Une liste d'un ou plusieurs data.frames. Chaque data.frame correspond
-#'   au résultat d'une tabulation. À chaque data.frame est associé un ensemble
-#'   d'attributs (métadonnées) peremttant de conserver une trace des
-#'   spécifications passées à Tau Argus.
+#'   au résultat d'une tabulation.
+#'
+#' @section Attribus:
+#'
+#' À chaque data.frame est associé un ensemble d'attributs (métadonnées)
+#' permettant de conserver une trace des spécifications passées à Tau-Argus.
 #'
 #' Attributs systématiquement présents :
 #' \itemize{
