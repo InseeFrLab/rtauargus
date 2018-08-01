@@ -1,0 +1,18 @@
+---
+title: Package ‘rtauargus’
+subtitle: Journal des modifications
+output: rmarkdown::html_vignette
+---
+
+## rtauargus 0.1.0.9000
+
+[`r format(Sys.Date(), "%d/%m%/%y")`] *
+
+* corrige extensions de fichiers pour "5" (.tab) et "6" (.jj)
+* petites corrections documentation
+
+## rtauargus 0.1.0
+
+[01/08/2018]
+
+* Première version stable.
