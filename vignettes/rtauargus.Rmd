@@ -264,8 +264,8 @@ plusieurs batch utilisant ces mêmes fichiers. Ce n'était pas le cas dans les
 exemples vus jusqu'à maintenant, où tous les fichiers intermédiaires étaient
 systématiquement regénérés, même si leur contenu était identique.
 
-Pour cela, on peut utiliser les fonctions appelées successivement par
-`rtauargus`, à savoir :
+Pour cela, on peut utiliser les fonctions appelées successivement par la
+fonction `rtauargus`, à savoir :
 
 > **`micro_asc_rda()`&nbsp;&nbsp;&rarr;&nbsp;&nbsp;
     `micro_arb()`    &nbsp;&nbsp;&rarr;&nbsp;&nbsp;
@@ -277,7 +277,8 @@ Pour cela, on peut utiliser les fonctions appelées successivement par
 &tau;-Argus n'accepte en entrée que des microdonnées sous une forme bien
 spécifique :
 
-- un fichier texte aux colonnes de longueur fixe (fichier .asc) ;
+- un fichier texte aux colonnes de longueur fixe, sans en-tête de colonnes
+  (fichier .asc) ;
 - un fichier de description des variables (fichier .rda).
 
 La fonction `micro_asc_rda` produit ces deux fichiers à partir d'un data.frame.
@@ -313,7 +314,8 @@ print.data.frame(
 
 > _Toutes les fonctions du package accepetent les emplacements de fichiers
 > sous forme de chemin relatif. Par exemple, `asc_filename = "donnees.asc"` avec
-> un répertoire de travail `Z:/` est équivalent à l'instruction précédente._
+un répertoire de travail sur `Z:/` est équivalent à
+`asc_filename = "Z:/donnees.asc"`._
 
 #### Exemple élaboré
 
@@ -649,9 +651,9 @@ différents._
 
 ### Signaler un problème, suggérer une amélioration
 
-Le package est en cours de construction. Toutes les fonctionnalités de &tau;-
-Argus n'ont pas été intégrées (la finalité n'est pas de les intégrer toutes,
-seulement les plus fréquemment utilisées).
+Le package est en cours de construction. Toutes les fonctionnalités de
+&tau;-Argus n'ont pas été intégrées (la finalité n'est pas de les intégrer
+toutes, seulement les plus fréquemment utilisées).
 
 En attendant un éventuel dépôt sur github, les retours (positifs ou négatifs)
 peuvent se faire
