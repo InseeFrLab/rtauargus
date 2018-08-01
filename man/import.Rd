@@ -29,7 +29,7 @@ Il n'est possible (pour l'instant) que d'importer les résultats de type "2"
 une tabulation donnée, un data.frame vide est retourné (avec un message
 d'avertissement).
 }
-\section{Attribus}{
+\section{Attributs}{
 
 
 À chaque data.frame est associé un ensemble d'attributs (métadonnées)

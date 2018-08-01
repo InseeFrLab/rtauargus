@@ -172,7 +172,7 @@ meta_import <- function(data,
 #' @return Une liste d'un ou plusieurs data.frames. Chaque data.frame correspond
 #'   au résultat d'une tabulation.
 #'
-#' @section Attribus:
+#' @section Attributs:
 #'
 #' À chaque data.frame est associé un ensemble d'attributs (métadonnées)
 #' permettant de conserver une trace des spécifications passées à Tau-Argus.

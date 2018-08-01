@@ -34,7 +34,8 @@ de manière modulaire.
 Le package a été développé sur la base des versions open source de Tau-Argus
 (versions 4.1 et supérieures), en particulier la dernière version disponible
 lors du développement (4.1.7). \strong{Il n'est pas compatible avec la version
-3.5.}
+3.5} (du fait notamment de l'utilisation d'options supplémentaires dans
+<WRITETABLE> en mode batch).
 
 Pour l'instant, \strong{seules les microdonnées sont acceptées} en entrée
 (pas les données déjà tabulées).
