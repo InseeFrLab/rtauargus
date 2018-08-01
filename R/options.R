@@ -12,7 +12,7 @@ op.rtauargus <- list(
   rtauargus.weighted           = FALSE,
   rtauargus.linked             = FALSE,
   rtauargus.output_type        = "2",
-  rtauargus.output_options     = "",
+  rtauargus.output_options     = "AS+",
   # run_tauargus ------------------------------------------------ #
   rtauargus.tauargus_exe       = "Y:/Logiciels/Tau/TauArgus.exe",
   rtauargus.show_batch_console = TRUE,
