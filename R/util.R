@@ -43,8 +43,8 @@ output_extensions <- c(
   "2" = ".csv",
   "3" = ".txt",
   "4" = ".sbs",
-  "5" = ".txt",
-  "6" = ".txt"
+  "5" = ".tab",
+  "6" = ".jj"
 )
 
 output_description <- c(
