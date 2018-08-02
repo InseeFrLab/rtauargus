@@ -35,7 +35,7 @@ df_param <- function(list_param) {
 }
 
 # fonction normalizePath sans warning
-normPath2 <- function(path, ...) suppressWarnings(normalizePath(path, ...))
+normPath2 <- purrr::partial(normalizePath, mustWork = FALSE)
 
 # lien parametre extension
 output_extensions <- c(
