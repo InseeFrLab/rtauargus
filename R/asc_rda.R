@@ -1,42 +1,54 @@
+write_rda_1var <- function(info_var) {
+
+  # écrit partie du .rda à partir des infos (une liste) pour une seule variable
+
+  with(
+    info_var,
+    paste(
+      sep = "\n",
+      paste(
+        colname,
+        position,
+        width,
+        if (!is.na(missing) & missing != "") missing
+      ),
+      paste0("  <", type_var, ">"),
+      if (!is.na(totcode))
+        paste0("  <TOTCODE> \"", totcode, "\""),
+      if (!is.na(codelist))
+        paste0("  <CODELIST> \"", codelist, "\""),
+      if (!is.na(hierleadstring) | !is.na(hierlevels))
+        "  <HIERARCHICAL>",
+      if (!is.na(hierleadstring))
+        paste0("  <HIERLEADSTRING> \"", hierleadstring, "\""),
+      if (!is.na(hiercodelist))
+        paste0("  <HIERCODELIST> \"", hiercodelist, "\""),
+      if (!is.na(hierlevels))
+        paste0("  <HIERLEVELS> ", hierlevels),
+      if (type_var %in% c("NUMERIC", "WEIGHT"))
+        paste0("  <DECIMALS> ", digits)
+    )
+  )
+
+}
+
 #' @importFrom dplyr %>%
 
-write_rda <- function(info_var) {
+write_rda <- function(info_vars) {
 
-  # info_var est une liste contenant les infos pour chaque variable
+  # écrit les infos format .rda pour toutes les variables
+  # (info_vars est une liste contenant les infos pour chaque variable)
 
-  info_var <-
-    lapply(
-      info_var,
-      function(x) {
-        if (!is.na(x$hiercodelist)) x$hiercodelist <- normPath2(x$hiercodelist)
-        x
-      }
-    )
+  chemin_complet <- function(x) {
+    if (!is.na(x$hiercodelist)) x$hiercodelist <- normPath2(x$hiercodelist)
+    if (!is.na(x$codelist)) x$codelist <- normPath2(x$codelist)
+    return(x)
+  }
+  info_vars <- lapply(info_vars, chemin_complet)
 
-  sapply(
-    info_var,
-    function(x) {
-      paste(
-        sep = "\n",
-        paste(x$colname, x$position, x$width),
-        paste0("  <", x$type_var, ">"),
-        #<TOTCODE>
-        if (!is.na(x$hierleadstring) | !is.na(x$hierlevels))
-          "  <HIERARCHICAL>",
-        if (!is.na(x$hierleadstring))
-          paste0("  <HIERLEADSTRING> \"", x$hierleadstring, "\""),
-        if (!is.na(x$hiercodelist))
-          paste0("  <HIERCODELIST> \"", x$hiercodelist, "\""),
-        if (!is.na(x$hierlevels))
-          paste0("  <HIERLEVELS> ", x$hierlevels),
-        if (x$type_var %in% c("NUMERIC", "WEIGHT"))
-          paste0("  <DECIMALS> ", x$digits)
-      )
-    }
-  ) %>%
-  gsub("(\n)+", "\n", .) %>% # plusieurs sauts de lignes par un seul
-  sub("\n$", "", .) %>% # supprime dernier saut de ligne
-  gsub("/", "\\\\", .) # remplace / par \, facultatif ?
+  vapply(info_vars, write_rda_1var, character(1)) %>%
+    gsub("(\n)+", "\n", .) %>% # plusieurs sauts de lignes par un seul
+    sub("\n$", "", .) # supprime dernier saut de ligne
 
 }
 
@@ -191,16 +203,35 @@ micro_asc_rda <- function(microdata,
     if (is.null(fwf_info[[hier_var]])) fwf_info[[hier_var]] <- NA_character_
   }
 
+  # ajoute missing, totcode, codelist
+  var_quanti <- names(microdata)[!num]
+  missing_df  <- df_param_defaut(names(microdata), "missing", missing)
+  codelist_df <- df_param_defaut(var_quanti, "codelist", codelist)
+  totcode_df  <-
+    df_param_defaut(var_quanti, "totcode", totcode) %>%
+    mutate(totcode = dplyr::coalesce(totcode, getOption("rtauargus.totcode")))
+
+  fwf_info <-
+    purrr::reduce(
+      list(fwf_info, missing_df, totcode_df, codelist_df),
+      merge,
+      by = "colname",
+      all.x = TRUE
+    )
+
   # reordonne car merge a fait un tri
-  # et reorganise par variable (transpose)
   fwf_info <-
     fwf_info %>%
     arrange(ordre_init) %>%
-    dplyr::select(-ordre_init, -nlevels, -exp) %>%
-    transpose()
+    dplyr::select(-ordre_init, -nlevels, -exp)
 
-  # appeler write_rda sur ce fichier modifie
+  # reorganise en une liste de variables
+  fwf_info <- transpose(fwf_info)
+
+  # genere vecteur format .rda
   res <- write_rda(fwf_info)
+
+  # écrit fichier texte
   writeLines(res, rda_filename)
 
   # renvoie les noms des fichiers asc et rda de manière invisible
