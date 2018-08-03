@@ -28,3 +28,10 @@
   )
 
 }
+
+.onUnload <- function(libpath) {
+
+  options(purrr::map(op.rtauargus, ~ NULL))
+  packageStartupMessage('rtauargus : options du package desactivees')
+
+}
