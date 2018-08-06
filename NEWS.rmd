@@ -8,6 +8,7 @@ output: rmarkdown::html_vignette
 
 [`r format(Sys.Date(), "%d/%m%/%y")`] *
 
+* `micro_asc_rda` : intègre paramètres _missing_, _totcode_ et _codelist_
 * corrige extensions de fichiers pour "5" (.tab) et "6" (.jj)
 * petites corrections documentation
 
