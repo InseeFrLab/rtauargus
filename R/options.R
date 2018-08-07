@@ -7,6 +7,7 @@ op.rtauargus <- list(
   rtauargus.decimals           = 0L,
   rtauargus.totcode            = "Total",
   rtauargus.missing            = "",
+  rtauargus.hierleadstring     = "@",
   # arb --------------------------------------------------------- #
   rtauargus.response_var       = "<freq>",
   rtauargus.weighted           = FALSE,
@@ -104,6 +105,7 @@ df_op.rtauargus <- function(html = FALSE) {
 #'  rtauargus.decimals               \tab  \Sexpr{rtauargus:::op.rtauargus$rtauargus.decimals}           \tab \link{micro_asc_rda}\cr
 #'  rtauargus.totcode                \tab "\Sexpr{rtauargus:::op.rtauargus$rtauargus.totcode}"           \tab                     \cr
 #'  rtauargus.missing                \tab "\Sexpr{rtauargus:::op.rtauargus$rtauargus.missing}"           \tab                     \cr
+#'  rtauargus.hierleadstring         \tab "\Sexpr{rtauargus:::op.rtauargus$rtauargus.hierleadstring}"    \tab                     \cr
 #'  \code{------------------------}  \tab  \code{---------------------------------}                      \tab \code{-------------}\cr
 #'  rtauargus.response_var           \tab "\Sexpr{rtauargus:::op.rtauargus$rtauargus.response_var}"      \tab \link{micro_arb}    \cr
 #'  rtauargus.weighted               \tab  \Sexpr{rtauargus:::op.rtauargus$rtauargus.weighted}           \tab                     \cr
