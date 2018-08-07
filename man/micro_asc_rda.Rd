@@ -33,14 +33,19 @@ Exemple :
 \code{VAR3 = c(hierlevels = "3 1 0")}
 \code{)}}
 
-\item{decimals}{nombre minimum de décimales à afficher, par défaut 0 (cf.
-section 'Details').}
+\item{decimals}{nombre minimal de décimales à afficher (voir section
+'Details').}
 
-\item{totcode}{(pas encore implémenté)}
+\item{totcode}{code(s) pour le total d'une variable catégorielle (voir
+section 'Paramètres spécifiques' pour la syntaxe de ce paramètre). Les
+variables non spécifiées (ni par défaut, ni explicitement) se verront
+attribuer la valeur de \code{rtauargus.totcode}.}
 
-\item{missing}{(pas encore implémenté)}
+\item{missing}{code(s) pour une valeur manquante (voir section
+'Paramètres spécifiques' pour la syntaxe de ce paramètre).}
 
-\item{codelist}{(pas encore implémenté)}
+\item{codelist}{fichier(s) contenant les libellés des variables catégorielles
+(voir section 'Paramètres spécifiques' pour la syntaxe de ce paramètre).}
 
 \item{request_var}{(pas encore implémenté)}
 
@@ -48,7 +53,7 @@ section 'Details').}
 }
 \value{
 Renvoie les noms des fichiers asc et rda sous forme de liste (de
-  manière invisible).
+  manière invisible)
 }
 \description{
 Crée un fichier texte de longueur fixe (asc) et un fichier de métadonnées
@@ -71,11 +76,33 @@ Les colonnes vides (\code{NA} ou chaînes de caractère vide) ne seront pas
 exportées dans le fichier asc. Un message d'avertissement listera les
 colonnes concernées.
 }
+\section{Paramètres spécifiques}{
+
+
+Les paramètres \code{totcode}, \code{missing} et \code{codelist} sont
+à renseigner sous la forme d'un vecteur indiquant la valeur à prendre pour
+chaque variable.
+
+Les noms des éléments du vecteur donnent la variable concernée, les éléments
+du vecteur donnent la valeur du paramètre pour Tau-Argus. Un élément non
+nommé constituera la valeur par défaut, qui sera attribuée à toutes les
+variables pouvant prendre ce paramètre.
+
+Exemples :
+\itemize{
+  \item{\code{totcode = "Ensemble"} écrira \code{<TOTCODE> "Ensemble"} pour
+    toutes les variables (catégorielles)}
+  \item{\code{totcode = c("Ensemble", GEO = "France")} fera une exception pour
+   la variable \code{GEO}}
+}
+}
+
 \examples{
 # donnees fictives temporaires
 micro_df <-
   data.frame(
     GEO   = c("443", "541", "543"),
+    A21   = c("A", "B", "A"),
     CA    = c(100, 0, 7),
     POIDS = c(1, 2.71, 4.2)
   )
@@ -84,7 +111,8 @@ res <- micro_asc_rda(
   microdata  = micro_df,
   weight_var = "POIDS",
   decimals   = 1,
-  hrc        = list(GEO = c(hierlevels = "2 1"))
+  hrc        = list(GEO = c(hierlevels = "2 1")),
+  totcode    = c(GEO = "France")
 )
 
 # visualisation des fichiers produits
