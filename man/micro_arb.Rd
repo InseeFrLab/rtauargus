@@ -20,7 +20,7 @@ extension). Si non renseigné, un fichier temporaire.}
 \item{asc_filename}{[\strong{obligatoire}] nom du fichier asc (avec extension).}
 
 \item{rda_filename}{nom du fichier rda (avec extension). Si non renseigné,
-\code{asc_filename} avec l'extension "rda" à la place de "asc").}
+\code{asc_filename} avec l'extension "rda" à la place de "asc".}
 
 \item{explanatory_vars}{[\strong{obligatoire}] variables catégorielles, sous
 forme de liste de vecteurs. Chaque élément de la liste est un vecteur des

@@ -328,7 +328,7 @@ micro_asc_rda(
   microdata    = donnees,
   asc_filename = "Z:/donnees.asc", 
   weight_var   = "POIDS",
-  hrc          = list(V3 = c(hierlevels = "1 1")),
+  hrc          = c(V3 = "1 1"),
   decimals     = 1
 )
 

@@ -31,8 +31,6 @@
 #' @inheritParams micro_asc_rda
 #' @param vars_hrc \strong{[obligatoire]} vecteur des noms des variables
 #'   constituant la hiérarchie, du niveau le plus fin au niveau le plus agrégé.
-#' @param hierleadstring caractère qui, répété n fois, indique que la valeur est
-#'   à n niveaux de profondeur dans la hiérarchie.
 #' @param hrc_filename nom et emplacement du fichier hrc produit. Si non
 #'   renseigné, un fichier temporaire.
 #' @param fill_na remplissage d'éventuelles valeurs manquantes, à l'aide d'une
