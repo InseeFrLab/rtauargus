@@ -305,3 +305,67 @@ check_seq_prof <- function(x) {
   all(ok)
 
 }
+
+
+# Autre -------------------------------------------------------------------
+
+normalise_hrc <- function(params_hrc,
+                          microdata = NULL,
+                          hierleadstring = NULL) {
+
+  # normalise un vecteur de paramètres sur les hiérarchies (transmis à
+  # micro_as_rda par exemple)
+  # - pour les syntaxes raccourcies 'v1 > v2 > ...', génère le fichier
+  #     temporaire et renvoie le fichier
+  # - normalizePath des fichiers hrc déjà existants
+  # - laisse le reste en l'état (hierlevels)
+
+  # type param
+
+  validrname <- "[\\.]?[[:alpha:]][\\._[:alnum:]]*"
+  vars <- grep(sprintf("^(%s *> *)+%s$", validrname, validrname), params_hrc)
+  fich <- grep(".+\\.hrc$", params_hrc)
+  lvls <- grep("^(\\d+ +)+\\d+$", params_hrc)
+
+  params_err <- setdiff(seq_along(params_hrc), c(vars, fich, lvls))
+
+  if (length(params_err)) {
+    stop(
+      "Parametres hrc incorrects :\n   ",
+      paste(unname(params_hrc[params_err]), collapse = "\n   ")
+    )
+  }
+
+  # transformations
+
+  if (length(vars)) {
+
+    if (is.null(microdata)) {
+      stop("specifier microdata pour construire une hierarchie 'v1 > v2 > ...'")
+    }
+
+    if (is.null(hierleadstring)) stop("specifier hierleadstring")
+
+    list_vars <- strsplit(params_hrc[vars], " *> *")
+
+    hrc_files <-
+      purrr::map_chr(
+        .f = write_hrc,
+        list_vars,
+        microdata = microdata,
+        hierleadstring = hierleadstring
+      )
+
+    params_hrc[vars] <- hrc_files
+
+  }
+
+  if (length(fich)) {
+
+    params_hrc[fich] <- normPath2(params_hrc[fich])
+
+  }
+
+  params_hrc
+
+}
