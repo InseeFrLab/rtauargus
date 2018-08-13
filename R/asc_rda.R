@@ -2,16 +2,20 @@ write_rda_1var <- function(info_var) {
 
   # écrit partie du .rda à partir des infos (une liste) pour une seule variable
 
+  ligne1 <- with(info_var,
+    paste(
+      colname,
+      position,
+      width,
+      if (!is.na(missing) & missing != "") missing
+    )
+  )
+
   with(
     info_var,
     paste(
       sep = "\n",
-      paste(
-        colname,
-        position,
-        width,
-        if (!is.na(missing) & missing != "") missing
-      ),
+      trimws(ligne1),
       paste0("  <", type_var, ">"),
       if (!is.na(totcode))
         paste0("  <TOTCODE> \"", totcode, "\""),
