@@ -25,9 +25,9 @@ df_param_defaut <- function(varnames, param_name, valvar) {
   specifique <- valvar[named]
   defaut <- valvar[!named]
 
-  if (!length(defaut)) defaut <- NA
-
-  if (length(defaut) > 1) {
+  if (length(defaut) == 0) { # (y c. NULL)
+    defaut <- NA
+  } else if (length(defaut) > 1) {
     defaut <- defaut[1]
     warning(
       'plusieurs valeurs par defaut pour "', param_name, '", ',

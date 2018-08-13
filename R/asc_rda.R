@@ -265,16 +265,13 @@ micro_asc_rda <- function(microdata,
 
   # hierachical  ......................................................
 
-  if (!is.null(hrc)) {
-    norm_hrc <-
-      normalise_hrc(
-        hrc,
-        microdata = microdata,
-        hierleadstring = hierleadstring
-      )
-  } else {
-    norm_hrc <- rep(NA_character_, length(var_quanti))
-  }
+  norm_hrc <-
+    normalise_hrc(
+      hrc,
+      microdata = microdata,
+      hierleadstring = hierleadstring
+    )
+
   hrc_df <- df_param_defaut(var_quanti, "hierarchical", norm_hrc)
   hrc_df$hierleadstring <- NA_character_
   need_leadstring <- grepl("\\.hrc$", hrc_df$hierarchical)
