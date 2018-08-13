@@ -9,31 +9,6 @@ cite <- function(x, guillemet = "\"", ignore_vide = TRUE) {
 
 }
 
-# fonction transformant une liste de parametres associes a des
-# variables en un data.frame (pour hrc notamment)
-
-df_param <- function(list_param) {
-
-  res <-
-    data.frame(
-      colname = names(list_param),
-      stringsAsFactors = FALSE,
-      row.names = names(list_param)
-    )
-
-  for (i in seq_along(list_param)) {
-    curvar <- names(list_param)[i]
-    curobj <- list_param[[i]]
-    for (j in seq_along(curobj)) {
-      curpar <- names(list_param[[i]])[j]
-      res[curvar, curpar] <- curobj[j]
-    }
-  }
-
-  res
-
-}
-
 df_param_defaut <- function(varnames, param_name, valvar) {
 
   # fonction créant un data.frame de deux colonnes :

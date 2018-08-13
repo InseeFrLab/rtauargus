@@ -1,7 +1,6 @@
-context("util")
-
-
 # cite --------------------------------------------------------------------
+
+context("cite")
 
 test_that("cite", {
 
@@ -25,64 +24,71 @@ test_that("cite", {
 })
 
 
-# df_param ----------------------------------------------------------------
+# df_param_defaut ---------------------------------------------------------
 
-test_that("df_param", {
+context("df_param_defaut")
 
-  df_param <- rtauargus:::df_param
+test_that("df_param_defaut", {
 
-  df_AB <-
+  df_param_defaut <- rtauargus:::df_param_defaut
+
+  # fonctions préremplies ...................................
+
+  vn <- sprintf("V%i", 1:4)
+
+  f_vn <- purrr::partial(df_param_defaut, varnames = vn)
+  f_vn_totcode <- purrr::partial(f_vn, param_name = "totcode")
+
+  df_attendu <-
     purrr::partial(
       data.frame,
+      colname = vn,
       stringsAsFactors = FALSE,
-      row.names = c("A", "B"),
-      colname = c("A", "B")
+      row.names = vn
     )
 
-  expect_error(
-    df_param(list(4)),
-    "doivent avoir un nom"
-  )
+  # expect_ ................................................
 
-  expect_error(
-    df_param(list(A = 4, B = c(b1 = "x"))),
-    "doivent etre nommés"
+  val_defaut <- "---"
+
+  expect_equal(
+    f_vn_totcode(val_defaut),
+    df_attendu(totcode = val_defaut)
   )
 
   expect_equal(
-    df_param(
-      list(
-        A = c(a1 = 4),
-        B = c(b1 = "x", b2 = "y")
-      )
-    ),
-    df_AB(
-      a1 = c(4, NA),
-      b1 = c(NA, "x"),
-      b2 = c(NA, "y")
-    )
+    f_vn_totcode(c(val_defaut, V1 = "T1", V3 = "T3")),
+    df_attendu(totcode = c("T1", val_defaut, "T3", val_defaut))
   )
 
   expect_equal(
-    df_param(
-      list(
-        A = 4,
-        B = c(b1 = "x")
-      )
-    ),
-    df_AB(b1 = c(NA, "x"))
+    f_vn_totcode(c(val_defaut, V3 = "T3", V1 = "T1")),  # permutation ordre dans liste
+    df_attendu(totcode = c("T1", val_defaut, "T3", val_defaut))
   )
 
-  # typage (warning ?)
   expect_equal(
-    df_param(
-      list(
-        A = c(param = 4),
-        B = c(param = "x")
-      )
-    ),
-    df_AB(param = c("4", "x"))
+    f_vn_totcode(c(V3 = "T3", V1 = "T1", val_defaut)), # permutation ordre dans liste
+    df_attendu(totcode = c("T1", val_defaut, "T3", val_defaut))
   )
 
+  expect_equal(
+    f_vn("param1", c(V1 = "T1", V3 = "T3")), # pas de val defaut (NA)
+    df_attendu(param1 = c("T1", NA, "T3", NA))
+  )
+
+  expect_equal(
+    f_vn("param1", c(V1 = "T1", V3 = "T3")), # pas de val defaut (NA)
+    df_attendu(param1 = c("T1", NA, "T3", NA))
+  )
+
+  expect_equal(
+    f_vn("param1", c(V1 = "T1", V3 = 3)), # (types différents)
+    df_attendu(param1 = c("T1", NA, "3", NA))
+  )
+
+  expect_equal(
+    f_vn("param1", c(V1 = 1, V3 = 3)), # (types identiques)
+    df_attendu(param1 = c(1, NA, 3, NA))
+  )
 
 })
