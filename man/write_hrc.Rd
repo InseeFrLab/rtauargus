@@ -6,7 +6,8 @@
 \usage{
 write_hrc(microdata, vars_hrc,
   hierleadstring = getOption("rtauargus.hierleadstring"),
-  hrc_filename = NULL, fill_na = c("up", "down"), compact = TRUE)
+  hrc_filename = NULL, fill_na = c("up", "down"), compact = TRUE,
+  hierlevels = NULL)
 }
 \arguments{
 \item{microdata}{[\strong{obligatoire}] data.frame contenant les
@@ -31,6 +32,11 @@ autre variable :\itemize{
 
 \item{compact}{pour élaguer les branches répétant une unique valeur jusqu'au
 plus bas niveau de profondeur (\code{TRUE} par défaut).}
+
+\item{hierlevels}{si une seule variable est spécifiée dans \code{vars_hrc},
+permet de générer la hiérarchie selon la position des caractères dans la
+chaîne. Par exemple, \code{hierlevels = "2 3"} pour construire une
+hiérarchie département-commune à partir d'un code commune.}
 }
 \value{
 Le nom du fichier hrc (utile dans le cas d'un fichier temporaire au

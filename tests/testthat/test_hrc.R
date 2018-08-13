@@ -447,6 +447,54 @@ test_that("input valide", {
 })
 
 
+
+# df_hierlevels -----------------------------------------------------------
+
+context("df_hierlevels")
+
+df_hierlevels <- rtauargus:::df_hierlevels
+
+test_that("base", {
+
+  expect_equal(
+    df_hierlevels(df$niv2, "1 1"),
+    data.frame(
+      var_hrc = c("A1", "A2", "B1", "B2"),
+      V2      = c("A",  "A",  "B",  "B" ),
+      stringsAsFactors = FALSE
+    )
+  )
+
+  expect_equal(
+    df_hierlevels(df$niv3, "1 1 1"),
+    data.frame(
+      var_hrc = c("A1x", "A1z", "A2y", "A2z", "B1x", "B1y", "B2x", "B2z"),
+      V2      = c("A1" , "A1" , "A2" , "A2" , "B1" , "B1" , "B2" , "B2" ),
+      V3      = c("A"  , "A"  , "A"  , "A"  , "B"  , "B"  , "B"  , "B"  ),
+      stringsAsFactors = FALSE
+    )
+  )
+
+
+})
+
+test_that("error", {
+
+  expect_error(
+    df_hierlevels(df$niv2, "1 un"),
+    "chiffres separes par des espaces"
+  )
+
+  expect_error(
+    df_hierlevels(df$niv4, "1 2 3"),
+    "somme de hierlevels"
+  )
+
+  expect_error(
+    df_hierlevels(c(df$niv3, df$niv2), "1 3"),
+    "nombre de caracteres"
+  )
+
+})
+
 # write_hrc ---------------------------------------------------------------
-
-

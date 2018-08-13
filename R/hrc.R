@@ -42,6 +42,10 @@
 #'    }
 #' @param compact pour élaguer les branches répétant une unique valeur jusqu'au
 #'   plus bas niveau de profondeur (\code{TRUE} par défaut).
+#' @param hierlevels si une seule variable est spécifiée dans \code{vars_hrc},
+#'   permet de générer la hiérarchie selon la position des caractères dans la
+#'   chaîne. Par exemple, \code{hierlevels = "2 3"} pour construire une
+#'   hiérarchie département-commune à partir d'un code commune.
 #'
 #' @return Le nom du fichier hrc (utile dans le cas d'un fichier temporaire au
 #'   nom aléatoire).
@@ -81,9 +85,20 @@ write_hrc <- function(microdata,
                       hierleadstring = getOption("rtauargus.hierleadstring"),
                       hrc_filename = NULL,
                       fill_na = c("up", "down"),
-                      compact = TRUE) {
+                      compact = TRUE,
+                      hierlevels = NULL) {
 
   if (is.null(hrc_filename)) hrc_filename <- tempfile(fileext = ".hrc")
+
+  # hierlevels
+
+  if (!is.null(hierlevels)) {
+    if (length(vars_hrc) != 1) {
+      stop("avec hierlevels, une seule variable hierarchique a specifier")
+    }
+    microdata <- df_hierlevels(microdata[[vars_hrc]], hierlevels)
+    vars_hrc <- names(microdata)
+  }
 
   # verifs
 
@@ -365,5 +380,37 @@ normalise_hrc <- function(params_hrc,
   }
 
   params_hrc
+
+}
+
+#' @importFrom dplyr %>%
+
+df_hierlevels <- function(var_hrc, hierlevels) {
+
+  # construit un data.frame pouvant être lu par hrc_list, à partir d'un vecteur
+  # et de niveaux hiérarchiques par position dans la chaîne
+
+  hierlevels <- trimws(hierlevels)
+  if (!grepl("^(\\d+ +)+\\d+$", hierlevels)) {
+    stop("hierlevels doit contenir plusieurs chiffres separes par des espaces")
+  }
+
+  var_hrc <- var_hrc %>% unique() %>% as.character()
+  n1 <- nchar(var_hrc[1])
+  if (any(nchar(var_hrc) != n1)) {
+    stop("le nombre de caracteres doit etre identique pour tous les elements")
+  }
+
+  lev <- strsplit(hierlevels, " +")[[1]]
+  lev <- as.integer(lev) %>% `[`(. != 0)
+  if (sum(lev) != n1) {
+    stop("la somme de hierlevels doit etre egale au nombre de caracteres")
+  }
+
+  lev <- lev %>% cumsum() %>% rev() %>% `[`(-1)
+
+  res <- data.frame(var_hrc, stringsAsFactors = FALSE)
+  for (i in seq_along(lev)) res[[i + 1]] <- substr(var_hrc, 1, lev[i])
+  res
 
 }
