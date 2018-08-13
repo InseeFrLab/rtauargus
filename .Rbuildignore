@@ -5,4 +5,4 @@
 ^NEWS\.md$
 ^NEWS\.html$
 ^tmp$
-^vignettes/.+\.png$
+# ^vignettes/.+\.png$
