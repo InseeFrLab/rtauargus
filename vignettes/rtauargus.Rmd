@@ -241,7 +241,7 @@ secret1
 > _Le premier paramètre attendu par &tau;-Argus est le numéro de la tabulation.
 > Ici, on souhaite appliquer la même méthode de suppression du secret secondaire 
 > à chaque tableau. S'il n'y a qu'une méthode et plusieurs tabulations, les 
-> caractères entre la parenthètes et la première virgule sont ignorés et les
+> caractères entre la parenthèse et la première virgule sont ignorés et les
 > numéros des tabulations calculés automatiquement._
 
 <p style="text-align: right">
@@ -297,7 +297,7 @@ Contenu des fichiers créés :
 ```{r file_show_asc_rda, eval = FALSE}
 file.show("Z:/donnees.asc", "Z:/donnees.rda", pager = "internal")
 ````
->```{r show_asc_rda, echo = FALSE, comment = ""}
+```{r show_asc_rda, echo = FALSE, comment = ""}
 donnees.asc <- c("", readLines("Z:/donnees.asc"))
 donnees.rda <- c("", readLines("Z:/donnees.rda"))
 na <- length(donnees.asc)
@@ -312,16 +312,19 @@ print.data.frame(
 )
 ```
 
-> _Toutes les fonctions du package accepetent les emplacements de fichiers
-> sous forme de chemin relatif. Par exemple, `asc_filename = "donnees.asc"` avec
-un répertoire de travail sur `Z:/` est équivalent à
-`asc_filename = "Z:/donnees.asc"`._
+> _Les fonctions du package acceptent les emplacements de fichiers sous forme
+> de chemin relatif. Par exemple, `asc_filename = "donnees.asc"` avec un 
+> répertoire de travail sur `Z:/` est équivalent à
+> `asc_filename = "Z:/donnees.asc"`._
 
 #### Exemple élaboré
 
-On ajoute à l'exemple précédent une variable de poids, les informations sur
-une variable hiérarchique et un nombre minimal de décimales à écrire pour les
-variables numériques :
+On ajoute à l'exemple précédent :
+
+- une variable de poids ;
+- les informations sur une variable hiérarchique ;
+- des codes différenciés pour les totaux ;
+- un nombre minimal de décimales à écrire pour les variables numériques.
 
 ```{r asc_rda_2}
 micro_asc_rda(
@@ -329,6 +332,7 @@ micro_asc_rda(
   asc_filename = "Z:/donnees.asc", 
   weight_var   = "POIDS",
   hrc          = c(V3 = "1 1"),
+  totcode      = c("Ensemble", V2 = "TOTAL"),
   decimals     = 1
 )
 
@@ -336,8 +340,8 @@ micro_asc_rda(
 Contenu des fichiers créés :
 ```{r file_show_asc_rda2, ref.label = 'file_show_asc_rda', eval = FALSE}
 ````
->```{r show_asc_rda2, ref.label = 'show_asc_rda', echo = FALSE, comment = ""}
->```
+```{r show_asc_rda2, ref.label = 'show_asc_rda', echo = FALSE, comment = ""}
+```
 
 #### Fichiers temporaires
 
@@ -388,13 +392,13 @@ Contenu du fichier créé :
 file.show("Z:/donnees.arb", pager = "internal")
 ````
 
->```{r show_arb, echo = FALSE, comment = ""}
+```{r show_arb, echo = FALSE, comment = ""}
 cat(readLines("Z:/donnees.arb"), sep = "\n")
 ```
 
 #### Exemple élaboré
 
-On complète l'exemple suivant avec :
+On complète l'exemple précédent avec :
 
 - une deuxième tabulation ;
 - une variable de réponse à sommer (au lieu d'un comptage) ;
@@ -422,8 +426,8 @@ micro_arb(
 ```{r file_show_arb2, ref.label = 'file_show_arb', eval = FALSE}
 ````
 
->```{r show_arb2, ref.label = 'show_arb', echo = FALSE, eval = TRUE, comment = ""}
-````
+```{r show_arb2, ref.label = 'show_arb', echo = FALSE, eval = TRUE, comment = ""}
+```
 
 #### Fichiers temporaires
 
@@ -634,22 +638,21 @@ différents._
 
 ## Autres informations
 
-### À propos de cette vignette
+#### À propos de cette vignette
 
 - Auteur : **<a href="mailto:pierre-yves.berrard@insee.fr">Pierre-Yves Berrard</a>**
 - Dernière mise à jour : **`r format(Sys.time(), "%d/%m/%Y")`**
 - Version de rtauargus utilisée : **`r packageVersion("rtauargus")`**
 - Version de &tau;-Argus utilisée : **`r unname(tauargus_info()["version"])`**
 
-### Idées pour la suite
+#### Idées pour la suite
 
-- implémenter paramètres `totcode`, `missing`, `codelist`, `request_var`,
-  `request_code`, `linked`...
+- implémenter paramètres `request`, `apriori`...
 - prendre en compte des données tabulées en entrée
 - importer d'autres formats ("5", "6" ?)
 - ...
 
-### Signaler un problème, suggérer une amélioration
+#### Signaler un problème, suggérer une amélioration
 
 Le package est en cours de construction. Toutes les fonctionnalités de
 &tau;-Argus n'ont pas été intégrées (la finalité n'est pas de les intégrer
