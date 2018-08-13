@@ -88,7 +88,7 @@ write_hrc <- function(microdata,
                       compact = TRUE,
                       hierlevels = NULL) {
 
-  if (is.null(hrc_filename)) hrc_filename <- tempfile(fileext = ".hrc")
+  if (is.null(hrc_filename)) hrc_filename <- tempfile("RTA_", fileext = ".hrc")
 
   # hierlevels
 

@@ -217,7 +217,7 @@ micro_asc_rda <- function(microdata,
 
   # parametres non renseignés  ...........................................
 
-  if (is.null(asc_filename)) asc_filename <- tempfile(fileext = ".asc")
+  if (is.null(asc_filename)) asc_filename <- tempfile("RTA_", fileext = ".asc")
   if (is.null(rda_filename)) rda_filename <- sub("asc$", "rda", asc_filename)
 
   # genere fichier longueur fixe et infos associees  .....................

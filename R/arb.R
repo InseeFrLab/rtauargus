@@ -172,7 +172,7 @@ micro_arb <- function(arb_filename     = NULL,
   nb_tabul <- length(explanatory_vars)
 
   # parametres non renseignés
-  if (is.null(arb_filename)) arb_filename <- tempfile("rtauargus_", fileext = ".arb")
+  if (is.null(arb_filename)) arb_filename <- tempfile("RTA_", fileext = ".arb")
   if (is.null(rda_filename)) rda_filename <- sub("asc$", "rda", asc_filename)
   if (is.null(shadow_var)) shadow_var <- ""
   if (is.null(cost_var)) cost_var <- ""
@@ -183,7 +183,7 @@ micro_arb <- function(arb_filename     = NULL,
       stopifnot(length(output_type) == nb_tabul)
       ext <- output_extensions[output_type]
     }
-    output_names <- tempfile("rtauargus_", fileext = ext)
+    output_names <- tempfile("RTA_", fileext = ext)
   }
   if (is.null(output_options)) output_options <- ""
 
