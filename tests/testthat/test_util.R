@@ -51,6 +51,21 @@ test_that("df_param_defaut", {
 
   val_defaut <- "---"
 
+  expect_warning(
+    deux_val_def <- f_vn_totcode(c(val_defaut, V3 = "T3", "drop")),
+    "plusieurs valeurs par defaut"
+  )
+
+  expect_equal(
+    deux_val_def,
+    df_attendu(totcode = c(val_defaut, val_defaut, "T3", val_defaut))
+  )
+
+  expect_equal(
+    f_vn_totcode(NULL),
+    df_attendu(totcode = rep(NA, 4))
+  )
+
   expect_equal(
     f_vn_totcode(val_defaut),
     df_attendu(totcode = val_defaut)
@@ -62,12 +77,12 @@ test_that("df_param_defaut", {
   )
 
   expect_equal(
-    f_vn_totcode(c(val_defaut, V3 = "T3", V1 = "T1")),  # permutation ordre dans liste
+    f_vn_totcode(c(val_defaut, V3 = "T3", V1 = "T1")), # permute ordre liste
     df_attendu(totcode = c("T1", val_defaut, "T3", val_defaut))
   )
 
   expect_equal(
-    f_vn_totcode(c(V3 = "T3", V1 = "T1", val_defaut)), # permutation ordre dans liste
+    f_vn_totcode(c(V3 = "T3", V1 = "T1", val_defaut)), # permute ordre liste
     df_attendu(totcode = c("T1", val_defaut, "T3", val_defaut))
   )
 
