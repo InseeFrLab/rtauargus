@@ -447,6 +447,46 @@ test_that("input valide", {
 })
 
 
+# normalise_hrc -----------------------------------------------------------
+
+context("normalise_hrc")
+
+normalise_hrc <- rtauargus:::normalise_hrc
+
+test_that("rien à normaliser", {
+
+  expect_null(normalise_hrc(NULL))
+
+  expect_equal(
+    normalise_hrc(c("1 2", "3 4 5")),
+    c("1 2", "3 4 5")
+  )
+
+})
+
+test_that("syntaxe valeur incorrecte", {
+
+  expect_error(
+    normalise_hrc("fich"),
+    "Parametres hrc incorrects"
+  )
+
+  expect_error(
+    normalise_hrc("3 Q 5"),
+    "Parametres hrc incorrects"
+  )
+
+})
+
+test_that("microdata absent si V1>V2...", {
+
+  expect_error(
+    normalise_hrc("V1>V2"),
+    "specifier microdata"
+  )
+
+})
+
 
 # df_hierlevels -----------------------------------------------------------
 
