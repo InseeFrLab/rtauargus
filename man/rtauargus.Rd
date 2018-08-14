@@ -12,12 +12,12 @@ microdonnées.}
 
 \item{explanatory_vars}{[\strong{obligatoire}] variables catégorielles, sous
 forme de liste de vecteurs. Chaque élément de la liste est un vecteur des
-noms de variables indiquant une tabulation.
+noms des variables formant une tabulation.
 Exemple : \code{list(c("CJ", "A21"), c("SEXE", "REGION"))} pour le premier
-tableau croisant \code{CJ} par \code{A21} et le deuxième tableau croisant
-\code{SEXE} par \code{REGION}.
+tableau croisant \code{CJ} x \code{A21} et le deuxième tableau croisant
+\code{SEXE} x \code{REGION}.
 Si une seule tabulation, un simple vecteur des variables à croiser est
-accepté.}
+accepté (pas besoin de \code{list(...)}).}
 
 \item{safety_rules}{[\strong{obligatoire}] règle(s) de secret primaire (hors
 pondération). Chaîne de caractères en syntaxe batch Tau-Argus.}
@@ -25,7 +25,7 @@ pondération). Chaîne de caractères en syntaxe batch Tau-Argus.}
 \item{suppress}{[\strong{obligatoire}] méthode(s) de gestion du secret
 secondaire (syntaxe batch de Tau-Argus). Si la méthode est la même pour
 chaque tabulation, le premier paramètre (numéro du tableau) sera ignoré et
-rempli automatiquement.}
+renuméroté automatiquement.}
 
 \item{...}{paramètres optionnels pour \code{micro_asc_rda}, \code{micro_arb}
 et \code{run_tauargus}. Voir l'aide de ces fonctions.}

@@ -97,6 +97,14 @@ suppr_writetable <- function(suppress,
 #' Sauf mention contraire, utiliser la syntaxe mentionnée dans la documentation
 #' de Tau-Argus.
 #'
+#' Syntaxe particulière pour \code{suppress}. Le premier paramètre dans la
+#' syntaxe Tau-Argus est le numéro de la tabulation. Si la méthode est identique
+#' pour toutes les tabulations, les caractères entre la parenthèse et la
+#' première virgule seront ignorés et les numéros recalculés automatiquement
+#' pour le batch. Dans l'écriture \code{suppress = "GH(n,100)"}, n sera ainsi
+#' transformé en 1 pour la première tabulation, en 2 pour la deuxième
+#' tabulation, etc.
+#'
 #' La fonction ne vérifie pas si les fichiers asc et rda existent.
 #'
 #' @param arb_filename nom du fichier arb généré (avec
@@ -105,12 +113,12 @@ suppr_writetable <- function(suppress,
 #' @inheritParams micro_asc_rda
 #' @param explanatory_vars [\strong{obligatoire}] variables catégorielles, sous
 #'   forme de liste de vecteurs. Chaque élément de la liste est un vecteur des
-#'   noms de variables indiquant une tabulation.
+#'   noms des variables formant une tabulation.
 #'   Exemple : \code{list(c("CJ", "A21"), c("SEXE", "REGION"))} pour le premier
-#'   tableau croisant \code{CJ} par \code{A21} et le deuxième tableau croisant
-#'   \code{SEXE} par \code{REGION}.
+#'   tableau croisant \code{CJ} x \code{A21} et le deuxième tableau croisant
+#'   \code{SEXE} x \code{REGION}.
 #'   Si une seule tabulation, un simple vecteur des variables à croiser est
-#'   accepté.
+#'   accepté (pas besoin de \code{list(...)}).
 #' @param response_var variable de réponse à sommer, ou comptage si
 #'   \code{"<freq>"}.
 #' @param shadow_var variable(s) pour l'application du secret primaire. Si non
@@ -122,9 +130,10 @@ suppr_writetable <- function(suppress,
 #' @param suppress [\strong{obligatoire}] méthode(s) de gestion du secret
 #'   secondaire (syntaxe batch de Tau-Argus). Si la méthode est la même pour
 #'   chaque tabulation, le premier paramètre (numéro du tableau) sera ignoré et
-#'   rempli automatiquement.
-#' @param linked pour lier les tableaux, une seule commande suppress autorisée
-#'   dans ce cas (appliquée à tous les tableaux).
+#'   renuméroté automatiquement.
+#' @param linked pour traiter le secret secondaire conjointement sur toutes les
+#'   tabulations. Une seule commande suppress autorisée dans ce cas (appliquée à
+#'   tous les tableaux).
 #' @param output_names noms des fichiers en sortie. Si renseigné,
 #'   obligatoirement autant de noms de fichiers que de tabulations. Si laissé
 #'   vide, autant de noms de fichiers temporaires que de tabulations seront
@@ -134,6 +143,7 @@ suppr_writetable <- function(suppress,
 #' @param output_options options supplémentaires des fichiers en sortie. Valeur
 #'   par défaut du package : \code{"AS+"} (affichage du statut). Pour ne
 #'   spécifier aucune option, \code{""}.
+#' @param apriori (pas encore implémenté)
 #' @param gointeractive pour avoir la possibilité de lancer le batch depuis le
 #'   menu de Tau-Argus (\code{FALSE} par défaut).
 #'
@@ -144,8 +154,8 @@ suppr_writetable <- function(suppress,
 #' # donnees fictives
 #' micro_df <- data.frame(
 #'   REGION = c("44", "11", "11"),
-#'       CJ = c("1", "2", "1"),
-#'       CA = c(100, 0, 7)
+#'       CJ = c("1" , "2" , "1" ),
+#'       CA = c( 100,  0  ,  7  )
 #'   )
 #' # cree les inputs asc et rda (dans dossier temporaire)
 #' tmp <- micro_asc_rda(micro_df)
@@ -159,7 +169,7 @@ suppr_writetable <- function(suppress,
 #'   suppress = "GH(.,100)",
 #'   output_names = c("tab1.csv", "~/tab2.csv"),
 #'   output_options = c("AS+SE+", "SE+"),
-#'   output_type = 2
+#'   output_type = "2"
 #' )
 #'
 #' # Visualisation du fichier batch dans la console
@@ -180,6 +190,7 @@ micro_arb <- function(arb_filename     = NULL,
                       output_names     = NULL,
                       output_type      = getOption("rtauargus.output_type"),
                       output_options   = getOption("rtauargus.output_options"),
+                      apriori          = NULL,
                       gointeractive    = FALSE) {
 
   # si une seule tabulation, vecteur autorisé

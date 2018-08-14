@@ -15,7 +15,7 @@ Une liste d'un ou plusieurs data.frames. Chaque data.frame correspond
   au résultat d'une tabulation.
 }
 \description{
-Importe les résultats générés par Tau-Argus à partir des informations
+Importe dans R les résultats générés par Tau-Argus à partir des informations
 contenues dans un fichier arb.
 }
 \details{
@@ -36,20 +36,10 @@ d'avertissement).
 permettant de conserver une trace des spécifications passées à Tau-Argus.
 
 Attributs systématiquement présents :
-\itemize{
-  \item{\code{explanatory_vars}}
-  \item{\code{response_var}}
-  \item{\code{safetyrule}}
-  \item{\code{suppress}}
-  \item{\code{linked}}
-  \item{\code{output_type}}
-}
+\code{explanatory_vars}, \code{response_var}, \code{safetyrule},
+\code{suppress}, \code{linked}, \code{output_type}.
+
 Attributs présents uniquement si l'option correspondante a été renseignée par
-l'utilisateur :
-\itemize{
-  \item{\code{shadow_var}}
-  \item{\code{cost_var}}
-  \item{\code{output_options}}
-}
+l'utilisateur : \code{shadow_var}, \code{cost_var}, \code{output_options}.
 }
 
