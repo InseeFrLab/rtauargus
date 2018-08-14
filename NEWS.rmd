@@ -4,20 +4,26 @@ subtitle: Journal des modifications
 output: rmarkdown::html_vignette
 ---
 
-## rtauargus 0.1.0.9000
+<!-- [`r format(Sys.Date(), "%d/%m%/%Y")`] * -->
 
-[`r format(Sys.Date(), "%d/%m%/%y")`] *
+## rtauargus 0.2.0
 
-* ajoute fonction `write_hrc` créant un fichier .hrc à partir de 
+[14/08/2018]
+
+* **micro_arb()** :
+    - implémente tableaux liés (paramètre **linked**)
+    - corrige extensions de fichiers pour `"5"` (.tab) et `"6"` (.jj)
+    - corrige bug quand un seul paramètre à suppress, par exemple `MOD(1)`
+* **write_hrc()** : nouvelle fonction  créant un fichier .hrc à partir de 
   variables hiérarchiques présentes dans les microdonnées 
-* `micro_asc_rda` :
-    - intègre paramètres _missing_, _totcode_ et _codelist_
-    - change syntaxe pour paramètre _hrc_ (cohérence avec _missing_...)
-    - nouveau paramètre _hierleadstring_ (avec une option de package associée)
-* corrige extensions de fichiers pour `"5"` (.tab) et `"6"` (.jj)
-* désactive les options du package au déchargement (unloadNamespace) de 
-  celui-ci
-* petites corrections documentation
+* **micro_asc_rda()** :
+    - implémente paramètres **missing**, **totcode** et **codelist**
+    - simplifie syntaxe pour paramètre **hrc** (cohérente avec nouveaux
+      paramètres)
+    - nouveau paramètre **hierleadstring** (valeur par défaut dans l'option de
+      package **rtauargus.hierleadstring**)
+* efface les options du package à son déchargement
+* corrections diverses documentation
 
 ## rtauargus 0.1.0
 
