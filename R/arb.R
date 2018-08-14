@@ -38,6 +38,7 @@ specif_safety <- function(explanatory_vars,
 
 # Genere partie SUPPRESS et WRITETABLE
 suppr_writetable <- function(suppress,
+                             linked,
                              output_names,
                              output_type,
                              output_options) {
@@ -45,10 +46,15 @@ suppr_writetable <- function(suppress,
   # numero table
   num_table <- seq_along(output_names)
 
+  if (linked & length(suppress) > 1) {
+    stop("un seul suppress permis quand linked = TRUE")
+  }
+
   # methode suppr
   if (length(suppress) == 1) {
+    if (linked) suppr_n <- 0 else suppr_n <- num_table
     suppress_fmt <- sub("\\((.+),", "\\(%i,", suppress)
-    suppress <- sprintf(suppress_fmt, num_table)
+    suppress <- sprintf(suppress_fmt, suppr_n)
   }
 
   # chemin complet sorties
@@ -65,7 +71,15 @@ suppr_writetable <- function(suppress,
       output_names, '")'
     )
 
-  mapply(paste, suppr_cmd, write_cmd, sep = "\n", USE.NAMES = FALSE)
+  if (linked) {
+    c(
+      suppr_cmd,
+      mapply(paste, write_cmd, sep = "\n", USE.NAMES = FALSE)
+    )
+  } else {
+    mapply(paste, suppr_cmd, write_cmd, sep = "\n", USE.NAMES = FALSE)
+  }
+
 
 }
 
@@ -109,7 +123,8 @@ suppr_writetable <- function(suppress,
 #'   secondaire (syntaxe batch de Tau-Argus). Si la méthode est la même pour
 #'   chaque tabulation, le premier paramètre (numéro du tableau) sera ignoré et
 #'   rempli automatiquement.
-#' @param linked (pas encore implémenté)
+#' @param linked pour lier les tableaux, une seule commande suppress autorisée
+#'   dans ce cas (appliquée à tous les tableaux).
 #' @param output_names noms des fichiers en sortie. Si renseigné,
 #'   obligatoirement autant de noms de fichiers que de tabulations. Si laissé
 #'   vide, autant de noms de fichiers temporaires que de tabulations seront
@@ -220,6 +235,7 @@ micro_arb <- function(arb_filename     = NULL,
   sw <-
     suppr_writetable(
       suppress,
+      linked,
       output_names,
       output_type,
       output_options

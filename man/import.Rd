@@ -41,6 +41,7 @@ Attributs systématiquement présents :
   \item{\code{response_var}}
   \item{\code{safetyrule}}
   \item{\code{suppress}}
+  \item{\code{linked}}
   \item{\code{output_type}}
 }
 Attributs présents uniquement si l'option correspondante a été renseignée par

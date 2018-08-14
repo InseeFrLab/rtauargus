@@ -49,7 +49,8 @@ secondaire (syntaxe batch de Tau-Argus). Si la méthode est la même pour
 chaque tabulation, le premier paramètre (numéro du tableau) sera ignoré et
 rempli automatiquement.}
 
-\item{linked}{(pas encore implémenté)}
+\item{linked}{pour lier les tableaux, une seule commande suppress autorisée
+dans ce cas (appliquée à tous les tableaux).}
 
 \item{output_names}{noms des fichiers en sortie. Si renseigné,
 obligatoirement autant de noms de fichiers que de tabulations. Si laissé

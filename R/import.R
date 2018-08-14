@@ -132,7 +132,12 @@ meta_import <- function(data,
 
   ## ajoute les meta donnees du batch (atrributs) à chacun des tableaux exportés
 
-  suppress <- sub("\\(\\d+,", "\\(.,", suppress) # remplace num tabl par point
+  # liés ?
+  num_tab <- stringr::str_match(suppress, "\\((\\d+)")[ , 2]
+  linked <- all(num_tab == 0)
+
+  # remplace num tabl par point
+  suppress <- sub("\\(\\d+,", "\\(.,", suppress)
 
   structure(
     data,
@@ -142,6 +147,7 @@ meta_import <- function(data,
     cost_var         = if (cost != "") cost,
     safetyrule       = safetyrule,
     suppress         = suppress,
+    linked           = linked,
     output_type      = output_type,
     output_options   = if (output_options != "") output_options
   )
@@ -183,6 +189,7 @@ meta_import <- function(data,
 #'   \item{\code{response_var}}
 #'   \item{\code{safetyrule}}
 #'   \item{\code{suppress}}
+#'   \item{\code{linked}}
 #'   \item{\code{output_type}}
 #' }
 #' Attributs présents uniquement si l'option correspondante a été renseignée par
