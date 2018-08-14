@@ -53,7 +53,8 @@ suppr_writetable <- function(suppress,
   # methode suppr
   if (length(suppress) == 1) {
     if (linked) suppr_n <- 0 else suppr_n <- num_table
-    suppress_fmt <- sub("\\((.+),", "\\(%i,", suppress)
+    suppress <- gsub(" ", "", suppress) # supprime tout espace
+    suppress_fmt <- sub("\\([^),]+(,*.*)\\)", "(%i\\1)", suppress)
     suppress <- sprintf(suppress_fmt, suppr_n)
   }
 
@@ -97,13 +98,12 @@ suppr_writetable <- function(suppress,
 #' Sauf mention contraire, utiliser la syntaxe mentionnée dans la documentation
 #' de Tau-Argus.
 #'
-#' Syntaxe particulière pour \code{suppress}. Le premier paramètre dans la
+#' Syntaxe spéciale pour \code{suppress} : le premier paramètre dans la
 #' syntaxe Tau-Argus est le numéro de la tabulation. Si la méthode est identique
-#' pour toutes les tabulations, les caractères entre la parenthèse et la
-#' première virgule seront ignorés et les numéros recalculés automatiquement
-#' pour le batch. Dans l'écriture \code{suppress = "GH(n,100)"}, n sera ainsi
-#' transformé en 1 pour la première tabulation, en 2 pour la deuxième
-#' tabulation, etc.
+#' pour toutes les tabulations, ce premier paramètre sera ignoré et les numéros
+#' recalculés automatiquement pour le batch. Dans l'écriture
+#' \code{suppress = "GH(n,100)"}, n sera ainsi transformé en 1 pour la première
+#' tabulation, en 2 pour la deuxième tabulation, etc.
 #'
 #' La fonction ne vérifie pas si les fichiers asc et rda existent.
 #'

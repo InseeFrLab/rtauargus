@@ -88,13 +88,12 @@ correspondent pas (déconseillé), un recyclage est effectué.
 Sauf mention contraire, utiliser la syntaxe mentionnée dans la documentation
 de Tau-Argus.
 
-Syntaxe particulière pour \code{suppress}. Le premier paramètre dans la
+Syntaxe spéciale pour \code{suppress} : le premier paramètre dans la
 syntaxe Tau-Argus est le numéro de la tabulation. Si la méthode est identique
-pour toutes les tabulations, les caractères entre la parenthèse et la
-première virgule seront ignorés et les numéros recalculés automatiquement
-pour le batch. Dans l'écriture \code{suppress = "GH(n,100)"}, n sera ainsi
-transformé en 1 pour la première tabulation, en 2 pour la deuxième
-tabulation, etc.
+pour toutes les tabulations, ce premier paramètre sera ignoré et les numéros
+recalculés automatiquement pour le batch. Dans l'écriture
+\code{suppress = "GH(n,100)"}, n sera ainsi transformé en 1 pour la première
+tabulation, en 2 pour la deuxième tabulation, etc.
 
 La fonction ne vérifie pas si les fichiers asc et rda existent.
 }
