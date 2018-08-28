@@ -532,6 +532,157 @@ test_that("4 niveaux", {
 })
 
 
+# is_hrc ------------------------------------------------------------------
+
+context("is_hrc")
+
+is_hrc <- rtauargus:::is_hrc
+
+test_that("depuis precomptage", {
+
+  mat2col <- purrr::partial(matrix, ncol = 2, byrow = TRUE)
+
+  expect_true(
+    mat2col(
+      c(1, 0,
+        0, 2)
+    ) %>% is_hrc()
+  )
+
+  expect_true(
+    mat2col(
+      c(1, 0,
+        0, 2,
+        8, 0)
+    ) %>% is_hrc()
+  )
+
+  expect_false(
+    mat2col(
+      c(7, 1, # deux niveaux agrégés pour un niveau fin
+        0, 2)
+    ) %>% is_hrc()
+  )
+
+  expect_true(
+    matrix(
+      nrow = 2,
+      c(1, 0,
+        0, 0
+      )
+    ) %>% is_hrc()
+  )
+
+})
+
+test_that("sortie table()", {
+
+  # TRUE ......................
+
+  expect_true(
+    is_hrc(
+      table(
+        fin = c("A1", "A2"),
+        agr = c("A" , "A" )
+      )
+    )
+  )
+
+  expect_true(
+    is_hrc(
+      table(
+        fin = c("A1", "A2", "B1"),
+        agr = c("A" , "A" , "B" )
+      )
+    )
+  )
+
+  expect_true(
+    is_hrc(
+      table(
+        fin = c("A1", "A2"),
+        agr = c("A" ,  NA )
+      )
+    )
+  )
+
+  expect_true(
+    is_hrc(
+      table(
+        fin = c("A1", NA ),
+        agr = c("A" , "B")
+      )
+    )
+  )
+
+  expect_true(
+    is_hrc(
+      table(
+        fin = c("A1", "A2", "B1"),
+        agr = c("A" , "A" , "B" )
+      )
+    )
+  )
+
+  expect_true(
+    is_hrc(
+      table(
+        fin = c("A1", "A2", "B1",  NA),
+        agr = c("A" , "A" , "B" , "B")
+      )
+    )
+  )
+
+  expect_true(
+    is_hrc(
+      table(
+        fin = c("A1", "A2", "B1",  NA),
+        agr = c("A" , "A" , "B" , "C")
+      )
+    )
+  )
+
+  expect_true(
+    is_hrc(
+      table(
+        fin = c("A1", "B1", "B2"), # ligne de 0 pour B2
+        agr = c("A" , "B" ,  NA )
+      )
+    )
+  )
+
+  # FALSE ......................
+
+  expect_false(
+    is_hrc(
+      table(
+        fin = c("A1", "A1"),
+        agr = c("A" , "B" ) # deux niveaux agrégés pour un niveau fin
+      )
+    )
+  )
+
+  expect_false(
+    is_hrc(
+      table(
+        fin = c("A1", "A2"),
+        agr = c( NA ,  NA )
+      )
+    )
+  )
+
+  expect_false(
+    is_hrc(
+      table(
+        fin = c( NA , NA ),
+        agr = c("A" , "A")
+      )
+    )
+  )
+
+})
+
+
 # check_seq_prof ----------------------------------------------------------
 
 context("check_seq_prof")
