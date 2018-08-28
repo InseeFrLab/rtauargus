@@ -162,6 +162,53 @@ test_that("normal", {
 
 })
 
+test_that("présence NAs", {
+
+  expect_error(
+    sublevels_t(c(NA, NA), c(NA , NA)),
+    "aucun croisement exploitable"
+  )
+
+  expect_error(
+    sublevels_t(c("A", NA), c(NA , NA)),
+    "aucun croisement exploitable"
+  )
+
+  expect_error(
+    sublevels_t(c("A1", NA), c(NA , "B")),
+    "aucun croisement exploitable"
+  )
+
+  res <- list(A = list(A1 = NULL)) # (attendu)
+
+  expect_equal(
+    sublevels_t(c("A1", NA), c("A", NA)),
+    res
+  )
+
+  expect_equal(
+    sublevels_t(c("A1", NA), c("A", "B")),
+    res # B disparaît à cause du NA au niveau inférieur
+  )
+
+  expect_equal(
+    sublevels_t(c("A1", "B1"), c("A", NA)),
+    res # B1 disparaît à cause du NA au niveau supérieur
+  )
+
+  expect_equal(
+    sublevels_t(c("A1", "A1"), c("A", NA)),
+    res
+  )
+
+  # plusieurs cas combinés
+  expect_equal(
+    sublevels_t(c("A1", "B2", NA, NA), c("A", NA, "B", NA)),
+    res
+  )
+
+})
+
 test_that("détecte variables non hierarchiques", {
 
   # niv 1 x (2 3 4) ...........................

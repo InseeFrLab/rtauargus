@@ -192,7 +192,14 @@ fill_na_hrc <- function(microdata, vars) {
 
 sublevels <- function(fin, agr) {
 
-  compt <- table(fin, agr)
+  # crée une liste à deux niveaux à partir de microdonnées (vecteurs)
+  # écarte les croisements inexploitables (NA dans fin ou dans agr)
+
+  compt <- table(fin, agr, useNA = "no")
+
+  if (sum(compt) == 0) {
+    stop("aucun croisement exploitable (valeurs manquantes ?)")
+  }
 
   if (!is_hrc(compt)) {
     stop(
@@ -271,12 +278,13 @@ is_hrc <- function(crois_fin_agr) {
   # prend en argument un comptage (S3:table, matrice) et renvoie vrai
   # ssi chaque niveau fin correspond à un seul niveau agrégé
   # (i.e. le relation fin -> agr est une application au sens mathématique)
+  # les lignes remplies de 0 sont aussi acceptées (causées par des NA)
 
   fin_unique_agr <-
     apply(
       crois_fin_agr,
       1,
-      function(x) sum(as.logical(x)) == 1
+      function(x) sum(as.logical(x)) %in% 0:1 # 0 aussi autorisé
     )
 
   all(fin_unique_agr)
