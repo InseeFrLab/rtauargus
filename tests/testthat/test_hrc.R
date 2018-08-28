@@ -293,6 +293,80 @@ test_that("melange", {
 
 context("hrc_list")
 
+hrc_123 <- list(
+  A = list(
+    A1 = list(
+      A1x = NULL,
+      A1z = NULL
+    ),
+    A2 = list(
+      A2y = NULL,
+      A2z = NULL
+    )
+  ),
+  B = list(
+    B1 = list(
+      B1x = NULL,
+      B1y = NULL
+    ),
+    B2 = list(
+      B2x = NULL,
+      B2z = NULL
+    )
+  )
+)
+
+hrc_124 <- list(
+  A = list(
+    A1 = list(
+      `A1x*` = NULL,
+       A1x_  = NULL,
+       A1z_  = NULL
+    ),
+    A2 = list(
+      `A2y*` = NULL,
+       A2y_  = NULL,
+      `A2z*` = NULL,
+       A2z_  = NULL
+    )
+  ),
+  B = list(
+    B1 = list(
+      `B1x*` = NULL,
+       B1x_  = NULL,
+       B1y_  = NULL
+    ),
+    B2 = list(
+      `B2x*` = NULL,
+       B2x_  = NULL,
+       B2z_  = NULL
+    )
+  )
+)
+
+hrc_1234 <- list(
+  A = list(
+    A1 = list(
+      A1x = list(`A1x*` = NULL, A1x_ = NULL),
+      A1z = list( A1z_  = NULL)
+    ),
+    A2 = list(
+      A2y = list(`A2y*` = NULL, A2y_ = NULL),
+      A2z = list(`A2z*` = NULL, A2z_ = NULL)
+    )
+  ),
+  B = list(
+    B1 = list(
+      B1x = list(`B1x*` = NULL, B1x_ = NULL),
+      B1y = list( B1y_  = NULL)
+    ),
+    B2 = list(
+      B2x = list(`B2x*` = NULL, B2x_ = NULL),
+      B2z = list (B2z_  = NULL)
+    )
+  )
+)
+
 hrc_list <- rtauargus:::hrc_list
 
 test_that("2 input (équivaut à sublevels)", {
@@ -323,58 +397,6 @@ test_that("2 input (équivaut à sublevels)", {
 
 test_that("3 input", {
 
-  hrc_123 <- list(
-    A = list(
-      A1 = list(
-        A1x = NULL,
-        A1z = NULL
-      ),
-      A2 = list(
-        A2y = NULL,
-        A2z = NULL
-      )
-    ),
-    B = list(
-      B1 = list(
-        B1x = NULL,
-        B1y = NULL
-      ),
-      B2 = list(
-        B2x = NULL,
-        B2z = NULL
-      )
-    )
-  )
-
-  hrc_124 <- list(
-      A = list(
-        A1 = list(
-          `A1x*` = NULL,
-           A1x_  = NULL,
-           A1z_  = NULL
-        ),
-        A2 = list(
-          `A2y*` = NULL,
-           A2y_  = NULL,
-          `A2z*` = NULL,
-           A2z_  = NULL
-        )
-      ),
-      B = list(
-        B1 = list(
-          `B1x*` = NULL,
-           B1x_  = NULL,
-           B1y_  = NULL
-        ),
-        B2 = list(
-          `B2x*` = NULL,
-           B2x_  = NULL,
-           B2z_  = NULL
-        )
-      )
-    )
-
-
   expect_equal(
     hrc_list(df, c("niv3", "niv2", "niv1")),
     hrc_123
@@ -389,32 +411,75 @@ test_that("3 input", {
 
 test_that("4 input", {
 
-  hrc_1234 <- list(
-    A = list(
-      A1 = list(
-        A1x = list(`A1x*` = NULL, A1x_ = NULL),
-        A1z = list( A1z_  = NULL)
-      ),
-      A2 = list(
-        A2y = list(`A2y*` = NULL, A2y_ = NULL),
-        A2z = list(`A2z*` = NULL, A2z_ = NULL)
-      )
-    ),
-    B = list(
-      B1 = list(
-        B1x = list(`B1x*` = NULL, B1x_ = NULL),
-        B1y = list( B1y_  = NULL)
-      ),
-      B2 = list(
-        B2x = list(`B2x*` = NULL, B2x_ = NULL),
-        B2z = list (B2z_  = NULL)
-      )
-    )
-  )
-
   expect_equal(
     hrc_list(df, c("niv4", "niv3", "niv2", "niv1")),
     hrc_1234
+  )
+
+})
+
+
+# prof_list ---------------------------------------------------------------
+
+context("prof_list")
+
+prof_list <- rtauargus:::prof_list
+
+test_that("2 niveaux", {
+
+  expect_equal(
+    prof_list(subl12),
+    c(A = 0, A1 = 1, A2 = 1, B = 0, B1 = 1, B2 = 1)
+  )
+
+})
+
+test_that("3 niveaux", {
+
+  expect_equal(
+    prof_list(hrc_124),
+    c(A = 0,
+        A1 = 1,
+         `A1x*` = 2, A1x_ = 2, A1z_ = 2,
+        A2 = 1,
+         `A2y*` = 2, A2y_ = 2, `A2z*` = 2, A2z_ = 2,
+      B = 0,
+        B1 = 1,
+          `B1x*` = 2, B1x_ = 2, B1y_ = 2,
+        B2 = 1,
+          `B2x*` = 2, B2x_ = 2, B2z_ = 2
+    )
+  )
+
+})
+
+test_that("4 niveaux", {
+
+  expect_equal(
+    prof_list(hrc_1234),
+    c(A = 0,
+        A1 = 1,
+          A1x = 2,
+            `A1x*` = 3, A1x_ = 3,
+          A1z = 2,
+            A1z_ = 3,
+        A2 = 1,
+          A2y = 2,
+            `A2y*` = 3, A2y_ = 3,
+          A2z = 2,
+            `A2z*` = 3, A2z_ = 3,
+      B = 0,
+        B1 = 1,
+          B1x = 2,
+            `B1x*` = 3, B1x_ = 3,
+          B1y = 2,
+            B1y_ = 3,
+        B2 = 1,
+          B2x = 2,
+            `B2x*` = 3, B2x_ = 3,
+          B2z = 2,
+            B2z_ = 3
+    )
   )
 
 })

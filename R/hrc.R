@@ -130,11 +130,7 @@ write_hrc <- function(microdata,
   # construit hiérarchie sous forme de liste
   list_hrc <- hrc_list(microdata, vars_hrc)
 
-  val_prof <-
-    purrr::set_names(
-      unlist(hrc_prof(list_hrc)),
-      unlist(hrc_names(list_hrc))
-    )
+  val_prof <- prof_list(list_hrc)
 
   # coupe branches avec unique valeur depuis une profondeur donnée
   if (compact) val_prof <- val_prof[!duplicated(names(val_prof))]
@@ -250,33 +246,20 @@ hrc_list <- function(df, vars_hrc) {
 }
 
 
-# Fonctions parcourant la liste hiérarchique ------------------------------
+# Fonction parcourant la liste hiérarchique -------------------------------
 
-hrc_names <- function(x) {
+prof_list <- function(z, level = 0,result = NULL) {
 
-  if (is.null(x[[1]])) {
-    names(x)
-  } else {
-    purrr::map2(
-      names(x),
-      lapply(x, hrc_names),
-      c
-    )
+  if (length(z) > 0) {
+
+    for (i in length(z):1) {
+      names(level) <- names(z)[i]
+      result <- c(level, prof_list(z[[i]], level + 1, result))
+    }
+
   }
 
-}
-
-hrc_prof <- function(x, prof = 0) {
-
-  if (is.null(x[[1]])) {
-    rep(prof, length(x))
-  } else {
-    purrr::map2(
-      rep(prof, length(x)),
-      lapply(x, hrc_prof, prof = prof + 1),
-      c
-    )
-  }
+  result
 
 }
 
