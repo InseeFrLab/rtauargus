@@ -4,9 +4,9 @@ subtitle: <h2>![logo R](R_logo_small.png)![logo &tau;-Argus](TauBall2_small.png)
 output:
   rmarkdown::html_vignette:
     toc: true
-    toc_depth : 3
+    toc_depth: 3
 params:
-  ta_lib :
+  ta_lib:
     label: "Version de Tau-Argus utilisée pour la vignette"
     value: "Poste_4.1.7"
     input: select
@@ -70,6 +70,13 @@ Ces différentes opérations peuvent être exécutées en une seule fois, mais a
 de manière modulaire. Elles permettent d'intégrer les tâches réalisées par
 &tau;-Argus dans une chaîne de traitement écrite en R.
 
+La syntaxe de certains arguments colle au plus près à la syntaxe _batch_ de 
+&tau;-Argus. Ceci permet d'utiliser un grand nombre de fonctionnalités sans 
+multiplier les arguments des fonctions. Le package pourra en outre s'adapter 
+plus facilement à d'éventuelles modifications du logiciel (nouvelles
+méthodes disponibles, options supplémentaires...). Les règles de syntaxe pour
+l'écriture de batch figurent dans le manuel de référence de &tau;-Argus.
+
 > _Le package a été développé sur la base des versions open source de &tau;
 > -Argus (versions 4.1 et supérieures), en particulier la dernière version
 > disponible lors du développement (4.1.7)._
@@ -130,7 +137,7 @@ installer au préalable (entre parenthèses les versions minimales requises).
 
 ```{r, echo = FALSE, comment = "•"}
 imports <- packageDescription("rtauargus", fields = "Imports")
-cat(gsub(",", "", imports))
+cat(gsub(", ", "\n", imports))
 ```
 
 ### Package
@@ -149,7 +156,7 @@ Le package _rtauargus_ est prêt à être installé depuis l'archive tar.gz.
 Cette partie explique comment effectuer une configuration minimale du package et
 comment appliquer le secret statistique en une seule instruction.
 
-### Configuration de l'emplacement de &tau;-Argus
+### Emplacement de &tau;-Argus
 
 Au chargement du package, la console affiche quelques informations :
 
@@ -194,8 +201,7 @@ effacé à la fin de la session R).
 - la (les) règle(s) à appliquer pour le secret primaire ;
 - la (les) méthode(s) pour la suppression des cases en secret secondaire.
 
-Les deux derniers arguments utilisent la même syntaxe que le batch &tau;-Argus
-(consulter le manuel de référence pour plus d'explications).
+Les deux derniers arguments utilisent la syntaxe batch &tau;-Argus.
 
 #### Exemple minimaliste
 
@@ -208,6 +214,9 @@ rtauargus(
 )
 ```
 
+Comme aucune variable de réponse n'est renseignée, un comptage est effectué
+("&lt;freq&gt;").
+
 #### Exemple élaboré
 
 D'autres paramètres sont disponibles. On peut par exemple compléter
@@ -218,7 +227,7 @@ l'instruction précédente avec :
    premier tableau ;
  - un paramètre permettant de masquer le journal de &tau;-Argus dans la console.
 
-De plus, les tables produites ne sont plus simplement envoyés dans la console.
+De plus, les tables produites ne sont plus simplement envoyées dans la console.
 Elles sont stockées dans un objet `secret1` (une liste constituée de deux
 data.frame), que l'on pourra continuer de manipuler.
 
@@ -226,11 +235,11 @@ data.frame), que l'on pourra continuer de manipuler.
 secret1 <-
   rtauargus(
     microdata          = donnees,
-    explanatory_vars   = list("V1", c("V1", "V2")), # 2 tabulations
+    explanatory_vars   = list("V1", c("V1", "V2")), # 2 tabulations (V1, V1xV2)
     safety_rules       = "FREQ(3,10)",
-    suppress           = "GH(.,100)", # . remplace le numéro de tabulation
+    suppress           = "GH(.,100)",  # . remplace le numéro de tabulation
     output_options     = c("", "AS+"), # pas de statut pour le 1er tableau
-    show_batch_console = FALSE # pour masquer le journal
+    show_batch_console = FALSE         # pour masquer le journal
   )
 
 secret1
@@ -269,7 +278,7 @@ fonction `rtauargus`, à savoir :
 
 > **`micro_asc_rda()`&nbsp;&nbsp;&rarr;&nbsp;&nbsp;
     `micro_arb()`    &nbsp;&nbsp;&rarr;&nbsp;&nbsp;
-    `run_tau_argus()`&nbsp;&nbsp;&rarr;&nbsp;&nbsp;
+    `run_tauargus()`&nbsp;&nbsp;&rarr;&nbsp;&nbsp;
     `import()`**
 
 ### Fonction `micro_asc_rda`
@@ -432,9 +441,9 @@ micro_arb(
 #### Fichiers temporaires
 
 Dans l'exemple précédent, les noms des fichiers en sortie (`output_names`)
-n'étaient pas précisés, ce qui a conduit à la création de fichiers temporaires.
-Préciser le nom du fichier .arb n'est pas obligatoire non plus. Ces informations
-sont récupérables dans la valeur de retour de la fonction.
+n'étaient pas précisés, ce qui a conduit à la génération de noms de fichiers
+temporaires. Préciser le nom du fichier .arb n'est pas obligatoire non plus. Ces
+informations sont récupérables dans la valeur de retour de la fonction.
 
 ```{r arb_tmp}
 infos_arb <-
@@ -453,10 +462,10 @@ infos_arb
 </p>
 
 
-### Fonction `run_tau_argus`
+### Fonction `run_tauargus`
 
 Maintenant que les instructions ont été générées dans un fichier .arb, on peut
-le soummettre à &tau;-Argus en mode batch :
+le soumettre à &tau;-Argus en mode batch :
 
 ```{r run1, eval = params$eval_ta}
 secret2 <- run_tauargus("Z:/donnees.arb")
@@ -536,9 +545,9 @@ Ces options sont utilisées si un argument obligatoire d'une fonction n'est pas
 renseigné. Le nom de l'option est le nom de l'argument d'une fonction précédé de
 `rtauargus.` :
 
-> _Par exemple, `rtauargus.decimals` sera la valeur utilisée si l'argument
+> `rtauargus.decimals` sera par exemple la valeur utilisée si l'argument
 > `decimals` de la fonction `micro_asc_rda` n'est pas renseigné par
-> l'utilisateur._
+> l'utilisateur.
 
 Au chargement, le package attribue une valeur par défaut à toutes les options
 de rtauargus qui ne sont pas encore déclarées. Les options déjà définies par
@@ -644,6 +653,7 @@ différents._
 - Dernière mise à jour : **`r format(Sys.time(), "%d/%m/%Y")`**
 - Version de rtauargus utilisée : **`r packageVersion("rtauargus")`**
 - Version de &tau;-Argus utilisée : **`r unname(tauargus_info()["version"])`**
+- Version de R utilisée :  **`r packageVersion("base")`**
 
 #### Idées pour la suite
 
