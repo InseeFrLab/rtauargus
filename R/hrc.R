@@ -280,6 +280,8 @@ is_hrc <- function(crois_fin_agr) {
   # (i.e. le relation fin -> agr est une application au sens mathématique)
   # les lignes remplies de 0 sont aussi acceptées (causées par des NA)
 
+  if (!length(crois_fin_agr)) return(FALSE)
+
   fin_unique_agr <-
     apply(
       crois_fin_agr,
