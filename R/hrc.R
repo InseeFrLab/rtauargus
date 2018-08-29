@@ -133,7 +133,7 @@ write_hrc <- function(microdata,
   val_prof <- prof_list(list_hrc)
 
   # coupe branches avec unique valeur depuis une profondeur donnée
-  if (compact) val_prof <- val_prof[!duplicated(names(val_prof))]
+  if (compact) val_prof <- val_prof[!following_dup(names(val_prof))]
 
   # génère vecteur format Tau-Argus
   res <-

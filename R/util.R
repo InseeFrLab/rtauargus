@@ -50,6 +50,15 @@ df_param_defaut <- function(varnames, param_name, valvar) {
 
 }
 
+following_dup <- function(x) {
+
+  # doublons consécutifs
+
+  if (anyNA(x)) stop("impossible : valeur(s) manquante(s)")
+  c(FALSE, x[-1] == x[-length(x)])
+
+}
+
 
 # fonction normalizePath sans warning
 normPath2 <- purrr::partial(normalizePath, mustWork = FALSE)

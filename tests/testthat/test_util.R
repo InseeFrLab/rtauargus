@@ -1,6 +1,6 @@
 # cite --------------------------------------------------------------------
 
-context("cite")
+context(":::cite")
 
 test_that("cite", {
 
@@ -26,7 +26,7 @@ test_that("cite", {
 
 # df_param_defaut ---------------------------------------------------------
 
-context("df_param_defaut")
+context(":::df_param_defaut")
 
 test_that("df_param_defaut", {
 
@@ -104,6 +104,32 @@ test_that("df_param_defaut", {
   expect_equal(
     f_vn("param1", c(V1 = 1, V3 = 3)), # (types identiques)
     df_attendu(param1 = c(1, NA, 3, NA))
+  )
+
+})
+
+
+# following_dup -----------------------------------------------------------
+
+context(":::following_dup")
+
+following_dup <- rtauargus:::following_dup
+
+test_that("following_dup", {
+
+  expect_equal(
+    following_dup(1:3),
+    c(FALSE, FALSE, FALSE)
+  )
+
+  expect_equal(
+    following_dup(c(    1,    1,     2,     1,    1,     3,     2,    2,    2)),
+                  c(FALSE, TRUE, FALSE, FALSE, TRUE, FALSE, FALSE, TRUE, TRUE)
+  )
+
+  expect_error(
+    following_dup(c(1, NA, NA)),
+    "manquante"
   )
 
 })
