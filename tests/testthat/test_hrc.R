@@ -24,7 +24,7 @@ df <-
 
 # fill_na_hrc -------------------------------------------------------------
 
-context("fill_na_hrc")
+context(":::fill_na_hrc")
 
 fill_na_hrc <- rtauargus:::fill_na_hrc
 
@@ -66,7 +66,7 @@ test_that("différentes configurations et ordre des variables", {
 
 # sublevels ---------------------------------------------------------------
 
-context("sublevels")
+context(":::sublevels")
 
 sublevels_t <- rtauargus:::sublevels
 
@@ -253,7 +253,7 @@ test_that("détecte variables non hierarchiques", {
 
 # imbrique ----------------------------------------------------------------
 
-context("imbrique")
+context(":::imbrique")
 
 imbrique_t <- rtauargus:::imbrique
 
@@ -338,7 +338,7 @@ test_that("melange", {
 
 # hrc_list -----------------------------------------------------------------
 
-context("hrc_list")
+context(":::hrc_list")
 
 hrc_123 <- list(
   A = list(
@@ -468,7 +468,7 @@ test_that("4 input", {
 
 # prof_list ---------------------------------------------------------------
 
-context("prof_list")
+context(":::prof_list")
 
 prof_list <- rtauargus:::prof_list
 
@@ -534,7 +534,7 @@ test_that("4 niveaux", {
 
 # is_hrc ------------------------------------------------------------------
 
-context("is_hrc")
+context(":::is_hrc")
 
 is_hrc <- rtauargus:::is_hrc
 
@@ -685,7 +685,7 @@ test_that("sortie table()", {
 
 # check_seq_prof ----------------------------------------------------------
 
-context("check_seq_prof")
+context(":::check_seq_prof")
 
 check_seq_prof <- rtauargus:::check_seq_prof
 
@@ -712,7 +712,7 @@ test_that("input valide", {
 
 # normalise_hrc -----------------------------------------------------------
 
-context("normalise_hrc")
+context(":::normalise_hrc")
 
 normalise_hrc <- rtauargus:::normalise_hrc
 
@@ -753,7 +753,7 @@ test_that("microdata absent si V1>V2...", {
 
 # df_hierlevels -----------------------------------------------------------
 
-context("df_hierlevels")
+context(":::df_hierlevels")
 
 df_hierlevels <- rtauargus:::df_hierlevels
 
@@ -801,3 +801,135 @@ test_that("error", {
 })
 
 # write_hrc ---------------------------------------------------------------
+
+context("write_hrc")
+
+test_that("hierlevels", {
+
+  expect_error(
+    write_hrc(df, c("niv1", "niv2"), hierlevels = "2 1"),
+    "une seule variable hierarchique a specifier"
+  )
+
+  expect_equal(
+    df %>% write_hrc("niv2", hierlevels = "1 1") %>% readLines(),
+    c("A", "@A1", "@A2", "B", "@B1", "@B2")
+  )
+
+})
+
+test_that("colonne absente", {
+
+  expect_error(
+    write_hrc(df, c("niv1", "niv0")),
+    "introuvable.+ niv0$"
+  )
+
+})
+
+test_that("un seul niveau", {
+
+  expect_warning(
+    res <- write_hrc(df, "niv2"),
+    "hierarchie d'un seul niveau"
+  )
+  expect_equal(readLines(res), c("A1", "A2", "B1", "B2"))
+
+})
+
+test_that("fill_na", {
+
+  hrc_complet <- purrr::partial(write_hrc, compact = FALSE) # [n'élague pas]
+
+  df$niv2[df$niv2 == "A1"] <- NA
+
+  # fill_na "up" ...................................................
+
+  expect_warning(
+    res <- hrc_complet(df, c("niv2", "niv1"), fill_na = "up"),
+    "valeurs manquantes imputees"
+  )
+  expect_equal(readLines(res), c("A", "@A", "@A2", "B", "@B1", "@B2"))
+    # ex-A1 imputés par le haut deviennent A
+
+  # fill_na "down" .................................................
+
+  expect_warning(
+    res <- hrc_complet(df, c("niv2", "niv1"), fill_na = "down"),
+    "valeurs manquantes imputees"
+  )
+  expect_equal(readLines(res), c("A", "@A2", "B", "@B1", "@B2"))
+    # pas de niveau inférieur à niv2 : imputation down sans effet,
+    # donc croisement A x NA simplement ignorés
+
+  df <- df[df$niv1 == "A", ]
+  expect_warning(
+    res <- hrc_complet(df, c("niv3", "niv2"), fill_na = "down"),
+    "valeurs manquantes imputees"
+  )
+  expect_equal(
+    readLines(res),
+    c("A1x", "@A1x", "A1z", "@A1z", "A2", "@A2y", "@A2z")
+  )  # ex-A1 imputés par le bas deviennent A1x et A1z
+
+})
+
+test_that("compact", {
+
+  df$niv3[df$niv1 == "A"] <- NA # vide niveau 3 pour A
+
+  expect_warning(
+    res <- write_hrc(df, paste0("niv", 3:1), compact = TRUE),
+    "valeurs manquantes imputees"
+  )
+
+  expect_equal(
+    readLines(res),
+    c("A", "@A1", "@A2", "B", "@B1", "@@B1x", "@@B1y", "@B2", "@@B2x", "@@B2z")
+  )
+
+  df$niv2[df$niv1 == "A"] <- NA # vide aussi niveau 2 pour A
+
+  expect_warning(
+    res <- write_hrc(df, paste0("niv", 3:1), compact = TRUE),
+    "valeurs manquantes imputees"
+  )
+
+  expect_equal(
+    readLines(res),
+    c("A", "B", "@B1", "@@B1x", "@@B1y", "@B2", "@@B2x", "@@B2z")
+  )
+
+})
+
+test_that("validité arbre", {
+
+  # vide niveau intermédiaire (produira une erreur si compactage)
+  df$niv2<- NA
+
+  expect_error(
+    suppressWarnings(write_hrc(df, paste0("niv", 3:1), compact = TRUE)),
+    "Niveaux de hierarchie incoherents"
+  )
+
+})
+
+test_that("hierleadstring", {
+
+  expect_equal(
+    df %>%
+      write_hrc(paste0("niv", 2:1), hierleadstring = ":") %>%
+      readLines(),
+    c("A", ":A1", ":A2", "B", ":B1", ":B2")
+  )
+
+})
+
+test_that("cas exotiques", {
+  skip("a->b b->a")
+  # expect_error ?
+  write_hrc(
+    data.frame(niv1 = letters[1:2], niv2 = letters[2:1]),
+    c("niv2", "niv1")
+  )
+})
