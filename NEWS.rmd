@@ -6,6 +6,12 @@ output: rmarkdown::html_vignette
 
 <!-- [`r format(Sys.Date(), "%d/%m%/%Y")`] * -->
 
+## rtauargus 0.2.0.9000
+
+[`r format(Sys.Date(), "%d/%m%/%Y")`] *
+
+* **write_hrc()** : prise en compte de davantage de cas particuliers
+
 ## rtauargus 0.2.0
 
 [14/08/2018]
