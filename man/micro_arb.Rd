@@ -10,8 +10,8 @@ micro_arb(arb_filename = NULL, asc_filename, rda_filename = NULL,
   weighted = getOption("rtauargus.weighted"), suppress,
   linked = getOption("rtauargus.linked"), output_names = NULL,
   output_type = getOption("rtauargus.output_type"),
-  output_options = getOption("rtauargus.output_options"), apriori = NULL,
-  gointeractive = FALSE)
+  output_options = getOption("rtauargus.output_options"),
+  apriori = NULL, gointeractive = FALSE)
 }
 \arguments{
 \item{arb_filename}{nom du fichier arb généré (avec

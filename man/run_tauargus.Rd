@@ -4,8 +4,8 @@
 \alias{run_tauargus}
 \title{Exécute un batch Tau-Argus}
 \usage{
-run_tauargus(arb_filename, tauargus_exe = getOption("rtauargus.tauargus_exe"),
-  logbook = NULL,
+run_tauargus(arb_filename,
+  tauargus_exe = getOption("rtauargus.tauargus_exe"), logbook = NULL,
   show_batch_console = getOption("rtauargus.show_batch_console"),
   import = getOption("rtauargus.import"), ...)
 }
