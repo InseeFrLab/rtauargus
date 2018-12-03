@@ -43,7 +43,7 @@ Le nom du fichier hrc (utile dans le cas d'un fichier temporaire au
   nom aléatoire).
 }
 \description{
-Crée un fichier hrc (hiérarachie) à partir de plusieurs variables d'un jeu de
+Crée un fichier hrc (hiérarchie) à partir de plusieurs variables d'un jeu de
 microdonnées.
 }
 \details{

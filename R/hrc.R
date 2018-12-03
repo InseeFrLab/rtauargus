@@ -2,7 +2,7 @@
 
 #' Crée un fichier hrc à partir de microdonnées
 #'
-#' Crée un fichier hrc (hiérarachie) à partir de plusieurs variables d'un jeu de
+#' Crée un fichier hrc (hiérarchie) à partir de plusieurs variables d'un jeu de
 #' microdonnées.
 #'
 #' La fonction reconstitue la hiérarchie des variables à partir des niveaux
