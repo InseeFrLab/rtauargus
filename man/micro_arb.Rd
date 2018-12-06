@@ -65,7 +65,8 @@ Valeur par défaut du package : \code{"2"} (csv for pivot-table).}
 par défaut du package : \code{"AS+"} (affichage du statut). Pour ne
 spécifier aucune option, \code{""}.}
 
-\item{apriori}{(pas encore implémenté)}
+\item{apriori}{fichier(s) d'informations \emph{a priori}. Voir ci-dessous
+pour la syntaxe.}
 
 \item{gointeractive}{pour avoir la possibilité de lancer le batch depuis le
 menu de Tau-Argus (\code{FALSE} par défaut).}
@@ -97,6 +98,23 @@ tabulation, en 2 pour la deuxième tabulation, etc.
 
 La fonction ne vérifie pas si les fichiers asc et rda existent.
 }
+\section{Informations \emph{a priori}}{
+
+Il est possible de fournir un fichier a priori (.hst) pour chaque tabulation.
+
+La manière la plus simple est de passer un vecteur contenant autant de noms de
+fichiers hst que de tabulations. Si le fichier est le même pour toutes les
+tabulations, spécifier le nom de ce fichier (il sera utilisé pour toutes les
+tabulations).
+
+Les options supplémentaires sont facultatives. Pour modifier les valeurs par
+défaut, passer une liste ayant comme premier élément le(s) fichier(s) hst et
+compléter avec les éléments portant les noms \code{sep} pour le séparateur,
+\code{ignore_err} pour IgnoreError et \code{exp_triv} pour ExpandTrivial.
+Comme pour les noms de fichiers, spécifier une seule valeur par paramètre ou
+autant de valeurs que de tabulations.
+}
+
 \examples{
 # donnees fictives
 micro_df <- data.frame(

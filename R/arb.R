@@ -84,6 +84,55 @@ suppr_writetable <- function(suppress,
 
 }
 
+
+# Paramètre a priori ------------------------------------------------------
+
+# Normalise parametre "apriori" pour le faire passer dans la
+# fonction apriori_batch
+
+norm_apriori_params <- function(params) {
+
+  if (is.character(params)) {
+
+    # forme simple : vecteur des noms de fichiers
+    list(params, sep = ',', ignore_err = 0 , exp_triv = 0)
+
+  } else if (is.list(params)) {
+
+    # options supplémentaires (valeurs par défaut si absents)
+    if (is.null(params$sep))        params$sep        <- ","
+    if (is.null(params$ignore_err)) params$ignore_err <- 0
+    if (is.null(params$exp_triv))   params$exp_triv   <- 0
+
+    params
+
+  }
+
+}
+
+# Génère <APRIORI>s
+
+apriori_batch <- function(ntab, hst_names, sep = ',', ignore_err = 0 , exp_triv = 0) {
+
+  # verif pour éviter recyclage qd longueurs args > 1 ne correspondent pas
+  n <- lengths(list(hst_names, sep, ignore_err, exp_triv))
+  if (any(ntab > 1 & n > 1 & n != ntab)) stop("longueur arguments")
+  if (any(ntab == 1 & n != 1)) stop("longueur arguments")
+
+  paste0(
+    '<APRIORI> "',
+    normPath2(hst_names), '",',
+    seq(ntab), ',"',
+    sep, '",',
+    ignore_err, ',',
+    exp_triv
+  )
+
+}
+
+
+# Exportée ----------------------------------------------------------------
+
 #' Crée un fichier batch (.arb) pour microdonnées
 #'
 #' Crée un fichier batch pour microdonnées, exécutable par Tau-Argus en ligne de
@@ -106,6 +155,21 @@ suppr_writetable <- function(suppress,
 #' tabulation, en 2 pour la deuxième tabulation, etc.
 #'
 #' La fonction ne vérifie pas si les fichiers asc et rda existent.
+#'
+#' @section Informations \emph{a priori}:
+#' Il est possible de fournir un fichier a priori (.hst) pour chaque tabulation.
+#'
+#' La manière la plus simple est de passer un vecteur contenant autant de noms de
+#' fichiers hst que de tabulations. Si le fichier est le même pour toutes les
+#' tabulations, spécifier le nom de ce fichier (il sera utilisé pour toutes les
+#' tabulations).
+#'
+#' Les options supplémentaires sont facultatives. Pour modifier les valeurs par
+#' défaut, passer une liste ayant comme premier élément le(s) fichier(s) hst et
+#' compléter avec les éléments portant les noms \code{sep} pour le séparateur,
+#' \code{ignore_err} pour IgnoreError et \code{exp_triv} pour ExpandTrivial.
+#' Comme pour les noms de fichiers, spécifier une seule valeur par paramètre ou
+#' autant de valeurs que de tabulations.
 #'
 #' @param arb_filename nom du fichier arb généré (avec
 #'   extension). Si non renseigné, un fichier temporaire.
@@ -143,7 +207,8 @@ suppr_writetable <- function(suppress,
 #' @param output_options options supplémentaires des fichiers en sortie. Valeur
 #'   par défaut du package : \code{"AS+"} (affichage du statut). Pour ne
 #'   spécifier aucune option, \code{""}.
-#' @param apriori (pas encore implémenté)
+#' @param apriori fichier(s) d'informations \emph{a priori}. Voir ci-dessous
+#'   pour la syntaxe.
 #' @param gointeractive pour avoir la possibilité de lancer le batch depuis le
 #'   menu de Tau-Argus (\code{FALSE} par défaut).
 #'
@@ -246,6 +311,23 @@ micro_arb <- function(arb_filename     = NULL,
 
   # read...
   res <- c(res, "<READMICRODATA>")
+
+  # apriori (doit figurer avant suppress)
+  if (!is.null(apriori)) {
+
+    std_apriori <- norm_apriori_params(apriori)
+    ap_batch <-
+      apriori_batch(
+        ntab = length(explanatory_vars),
+        hst_names = std_apriori[[1]],
+        sep = std_apriori$sep,
+        ignore_err = std_apriori$ignore_err,
+        exp_triv = std_apriori$exp_triv
+      )
+
+    res <- c(res, ap_batch)
+
+  }
 
   # suppress + writetable
   sw <-
