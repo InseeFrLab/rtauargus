@@ -213,6 +213,11 @@ micro_arb <- function(arb_filename     = NULL,
   }
   if (is.null(output_options)) output_options <- ""
 
+  # correspondance nombre tab et nombre fichiers sortie
+  if (length(explanatory_vars) != length(output_names)) {
+    stop("renseigner autant de noms de fichiers que de tabulations")
+  }
+
   # chemins absolus
   asc_full <- normPath2(asc_filename)
   rda_full <- normPath2(rda_filename)
