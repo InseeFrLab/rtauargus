@@ -23,7 +23,13 @@ specif_safety <- function(explanatory_vars,
       shadow_var,
       cost_var
     )
+
   specify_tables <- paste("<SPECIFYTABLE>", specify_tables)
+
+  if (!is.null(names(explanatory_vars))) {
+    table_ids <- sprintf('// <TABLE_ID> "%s"', names(explanatory_vars))
+    specify_tables <- paste(table_ids, specify_tables, sep = "\n")
+  }
 
   safety_rules <- paste("<SAFETYRULE>", safety_rules)
   sr_weight <- mapply(
@@ -156,6 +162,13 @@ apriori_batch <- function(ntab, hst_names, sep = ',', ignore_err = 0 , exp_triv 
 #'
 #' La fonction ne vérifie pas si les fichiers asc et rda existent.
 #'
+#' @section Identifiants des tableaux:
+#' Si la liste \code{explanatory_vars} comporte des noms, ceux-ci seront
+#' utilisés dans le batch pour donner un identifiant au tableau, sous la forme
+#' d'une ligne de commentaire (\code{// <TABLE_ID> "..."}). Ils seront
+#' réutilisés par la fonction \code{import} pour nommer les tableaux formats R
+#' en sortie.
+#'
 #' @section Informations \emph{a priori}:
 #' Il est possible de fournir un fichier a priori (.hst) pour chaque tabulation.
 #'
@@ -184,7 +197,7 @@ apriori_batch <- function(ntab, hst_names, sep = ',', ignore_err = 0 , exp_triv 
 #'   Si une seule tabulation, un simple vecteur des variables à croiser est
 #'   accepté (pas besoin de \code{list(...)}).
 #' @param response_var variable de réponse à sommer, ou comptage si
-#'   \code{"<freq>"}.
+#'   \code{"<freq>"}. Une seule valeur ou autant de valeurs que de tabulations.
 #' @param shadow_var variable(s) pour l'application du secret primaire. Si non
 #'   renseigné, \code{response_var} sera utilisé par Tau-Argus.
 #' @param cost_var variable(s) de coût pour le secret secondaire.

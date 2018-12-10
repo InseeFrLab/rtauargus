@@ -176,7 +176,8 @@ meta_import <- function(data,
 #'   informations nécessaires à l'import.
 #'
 #' @return Une liste d'un ou plusieurs data.frames. Chaque data.frame correspond
-#'   au résultat d'une tabulation.
+#'   au résultat d'une tabulation. Les noms des tableaux renseignés dans les
+#'   lignes du batch de la forme \code{// <TABLE_ID> "..."} sont récupérés.
 #'
 #' @section Attributs:
 #'
@@ -240,6 +241,18 @@ import <- function(arb_filename) {
     USE.NAMES = FALSE,
     SIMPLIFY = FALSE
   )
+
+  # id des tableaux
+  motif_tid <- "^// +<TABLE_ID> +\"(.*)\"$"
+  lignes_tid <- grep(motif_tid, lignes, value = TRUE)
+  if (length(lignes_tid)) {
+    t_id <-
+      stringr::str_match(
+        lignes_tid,
+        "^// +<TABLE_ID> +\"(.*)\"$"
+      )[ , 2]
+    names(res) <- t_id
+  }
 
   # ajout metadonnees batch
   # (specif table, safetyrule, suppress, output_type, output_options)

@@ -12,7 +12,8 @@ informations nécessaires à l'import.}
 }
 \value{
 Une liste d'un ou plusieurs data.frames. Chaque data.frame correspond
-  au résultat d'une tabulation.
+  au résultat d'une tabulation. Les noms des tableaux renseignés dans les
+  lignes du batch de la forme \code{// <TABLE_ID> "..."} sont récupérés.
 }
 \description{
 Importe dans R les résultats générés par Tau-Argus à partir des informations
