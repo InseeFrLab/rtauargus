@@ -6,6 +6,16 @@ output: rmarkdown::html_vignette
 
 <!-- [`r format(Sys.Date(), "%d/%m%/%Y")`] * -->
 
+## rtauargus 0.3.0
+
+[29/03/2019]
+
+* **micro_arb()** :
+    - ajoute paramètre apriori (fichiers hst)
+    - conserve les noms de tabulations en sortie si précisés dans
+      `explanatory_vars`
+* vérification plus rigoureuse de certains paramètres
+
 ## rtauargus 0.2.1
 
 [03/12/2018]
