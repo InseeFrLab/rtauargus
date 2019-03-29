@@ -647,6 +647,18 @@ différents._
 
 ## Autres informations
 
+#### Autres fonctionnalités
+
+Certaines fonctionnalités du package ne sont pas évoquées dans ce document de
+prise en main :
+
+- gestion de tableaux liés (argument `linked` dans `micro_arb`)
+- création de variables hiérarchiques à partir de microdonnées (fonction
+  `write_hrc`).
+- prise en compte de fichier apriori (argument `apriori` dans `micro_arb`)
+
+Consulter l'aide de ces fonctions pour plus d'informations.
+
 #### À propos de cette vignette
 
 - Auteur : **<a href="mailto:pierre-yves.berrard@insee.fr">Pierre-Yves Berrard</a>**
