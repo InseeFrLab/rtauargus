@@ -269,6 +269,10 @@ micro_asc_rda <- function(microdata,
 
   # hierachical  ......................................................
 
+  if (!is.null(hrc) & (is.null(names(hrc)) | any(names(hrc) == ""))) {
+    stop("noms manquants pour hrc. Exemple : hrc = c(VAR = \"var.hrc\")")
+  }
+
   norm_hrc <-
     normalise_hrc(
       hrc,
