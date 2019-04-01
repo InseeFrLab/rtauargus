@@ -6,3 +6,4 @@
 ^NEWS\.html$
 ^tmp$
 # ^vignettes/.+\.png$
+^README.Rmd$
