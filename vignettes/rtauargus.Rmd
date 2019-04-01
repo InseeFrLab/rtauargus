@@ -659,14 +659,6 @@ prise en main :
 
 Consulter l'aide de ces fonctions pour plus d'informations.
 
-#### À propos de cette vignette
-
-- Auteur : **<a href="mailto:pierre-yves.berrard@insee.fr">Pierre-Yves Berrard</a>**
-- Dernière mise à jour : **`r format(Sys.time(), "%d/%m/%Y")`**
-- Version de rtauargus utilisée : **`r packageVersion("rtauargus")`**
-- Version de &tau;-Argus utilisée : **`r unname(tauargus_info()["version"])`**
-- Version de R utilisée :  **`r packageVersion("base")`**
-
 #### Idées pour la suite
 
 - implémenter paramètres `request`...
@@ -674,16 +666,28 @@ Consulter l'aide de ces fonctions pour plus d'informations.
 - importer d'autres formats ("5", "6" ?)
 - ...
 
+#### Code source
+
+Le code source est disponible sur la [plate-forme innovation Insee](https://git.stable.innovation.insee.eu/xkfzv9/rtauargus).
+
 #### Signaler un problème, suggérer une amélioration
 
 Le package est en cours de construction. Toutes les fonctionnalités de
 &tau;-Argus n'ont pas été intégrées (la finalité n'est pas de les intégrer
 toutes, seulement les plus fréquemment utilisées).
 
-En attendant un éventuel dépôt sur github, les retours (positifs ou négatifs)
-peuvent se faire
+Pour tout retour ou signalement d'erreur, utiliser de préférence [ce lien](https://git.stable.innovation.insee.eu/xkfzv9/rtauargus/issues) (ou
+éventuellement un
 <a href="mailto:pierre-yves.berrard@insee.fr?subject=package rtauargus">
-par courrier électronique</a>.
+courrier électronique</a>).
+
+#### À propos de cette vignette
+
+- Auteur : **<a href="mailto:pierre-yves.berrard@insee.fr">Pierre-Yves Berrard</a>**
+- Dernière mise à jour : **`r format(Sys.time(), "%d/%m/%Y")`**
+- Version de rtauargus utilisée : **`r packageVersion("rtauargus")`**
+- Version de &tau;-Argus utilisée : **`r unname(tauargus_info()["version"])`**
+- Version de R utilisée :  **`r packageVersion("base")`**
 
 <p style="text-align: right">
   <a href="#TOC" title="Retour sommaire">sommaire &uarr;</a>
