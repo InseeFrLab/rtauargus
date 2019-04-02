@@ -1,0 +1,11 @@
+stages:
+    - build
+
+variables:
+  GIT_SSL_NO_VERIFY: "1"
+
+build-java:
+    stage: build
+    image: git.stable.innovation.insee.eu:50000/innovation/images-ci/jdk:8
+    script:
+      - 'echo "Hello"'
