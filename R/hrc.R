@@ -90,6 +90,12 @@ write_hrc <- function(microdata,
 
   if (is.null(hrc_filename)) hrc_filename <- tempfile("RTA_", fileext = ".hrc")
 
+  # valeur par défaut du package si option vide
+
+  if (is.null(hierleadstring)) {
+    hierleadstring <- op.rtauargus$rtauargus.hierleadstring
+  }
+
   # hierlevels
 
   if (!is.null(hierlevels)) {

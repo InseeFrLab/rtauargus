@@ -208,6 +208,15 @@ micro_asc_rda <- function(microdata,
 
   microdata <- as.data.frame(microdata) # (probleme avec tibble notamment)
 
+  # valeur par défaut du package si option vide ...........................
+
+  if (is.null(decimals)) decimals <- op.rtauargus$rtauargus.decimals
+  if (is.null(hierleadstring)) {
+    hierleadstring <- op.rtauargus$rtauargus.hierleadstring
+  }
+  if (is.null(totcode)) totcode <- op.rtauargus$rtauargus.totcode
+  if (is.null(missing)) missing <- op.rtauargus$rtauargus.missing
+
   # ignore colonnes de longueurs nulles  ..................................
 
   colvides <- sapply(microdata, function(x) all(is.na(x)) | all(x == ""))

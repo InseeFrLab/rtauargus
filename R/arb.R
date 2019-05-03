@@ -271,6 +271,15 @@ micro_arb <- function(arb_filename     = NULL,
                       apriori          = NULL,
                       gointeractive    = FALSE) {
 
+  # valeur par défaut du package si option vide
+  if (is.null(response_var)) response_var <- op.rtauargus$rtauargus.response_var
+  if (is.null(weighted)) weighted <- op.rtauargus$rtauargus.weighted
+  if (is.null(linked)) linked <- op.rtauargus$rtauargus.linked
+  if (is.null(output_type)) output_type <- op.rtauargus$rtauargus.output_type
+  if (is.null(output_options)) {
+    output_options <- op.rtauargus$rtauargus.output_options
+  }
+
   # si une seule tabulation, vecteur autorisé
   if (is.atomic(explanatory_vars)) explanatory_vars <- list(explanatory_vars)
   nb_tabul <- length(explanatory_vars)

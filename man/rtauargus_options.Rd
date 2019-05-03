@@ -31,14 +31,17 @@ précédé de \code{rtauargus.} .
 l’utilisateur.}
 
 Au chargement, le package attribue une valeur par défaut à toutes les options
-de rtauargus qui ne sont pas encore déclarées. Les options déjà définies par
-l'utilisateur gardent leurs valeurs.
+de rtauargus qui ne sont pas encore déclarées (cf. tableau ci-dessous). Les
+options déjà définies par l'utilisateur gardent leurs valeurs.
 
 Elles peuvent être redéfinies pour une session par une instruction
 \code{options(rtauargus.}...\code{ = }...\code{)}, ou de manière globale si
 de telles instructions sont placées dans un fichier de configuration propre à
 l'utilisateur (fortement déconseillé si le programme a vocation à être
 reproductible).
+
+En cas d'effacement accidentel d'une option par l'utilisateur, les fonctions
+utiliseront les valeurs par défaut du package.
 }
 \section{Liste des options}{
 

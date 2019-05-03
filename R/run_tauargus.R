@@ -32,6 +32,13 @@ run_tauargus <- function(arb_filename,
                          import = getOption("rtauargus.import"),
                          ...) {
 
+  # valeur par défaut du package si option vide
+  if (is.null(tauargus_exe)) tauargus_exe <- op.rtauargus$rtauargus.tauargus_exe
+  if (is.null(show_batch_console)) {
+    show_batch_console <- op.rtauargus$rtauargus.show_batch_console
+  }
+  if (is.null(import)) import <- op.rtauargus$rtauargus.import
+
   arb_full <- normalizePath(arb_filename)
   tau_full <- normalizePath(tauargus_exe)
 
