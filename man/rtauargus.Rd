@@ -57,11 +57,12 @@ propre à Tau-Argus et de maintenir l'intégralité de la chaîne de traitements
 dans R.
 }
 \examples{
+\dontrun{
 rtauargus(
   microdata = data.frame(V1 = c("A", "A", "B", "C", "A"), V2 = "Z"),
   explanatory_vars = c("V1", "V2"),
   safety_rules = "FREQ(3,10)",
   suppress = "GH(.,100)",
   output_options = "AS+" # (exemple de parametre optionnel pour micro_arb)
-)
+)}
 }
