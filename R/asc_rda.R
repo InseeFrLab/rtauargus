@@ -152,7 +152,7 @@ write_rda <- function(info_vars) {
 #' ajouter des zéros à une variable entière, la convertir avec \code{as.double}
 #' au préalable.
 #'
-#' Les chiffres après la virgule peuvent être incorrects dans le fichie asc si
+#' Les chiffres après la virgule peuvent être incorrects dans le fichier asc si
 #' le nombre total de chiffres (avant ou après le séparateur décimal) est
 #' supérieur à 15. Voir \code{\link[gdata]{write.fwf}} (fonction utilisée pour
 #' écrire le fichier asc) pour plus de détails.
