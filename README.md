@@ -3,6 +3,8 @@
 rtauargus
 =========
 
+![](vignettes/R_logo_small.png) ![](vignettes/TauBall2_small.png)
+
 ### τ-Argus depuis R
 
 Le package *rtauargus* offre une interface **R** pour **τ-Argus**.
