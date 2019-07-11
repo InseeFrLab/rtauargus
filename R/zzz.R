@@ -15,9 +15,13 @@
 
 .onAttach <- function(libname, pkgname) {
 
+  ta_exe <- getOption("rtauargus.tauargus_exe")
+
   packageStartupMessage(
     '\n',
-    'Tau-Argus : "', getOption("rtauargus.tauargus_exe"), '"\n\n',
+    'Tau-Argus : "', ta_exe, '"\n',
+    if (!file.exists(ta_exe)) '  (note : emplacement inconnu)\n',
+    '\n',
     '  Pour changer ce repertoire :\n',
     '    options(rtauargus.tauargus_exe = "chemin/vers/TauArgus.exe")\n\n',
     '  Pour revenir a l\'emplacement par defaut :\n',

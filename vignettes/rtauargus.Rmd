@@ -165,8 +165,8 @@ library(rtauargus)
 ```
 
 En particulier, un emplacement plausible pour le logiciel &tau;-Argus est
-prédéfini. Il est possible de le changer pour toute la durée de la session R.
-Exemple :
+prédéfini. Il est possible de le changer pour toute la durée de la session R. Un
+message indique que cet emplacement est inconnu, on le modifie donc :
 
 ```{r opt_exe, include = FALSE}
 loc_tauargus <- unname(loc_tauargus[params$ta_lib])
