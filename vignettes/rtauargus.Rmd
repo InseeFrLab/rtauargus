@@ -253,6 +253,12 @@ secret1
 > caractères entre la parenthèse et la première virgule sont ignorés et les
 > numéros des tabulations calculés automatiquement._
 
+L'aide de la fonction ne décrit que les 4 arguments obligatoires. Les arguments
+optionnels disponibles sont documentés dans les fonctions élémentaires la
+constituant (`micro_asc_rda`, `micro_arb`, `run_tauargus`, `import`). Tout
+argument de ces fonctions peut être utilisé dans `rtauargus`. Leur
+fonctionnement est détaillé dans la section qui suit.
+
 <p style="text-align: right">
   <a href="#TOC" title="Retour sommaire">sommaire &uarr;</a>
 </p>
@@ -465,7 +471,8 @@ infos_arb
 ### Fonction `run_tauargus`
 
 Maintenant que les instructions ont été générées dans un fichier .arb, on peut
-le soumettre à &tau;-Argus en mode batch :
+le soumettre à &tau;-Argus en mode batch. On récupère la liste des tableaux
+secrétisés :
 
 ```{r run1, eval = params$eval_ta}
 secret2 <- run_tauargus("Z:/donnees.arb")
@@ -484,6 +491,10 @@ nécessaires sont présentes dans le fichier .arb. Des paramètres optionnels so
   console ;
 - `import` : si désactivé, la fonction ne fait que générer les fichiers texte 
   sans les importer dans R (voir section suivante pour plus de détails).
+
+Si les tabulations ont reçu un nom dans `micro_arb`, ces noms sont utilisés pour
+la liste de data.frames en sortie de `run_tauargus` (pas de noms définis dans
+l'exemple ci-dessus).
 
 <p style="text-align: right">
   <a href="#TOC" title="Retour sommaire">sommaire &uarr;</a>
@@ -668,7 +679,8 @@ Consulter l'aide de ces fonctions pour plus d'informations.
 
 #### Code source
 
-Le code source est disponible sur la [plate-forme innovation Insee](https://git.stable.innovation.insee.eu/xkfzv9/rtauargus).
+Le code source est disponible sur la
+[plate-forme innovation Insee](https://git.stable.innovation.insee.eu/xkfzv9/rtauargus).
 
 #### Signaler un problème, suggérer une amélioration
 
@@ -676,10 +688,9 @@ Le package est en cours de construction. Toutes les fonctionnalités de
 &tau;-Argus n'ont pas été intégrées (la finalité n'est pas de les intégrer
 toutes, seulement les plus fréquemment utilisées).
 
-Pour tout retour ou signalement d'erreur, utiliser de préférence [ce lien](https://git.stable.innovation.insee.eu/xkfzv9/rtauargus/issues) (ou
-éventuellement un
-<a href="mailto:pierre-yves.berrard@insee.fr?subject=package rtauargus">
-courrier électronique</a>).
+Pour tout retour ou signalement d'erreur, utiliser de préférence
+[ce lien](https://git.stable.innovation.insee.eu/xkfzv9/rtauargus/issues)
+(cliquer sur **"New issue"**). Nécessite d'être connecté au gitlab-Insee.
 
 #### À propos de cette vignette
 
