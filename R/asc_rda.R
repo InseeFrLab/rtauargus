@@ -143,6 +143,10 @@ write_rda <- function(info_vars) {
 #' Pour un fichier hrc réutilisable, il est nécessaire de le créer au préalable
 #' à l'aide de \code{write_hrc}.
 #'
+#' Les trois méthodes nécessitent que les éléments du vecteur en paramètre
+#' soient nommés (avec le nom de la variable), même s'il n'y a qu'un seul
+#' élément.
+#'
 #' @section Nombre de décimales:
 #'
 #' Le paramètre \code{decimals} indique le nombre minimal de décimales à faire

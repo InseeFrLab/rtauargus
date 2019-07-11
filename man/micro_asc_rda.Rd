@@ -114,6 +114,10 @@ quelconque avant et après les ">")}
 Les deux dernières méthodes passent par la création d'un fichier temporaire.
 Pour un fichier hrc réutilisable, il est nécessaire de le créer au préalable
 à l'aide de \code{write_hrc}.
+
+Les trois méthodes nécessitent que les éléments du vecteur en paramètre
+soient nommés (avec le nom de la variable), même s'il n'y a qu'un seul
+élément.
 }
 
 \section{Nombre de décimales}{
