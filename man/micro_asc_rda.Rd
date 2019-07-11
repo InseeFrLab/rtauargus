@@ -132,6 +132,11 @@ supérieur à 15. Voir \code{\link[gdata]{write.fwf}} (fonction utilisée pour
 écrire le fichier asc) pour plus de détails.
 }
 
+\section{Voir aussi}{
+ La fonction \code{\link{rtauargus}}, qui utilise cette
+fonction.
+}
+
 \examples{
 # donnees fictives
 micro_df <-

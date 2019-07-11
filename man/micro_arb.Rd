@@ -124,6 +124,11 @@ Comme pour les noms de fichiers, spécifier une seule valeur par paramètre ou
 autant de valeurs que de tabulations.
 }
 
+\section{Voir aussi}{
+ La fonction \code{\link{rtauargus}}, qui utilise cette
+fonction.
+}
+
 \examples{
 # donnees fictives
 micro_df <- data.frame(

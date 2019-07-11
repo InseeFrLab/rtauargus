@@ -44,3 +44,8 @@ Attributs présents uniquement si l'option correspondante a été renseignée pa
 l'utilisateur : \code{shadow_var}, \code{cost_var}, \code{output_options}.
 }
 
+\section{Voir aussi}{
+ La fonction \code{\link{rtauargus}}, qui utilise cette
+fonction.
+}
+

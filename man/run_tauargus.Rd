@@ -41,3 +41,8 @@ chargement du package. De fait, l'argument \code{tauargus_exe} n'aura
 normalement pas à être spécifié (sauf pour surcharger l'option globale le
 temps de l'exécution de la foncion).
 }
+\section{Voir aussi}{
+ La fonction \code{\link{rtauargus}}, qui utilise cette
+fonction.
+}
+

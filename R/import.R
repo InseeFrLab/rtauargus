@@ -191,6 +191,8 @@ meta_import <- function(data,
 #' Attributs présents uniquement si l'option correspondante a été renseignée par
 #' l'utilisateur : \code{shadow_var}, \code{cost_var}, \code{output_options}.
 #'
+#' @inheritSection micro_asc_rda Voir aussi
+#'
 #' @importFrom dplyr %>%
 #' @importFrom purrr map_at
 #' @importFrom purrr transpose

@@ -23,6 +23,8 @@
 #'   \item{\code{NULL} sinon}.
 #' }
 #'
+#' @inheritSection micro_asc_rda Voir aussi
+#'
 #' @export
 
 run_tauargus <- function(arb_filename,

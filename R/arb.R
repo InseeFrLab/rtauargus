@@ -228,6 +228,8 @@ apriori_batch <- function(ntab, hst_names, sep = ',', ignore_err = 0 , exp_triv 
 #' @return Une liste de deux éléments : le nom du fichier arb, les noms des
 #'   fichiers en sortie (utile pour récupérer les noms générés aléatoirement).
 #'
+#' @inheritSection micro_asc_rda Voir aussi
+#'
 #' @examples
 #' # donnees fictives
 #' micro_df <- data.frame(
