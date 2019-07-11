@@ -4,7 +4,14 @@ subtitle: Journal des modifications
 output: rmarkdown::html_vignette
 ---
 
-<!-- [`r format(Sys.Date(), "%d/%m%/%Y")`] * -->
+## rtauargus 0.3.1
+
+[11/07/2019]
+
+* informe de l'absence de tauargus.exe au chargement du package
+* diverses améliorations de la documentation (rubriques d'aide et vignette)
+* utilise valeurs par défaut des options en cas d'effacement accidentel par
+  l'utilisateur
 
 ## rtauargus 0.3.0
 
