@@ -130,18 +130,9 @@ fonction.
 }
 
 \examples{
-# donnees fictives
-micro_df <- data.frame(
-  REGION = c("44", "11", "11"),
-      CJ = c("1" , "2" , "1" ),
-      CA = c( 100,  0  ,  7  )
-  )
-# cree les inputs asc et rda (dans dossier temporaire)
-tmp <- micro_asc_rda(micro_df)
-
-# cree fichier arb
+# creation fichier arb
 infos_arb <- micro_arb(
-  asc_filename = tmp$asc_filename,
+  asc_filename = "donnees.asc",
   explanatory_vars = list(c("REGION", "CJ"), c("REGION")),
   response_var = c("CA", "<freq>"),
   safety_rules = c("NK(1,85)|FREQ(3,10)", "FREQ(3,10)"),
@@ -151,6 +142,6 @@ infos_arb <- micro_arb(
   output_type = "2"
 )
 
-# Visualisation du fichier batch dans la console
+# Visualisation du fichier dans la console
 file.show(infos_arb$arb_filename, pager = "console")
 }
