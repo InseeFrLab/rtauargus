@@ -125,12 +125,13 @@ meta_import <- function(data,
                         response,
                         shadow,
                         cost,
+                        apriori,
                         safetyrule,
                         suppress,
                         output_type,
                         output_options) {
 
-  ## ajoute les meta donnees du batch (atrributs) à chacun des tableaux exportés
+  ## ajoute les meta donnees du batch (atrributs) à un tableau exporté
 
   # liés ?
   num_tab <- stringr::str_match(suppress, "\\((\\d+)")[ , 2]
@@ -145,6 +146,7 @@ meta_import <- function(data,
     response_var     = response,
     shadow_var       = if (shadow != "") shadow,
     cost_var         = if (cost != "") cost,
+    apriori          = if (!is.na(apriori)) apriori,
     safetyrule       = safetyrule,
     suppress         = suppress,
     linked           = linked,
@@ -248,12 +250,18 @@ import <- function(arb_filename) {
   motif_tid <- "^// +<TABLE_ID> +\"(.*)\"$"
   lignes_tid <- grep(motif_tid, lignes, value = TRUE)
   if (length(lignes_tid)) {
-    t_id <-
-      stringr::str_match(
-        lignes_tid,
-        "^// +<TABLE_ID> +\"(.*)\"$"
-      )[ , 2]
+    t_id <- stringr::str_match(lignes_tid, motif_tid)[ , 2]
     names(res) <- t_id
+  }
+
+  # apriori : detection fichiers et numéros de tabulation associés
+  apriori <- rep(NA, length(res)) # init vecteur vide
+  motif_apriori <- '^ *<APRIORI> *"(.+?)", *(\\d{1,2}),.+$'
+  lignes_apriori <- grep(motif_apriori, lignes, value = TRUE)
+  if (length(lignes_apriori)) {
+    infos_apriori <- stringr::str_match(lignes_apriori, motif_apriori)
+    num_tab <- as.integer(infos_apriori[ , 3])
+    apriori[num_tab] <- infos_apriori[ , 2]
   }
 
   # ajout metadonnees batch
@@ -264,6 +272,7 @@ import <- function(arb_filename) {
     infos_specifytable$response,
     infos_specifytable$shadow,
     infos_specifytable$cost,
+    apriori,
     commandes$safetyrule,
     commandes$suppress,
     output_types,
