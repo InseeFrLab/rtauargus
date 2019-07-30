@@ -282,10 +282,10 @@ systématiquement regénérés, même si leur contenu était identique.
 Pour cela, on peut utiliser les fonctions appelées successivement par la
 fonction `rtauargus`, à savoir :
 
-> **`micro_asc_rda()`&nbsp;&nbsp;&rarr;&nbsp;&nbsp;
-    `micro_arb()`    &nbsp;&nbsp;&rarr;&nbsp;&nbsp;
-    `run_tauargus()`&nbsp;&nbsp;&rarr;&nbsp;&nbsp;
-    `import()`**
+> **[micro_asc_rda()](#fonction-micro_asc_rda) &nbsp;&nbsp;&rarr;&nbsp;&nbsp;
+    [micro_arb()](#fonction-micro_arb)         &nbsp;&nbsp;&rarr;&nbsp;&nbsp;
+    [run_tauargus()](#fonction-run_tauargus)   &nbsp;&nbsp;&rarr;&nbsp;&nbsp;
+    [import()](#fonction-import)**
 
 ### Fonction `micro_asc_rda`
 
