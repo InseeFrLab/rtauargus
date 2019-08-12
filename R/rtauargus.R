@@ -30,10 +30,24 @@ param_function <- function(f, list_param) {
 #' propre à Tau-Argus et de maintenir l'intégralité de la chaîne de traitements
 #' dans R.
 #'
-#' @inheritParams micro_asc_rda
 #' @inheritParams micro_arb
+#' @param microdata [\strong{obligatoire}] data.frame contenant les microdonnées
+#'   (ou chemin vers des fichiers texte déjà présents : voir section
+#'   \emph{Microdonnées déjà sous forme de fichiers texte}).
 #' @param ... paramètres optionnels pour \code{micro_asc_rda}, \code{micro_arb}
 #'    et \code{run_tauargus}. Voir l'aide de ces fonctions.
+#'
+#' @section Microdonnées déjà sous forme de fichiers texte: Pour utiliser des
+#'  fichiers asc et rda existant déjà, il est possible de fournir à la place du
+#'  data.frame un vecteur caractère indiquant le chemin de ces fichiers. Le
+#'  premier élément de ce vecteur est le fichier asc, le deuxième élément le
+#'  fichier rda. Le fichier rda peut être omis s'il porte le même nom que le
+#'  fichier asc (à l'extension près).
+#'
+#'  Utiliser cette option pour lancer le processus complet sans la génération
+#'  des données en texte. Ne pas spécifier \code{asc_filename} ou
+#'  \code{rda_filename} (sert à nommer les fichiers texte à créer, ce qui est
+#'  sans objet ici).
 #'
 #' @return Si \code{import = TRUE}, une liste de data.frames (tableaux
 #'   secrétisés), \code{NULL} sinon.
@@ -57,7 +71,17 @@ rtauargus <- function(microdata,
 
   .dots <- list(...)
 
-  ## 0. VERIFS .............................
+  ## 0. CONFLITS PARAMETRES .................
+
+  # microdata pas un data.frame et asc/rda_filename spécifié
+  if (!is.data.frame(microdata) &
+      !(is.null(.dots$asc_filename) & is.null(.dots$rda_filename))) {
+    stop(
+      "\nIncoherence parametres :\n",
+      " asc_filename ou rda_filename defini(s) alors que microdata sous",
+      " forme de fichier texte"
+    )
+  }
 
   # weighted_var necessaire si un weighted = TRUE
   any_weighted <- any(getOption("rtauargus.weighted"))
@@ -72,12 +96,35 @@ rtauargus <- function(microdata,
 
   ## 1. MICRO_ASC_RDA  .....................
 
-  # parametres
-  param_asc_rda <- param_function(micro_asc_rda, .dots)
-  param_asc_rda$microdata <- microdata
+  if (is.data.frame(microdata)) {
+    # si microdata est un data.frame, crée les fichiers temporaires asc et rda
+    # (récupère leurs noms dans liste 'input')
 
-  # appel (+ récuperation noms asc et rda)
-  input <- do.call(micro_asc_rda, param_asc_rda)
+    # parametres
+    param_asc_rda <- param_function(micro_asc_rda, .dots)
+    param_asc_rda$microdata <- microdata
+    # appel (+ récuperation noms asc et rda)
+    input <- do.call(micro_asc_rda, param_asc_rda)
+
+  } else if (is.character(microdata) & length(microdata) <= 2) {
+    # si chemin vers fichiers texte, crée liste 'input' à partir de ceux-ci
+
+    if (is.na(microdata[2])) { # le fichier rda porte le même nom
+      microdata[2] <- sub("asc$", "rda", microdata[1])
+    }
+    if (!all(file.exists(microdata))) stop("fichier(s) asc ou rda manquant(s)")
+    input <- list(
+      asc_filename = microdata[1],
+      rda_filename = microdata[2]
+    )
+
+  } else {
+
+    stop(
+      "microdata obligatoirement data.frame ou chemin(s) vers fichiers texte"
+    )
+
+  }
 
   ## 2. MICRO_ARB .........................
 

@@ -7,8 +7,9 @@
 rtauargus(microdata, explanatory_vars, safety_rules, suppress, ...)
 }
 \arguments{
-\item{microdata}{[\strong{obligatoire}] data.frame contenant les
-microdonnées.}
+\item{microdata}{[\strong{obligatoire}] data.frame contenant les microdonnées
+(ou chemin vers des fichiers texte déjà présents : voir section
+\emph{Microdonnées déjà sous forme de fichiers texte}).}
 
 \item{explanatory_vars}{[\strong{obligatoire}] variables catégorielles, sous
 forme de liste de vecteurs. Chaque élément de la liste est un vecteur des
@@ -56,6 +57,20 @@ mécanisme permet à l'utilisateur de s'abstraire de la préparation des donnée
 propre à Tau-Argus et de maintenir l'intégralité de la chaîne de traitements
 dans R.
 }
+\section{Microdonnées déjà sous forme de fichiers texte}{
+ Pour utiliser des
+ fichiers asc et rda existant déjà, il est possible de fournir à la place du
+ data.frame un vecteur caractère indiquant le chemin de ces fichiers. Le
+ premier élément de ce vecteur est le fichier asc, le deuxième élément le
+ fichier rda. Le fichier rda peut être omis s'il porte le même nom que le
+ fichier asc (à l'extension près).
+
+ Utiliser cette option pour lancer le processus complet sans la génération
+ des données en texte. Ne pas spécifier \code{asc_filename} ou
+ \code{rda_filename} (sert à nommer les fichiers texte à créer, ce qui est
+ sans objet ici).
+}
+
 \examples{
 \dontrun{
 rtauargus(

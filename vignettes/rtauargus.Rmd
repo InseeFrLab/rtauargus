@@ -667,6 +667,8 @@ prise en main :
 - création de variables hiérarchiques à partir de microdonnées (fonction
   `write_hrc`).
 - prise en compte de fichier apriori (argument `apriori` dans `micro_arb`)
+- utilisation de la fonction `rtauargus` à partir de microdonnées déjà sous
+  forme de fichier texte (et non de data.frame)
 
 Consulter l'aide de ces fonctions pour plus d'informations.
 
