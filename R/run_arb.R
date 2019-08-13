@@ -25,14 +25,16 @@
 #'
 #' @inheritSection micro_asc_rda Voir aussi
 #'
+#' @aliases run_tauargus
+#'
 #' @export
 
-run_tauargus <- function(arb_filename,
-                         tauargus_exe = getOption("rtauargus.tauargus_exe"),
-                         logbook = NULL,
-                         show_batch_console = getOption("rtauargus.show_batch_console"),
-                         import = getOption("rtauargus.import"),
-                         ...) {
+run_arb <- function(arb_filename,
+                    tauargus_exe = getOption("rtauargus.tauargus_exe"),
+                    logbook = NULL,
+                    show_batch_console = getOption("rtauargus.show_batch_console"),
+                    import = getOption("rtauargus.import"),
+                    ...) {
 
   # valeur par défaut du package si option vide
   if (is.null(tauargus_exe)) tauargus_exe <- op.rtauargus$rtauargus.tauargus_exe
@@ -60,5 +62,38 @@ run_tauargus <- function(arb_filename,
   )
 
   if (import) import(arb_filename) else invisible(NULL)
+
+}
+
+# changement de nom
+# slow deprecation : dans un premier temps juste un avertissement,
+# remplacer par .Defunct à terme, puis supprimer définitivement
+
+#' @export
+#' @keywords internal
+
+run_tauargus <- function(arb_filename,
+                         tauargus_exe = getOption("rtauargus.tauargus_exe"),
+                         logbook = NULL,
+                         show_batch_console = getOption("rtauargus.show_batch_console"),
+                         import = getOption("rtauargus.import"),
+                         ...) {
+
+  .Deprecated( # puis .Defunct
+    new = "run_arb",
+    old = "run_tauargus", # (a supprimer si .Defunct)
+    package = "rtauargus",
+    msg = paste0("Utiliser maintenant 'run_arb' a la place de 'run_tauargus'\n",
+                 "(seul le nom change, la syntaxe reste la meme)")
+  )
+
+  run_arb(
+    arb_filename,
+    tauargus_exe,
+    logbook,
+    show_batch_console,
+    import,
+    ...
+  )
 
 }

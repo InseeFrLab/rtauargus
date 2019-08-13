@@ -29,7 +29,7 @@ chaque tabulation, le premier paramètre (numéro du tableau) sera ignoré et
 renuméroté automatiquement.}
 
 \item{...}{paramètres optionnels pour \code{micro_asc_rda}, \code{micro_arb}
-et \code{run_tauargus}. Voir l'aide de ces fonctions.}
+et \code{run_arb}. Voir l'aide de ces fonctions.}
 }
 \value{
 Si \code{import = TRUE}, une liste de data.frames (tableaux
@@ -47,7 +47,7 @@ La fonction exécute séquentiellement les fonctions : \itemize{
   \item{
     \code{\link{micro_asc_rda}} \code{->}
     \code{\link{micro_arb}} \code{->}
-    \code{\link{run_tauargus}}
+    \code{\link{run_arb}}
   }
 }
 

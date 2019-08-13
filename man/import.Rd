@@ -22,7 +22,7 @@ contenues dans un fichier arb.
 \details{
 Nécessite que le batch ait été exécuté et se soit terminé sans erreur. Afin
 d'importer immédiatement après exécution du batch, cette fonction sera ainsi
-le plus souvent appelée via \code{\link{run_tauargus}} (en paramétrant
+le plus souvent appelée via \code{\link{run_arb}} (en paramétrant
 \code{import = TRUE}).
 
 Il n'est possible (pour l'instant) que d'importer les résultats de type "2"

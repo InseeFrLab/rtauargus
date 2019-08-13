@@ -20,7 +20,7 @@ param_function <- function(f, list_param) {
 #'   \item{
 #'     \code{\link{micro_asc_rda}} \code{->}
 #'     \code{\link{micro_arb}} \code{->}
-#'     \code{\link{run_tauargus}}
+#'     \code{\link{run_arb}}
 #'   }
 #' }
 #'
@@ -35,7 +35,7 @@ param_function <- function(f, list_param) {
 #'   (ou chemin vers des fichiers texte déjà présents : voir section
 #'   \emph{Microdonnées déjà sous forme de fichiers texte}).
 #' @param ... paramètres optionnels pour \code{micro_asc_rda}, \code{micro_arb}
-#'    et \code{run_tauargus}. Voir l'aide de ces fonctions.
+#'    et \code{run_arb}. Voir l'aide de ces fonctions.
 #'
 #' @section Microdonnées déjà sous forme de fichiers texte: Pour utiliser des
 #'  fichiers asc et rda existant déjà, il est possible de fournir à la place du
@@ -139,16 +139,16 @@ rtauargus <- function(microdata,
   # appel (+ récupération nom batch)
   batch <- do.call(micro_arb, param_arb)
 
-  ## 3. RUN_TAUARGUS ......................
+  ## 3. RUN_ARB ...........................
 
   # parametres
-  param_run0 <- param_function(run_tauargus, .dots)
+  param_run0 <- param_function(run_arb, .dots)
   param_system <- param_function(system, .dots)
   param_run <- c(param_run0, param_system)
   param_run$arb_filename <- batch$arb_filename
 
   # appel
-  res <- do.call(run_tauargus, param_run)
+  res <- do.call(run_arb, param_run)
 
   # RESULTAT .............................
 

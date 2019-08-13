@@ -255,7 +255,7 @@ secret1
 
 L'aide de la fonction ne décrit que les 4 arguments obligatoires. Les arguments
 optionnels disponibles sont documentés dans les fonctions élémentaires la
-constituant (`micro_asc_rda`, `micro_arb`, `run_tauargus`, `import`). Tout
+constituant (`micro_asc_rda`, `micro_arb`, `run_arb`, `import`). Tout
 argument de ces fonctions peut être utilisé dans `rtauargus`. Leur
 fonctionnement est détaillé dans la section qui suit.
 
@@ -284,7 +284,7 @@ fonction `rtauargus`, à savoir :
 
 > **[micro_asc_rda()](#fonction-micro_asc_rda) &nbsp;&nbsp;&rarr;&nbsp;&nbsp;
     [micro_arb()](#fonction-micro_arb)         &nbsp;&nbsp;&rarr;&nbsp;&nbsp;
-    [run_tauargus()](#fonction-run_tauargus)   &nbsp;&nbsp;&rarr;&nbsp;&nbsp;
+    [run_arb()](#fonction-run_arb)             &nbsp;&nbsp;&rarr;&nbsp;&nbsp;
     [import()](#fonction-import)**
 
 ### Fonction `micro_asc_rda`
@@ -468,14 +468,14 @@ infos_arb
 </p>
 
 
-### Fonction `run_tauargus`
+### Fonction `run_arb`
 
 Maintenant que les instructions ont été générées dans un fichier .arb, on peut
 le soumettre à &tau;-Argus en mode batch. On récupère la liste des tableaux
 secrétisés :
 
 ```{r run1, eval = params$eval_ta}
-secret2 <- run_tauargus("Z:/donnees.arb")
+secret2 <- run_arb("Z:/donnees.arb")
 
 secret2
 ```
@@ -493,7 +493,7 @@ nécessaires sont présentes dans le fichier .arb. Des paramètres optionnels so
   sans les importer dans R (voir section suivante pour plus de détails).
 
 Si les tabulations ont reçu un nom dans `micro_arb`, ces noms sont utilisés pour
-la liste de data.frames en sortie de `run_tauargus` (pas de noms définis dans
+la liste de data.frames en sortie de `run_arb` (pas de noms définis dans
 l'exemple ci-dessus).
 
 <p style="text-align: right">
@@ -508,13 +508,13 @@ le batch se soit déroulé sans erreur et que les fichiers soient toujours
 présents.
 
 Pour cette dernière raison, la fonction `import` est typiquement appelée depuis 
-`run_tauargus` en paramétrant `import = TRUE`. Elle est aussi utilisable de
+`run_arb` en paramétrant `import = TRUE`. Elle est aussi utilisable de
 manière indépendante (par exemple si on ne souhaite pas relancer un batch qui a
 mis beaucoup de temps à s'exécuter).
 
 ```{r import, results = "hide", eval = FALSE}
 secret2 <- import("Z:/donnees.arb")
-#  produit le même résultat que run_tauargus("Z:/donnees.arb", import = TRUE)
+#  produit le même résultat que run_arb("Z:/donnees.arb", import = TRUE)
 ```
 
 #### Formats acceptés

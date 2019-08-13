@@ -14,7 +14,7 @@ op.rtauargus <- list(
   rtauargus.linked             = FALSE,
   rtauargus.output_type        = "2",
   rtauargus.output_options     = "AS+",
-  # run_tauargus ------------------------------------------------ #
+  # run_arb ----------------------------------------------------- #
   rtauargus.tauargus_exe       = "Y:/Logiciels/Tau/TauArgus.exe",
   rtauargus.show_batch_console = TRUE,
   rtauargus.import             = TRUE
@@ -34,7 +34,7 @@ df_op.rtauargus <- function(html = FALSE) {
     stringsAsFactors = FALSE
   )
 
-  fun_names <- c("micro_asc_rda", "micro_arb", "run_tauargus")
+  fun_names <- c("micro_asc_rda", "micro_arb", "run_arb")
 
   param_names <- lapply(fun_names, function(x) names(formals(get(x))))
   func <- data.frame(
@@ -116,7 +116,7 @@ df_op.rtauargus <- function(html = FALSE) {
 #'  rtauargus.output_type            \tab "\Sexpr{rtauargus:::op.rtauargus$rtauargus.output_type}"       \tab                     \cr
 #'  rtauargus.output_options         \tab "\Sexpr{rtauargus:::op.rtauargus$rtauargus.output_options}"    \tab                     \cr
 #'  \code{------------------------}  \tab  \code{---------------------------------}                      \tab \code{-------------}\cr
-#'  rtauargus.tauargus_exe           \tab "\Sexpr{rtauargus:::op.rtauargus$rtauargus.tauargus_exe}"      \tab \link{run_tauargus} \cr
+#'  rtauargus.tauargus_exe           \tab "\Sexpr{rtauargus:::op.rtauargus$rtauargus.tauargus_exe}"      \tab \link{run_arb} \cr
 #'  rtauargus.show_batch_console     \tab  \Sexpr{rtauargus:::op.rtauargus$rtauargus.show_batch_console} \tab                     \cr
 #'  rtauargus.import                 \tab  \Sexpr{rtauargus:::op.rtauargus$rtauargus.import}             \tab
 #' }
