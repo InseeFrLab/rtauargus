@@ -37,6 +37,9 @@ défaut.}
 Exécute les instructions contenues dans un fichier .arb pour Tau-Argus.
 }
 \details{
+Il s'agit de la seule fonction du package qui exécute Tau-Argus. Elle
+nécessite donc que le logiciel soit accessible depuis le poste de travail.
+
 L'emplacement du programme TauArgus.exe est défini de manière globale au
 chargement du package. De fait, l'argument \code{tauargus_exe} n'aura
 normalement pas à être spécifié (sauf pour surcharger l'option globale le

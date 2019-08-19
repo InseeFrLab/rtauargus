@@ -480,6 +480,9 @@ secret2 <- run_arb("Z:/donnees.arb")
 secret2
 ```
 
+`run_arb` est la seule fonction du package qui exécute &tau;-Argus. Elle
+nécessite donc que le logiciel soit accessible depuis le poste de travail.
+
 Seul l'argument `arb_filename` est obligatoire, car toutes les informations
 nécessaires sont présentes dans le fichier .arb. Des paramètres optionnels sont
 également disponibles :
