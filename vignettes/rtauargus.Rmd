@@ -8,10 +8,18 @@ output:
 params:
   ta_lib:
     label: "Version de Tau-Argus utilisée pour la vignette"
-    value: "Poste_4.1.7"
+    value: "file_ini"
     input: select
-    choices: ["Poste_4.1.7", "Poste_4.1.6", "Poste_4.1.4", "Poste_4.1.3",
-              "AUS_4.1.7", "AUS_commun", "Home_4.1.7"]
+    choices: ["file_ini",
+              "AUS_commun",
+              "Poste_4.1.7",
+              "Poste_4.1.6",
+              "Poste_4.1.4",
+              "Poste_4.1.3"]
+  ta_lib_man:
+    label: "ou manuellement définir chemin emplacement exécutable Tau-Argus"
+    input: text
+    value: "?"
   eval_ta:
     label: "Évaluer les chunks nécessitant Tau-Argus (lent mais complet)"
     value: TRUE 
@@ -36,18 +44,17 @@ knitr::opts_chunk$set(
 
 ```{r version_ta, include = FALSE}
 # pour relier les emplacements exacts aux choix fait dans knit with param
-dir_aus <- "V:/PNCDEE/Secret statistique et TAU ARGUS/TauArgus autres versions"
-dir_poste <- "D:/XKFZV9/TauArgus"
-dir_home <- "E:/TauArgus"
-nom_exe <- "TauArgus.exe"
+# par défaut (notamment pour build), lit la première ligne d'un fichier
+# "tauargus_exe.ini" dans répertoire "vignettes" (un développeur rapatriant le
+# code source devra créer ce fichier personnalisé)
+dir_poste <- sprintf("D:/%s/TauArgus", Sys.getenv("USERNAME")) # windows only ?
 loc_tauargus <- c(
-  Poste_4.1.7 = file.path(dir_poste, "TauArgus4.1.7b4", nom_exe),
-  Poste_4.1.6 = file.path(dir_poste, "TauArgus4.1.6b2", nom_exe),
-  Poste_4.1.4 = file.path(dir_poste, "TauArgus4.1.4"  , nom_exe),
-  Poste_4.1.3 = file.path(dir_poste, "TauARGUS4.1.3"  , nom_exe),
-  AUS_4.1.7   = file.path(dir_aus,   "TauArgus4.1.7b4", nom_exe),
+  file_ini    = if (file.exists(f <- "tauargus_exe.ini")) readLines(f)[1],
   AUS_commun  = "Y:/Logiciels/Tau/TauArgus.exe",
-  Home_4.1.7  = file.path(dir_home,  "TauArgus4.1.7b4", nom_exe)
+  Poste_4.1.7 = file.path(dir_poste, "TauArgus4.1.7b4", "TauArgus.exe"),
+  Poste_4.1.6 = file.path(dir_poste, "TauArgus4.1.6b2", "TauArgus.exe"),
+  Poste_4.1.4 = file.path(dir_poste, "TauArgus4.1.4"  , "TauArgus.exe"),
+  Poste_4.1.3 = file.path(dir_poste, "TauARGUS4.1.3"  , "TauArgus.exe")
 )
 ```
 
@@ -169,7 +176,23 @@ prédéfini. Il est possible de le changer pour toute la durée de la session R.
 message indique que cet emplacement est inconnu, on le modifie donc :
 
 ```{r opt_exe, include = FALSE}
-loc_tauargus <- unname(loc_tauargus[params$ta_lib])
+loc_tauargus <-
+  # sélection manuelle prioritaire sur les raccourcis proposés
+  if (params$ta_lib_man != "?") {
+    params$ta_lib_man
+  } else {
+    unname(loc_tauargus[params$ta_lib])
+  }
+if (!file.exists(loc_tauargus)) {
+  # message affiché lorsque build échoue à cause absence Tau-Argus sur poste
+  stop(
+    "\n--- Logiciel Tau-Argus introuvable :",
+    "\n--- renseigner son emplacement dans la 1ere ligne",
+    "\n--- de 'vignettes/tauargus_exe.ini' (a creer si n'existe pas)",
+    "\n--- par exemple, D:/XKFZV9/TauArgus/TauArgus4.1.7b4/TauArgus.exe",
+    "\n "
+  )
+}
 options(rtauargus.tauargus_exe = loc_tauargus)
 ```
 
