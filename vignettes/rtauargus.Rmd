@@ -510,6 +510,8 @@ Seul l'argument `arb_filename` est obligatoire, car toutes les informations
 nécessaires sont présentes dans le fichier .arb. Des paramètres optionnels sont
 également disponibles :
 
+- `missing_dir` : action à effectuer si un dossier où sera écrit le résultat
+  n'existe pas (déclencher un erreur ou le créer)
 - `tauargus_exe` : pour changer l'exécutable (surcharge l'option
   `rtauargus.tauargus_exe` le temps de la fonction) ;
 - `logbook` : emplacement et nom du fichier contenant le journal d'erreurs ;

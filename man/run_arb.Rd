@@ -5,13 +5,17 @@
 \alias{run_tauargus}
 \title{Exécute un batch Tau-Argus}
 \usage{
-run_arb(arb_filename, tauargus_exe = getOption("rtauargus.tauargus_exe"),
-  logbook = NULL,
+run_arb(arb_filename, missing_dir = getOption("rtauargus.missing_dir"),
+  tauargus_exe = getOption("rtauargus.tauargus_exe"), logbook = NULL,
   show_batch_console = getOption("rtauargus.show_batch_console"),
   import = getOption("rtauargus.import"), ...)
 }
 \arguments{
 \item{arb_filename}{nom du fichier batch à exécuter.}
+
+\item{missing_dir}{action si les dossiers où seront écrits les
+résultats n'existent pas ("stop" pour déclencher une erreur, "create" pour
+créer les dossiers manquants).}
 
 \item{tauargus_exe}{répertoire et nom du logiciel Tau-Argus.}
 

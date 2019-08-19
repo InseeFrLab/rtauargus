@@ -15,6 +15,7 @@ op.rtauargus <- list(
   rtauargus.output_type        = "2",
   rtauargus.output_options     = "AS+",
   # run_arb ----------------------------------------------------- #
+  rtauargus.missing_dir        = "stop",
   rtauargus.tauargus_exe       = "Y:/Logiciels/Tau/TauArgus.exe",
   rtauargus.show_batch_console = TRUE,
   rtauargus.import             = TRUE
@@ -116,7 +117,8 @@ df_op.rtauargus <- function(html = FALSE) {
 #'  rtauargus.output_type            \tab "\Sexpr{rtauargus:::op.rtauargus$rtauargus.output_type}"       \tab                     \cr
 #'  rtauargus.output_options         \tab "\Sexpr{rtauargus:::op.rtauargus$rtauargus.output_options}"    \tab                     \cr
 #'  \code{------------------------}  \tab  \code{---------------------------------}                      \tab \code{-------------}\cr
-#'  rtauargus.tauargus_exe           \tab "\Sexpr{rtauargus:::op.rtauargus$rtauargus.tauargus_exe}"      \tab \link{run_arb} \cr
+#'  rtauargus.missing_dir            \tab "\Sexpr{rtauargus:::op.rtauargus$rtauargus.missing_dir}"       \tab \link{run_arb}      \cr
+#'  rtauargus.tauargus_exe           \tab "\Sexpr{rtauargus:::op.rtauargus$rtauargus.tauargus_exe}"      \tab                     \cr
 #'  rtauargus.show_batch_console     \tab  \Sexpr{rtauargus:::op.rtauargus$rtauargus.show_batch_console} \tab                     \cr
 #'  rtauargus.import                 \tab  \Sexpr{rtauargus:::op.rtauargus$rtauargus.import}             \tab
 #' }
