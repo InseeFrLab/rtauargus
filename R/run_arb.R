@@ -52,6 +52,15 @@ run_arb <- function(arb_filename,
   }
   if (is.null(import)) import <- op.rtauargus$rtauargus.import
 
+  # présence TauArgus.exe ......................................
+
+  if (!file.exists(tauargus_exe)) {
+    stop(
+     "Tau-Argus introuvable (", tauargus_exe, ")\n  ",
+     "renseigner le parametre tauargus_exe ou l'option rtauargus.tauargus_exe"
+    )
+  }
+
   # gestion dossiers manquants .................................
 
   writetable <-
