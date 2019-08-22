@@ -144,6 +144,9 @@ apriori_batch <- function(ntab, hst_names, sep = ',', ignore_err = 0 , exp_triv 
 #' Crée un fichier batch pour microdonnées, exécutable par Tau-Argus en ligne de
 #' commande.
 #'
+#' La fonction ne vérifie pas si les fichiers asc et rda existent.
+#'
+#' @section Syntaxe:
 #' Tau-Argus peut traiter jusqu'à 10 tabulations pour un même jeu de
 #' microdonnées. Passer une seule valeur pour une option appliquera le même
 #' traitement à chaque tabulation. Pour des options différenciées, passer un
@@ -159,8 +162,6 @@ apriori_batch <- function(ntab, hst_names, sep = ',', ignore_err = 0 , exp_triv 
 #' recalculés automatiquement pour le batch. Dans l'écriture
 #' \code{suppress = "GH(n,100)"}, n sera ainsi transformé en 1 pour la première
 #' tabulation, en 2 pour la deuxième tabulation, etc.
-#'
-#' La fonction ne vérifie pas si les fichiers asc et rda existent.
 #'
 #' @section Identifiants des tableaux:
 #' Si la liste \code{explanatory_vars} comporte des noms, ceux-ci seront
@@ -201,13 +202,15 @@ apriori_batch <- function(ntab, hst_names, sep = ',', ignore_err = 0 , exp_triv 
 #' @param shadow_var variable(s) pour l'application du secret primaire. Si non
 #'   renseigné, \code{response_var} sera utilisé par Tau-Argus.
 #' @param cost_var variable(s) de coût pour le secret secondaire.
-#' @param safety_rules [\strong{obligatoire}] règle(s) de secret primaire (hors
-#'   pondération). Chaîne de caractères en syntaxe batch Tau-Argus.
+#' @param safety_rules [\strong{obligatoire}] règle(s) de secret primaire.
+#'   Chaîne de caractères en syntaxe batch Tau-Argus. La pondération est traitée
+#'   dans un paramètre à part (ne pas spécifier WGT ici, utiliser le paramètre
+#'   \code{weighted}).
 #' @param weighted indicatrice(s) de pondération (booléen).
 #' @param suppress [\strong{obligatoire}] méthode(s) de gestion du secret
 #'   secondaire (syntaxe batch de Tau-Argus). Si la méthode est la même pour
 #'   chaque tabulation, le premier paramètre (numéro du tableau) sera ignoré et
-#'   renuméroté automatiquement.
+#'   renuméroté automatiquement (voir la section 'Syntaxe').
 #' @param linked pour traiter le secret secondaire conjointement sur toutes les
 #'   tabulations. Une seule commande suppress autorisée dans ce cas (appliquée à
 #'   tous les tableaux).
@@ -243,7 +246,7 @@ apriori_batch <- function(ntab, hst_names, sep = ',', ignore_err = 0 , exp_triv 
 #'   output_type = "2"
 #' )
 #'
-#' # Visualisation du fichier dans la console
+#' # visualisation du contenu du fichier dans la console
 #' file.show(infos_arb$arb_filename, pager = "console")
 #' @export
 

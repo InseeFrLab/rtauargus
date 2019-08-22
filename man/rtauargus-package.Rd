@@ -44,7 +44,7 @@ Pour l'instant, \strong{seules les microdonnées sont acceptées} en entrée
 
 \section{Emplacement de TauArgus.exe}{
 
-La fonction \code{\link{run_tauargus}} doit connaître l'emplacement du
+La fonction \code{\link{run_arb}} doit connaître l'emplacement du
 programme Tau-Argus sur le disque. Cet emplacement est renseigné de manière
 globale via l'option \code{rtauargus.tauargus_exe}. Il perdure ainsi pour la
 session R courante.

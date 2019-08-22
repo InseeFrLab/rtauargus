@@ -39,15 +39,17 @@ renseigné, \code{response_var} sera utilisé par Tau-Argus.}
 
 \item{cost_var}{variable(s) de coût pour le secret secondaire.}
 
-\item{safety_rules}{[\strong{obligatoire}] règle(s) de secret primaire (hors
-pondération). Chaîne de caractères en syntaxe batch Tau-Argus.}
+\item{safety_rules}{[\strong{obligatoire}] règle(s) de secret primaire.
+Chaîne de caractères en syntaxe batch Tau-Argus. La pondération est traitée
+dans un paramètre à part (ne pas spécifier WGT ici, utiliser le paramètre
+\code{weighted}).}
 
 \item{weighted}{indicatrice(s) de pondération (booléen).}
 
 \item{suppress}{[\strong{obligatoire}] méthode(s) de gestion du secret
 secondaire (syntaxe batch de Tau-Argus). Si la méthode est la même pour
 chaque tabulation, le premier paramètre (numéro du tableau) sera ignoré et
-renuméroté automatiquement.}
+renuméroté automatiquement (voir la section 'Syntaxe').}
 
 \item{linked}{pour traiter le secret secondaire conjointement sur toutes les
 tabulations. Une seule commande suppress autorisée dans ce cas (appliquée à
@@ -80,6 +82,10 @@ Crée un fichier batch pour microdonnées, exécutable par Tau-Argus en ligne de
 commande.
 }
 \details{
+La fonction ne vérifie pas si les fichiers asc et rda existent.
+}
+\section{Syntaxe}{
+
 Tau-Argus peut traiter jusqu'à 10 tabulations pour un même jeu de
 microdonnées. Passer une seule valeur pour une option appliquera le même
 traitement à chaque tabulation. Pour des options différenciées, passer un
@@ -95,9 +101,8 @@ pour toutes les tabulations, ce premier paramètre sera ignoré et les numéros
 recalculés automatiquement pour le batch. Dans l'écriture
 \code{suppress = "GH(n,100)"}, n sera ainsi transformé en 1 pour la première
 tabulation, en 2 pour la deuxième tabulation, etc.
-
-La fonction ne vérifie pas si les fichiers asc et rda existent.
 }
+
 \section{Identifiants des tableaux}{
 
 Si la liste \code{explanatory_vars} comporte des noms, ceux-ci seront
@@ -126,7 +131,7 @@ autant de valeurs que de tabulations.
 
 \section{Voir aussi}{
  La fonction \code{\link{rtauargus}}, qui utilise cette
-fonction.
+fonction et hérite de ses paramètres.
 }
 
 \examples{
@@ -142,6 +147,6 @@ infos_arb <- micro_arb(
   output_type = "2"
 )
 
-# Visualisation du fichier dans la console
+# visualisation du contenu du fichier dans la console
 file.show(infos_arb$arb_filename, pager = "console")
 }

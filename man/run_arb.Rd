@@ -41,6 +41,9 @@ défaut.}
 Exécute les instructions contenues dans un fichier .arb pour Tau-Argus.
 }
 \details{
+Seul l’argument \code{arb_filename} est obligatoire, car toutes les
+informations nécessaires sont présentes dans ce fichier.
+
 Il s'agit de la seule fonction du package qui exécute Tau-Argus. Elle
 nécessite donc que le logiciel soit accessible depuis le poste de travail.
 
@@ -51,6 +54,13 @@ temps de l'exécution de la foncion).
 }
 \section{Voir aussi}{
  La fonction \code{\link{rtauargus}}, qui utilise cette
-fonction.
+fonction et hérite de ses paramètres.
 }
 
+\examples{
+\dontrun{
+
+micro_arb("my_batch.arb")
+}
+
+}

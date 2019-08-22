@@ -2,6 +2,9 @@
 #'
 #' Exécute les instructions contenues dans un fichier .arb pour Tau-Argus.
 #'
+#' Seul l’argument \code{arb_filename} est obligatoire, car toutes les
+#' informations nécessaires sont présentes dans ce fichier.
+#'
 #' Il s'agit de la seule fonction du package qui exécute Tau-Argus. Elle
 #' nécessite donc que le logiciel soit accessible depuis le poste de travail.
 #'
@@ -30,6 +33,12 @@
 #' }
 #'
 #' @inheritSection micro_asc_rda Voir aussi
+#'
+#' @examples
+#' \dontrun{
+#'
+#' micro_arb("my_batch.arb")
+#' }
 #'
 #' @aliases run_tauargus
 #'

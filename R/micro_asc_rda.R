@@ -91,7 +91,7 @@ write_rda <- function(info_vars) {
 #'
 #' @section Paramètres spécifiques:
 #'
-#' Les paramètres \code{hrc}, \code{totcode}, \code{missing} et \code{codelist}
+#' Les paramètres \code{totcode}, \code{missing} et \code{codelist}
 #' sont à renseigner sous la forme d'un vecteur indiquant la valeur à prendre
 #' pour chaque variable.
 #'
@@ -111,8 +111,8 @@ write_rda <- function(info_vars) {
 #' @section Variables hiérarchiques:
 #'
 #' Le paramètre \code{hrc} obéit aux mêmes règles de syntaxe que \code{totcode},
-#' \code{missing} et \code{codelist} (éventuelle valeur commune, valeurs
-#' spécifiques à chaque variable). Il présente de plus la particularité
+#' \code{missing} et \code{codelist} (vecteur nommé contenant autant d'éléments
+#' que de variables à décrire). Il présente de plus la particularité
 #' d'accepter plusieurs façons de spécifier les valeurs associées aux variables
 #' hiérarchiques.
 #'
@@ -162,7 +162,7 @@ write_rda <- function(info_vars) {
 #' écrire le fichier asc) pour plus de détails.
 #'
 #' @section Voir aussi: La fonction \code{\link{rtauargus}}, qui utilise cette
-#' fonction.
+#' fonction et hérite de ses paramètres.
 #'
 #' @examples
 #' # donnees fictives

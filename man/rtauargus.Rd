@@ -20,13 +20,15 @@ tableau croisant \code{CJ} x \code{A21} et le deuxième tableau croisant
 Si une seule tabulation, un simple vecteur des variables à croiser est
 accepté (pas besoin de \code{list(...)}).}
 
-\item{safety_rules}{[\strong{obligatoire}] règle(s) de secret primaire (hors
-pondération). Chaîne de caractères en syntaxe batch Tau-Argus.}
+\item{safety_rules}{[\strong{obligatoire}] règle(s) de secret primaire.
+Chaîne de caractères en syntaxe batch Tau-Argus. La pondération est traitée
+dans un paramètre à part (ne pas spécifier WGT ici, utiliser le paramètre
+\code{weighted}).}
 
 \item{suppress}{[\strong{obligatoire}] méthode(s) de gestion du secret
 secondaire (syntaxe batch de Tau-Argus). Si la méthode est la même pour
 chaque tabulation, le premier paramètre (numéro du tableau) sera ignoré et
-renuméroté automatiquement.}
+renuméroté automatiquement (voir la section 'Syntaxe').}
 
 \item{...}{paramètres optionnels pour \code{micro_asc_rda}, \code{micro_arb}
 et \code{run_arb}. Voir l'aide de ces fonctions.}
@@ -69,6 +71,25 @@ dans R.
  des données en texte. Ne pas spécifier \code{asc_filename} ou
  \code{rda_filename} (sert à nommer les fichiers texte à créer, ce qui est
  sans objet ici).
+}
+
+\section{Syntaxe}{
+
+Tau-Argus peut traiter jusqu'à 10 tabulations pour un même jeu de
+microdonnées. Passer une seule valeur pour une option appliquera le même
+traitement à chaque tabulation. Pour des options différenciées, passer un
+vecteur contenant autant de valeurs que de tabulations. Si les longueurs ne
+correspondent pas (déconseillé), un recyclage est effectué.
+
+Sauf mention contraire, utiliser la syntaxe mentionnée dans la documentation
+de Tau-Argus.
+
+Syntaxe spéciale pour \code{suppress} : le premier paramètre dans la
+syntaxe Tau-Argus est le numéro de la tabulation. Si la méthode est identique
+pour toutes les tabulations, ce premier paramètre sera ignoré et les numéros
+recalculés automatiquement pour le batch. Dans l'écriture
+\code{suppress = "GH(n,100)"}, n sera ainsi transformé en 1 pour la première
+tabulation, en 2 pour la deuxième tabulation, etc.
 }
 
 \examples{

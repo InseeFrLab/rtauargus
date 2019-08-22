@@ -37,6 +37,8 @@ param_function <- function(f, list_param) {
 #' @param ... paramètres optionnels pour \code{micro_asc_rda}, \code{micro_arb}
 #'    et \code{run_arb}. Voir l'aide de ces fonctions.
 #'
+#' @inheritSection micro_arb Syntaxe
+#'
 #' @section Microdonnées déjà sous forme de fichiers texte: Pour utiliser des
 #'  fichiers asc et rda existant déjà, il est possible de fournir à la place du
 #'  data.frame un vecteur caractère indiquant le chemin de ces fichiers. Le

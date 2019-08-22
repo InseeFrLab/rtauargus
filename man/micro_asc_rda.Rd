@@ -61,7 +61,7 @@ Crée un fichier texte de longueur fixe (asc) et un fichier de métadonnées
 \section{Paramètres spécifiques}{
 
 
-Les paramètres \code{hrc}, \code{totcode}, \code{missing} et \code{codelist}
+Les paramètres \code{totcode}, \code{missing} et \code{codelist}
 sont à renseigner sous la forme d'un vecteur indiquant la valeur à prendre
 pour chaque variable.
 
@@ -83,8 +83,8 @@ Par exemple :
 
 
 Le paramètre \code{hrc} obéit aux mêmes règles de syntaxe que \code{totcode},
-\code{missing} et \code{codelist} (éventuelle valeur commune, valeurs
-spécifiques à chaque variable). Il présente de plus la particularité
+\code{missing} et \code{codelist} (vecteur nommé contenant autant d'éléments
+que de variables à décrire). Il présente de plus la particularité
 d'accepter plusieurs façons de spécifier les valeurs associées aux variables
 hiérarchiques.
 
@@ -138,7 +138,7 @@ supérieur à 15. Voir \code{\link[gdata]{write.fwf}} (fonction utilisée pour
 
 \section{Voir aussi}{
  La fonction \code{\link{rtauargus}}, qui utilise cette
-fonction.
+fonction et hérite de ses paramètres.
 }
 
 \examples{
