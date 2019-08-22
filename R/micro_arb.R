@@ -298,6 +298,14 @@ micro_arb <- function(arb_filename     = NULL,
     stop("renseigner autant de noms de fichiers que de tabulations")
   }
 
+  # interdit 'WGT' dans safety_rules
+  if (length(grep("WGT", safety_rules, ignore.case = TRUE))) {
+    stop(
+      "ne pas renseigner WGT dans 'safety_rules', ",
+      "utiliser le parametre 'weighted' pour la ponderation"
+    )
+  }
+
   # chemins absolus
   asc_full <- normPath2(asc_filename)
   rda_full <- normPath2(rda_filename)
