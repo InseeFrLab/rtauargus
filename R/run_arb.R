@@ -152,6 +152,7 @@ run_tauargus <- function(arb_filename,
 
   run_arb(
     arb_filename,
+    missing_dir,
     tauargus_exe,
     logbook,
     show_batch_console,
