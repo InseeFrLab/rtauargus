@@ -81,3 +81,17 @@ output_description <- c(
   "5" = "(5) intermediate file",
   "6" = "(6) JJ format file"
 )
+
+# vecteur des noms de variables décrites dans un fichier rda pour microdonnées
+
+vars_micro_rda <- function(rda_file) {
+
+  stopifnot(file.exists(rda_file))
+  lignes <- readLines(rda_file, warn = FALSE)
+
+  # mot commençant par lettre, précédé éventuellement d'espaces (améliorable ?)
+  motif <- "^ *([A-Za-z][^ ]*)"
+  lignes_var <- stringr::str_match(lignes, motif)[ , 2]
+  lignes_var[!is.na(lignes_var)]
+
+}
