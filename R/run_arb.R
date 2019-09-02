@@ -42,6 +42,8 @@
 #'
 #' @aliases run_tauargus
 #'
+#' @importFrom dplyr %>%
+#'
 #' @export
 
 run_arb <- function(arb_filename,
@@ -70,16 +72,43 @@ run_arb <- function(arb_filename,
     )
   }
 
-  # gestion dossiers manquants .................................
+  # lecture contenu fichier arb pour vérifications .............
 
-  writetable <-
-    grep(
-      "<WRITETABLE>",
-      readLines(arb_filename),
-      value = TRUE
+  if (!file.exists(arb_filename)) {
+    stop(
+      "Fichier introuvable : ", arb_filename, "\n",
+      "(utiliser `micro_arb` pour creer un fichier batch)"
     )
-  output_names <-
-    stringr::str_match(writetable, "\\(\\d+,[1-6]+,.*,\"(.+)\"\\)")[ , 2]
+  }
+  infos_arb <- arb_contents(arb_filename)
+
+  # présence des fichiers (input) ..............................
+
+  if (!file.exists(infos_arb$openmicrodata)) {
+    stop(
+      "Fichier asc introuvable : ", infos_arb$openmicrodata, "\n",
+      "(utiliser `micro_asc_rda` pour creer un fichier asc)"
+    )
+  }
+  if (!file.exists(infos_arb$openmetadata)) {
+    stop(
+      "Fichier rda introuvable : ", infos_arb$openmetadata, "\n",
+      "(utiliser `micro_asc_rda` pour creer un fichier rda)"
+    )
+  }
+  if (!is.null(infos_arb$apriori)) {
+    hst <- infos_arb$apriori$file
+    if (any(manq <- !file.exists(hst))) {
+      stop(
+        "Fichier(s) d'apriori introuvable(s) : ",
+        paste(unique(hst[manq]), collapse = "\n")
+      )
+    }
+  }
+
+  # gestion dossiers manquants (output) ........................
+
+  output_names <- infos_arb$writetable$output_names
 
   ouput_dirs <- dirname(output_names)
   if (any(manq <- !dir.exists(ouput_dirs))) {
@@ -99,6 +128,27 @@ run_arb <- function(arb_filename,
     } else {
       stop("'missing_dir' incorrect. Valeurs permises : \"stop\", \"create\".")
     }
+  }
+
+  # coherence explanatory_vars et variables rda ...............
+
+  used_vars <-
+    with(
+      infos_arb$specifytable,
+      c(explanatory, response, shadow, cost)
+    ) %>%
+    unlist() %>%
+    unique()
+  used_vars <- used_vars[!used_vars %in% c("Freq", "")]
+
+  rda_vars <- vars_micro_rda(infos_arb$openmetadata)
+
+  vars_manq <- setdiff(used_vars, rda_vars)
+  if (length(vars_manq)) {
+    stop(
+      "Variable(s) specifiee(s) absente(s) des metadonnees (rda) :\n    ",
+      paste(vars_manq, collapse = "\n    ")
+    )
   }
 
   # construction commande .....................................
