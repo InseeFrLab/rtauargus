@@ -162,11 +162,23 @@ import <- function(arb_filename) {
   # extrait infos arb
   infos <- arb_contents(arb_filename)
 
+  # présence fichiers
+  manq <- !file.exists(infos$writetable$output_names)
+  if (any(manq)) {
+    stop(
+      "fichiers texte introuvables ",
+      "(echec Tau-Argus ou supprimes entre-temps) : \n    ",
+      paste(infos$writetable$output_names[manq], collapse = "\n    ")
+    )
+  }
+
+  # nom variables
   expl_resp <-
     infos$specifytable[c("explanatory", "response")] %>%
     transpose() %>%
     lapply(unlist, use.names = FALSE)
 
+  # lecture fichiers
   res <- mapply(
     infos$writetable$output_names,
     infos$writetable$output_types,
