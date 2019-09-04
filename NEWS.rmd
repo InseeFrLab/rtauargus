@@ -4,6 +4,31 @@ subtitle: Journal des modifications
 output: rmarkdown::html_vignette
 ---
 
+## rtauargus 0.4.0
+
+[04/09/2019]
+
+* **rtauargus()** peut désormais prendre en entrée un couple de fichiers asc et
+  rda (au lieu d'un data.frame). Permet de lancer un traitement dans le cas
+  où ces fichiers texte de microdonnées existent déjà.
+* **run_arb()** :
+    - nouveau nom de <font color="red">run_tauargus</font> (nom plus explicite,
+      principalement pour éviter la confusion avec la fonction _rtauargus_).
+      L'ancien nom reste pour l'instant utilisable : un message avertit du
+      changement. Il sera remplacé par un message d'erreur dans une prochaine
+      version.
+    - vérifications préalables à l'exécution de &tau;-Argus :
+        * existence du logiciel sur le poste ;
+        * existence des fichiers asc et rda ;
+        * présence des variables à utiliser (croisements, variable de réponse, 
+          ...) dans les métadonnées (fichier rda) ;
+        * existence des dossiers où vont être écrits les résultats. Si absents,
+          possibilité de les créer automatiquement (paramètre `missing_dir` avec 
+          option associée `rtauargus.missing_dir`).
+* **import()** : si des fichiers _apriori_ ont été utilisés, stockage du nom de
+  ces fichiers dans les métadonnées (attributs) de l'objet R créé
+* améliorations de la documentation (rubriques d'aide et vignette)
+
 ## rtauargus 0.3.1
 
 [11/07/2019]
