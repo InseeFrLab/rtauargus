@@ -309,6 +309,12 @@ micro_arb <- function(arb_filename     = NULL,
     )
   }
 
+  # output_names doivent comporter une extension de fichier
+  # (sinon Tau-Argus plante)
+  if (!all(grepl("\\.", basename(output_names)))) {
+    stop("output_names doivent comporter une extension de fichier")
+  }
+
   # chemins absolus
   asc_full <- normPath2(asc_filename)
   rda_full <- normPath2(rda_filename)
