@@ -410,7 +410,8 @@ La fonction a également besoin du nom du fichier rda. S'il n'est pas spécifié
 le même nom que le fichier asc avec l'extension .rda est utilisé.
 
 > _La fonction ne vérifie pas l'existence des répertoires ou fichiers spécifiés.
-> Elle ne fait que générer la séquence d'instructions._
+> Elle ne fait que générer un fichier d'instructions, sans en évaluer la
+> validité._
 
 #### Exemple minimaliste
 
@@ -519,10 +520,15 @@ nécessaires sont présentes dans le fichier .arb. Des paramètres optionnels so
   console ;
 - `import` : si désactivé, la fonction ne fait que générer les fichiers texte 
   sans les importer dans R (voir section suivante pour plus de détails).
-
+  
 Si les tabulations ont reçu un nom dans `micro_arb`, ces noms sont utilisés pour
 la liste de data.frames en sortie de `run_arb` (pas de noms définis dans
 l'exemple ci-dessus).
+
+> _Des vérifications sont effectuées avant le lancement effectif de &tau;-Argus :
+> existence du logiciel sur le poste, des fichiers asc et rda, des dossiers où
+> écrire les résultats, des variables à utiliser (croisements, variable de
+> réponse, ...) dans les métadonnées (fichier rda)._
 
 <p style="text-align: right">
   <a href="#TOC" title="Retour sommaire">sommaire &uarr;</a>
@@ -638,13 +644,14 @@ str(rtauargus_options())
 Pour réinitialiser certaines options :
 
 ```{r opt_reset}
-reset_rtauargus_options("rtauargus.response_var", "output_type")
+reset_rtauargus_options("rtauargus.response_var", "rtauargus.output_type")
+
+# Il est possible d'omettre le préfixe 'rtauargus.'
+# L'instruction suivante est équivalente :
+reset_rtauargus_options("response_var", "output_type")
 
 str(rtauargus_options())
 ```
-
-> _Le préfixe `rtauargus.` avant le nom du paramètre est possible, mais 
-> pas obligatoire._
 
 Pour remettre toutes les valeurs par défaut (y compris le chemin vers
 &tau;-Argus modifié en début de démonstration), ne spécifier aucun argument :

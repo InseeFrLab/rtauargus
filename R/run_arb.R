@@ -13,6 +13,11 @@
 #' normalement pas à être spécifié (sauf pour surcharger l'option globale le
 #' temps de l'exécution de la foncion).
 #'
+#' Des vérifications sont effectuées avant le lancement effectif de Tau-Argus :
+#' existence du logiciel sur le poste, des fichiers asc et rda, des dossiers où
+#' écrire les résultats, des variables à utiliser (croisements, variable de
+#' réponse) dans les métadonnées (fichier rda).
+#'
 #' @param arb_filename nom du fichier batch à exécuter.
 #' @param missing_dir action si les dossiers où seront écrits les
 #'   résultats n'existent pas ("stop" pour déclencher une erreur, "create" pour
