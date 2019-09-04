@@ -75,11 +75,13 @@ df_op.rtauargus <- function(html = FALSE) {
 #' # options(rtauargus.<opt> = <val>)
 #'
 #' @details
-#' Les options du package définissent les comportements par défaut des fonctions.
+#' Les options du package définissent les comportements par défaut des
+#' fonctions.
 #'
 #' Ces options sont utilisées si un argument obligatoire d’une fonction n’est
-#' pas renseigné. Le nom de l’option est le nom de l’argument d’une fonction
-#' précédé de \code{rtauargus.} .
+#' pas renseigné. Elles permettent de ne pas répéter systématiquement le même
+#' paramètre à chaque appel d'une fonction. Le nom de l’option est le nom de
+#' l’argument d’une fonction précédé de \code{rtauargus.} :
 #'
 #' \emph{Par exemple, \code{rtauargus.decimals} sera la valeur utilisée si l’argument
 #' \code{decimals} de la fonction \code{micro_asc_rda} n’est pas renseigné par

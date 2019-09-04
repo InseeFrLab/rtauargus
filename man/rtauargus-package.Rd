@@ -27,6 +27,13 @@ par Tau-Argus. Ses fonctionnalités principales sont de :
 Ces différentes opérations peuvent être exécutées en une seule fois, mais aussi
 de manière modulaire.
 
+La syntaxe de certains arguments colle au plus près à la syntaxe batch de
+Tau-Argus. Ceci permet d’utiliser un grand nombre de fonctionnalités sans
+multiplier les arguments des fonctions. Le package pourra en outre s’adapter
+plus facilement à d’éventuelles modifications du logiciel (nouvelles méthodes
+disponibles, options supplémentaires…). Les règles de syntaxe pour l’écriture de
+batch figurent dans le manuel de référence de Tau-Argus.
+
 }
 
 \section{Précautions d'usage}{

@@ -310,7 +310,7 @@ fonction `rtauargus`, à savoir :
     [run_arb()](#fonction-run_arb)             &nbsp;&nbsp;&rarr;&nbsp;&nbsp;
     [import()](#fonction-import)**
 
-### Fonction `micro_asc_rda`
+### [1] Fonction `micro_asc_rda`
 
 &tau;-Argus n'accepte en entrée que des microdonnées sous une forme bien
 spécifique :
@@ -396,7 +396,7 @@ noms_asc_rda
   <a href="#TOC" title="Retour sommaire">sommaire &uarr;</a>
 </p>
 
-### Fonction `micro_arb`
+### [2] Fonction `micro_arb`
 
 Cette fonction construit un fichier batch exécutable par &tau;-Argus. Elle prend 
 comme arguments obligatoires :
@@ -492,7 +492,7 @@ infos_arb
 </p>
 
 
-### Fonction `run_arb`
+### [3] Fonction `run_arb`
 
 Maintenant que les instructions ont été générées dans un fichier .arb, on peut
 le soumettre à &tau;-Argus en mode batch. On récupère la liste des tableaux
@@ -512,7 +512,7 @@ nécessaires sont présentes dans le fichier .arb. Des paramètres optionnels so
 également disponibles :
 
 - `missing_dir` : action à effectuer si un dossier où sera écrit le résultat
-  n'existe pas (déclencher un erreur ou le créer)
+  n'existe pas (déclencher une erreur ou le créer)
 - `tauargus_exe` : pour changer l'exécutable (surcharge l'option
   `rtauargus.tauargus_exe` le temps de la fonction) ;
 - `logbook` : emplacement et nom du fichier contenant le journal d'erreurs ;
@@ -534,7 +534,7 @@ l'exemple ci-dessus).
   <a href="#TOC" title="Retour sommaire">sommaire &uarr;</a>
 </p>
 
-### Fonction `import`
+### [4] Fonction `import`
 
 Cette fonction importe les résultats produits par &tau;-Argus (fichiers texte) à
 partir des informations contenues dans un fichier arb. Elle nécessite donc que
@@ -587,10 +587,11 @@ str(secret2[[2]])
 Les options du package définissent les comportements par défaut des fonctions.
 
 Ces options sont utilisées si un argument obligatoire d'une fonction n'est pas
-renseigné. Le nom de l'option est le nom de l'argument d'une fonction précédé de
-`rtauargus.` :
+renseigné. Elles permettent de ne pas répéter systématiquement le même paramètre
+à chaque appel d'une fonction. Le nom de l'option est le nom de l'argument d'une
+fonction précédé de `rtauargus.` :
 
-> `rtauargus.decimals` sera par exemple la valeur utilisée si l'argument
+> Par exemple, `rtauargus.decimals` sera la valeur utilisée si l'argument
 > `decimals` de la fonction `micro_asc_rda` n'est pas renseigné par
 > l'utilisateur.
 
@@ -598,7 +599,8 @@ Au chargement, le package attribue une valeur par défaut à toutes les options
 de rtauargus qui ne sont pas encore déclarées. Les options déjà définies par
 l'utilisateur gardent leurs valeurs.
 
-Les options disponibles sont listées ci-dessous avec leur valeur par défaut :
+Les options disponibles ainsi que leurs valeurs par défaut sont listées
+ci-dessous :
 
 ```{r tab_val_defaut, echo = FALSE}
 knitr::kable(
