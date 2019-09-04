@@ -1,7 +1,7 @@
 Package: rtauargus
 Type: Package
 Title: Tau-Argus with R
-Version: 0.4.0
+Version: 0.4.0.9000
 Depends: R (>= 3.3)
 Imports:
     purrr (>= 0.2),
