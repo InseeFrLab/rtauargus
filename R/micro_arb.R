@@ -147,7 +147,7 @@ apriori_batch <- function(ntab, hst_names, sep = ',', ignore_err = 0 , exp_triv 
 #' La fonction ne vérifie pas si les fichiers asc et rda existent.
 #'
 #' @section Syntaxe:
-#' Tau-Argus peut traiter jusqu'à 10 tabulations pour un même jeu de
+#' Tau-Argus peut traiter plusieurs tabulations pour un même jeu de
 #' microdonnées. Passer une seule valeur pour une option appliquera le même
 #' traitement à chaque tabulation. Pour des options différenciées, passer un
 #' vecteur contenant autant de valeurs que de tabulations. Si les longueurs ne

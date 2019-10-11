@@ -706,6 +706,9 @@ prise en main :
 - prise en compte de fichier apriori (argument `apriori` dans `micro_arb`)
 - utilisation de la fonction `rtauargus` à partir de microdonnées déjà sous
   forme de fichier texte (et non de data.frame)
+- lancement optimisé d'un grand nombre de croisements ayant les mêmes paramètres
+  (règles de secret primaire, méthode de secret secondaire, ...) : fonction 
+  `rtauargus_plus`
 
 Consulter l'aide de ces fonctions pour plus d'informations.
 

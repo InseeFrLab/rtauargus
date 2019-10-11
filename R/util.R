@@ -95,3 +95,37 @@ vars_micro_rda <- function(rda_file) {
   lignes_var[!is.na(lignes_var)]
 
 }
+
+# renvoie les noms des paramètres acceptés par f présents dans list_param
+
+param_function <- function(f, list_param) {
+  f_param_names <-
+    intersect(
+      names(formals(f)),
+      names(list_param)
+    )
+  list_param[f_param_names]
+}
+
+# vecteur des variables nécessaires pour rtauargus()
+
+used_var <- function(explanatory_vars,
+                     weight_var   = NULL,
+                     holding_var  = NULL,
+                     response_var = getOption("rtauargus.response_var"),
+                     shadow_var   = NULL,
+                     cost_var     = NULL) {
+
+  res <- unlist(
+    c(explanatory_vars,
+      weight_var,
+      holding_var,
+      response_var,
+      shadow_var,
+      cost_var
+    )
+  )
+
+  unique(setdiff(res, "<freq>"))
+
+}

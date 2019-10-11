@@ -53,11 +53,11 @@ La fonction exécute séquentiellement les fonctions : \itemize{
   }
 }
 
-Les fichiers intermédiaires sans nom renseigné (\code{asc_filename}...) seront
-créés dans un dossier temporaire, avec des noms générés aléatoirement. Ce
-mécanisme permet à l'utilisateur de s'abstraire de la préparation des données
-propre à Tau-Argus et de maintenir l'intégralité de la chaîne de traitements
-dans R.
+Les fichiers intermédiaires sans nom renseigné (\code{asc_filename}...)
+seront créés dans un dossier temporaire, avec des noms générés aléatoirement.
+Ce mécanisme permet à l'utilisateur de s'abstraire de la préparation des
+données propre à Tau-Argus et de maintenir l'intégralité de la chaîne de
+traitements dans R.
 }
 \section{Microdonnées déjà sous forme de fichiers texte}{
  Pour utiliser des
@@ -75,7 +75,7 @@ dans R.
 
 \section{Syntaxe}{
 
-Tau-Argus peut traiter jusqu'à 10 tabulations pour un même jeu de
+Tau-Argus peut traiter plusieurs tabulations pour un même jeu de
 microdonnées. Passer une seule valeur pour une option appliquera le même
 traitement à chaque tabulation. Pour des options différenciées, passer un
 vecteur contenant autant de valeurs que de tabulations. Si les longueurs ne
@@ -101,4 +101,8 @@ rtauargus(
   suppress = "GH(.,100)",
   output_options = "AS+" # (exemple de parametre optionnel pour micro_arb)
 )}
+}
+\seealso{
+\code{\link{rtauargus_plus}}, une version optimisée pour un grand
+  nombre de tableaux (au prix de quelques restrictions d'usage).
 }

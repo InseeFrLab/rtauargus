@@ -1,13 +1,3 @@
-param_function <- function(f, list_param) {
-  # renvoie les noms des paramètres acceptés par f présents dans list_param
-  f_param_names <-
-    intersect(
-      names(formals(f)),
-      names(list_param)
-    )
-  list_param[f_param_names]
-}
-
 #' Secrétise des tableaux à partir de microdonnées
 #'
 #' Secrétise des tableaux construits à partir de microdonnées et des
@@ -24,11 +14,11 @@ param_function <- function(f, list_param) {
 #'   }
 #' }
 #'
-#' Les fichiers intermédiaires sans nom renseigné (\code{asc_filename}...) seront
-#' créés dans un dossier temporaire, avec des noms générés aléatoirement. Ce
-#' mécanisme permet à l'utilisateur de s'abstraire de la préparation des données
-#' propre à Tau-Argus et de maintenir l'intégralité de la chaîne de traitements
-#' dans R.
+#' Les fichiers intermédiaires sans nom renseigné (\code{asc_filename}...)
+#' seront créés dans un dossier temporaire, avec des noms générés aléatoirement.
+#' Ce mécanisme permet à l'utilisateur de s'abstraire de la préparation des
+#' données propre à Tau-Argus et de maintenir l'intégralité de la chaîne de
+#' traitements dans R.
 #'
 #' @inheritParams micro_arb
 #' @param microdata [\strong{obligatoire}] data.frame contenant les microdonnées
@@ -54,6 +44,9 @@ param_function <- function(f, list_param) {
 #' @return Si \code{import = TRUE}, une liste de data.frames (tableaux
 #'   secrétisés), \code{NULL} sinon.
 #'
+#' @seealso \code{\link{rtauargus_plus}}, une version optimisée pour un grand
+#'   nombre de tableaux (au prix de quelques restrictions d'usage).
+#'
 #' @examples
 #' \dontrun{
 #' rtauargus(
@@ -72,6 +65,13 @@ rtauargus <- function(microdata,
                       ...) {
 
   .dots <- list(...)
+
+  if (length(explanatory_vars) > 10) {
+    warning(
+      "Plus de 10 croisements. ",
+      "Utiliser 'rtauargus_plus' pour une execution plus rapide ?"
+    )
+  }
 
   ## 0. CONFLITS PARAMETRES .................
 
