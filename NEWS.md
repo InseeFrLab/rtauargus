@@ -1,8 +1,16 @@
 ---
 title: Package ‘rtauargus’
-subtitle: Journal des modifications
+subtitle: Historique des modifications
 output: rmarkdown::html_vignette
 ---
+
+## rtauargus 0.4.1
+
+[18/10/2019]
+
+* **rtauargus_plus()** : extension de la fonction `rtauargus` pour un grand
+  nombre de croisements (ayant tous les mêmes caractéristiques). Réduit le temps
+  d'exécution par rapport à la version "normale".
 
 ## rtauargus 0.4.0
 
