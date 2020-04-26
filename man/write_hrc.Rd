@@ -4,10 +4,15 @@
 \alias{write_hrc}
 \title{Crée un fichier hrc à partir de microdonnées}
 \usage{
-write_hrc(microdata, vars_hrc,
+write_hrc(
+  microdata,
+  vars_hrc,
   hierleadstring = getOption("rtauargus.hierleadstring"),
-  hrc_filename = NULL, fill_na = c("up", "down"), compact = TRUE,
-  hierlevels = NULL)
+  hrc_filename = NULL,
+  fill_na = c("up", "down"),
+  compact = TRUE,
+  hierlevels = NULL
+)
 }
 \arguments{
 \item{microdata}{[\strong{obligatoire}] data.frame contenant les

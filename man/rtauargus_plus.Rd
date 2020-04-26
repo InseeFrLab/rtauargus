@@ -4,8 +4,14 @@
 \alias{rtauargus_plus}
 \title{Secrétisation en masse}
 \usage{
-rtauargus_plus(grp_size = 5, microdata, explanatory_vars, safety_rules,
-  suppress, ...)
+rtauargus_plus(
+  grp_size = 5,
+  microdata,
+  explanatory_vars,
+  safety_rules,
+  suppress,
+  ...
+)
 }
 \arguments{
 \item{grp_size}{nombre de tableaux par appel de Tau-Argus (un entier compris

@@ -4,13 +4,20 @@
 \alias{micro_asc_rda}
 \title{Crée les fichiers asc et rda à partir de microdonnées}
 \usage{
-micro_asc_rda(microdata, asc_filename = NULL, rda_filename = NULL,
-  weight_var = NULL, holding_var = NULL,
-  decimals = getOption("rtauargus.decimals"), hrc = NULL,
+micro_asc_rda(
+  microdata,
+  asc_filename = NULL,
+  rda_filename = NULL,
+  weight_var = NULL,
+  holding_var = NULL,
+  decimals = getOption("rtauargus.decimals"),
+  hrc = NULL,
   hierleadstring = getOption("rtauargus.hierleadstring"),
   totcode = getOption("rtauargus.totcode"),
-  missing = getOption("rtauargus.missing"), codelist = NULL,
-  request = NULL)
+  missing = getOption("rtauargus.missing"),
+  codelist = NULL,
+  request = NULL
+)
 }
 \arguments{
 \item{microdata}{[\strong{obligatoire}] data.frame contenant les
