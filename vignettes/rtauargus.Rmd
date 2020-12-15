@@ -5,27 +5,27 @@ output:
   rmarkdown::html_vignette:
     toc: true
     toc_depth: 3
-params:
-  ta_lib:
-    label: "Version de Tau-Argus utilisée pour la vignette"
-    value: "file_ini"
-    input: select
-    choices: ["file_ini",
-              "AUS_commun",
-              "Poste_4.1.7",
-              "Poste_4.1.6",
-              "Poste_4.1.4",
-              "Poste_4.1.3"]
-  ta_lib_man:
-    label: "ou manuellement définir chemin emplacement exécutable Tau-Argus"
-    input: text
-    value: "?"
-  eval_ta:
-    label: "Évaluer les chunks nécessitant Tau-Argus (lent mais complet)"
-    value: TRUE 
-  warning:
-    label: "Afficher warnings"
-    value: FALSE
+# params:
+#   ta_lib:
+#     label: "Version de Tau-Argus utilisée pour la vignette"
+#     value: "file_ini"
+#     input: select
+#     choices: ["file_ini",
+#               "AUS_commun",
+#               "Poste_4.1.7",
+#               "Poste_4.1.6",
+#               "Poste_4.1.4",
+#               "Poste_4.1.3"]
+#   ta_lib_man:
+#     label: "ou manuellement définir chemin emplacement exécutable Tau-Argus"
+#     input: text
+#     value: "?"
+#   eval_ta:
+#     label: "Évaluer les chunks nécessitant Tau-Argus (lent mais complet)"
+#     value: TRUE 
+#   warning:
+#     label: "Afficher warnings"
+#     value: FALSE
 vignette: >
   %\VignetteIndexEntry{Tau-Argus depuis R}
   %\VignetteEngine{knitr::rmarkdown}
@@ -34,6 +34,13 @@ vignette: >
 
 
 ```{r setup, include = FALSE}
+params <- list(
+  ta_lib = "file_ini",
+  ta_lib_man = "?",
+  ta_eval = TRUE,
+  warning = FALSE
+)
+  
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
