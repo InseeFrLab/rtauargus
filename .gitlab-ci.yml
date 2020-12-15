@@ -15,11 +15,10 @@ pkg_check:
     - R -e 'devtools::check(check_dir = ".",
                             error_on  = "error",
                             document  = FALSE,
-                            manual    = TRUE)'
+                            manual    = FALSE)'
   artifacts:
     paths:
       - "${PKG_NAME}_*.tar.gz"
-      - "${PKG_NAME}.Rcheck/${PKG_NAME}-manual.pdf"
 
 pages:
   stage: deploy
