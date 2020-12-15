@@ -1,0 +1,34 @@
+image: rocker/tidyverse
+
+stages:
+  - check
+  - deploy
+
+variables:
+  GIT_SSL_NO_VERIFY: "1"
+  PKG_NAME: "rtauargus"
+
+pkg_check:
+  stage: check
+  script:
+    - R -e install.packages("gdata")
+    - R -e 'devtools::check(check_dir = ".",
+                            error_on  = "error",
+                            document  = FALSE,
+                            manual    = TRUE)'
+  artifacts:
+    paths:
+      - "${PKG_NAME}_*.tar.gz"
+      - "${PKG_NAME}.Rcheck/${PKG_NAME}-manual.pdf"
+
+pages:
+  stage: deploy
+  script:
+    - R -e 'install.packages(c("gdata", "pkgdown"))'
+    - R -e 'pkgdown::build_site()'
+  artifacts:
+    paths:
+      - public
+  when: manual # pour declencher manuellement le job quand version stable
+  only:
+    - master
