@@ -11,7 +11,7 @@ variables:
 pkg_check:
   stage: check
   script:
-    - R -e install.packages("gdata")
+    - R -e 'install.packages("gdata")'
     - R -e 'devtools::check(check_dir = ".",
                             error_on  = "error",
                             document  = FALSE,
