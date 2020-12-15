@@ -55,9 +55,9 @@ test_that("différentes configurations et ordre des variables", {
       c("niv3", "niv2", "niv1") # inversion ordre
     ),
     tibble(
-      niv1 = c("A"  , "A" , "B", NA, "D", "E", "F1"),
+      niv3 = c("A1x",  NA ,  NA, NA,  NA, "E", "F" ),
       niv2 = c("A1" , "A2",  NA, NA, "D", "E", "F1"),
-      niv3 = c("A1x",  NA ,  NA, NA,  NA, "E", "F" )
+      niv1 = c("A"  , "A" , "B", NA, "D", "E", "F1")
     )
   )
 
