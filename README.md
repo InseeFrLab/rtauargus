@@ -20,6 +20,29 @@ Ces différentes opérations peuvent être exécutées en une seule fois, mais a
 
 Le package présente d'autres fonctionnalités annexes, comme créer une variable hiérarchique à partir de microdonnées.
 
+### Installation
+
+* **version stable la plus récente** (recommandé)
+```r
+install.packages("rtauargus", repos = "https://nexus.insee.fr/repository/r-public")
+```
+
+* **version de développement**
+```r
+# install.packages("remotes")
+remotes::install_gitlab(
+  repo    = "xkfzv9/rtauargus",
+  host    = "gitlab.insee.fr",
+  upgrade = "never"
+)
+```
+
+Pour installer une version spécifique, ajouter au répertoire une référence
+([commit](https://gitlab.insee.fr/xkfzv9/rtauargus/-/commits/master) ou
+[tag](https://gitlab.insee.fr/xkfzv9/rtauargus/-/tags)),
+par exemple `"xkfzv9/rtauargus@v-0.4.1"`.
+
+
 ### Exemple simple
 
 ``` r

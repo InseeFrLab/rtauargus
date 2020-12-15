@@ -719,11 +719,6 @@ Consulter l'aide de ces fonctions pour plus d'informations.
 - importer d'autres formats ("5", "6" ?)
 - ...
 
-#### Code source
-
-Le code source est disponible sur la
-[plate-forme innovation Insee](https://git.stable.innovation.insee.eu/xkfzv9/rtauargus).
-
 #### Signaler un problème, suggérer une amélioration
 
 Le package est en cours de construction. Toutes les fonctionnalités de
@@ -731,7 +726,7 @@ Le package est en cours de construction. Toutes les fonctionnalités de
 toutes, seulement les plus fréquemment utilisées).
 
 Pour tout retour ou signalement d'erreur, utiliser de préférence
-[ce lien](https://git.stable.innovation.insee.eu/xkfzv9/rtauargus/issues)
+[ce lien](https://gitlab.insee.fr/xkfzv9/rtauargus/-/issues)
 (cliquer sur **"New issue"**). Nécessite d'être connecté au gitlab-Insee.
 
 #### À propos de cette vignette
