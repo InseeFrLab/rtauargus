@@ -7,3 +7,4 @@
 ^tmp$
 # ^vignettes/.+\.png$
 ^vignettes/rtauargus\.Rmd\.orig$
+^vignettes/precompilation.R$

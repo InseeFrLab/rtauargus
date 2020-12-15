@@ -40,37 +40,9 @@ vignette: >
 
 
 
-```{r setup, include = FALSE}
-params <- list(
-  ta_lib = "file_ini",
-  ta_lib_man = "?",
-  ta_eval = TRUE,
-  warning = FALSE
-)
 
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>",
-  eval = TRUE,
-  warning = params$warning
-)
-```
 
-```{r version_ta, include = FALSE}
-# pour relier les emplacements exacts aux choix fait dans knit with param
-# par défaut (notamment pour build), lit la première ligne d'un fichier
-# "tauargus_exe.ini" dans répertoire "vignettes" (un développeur rapatriant le
-# code source devra créer ce fichier personnalisé)
-dir_poste <- sprintf("D:/%s/TauArgus", Sys.getenv("USERNAME")) # windows only ?
-loc_tauargus <- c(
-  file_ini    = if (file.exists(f <- "tauargus_exe.ini")) readLines(f)[1],
-  AUS_commun  = "Y:/Logiciels/Tau/TauArgus.exe",
-  Poste_4.1.7 = file.path(dir_poste, "TauArgus4.1.7b4", "TauArgus.exe"),
-  Poste_4.1.6 = file.path(dir_poste, "TauArgus4.1.6b2", "TauArgus.exe"),
-  Poste_4.1.4 = file.path(dir_poste, "TauArgus4.1.4"  , "TauArgus.exe"),
-  Poste_4.1.3 = file.path(dir_poste, "TauARGUS4.1.3"  , "TauArgus.exe")
-)
-```
+
 
 
 <!-- ####################################################################### -->
@@ -117,7 +89,8 @@ aspects techniques...) est disponible via la rubrique d'aide dédiée.
 Pour la démonstration qui va suivre, un jeu de microdonnées fictif sera
 utilisé :
 
-```{r donnees}
+
+```r
 donnees <-
   data.frame(
     V1    = c("A", "A", "A", "A", "B", "B", "B", "C"),
@@ -127,6 +100,15 @@ donnees <-
     POIDS = c(1, 2.71, 4.2, 1)
   )
 donnees
+#>   V1 V2 V3 VAL POIDS
+#> 1  A  Y T1 100  1.00
+#> 2  A  Z T2   0  2.71
+#> 3  A  Y T1   7  4.20
+#> 4  A  Z S_  25  1.00
+#> 5  B  Y T1   0  1.00
+#> 6  B  Z T1   4  2.71
+#> 7  B  Y T1   0  4.20
+#> 8  C  Z S_   5  1.00
 ```
 
 <p style="text-align: right">
@@ -156,9 +138,12 @@ microdonnées...). Ne pas l'avoir sur son poste n'est donc pas bloquant.
 Pour fonctionner, _rtauargus_ dépend d'autres packages R. Ceux-ci sont à
 installer au préalable (entre parenthèses les versions minimales requises).
 
-```{r, echo = FALSE, comment = "•"}
-imports <- packageDescription("rtauargus", fields = "Imports")
-cat(gsub(", ", "\n", imports))
+
+```
+• purrr (>= 0.2)
+• dplyr (>= 0.7)
+• gdata
+• stringr
 ```
 
 ### Package
@@ -181,7 +166,8 @@ comment appliquer le secret statistique en une seule instruction.
 
 Au chargement du package, la console affiche quelques informations :
 
-```{r library}
+
+```r
 library(rtauargus)
 ```
 
@@ -189,29 +175,10 @@ En particulier, un emplacement plausible pour le logiciel &tau;-Argus est
 prédéfini. Il est possible de le changer pour toute la durée de la session R. Un
 message indique que cet emplacement est inconnu, on le modifie donc :
 
-```{r opt_exe, include = FALSE}
-loc_tauargus <-
-  # sélection manuelle prioritaire sur les raccourcis proposés
-  if (params$ta_lib_man != "?") {
-    params$ta_lib_man
-  } else {
-    unname(loc_tauargus[params$ta_lib])
-  }
-if (!file.exists(loc_tauargus)) {
-  # message affiché lorsque build échoue à cause absence Tau-Argus sur poste
-  stop(
-    "\n--- Logiciel Tau-Argus introuvable :",
-    "\n--- renseigner son emplacement dans la 1ere ligne",
-    "\n--- de 'vignettes/tauargus_exe.ini' (a creer si n'existe pas)",
-    "\n--- par exemple, D:/XKFZV9/TauArgus/TauArgus4.1.7b4/TauArgus.exe",
-    "\n "
-  )
-}
-options(rtauargus.tauargus_exe = loc_tauargus)
-```
+
 
 ``` r
-options(rtauargus.tauargus_exe = "`r loc_tauargus`")
+options(rtauargus.tauargus_exe = "D:/Program Files/TauArgus/TauArgus4.1.7b4/TauArgus.exe")
 ```
 
 Ce petit réglage effectué, le package est prêt à être utilisé.
@@ -242,13 +209,20 @@ Les deux derniers arguments utilisent la syntaxe batch &tau;-Argus.
 
 #### Exemple minimaliste
 
-```{r rtauargus_ex1, eval = params$eval_ta}
+
+```r
 rtauargus(
   microdata        = donnees,
   explanatory_vars = "V1",
   safety_rules     = "FREQ(3,10)",
   suppress         = "GH(1,100)"
 )
+#> [[1]]
+#>      V1 Freq Status
+#> 1 Total    8      1
+#> 2     A    4      1
+#> 3     B    3     11
+#> 4     C    1      5
 ```
 
 Comme aucune variable de réponse n'est renseignée, un comptage est effectué
@@ -268,7 +242,8 @@ De plus, les tables produites ne sont plus simplement envoyées dans la console.
 Elles sont stockées dans un objet `secret1` (une liste constituée de deux
 data.frame), que l'on pourra continuer de manipuler.
 
-```{r rtauargus_ex2, eval = params$eval_ta}
+
+```r
 secret1 <-
   rtauargus(
     microdata          = donnees,
@@ -280,6 +255,27 @@ secret1 <-
   )
 
 secret1
+#> [[1]]
+#>      V1 Freq
+#> 1 Total    8
+#> 2     A    4
+#> 3     B    x
+#> 4     C    x
+#> 
+#> [[2]]
+#>       V1    V2 Freq Status
+#> 1  Total Total    8      1
+#> 2  Total     Y    4      1
+#> 3  Total     Z    4      1
+#> 4      A Total    4     11
+#> 5      A     Y    2      5
+#> 6      A     Z    2      5
+#> 7      B Total    3     11
+#> 8      B     Y    2      5
+#> 9      B     Z    1      5
+#> 10     C Total    1      5
+#> 11     C     Y   NA     14
+#> 12     C     Z    1      5
 ```
 
 > _Note sur l'écriture `suppress = "GH(.,100)"` :_
@@ -341,27 +337,35 @@ On ne renseigne ici que les données et le nom du fichier asc. Comme le nom du
 fichier de métadonnées n'est pas spécifié, il prend le même nom que le fichier
 asc, mais avec l'extension .rda.
 
-```{r asc_rda_1}
+
+```r
 micro_asc_rda(donnees, asc_filename = "Z:/donnees.asc")
 ```
 
 Contenu des fichiers créés :
-```{r file_show_asc_rda, eval = FALSE}
+
+```r
 file.show("Z:/donnees.asc", "Z:/donnees.rda", pager = "internal")
-````
-```{r show_asc_rda, echo = FALSE, comment = ""}
-donnees.asc <- c("", readLines("Z:/donnees.asc"))
-donnees.rda <- c("", readLines("Z:/donnees.rda"))
-na <- length(donnees.asc)
-nr <- length(donnees.rda)
-# suppose que rda a plus de lignes que asc
-donnees.asc[(na + 1):nr] <- ""
-donnees.asc <- paste(donnees.asc, "      ")
-print.data.frame(
-  data.frame(donnees.asc, donnees.rda),
-  row.names = FALSE,
-  right = FALSE
-)
+```
+
+```
+ donnees.asc            donnees.rda        
+                                           
+ A Y T1 100 1.00        V1 1 1             
+ A Z T2   0 2.71          <RECODEABLE>     
+ A Y T1   7 4.20          <TOTCODE> "Total"
+ A Z S_  25 1.00        V2 3 1             
+ B Y T1   0 1.00          <RECODEABLE>     
+ B Z T1   4 2.71          <TOTCODE> "Total"
+ B Y T1   0 4.20        V3 5 2             
+ C Z S_   5 1.00          <RECODEABLE>     
+                          <TOTCODE> "Total"
+                        VAL 8 3            
+                          <NUMERIC>        
+                          <DECIMALS> 0     
+                        POIDS 12 4         
+                          <NUMERIC>        
+                          <DECIMALS> 2     
 ```
 
 > _Les fonctions du package acceptent les emplacements de fichiers sous forme
@@ -378,7 +382,8 @@ On ajoute à l'exemple précédent :
 - des codes différenciés pour les totaux ;
 - un nombre minimal de décimales à écrire pour les variables numériques.
 
-```{r asc_rda_2}
+
+```r
 micro_asc_rda(
   microdata    = donnees,
   asc_filename = "Z:/donnees.asc",
@@ -387,12 +392,33 @@ micro_asc_rda(
   totcode      = c("Ensemble", V2 = "TOTAL"),
   decimals     = 1
 )
-
 ```
 Contenu des fichiers créés :
-```{r file_show_asc_rda2, ref.label = 'file_show_asc_rda', eval = FALSE}
-````
-```{r show_asc_rda2, ref.label = 'show_asc_rda', echo = FALSE, comment = ""}
+
+```r
+file.show("Z:/donnees.asc", "Z:/donnees.rda", pager = "internal")
+```
+
+```
+ donnees.asc              donnees.rda           
+                                                
+ A Y T1 100.0 1.00        V1 1 1                
+ A Z T2   0.0 2.71          <RECODEABLE>        
+ A Y T1   7.0 4.20          <TOTCODE> "Ensemble"
+ A Z S_  25.0 1.00        V2 3 1                
+ B Y T1   0.0 1.00          <RECODEABLE>        
+ B Z T1   4.0 2.71          <TOTCODE> "TOTAL"   
+ B Y T1   0.0 4.20        V3 5 2                
+ C Z S_   5.0 1.00          <RECODEABLE>        
+                            <TOTCODE> "Ensemble"
+                            <HIERARCHICAL>      
+                            <HIERLEVELS> 1 1    
+                          VAL 8 5               
+                            <NUMERIC>           
+                            <DECIMALS> 1        
+                          POIDS 14 4            
+                            <WEIGHT>            
+                            <DECIMALS> 2        
 ```
 
 #### Fichiers temporaires
@@ -401,9 +427,15 @@ Pour tout paramètre `*_filename` non renseigné, les fichiers générés sont p
 dans un dossier temporaire. Il est possible de récupérer l'emplacement et le nom
 (aléatoire) de ces fichiers dans la valeur de retour de la fonction.
 
-```{r temp_asc_rda}
+
+```r
 noms_asc_rda <- micro_asc_rda(donnees)
 noms_asc_rda
+#> $asc_filename
+#> [1] "C:\\Users\\XKFZV9\\AppData\\Local\\Temp\\RtmpqwaENb\\RTA_17047d7f63dd.asc"
+#> 
+#> $rda_filename
+#> [1] "C:\\Users\\XKFZV9\\AppData\\Local\\Temp\\RtmpqwaENb\\RTA_17047d7f63dd.rda"
 ```
 
 <p style="text-align: right">
@@ -429,7 +461,8 @@ le même nom que le fichier asc avec l'extension .rda est utilisé.
 
 #### Exemple minimaliste
 
-```{r arb, eval = TRUE}
+
+```r
 micro_arb(
   arb_filename     = "Z:/donnees.arb",
   asc_filename     = "Z:/donnees.asc",
@@ -441,12 +474,22 @@ micro_arb(
 ```
 
 Contenu du fichier créé :
-```{r file_show_arb, eval = FALSE}
-file.show("Z:/donnees.arb", pager = "internal")
-````
 
-```{r show_arb, echo = FALSE, comment = ""}
-cat(readLines("Z:/donnees.arb"), sep = "\n")
+```r
+file.show("Z:/donnees.arb", pager = "internal")
+```
+
+
+```
+// Batch generated by package *rtauargus*
+// (2020-12-15 21:03:22 CET)
+<OPENMICRODATA> "Z:\donnees.asc"
+<OPENMETADATA> "Z:\donnees.rda"
+<SPECIFYTABLE> "V1"|"<freq>"||
+<SAFETYRULE> FREQ(3,10)
+<READMICRODATA>
+<SUPPRESS> GH(1,100)
+<WRITETABLE> (1,2,AS+SE+,"Z:\resultats\secretV1.csv")
 ```
 
 #### Exemple élaboré
@@ -463,7 +506,8 @@ Passer une seule valeur pour une option applique le même traitement à chaque
 tabulation. Pour des options différenciées, il faut impérativement passer un
 vecteur contenant autant de valeurs que de tabulations.
 
-```{r arb2}
+
+```r
 micro_arb(
   arb_filename     = "Z:/donnees.arb",
   asc_filename     = "Z:/donnees.asc",
@@ -476,10 +520,26 @@ micro_arb(
 )
 ```
 
-```{r file_show_arb2, ref.label = 'file_show_arb', eval = FALSE}
-````
 
-```{r show_arb2, ref.label = 'show_arb', echo = FALSE, eval = TRUE, comment = ""}
+```r
+file.show("Z:/donnees.arb", pager = "internal")
+```
+
+
+```
+// Batch generated by package *rtauargus*
+// (2020-12-15 21:03:23 CET)
+<OPENMICRODATA> "Z:\donnees.asc"
+<OPENMETADATA> "Z:\donnees.rda"
+<SPECIFYTABLE> "V1"|"VAL"||
+<SAFETYRULE> FREQ(3,10)|Wgt(1)
+<SPECIFYTABLE> "V2""V3"|"VAL"||
+<SAFETYRULE> FREQ(3,10)|NK(1,85)
+<READMICRODATA>
+<SUPPRESS> GH(1,100)
+<WRITETABLE> (1,2,AS+SE+,"C:\Users\XKFZV9\AppData\Local\Temp\RtmpqwaENb\RTA_17045692239a.csv")
+<SUPPRESS> GH(2,100)
+<WRITETABLE> (2,2,AS+SE+,"C:\Users\XKFZV9\AppData\Local\Temp\RtmpqwaENb\RTA_170466085185.csv")
 ```
 
 #### Fichiers temporaires
@@ -489,7 +549,8 @@ n'étaient pas précisés, ce qui a conduit à la génération de noms de fichie
 temporaires. Préciser le nom du fichier .arb n'est pas obligatoire non plus. Ces
 informations sont récupérables dans la valeur de retour de la fonction.
 
-```{r arb_tmp}
+
+```r
 infos_arb <-
   micro_arb(
     asc_filename     = "Z:/donnees.asc",
@@ -499,6 +560,12 @@ infos_arb <-
     output_type      = "4"
   )
 infos_arb
+#> $arb_filename
+#> [1] "C:\\Users\\XKFZV9\\AppData\\Local\\Temp\\RtmpqwaENb\\RTA_17044a391da9.arb"
+#> 
+#> $output_names
+#> [1] "C:\\Users\\XKFZV9\\AppData\\Local\\Temp\\RtmpqwaENb\\RTA_1704222a1b5.sbs" 
+#> [2] "C:\\Users\\XKFZV9\\AppData\\Local\\Temp\\RtmpqwaENb\\RTA_1704271930bd.sbs"
 ```
 
 <p style="text-align: right">
@@ -512,10 +579,35 @@ Maintenant que les instructions ont été générées dans un fichier .arb, on p
 le soumettre à &tau;-Argus en mode batch. On récupère la liste des tableaux
 secrétisés :
 
-```{r run1, eval = params$eval_ta}
+
+```r
 secret2 <- run_arb("Z:/donnees.arb")
 
 secret2
+#> [[1]]
+#>         V1   VAL Status
+#> 1 Ensemble 170.2      1
+#> 2        A 154.4      1
+#> 3        B  10.8     11
+#> 4        C   5.0      5
+#> 
+#> [[2]]
+#>       V2       V3 VAL Status
+#> 1  TOTAL Ensemble 141     11
+#> 2  TOTAL        S  30      5
+#> 3  TOTAL       S_  30      5
+#> 4  TOTAL        T 111      3
+#> 5  TOTAL       T1 111      3
+#> 6  TOTAL       T2   0      5
+#> 7      Y Ensemble 107      3
+#> 8      Y        T 107      3
+#> 9      Y       T1 107      3
+#> 10     Z Ensemble  34     11
+#> 11     Z        S  30      5
+#> 12     Z       S_  30      5
+#> 13     Z        T   4      3
+#> 14     Z       T1   4      3
+#> 15     Z       T2   0      5
 ```
 
 `run_arb` est la seule fonction du package qui exécute &tau;-Argus. Elle
@@ -560,7 +652,8 @@ Pour cette dernière raison, la fonction `import` est typiquement appelée depui
 manière indépendante (par exemple si on ne souhaite pas relancer un batch qui a
 mis beaucoup de temps à s'exécuter).
 
-```{r import, results = "hide", eval = FALSE}
+
+```r
 secret2 <- import("Z:/donnees.arb")
 #  produit le même résultat que run_arb("Z:/donnees.arb", import = TRUE)
 ```
@@ -584,8 +677,21 @@ Par exemple, pour `secret2[[2]]` (le deuxième tableau de `secret2`), on y
 retrouve les paramètres que l'on a transmis à la fonction (les autres
 correspondent à des valeurs par défaut du package).
 
-```{r attributs, eval = params$eval_ta}
+
+```r
 str(secret2[[2]])
+#> 'data.frame':	15 obs. of  4 variables:
+#>  $ V2    : chr  "TOTAL" "TOTAL" "TOTAL" "TOTAL" ...
+#>  $ V3    : chr  "Ensemble" "S" "S_" "T" ...
+#>  $ VAL   : num  141 30 30 111 111 0 107 107 107 34 ...
+#>  $ Status: chr  "11" "5" "5" "3" ...
+#>  - attr(*, "explanatory_vars")= chr [1:2] "V2" "V3"
+#>  - attr(*, "response_var")= chr "VAL"
+#>  - attr(*, "safetyrule")= chr "FREQ(3,10)|NK(1,85)"
+#>  - attr(*, "suppress")= chr "GH(.,100)"
+#>  - attr(*, "linked")= logi FALSE
+#>  - attr(*, "output_type")= chr "2"
+#>  - attr(*, "output_options")= chr "AS+SE+"
 ```
 
 <p style="text-align: right">
@@ -616,21 +722,68 @@ l'utilisateur gardent leurs valeurs.
 Les options disponibles ainsi que leurs valeurs par défaut sont listées
 ci-dessous :
 
-```{r tab_val_defaut, echo = FALSE}
-knitr::kable(
-  rtauargus:::df_op.rtauargus(html = TRUE),
-  row.names = FALSE,
-  align = "lllr",
-  col.names = c("Option", "Valeur par défaut", "Type", "Fonction concernée")
-)
-```
+
+|Option                       |Valeur par défaut               |Type      | Fonction concernée|
+|:----------------------------|:-------------------------------|:---------|------------------:|
+|rtauargus.decimals           |0                               |integer   |      micro_asc_rda|
+|rtauargus.totcode            |"Total"                         |character |      micro_asc_rda|
+|rtauargus.missing            |""                              |character |      micro_asc_rda|
+|rtauargus.hierleadstring     |"@"                             |character |      micro_asc_rda|
+|rtauargus.response_var       |"&lt;freq&gt;"                  |character |          micro_arb|
+|rtauargus.weighted           |FALSE                           |logical   |          micro_arb|
+|rtauargus.linked             |FALSE                           |logical   |          micro_arb|
+|rtauargus.output_type        |"2"                             |character |          micro_arb|
+|rtauargus.output_options     |"AS+"                           |character |          micro_arb|
+|rtauargus.missing_dir        |"stop"                          |character |            run_arb|
+|rtauargus.tauargus_exe       |"Y:/Logiciels/Tau/TauArgus.exe" |character |            run_arb|
+|rtauargus.show_batch_console |TRUE                            |logical   |            run_arb|
+|rtauargus.import             |TRUE                            |logical   |            run_arb|
 
 ### Affichage
 
 Pour afficher les options définies pour la session en cours :
 
-```{r opt}
+
+```r
 rtauargus_options()
+#> $rtauargus.decimals
+#> [1] 0
+#> 
+#> $rtauargus.hierleadstring
+#> [1] "@"
+#> 
+#> $rtauargus.import
+#> [1] TRUE
+#> 
+#> $rtauargus.linked
+#> [1] FALSE
+#> 
+#> $rtauargus.missing
+#> [1] ""
+#> 
+#> $rtauargus.missing_dir
+#> [1] "stop"
+#> 
+#> $rtauargus.output_options
+#> [1] "AS+SE+"
+#> 
+#> $rtauargus.output_type
+#> [1] "2"
+#> 
+#> $rtauargus.response_var
+#> [1] "<freq>"
+#> 
+#> $rtauargus.show_batch_console
+#> [1] FALSE
+#> 
+#> $rtauargus.tauargus_exe
+#> [1] "D:/Program Files/TauArgus/TauArgus4.1.7b4/TauArgus.exe"
+#> 
+#> $rtauargus.totcode
+#> [1] "Total"
+#> 
+#> $rtauargus.weighted
+#> [1] FALSE
 ```
 
 Les valeurs sont identiques aux valeurs par défaut, hormis l'emplacement de
@@ -646,7 +799,8 @@ alphabétique.
 Pour modifier une ou plusieurs options, utiliser la syntaxe suivante (la même
 que celle employée pour modifier l'emplacement de &tau;-Argus) :
 
-```{r opt_modif}
+
+```r
 options(
   rtauargus.show_batch_console = FALSE,
   rtauargus.output_options     = "AS+SE+",
@@ -655,11 +809,26 @@ options(
 )
 
 str(rtauargus_options())
+#> List of 13
+#>  $ rtauargus.decimals          : int 0
+#>  $ rtauargus.hierleadstring    : chr "@"
+#>  $ rtauargus.import            : logi TRUE
+#>  $ rtauargus.linked            : logi FALSE
+#>  $ rtauargus.missing           : chr ""
+#>  $ rtauargus.missing_dir       : chr "stop"
+#>  $ rtauargus.output_options    : chr "AS+SE+"
+#>  $ rtauargus.output_type       : chr "4"
+#>  $ rtauargus.response_var      : chr "VAL"
+#>  $ rtauargus.show_batch_console: logi FALSE
+#>  $ rtauargus.tauargus_exe      : chr "D:/Program Files/TauArgus/TauArgus4.1.7b4/TauArgus.exe"
+#>  $ rtauargus.totcode           : chr "Total"
+#>  $ rtauargus.weighted          : logi FALSE
 ```
 
 Pour réinitialiser certaines options :
 
-```{r opt_reset}
+
+```r
 reset_rtauargus_options("rtauargus.response_var", "rtauargus.output_type")
 
 # Il est possible d'omettre le préfixe 'rtauargus.'
@@ -667,12 +836,27 @@ reset_rtauargus_options("rtauargus.response_var", "rtauargus.output_type")
 reset_rtauargus_options("response_var", "output_type")
 
 str(rtauargus_options())
+#> List of 13
+#>  $ rtauargus.decimals          : int 0
+#>  $ rtauargus.hierleadstring    : chr "@"
+#>  $ rtauargus.import            : logi TRUE
+#>  $ rtauargus.linked            : logi FALSE
+#>  $ rtauargus.missing           : chr ""
+#>  $ rtauargus.missing_dir       : chr "stop"
+#>  $ rtauargus.output_options    : chr "AS+SE+"
+#>  $ rtauargus.output_type       : chr "2"
+#>  $ rtauargus.response_var      : chr "<freq>"
+#>  $ rtauargus.show_batch_console: logi FALSE
+#>  $ rtauargus.tauargus_exe      : chr "D:/Program Files/TauArgus/TauArgus4.1.7b4/TauArgus.exe"
+#>  $ rtauargus.totcode           : chr "Total"
+#>  $ rtauargus.weighted          : logi FALSE
 ```
 
 Pour remettre toutes les valeurs par défaut (y compris le chemin vers
 &tau;-Argus modifié en début de démonstration), ne spécifier aucun argument :
 
-```{r opt_reset_all, eval = FALSE}
+
+```r
 reset_rtauargus_options()
 ```
 
@@ -746,10 +930,10 @@ Pour tout retour ou signalement d'erreur, utiliser de préférence
 #### À propos de cette vignette
 
 - Auteur : **<a href="mailto:pierre-yves.berrard@insee.fr">Pierre-Yves Berrard</a>**
-- Dernière mise à jour : **`r format(Sys.time(), "%d/%m/%Y")`**
-- Version de rtauargus utilisée : **`r packageVersion("rtauargus")`**
-- Version de &tau;-Argus utilisée : **`r unname(tauargus_info()["version"])`**
-- Version de R utilisée :  **`r packageVersion("base")`**
+- Dernière mise à jour : **15/12/2020**
+- Version de rtauargus utilisée : **0.4.1.9000**
+- Version de &tau;-Argus utilisée : **4.1.7**
+- Version de R utilisée :  **4.0.3**
 
 <p style="text-align: right">
   <a href="#TOC" title="Retour sommaire">sommaire &uarr;</a>
@@ -758,6 +942,4 @@ Pour tout retour ou signalement d'erreur, utiliser de préférence
 
 <!-- ####################################################################### -->
 
-```{r menage, include = FALSE}
-unlink(paste0("Z:/donnees.", c("arb", "asc", "rda")))
-```
+
