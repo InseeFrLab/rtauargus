@@ -1,24 +1,11 @@
 image: git.stable.innovation.insee.eu:50000/innovation/rstudio
 
 stages:
-  - check
   - deploy
 
 variables:
   GIT_SSL_NO_VERIFY: "1"
   PKG_NAME: "rtauargus"
-
-pkg_check:
-  stage: check
-  script:
-    - R -e 'install.packages("gdata")'
-    - R -e 'devtools::check(check_dir = ".",
-                            error_on  = "error",
-                            document  = FALSE,
-                            manual    = FALSE)'
-  artifacts:
-    paths:
-      - "${PKG_NAME}_*.tar.gz"
 
 pages:
   stage: deploy
