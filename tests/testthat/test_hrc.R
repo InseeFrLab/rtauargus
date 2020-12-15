@@ -1,7 +1,7 @@
 # données test ------------------------------------------------------------
 
 df <-
-  data_frame(
+  tibble(
     niv1 = rep(
       c("A", "B"),
       c(27, 23)
@@ -31,7 +31,7 @@ fill_na_hrc <- rtauargus:::fill_na_hrc
 test_that("différentes configurations et ordre des variables", {
 
   df_NA <-
-    data_frame(
+    tibble(
       niv1 = c("A"  , "A" , "B", NA,  NA,  NA,  NA ),
       niv2 = c("A1" , "A2",  NA, NA, "D",  NA, "F1"),
       niv3 = c("A1x",  NA ,  NA, NA,  NA, "E", "F" )
@@ -42,7 +42,7 @@ test_that("différentes configurations et ordre des variables", {
       df_NA,
       c("niv1", "niv2", "niv3")
     ),
-    data_frame(
+    tibble(
       niv1 = c("A"  , "A" , "B", NA,  NA,  NA,  NA ),
       niv2 = c("A1" , "A2", "B", NA, "D",  NA, "F1"),
       niv3 = c("A1x", "A2", "B", NA, "D", "E", "F" )
@@ -54,7 +54,7 @@ test_that("différentes configurations et ordre des variables", {
       df_NA,
       c("niv3", "niv2", "niv1") # inversion ordre
     ),
-    data_frame(
+    tibble(
       niv1 = c("A"  , "A" , "B", NA, "D", "E", "F1"),
       niv2 = c("A1" , "A2",  NA, NA, "D", "E", "F1"),
       niv3 = c("A1x",  NA ,  NA, NA,  NA, "E", "F" )
