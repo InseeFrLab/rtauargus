@@ -1,6 +1,10 @@
 rtauargus
 =========
 
+<!-- badges: start -->
+[![pipeline status](https://gitlab.insee.fr/xkfzv9/rtauargus/badges/master/pipeline.svg)](https://gitlab.insee.fr/xkfzv9/rtauargus/-/pipelines)
+<!-- badges: end -->
+
 ![](vignettes/R_logo_small.png) ![](vignettes/TauBall2_small.png)
 
 ### τ-Argus depuis R
