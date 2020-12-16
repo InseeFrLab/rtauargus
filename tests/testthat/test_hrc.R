@@ -26,8 +26,6 @@ df <-
 
 context(":::fill_na_hrc")
 
-fill_na_hrc <- rtauargus:::fill_na_hrc
-
 test_that("différentes configurations et ordre des variables", {
 
   df_NA <-
@@ -67,8 +65,6 @@ test_that("différentes configurations et ordre des variables", {
 # sublevels ---------------------------------------------------------------
 
 context(":::sublevels")
-
-sublevels_t <- rtauargus:::sublevels
 
 subl12 <-
   list(
@@ -127,36 +123,36 @@ test_that("normal", {
   # niv 1 x (2 3 4) ...........................
 
   expect_equal(
-    sublevels_t(df$niv2, df$niv1),
+    sublevels(df$niv2, df$niv1),
     subl12
   )
 
   expect_equal(
-    sublevels_t(df$niv3, df$niv1),
+    sublevels(df$niv3, df$niv1),
     subl13
   )
 
   expect_equal(
-    sublevels_t(df$niv4, df$niv1),
+    sublevels(df$niv4, df$niv1),
     subl14
   )
 
   # niv 2 x (3 4) ............................
 
   expect_equal(
-    sublevels_t(df$niv3, df$niv2),
+    sublevels(df$niv3, df$niv2),
     subl23
   )
 
   expect_equal(
-    sublevels_t(df$niv4, df$niv2),
+    sublevels(df$niv4, df$niv2),
     subl24
   )
 
   # niv 3 x 4 ...........................
 
   expect_equal(
-    sublevels_t(df$niv4, df$niv3),
+    sublevels(df$niv4, df$niv3),
     subl34
   )
 
@@ -165,45 +161,45 @@ test_that("normal", {
 test_that("présence NAs", {
 
   expect_error(
-    sublevels_t(c(NA, NA), c(NA , NA)),
+    sublevels(c(NA, NA), c(NA , NA)),
     "aucun croisement exploitable"
   )
 
   expect_error(
-    sublevels_t(c("A", NA), c(NA , NA)),
+    sublevels(c("A", NA), c(NA , NA)),
     "aucun croisement exploitable"
   )
 
   expect_error(
-    sublevels_t(c("A1", NA), c(NA , "B")),
+    sublevels(c("A1", NA), c(NA , "B")),
     "aucun croisement exploitable"
   )
 
   res <- list(A = list(A1 = NULL)) # (attendu)
 
   expect_equal(
-    sublevels_t(c("A1", NA), c("A", NA)),
+    sublevels(c("A1", NA), c("A", NA)),
     res
   )
 
   expect_equal(
-    sublevels_t(c("A1", NA), c("A", "B")),
+    sublevels(c("A1", NA), c("A", "B")),
     res # B disparaît à cause du NA au niveau inférieur
   )
 
   expect_equal(
-    sublevels_t(c("A1", "B1"), c("A", NA)),
+    sublevels(c("A1", "B1"), c("A", NA)),
     res # B1 disparaît à cause du NA au niveau supérieur
   )
 
   expect_equal(
-    sublevels_t(c("A1", "A1"), c("A", NA)),
+    sublevels(c("A1", "A1"), c("A", NA)),
     res
   )
 
   # plusieurs cas combinés
   expect_equal(
-    sublevels_t(c("A1", "B2", NA, NA), c("A", NA, "B", NA)),
+    sublevels(c("A1", "B2", NA, NA), c("A", NA, "B", NA)),
     res
   )
 
@@ -214,36 +210,36 @@ test_that("détecte variables non hierarchiques", {
   # niv 1 x (2 3 4) ...........................
 
   expect_error(
-    sublevels_t(df$niv1, df$niv2),
+    sublevels(df$niv1, df$niv2),
     "variables non hierarchiques"
   )
 
   expect_error(
-    sublevels_t(df$niv1, df$niv3),
+    sublevels(df$niv1, df$niv3),
     "variables non hierarchiques"
   )
 
   expect_error(
-    sublevels_t(df$niv1, df$niv4),
+    sublevels(df$niv1, df$niv4),
     "variables non hierarchiques"
   )
 
   # niv 2 x (3 4) ............................
 
   expect_error(
-    sublevels_t(df$niv2, df$niv3),
+    sublevels(df$niv2, df$niv3),
     "variables non hierarchiques"
   )
 
   expect_error(
-    sublevels_t(df$niv2, df$niv4),
+    sublevels(df$niv2, df$niv4),
     "variables non hierarchiques"
   )
 
   # niv 3 x 4 ...........................
 
   expect_error(
-    sublevels_t(df$niv3, df$niv4),
+    sublevels(df$niv3, df$niv4),
     "variables non hierarchiques"
   )
 
@@ -254,8 +250,6 @@ test_that("détecte variables non hierarchiques", {
 # imbrique ----------------------------------------------------------------
 
 context(":::imbrique")
-
-imbrique_t <- rtauargus:::imbrique
 
 p_12 <-
   list(
@@ -304,7 +298,7 @@ i_13 <-
 test_that("normal", {
 
   expect_equal(
-   imbrique_t(p_23, p_12),
+   imbrique(p_23, p_12),
     i_13
   )
 
@@ -314,7 +308,7 @@ test_that("melange", {
 
   # melange input 1
   expect_equal(
-   imbrique_t(
+   imbrique(
      p_23[c(3, 2, 4, 1)],
      p_12
     ),
@@ -323,13 +317,13 @@ test_that("melange", {
 
   # melange input 2
   expect_equal(
-   imbrique_t(p_23, p_12[2:1]),
+   imbrique(p_23, p_12[2:1]),
     i_13[2:1]
   )
 
   # melange inputs 1 et 2
   expect_equal(
-   imbrique_t(p_23[c(3, 2, 4, 1)], p_12[2:1]),
+   imbrique(p_23[c(3, 2, 4, 1)], p_12[2:1]),
     i_13[2:1]
   )
 
@@ -414,8 +408,6 @@ hrc_1234 <- list(
   )
 )
 
-hrc_list <- rtauargus:::hrc_list
-
 test_that("2 input (équivaut à sublevels)", {
 
   # 2 inputs équivaut à sublevels
@@ -469,8 +461,6 @@ test_that("4 input", {
 # prof_list ---------------------------------------------------------------
 
 context(":::prof_list")
-
-prof_list <- rtauargus:::prof_list
 
 test_that("2 niveaux", {
 
@@ -535,8 +525,6 @@ test_that("4 niveaux", {
 # is_hrc ------------------------------------------------------------------
 
 context(":::is_hrc")
-
-is_hrc <- rtauargus:::is_hrc
 
 test_that("depuis precomptage", {
 
@@ -687,8 +675,6 @@ test_that("sortie table()", {
 
 context(":::check_seq_prof")
 
-check_seq_prof <- rtauargus:::check_seq_prof
-
 test_that("input invalide", {
 
   expect_false(check_seq_prof(integer(0)))
@@ -713,8 +699,6 @@ test_that("input valide", {
 # normalise_hrc -----------------------------------------------------------
 
 context(":::normalise_hrc")
-
-normalise_hrc <- rtauargus:::normalise_hrc
 
 test_that("rien à normaliser", {
 
@@ -754,8 +738,6 @@ test_that("microdata absent si V1>V2...", {
 # df_hierlevels -----------------------------------------------------------
 
 context(":::df_hierlevels")
-
-df_hierlevels <- rtauargus:::df_hierlevels
 
 test_that("base", {
 
