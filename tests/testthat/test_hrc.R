@@ -15,8 +15,8 @@ df <-
       c(16L, 1L, 8L, 2L, 9L, 1L, 10L, 3L)
     ),
     niv4 = rep(
-      c("A1x*", "A1x_", "A1z_", "A2y*", "A2y_", "A2z*", "A2z_",
-        "B1x*", "B1x_", "B1y_", "B2x*", "B2x_", "B2z_"),
+      c("A1x6", "A1x7", "A1z6", "A2y7", "A2y6", "A2z7", "A2z6",
+        "B1x7", "B1x6", "B1y6", "B2x7", "B2x6", "B2z6"),
       c(7L, 9L, 1L, 5L, 3L, 1L, 1L, 6L, 3L, 1L, 7L, 3L, 3L)
     )
   )
@@ -81,12 +81,12 @@ subl13 <-
 subl14 <-
   list(
     A = list(
-          `A1x*` = NULL, A1x_ = NULL, A1z_   = NULL,
-          `A2y*` = NULL, A2y_ = NULL, `A2z*` = NULL, A2z_ = NULL
+          A1x6 = NULL, A1x7 = NULL, A1z6 = NULL,
+          A2y6 = NULL, A2y7 = NULL, A2z6 = NULL, A2z7 = NULL
         ),
     B = list(
-          `B1x*` = NULL, B1x_ = NULL, B1y_ = NULL,
-          `B2x*` = NULL, B2x_ = NULL, B2z_ = NULL
+          B1x6 = NULL, B1x7 = NULL, B1y6 = NULL,
+          B2x6 = NULL, B2x7 = NULL, B2z6 = NULL
         )
   )
 
@@ -100,22 +100,22 @@ subl23 <-
 
 subl24 <-
   list(
-    A1 = list(`A1x*` = NULL, A1x_ = NULL, A1z_   = NULL),
-    A2 = list(`A2y*` = NULL, A2y_ = NULL, `A2z*` = NULL, A2z_ = NULL),
-    B1 = list(`B1x*` = NULL, B1x_ = NULL, B1y_   = NULL),
-    B2 = list(`B2x*` = NULL, B2x_ = NULL, B2z_   = NULL)
+    A1 = list(A1x6 = NULL, A1x7 = NULL, A1z6 = NULL),
+    A2 = list(A2y6 = NULL, A2y7 = NULL, A2z6 = NULL, A2z7 = NULL),
+    B1 = list(B1x6 = NULL, B1x7 = NULL, B1y6 = NULL),
+    B2 = list(B2x6 = NULL, B2x7 = NULL, B2z6 = NULL)
   )
 
 subl34 <-
   list(
-    A1x = list(`A1x*` = NULL, A1x_ = NULL),
-    A1z = list(A1z_   = NULL),
-    A2y = list(`A2y*` = NULL, A2y_ = NULL),
-    A2z = list(`A2z*` = NULL, A2z_ = NULL),
-    B1x = list(`B1x*` = NULL, B1x_ = NULL),
-    B1y = list(B1y_   = NULL),
-    B2x = list(`B2x*` = NULL, B2x_ = NULL),
-    B2z = list(B2z_   = NULL)
+    A1x = list(A1x6 = NULL, A1x7 = NULL),
+    A1z = list(A1z6 = NULL),
+    A2y = list(A2y6 = NULL, A2y7 = NULL),
+    A2z = list(A2z6 = NULL, A2z7 = NULL),
+    B1x = list(B1x6 = NULL, B1x7 = NULL),
+    B1y = list(B1y6 = NULL),
+    B2x = list(B2x6 = NULL, B2x7 = NULL),
+    B2z = list(B2z6 = NULL)
   )
 
 test_that("normal", {
@@ -360,27 +360,27 @@ hrc_123 <- list(
 hrc_124 <- list(
   A = list(
     A1 = list(
-      `A1x*` = NULL,
-       A1x_  = NULL,
-       A1z_  = NULL
+       A1x6 = NULL,
+       A1x7 = NULL,
+       A1z6 = NULL
     ),
     A2 = list(
-      `A2y*` = NULL,
-       A2y_  = NULL,
-      `A2z*` = NULL,
-       A2z_  = NULL
+       A2y6 = NULL,
+       A2y7 = NULL,
+       A2z6 = NULL,
+       A2z7 = NULL
     )
   ),
   B = list(
     B1 = list(
-      `B1x*` = NULL,
-       B1x_  = NULL,
-       B1y_  = NULL
+       B1x6 = NULL,
+       B1x7 = NULL,
+       B1y6 = NULL
     ),
     B2 = list(
-      `B2x*` = NULL,
-       B2x_  = NULL,
-       B2z_  = NULL
+       B2x6 = NULL,
+       B2x7 = NULL,
+       B2z6 = NULL
     )
   )
 )
@@ -388,22 +388,22 @@ hrc_124 <- list(
 hrc_1234 <- list(
   A = list(
     A1 = list(
-      A1x = list(`A1x*` = NULL, A1x_ = NULL),
-      A1z = list( A1z_  = NULL)
+      A1x = list(A1x6 = NULL, A1x7 = NULL),
+      A1z = list(A1z6 = NULL)
     ),
     A2 = list(
-      A2y = list(`A2y*` = NULL, A2y_ = NULL),
-      A2z = list(`A2z*` = NULL, A2z_ = NULL)
+      A2y = list(A2y6 = NULL, A2y7 = NULL),
+      A2z = list(A2z6 = NULL, A2z7 = NULL)
     )
   ),
   B = list(
     B1 = list(
-      B1x = list(`B1x*` = NULL, B1x_ = NULL),
-      B1y = list( B1y_  = NULL)
+      B1x = list(B1x6 = NULL, B1x7 = NULL),
+      B1y = list(B1y6 = NULL)
     ),
     B2 = list(
-      B2x = list(`B2x*` = NULL, B2x_ = NULL),
-      B2z = list (B2z_  = NULL)
+      B2x = list(B2x6 = NULL, B2x7 = NULL),
+      B2z = list(B2z6 = NULL)
     )
   )
 )
@@ -477,14 +477,14 @@ test_that("3 niveaux", {
     prof_list(hrc_124),
     c(A = 0,
         A1 = 1,
-         `A1x*` = 2, A1x_ = 2, A1z_ = 2,
+         A1x6 = 2, A1x7 = 2, A1z6 = 2,
         A2 = 1,
-         `A2y*` = 2, A2y_ = 2, `A2z*` = 2, A2z_ = 2,
+         A2y6 = 2, A2y7 = 2, A2z6 = 2, A2z7 = 2,
       B = 0,
         B1 = 1,
-          `B1x*` = 2, B1x_ = 2, B1y_ = 2,
+          B1x6 = 2, B1x7 = 2, B1y6 = 2,
         B2 = 1,
-          `B2x*` = 2, B2x_ = 2, B2z_ = 2
+          B2x6 = 2, B2x7 = 2, B2z6 = 2
     )
   )
 
@@ -497,25 +497,25 @@ test_that("4 niveaux", {
     c(A = 0,
         A1 = 1,
           A1x = 2,
-            `A1x*` = 3, A1x_ = 3,
+            A1x6 = 3, A1x7 = 3,
           A1z = 2,
-            A1z_ = 3,
+            A1z6 = 3,
         A2 = 1,
           A2y = 2,
-            `A2y*` = 3, A2y_ = 3,
+            A2y6 = 3, A2y7 = 3,
           A2z = 2,
-            `A2z*` = 3, A2z_ = 3,
+            A2z6 = 3, A2z7 = 3,
       B = 0,
         B1 = 1,
           B1x = 2,
-            `B1x*` = 3, B1x_ = 3,
+            B1x6 = 3, B1x7 = 3,
           B1y = 2,
-            B1y_ = 3,
+            B1y6 = 3,
         B2 = 1,
           B2x = 2,
-            `B2x*` = 3, B2x_ = 3,
+            B2x6 = 3, B2x7 = 3,
           B2z = 2,
-            B2z_ = 3
+            B2z6 = 3
     )
   )
 
