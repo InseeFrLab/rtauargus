@@ -1,6 +1,6 @@
 Package: rtauargus
 Type: Package
-Title: Tau-Argus with R
+Title: Tau-Argus depuis R
 Language: fr
 Version: 0.4.1.9000
 Depends: R (>= 3.3)
@@ -19,8 +19,8 @@ Authors@R:
       email = "pierre-yves.berrard@insee.fr",
       role = c("aut", "cre")
     )
-Description: Create input files (asc, rda, arb), call Tau-Argus,
-    reimport protected tables in R.
+Description: Crée fichiers en entrée (asc, rda, arb), appelle Tau-Argus,
+    réimporte les tables secrétisées dans R.
 License: GPL-2
 Encoding: UTF-8
 LazyData: true
