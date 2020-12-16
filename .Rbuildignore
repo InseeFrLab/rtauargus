@@ -9,3 +9,4 @@
 ^vignettes/rtauargus\.Rmd\.orig$
 ^vignettes/precompilation.R$
 ^\.gitlab-ci\.yml$
+^_pkgdown\.yml$
