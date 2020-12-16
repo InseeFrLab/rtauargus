@@ -5,32 +5,12 @@ output:
   rmarkdown::html_vignette:
     toc: true
     toc_depth: 3
-# params:
-#   ta_lib:
-#     label: "Version de Tau-Argus utilisée pour la vignette"
-#     value: "file_ini"
-#     input: select
-#     choices: ["file_ini",
-#               "AUS_commun",
-#               "Poste_4.1.7",
-#               "Poste_4.1.6",
-#               "Poste_4.1.4",
-#               "Poste_4.1.3"]
-#   ta_lib_man:
-#     label: "ou manuellement définir chemin emplacement exécutable Tau-Argus"
-#     input: text
-#     value: "?"
-#   eval_ta:
-#     label: "Évaluer les chunks nécessitant Tau-Argus (lent mais complet)"
-#     value: TRUE
-#   warning:
-#     label: "Afficher warnings"
-#     value: FALSE
 vignette: >
   %\VignetteIndexEntry{Tau-Argus depuis R}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
+
 
 <!--
   NE JAMAIS MODIFIER DIRECTEMENT `rtauargus.Rmd`
@@ -163,7 +143,7 @@ cat(gsub(", ", "\n", imports))
 
 ### Package
 
-Le package _rtauargus_ est prêt à être installé depuis l'archive tar.gz.
+Le package _rtauargus_ est prêt à être installé.
 
 <p style="text-align: right">
   <a href="#TOC" title="Retour sommaire">sommaire &uarr;</a>
@@ -730,7 +710,6 @@ Consulter l'aide de ces fonctions pour plus d'informations.
 
 - implémenter paramètres `request`...
 - prendre en compte des données tabulées en entrée
-- importer d'autres formats ("5", "6" ?)
 - ...
 
 #### Signaler un problème, suggérer une amélioration
