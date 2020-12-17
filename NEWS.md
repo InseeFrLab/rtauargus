@@ -4,6 +4,12 @@ subtitle: Historique des modifications
 output: rmarkdown::html_vignette
 ---
 
+## rtauargus 0.4.2
+
+[17/12/2020]
+
+* projet migré vers gitlab.insee.fr
+
 ## rtauargus 0.4.1
 
 [18/10/2019]
