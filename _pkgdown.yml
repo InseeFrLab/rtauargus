@@ -1,1 +1,7 @@
 destination: public
+
+navbar:
+  right:
+   - text: Contribuer
+     href: https://gitlab.insee.fr/py_b/rtauargus
+     icon: fa-gitlab
