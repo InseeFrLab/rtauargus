@@ -915,7 +915,7 @@ Le package est en cours de construction. Toutes les fonctionnalités de
 toutes, seulement les plus fréquemment utilisées).
 
 Pour tout retour ou signalement d'erreur, utiliser de préférence
-[ce lien](https://gitlab.insee.fr/xkfzv9/rtauargus/-/issues)
+[ce lien](https://gitlab.insee.fr/py_b/rtauargus/-/issues)
 (cliquer sur **"New issue"**). Nécessite d'être connecté au gitlab-Insee.
 
 #### À propos de cette vignette
