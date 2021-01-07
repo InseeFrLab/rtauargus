@@ -13,15 +13,20 @@ Suggests:
     testthat,
     knitr,
     rmarkdown
-Authors@R:
+Authors@R: c(
     person(
       "Pierre-Yves", "Berrard",
       email = "pierre-yves.berrard@insee.fr",
       role = c("aut", "cre")
+    ),
+    person(
+      family = "Institut National de la Statistique et des Études Économiques",
+      role = "cph"
     )
+  )
 Description: Crée fichiers en entrée (asc, rda, arb), appelle Tau-Argus,
     réimporte les tables secrétisées dans R.
-License: GPL-2
+License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.1
