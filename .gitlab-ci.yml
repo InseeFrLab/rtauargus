@@ -1,4 +1,4 @@
-image: git.stable.innovation.insee.eu:50000/innovation/rstudio
+image: rocker/tidyverse:latest
 
 stages:
   - check
@@ -10,8 +10,10 @@ variables:
 
 pkg_check:
   stage: check
+  tags:
+    - poc-kube
   script:
-    - R -e 'install.packages("gdata")'
+    - R -e 'install.packages("gdata", repos = "https://nexus.insee.fr/repository/r-cran")'
     - R -e 'devtools::check(check_dir = ".",
                             error_on  = "error",
                             document  = FALSE,
@@ -22,9 +24,13 @@ pkg_check:
 
 pages:
   stage: deploy
+  image: colinfay/r-ci-tidyverse:3.6.0
+  tags:
+    - poc-kube
   script:
-    - R -e 'install.packages(c("gdata", "pkgdown"))'
-    - R -e 'pkgdown::build_site()'
+    - R -e 'install.packages("gdata", repos = "https://nexus.insee.fr/repository/r-cran")'
+    - R -e 'devtools::install(dependencies = FALSE)'
+    - R -e 'options(pkgdown.internet = FALSE) ; pkgdown::build_site()'
   artifacts:
     paths:
       - public
