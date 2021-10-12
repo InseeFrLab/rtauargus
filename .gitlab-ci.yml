@@ -16,6 +16,7 @@ pkg_check:
     - R -e 'install.packages("gdata", repos = "https://nexus.insee.fr/repository/r-cran")'
     - R -e 'devtools::check(check_dir = ".",
                             error_on  = "error",
+                            cran      = FALSE,
                             document  = FALSE,
                             manual    = FALSE)'
   artifacts:
