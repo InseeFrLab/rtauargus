@@ -35,6 +35,7 @@ install.packages("rtauargus", repos = "https://nexus.insee.fr/repository/r-publi
 remotes::install_gitlab(
   repo    = "outilsconfidentialite/rtauargus",
   host    = "gitlab.insee.fr",
+  build_vignettes = TRUE,
   upgrade = "never"
 )
 ```
