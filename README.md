@@ -1,5 +1,5 @@
 <!-- badges: start -->
-[![pipeline status](https://gitlab.insee.fr/py_b/rtauargus/badges/master/pipeline.svg)](https://gitlab.insee.fr/py_b/rtauargus/-/pipelines)
+[![pipeline status](https://gitlab.insee.fr/outilsconfidentialite/rtauargus/badges/master/pipeline.svg)](https://gitlab.insee.fr/outilsconfidentialite/rtauargus/-/pipelines)
 <!-- badges: end -->
 
 rtauargus
@@ -33,16 +33,16 @@ install.packages("rtauargus", repos = "https://nexus.insee.fr/repository/r-publi
 ```r
 # install.packages("remotes")
 remotes::install_gitlab(
-  repo    = "py_b/rtauargus",
+  repo    = "outilsconfidentialite/rtauargus",
   host    = "gitlab.insee.fr",
   upgrade = "never"
 )
 ```
 
 Pour installer une version spécifique, ajouter au répertoire une référence
-([commit](https://gitlab.insee.fr/py_b/rtauargus/-/commits/master) ou
-[tag](https://gitlab.insee.fr/py_b/rtauargus/-/tags)),
-par exemple `"py_b/rtauargus@v-0.4.1"`.
+([commit](https://gitlab.insee.fr/outilsconfidentialite/rtauargus/-/commits/master) ou
+[tag](https://gitlab.insee.fr/outilsconfidentialite/rtauargus/-/tags)),
+par exemple `"outilsconfidentialite/rtauargus@v-0.4.1"`.
 
 
 ### Exemple simple
