@@ -24,7 +24,7 @@ navbar:
       href: news/index.html
     gitlab:
       text: Contribuer
-      href: https://gitlab.insee.fr/py_b/rtauargus
+      href: https://gitlab.insee.fr/outilsconfidentialite/rtauargus
       icon: fa-gitlab
 
 reference:
