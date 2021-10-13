@@ -4,6 +4,12 @@ subtitle: Historique des modifications
 output: rmarkdown::html_vignette
 ---
 
+## rtauargus 0.4.3
+
+[13/10/2021]
+
+* projet transféré dans le groupe `outilsconfidentialite`
+
 ## rtauargus 0.4.2
 
 [17/12/2020]
