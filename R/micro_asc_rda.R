@@ -126,7 +126,7 @@ write_rda <- function(info_vars) {
 #' (\strong{hiercodelist}), la fonction attend l'emplacement de ce fichier (et
 #' un éventuel \code{hierleadstring} s'il diffère de l'option par défaut du
 #' package). Dans ce cas, on peut écrire explicitement le chemin vers un fichier
-#' existant (\code{c(A38 = "a38.hrc")}), mais aussi aussi passer un appel à
+#' existant (\code{c(A38 = "a38.hrc")}), mais aussi passer un appel à
 #' \code{\link{write_hrc}} qui génèrera un fichier hrc à partir de microdonnées.
 #'
 #' \emph{Exemple :} \code{c(A38 = write_hrc(microdata, c("A38", "A21", "A10")))}
