@@ -25,26 +25,27 @@ Le package présente d'autres fonctionnalités annexes, comme créer une variabl
 ### Installation
 
 * **version stable la plus récente** (recommandé)
-```r
-install.packages("rtauargus", repos = "https://nexus.insee.fr/repository/r-public")
-```
+
+    ```r
+    install.packages("rtauargus", repos = "https://nexus.insee.fr/repository/r-public")
+    ```
 
 * **version de développement**
-```r
-# install.packages("remotes")
-remotes::install_gitlab(
-  repo    = "outilsconfidentialite/rtauargus",
-  host    = "gitlab.insee.fr",
-  build_vignettes = TRUE,
-  upgrade = "never"
-)
-```
 
-Pour installer une version spécifique, ajouter au répertoire une référence
-([commit](https://gitlab.insee.fr/outilsconfidentialite/rtauargus/-/commits/master) ou
-[tag](https://gitlab.insee.fr/outilsconfidentialite/rtauargus/-/tags)),
-par exemple `"outilsconfidentialite/rtauargus@v-0.4.1"`.
+    ```r
+    # install.packages("remotes")
+    remotes::install_gitlab(
+      repo    = "outilsconfidentialite/rtauargus",
+      host    = "gitlab.insee.fr",
+      build_vignettes = TRUE,
+      upgrade = "never"
+    )
+    ```
 
+    Pour installer une version spécifique, ajouter au répertoire une référence
+    ([commit](https://gitlab.insee.fr/outilsconfidentialite/rtauargus/-/commits/master) ou
+    [tag](https://gitlab.insee.fr/outilsconfidentialite/rtauargus/-/tags)),
+    par exemple `"outilsconfidentialite/rtauargus@v-0.4.1"`.
 
 ### Exemple simple
 
