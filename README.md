@@ -50,6 +50,8 @@ Le package présente d'autres fonctionnalités annexes, comme créer une variabl
 ### Exemple simple
 
 ``` r
+library(rtauargus)
+
 rtauargus(
   microdata        = donnees,
   explanatory_vars = c("variable1", "variable2"),
