@@ -55,7 +55,7 @@ nécessite donc que le logiciel soit accessible depuis le poste de travail.
 L'emplacement du programme TauArgus.exe est défini de manière globale au
 chargement du package. De fait, l'argument \code{tauargus_exe} n'aura
 normalement pas à être spécifié (sauf pour surcharger l'option globale le
-temps de l'exécution de la foncion).
+temps de l'exécution de la fonction).
 
 Des vérifications sont effectuées avant le lancement effectif de Tau-Argus :
 existence du logiciel sur le poste, des fichiers asc et rda, des dossiers où

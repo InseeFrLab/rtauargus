@@ -131,7 +131,7 @@ write_rda <- function(info_vars) {
 #'
 #' \emph{Exemple :} \code{c(A38 = write_hrc(microdata, c("A38", "A21", "A10")))}
 #'
-#' Un raccourci pour cet appel est d'écrire les variables consituant la
+#' Un raccourci pour cet appel est d'écrire les variables constituant la
 #' hiérarchie séparées par des ">". Dans ce cas, les microdonnées et
 #' hierleadstring qu'utilise \code{write_hrc} sont ceux déclarés dans
 #' \code{micro_asc_rda}.
