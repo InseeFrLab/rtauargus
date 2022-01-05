@@ -36,7 +36,7 @@ Le package présente d'autres fonctionnalités annexes, comme créer une variabl
     install.packages("devtools")
     devtools::install_github(
         "InseeFrLab/rtauargus",
-        build_vignettes = TRUE,
+        build_vignettes = FALSE,
         upgrade = "never"
     )
     ```
