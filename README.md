@@ -24,28 +24,36 @@ Le package présente d'autres fonctionnalités annexes, comme créer une variabl
 
 ### Installation
 
-* **version stable la plus récente** (recommandé)
+* **version stable la plus récente** (recommandé pour les agents de l'Insee)
 
     ```r
     install.packages("rtauargus", repos = "https://nexus.insee.fr/repository/r-public")
     ```
 
-* **version de développement**
+* **version de développement** (seule méthode envisageable hors Insee)
 
     ```r
-    # install.packages("remotes")
-    remotes::install_gitlab(
-      repo    = "outilsconfidentialite/rtauargus",
-      host    = "gitlab.insee.fr",
-      build_vignettes = TRUE,
-      upgrade = "never"
+    install.packages("devtools")
+    devtools::install_github(
+        "InseeFrLab/rtauargus",
+        build_vignettes = TRUE,
+        upgrade = "never"
     )
     ```
-
+    
     Pour installer une version spécifique, ajouter au répertoire une référence
-    ([commit](https://gitlab.insee.fr/outilsconfidentialite/rtauargus/-/commits/master) ou
-    [tag](https://gitlab.insee.fr/outilsconfidentialite/rtauargus/-/tags)),
-    par exemple `"outilsconfidentialite/rtauargus@v-0.4.1"`.
+    ([commit](https://github.com/inseefrlab/rtauargus/commits/master) ou
+    [tag](https://github.com/inseefrlab/rtauargus/tags)),
+    par exemple `"inseefrlab/rtauargus@v-0.4.1"`.
+    
+### Préciser le chemin vers τ-Argus
+
+Si le logiciel τ-Argus est installé sous : C:\Programmes\TauArgus\TauArgus4.1.7b4, renseigner le chemin de la manière suivante :
+
+```r
+    library(rtauargus)
+    options(rtauargus.tauargus_exe = "C:/Programmes/TauArgus/TauArgus4.1.7b4/TauArgus.exe")
+```
 
 ### Exemple simple
 
