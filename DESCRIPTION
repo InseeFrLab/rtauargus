@@ -8,7 +8,8 @@ Imports:
     purrr (>= 0.2),
     dplyr (>= 0.7),
     gdata,
-    stringr
+    stringr,
+    rlang
 Suggests:
     testthat,
     knitr,
