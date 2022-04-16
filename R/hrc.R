@@ -195,6 +195,7 @@ fill_na_hrc <- function(microdata, vars) {
 # Fonctions créant une liste hiérarchique ---------------------------------
 
 #' @importFrom dplyr %>%
+#' @importFrom rlang .data
 
 sublevels <- function(fin, agr) {
 
@@ -217,7 +218,7 @@ sublevels <- function(fin, agr) {
   compt <-
     compt %>%
     as.data.frame(stringsAsFactors = FALSE) %>%
-    subset(Freq > 0)
+    dplyr::filter(.data$Freq > 0)
 
   tapply(
     compt$fin,

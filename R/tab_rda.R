@@ -1,14 +1,13 @@
-write_rda_1var <- function(info_var) {
+
+write_rda_1var_tab <- function(info_var) {
 
   # écrit partie du .rda à partir des infos (une liste) pour une seule variable
 
   ligne1 <- with(info_var,
-    paste(
-      colname,
-      position,
-      width,
-      if (!is.na(missing) & missing != "") missing
-    )
+                 paste(
+                   colname,
+                   if (!is.na(missing) & missing != "") missing
+                 )
   )
 
   with(
@@ -29,7 +28,7 @@ write_rda_1var <- function(info_var) {
         paste0("  <HIERLEADSTRING> \"", hierleadstring, "\""),
       if (!is.na(hierarchical) && grepl("^(\\d+ +)+\\d+$", hierarchical))
         paste0("  <HIERLEVELS> ", hierarchical),
-      if (type_var %in% c("NUMERIC", "WEIGHT"))
+      if (type_var %in% c("NUMERIC", "WEIGHT","MAXSCORE"))
         paste0("  <DECIMALS> ", digits)
     )
   )
@@ -37,8 +36,8 @@ write_rda_1var <- function(info_var) {
 }
 
 #' @importFrom dplyr %>%
+write_rda_tab <- function(info_vars) {
 
-write_rda <- function(info_vars) {
 
   # écrit les infos format .rda pour toutes les variables
   # (info_vars est une liste contenant les infos pour chaque variable)
@@ -49,25 +48,21 @@ write_rda <- function(info_vars) {
   }
   info_vars <- lapply(info_vars, chemin_complet)
 
-  vapply(info_vars, write_rda_1var, character(1)) %>%
+  vapply(info_vars, write_rda_1var_tab, character(1)) %>%
     gsub("(\n)+", "\n", .) %>% # plusieurs sauts de lignes par un seul
     sub("\n$", "", .) # supprime dernier saut de ligne
 
 }
 
-#' Crée les fichiers asc et rda à partir de microdonnées
+#' Crée les fichiers rda à partir de données tabulées
 #'
-#' Crée un fichier texte de longueur fixe (asc) et un fichier de métadonnées
-#' (rda) à partir de microdonnées et d'informations additionnelles.
+#' Crée un fichier tabular (tab) et de métadonnées
+#' (rda) à partir de données tabulées et d'informations additionnelles.
 #'
-#' @param microdata [\strong{obligatoire}] data.frame contenant les
-#'   microdonnées.
-#' @param asc_filename nom du fichier asc (avec extension). Si non renseigné, un
-#'   fichier temporaire.
-#' @param rda_filename nom du fichier rda (avec extension). Si non renseigné,
-#'   \code{asc_filename} avec l'extension "rda" à la place de "asc".
-#' @param weight_var nom de la variable de poids.
-#' @param holding_var nom de la variable de holding.
+#' @param tabular [\strong{obligatoire}] data.frame contenant les
+#'   données tabulées
+#' @param tab_filename nom du fichier tab (avec extension)
+#' @param rda_filename nom du fichier rda (avec extension).
 #' @param decimals nombre minimal de décimales à afficher (voir section 'Nombre
 #'   de décimales').
 #' @param hrc informations sur les variables hiérarchiques (voir section
@@ -82,12 +77,13 @@ write_rda <- function(info_vars) {
 #'   'Paramètres spécifiques' pour la syntaxe de ce paramètre).
 #' @param codelist fichier(s) contenant les libellés des variables catégorielles
 #'   (voir section 'Paramètres spécifiques' pour la syntaxe de ce paramètre).
-#' @param request (pas encore implémenté)
-#'
-#' @return Renvoie les noms des fichiers asc et rda sous forme de liste (de
-#'   manière invisible). Les colonnes vides (remplies de \code{NA} ou de chaînes
-#'   de caractères vides) ne seront pas exportées dans le fichier asc. Un
-#'   message d'avertissement listera les colonnes concernées.
+#' @param value nom de la colonne contenant la valeur des cellules
+#' @param freq  nom de la colonne contenant les effectifs pour une cellule
+#' @param maxscore nom de la colonne contenant la valeur du plus gros contributeur
+#' d'une cellule
+#' @param separator charactere utilisé en tant que separateur dans le fichier .tab
+#' @return Renvoie le nom du fichier rda sous forme de liste (de
+#'   manière invisible).
 #'
 #' @section Paramètres spécifiques:
 #'
@@ -127,17 +123,10 @@ write_rda <- function(info_vars) {
 #' un éventuel \code{hierleadstring} s'il diffère de l'option par défaut du
 #' package). Dans ce cas, on peut écrire explicitement le chemin vers un fichier
 #' existant (\code{c(A38 = "a38.hrc")}), mais aussi passer un appel à
-#' \code{\link{write_hrc}} qui génèrera un fichier hrc à partir de microdonnées.
+#' \code{\link{write_hrc}} qui génèrera un fichier hrc à partir de données tabulées.
 #'
-#' \emph{Exemple :} \code{c(A38 = write_hrc(microdata, c("A38", "A21", "A10")))}
+#' \emph{Exemple :} \code{c(A38 = write_hrc(tabular, c("A38", "A21", "A10")))}
 #'
-#' Un raccourci pour cet appel est d'écrire les variables constituant la
-#' hiérarchie séparées par des ">". Dans ce cas, les microdonnées et
-#' hierleadstring qu'utilise \code{write_hrc} sont ceux déclarés dans
-#' \code{micro_asc_rda}.
-#'
-#' \emph{Exemple :} \code{c(A38 = "A38 > A21 > A10")} \emph{(nombre d'espaces
-#' quelconque avant et après les ">")}
 #'
 #' Les deux dernières méthodes passent par la création d'un fichier temporaire.
 #' Pour un fichier hrc réutilisable, il est nécessaire de le créer au préalable
@@ -151,48 +140,50 @@ write_rda <- function(info_vars) {
 #'
 #' Le paramètre \code{decimals} indique le nombre minimal de décimales à faire
 #' figurer dans le fichier en sortie (quel que soit le nombre de décimales
-#' effectivement présent dans \code{microdata}). Il s'applique à toutes les
+#' effectivement présent dans \code{tabular}). Il s'applique à toutes les
 #' variables réelles (double) mais pas aux variables entières (integer). Pour
 #' ajouter des zéros à une variable entière, la convertir avec \code{as.double}
 #' au préalable.
 #'
-#' Les chiffres après la virgule peuvent être incorrects dans le fichier asc si
-#' le nombre total de chiffres (avant ou après le séparateur décimal) est
-#' supérieur à 15. Voir \code{\link[gdata]{write.fwf}} (fonction utilisée pour
-#' écrire le fichier asc) pour plus de détails.
 #'
 #' @section Voir aussi: La fonction \code{\link{rtauargus}}, qui utilise cette
 #' fonction et hérite de ses paramètres.
 #'
 #' @examples
+#' \dontrun{
 #' # donnees fictives
-#' micro_df <-
+#' tab_df <-
 #'   data.frame(
-#'     GEO   = c("443", "541", "543"),
-#'     A10   = c( "AZ",  "BE",  "BE"),
-#'     A21   = c(  "A",   "B",   "C"),
-#'     DIPL  = c( "01",  "??",  "02"),
-#'     CA    = c(  100,     0,     7),
-#'     POIDS = c(    1,  2.71,   4.2)
+#'     GEO      = c("443", "541", "543"),
+#'     A10      = c( "AZ",  "BE",  "BE"),
+#'     A21      = c(  "A",   "B",   "C"),
+#'     DIPL     = c( "01",  "??",  "02"),
+#'     CA       = c(  100,     0,     7),
+#'     effectif = c(    3,     6,     8),
+#'     max_CA   = c(   57,     0,     1),
 #'   )
 #'
-#' # creation asc + rda
+#' # creation rda
 #' res <-
-#'   micro_asc_rda(
-#'     microdata  = micro_df,
-#'     weight_var = "POIDS",
+#'   tab_rda(
+#'     tabular  = tab_df,
 #'     decimals   = 1,
 #'     hrc        = c(A21 = "A21>A10", GEO = "2 1 0", DIPL = "dipl.hrc"),
 #'     totcode    = c(GEO = "France"),
-#'     missing    = c(DIPL = "??")
+#'     missing    = c(DIPL = "??"),
+#'     value = "CA",
+#'     freq = "effectif",
+#'     maxscore = "max_CA",
+#'     separator = ","
 #'   )
 #'
 #' # visualisation des fichiers produits
 #' file.show(
-#'   res$asc_filename, res$rda_filename,
+#'  res$rda_filename,
 #'   header = unlist(res),
 #'   pager = "internal"
 #' )
+#' }
 #' @importFrom dplyr %>%
 #' @importFrom dplyr mutate
 #' @importFrom dplyr arrange
@@ -201,20 +192,23 @@ write_rda <- function(info_vars) {
 #'
 #' @export
 
-micro_asc_rda <- function(microdata,
-                          asc_filename   = NULL,
-                          rda_filename   = NULL,
-                          weight_var     = NULL,
-                          holding_var    = NULL,
-                          decimals       = getOption("rtauargus.decimals"),
-                          hrc            = NULL,
-                          hierleadstring = getOption("rtauargus.hierleadstring"),
-                          totcode        = getOption("rtauargus.totcode"),
-                          missing        = getOption("rtauargus.missing"),
-                          codelist       = NULL,
-                          request        = NULL) {
+tab_rda <- function(
+	tabular,
+	tab_filename   = NULL,
+	rda_filename   = NULL,
+	decimals       = getOption("rtauargus.decimals"),
+	hrc            = NULL,
+	hierleadstring = getOption("rtauargus.hierleadstring"),
+	totcode        = getOption("rtauargus.totcode"),
+	missing        = getOption("rtauargus.missing"),
+	codelist       = NULL,
+	value          = NULL,
+	freq           = NULL,
+	maxscore       = NULL,
+	separator      = ","
+) {
 
-  microdata <- as.data.frame(microdata) # (probleme avec tibble notamment)
+  tabular <- as.data.frame(tabular) # (probleme avec tibble notamment)
 
   # valeur par défaut du package si option vide ...........................
 
@@ -227,38 +221,38 @@ micro_asc_rda <- function(microdata,
 
   # ignore colonnes de longueurs nulles  ..................................
 
-  colvides <- sapply(microdata, function(x) all(is.na(x)) | all(x == ""))
+  colvides <- sapply(tabular, function(x) all(is.na(x)) | all(x == ""))
   if (any(colvides)) {
     warning(
-      "Colonnes vides non exportees en asc : ",
-      paste(names(microdata)[colvides], collapse = ", ")
+      "Colonnes vides : ",
+      paste(names(tabular)[colvides], collapse = ", ")
     )
-    microdata <- microdata[!colvides]
+    tabular <- tabular[!colvides]
   }
 
   # parametres non renseignés  ...........................................
 
-  if (is.null(asc_filename)) asc_filename <- tempfile("RTA_", fileext = ".asc")
-  if (is.null(rda_filename)) rda_filename <- sub("asc$", "rda", asc_filename)
+  if (is.null(rda_filename)) rda_filename <- tempfile("RTA_", fileext = ".rda")
 
   # genere fichier longueur fixe et infos associees  .....................
 
-  fwf_info <-
+  fwf_info_tabular <-
     gdata::write.fwf(
-      microdata,
-      asc_filename,
+      tabular,
+	  file = tab_filename,
       formatInfo = TRUE,
       colnames = FALSE,
       justify = "right", # pour les variables caractères uniquement
       digits = 15, # max ? voir aide de format
       nsmall = decimals,
-      scientific = FALSE
+      scientific = FALSE,
+	    sep=separator
     )
 
-  num <- vapply(microdata, is.numeric, logical(1))
+  num <- vapply(tabular, is.numeric, logical(1))
 
-  fwf_info <-
-    fwf_info %>%
+  fwf_info_tabular <-
+    fwf_info_tabular %>%
     mutate(
       type_var = ifelse(num, "NUMERIC", "RECODEABLE"),
       ordre_init = dplyr::row_number()
@@ -266,19 +260,19 @@ micro_asc_rda <- function(microdata,
 
   # weight_var et holding_var ..........................................
 
-  if (!is.null(weight_var)) {
-    fwf_info$type_var[fwf_info$colname == weight_var] <- "WEIGHT"
+  if (!is.null(freq)) {
+    fwf_info_tabular$type_var[fwf_info_tabular$colname == freq] <- "FREQUENCY"
   }
 
-  if (!is.null(holding_var)) {
-    fwf_info$type_var[fwf_info$colname == holding_var] <- "HOLDING"
+  if (!is.null(maxscore)) {
+    fwf_info_tabular$type_var[fwf_info_tabular$colname == maxscore] <- "MAXSCORE"
   }
 
   # missing, totcode, codelist  ........................................
 
-  var_quanti <- names(microdata)[!num]
+  var_quanti <- names(tabular)[!num]
 
-  missing_df  <- df_param_defaut(names(microdata), "missing", missing)
+  missing_df  <- df_param_defaut(names(tabular), "missing", missing)
   codelist_df <- df_param_defaut(var_quanti, "codelist", codelist)
   totcode_df  <-
     df_param_defaut(var_quanti, "totcode", totcode) %>%
@@ -293,7 +287,7 @@ micro_asc_rda <- function(microdata,
   norm_hrc <-
     normalise_hrc(
       hrc,
-      microdata = microdata,
+      tabular,
       hierleadstring = hierleadstring
     )
 
@@ -302,9 +296,9 @@ micro_asc_rda <- function(microdata,
   need_leadstring <- grepl("\\.hrc$", hrc_df$hierarchical)
   hrc_df$hierleadstring[need_leadstring] <- hierleadstring
 
-  fwf_info <-
+  fwf_info_tabular <-
     purrr::reduce(
-      list(fwf_info, missing_df, totcode_df, codelist_df, hrc_df),
+      list(fwf_info_tabular, missing_df, totcode_df, codelist_df, hrc_df),
       merge,
       by = "colname",
       all.x = TRUE
@@ -312,26 +306,37 @@ micro_asc_rda <- function(microdata,
 
   # reordonne (car tri par merge)  ...................................
 
-  fwf_info <-
-    fwf_info %>%
+  fwf_info_tabular <-
+    fwf_info_tabular %>%
     arrange(.data$ordre_init) %>%
-    dplyr::select(-dplyr::all_of(c("ordre_init", "nlevels", "exp")))
+    dplyr::select(
+      -dplyr::all_of(c("ordre_init", "nlevels", "exp","position","width"))
+    )
 
   # reorganise en une liste de variables .............................
-  fwf_info <- transpose(fwf_info)
+  fwf_info_tabular <-transpose(fwf_info_tabular)
 
   # genere vecteur format .rda .......................................
-  res <- write_rda(fwf_info)
+  res <- character(0)
+  # instructions
+  res[1] <- sprintf('   <SEPARATOR> "%s"',separator)
+  res[2] <- sprintf('   <SAFE> "s"')
+  res[3] <- sprintf('   <UNSAFE> "u"')
+  res[4] <- sprintf('   <PROTECT> "p"')
+
+  res <- c(res,write_rda_tab(fwf_info_tabular))
 
   # écrit fichier texte ..............................................
   writeLines(res, rda_filename)
 
-  # renvoie noms des fichiers asc et rda de manière invisible .......
+  # renvoie noms des fichiers tab et rda de manière invisible .......
   invisible(
     list(
-      asc_filename = normPath2(asc_filename),
-      rda_filename = normPath2(rda_filename)
-    )
+		tab_filename = normPath2(tab_filename),
+		rda_filename = normPath2(rda_filename)
+	)
   )
 
+
 }
+
