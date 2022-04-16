@@ -1,3 +1,125 @@
+# Fonction extrayant les informations contenues dans un fichier batch (arb)
+# Structure de la liste en sortie (tous les items pas forcément présents)
+# $ openmicrodata     [chr]
+# $ openmetadata      [chr]
+# $ specifytable      [list]
+#  ..$ explanatory    [list]
+#  ..$ response       [chr]
+#  ..$ shadow         [chr]
+#  ..$ cost           [chr]
+# $ apriori           [list]
+#  ..$ file           [chr]
+#  ..$ sep            [chr]
+#  ..$ ignore_err     [chr]
+#  ..$ exp_triv       [chr]
+# $ safetyrule        [chr]
+# $ suppress          [chr]
+# $ writetable        [list]
+#  ..$ output_types   [chr]
+#  ..$ output_options [chr]
+#  ..$ output_names   [chr]
+# $ gointeractive     [logi]
+# $ tab_id            [chr]
+
+#' @importFrom purrr map_at
+#' @importFrom dplyr %>%
+
+# Décompose commandes avec plusieurs arguments ----------------------------
+
+#' @importFrom purrr map
+#' @importFrom purrr map_at
+#' @importFrom purrr transpose
+#' @importFrom dplyr %>%
+
+specif_decompose <- function(specif) {
+
+  ## extrait les infos contenus dans instructions <SPECIFYTABLE> d'un batch
+  ## pour par exemple les utiliser dans reimport des données
+  ## param specif : un vecteur de commandes <SPECIFYTABLE>
+
+  # menage debut fin
+  specif <- sub("^<SPECIFYTABLE> +", "", trimws(specif))
+
+  # variable comptage
+  specif <- sub("<freq>", "Freq", specif)
+
+  # separe differentes parties
+  specif <- paste0(specif, "|") # pour dernière valeur vide (cf. ?strsplit)
+  specif_split <- strsplit(specif, "|", fixed = TRUE)
+
+  # reclasse par type de variable
+  type_var <- c("explanatory", "response", "shadow", "cost")
+  res <- transpose(specif_split, type_var)
+
+  # supprime guillements et espaces (sauf dans explanatory)
+  res <-
+    res %>%
+    map_at(
+      c("response", "shadow", "cost"),
+      ~ gsub("(\"| )", "", .x)
+    )
+
+  # separe variables dans explanatory
+  res %>%
+    map_at(
+      "explanatory",
+      ~ .x %>%
+        stringr::str_match_all('[^" ]+') %>%
+        map(~ .[ , 1])
+    )
+
+}
+
+write_decompose <- function(write_cmd) {
+
+  ## extrait les infos contenus dans instructions <WRITETABLE> d'un batch
+  ## pour par exemple les utiliser dans reimport des données
+  ## param write_cmd : un vecteur de commandes <WRITETABLE>
+
+  res <- NULL
+
+  infos_writetable <-
+    stringr::str_match(
+      write_cmd,
+      "\\((\\d+),([1-6]+),(.*),\"(.+)\"\\)"
+    )
+
+  res$output_types   <- infos_writetable[ , 3]
+  res$output_options <- infos_writetable[ , 4]
+  res$output_names   <- infos_writetable[ , 5]
+
+  res
+
+}
+
+apriori_decompose <- function(apriori_cmd) {
+
+  res <- NULL
+
+  infos_apriori <-
+    stringr::str_match(
+      apriori_cmd,
+      "(.+),\\d{1,2},\"(.+)\",(\\d),(\\d)"
+    )
+
+  if (!length(infos_apriori)) return(NULL)
+
+  res$file       <- infos_apriori[ , 2] %>% rm_cmd() %>% unquote()
+  res$sep        <- infos_apriori[ , 3]
+  res$ignore_err <- infos_apriori[ , 4]
+  res$exp_triv   <- infos_apriori[ , 5]
+
+  res
+
+}
+
+
+# Autres fonctions utiles -------------------------------------------------
+
+rm_cmd <- function(cmd) sub("^ *<.+> *", "", cmd)
+
+unquote <- function(s) sub("^[\"'](.+)[\"']$", "\\1", s)
+
 #' Exécute un batch Tau-Argus
 #'
 #' Exécute les instructions contenues dans un fichier .arb pour Tau-Argus.
@@ -19,6 +141,7 @@
 #' réponse) dans les métadonnées (fichier rda).
 #'
 #' @param arb_filename nom du fichier batch à exécuter.
+#' @param is_tabular booléen, si les données sont déja tabulées ou non
 #' @param missing_dir action si les dossiers où seront écrits les
 #'   résultats n'existent pas ("stop" pour déclencher une erreur, "create" pour
 #'   créer les dossiers manquants).
@@ -52,11 +175,13 @@
 #' @export
 
 run_arb <- function(arb_filename,
+                    is_tabular=NULL,
                     missing_dir = getOption("rtauargus.missing_dir"),
                     tauargus_exe = getOption("rtauargus.tauargus_exe"),
                     logbook = NULL,
                     show_batch_console = getOption("rtauargus.show_batch_console"),
                     import = getOption("rtauargus.import"),
+
                     ...) {
 
   # valeur par défaut du package si option vide ................
@@ -72,8 +197,8 @@ run_arb <- function(arb_filename,
 
   if (!file.exists(tauargus_exe)) {
     stop(
-     "Tau-Argus introuvable (", tauargus_exe, ")\n  ",
-     "renseigner le parametre tauargus_exe ou l'option rtauargus.tauargus_exe"
+      "Tau-Argus introuvable (", tauargus_exe, ")\n  ",
+      "renseigner le parametre tauargus_exe ou l'option rtauargus.tauargus_exe"
     )
   }
 
@@ -88,12 +213,13 @@ run_arb <- function(arb_filename,
   infos_arb <- arb_contents(arb_filename)
 
   # présence des fichiers (input) ..............................
-
-  if (!file.exists(infos_arb$openmicrodata)) {
-    stop(
-      "Fichier asc introuvable : ", infos_arb$openmicrodata, "\n",
-      "(utiliser `micro_asc_rda` pour creer un fichier asc)"
-    )
+  if (is_tabular!= TRUE){
+    if (!file.exists(infos_arb$openmicrodata)) {
+      stop(
+        "Fichier asc introuvable : ", infos_arb$openmicrodata, "\n",
+        "(utiliser `micro_asc_rda` pour creer un fichier asc)"
+      )
+    }
   }
   if (!file.exists(infos_arb$openmetadata)) {
     stop(

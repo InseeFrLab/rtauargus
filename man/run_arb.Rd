@@ -7,6 +7,7 @@
 \usage{
 run_arb(
   arb_filename,
+  is_tabular = NULL,
   missing_dir = getOption("rtauargus.missing_dir"),
   tauargus_exe = getOption("rtauargus.tauargus_exe"),
   logbook = NULL,
@@ -17,6 +18,8 @@ run_arb(
 }
 \arguments{
 \item{arb_filename}{nom du fichier batch à exécuter.}
+
+\item{is_tabular}{booléen, si les données sont déja tabulées ou non}
 
 \item{missing_dir}{action si les dossiers où seront écrits les
 résultats n'existent pas ("stop" pour déclencher une erreur, "create" pour

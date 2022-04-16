@@ -16,7 +16,7 @@ op.rtauargus <- list(
   rtauargus.output_options     = "AS+",
   # run_arb ----------------------------------------------------- #
   rtauargus.missing_dir        = "stop",
-  rtauargus.tauargus_exe       = "Y:/Logiciels/Tau/TauArgus.exe",
+  rtauargus.tauargus_exe       = "Y:/Logiciels/TauArgus/TauArgus.exe",
   rtauargus.show_batch_console = TRUE,
   rtauargus.import             = TRUE
 )
