@@ -20,6 +20,16 @@ Authors@R: c(
       email = "pierre-yves.berrard@insee.fr",
       role = c("aut", "cre")
     ),
+	person(
+	  "Julien", "Jamme",
+      email = "julien.jamme@insee.fr",
+      role = c("aut")
+	),
+	person(
+	  "Nathanaël", "Rastout",
+      email = "nathanael.rastout@insee.fr",
+      role = c("aut")
+	),
     person(
       family = "Institut National de la Statistique et des Études Économiques",
       role = "cph"
