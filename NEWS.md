@@ -4,6 +4,13 @@ subtitle: Historique des modifications
 output: rmarkdown::html_vignette
 ---
 
+## rtauargus 0.5.0
+
+[18/04/2022]
+
+* Ajout de fonctions pour gérer le secret directement sur des données tabulées.  
+Addition of functions to manage confidentiality directly on tabular data.
+
 ## rtauargus 0.4.3
 
 [13/10/2021]
