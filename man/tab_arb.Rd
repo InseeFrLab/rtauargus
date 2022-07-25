@@ -28,7 +28,8 @@ extension). Si non renseigné, un fichier temporaire.}
 
 \item{tab_filename}{[\strong{obligatoire}] nom du fichier .tab (avec extension).}
 
-\item{rda_filename}{nom du fichier rda (avec extension).}
+\item{rda_filename}{rda file name (with .rda extension) \cr
+nom du fichier rda (avec extension)}
 
 \item{explanatory_vars}{[\strong{obligatoire}] variables catégorielles, sous
 forme de liste de vecteurs. Chaque élément de la liste est un vecteur des
@@ -136,8 +137,7 @@ autant de valeurs que de tabulations.
 }
 
 \section{Voir aussi}{
- La fonction \code{\link{rtauargus}}, qui utilise cette
-fonction et hérite de ses paramètres.
+
 }
 
 \examples{
