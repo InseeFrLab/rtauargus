@@ -1,12 +1,30 @@
-#' Secrétise des tableaux à partir de microdonnées
+#' Protects tables from microdata
 #'
-#' Secrétise des tableaux construits à partir de microdonnées et des
+#' Protects tables built from microdata and specifications of the crossings.
+#' The function allows to perform the complete process, namely the creation of
+#' the asc and rda files, the construction of the arb file, the effective
+#' launching of Tau-Argus and the eventual recovery of the results in R. \cr
+#' (Secrétise des tableaux construits à partir de microdonnées et des
 #' spécifications des croisements. La fonction permet d'effectuer le processus
 #' complet, à savoir la création des fichiers asc et rda, la construction
 #' du fichier arb, le lancement effectif de Tau-Argus et la récupération
-#' éventuelle des résultats dans R.
+#' éventuelle des résultats dans R.)
 #'
-#' La fonction exécute séquentiellement les fonctions : \itemize{
+#' The function executes sequentially the functions: \itemize{
+#' \item{
+#' \code{\link{micro_asc_rda}} \code{->}
+#' \code{\link{micro_arb}} \code{->}
+#' \code{\link{run_arb}}
+#' }
+#' }
+#'
+#' Intermediate files without a name entered (\code{asc_filename}...)
+#' will be created in a temporary folder, with randomly generated names.
+#' This mechanism allows the user to abstract from the preparation of
+#' preparation of the data and to maintain the entire chain of
+#' processing in R. \cr
+#'
+#' (La fonction exécute séquentiellement les fonctions : \itemize{
 #'   \item{
 #'     \code{\link{micro_asc_rda}} \code{->}
 #'     \code{\link{micro_arb}} \code{->}
@@ -18,34 +36,56 @@
 #' seront créés dans un dossier temporaire, avec des noms générés aléatoirement.
 #' Ce mécanisme permet à l'utilisateur de s'abstraire de la préparation des
 #' données propre à Tau-Argus et de maintenir l'intégralité de la chaîne de
-#' traitements dans R.
+#' traitements dans R.)
 #'
 #' @inheritParams micro_arb
-#' @param microdata [\strong{obligatoire}] data.frame contenant les microdonnées
+#' @param microdata [\strong{required}] data.frame containing the microdata
+#' (or path to text files already present: see section
+#' \emph{Microdata already as text files}). \cr
+#' ([\strong{obligatoire}] data.frame contenant les microdonnées
 #'   (ou chemin vers des fichiers texte déjà présents : voir section
-#'   \emph{Microdonnées déjà sous forme de fichiers texte}).
-#' @param ... paramètres optionnels pour \code{micro_asc_rda}, \code{micro_arb}
-#'    et \code{run_arb}. Voir l'aide de ces fonctions.
+#'   \emph{Microdata already as text files}).)
+#' @param ... optional parameters for \code{micro_asc_rda}, \code{micro_arb}
+#' and \code{run_arb}. See the help for these functions. \cr
+#' (paramètres optionnels pour \code{micro_asc_rda}, \code{micro_arb}
+#'    et \code{run_arb}. Voir l'aide de ces fonctions.)
 #'
-#' @inheritSection micro_arb Syntaxe
+#' @inheritSection micro_arb Syntax
 #'
-#' @section Microdonnées déjà sous forme de fichiers texte: Pour utiliser des
-#'  fichiers asc et rda existant déjà, il est possible de fournir à la place du
-#'  data.frame un vecteur caractère indiquant le chemin de ces fichiers. Le
-#'  premier élément de ce vecteur est le fichier asc, le deuxième élément le
-#'  fichier rda. Le fichier rda peut être omis s'il porte le même nom que le
-#'  fichier asc (à l'extension près).
+#' @section Microdata already as text files:
+#' To use existing asc and rda files already existing, it is possible to
+#' provide, instead of the data.frame, a character vector indicating
+#' the path of these files. The first element of this vector is the asc file,
+#' the second element the rda file. The rda file can be omitted if it has the
+#' same name as the asc file (except for the extension).
+#' Use this option to start the whole process without the generation
+#' of the text data. Do not specify \code{asc_filename} or
+#' \code{rda_filename} (used to name the text files to be created, which is
+#' irrelevant here). \cr
 #'
-#'  Utiliser cette option pour lancer le processus complet sans la génération
+#' Pour utiliser des fichiers asc et rda existant déjà, il est possible de
+#' fournir à la place du data.frame un vecteur caractère indiquant le chemin
+#' de ces fichiers. Le premier élément de ce vecteur est le fichier asc,
+#' le deuxième élément le fichier rda. Le fichier rda peut être omis s'il
+#' porte le même nom que le fichier asc (à l'extension près).
+#'
+#' Utiliser cette option pour lancer le processus complet sans la génération
 #'  des données en texte. Ne pas spécifier \code{asc_filename} ou
 #'  \code{rda_filename} (sert à nommer les fichiers texte à créer, ce qui est
 #'  sans objet ici).
 #'
-#' @return Si \code{import = TRUE}, une liste de data.frames (tableaux
-#'   secrétisés), \code{NULL} sinon.
+#' @return
+#' If \code{import = TRUE}, a list of data.frames (protected tables),
+#' \code{NULL} otherwise. \cr
 #'
-#' @seealso \code{\link{rtauargus_plus}}, une version optimisée pour un grand
-#'   nombre de tableaux (au prix de quelques restrictions d'usage).
+#'(Si \code{import = TRUE}, une liste de data.frames (tableaux
+#'   secrétisés), \code{NULL} sinon.)
+#'
+#' @seealso
+#' \code{link{rtauargus_plus}}, a version optimized for a large
+#' number of tables (at the cost of some usage restrictions). \cr
+#' (\code{\link{rtauargus_plus}}, une version optimisée pour un grand
+#'   nombre de tableaux (au prix de quelques restrictions d'usage).)
 #'
 #' @examples
 #' \dontrun{
@@ -54,7 +94,7 @@
 #'   explanatory_vars = c("V1", "V2"),
 #'   safety_rules = "FREQ(3,10)",
 #'   suppress = "GH(.,100)",
-#'   output_options = "AS+" # (exemple de parametre optionnel pour micro_arb)
+#'   output_options = "AS+" # (example of optional parameter for micro_arb)
 #' )}
 #' @export
 

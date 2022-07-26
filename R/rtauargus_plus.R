@@ -1,9 +1,32 @@
-#' Secrétisation en masse
+#' Mass protection
 #'
-#' Optimisation de la fonction \code{\link{rtauargus}} pour un grand nombre de
-#' croisements (ayant tous les mêmes paramètres).
+#' Optimization of the function \code{link{rtauargus}} for a large number of
+#' crossovers (all having the same parameters). \cr
+#' (Optimisation de la fonction \code{\link{rtauargus}} pour un grand nombre de
+#' croisements (ayant tous les mêmes paramètres).)
 #'
-#' En mode interactif, Tau-Argus peut traiter jusqu'à 10 tabulations
+#' In interactive mode, Tau-Argus can process up to 10 tabs
+#' simultaneously for the same microdata set. In batch mode, a larger number of
+#' of crossings can be specified. However, doing so
+#' can be particularly time consuming, as Tau-Argus takes a lot of time
+#' to read large text files of microdata.
+#'
+#' \code{rtauargus_plus} helps to improve the speed of execution. The function
+#' splits the list of tabs into groups of size \code{grp_size} and
+#' makes a call to \code{rtauargus} for each group. It writes an
+#' asc file restricted to the only variables actually used within a
+#' of a group.
+#'
+#' The results are then aggregated into a single list, as if Tau-Argus
+#' had been called only once.
+#'
+#' Modifying \code{grp_size} will not change the result, only the time
+#' execution time. A value around 5 (default) seems to be a good compromise
+#' between reading too large asc files and calling Tau-Argus too often.
+#' Tau-Argus too much. It can be adjusted according to the number of
+#' common variables within each tab group.
+#
+#' (En mode interactif, Tau-Argus peut traiter jusqu'à 10 tabulations
 #' simultanément pour un même jeu de microdonnées. En mode batch, un nombre plus
 #' important de croisements peut être spécifié. Cependant, procéder de la sorte
 #' peut être particulièrement long, car Tau-Argus prend beaucoup de temps
@@ -22,11 +45,29 @@
 #' d'exécution. Une valeur autour de 5 (défaut) semble être un bon compromis
 #' entre une lecture de fichiers asc trop volumineux et un nombre d'appels à
 #' Tau-Argus trop important. Elle peut être ajustée en fonction du nombre de
-#' variables communes à l'intérieur de chaque groupe de tabulations.
+#' variables communes à l'intérieur de chaque groupe de tabulations.)
 #'
-#' @section Limites par rapport à la fonction \code{rtauargus}:
 #'
-#' En contrepartie de la vitesse d'exécution, les croisements doivent avoir les
+#' @section Limits in relation to the function \code{rtauargus}:
+#'
+#' In return for the speed of execution, the crossings must have the
+#' same characteristics (same primary secret rules, same secondary secret method,
+#' same secondary secret, same weighting variable, etc.). The parameters
+#' \code{safety_rules}, \code{supress}, ..., must therefore contain a
+#' unique value.
+#'
+#' Moreover, it is not possible to specify \code{asc_filename},
+#' \code{rda_filename}, \code{arb_filename} or \code{output_names} to
+#' retrieve the intermediate files. These files will be written to a
+#' temporary folder (and overwritten with each new group). Therefore,
+#' specifying \code{import = FALSE} is irrelevant and will be ignored.
+#'
+#' The data must be a data.frame (asc and rda files not allowed).
+#'
+#' If the \code{linked} option is used, the link will only be effective at
+#' within each group of tabs. \cr
+#'
+#' (En contrepartie de la vitesse d'exécution, les croisements doivent avoir les
 #' mêmes caractéristiques (mêmes règles de secret primaire, même méthode de
 #' secret secondaire, même variable de pondération, etc.). Les paramètres
 #' \code{safety_rules}, \code{supress}, ..., doivent donc contenir une valeur
@@ -42,26 +83,35 @@
 #' pas autorisés).
 #'
 #' Si l'option \code{linked} est utilisée, la liaison ne sera effective qu'à
-#' l'intérieur de chaque groupe de tabulations.
+#' l'intérieur de chaque groupe de tabulations.)
 #'
-#' @param grp_size nombre de tableaux par appel de Tau-Argus (un entier compris
-#'   entre 1 et 10).
+#' @param grp_size number of tables per Tau-Argus call (an integer between
+#' between 1 and 10). \cr
+#' (nombre de tableaux par appel de Tau-Argus (un entier compris
+#'   entre 1 et 10).)
 #' @inheritParams micro_asc_rda
 #' @inheritParams micro_arb
 #' @inheritParams rtauargus
-#' @param suppress [\strong{obligatoire}] méthode de gestion du secret
+#' @param suppress [\strong{required}] secondary secret management method
+#' (Tau-Argus batch syntax). Only one method allowed for
+#' all tables. Example : \code{"GH(.,100)"} (the dot playing the role of the
+#' tabulation number). \cr
+#' [\strong{obligatoire}] méthode de gestion du secret
 #'   secondaire (syntaxe batch de Tau-Argus). Une seule méthode autorisée pour
 #'   tous les tableaux. Exemple \code{"GH(.,100)"} (le point jouant le rôle du
 #'   numéro de tabulation).
 #'
-#' @return Une liste de data.frames (tableaux secrétisés).
+#' @return A list of data.frames (secret arrays). \cr
+#' (Une liste de data.frames (tableaux secrétisés).)
 #'
-#' @seealso \code{\link{rtauargus}}, fonction appelée de manière répétée par
+#' @seealso \code{\link{rtauargus}}, a function called repeatedly by
+#' \code{rtauargus_plus}. \cr
+#' fonction appelée de manière répétée par
 #'   \code{rtauargus_plus}.
 #'
 #' @examples
 #' \dontrun{
-#' # exemple de ?rtauargus, avec une repetition (artificielle) des croisements
+#' # example of ?rtauargus, with an (artificial) repetition of the crossings
 #' rtauargus_plus(
 #'   grp_size         = 6, # (pour lancer les 12 croisements en 2 appels)
 #'   microdata        = data.frame(V1 = c("A", "A", "B", "C", "A"), V2 = "Z"),

@@ -120,13 +120,29 @@ rm_cmd <- function(cmd) sub("^ *<.+> *", "", cmd)
 
 unquote <- function(s) sub("^[\"'](.+)[\"']$", "\\1", s)
 
-#' Exécute un batch Tau-Argus
+#' Runs a Tau-Argus batch
 #'
-#' Exécute les instructions contenues dans un fichier .arb pour Tau-Argus.
+#' Executes the instructions contained in an .arb file for Tau-Argus.
+#' (Exécute les instructions contenues dans un fichier .arb pour Tau-Argus.)
 #'
-#' Seul l’argument \code{arb_filename} est obligatoire, car toutes les
+#' Only the argument \code{arb_filename} is required, because all
+#' necessary information is present in this file.
+#'
+#' This is the only function in the package that runs Tau-Argus. It
+#' therefore requires the software to be accessible from the workstation.
+#'
+#' The location of the TauArgus.exe program is defined globally when the
+#' loading the package. In fact, the argument \code{tauargus_exe} will not
+#' normally not have to be specified (except to override the global option the
+#' time of the execution of the function).
+#'
+#' Checks are made before the actual launching of Tau-Argus:
+#' existence of the software on the computer, of the asc and rda files, of the folders where
+#' write the results, the variables to be used (crossings, response variable) in the
+#' response variable) in the metadata (rda file).
+#'
+#' (Seul l’argument \code{arb_filename} est obligatoire, car toutes les
 #' informations nécessaires sont présentes dans ce fichier.
-#'
 #' Il s'agit de la seule fonction du package qui exécute Tau-Argus. Elle
 #' nécessite donc que le logiciel soit accessible depuis le poste de travail.
 #'
@@ -138,29 +154,42 @@ unquote <- function(s) sub("^[\"'](.+)[\"']$", "\\1", s)
 #' Des vérifications sont effectuées avant le lancement effectif de Tau-Argus :
 #' existence du logiciel sur le poste, des fichiers asc et rda, des dossiers où
 #' écrire les résultats, des variables à utiliser (croisements, variable de
-#' réponse) dans les métadonnées (fichier rda).
+#' réponse) dans les métadonnées (fichier rda).)
 #'
-#' @param arb_filename nom du fichier batch à exécuter.
-#' @param is_tabular booléen, si les données sont déja tabulées ou non
-#' @param missing_dir action si les dossiers où seront écrits les
+#' @param arb_filename name of the batch file to execute.
+#' (nom du fichier batch à exécuter.)
+#' @param is_tabular boolean, if the data is already tabulated or not
+#' (booléen, si les données sont déja tabulées ou non)
+#' @param missing_dir what to do if the folders where the results will be written
+#' results do not exist ("stop" to trigger an error, "create" to
+#' create the missing folders).
+#' (action si les dossiers où seront écrits les
 #'   résultats n'existent pas ("stop" pour déclencher une erreur, "create" pour
-#'   créer les dossiers manquants).
-#' @param tauargus_exe répertoire et nom du logiciel Tau-Argus.
-#' @param logbook nom du fichier où est enregistré le journal d'erreurs
-#'   (optionnel).
-#' @param show_batch_console pour afficher le déroulement du batch dans la
-#'   console.
-#' @param import pour importer dans R les fichiers produits, \code{TRUE} par
-#'   défaut.
-#' @param ... paramètres supplémentaires pour \code{system()}.
+#'   créer les dossiers manquants).)
+#' @param tauargus_exe directory and name of the Tau-Argus software.
+#' (répertoire et nom du logiciel Tau-Argus.)
+#' @param logbook name of the file where the error log is saved
+#' (optional).
+#' (nom du fichier où est enregistré le journal d'erreurs
+#'   (optionnel).)
+#' @param show_batch_console to display the batch progress in the
+#' console.
+#' (pour afficher le déroulement du batch dans la
+#'   console.)
+#' @param import to import in R the files produced, \code{TRUE} by
+#' default.
+#' (pour importer dans R les fichiers produits, \code{TRUE} par
+#'   défaut.)
+#' @param ... additional parameters for \code{system()}.
+#' (paramètres supplémentaires pour \code{system()}.)
 #'
 #' @return \itemize{
-#'   \item{une liste de data.frame contenant les résultats si
-#'     \code{import = TRUE} (via la fonction \code{\link{import}})} ;
-#'   \item{\code{NULL} sinon}.
+#' \item{a list of data.frame containing the results if
+#' \code{import = TRUE} (via the \code{link{import}} function)} ;
+#' \item{\code{NULL} otherwise}.
 #' }
 #'
-#' @inheritSection micro_asc_rda Voir aussi
+#' @inheritSection micro_asc_rda See also
 #'
 #' @examples
 #' \dontrun{
