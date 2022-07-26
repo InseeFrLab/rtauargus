@@ -173,7 +173,7 @@ unquote <- function(s) sub("^[\"'](.+)[\"']$", "\\1", s)
 
 #' Runs a Tau-Argus batch
 #'
-#' Executes the instructions contained in an .arb file for Tau-Argus.
+#' Executes the instructions contained in an .arb file for Tau-Argus. \cr
 #' (Exécute les instructions contenues dans un fichier .arb pour Tau-Argus.)
 #'
 #' Only the argument \code{arb_filename} is required, because all
@@ -190,7 +190,7 @@ unquote <- function(s) sub("^[\"'](.+)[\"']$", "\\1", s)
 #' Checks are made before the actual launching of Tau-Argus:
 #' existence of the software on the computer, of the asc and rda files, of the folders where
 #' write the results, the variables to be used (crossings, response variable) in the
-#' response variable) in the metadata (rda file).
+#' response variable) in the metadata (rda file). \cr
 #'
 #' (Seul l’argument \code{arb_filename} est obligatoire, car toutes les
 #' informations nécessaires sont présentes dans ce fichier.
@@ -207,35 +207,35 @@ unquote <- function(s) sub("^[\"'](.+)[\"']$", "\\1", s)
 #' écrire les résultats, des variables à utiliser (croisements, variable de
 #' réponse) dans les métadonnées (fichier rda).)
 #'
-#' @param arb_filename name of the batch file to execute.
+#' @param arb_filename name of the batch file to execute. \cr
 #' (nom du fichier batch à exécuter.)
-#' @param is_tabular boolean, if the data is already tabulated or not
+#' @param is_tabular boolean, if the data is already tabulated or not \cr
 #' (booléen, si les données sont déja tabulées ou non)
 #' @param missing_dir what to do if the folders where the results will be written
 #' results do not exist ("stop" to trigger an error, "create" to
-#' create the missing folders).
+#' create the missing folders). \cr
 #' (action si les dossiers où seront écrits les
 #'   résultats n'existent pas ("stop" pour déclencher une erreur, "create" pour
 #'   créer les dossiers manquants).)
-#' @param tauargus_exe directory and name of the Tau-Argus software.
+#' @param tauargus_exe directory and name of the Tau-Argus software. \cr
 #' (répertoire et nom du logiciel Tau-Argus.)
 #' @param logbook name of the file where the error log is saved
-#' (optional).
+#' (optional). \cr
 #' (nom du fichier où est enregistré le journal d'erreurs
 #'   (optionnel).)
 #' @param show_batch_console to display the batch progress in the
-#' console.
+#' console. \cr
 #' (pour afficher le déroulement du batch dans la
 #'   console.)
 #' @param verbose boolean, to display the batch execution (if TRUE) or 
-#' only error messages if any (if FALSE)
+#' only error messages if any (if FALSE) \cr
 #' (booléen, pour afficher l'exécution du batch (si TRUE) ou 
 #' uniquement les messages d'erreurs, s'il y en a (si FALSE))
 #' @param import to import in R the files produced, \code{TRUE} by
-#' default.
+#' default. \cr
 #' (pour importer dans R les fichiers produits, \code{TRUE} par
 #'   défaut.)
-#' @param ... additional parameters for \code{system()}.
+#' @param ... additional parameters for \code{system()}. \cr
 #' (paramètres supplémentaires pour \code{system()}.)
 #'
 #' @return \itemize{

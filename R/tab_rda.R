@@ -77,73 +77,57 @@ write_rda_tab <- function(info_vars) {
 #' nom du fichier rda (avec extension)
 #' @param hst_filename hst file name (with .hst extension) \cr
 #' nom du fichier hst (avec extension)
-#'
-#' @param explanatory_vars [\strong{obligatoire}] Vector of categorical variables
-#' \cr
-#' Variables catégorielles, sous forme de liste de vecteurs
-#'
+#' @param explanatory_vars [\strong{obligatoire}] Vector of categorical variables \cr
+#' Variables catégorielles, sous forme de liste de vecteurs \cr
 #' Example : \code{list(c("A21", "TREFF", "REG")}
 #' table crossing \code{A21} x \code{TREFF} x \code{REG}
-#'
 #' @param secret_var Boolean variable which give the primary secret : equal to
-#' "TRUE" if a cell is concerned by the primary secret,"FALSE" otherwise.
-#' \cr
-#' variable indiquant le secret primaire de type booléen:
+#' "TRUE" if a cell is concerned by the primary secret,"FALSE" otherwise. \cr
+#' (Variable indiquant le secret primaire de type booléen:
 #' prend la valeur "TRUE" quand les cellules du tableau doivent être masquées
-#' par le secret primaire, "FALSE" sinon.
-#'
+#' par le secret primaire, "FALSE" sinon.)
 #' @param decimals Minimum number of decimals to be displayed
 #' (see section 'Number of decimals') \cr
-#' nombre minimal de décimales à afficher (voir section 'Nombre
-#' de décimales').
-#'
-#' @param hrc Informations on hierarchical variables (see section 'hierarchical
-#' variable'). \cr
-#' informations sur les variables hiérarchiques (voir section
-#' 'Variables hiérarchiques').
-#'
+#' (nombre minimal de décimales à afficher (voir section 'Number of decimals').)
+#' @param hrc Informations on hierarchical variables (see section 
+#' 'Hierarchical variables'). \cr
+#' (Informations sur les variables hiérarchiques (voir section
+#' 'Hierarchical variables').)#'
 #' @param hierleadstring  Character which, repeated n times,
 #' indicates that the value is at n levels of depth in the hierarchy. \cr
-#' caractère qui, répété n fois, indique que la valeur est
-#' à n niveaux de profondeur dans la hiérarchie.
-#'
+#' (Caractère qui, répété n fois, indique que la valeur est
+#' à n niveaux de profondeur dans la hiérarchie.)#'
 #' @param totcode Code(s) which represent the total of a categorical variable
 #' (see section 'Specific parameters' for the syntax of this parameter).
 #' Variables not specified (neither by default nor explicitly)
-#' will be assigned the value of \code{rtauargus.totcode}.\cr
-#' code(s) pour le total d'une variable catégorielle (voir
-#' section 'Paramètres spécifiques' pour la syntaxe de ce paramètre). Les
+#' will be assigned the value of \code{rtauargus.totcode}. \cr
+#' (Code(s) pour le total d'une variable catégorielle (voir
+#' section 'Specific parameters' pour la syntaxe de ce paramètre). Les
 #' variables non spécifiées (ni par défaut, ni explicitement) se verront
-#' attribuer la valeur de \code{rtauargus.totcode}.
-#'
+#' attribuer la valeur de \code{rtauargus.totcode}.)#'
 #' @param missing Code(s) for a missing value (see section 'Specific parameters'
 #' for the syntax of this parameter). \cr
-#' code(s) pour une valeur manquante (voir section
-#' 'Paramètres spécifiques' pour la syntaxe de ce paramètre).
-#'
+#' (Code(s) pour une valeur manquante (voir section
+#' 'Specific parameters' pour la syntaxe de ce paramètre).)
 #' @param codelist file(s) containing labels of the categorical variables
-#' (see section 'Specific parameters' for the syntax of this parameter).\cr
-#' fichier(s) contenant les libellés des variables catégorielles
-#' (voir section 'Paramètres spécifiques' pour la syntaxe de ce paramètre).
-#'
+#' (see section 'Specific parameters' for the syntax of this parameter). \cr
+#' (Fichier(s) contenant les libellés des variables catégorielles
+#' (voir section 'Specific parameters' pour la syntaxe de ce paramètre).)
 #' @param value Name of the column containing the value of the cells. \cr
-#' nom de la colonne contenant la valeur des cellules
-#'
+#' (Nom de la colonne contenant la valeur des cellules)
 #' @param freq Name of the column containing the the numbers for a cell. \cr
-#' Nom de la colonne contenant les effectifs pour une cellule
+#' (Nom de la colonne contenant les effectifs pour une cellule)#'
+#' @param maxscore Name of the column containing, the value of the largest
+#' contributor of a cell. \cr
+#' (Nom de la colonne contenant la valeur du plus gros contributeur
+#' d'une cellule)
+#' @param separator Character used as separator in the .tab file. \cr
+#' (Caractère utilisé en tant que separateur dans le fichier .tab)
 #'
-#' @param maxscore  Name of the column containing
-#' the value of the largest contributor of a cell. \cr
-#'
-#' Nom de la colonne contenant la valeur du plus gros contributeur
-#' d'une cellule
-#'
-#' @param separator character used as separator in the .tab file. \cr
-#' caractère utilisé en tant que separateur dans le fichier .tab
 #'
 #' @return Return the rda file name as a list (invisible).\cr
-#' Renvoie le nom du fichier rda sous forme de liste (de
-#' manière invisible).
+#' (Renvoie le nom du fichier rda sous forme de liste (de
+#' manière invisible).)
 #'
 #'
 #' @section Apriori file :
@@ -154,7 +138,7 @@ write_rda_tab <- function(info_vars) {
 #' The parameter \code{secret_var} indicates the name of the primary secret variable.
 #' If there is the additional boolean variable which indicates the primary secret
 #' in the table (of tabulated data), the function tab_rda will create
-#' an apriori file in a format conforming to tauargus.\cr
+#' an apriori file in a format conforming to tauargus. \cr
 #'
 #'
 #' Le fichier d'apriori (.hst) récapitule pour chaque valeurs
@@ -173,16 +157,16 @@ write_rda_tab <- function(info_vars) {
 #' must be given in the form of a vector indicating the value to take for each variable.
 #' The names of the elements of the vector give the variable concerned and
 #' the elements of the vector give the value of the parameter for Tau-Argus.
-#' An unnamed element will be the default value.\cr
+#' An unnamed element will be the default value. \cr
 #'
-#' Les paramètres \code{totcode}, \code{missing} et \code{codelist}
+#' (Les paramètres \code{totcode}, \code{missing} et \code{codelist}
 #' sont à renseigner sous la forme d'un vecteur indiquant la valeur à prendre
 #' pour chaque variable.
 #'
 #' Les noms des éléments du vecteur donnent la variable concernée, les éléments
 #' du vecteur donnent la valeur du paramètre pour Tau-Argus. Un élément non
 #' nommé constituera la valeur par défaut, qui sera attribuée à toutes les
-#' variables pouvant prendre ce paramètre.
+#' variables pouvant prendre ce paramètre.)
 #'
 #' For example :
 #' \itemize{
@@ -191,6 +175,7 @@ write_rda_tab <- function(info_vars) {
 #'   \item{\code{totcode = c("global", size="total", income="total")} :
 #'   idem, sauf pour les variables \code{size}et \code{income}}
 #' }
+#'
 #'
 #' @section Hierarchical variables:
 #'
@@ -202,10 +187,11 @@ write_rda_tab <- function(info_vars) {
 #' if it differs from the default option of the package).
 #' The path to the existing file is explicitly given.
 #' The elements of the vector in parameter must be named (with the name of the variable),
-#' even if there is only one element
-#' emph{Example :}\code{c(category="category.hrc")}
+#' even if there is only one element.
 #'
-#' Le paramètre \code{hrc} obéit aux mêmes règles de syntaxe que \code{totcode},
+#' emph{Example :}\code{c(category="category.hrc")} \cr
+#'
+#' (Le paramètre \code{hrc} obéit aux mêmes règles de syntaxe que \code{totcode},
 #' \code{missing} et \code{codelist} (vecteur nommé contenant autant d'éléments
 #' que de variables à décrire).
 #'
@@ -216,10 +202,11 @@ write_rda_tab <- function(info_vars) {
 #' s'il diffère de l'option par défaut du package).
 #' Le chemin vers le fichier existant est explicitement donné.
 #' Les éléments du vecteur en paramètre doivent nommés (avec le nom de la variable),
-#' même s'il n'y a qu'un seul
-#' élément.
-#'\emph{Exemple :}\code{c(category="category.hrc")}
+#' même s'il n'y a qu'un seul élément.
 #'
+#'\emph{Exemple :}\code{c(category="category.hrc")})
+#'
+#' 
 #' @section Number of decimals:
 #' Parameter \code{decimals} indicates the minimum number of decimal places to
 #' include in the output file
@@ -227,14 +214,16 @@ write_rda_tab <- function(info_vars) {
 #' It applies to all real variables (double) but not to integer variables.
 #' To add zeros to an integer variable, convert it with \code{as.double} beforehand.\cr
 #'
-#' Le paramètre \code{decimals} indique le nombre minimal de décimales à faire
+#' (Le paramètre \code{decimals} indique le nombre minimal de décimales à faire
 #' figurer dans le fichier en sortie (quel que soit le nombre de décimales
 #' effectivement présent dans \code{tabular}). Il s'applique à toutes les
 #' variables réelles (double) mais pas aux variables entières (integer). Pour
 #' ajouter des zéros à une variable entière, la convertir avec \code{as.double}
-#' au préalable.
+#' au préalable.)
 #'
-#' @section Voir aussi:
+#'
+#' @section See also
+#'
 #'
 #' @examples
 #' \dontrun{

@@ -222,10 +222,13 @@ apriori_batch <- function(ntab, hst_names, sep = ',', ignore_err = 0 , exp_triv 
 #' @param gointeractive pour avoir la possibilité de lancer le batch depuis le
 #'   menu de Tau-Argus (\code{FALSE} par défaut).
 #'
+#'
 #' @return Une liste de deux éléments : le nom du fichier arb, les noms des
 #'   fichiers en sortie (utile pour récupérer les noms générés aléatoirement).
 #'
-#' @inheritSection tab_rda Voir aussi
+#'
+#' @inheritSection tab_rda See also
+#'
 #'
 #' @examples
 #' \dontrun{
