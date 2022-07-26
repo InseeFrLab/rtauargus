@@ -2,7 +2,7 @@
 % Please edit documentation in R/micro_asc_rda.R
 \name{micro_asc_rda}
 \alias{micro_asc_rda}
-\title{Crée les fichiers asc et rda à partir de microdonnées}
+\title{Creates asc and rda files from microdata}
 \usage{
 micro_asc_rda(
   microdata,
@@ -20,55 +20,98 @@ micro_asc_rda(
 )
 }
 \arguments{
-\item{microdata}{[\strong{obligatoire}] data.frame contenant les
-microdonnées.}
+\item{microdata}{[\strong{required}] data.frame containing the microdata. \cr
+([\strong{obligatoire}] data.frame contenant les microdonnées.)}
 
-\item{asc_filename}{nom du fichier asc (avec extension). Si non renseigné, un
-fichier temporaire.}
+\item{asc_filename}{name of the asc file (with extension). If not filled in,
+a temporary file. \cr
+(nom du fichier asc (avec extension). Si non renseigné,
+un fichier temporaire.)}
 
-\item{rda_filename}{nom du fichier rda (avec extension). Si non renseigné,
-\code{asc_filename} avec l'extension "rda" à la place de "asc".}
+\item{rda_filename}{name of the rda file (with extension). If not filled in,
+\code{asc_filename} with the extension "rda" instead of "asc". \cr
+(nom du fichier rda (avec extension). Si non renseigné,
+\code{asc_filename} avec l'extension "rda" à la place de "asc".)}
 
-\item{weight_var}{nom de la variable de poids.}
+\item{weight_var}{name of the weight variable. \cr
+(nom de la variable de poids.)}
 
-\item{holding_var}{nom de la variable de holding.}
+\item{holding_var}{nom de la variable de holding.
+(name of the holding variable.) \cr}
 
-\item{decimals}{nombre minimal de décimales à afficher (voir section 'Nombre
-de décimales').}
+\item{decimals}{minimum number of decimals to display (see section 'Number of
+of decimals').
+(nombre minimal de décimales à afficher (voir section 'Number of
+of decimals').)}
 
-\item{hrc}{informations sur les variables hiérarchiques (voir section
-'Variables hiérarchiques').}
+\item{hrc}{information about the hierarchical variables (see section
+section 'Hierarchical variables'). \cr
+(informations sur les variables hiérarchiques (voir section
+'Hierarchical variables').)}
 
-\item{hierleadstring}{caractère qui, répété n fois, indique que la valeur est
-à n niveaux de profondeur dans la hiérarchie.}
+\item{hierleadstring}{character which, repeated n times, indicates that the value is
+at n levels deep in the hierarchy. \cr
+(caractère qui, répété n fois, indique que la valeur est
+à n niveaux de profondeur dans la hiérarchie.)}
 
-\item{totcode}{code(s) pour le total d'une variable catégorielle (voir
-section 'Paramètres spécifiques' pour la syntaxe de ce paramètre). Les
+\item{totcode}{code(s) for the total of a categorical variable (see
+section 'Specific parameters' for the syntax of this parameter). The
+variables not specified (neither by default nor explicitly) will be
+assigned the value of \code{rtauargus.totcode}. \cr
+(code(s) pour le total d'une variable catégorielle (voir
+section 'Specific parameters' pour la syntaxe de ce paramètre). Les
 variables non spécifiées (ni par défaut, ni explicitement) se verront
-attribuer la valeur de \code{rtauargus.totcode}.}
+attribuer la valeur de \code{rtauargus.totcode}.)}
 
-\item{missing}{code(s) pour une valeur manquante (voir section
-'Paramètres spécifiques' pour la syntaxe de ce paramètre).}
+\item{missing}{code(s) for a missing value (see section
+'Specific parameters' for the syntax of this parameter). \cr
+(code(s) pour une valeur manquante (voir section
+  'Specific parameters' pour la syntaxe de ce paramètre).)}
 
-\item{codelist}{fichier(s) contenant les libellés des variables catégorielles
-(voir section 'Paramètres spécifiques' pour la syntaxe de ce paramètre).}
+\item{codelist}{file(s) containing labels for categorical variables
+(see section 'Specific parameters' for the syntax of this parameter). \cr
+(fichier(s) contenant les libellés des variables catégorielles
+  (voir section 'Specific parameters' pour la syntaxe de ce paramètre).)}
 
-\item{request}{(pas encore implémenté)}
+\item{request}{(not yet implemented - pas encore implémenté)}
 }
 \value{
-Renvoie les noms des fichiers asc et rda sous forme de liste (de
+Returns the names of the asc and rda files as a list (invisibly).
+invisibly). Empty columns (filled with \code{NA} or empty strings) are not
+strings) will not be exported to the asc file. A
+warning message will list the affected columns. \cr
+(Renvoie les noms des fichiers asc et rda sous forme de liste (de
   manière invisible). Les colonnes vides (remplies de \code{NA} ou de chaînes
   de caractères vides) ne seront pas exportées dans le fichier asc. Un
-  message d'avertissement listera les colonnes concernées.
+  message d'avertissement listera les colonnes concernées.)
 }
 \description{
-Crée un fichier texte de longueur fixe (asc) et un fichier de métadonnées
-(rda) à partir de microdonnées et d'informations additionnelles.
+Creates a fixed length text file (asc) and a metadata file
+(rda) from microdata and additional information. \cr
+(Crée un fichier texte de longueur fixe (asc) et un fichier de métadonnées
+(rda) à partir de microdonnées et d'informations additionnelles.)
 }
-\section{Paramètres spécifiques}{
+\section{Specific parameters}{
 
 
-Les paramètres \code{totcode}, \code{missing} et \code{codelist}
+The parameters \code{totcode}, \code{missing} and \code{codelist}
+are to be filled in as a vector indicating the value to take
+for each variable.
+
+The names of the elements of the vector give the variable concerned, the elements
+of the vector give the value of the parameter for Tau-Argus. An unnamed element
+element will be the default value, which will be assigned to all
+variables that can take this parameter.
+
+For example :
+\itemize{
+  \item{\code{totcode = "All"} : écrit \code{<TOTCODE> "All"} for all
+  categorical variables}
+  \item{\code{totcode = c("All", GEO = "France")} : idem, except for the
+    \code{GEO} variable }
+}
+
+(Les paramètres \code{totcode}, \code{missing} et \code{codelist}
 sont à renseigner sous la forme d'un vecteur indiquant la valeur à prendre
 pour chaque variable.
 
@@ -83,13 +126,50 @@ Par exemple :
     toutes les variables catégorielles}
   \item{\code{totcode = c("Ensemble", GEO = "France")} : idem, sauf pour la
     variable \code{GEO}}
+})
 }
-}
 
-\section{Variables hiérarchiques}{
+\section{Hierarchical variables}{
 
 
-Le paramètre \code{hrc} obéit aux mêmes règles de syntaxe que \code{totcode},
+The parameter \code{hrc} follows the same syntax rules as \code{totcode},
+\code{missing} and \code{codelist} (named vector containing as many elements
+as there are variables to describe). It also has the particularity
+to accept several ways of specifying the values associated with the
+hierarchical variables.
+
+To define a hierarchy based on the positions of characters
+(\strong{hierierlevels}), pass a sequence of integers separated by
+spaces.
+
+\emph{Example :} \code{c(CODECOM = "2 3 0 0 0")}
+
+If the hierarchy is defined in a separate hrc file
+(\strong{hiercodelist}), the function expects the location of this file (and
+a possible \code{hiercodelist} if it differs from the default option of the
+package). In this case, you can write explicitly the path to an existing file
+file (\code{c(A38 = "a38.hrc")}), but also make a call to
+\code{\link{write_hrc}} which will generate an hrc file from microdata.
+
+\emph{Example :} \code{c(A38 = write_hrc(microdata, c("A38", "A21", "A10")))}
+
+A shortcut for this call is to write the variables constituting the
+hierarchy separated by ">". In this case, the microdata and
+hierleadstring that \code{write_hrc} uses are those declared in
+\code{micro_asc_rda}.
+
+\emph{Example :} \code{c(A38 = "A38 > A21 > A10")} \emph{(number of spaces
+any before and after the ">")}
+
+The last two methods require the creation of a temporary file.
+For a reusable hrc file, it is necessary to create it beforehand
+using \code{write_hrc}.
+
+The three methods require that the elements of the vector in parameter
+be named (with the name of the variable), even if there is only one
+element.
+
+(Le paramètre \code{hrc} obéit aux mêmes règles de syntaxe que \code{totcode},
 \code{missing} et \code{codelist} (vecteur nommé contenant autant d'éléments
 que de variables à décrire). Il présente de plus la particularité
 d'accepter plusieurs façons de spécifier les valeurs associées aux variables
@@ -99,16 +179,12 @@ Pour définir une hiérarchie basée sur les positions des caractères
 (\strong{hierlevels}), passer une suite de nombre entiers séparés par des
 espaces.
 
-\emph{Exemple :} \code{c(CODECOM = "2 3 0 0 0")}
-
 Si la hiérarchie est définie dans un fichier hrc à part
 (\strong{hiercodelist}), la fonction attend l'emplacement de ce fichier (et
 un éventuel \code{hierleadstring} s'il diffère de l'option par défaut du
 package). Dans ce cas, on peut écrire explicitement le chemin vers un fichier
 existant (\code{c(A38 = "a38.hrc")}), mais aussi passer un appel à
 \code{\link{write_hrc}} qui génèrera un fichier hrc à partir de microdonnées.
-
-\emph{Exemple :} \code{c(A38 = write_hrc(microdata, c("A38", "A21", "A10")))}
 
 Un raccourci pour cet appel est d'écrire les variables constituant la
 hiérarchie séparées par des ">". Dans ce cas, les microdonnées et
@@ -124,13 +200,25 @@ Pour un fichier hrc réutilisable, il est nécessaire de le créer au préalable
 
 Les trois méthodes nécessitent que les éléments du vecteur en paramètre
 soient nommés (avec le nom de la variable), même s'il n'y a qu'un seul
-élément.
+élément.)
 }
 
-\section{Nombre de décimales}{
+\section{Number of decimals}{
 
 
-Le paramètre \code{decimals} indique le nombre minimal de décimales à faire
+The parameter \code{decimals} indicates the minimum number of decimals to be
+appear in the output file (whatever the number of decimals
+actually present in \code{microdata}). It applies to all
+real variables (double) but not to integer variables (integer). For
+add zeros to an integer variable, convert it with \code{as.double}
+beforehand.
+
+The digits after the decimal point may be incorrect in the asc file if
+the total number of digits (before or after the decimal separator) is
+greater than 15. See \code{\link[gdata]{write.fwf}} (function used to
+writing the asc file) for more details. \cr
+
+(Le paramètre \code{decimals} indique le nombre minimal de décimales à faire
 figurer dans le fichier en sortie (quel que soit le nombre de décimales
 effectivement présent dans \code{microdata}). Il s'applique à toutes les
 variables réelles (double) mais pas aux variables entières (integer). Pour
@@ -140,16 +228,20 @@ au préalable.
 Les chiffres après la virgule peuvent être incorrects dans le fichier asc si
 le nombre total de chiffres (avant ou après le séparateur décimal) est
 supérieur à 15. Voir \code{\link[gdata]{write.fwf}} (fonction utilisée pour
-écrire le fichier asc) pour plus de détails.
+écrire le fichier asc) pour plus de détails.)
 }
 
-\section{Voir aussi}{
- La fonction \code{\link{rtauargus}}, qui utilise cette
-fonction et hérite de ses paramètres.
+\section{See also}{
+
+
+The function \code{\link{rtauargus}}, which uses this
+function and inherits its parameters. \cr
+(La fonction \code{\link{rtauargus}}, qui utilise cette
+fonction et hérite de ses paramètres.)
 }
 
 \examples{
-# donnees fictives
+# dummy data/donnees fictives
 micro_df <-
   data.frame(
     GEO   = c("443", "541", "543"),
@@ -171,7 +263,7 @@ res <-
     missing    = c(DIPL = "??")
   )
 
-# visualisation des fichiers produits
+# Content of output files/visualisation des fichiers produits
 file.show(
   res$asc_filename, res$rda_filename,
   header = unlist(res),

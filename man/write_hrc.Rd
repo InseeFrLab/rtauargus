@@ -15,14 +15,16 @@ write_hrc(
 )
 }
 \arguments{
-\item{microdata}{[\strong{obligatoire}] data.frame contenant les
-microdonnées.}
+\item{microdata}{[\strong{required}] data.frame containing the microdata. \cr
+([\strong{obligatoire}] data.frame contenant les microdonnées.)}
 
 \item{vars_hrc}{\strong{[obligatoire]} vecteur des noms des variables
 constituant la hiérarchie, du niveau le plus fin au niveau le plus agrégé.}
 
-\item{hierleadstring}{caractère qui, répété n fois, indique que la valeur est
-à n niveaux de profondeur dans la hiérarchie.}
+\item{hierleadstring}{character which, repeated n times, indicates that the value is
+at n levels deep in the hierarchy. \cr
+(caractère qui, répété n fois, indique que la valeur est
+à n niveaux de profondeur dans la hiérarchie.)}
 
 \item{hrc_filename}{nom et emplacement du fichier hrc produit. Si non
 renseigné, un fichier temporaire.}
