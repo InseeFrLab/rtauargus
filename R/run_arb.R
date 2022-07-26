@@ -113,6 +113,57 @@ apriori_decompose <- function(apriori_cmd) {
 
 }
 
+#Affiche le logbook complet dans la console si verbose = TRUE, sinon que les erreurs
+
+display_console <- function (
+  verbose = FALSE,
+  logbook_file = NULL
+){
+
+  if (is.null(logbook_file)){
+    stop("logbook_file not filled in ")
+  }
+  logbook<-(readLines(logbook_file))
+  logbook<-unname(sapply(logbook,
+                         function(l){
+                           substring(l, gregexpr(":[0-9]{2} : ", l)[[1]][1][1]+6)
+                         }))
+
+  logbook_df<-data.frame(logbook)
+
+  start_batch<-(grep("Start of batch procedure", x=logbook, value=FALSE))
+
+  dernier_lancement<-tail(start_batch, n=1)
+
+  dernier_logbook<-logbook_df[dernier_lancement:nrow(logbook_df),]
+
+
+  if (verbose){
+    writeLines(dernier_logbook)
+  }else{
+
+    dernier_logbook_df<-data.frame(dernier_logbook)
+
+    debut_error<-(grep("Error ", x=dernier_logbook, value=FALSE))
+    debut_error<- data.frame(debut_error)
+
+    if (!nrow(debut_error)==0){
+      error <- dernier_logbook_df[debut_error[1,]:nrow(dernier_logbook_df),]
+      error_df<-data.frame(error)
+      debut_error2<-(grep("Error ", x=error, value=FALSE))
+      debut_error2<- data.frame(debut_error2)
+
+      fin_possible1<-(grep("End of TauArgus run", x=error, value=FALSE))
+      fin_possible2<-(grep("<", x=error, value=FALSE))
+      fin_error<-min(fin_possible1, fin_possible2)
+
+      error_message<-error_df[debut_error2[1,]:fin_error-1,]
+      error_message<-error_df[debut_error2[1,]:fin_error-1,]
+
+      writeLines(error_message)
+    }
+  }
+}
 
 # Autres fonctions utiles -------------------------------------------------
 
@@ -209,6 +260,7 @@ run_arb <- function(arb_filename,
                     tauargus_exe = getOption("rtauargus.tauargus_exe"),
                     logbook = NULL,
                     show_batch_console = getOption("rtauargus.show_batch_console"),
+                    verbose = NULL,
                     import = getOption("rtauargus.import"),
 
                     ...) {
@@ -324,6 +376,8 @@ run_arb <- function(arb_filename,
     '"',
     if (!is.null(logbook)) paste0(' "', normPath2(logbook), '"')
   )
+  logbook_file<-paste0( normPath2(logbook))
+
 
   # appel .....................................................
 
@@ -332,6 +386,7 @@ run_arb <- function(arb_filename,
     show.output.on.console = show_batch_console,
     ...
   )
+  display_console(verbose, logbook_file)
 
   if (import) import(arb_filename) else invisible(NULL)
 
