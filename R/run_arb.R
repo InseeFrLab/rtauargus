@@ -227,6 +227,10 @@ unquote <- function(s) sub("^[\"'](.+)[\"']$", "\\1", s)
 #' console.
 #' (pour afficher le déroulement du batch dans la
 #'   console.)
+#' @param verbose boolean, to display the batch execution (if TRUE) or 
+#' only error messages if any (if FALSE)
+#' (booléen, pour afficher l'exécution du batch (si TRUE) ou 
+#' uniquement les messages d'erreurs, s'il y en a (si FALSE))
 #' @param import to import in R the files produced, \code{TRUE} by
 #' default.
 #' (pour importer dans R les fichiers produits, \code{TRUE} par
