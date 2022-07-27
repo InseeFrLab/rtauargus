@@ -5,8 +5,7 @@ write_rda_1var_tab <- function(info_var) {
 
   ligne1 <- with(info_var,
                  paste(
-                   colname,
-                   if (!is.na(missing) & missing != "") missing
+                   colname
                  )
   )
 
@@ -54,7 +53,7 @@ write_rda_tab <- function(info_vars) {
 
 }
 
-#' Create rda files from tabulated data \cr
+#' Create rda files from tabular data \cr
 #' Crée les fichiers rda à partir de données tabulées
 #'
 #' Create an apriori file for the primary secret,
@@ -86,36 +85,32 @@ write_rda_tab <- function(info_vars) {
 #' (Variable indiquant le secret primaire de type booléen:
 #' prend la valeur "TRUE" quand les cellules du tableau doivent être masquées
 #' par le secret primaire, "FALSE" sinon.)
-#' @param decimals Minimum number of decimals to be displayed
+#' @param decimals Minimum number of decimals to display
 #' (see section 'Number of decimals') \cr
 #' (nombre minimal de décimales à afficher (voir section 'Number of decimals').)
-#' @param hrc Informations on hierarchical variables (see section 
+#' @param hrc Informations of hierarchical variables (see section
 #' 'Hierarchical variables'). \cr
 #' (Informations sur les variables hiérarchiques (voir section
 #' 'Hierarchical variables').)#'
-#' @param hierleadstring  Character which, repeated n times,
-#' indicates that the value is at n levels of depth in the hierarchy. \cr
+#' @param hierleadstring  The character that is used to indicate the depth of a
+#' code in the hierarchy. \cr
 #' (Caractère qui, répété n fois, indique que la valeur est
 #' à n niveaux de profondeur dans la hiérarchie.)#'
 #' @param totcode Code(s) which represent the total of a categorical variable
-#' (see section 'Specific parameters' for the syntax of this parameter).
-#' Variables not specified (neither by default nor explicitly)
-#' will be assigned the value of \code{rtauargus.totcode}. \cr
+#' (see section 'Specific parameters' for this parameter's syntax).
+#' If unspecified for a variable(neither by default nor explicitly)
+#' it will be set to  \code{rtauargus.totcode}. \cr
 #' (Code(s) pour le total d'une variable catégorielle (voir
 #' section 'Specific parameters' pour la syntaxe de ce paramètre). Les
 #' variables non spécifiées (ni par défaut, ni explicitement) se verront
 #' attribuer la valeur de \code{rtauargus.totcode}.)#'
-#' @param missing Code(s) for a missing value (see section 'Specific parameters'
-#' for the syntax of this parameter). \cr
-#' (Code(s) pour une valeur manquante (voir section
-#' 'Specific parameters' pour la syntaxe de ce paramètre).)
-#' @param codelist file(s) containing labels of the categorical variables
+#' @param codelist file(s) containing labels of a categorical variables
 #' (see section 'Specific parameters' for the syntax of this parameter). \cr
 #' (Fichier(s) contenant les libellés des variables catégorielles
 #' (voir section 'Specific parameters' pour la syntaxe de ce paramètre).)
 #' @param value Name of the column containing the value of the cells. \cr
 #' (Nom de la colonne contenant la valeur des cellules)
-#' @param freq Name of the column containing the the numbers for a cell. \cr
+#' @param freq Name of the column containing the cell frequency. \cr
 #' (Nom de la colonne contenant les effectifs pour une cellule)#'
 #' @param maxscore Name of the column containing, the value of the largest
 #' contributor of a cell. \cr
@@ -134,7 +129,7 @@ write_rda_tab <- function(info_vars) {
 #'
 #' The apriori file (.hst) summarizes for each value of the table
 #' if they are concerned by the primary secret or not.
-#' With this file tauargus will not need to set the primary secret itself.
+#' With this file tau-argus will not need to set the primary secret itself.
 #' The parameter \code{secret_var} indicates the name of the primary secret variable.
 #' If there is the additional boolean variable which indicates the primary secret
 #' in the table (of tabulated data), the function tab_rda will create
@@ -143,7 +138,7 @@ write_rda_tab <- function(info_vars) {
 #'
 #' Le fichier d'apriori (.hst) récapitule pour chaque valeurs
 #' du tableau si elles sont concernées par le secret primaire ou non.
-#' Avec ce fichier tauargus n'aura plus besoin de poser le secret primaire lui même,
+#' Avec ce fichier tau-argus n'aura plus besoin de poser le secret primaire lui même,
 #' il se basera sur le fichier d'apriori pour le faire.
 #' Le paramètre \code{secret_var} indique le nom de la variable du secret primaire.
 #' Si l'on rajoute cette variable supplémentaire indiquant
@@ -153,13 +148,13 @@ write_rda_tab <- function(info_vars) {
 #'
 #' @section Specific parameters:
 #'
-#' The parameters \code{totcode}, \code{missing} and \code{codelist}
+#' The parameters \code{totcode}, and \code{codelist}
 #' must be given in the form of a vector indicating the value to take for each variable.
 #' The names of the elements of the vector give the variable concerned and
 #' the elements of the vector give the value of the parameter for Tau-Argus.
-#' An unnamed element will be the default value. \cr
+#' An unnamed element will set the default value for each variable. \cr
 #'
-#' (Les paramètres \code{totcode}, \code{missing} et \code{codelist}
+#' (Les paramètres \code{totcode},  et \code{codelist}
 #' sont à renseigner sous la forme d'un vecteur indiquant la valeur à prendre
 #' pour chaque variable.
 #'
@@ -179,7 +174,7 @@ write_rda_tab <- function(info_vars) {
 #'
 #' @section Hierarchical variables:
 #'
-#' Parameter \code{hrc} has the same syntax as \code{totcode},\code{missing} and
+#' Parameter \code{hrc} has the same syntax as \code{totcode} and
 #' \code{codelist} (named vector containing as many elements as variables to describe).
 #' Hierarchy is defined in an separate hrc file (\strong{hiercodelist}).
 #' which can be written with the function \code{link{write_hrc2}}.
@@ -191,8 +186,8 @@ write_rda_tab <- function(info_vars) {
 #'
 #' emph{Example :}\code{c(category="category.hrc")} \cr
 #'
-#' (Le paramètre \code{hrc} obéit aux mêmes règles de syntaxe que \code{totcode},
-#' \code{missing} et \code{codelist} (vecteur nommé contenant autant d'éléments
+#' (Le paramètre \code{hrc} obéit aux mêmes règles de syntaxe que \code{totcode}
+#'  et \code{codelist} (vecteur nommé contenant autant d'éléments
 #' que de variables à décrire).
 #'
 #' La hiérarchie est définie dans un fichier hrc à part (\strong{hiercodelist})
@@ -206,7 +201,7 @@ write_rda_tab <- function(info_vars) {
 #'
 #'\emph{Exemple :}\code{c(category="category.hrc")})
 #'
-#' 
+#'
 #' @section Number of decimals:
 #' Parameter \code{decimals} indicates the minimum number of decimal places to
 #' include in the output file
@@ -280,17 +275,18 @@ tab_rda <- function(
   tab_filename   = NULL,
   rda_filename   = NULL,
   hst_filename   = NULL,
-  explanatory_vars=NULL,
+  explanatory_vars = NULL,
   secret_var=NULL,
   decimals       = getOption("rtauargus.decimals"),
   hrc            = NULL,
   hierleadstring = getOption("rtauargus.hierleadstring"),
   totcode        = getOption("rtauargus.totcode"),
-  missing        = getOption("rtauargus.missing"),
   codelist       = NULL,
   value          = NULL,
   freq           = NULL,
   maxscore       = NULL,
+  maxscore_2     = NULL,
+  maxscore_3     = NULL,
   separator      = ","
 ) {
 
@@ -305,7 +301,6 @@ tab_rda <- function(
     hierleadstring <- op.rtauargus$rtauargus.hierleadstring
   }
   if (is.null(totcode)) totcode <- op.rtauargus$rtauargus.totcode
-  if (is.null(missing)) missing <- op.rtauargus$rtauargus.missing
 
 
   if (!is.null(secret_var)){
@@ -329,34 +324,34 @@ tab_rda <- function(
   if (is.null(hst_filename)) hst_filename <- "apriori.hst"
 
   #Gestion du chemin des fichiers
-  name_rda<-basename(rda_filename)
-  directory_rda<-stringr::str_replace(rda_filename, pattern = name_rda, replacement="")
+  name_rda <- basename(rda_filename)
+  directory_rda <- stringr::str_replace(rda_filename, pattern = name_rda, replacement="")
   if(!(dir.exists(directory_rda)))
-    {dir.create(directory_rda, recursive = TRUE)}
+  {dir.create(directory_rda, recursive = TRUE)}
 
-  name_tab<-basename(tab_filename)
-  directory_tab<-stringr::str_replace(tab_filename, pattern = name_tab, replacement="")
+  name_tab <- basename(tab_filename)
+  directory_tab <- stringr::str_replace(tab_filename, pattern = name_tab, replacement="")
   if(!(dir.exists(directory_tab)))
-    {dir.create(directory_tab, recursive = TRUE)}
+  {dir.create(directory_tab, recursive = TRUE)}
 
-  name_hst<-basename(hst_filename)
-  directory_hst<-stringr::str_replace(hst_filename, pattern = name_hst, replacement="")
+  name_hst <- basename(hst_filename)
+  directory_hst <- stringr::str_replace(hst_filename, pattern = name_hst, replacement="")
   if(!(dir.exists(directory_hst)))
-    {dir.create(directory_hst, recursive = TRUE)}
+  {dir.create(directory_hst, recursive = TRUE)}
 
 
   #Controles sur secret_var
 
-  if (is.null(secret_var)) message("secret_var is NULL : no apriori file will be used")
+  if (is.null(secret_var)) message("secret_var is NULL : no apriori file will be provided")
 
   if ((!is.null(secret_var)) && (!secret_var %in%  colnames(tabular)))
-    {stop("secret_var does not exist in tabular")}
+  {stop("secret_var does not exist in tabular")}
 
   if((!is.null(secret_var)) && (any(!is.na(tabular[[secret_var]]))) && (!is.logical(tabular[[secret_var]])))
-    {stop("unexpected type : secret_var must be a  boolean variable")}
+  {stop("unexpected type : secret_var must be a  boolean variable")}
 
   if((!is.null(secret_var)) && any(is.na(tabular[[secret_var]])))
-    {stop("NAs in secret_var are not allowed")}
+  {stop("NAs in secret_var are not allowed")}
 
 
   #Genere le fichier hst
@@ -369,7 +364,7 @@ tab_rda <- function(
       c(explanatory_vars[(explanatory_vars %in% colnames(tabular))], secret_var)
     ]
 
-  if (nrow(hst)==0) message("no values are concerned by the primary secret : hst file is empty")
+    if (nrow(hst)==0) message("no cells are unsafe : hst file is empty")
 
     write.table(
       hst,
@@ -421,11 +416,18 @@ tab_rda <- function(
     fwf_info_tabular$type_var[fwf_info_tabular$colname == maxscore] <- "MAXSCORE"
   }
 
-  # missing, totcode, codelist  ........................................
+  if (!is.null(maxscore_2)) {
+    fwf_info_tabular$type_var[fwf_info_tabular$colname == maxscore_2] <- "MAXSCORE"
+  }
+
+  if (!is.null(maxscore_3)) {
+    fwf_info_tabular$type_var[fwf_info_tabular$colname == maxscore_3] <- "MAXSCORE"
+  }
+
+  #  totcode, codelist  ........................................
 
   var_quanti <- names(tabular)[!num]
 
-  missing_df  <- df_param_defaut(names(tabular), "missing", missing)
   codelist_df <- df_param_defaut(var_quanti, "codelist", codelist)
   totcode_df  <-
     df_param_defaut(var_quanti, "totcode", totcode) %>%
@@ -454,7 +456,7 @@ tab_rda <- function(
 
   fwf_info_tabular <-
     purrr::reduce(
-      list(fwf_info_tabular, missing_df, totcode_df, codelist_df, hrc_df),
+      list(fwf_info_tabular, totcode_df, codelist_df, hrc_df),
       merge,
       by = "colname",
       all.x = TRUE
