@@ -27,7 +27,7 @@ write_rda_1var_tab <- function(info_var) {
         paste0("  <HIERLEADSTRING> \"", hierleadstring, "\""),
       if (!is.na(hierarchical) && grepl("^(\\d+ +)+\\d+$", hierarchical))
         paste0("  <HIERLEVELS> ", hierarchical),
-      if (type_var %in% c("NUMERIC", "WEIGHT","MAXSCORE"))
+      if (type_var %in% c("NUMERIC","MAXSCORE"))
         paste0("  <DECIMALS> ", digits)
     )
   )
