@@ -15,8 +15,8 @@
 #' \cr
 #' Nom du répertoire dans lequel écrire le fichier hrc
 #' @param sort_table boolean. If TRUE, table will be sorted beforehand.
-#' Recommended.\cr
-#' Si TRUE, la table sera triée avant traitement. Recommandé.
+#' (default to FALSE)\cr
+#' Si TRUE, la table sera triée avant traitement. (défaut à FALSE)
 #' @param rev boolean. If TRUE, column order is reversed.\cr
 #' Si TRUE, inverse l'ordre des colonnes.
 #' @param hier_lead_string character. (Single) character indicating the
@@ -65,14 +65,15 @@
 #'
 #' 2 \strong{Dealing with NAs}
 #'
-#' All levels must be filled in for the write_hrc2 function to work properly.
-#' This ensures that the alphabetical sorting purposely regroups equal levels
-#' together. NAs would be sorted together and, thus, be separated from their
-#' expected place in the hierarchy. Other problems may also arise if NAs are
-#' mixed with regular values in the table : comparisons between a line and its
-#' precedessor are made, that may fail if NAs are inputed.\cr
-#' There are, however, a few cases when NAs can be left relevantly. Please
-#' be careful with the following possibilities and check thoroughly the
+#' The write_hrc2 function has to be preferably used without any NAs in your
+#' correspondence table. In presence of NAs, the \strong{sort} argument
+#' has to be to FALSE. Indeed, NAs would be sorted together and, thus,
+#' be separated from their expected place in the hierarchy.
+#'
+#' Below, we introduce two common cases where correspondence tables could have
+#' NAs. The first one is supported by the function, the second one is not.
+#'
+#' Please be careful when dealing with NAs and check thoroughly the
 #' resulting .hrc file, or consider filling in NAs beforehand.
 #'
 #' 2.1 \emph{Sparse hierarchies} \cr
@@ -89,10 +90,8 @@
 #' | other  | blackhole  |
 #' |        | pulsar     |
 #'
-#' Processing such a file will result in wrongly written .hrc, since NAs will be
-#' sorted together. It is still possible to deactivate sorting ; see sexample
-#' below. This crucially requires that the table has already been sorted by the
-#' user.
+#' Such cases still issue a warning for the presence of NAs, but do not pose
+#' any problem, if \strong{sort=FALSE} is set.
 #'
 #' 2.2 \emph{Non-uniform hierarchies}\cr
 #' Hierarchies with non-uniform depth happen when some levels are not detailed
@@ -106,10 +105,9 @@
 #'   | other  | blackhole  |
 #'   | other  | pulsar     |
 #'
-#' Such cases still issue a warning for the presence of NAs, but do not pose
-#' any problem.
-#' @md
-#'
+#' Processing such a file will generate an error with the following messages:
+#' \emph{Missing values on the last column of the correspondence table is not allowed.
+#' If relevant, you could fill in with the value of the previous column}
 #'
 #' @section Détails sur les tables de correspondance et le .hrc:
 #' Tau-Argus attend des fichiers écrits avec précision. Certaines de ses
@@ -145,17 +143,17 @@
 #'
 #' 2 \strong{Valeurs manquantes}
 #'
-#' Tous les niveaux doivent être remplis pour que write_hrc2 marche correctement.
-#' Cela assure que lors du tri de la table, les niveaux identiques soient
-#' regroupés. Les NAS risquent d'être triés ensemble et donc d'être séparés de
-#' leur position normale. D'autres problèmes peuvent également émerger s'il
-#' reste des valeurs manquantes dans la table : des comparaisons entre une ligne
-#' et sa prédécesseuse peuvent échouer.\cr
+#' La fonction write_hrc2 doit être utilisée de préférence sans aucun NA dans votre
+#' table de correspondance. En présence de NAs, l'argument \strong{sort}
+#' doit être à FALSE. En effet, les NAs seraient triés ensemble et, donc,
+#' être séparées de leur place attendue dans la hiérarchie.
 #'
-#' Il y a toutefois quelques cas où les valeurs manquantes peuvent rester
-#' pertinentes. Si c'est ce que vous envisagez, faites bien attention à être
-#' effectivement dans l'un des cas suivants, et prenez le temps de vérifier
-#' prudemment la table .hrc ainsi créée.
+#' Ci-dessous, nous présentons deux cas courants où les tables de correspondance
+#' pourraient avoir NAs. Le premier cas est pris en charge par la fonction,
+#' le second ne l'est pas.
+#'
+#' Soyez prudent lorsque vous manipulez des NA et vérifiez soigneusement
+#' le fichier .hrc résultant ou envisagez de remplir les NAs à l'avance.
 #'
 #' 2.1 \emph{Hiérarchies creuses} \cr
 #' Une hiérarchie est creuse si des NAs sont insérées au lieu de répéter un
@@ -171,10 +169,8 @@
 #' | other  | blackhole  |
 #' |        | pulsar     |
 #'
-#' Utiliser un tel fichier va conduire à un mauvais .hrc, car les NAs vont être
-#' regroupées par l'étape de tri des lignes . Il est cependant possible de
-#' désactiver le tri (cf. exemples plus bas). Il est alors absolument nécessaire
-#' que la table ait déjà été bien triée, comme ci-dessus.
+#' De tels cas émettent toujours un avertissement du fait de la présence de NA,
+#' mais ne posent aucun problème, si on utilise \strong{sort=FALSE}.
 #'
 #' 2.2 \emph{Hiérarchies non-uniformes}\cr
 #' Les hiérarchies à profondeur non-uniforme correspondent aux cas où certains
@@ -189,9 +185,9 @@
 #'   | other  | blackhole  |
 #'   | other  | pulsar     |
 #'
-#' De tels cas génèrent toujours un warning à cause des NAs, mais ne posent pas
-#' de problème particulier.
-#' @md
+#' Le traitement d'un tel fichier générera une erreur avec les messages suivants :
+#' \emph{Missing values on the last column of the correspondence table is not allowed.
+#' If relevant, you could fill in with the value of the previous column}
 #'
 #' @return Invisible. Path to the written .hrc file.
 #' \cr
@@ -212,7 +208,7 @@
 #' # ce qui n'a aucune conséquence pour Tau-Argus.
 #'
 #' # Wrong column order:
-#' # Mauvais ordonnement des colonnes :
+#' # Mauvais ordonnancement des colonnes :
 #' astral_inv <- data.frame(
 #'   details   = c("telluric", "gasgiant", "bluestar", "whitedwarf", "reddwarf", "blackhole", "pulsar"),
 #'   type      = c("planet", "planet", "star", "star", "star", "other", "other")
@@ -234,17 +230,11 @@
 #'   type      = c("planet", NA, "star", NA, NA, "other", NA),
 #'   details   = c("telluric", "gasgiant", "bluestar", "whitedwarf", "reddwarf", "blackhole", "pulsar")
 #' )
-#' # NAs in general are risky : as is, the alphabetical sorting scrambles it all.
-#' # Les valeurs manquantes causent un risque, de manière générale, à cause du
-#' # tri alphabétique.
+#' # NAs in general are risky, but, in this case, the function works well.
+#' # Les valeurs manquantes causent un risque, mais, dans ce genre de cas, la fonction
+#' a le comportement attendu.
 #' path <- write_hrc2(astral_sparse, hier_lead_string = "@")
 #' read.table(path)
-#' # Here, gasgiant and pulsar were misread as sublevels of 'star'.
-#' # In order to correctly ignore NAs, sorting must be disabled.
-#' # Ici, on voit que gasgiant et pulsar se retrouvent considérés comme des
-#' # sous-types de planètes. Pour corriger, il faut désactiver le tri.
-#' path2 <- write_hrc2(astral_sparse, sort_table = FALSE, hier_lead_string = "@")
-#' read.table(path2)
 #'
 #' # 2.2 Non-uniform depth
 #' # Hiérarchie non-uniforme
@@ -252,31 +242,26 @@
 #'   type      = c("planet", "planet", "star", "other", "other"),
 #'   details  = c("telluric", "gasgiant", NA, "blackhole", "pulsar")
 #' )
+#' # The following code will generate an error
+#' # (see section Details about correspondence table & .hrc)
 #' path <- write_hrc2(astral_nu, hier_lead_string = "@")
-#' read.table(path)
-#' # In this case, everything is alright.
-#' # Cette fois, tout se passe bien.
+#' To fix the issue, you have to fill in the NAs beforehand.
 #'
-#' # In some cases, non-uniform depth hierarchies are filled in to the last
-#' # level with placeholder repetition. Such repetitions should not be written
-#' # in the .hrc file, and are correctly erased.
-#' # Dans certains cas, des hiérarchies à profondeur non-uniformes sont remplies
-#' # à tous les niveaux en répétant les niveaux les plus hauts. De telles
-#' # répétitions ne doivent pas être transmises dans le .hrc, et sont
-#' # correctement effacées par la fonction.
-#' astral_repeat <- data.frame(
-#'   type      = c("planet", "planet", "star", "other"),
-#'   details  = c("telluric", "gasgiant", "star", "other")
+#' astral_nu_fill <- data.frame(
+#'   type      = c("planet", "planet", "star", "other", "other"),
+#'   details  = c("telluric", "gasgiant", "star", "blackhole", "pulsar")
 #' )
-#' path <- write_hrc2(astral_repeat, hier_lead_string = "@")
+#' # The following code will work
+#' path <- write_hrc2(astral_nu_fill, hier_lead_string = "@")
 #' read.table(path)
+#'
 #' @importFrom zoo na.locf
 #' @export
 
 write_hrc2 <- function(corr_table,
                        output_name = NULL,
                        dir_name = NULL,
-                       sort_table = TRUE,
+                       sort_table = FALSE,
                        rev = FALSE,
                        hier_lead_string = getOption("rtauargus.hierleadstring")
 ){
@@ -291,9 +276,11 @@ write_hrc2 <- function(corr_table,
     output_name <- givenfilename
   }
 
-  if(is.null(dir_name) | dir_name == ""){
+  if(is.null(dir_name)){
     dir_name <- getwd()
-  }else if(! dir.exists(dir_name)){
+  }else if(dir_name == ""){
+    dir_name <- getwd()
+  } else if(! dir.exists(dir_name)){
     stop(paste0("directory ", dir_name, " doesn't exist."))
   }
 
