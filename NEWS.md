@@ -8,7 +8,8 @@ output: rmarkdown::html_vignette
 [01/09/2022]
 
 * English documentation  
-* **tab_arb()** : arument *value* is now called *response_var* as in the **tab_rda()** function.  
+* **tab_arb()** : argument *value* is now called *response_var* as in the **tab_rda()** function.  
+* **tab_arb()** : argument *apriori* is now called *hst_filename* as in the **tab_rda()** function.
 
 ## rtauargus 0.5.0
 
