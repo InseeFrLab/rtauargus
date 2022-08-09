@@ -80,36 +80,39 @@ apriori_batch <- function(hst_names, sep = ',', ignore_err = 0 , exp_triv = 0) {
 
 #' Create batch file (.arb) for tabular data in order to run Tau Argus
 #' Crée un fichier batch (.arb) pour données tabulées exécutable par
-#' Tau-Argus en ligne de commande.
+#' Tau-Argus en ligne de commande.\cr
 #'
 #' Function doesn't check if the asc and rda files exists
 #' La fonction ne vérifie pas si les fichiers asc et rda existent.
 #'
 #' @section Syntaxe:
 #'
-#' For tabular data, the function secure one table
+#' For tabular data, this function secures only one table at a time\cr
 #' Pour les données tabulées la fonction traite un tableau à la fois
 #'
-#' Unless specific details, use syntaxe from Tau-Argus manual
+#' Unless specific details, use syntax from Tau-Argus manual \cr
 #' Sauf mention contraire, utiliser la syntaxe mentionnée dans la documentation
 #' de Tau-Argus.
 #'
+#' Syntax pour \code{suppress} :
+#' First parameter is the table number, in this case it will always be 1 \cr
 #' Syntaxe spéciale pour \code{suppress} :
-#' First parameter is the table number, in this case it will always be 1
-#' le premier paramètre dans la syntaxe Tau-Argus est le numéro de la tabulation.
+#' le premier paramètre dans la syntaxe Tau-Argus est le numéro du tableau.
 #' Dans le cas de cette fonction ce sera toujours 1
 #'
 #'
-#' @section Informations \emph{hst}:
+#' @section Informations \emph{hst_filename}:
 #' It's possible to add an apriori file (.hst) for a tabular, it can be generated
-#' by the table_rda() function
-#' Il est possible de fournir un fichier apriori (.hst) pour chaque tabulation,
-#' il peut être fourni par la fonction table_rda()
+#' by the table_rda() function.
 #'
 #' Other options are not mandatory. To modify default value use a vector with the
 #' .hst file path as first element and then complete with those parameters :
 #' \code{sep} for the separator,
-#' \code{ignore_err} for IgnoreError and \code{exp_triv} for ExpandTrivial.
+#' \code{ignore_err} for IgnoreError and \code{exp_triv} for ExpandTrivial. \cr
+#'
+#' Il est possible de fournir un fichier apriori (.hst) pour un tableau,
+#' il peut être fourni par la fonction table_rda()
+#' Exemple : hst_filename = "mon_chemin/apriori.hst" \cr
 #'
 #' Les options supplémentaires sont facultatives. Pour modifier les valeurs par
 #' défaut, passer une liste ayant comme premier élément le(s) fichier(s) hst et
@@ -119,42 +122,57 @@ apriori_batch <- function(hst_names, sep = ',', ignore_err = 0 , exp_triv = 0) {
 #' autant de valeurs que de tabulations.
 #'
 #' @param arb_filename path of the arb filename, if unspecified, creates a temporary
-#' file
+#' file \cr
 #' nom du fichier arb généré (avec extension). Si non renseigné, un fichier temporaire.
-#' @param tab_filename [\strong{obligatoire}] path of the tab_filename, mandatory
+#' @param tab_filename [\strong{obligatoire/mandatory}] path of the tab_filename,
 #' nom du fichier .tab (avec extension).
 #' @inheritParams tab_rda
-#' @param explanatory_vars [\strong{obligatoire}] explanatory vars in a vector
-#'  variables catégorielles, sous forme de vecteur.
-#'   Example : \code{c("CJ", "A21")} for the tabular \code{CJ} x \code{A21}
-#'   Exemple : \code{c("CJ", "A21")} pour le premier
-#'   tableau croisant \code{CJ} x \code{A21}
-#' @param value response variable name in the tabular
-#'   \code{"<freq>"}. Une seule valeur.
-#' @param safety_rules [\strong{obligatoire}] règle(s) de secret primaire.
-#'   Chaîne de caractères en syntaxe batch Tau-Argus. La pondération est traitée
-#'   dans un paramètre à part (ne pas spécifier WGT ici, utiliser le paramètre
-#'   \code{weighted}).
-#' @param suppress [\strong{obligatoire}] méthode(s) de gestion du secret
-#'   secondaire (syntaxe batch de Tau-Argus). Si la méthode est la même pour
-#'   chaque tabulation, le premier paramètre (numéro du tableau) sera ignoré et
-#'   renuméroté automatiquement (voir la section 'Syntaxe').
-#' @param output_names noms des fichiers en sortie. Si renseigné,
-#'   obligatoirement autant de noms de fichiers que de tabulations. Si laissé
-#'   vide, autant de noms de fichiers temporaires que de tabulations seront
-#'   générés.
-#' @param output_type format des fichiers en sortie (codification Tau-Argus).
-#'   Valeur par défaut du package : \code{"2"} (csv for pivot-table).
-#' @param output_options options supplémentaires des fichiers en sortie. Valeur
+#' @param hst_filename Apriori file name, syntax detailed below,
+#' Example : hst_filename = "path_to_file/apriori.hst"
+#' fichier(s) d'informations \emph{a priori}. Voir ci-dessous
+#' pour la syntaxe. Exemple : hst_filename = "path_to_file/apriori.hst"
+#' @param explanatory_vars [\strong{obligatoire/mandatory}]
+#' Explanatory vars in a vector
+#' Example : \code{c("CJ", "A21")} for the tabular \code{CJ} x \code{A21}
+#' variables catégorielles, sous forme de vecteur.
+#' Exemple : \code{c("CJ", "A21")} pour le premier
+#' Pour un tableau croisant \code{CJ} x \code{A21}
+#' @param value Colname for response variable in the tabular
+#' \code{"<freq>"}. For frequency table \cr
+#' Nom de la variable de réponse dans le tableau
+#' \code{"<freq>"}. Permet de tariter les tableaux de fréquence
+#' @param safety_rules [\strong{obligatoire/mandatory}]
+#' Rules for primary suppression with Argus syntax, if the primary suppression
+#' has been dealt with an apriori file specify manual safety range :"MAN(10)"
+#' for example.\cr
+#' Règle(s) de secret primaire.
+#' Chaîne de caractères en syntaxe batch Tau-Argus. Si le secret primaire
+#' a été traité dans un fichier d'apriori : utiliser "MAN(10)"
+#' @param suppress [\strong{obligatoire/mandatory}]
+#' Algortihm for secondary suppression (Tau-Argus batch syntax), and the
+#' parameters for it.
+#' Algorithme de gestion du secret secondaire (syntaxe batch de Tau-Argus).
+#' ainsi que les potentiels paramètres associés
+#' @param output_names output file name
+#' nom du fichier en sortie.
+#' @param output_type Type of the output file (Argus codification)
+#' By default \code{"2"} (csv for pivot-table).
+#' For SBS files use \code{"4"}
+#' Format des fichiers en sortie (codification Tau-Argus).
+#' Valeur par défaut du package : \code{"2"} (csv for pivot-table).
+#' Pour le format SBS utiliser \code{"4"}
+#' @param output_options Additionnal parameter for the output,
+#' by default : code{"AS+"} (print Status). To specify no options : \code{""}.
+#'   options supplémentaires des fichiers en sortie. Valeur
 #'   par défaut du package : \code{"AS+"} (affichage du statut). Pour ne
 #'   spécifier aucune option, \code{""}.
-#' @param hst fichier(s) d'informations \emph{a priori}. Voir ci-dessous
-#'   pour la syntaxe.
-#' @param gointeractive pour avoir la possibilité de lancer le batch depuis le
-#'   menu de Tau-Argus (\code{FALSE} par défaut).
+#' @param gointeractive Boolean, if TRUE will open a Tau-Argus window and launch
+#' the batch in it (\code{FALSE} by default). \cr
+#' Possibilité de lancer le batch depuis le menu de Tau-Argus (\code{FALSE} par défaut).
 #'
-#'
-#' @return Une liste de deux éléments : le nom du fichier arb, les noms des
+#' @return A list containing two elements :
+#'  the arb file name and the output name (usefull if the name is generated randomly) \cr
+#'   Une liste de deux éléments : le nom du fichier arb, le nom
 #'   fichiers en sortie (utile pour récupérer les noms générés aléatoirement).
 #'
 #'
@@ -165,14 +183,16 @@ apriori_batch <- function(hst_names, sep = ',', ignore_err = 0 , exp_triv = 0) {
 #' \dontrun{
 #' # creating arb file
 #' infos_arb <- tab_arb(
-#'   tab_filename = "donnees.tab",
+#'   arb_filename = "path/tab1.arb",
+#'   tab_filename = "path/tab1.tab",
+#'   rda_filename = "path/tab1.rda",
 #'   explanatory_vars = c("REGION", "CJ"),
-#'   value = c("CA", "<freq>"),
-#'   safety_rules = c("NK(1,85)|FREQ(3,10)"),
+#'   value = "CA",
+#'   safety_rules = "NK(1,85)|FREQ(3,10)",
 #'   suppress = "GH(1,100)",
-#'   output_names = c("tab1.csv"),
+#'   output_names = "path/tab1.csv",
 #'   output_options = "AS+SE+",
-#'   output_type = "2"
+#'   output_type = "4"
 #' )
 #' # show the content of the file in console
 #' # visualisation du contenu du fichier dans la console
