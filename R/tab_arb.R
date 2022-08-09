@@ -1,50 +1,19 @@
-specify_tables_one_tab <- function(expl, resp, shad, cost) {
-  paste0(
+specify_tables_one_tab <- function(expl, resp, safety_rules) {
+  specif_table <- paste0(
     paste(cite(expl), collapse = ""), '|',
-    cite(resp), '|',
-    cite(shad), '|',
-    cite(cost)
+    cite(resp), '||'
   )
-}
-
-# Genere partie SPECIFYTABLE et SAFETYRULE
-specif_safety_tab <- function(explanatory_vars,
-                              response_var,
-                              shadow_var,
-                              cost_var,
-                              safety_rules
-) {
-
-  specify_tables <-
-    mapply(
-      specify_tables_one_tab,
-      explanatory_vars,
-      response_var,
-      shadow_var,
-      cost_var
-    )
-
-  specify_tables <- paste("<SPECIFYTABLE>", specify_tables)
-
-  if (!is.null(names(explanatory_vars))) {
-    table_ids <- sprintf('// <TABLE_ID> "%s"', names(explanatory_vars))
-    specify_tables <- paste(table_ids, specify_tables, sep = "\n")
-  }
-
+  specif_table <- paste("<SPECIFYTABLE>", specif_table)
   safety_rules <- paste("<SAFETYRULE>", safety_rules)
-
-  mapply(paste, specify_tables,safety_rules, sep = "\n", USE.NAMES = FALSE)
-
+  paste(specif_table,safety_rules, sep = "\n")
 }
+
 
 # Genere partie SUPPRESS et WRITETABLE
 suppr_writetable_tab <- function(suppress,
                                  output_names,
                                  output_type,
                                  output_options) {
-
-  # numero table
-  num_table <- seq_along(output_names)
 
   # chemin complet sorties
   output_names <- normPath2(output_names)
@@ -54,18 +23,17 @@ suppr_writetable_tab <- function(suppress,
   write_cmd <-
     paste0(
       '<WRITETABLE> (',
-      num_table, ',',
+      1, ',',
       output_type, ',',
       output_options, ',"',
       output_names, '")'
     )
 
-  mapply(paste, suppr_cmd, write_cmd, sep = "\n", USE.NAMES = FALSE)
+  paste (suppr_cmd, write_cmd, sep = "\n")
 
 
 
 }
-
 
 # Paramètre a priori ------------------------------------------------------
 
@@ -94,17 +62,12 @@ norm_apriori_params_tab <- function(params) {
 
 # Génère <APRIORI>s
 
-apriori_batch <- function(ntab, hst_names, sep = ',', ignore_err = 0 , exp_triv = 0) {
-
-  # verif pour éviter recyclage qd longueurs args > 1 ne correspondent pas
-  n <- lengths(list(hst_names, sep, ignore_err, exp_triv))
-  if (any(ntab > 1 & n > 1 & n != ntab)) stop("longueur arguments")
-  if (any(ntab == 1 & n != 1)) stop("longueur arguments")
+apriori_batch <- function(hst_names, sep = ',', ignore_err = 0 , exp_triv = 0) {
 
   paste0(
     '<APRIORI> "',
     normPath2(hst_names), '",',
-    seq(ntab), ',"',
+    1, ',"',
     sep, '",',
     ignore_err, ',',
     exp_triv
@@ -137,7 +100,7 @@ apriori_batch <- function(ntab, hst_names, sep = ',', ignore_err = 0 , exp_triv 
 #' Dans le cas de cette fonction ce sera toujours 1
 #'
 #'
-#' @section Informations \emph{apriori}:
+#' @section Informations \emph{hst}:
 #' It's possible to add an apriori file (.hst) for a tabular, it can be generated
 #' by the table_rda() function
 #' Il est possible de fournir un fichier apriori (.hst) pour chaque tabulation,
@@ -166,13 +129,8 @@ apriori_batch <- function(ntab, hst_names, sep = ',', ignore_err = 0 , exp_triv 
 #'   Example : \code{c("CJ", "A21")} for the tabular \code{CJ} x \code{A21}
 #'   Exemple : \code{c("CJ", "A21")} pour le premier
 #'   tableau croisant \code{CJ} x \code{A21}
-#' @param response_var response variable name in the tabular
+#' @param value response variable name in the tabular
 #'   \code{"<freq>"}. Une seule valeur.
-#' @param shadow_var variable for primary secret. If unspecified, \code{response_var}
-#' will be used by Tau Argus
-#'   variable(s) pour l'application du secret primaire. Si non
-#'   renseigné, \code{response_var} sera utilisé par Tau-Argus.
-#' @param cost_var variable(s) de coût pour le secret secondaire.
 #' @param safety_rules [\strong{obligatoire}] règle(s) de secret primaire.
 #'   Chaîne de caractères en syntaxe batch Tau-Argus. La pondération est traitée
 #'   dans un paramètre à part (ne pas spécifier WGT ici, utiliser le paramètre
@@ -190,7 +148,7 @@ apriori_batch <- function(ntab, hst_names, sep = ',', ignore_err = 0 , exp_triv 
 #' @param output_options options supplémentaires des fichiers en sortie. Valeur
 #'   par défaut du package : \code{"AS+"} (affichage du statut). Pour ne
 #'   spécifier aucune option, \code{""}.
-#' @param apriori fichier(s) d'informations \emph{a priori}. Voir ci-dessous
+#' @param hst fichier(s) d'informations \emph{a priori}. Voir ci-dessous
 #'   pour la syntaxe.
 #' @param gointeractive pour avoir la possibilité de lancer le batch depuis le
 #'   menu de Tau-Argus (\code{FALSE} par défaut).
@@ -209,7 +167,7 @@ apriori_batch <- function(ntab, hst_names, sep = ',', ignore_err = 0 , exp_triv 
 #' infos_arb <- tab_arb(
 #'   tab_filename = "donnees.tab",
 #'   explanatory_vars = c("REGION", "CJ"),
-#'   response_var = c("CA", "<freq>"),
+#'   value = c("CA", "<freq>"),
 #'   safety_rules = c("NK(1,85)|FREQ(3,10)"),
 #'   suppress = "GH(1,100)",
 #'   output_names = c("tab1.csv"),
@@ -225,61 +183,49 @@ apriori_batch <- function(ntab, hst_names, sep = ',', ignore_err = 0 , exp_triv 
 tab_arb <- function(arb_filename     = NULL,
                     tab_filename,
                     rda_filename     = NULL,
+                    hst_filename          = NULL,
                     explanatory_vars,
-                    response_var     = getOption("rtauargus.response_var"),
-                    shadow_var       = NULL,
-                    cost_var         = NULL,
+                    value     = getOption("rtauargus.response_var"),
                     safety_rules,
                     suppress,
                     output_names     = NULL,
                     output_type      = getOption("rtauargus.output_type"),
                     output_options   = getOption("rtauargus.output_options"),
-                    apriori          = NULL,
                     gointeractive    = FALSE) {
 
   # valeur par défaut du package si option vide
-  if (is.null(response_var)) response_var <- op.rtauargus$rtauargus.response_var
+  if (is.null(value)) value <- op.rtauargus$rtauargus.value
   if (is.null(output_type)) output_type <- op.rtauargus$rtauargus.output_type
   if (is.null(output_options)) {
     output_options <- op.rtauargus$rtauargus.output_options
   }
 
-  # si une seule tabulation, vecteur autorisé
-  if (is.atomic(explanatory_vars)) explanatory_vars <- list(explanatory_vars)
-  nb_tabul <- length(explanatory_vars)
-
   # parametres non renseignés
   if (is.null(arb_filename)) arb_filename <- tempfile("RTA_", fileext = ".arb")
   if (is.null(rda_filename)) rda_filename <- sub("tab$", "rda", tab_filename)
-  if (is.null(shadow_var)) shadow_var <- ""
-  if (is.null(cost_var)) cost_var <- ""
   if (is.null(output_names)) {
     if (length(output_type) == 1) {
-      ext <- rep(output_extensions[output_type], nb_tabul)
+      ext <- output_extensions[output_type]
     } else {
-      stopifnot(length(output_type) == nb_tabul)
+      stopifnot(length(output_type) == 1)
       ext <- output_extensions[output_type]
     }
     output_names <- tempfile("RTA_", fileext = ext)
   }
   if (is.null(output_options)) output_options <- ""
 
-  # correspondance nombre tab et nombre fichiers sortie
-  if (length(explanatory_vars) != length(output_names)) {
-    stop("renseigner autant de noms de fichiers que de tabulations")
-  }
 
   # interdit 'WGT' dans safety_rules
   if (length(grep("WGT", safety_rules, ignore.case = TRUE))) {
     stop(
-      "Le poids est applique a la creation de la  table', "
+      "Weight need to be used when the table is created', "
     )
   }
 
   # output_names doivent comporter une extension de fichier
   # (sinon Tau-Argus plante)
   if (!all(grepl("\\.", basename(output_names)))) {
-    stop("output_names doivent comporter une extension de fichier")
+    stop("output_names needs to specify the type of file expected")
   }
 
   # chemins absolus
@@ -298,11 +244,9 @@ tab_arb <- function(arb_filename     = NULL,
 
   # tabulations + secret primaire
   tab_sp <-
-    specif_safety_tab(
-      explanatory_vars = explanatory_vars,
-      response_var = response_var,
-      shadow_var = shadow_var,
-      cost_var = cost_var,
+    specify_tables_one_tab(
+      expl = explanatory_vars,
+      res = value,
       safety_rules = safety_rules
     )
   res <- c(res, tab_sp)
@@ -311,12 +255,11 @@ tab_arb <- function(arb_filename     = NULL,
   res <- c(res, "<READTABLE> 1")
 
   # apriori (doit figurer avant suppress)
-  if (!is.null(apriori)) {
+  if (!is.null(hst_filename)) {
 
-    std_apriori <- norm_apriori_params_tab(apriori)
+    std_apriori <- norm_apriori_params_tab(hst_filename)
     ap_batch <-
       apriori_batch(
-        ntab = length(explanatory_vars),
         hst_names = std_apriori[[1]],
         sep = std_apriori$sep,
         ignore_err = std_apriori$ignore_err,
