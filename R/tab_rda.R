@@ -271,23 +271,24 @@ write_rda_tab <- function(info_vars) {
 #' @export
 
 tab_rda <- function(
-  tabular,
-  tab_filename   = NULL,
-  rda_filename   = NULL,
-  hst_filename   = NULL,
-  explanatory_vars = NULL,
-  secret_var=NULL,
-  decimals       = getOption("rtauargus.decimals"),
-  hrc            = NULL,
-  hierleadstring = getOption("rtauargus.hierleadstring"),
-  totcode        = getOption("rtauargus.totcode"),
-  codelist       = NULL,
-  value          = NULL,
-  freq           = NULL,
-  maxscore       = NULL,
-  maxscore_2     = NULL,
-  maxscore_3     = NULL,
-  separator      = ","
+    tabular,
+    tab_filename   = NULL,
+    rda_filename   = NULL,
+    hst_filename   = NULL,
+    explanatory_vars = NULL,
+    secret_var = NULL,
+    cost_var = NULL,
+    decimals       = getOption("rtauargus.decimals"),
+    hrc            = NULL,
+    hierleadstring = getOption("rtauargus.hierleadstring"),
+    totcode        = getOption("rtauargus.totcode"),
+    codelist       = NULL,
+    value          = NULL,
+    freq           = NULL,
+    maxscore       = NULL,
+    maxscore_2     = NULL,
+    maxscore_3     = NULL,
+    separator      = ","
 ) {
 
 
@@ -338,13 +339,33 @@ tab_rda <- function(
   directory_hst <- stringr::str_replace(hst_filename, pattern = name_hst, replacement="")
   if(!(dir.exists(directory_hst)))
   {dir.create(directory_hst, recursive = TRUE)}
+  # Controle sur le nombre de colonnes
 
+  col_tabular <- c(explanatory_vars,
+                   secret_var,
+                   cost_var,
+                   value,
+                   freq,
+                   maxscore,
+                   maxscore_2,
+                   maxscore_3)
+
+  if (length(tabular[1,]) != length(col_tabular))
+  {warning("unspecified columns in table")}
+  # Controle hrc
+  if(!all(names(hrc) %in% explanatory_vars))
+  {stop(" error with label of the hierarchichal variable")}
+
+  # Controle sur frequency
+
+  if (any(tabular[[freq]] != round(tabular[[freq]],0)))
+  {stop("decimals are not allowed for frequency")}
 
   #Controles sur secret_var
 
-  if (is.null(secret_var)) message("secret_var is NULL : no apriori file will be provided")
+  if (is.null(secret_var) && is.null(cost_var)) message("secret_var and cost_var are NULL : no apriori file will be provided")
 
-  if ((!is.null(secret_var)) && (!secret_var %in%  colnames(tabular)))
+  if ((!is.null(secret_var)) && (!secret_var %in% colnames(tabular)))
   {stop("secret_var does not exist in tabular")}
 
   if((!is.null(secret_var)) && (any(!is.na(tabular[[secret_var]]))) && (!is.logical(tabular[[secret_var]])))
@@ -353,17 +374,61 @@ tab_rda <- function(
   if((!is.null(secret_var)) && any(is.na(tabular[[secret_var]])))
   {stop("NAs in secret_var are not allowed")}
 
+  # Controles sur cost_var
 
-  #Genere le fichier hst
+  if ((!is.null(cost_var)) && (!cost_var %in%  colnames(tabular)))
+  {stop("cost_var_var does not exist in tabular")}
+
+  if((!is.null(cost_var)) && (!is.numeric(tabular[[cost_var]])))
+  {stop("unexpected type : secret_var must be a  numeric variable")}
+
+  #Genere le fichier hst lié au secret primaire
 
   if((!is.null(secret_var)) && (is.logical(tabular[[secret_var]]))) {
 
     tabular[secret_var]<-ifelse(tabular[[secret_var]],"u","s")
-    hst=tabular[
+    hst_secret_prim=tabular[
       tabular[secret_var]=="u",
       c(explanatory_vars[(explanatory_vars %in% colnames(tabular))], secret_var)
     ]
+  }
 
+  #Genere le fichier hst lié au coût
+
+  if ((!is.null(cost_var)) && (is.numeric(tabular[[cost_var]]))&&
+      (!is.null(secret_var))){
+    tabular[cost_var]<-ifelse(!is.na(tabular[[cost_var]] && tabular[[secret_var]] == "s"),
+                              paste0("c,",tabular[[cost_var]]),"no_cost")
+
+    hst_cost=tabular[
+      tabular[cost_var]!="no_cost",
+      c(explanatory_vars[(explanatory_vars %in% colnames(tabular))], cost_var)
+    ]
+  }
+
+  if ((!is.null(cost_var)) && (is.numeric(tabular[[cost_var]]))&&
+      (is.null(secret_var))){
+    tabular[cost_var]<-ifelse(!is.na(tabular[[cost_var]]),
+                              paste0("c,",tabular[[cost_var]]),"no_cost")
+
+    hst_cost=tabular[
+      tabular[cost_var]!="no_cost",
+      c(explanatory_vars[(explanatory_vars %in% colnames(tabular))], cost_var)
+    ]
+  }
+
+
+  if(!is.null(cost_var) && !is.null(secret_var)){
+    hst <- rbind(hst_secret_prim,hst_cost)
+  }
+  else if (is.null(cost_var) && !is.null(secret_var)){
+    hst <- hst_secret_prim
+  }
+  else if (!is.null(cost_var) && is.null(secret_var)){
+    hst <- hst_cost
+  }
+
+  if(!is.null(cost_var) | !is.null(secret_var)) {
     if (nrow(hst)==0) message("no cells are unsafe : hst file is empty")
 
     write.table(
@@ -376,11 +441,11 @@ tab_rda <- function(
     )
   }
 
-
-
   # genere fichier longueur fixe (le fichier .tab) dans le dossier indiqué et infos associees  .....................
 
   if (!is.null(secret_var)) tabular<-tabular[,!names(tabular)==secret_var]
+  if (!is.null(cost_var)) tabular<-tabular[,!names(tabular)==cost_var]
+
 
   fwf_info_tabular <-
     gdata::write.fwf(
