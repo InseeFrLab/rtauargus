@@ -9,7 +9,8 @@ output: rmarkdown::html_vignette
 
 * English documentation  
 * **tab_arb()** : argument *value* is now called *response_var* as in the **tab_rda()** function.  
-* **tab_arb()** : argument *apriori* is now called *hst_filename* as in the **tab_rda()** function.
+* **tab_arb()** : argument *apriori* is now called *hst_filename* as in the **tab_rda()** function.  
+* **write_hrc2()** : new function to creat a hrc file from a correspondence table  
 
 ## rtauargus 0.5.0
 
