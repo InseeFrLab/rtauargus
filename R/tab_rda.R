@@ -288,7 +288,7 @@ tab_rda <- function(
     maxscore       = NULL,
     maxscore_2     = NULL,
     maxscore_3     = NULL,
-    separator      = ","
+    separator      = getOption("rtauargus.separator")
 ) {
 
 

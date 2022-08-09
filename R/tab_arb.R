@@ -183,7 +183,7 @@ apriori_batch <- function(hst_names, sep = ',', ignore_err = 0 , exp_triv = 0) {
 tab_arb <- function(arb_filename     = NULL,
                     tab_filename,
                     rda_filename     = NULL,
-                    hst_filename          = NULL,
+                    hst_filename     = NULL,
                     explanatory_vars,
                     value     = getOption("rtauargus.response_var"),
                     safety_rules,

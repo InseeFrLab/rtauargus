@@ -259,12 +259,12 @@ unquote <- function(s) sub("^[\"'](.+)[\"']$", "\\1", s)
 #' @export
 
 run_arb <- function(arb_filename,
-                    is_tabular=NULL,
+                    is_tabular = getOption("rtauargus.is_tabular"),
                     missing_dir = getOption("rtauargus.missing_dir"),
                     tauargus_exe = getOption("rtauargus.tauargus_exe"),
                     logbook = NULL,
                     show_batch_console = getOption("rtauargus.show_batch_console"),
-                    verbose = NULL,
+                    verbose = TRUE,
                     import = getOption("rtauargus.import"),
 
                     ...) {

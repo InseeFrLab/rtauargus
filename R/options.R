@@ -8,17 +8,20 @@ op.rtauargus <- list(
   rtauargus.totcode            = "Total",
   rtauargus.missing            = "",
   rtauargus.hierleadstring     = "@",
+  # tab_rda --------------------------------------------------------- #
+  rtauargus.separator          = ",",
   # arb --------------------------------------------------------- #
   rtauargus.response_var       = "<freq>",
   rtauargus.weighted           = FALSE,
   rtauargus.linked             = FALSE,
-  rtauargus.output_type        = "2",
-  rtauargus.output_options     = "AS+",
+  rtauargus.output_type        = "4",
+  rtauargus.output_options     = "",
   # run_arb ----------------------------------------------------- #
   rtauargus.missing_dir        = "stop",
   rtauargus.tauargus_exe       = "Y:/Logiciels/TauArgus/TauArgus.exe",
-  rtauargus.show_batch_console = TRUE,
-  rtauargus.import             = TRUE
+  rtauargus.show_batch_console = FALSE,
+  rtauargus.import             = FALSE,
+  rtauargus.is_tabular         = TRUE
 )
 
 df_op.rtauargus <- function(html = FALSE) {
