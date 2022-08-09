@@ -219,17 +219,17 @@ unquote <- function(s) sub("^[\"'](.+)[\"']$", "\\1", s)
 #'   créer les dossiers manquants).)
 #' @param tauargus_exe directory and name of the Tau-Argus software. \cr
 #' (répertoire et nom du logiciel Tau-Argus.)
-#' @param logbook name of the file where the error log is saved
-#' (optional). \cr
-#' (nom du fichier où est enregistré le journal d'erreurs
-#'   (optionnel).)
+#' @param logbook name of the file where the error log is saved.
+#' If NULL, a "logbook.txt" file will be saved in the working directory). \cr
+#' (nom du fichier où est enregistré le journal d'erreurs.
+#' Si NULL, le fichier "logbook.txt" sera suavegardé sur le répertoire de travail.)
 #' @param show_batch_console to display the batch progress in the
 #' console. \cr
 #' (pour afficher le déroulement du batch dans la
 #'   console.)
-#' @param verbose boolean, to display the batch execution (if TRUE) or 
+#' @param verbose boolean, to display the batch execution (if TRUE) or
 #' only error messages if any (if FALSE) \cr
-#' (booléen, pour afficher l'exécution du batch (si TRUE) ou 
+#' (booléen, pour afficher l'exécution du batch (si TRUE) ou
 #' uniquement les messages d'erreurs, s'il y en a (si FALSE))
 #' @param import to import in R the files produced, \code{TRUE} by
 #' default. \cr
@@ -273,6 +273,7 @@ run_arb <- function(arb_filename,
 
   if (is.null(missing_dir)) missing_dir <- op.rtauargus$rtauargus.missing_dir
   if (is.null(tauargus_exe)) tauargus_exe <- op.rtauargus$rtauargus.tauargus_exe
+  if(is.null(logbook)) logbook <- "logbook.txt"
   if (is.null(show_batch_console)) {
     show_batch_console <- op.rtauargus$rtauargus.show_batch_console
   }
