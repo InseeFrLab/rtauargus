@@ -64,7 +64,7 @@ write_rda_tab <- function(info_vars) {
 #' un fichier tabular (tab) et un fichier de métadonnées
 #' (rda) à partir de données tabulées et d'informations additionnelles.
 #'
-#' @param tabular [\strong{obligatoire}]
+#' @param tabular [\strong{obligatoire/mandatory}]
 #' data.frame which contains the tabulated data and
 #' an additional boolean variable that indicates the primary secret of type boolean \cr
 #' data.frame contenant les données tabulées et
@@ -76,15 +76,24 @@ write_rda_tab <- function(info_vars) {
 #' nom du fichier rda (avec extension)
 #' @param hst_filename hst file name (with .hst extension) \cr
 #' nom du fichier hst (avec extension)
-#' @param explanatory_vars [\strong{obligatoire}] Vector of categorical variables \cr
-#' Variables catégorielles, sous forme de liste de vecteurs \cr
-#' Example : \code{list(c("A21", "TREFF", "REG")}
+#' @param explanatory_vars [\strong{obligatoire/mandatory}] Vector of explanatory variables \cr
+#' Variables catégorielles, sous forme  de vecteurs \cr
+#' Example : \code{c("A21", "TREFF", "REG")}
 #' table crossing \code{A21} x \code{TREFF} x \code{REG}
 #' @param secret_var Boolean variable which give the primary secret : equal to
-#' "TRUE" if a cell is concerned by the primary secret,"FALSE" otherwise. \cr
+#' "TRUE" if a cell is concerned by the primary secret,"FALSE" otherwise.
+#' will  be exported in the apriori file \cr
 #' (Variable indiquant le secret primaire de type booléen:
 #' prend la valeur "TRUE" quand les cellules du tableau doivent être masquées
-#' par le secret primaire, "FALSE" sinon.)
+#' par le secret primaire, "FALSE" sinon. Permet de créer un fichier d'apriori)
+#' @param cost_var Numeric variable allow to change the cost suppression of a cell
+#' for secondary suppression, it's the value of the cell by default, can be
+#' specified for each cell, fill with NA if the cost doesn't need to be changed
+#' for all cells \cr
+#' Variable numeric qui permet de changer la coût de suppression d'une cellule,
+#' pris en compte dans les algorithmes de secret secondaire.Par défaut le coût
+#' correspond à la valeur de la cellule.  peut être spécifié pour chacune des cellules,
+#' peut contenir des NA pour les coûts que l'on ne souhaite pas modifier
 #' @param decimals Minimum number of decimals to display
 #' (see section 'Number of decimals') \cr
 #' (nombre minimal de décimales à afficher (voir section 'Number of decimals').)
@@ -115,6 +124,14 @@ write_rda_tab <- function(info_vars) {
 #' @param maxscore Name of the column containing, the value of the largest
 #' contributor of a cell. \cr
 #' (Nom de la colonne contenant la valeur du plus gros contributeur
+#' d'une cellule)
+#' @param maxscore_2 Name of the column containing, the value of the second largest
+#' contributor to a cell. \cr
+#' (Nom de la colonne contenant la valeur du deuxième plus gros contributeur
+#' d'une cellule)
+#' @param maxscore_3 Name of the column containing, the value of the third largest
+#' contributor to a cell. \cr
+#' (Nom de la colonne contenant la valeur du troisième plus gros contributeur
 #' d'une cellule)
 #' @param separator Character used as separator in the .tab file. \cr
 #' (Caractère utilisé en tant que separateur dans le fichier .tab)
@@ -165,11 +182,21 @@ write_rda_tab <- function(info_vars) {
 #'
 #' For example :
 #' \itemize{
+#'   \item{\code{totcode = "global"} : writes \code{<TOTCODE> "global"} for each
+#'   explanatory vars}
+#'   \item{\code{totcode = c("global", size="total", income="total")} :
+#'   \code{<TOTCODE> "global"} for each variable except for \code{size} and
+#'   \code{income}} assigned with \code{<TOTCODE> "total"}
+#'   by default : {<TOTCODE> "Total"}
 #'   \item{\code{totcode = "global"} : écrit \code{<TOTCODE> "global"} pour
 #'     toutes les variables catégorielles}
 #'   \item{\code{totcode = c("global", size="total", income="total")} :
-#'   idem, sauf pour les variables \code{size}et \code{income}}
+#'   \code{<TOTCODE> "global"} pour toutes les variables catégorielles
+#'   sauf  \code{size} and \code{income}} qui se verront affecter
+#'   le total : \code{<TOTCODE> "total"}
+#'   Par defaut : {<TOTCODE> "Total"}
 #' }
+#'
 #'
 #'
 #' @section Hierarchical variables:
@@ -179,7 +206,7 @@ write_rda_tab <- function(info_vars) {
 #' Hierarchy is defined in an separate hrc file (\strong{hiercodelist}).
 #' which can be written with the function \code{link{write_hrc2}}.
 #' The function expects the location of this file (and a possible \code{hierleadstring}
-#' if it differs from the default option of the package).
+#' if it differs from the default option of the package : @.
 #' The path to the existing file is explicitly given.
 #' The elements of the vector in parameter must be named (with the name of the variable),
 #' even if there is only one element.
@@ -231,7 +258,8 @@ write_rda_tab <- function(info_vars) {
 #' income         = c(  100,     4,     7,    14,    42,    85),
 #' freq           = c(    2,     6,     8,    45,   100,     1),
 #' max            = c(   54,     2,     1,    13,    19,    85),
-#' primary_secret = c( TRUE, FALSE, FALSE,  TRUE, FALSE,  TRUE)
+#' primary_secret = c( TRUE, FALSE, FALSE,  TRUE, FALSE,  TRUE),
+#' cost           = c(   NA,    NA,    NA,     1,     5,    NA)
 #' )
 #'
 #' # rda creation
@@ -245,11 +273,11 @@ write_rda_tab <- function(info_vars) {
 #'   hrc              = c(category = "category.hrc"),
 #'   explanatory_vars = c("category" , "size", "area"),
 #'   secret_var       = "primary_secret",
+#'   cost_var         = "cost"
 #'   totcode          = c(
 #'     category = "global",
 #'     size     = "total",
-#'     area     = "global",
-#'     income   = "total"
+#'     area     = "global"
 #'   ),
 #'   value            = "income",
 #'   freq             = "freq"
