@@ -3,6 +3,12 @@ title: Package ‘rtauargus’
 subtitle: Historique des modifications
 output: rmarkdown::html_vignette
 ---
+## rtauargus 1.0.0
+
+[01/09/2022]
+
+* English documentation  
+* **tab_arb()** : arument *value* is now called *response_var* as in the **tab_rda()** function.  
 
 ## rtauargus 0.5.0
 
