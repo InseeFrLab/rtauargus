@@ -197,8 +197,6 @@
 #' \cr
 #' Chemin vers le fichier .hrc.
 #'
-#' @export
-#'
 #' @examples
 #' # 1. Standard example. Table will be written on your working directory.
 #' # Exemple standard. La table sera écrite dans votre répertoire de travail.
@@ -272,7 +270,8 @@
 #' )
 #' path <- write_hrc2(astral_repeat, hier_lead_string = "@")
 #' read.table(path)
-
+#' @importFrom zoo na.locf
+#' @export
 
 write_hrc2 <- function(corr_table,
                        output_name = NULL,
@@ -282,13 +281,21 @@ write_hrc2 <- function(corr_table,
                        hier_lead_string = getOption("rtauargus.hierleadstring")
 ){
 
+  if(! any(class(corr_table) %in% c("data.frame","matrix"))){
+    class_corr <- class(corr_table)
+    stop(paste0("corr_table has to be a data frame or a matrix, not ", class_corr))
+  }
   # Set default filename / directory
   if (is.null(output_name)) {
     givenfilename <- deparse(substitute(corr_table))
     output_name <- givenfilename
   }
 
-  dir_name <- if(is.null(dir_name) | dir_name == "") getwd() else dir_name
+  if(is.null(dir_name) | dir_name == ""){
+    dir_name <- getwd()
+  }else if(! dir.exists(dir_name)){
+    stop(paste0("directory ", dir_name, " doesn't exist."))
+  }
 
   d = dim.data.frame(corr_table)
 
@@ -313,10 +320,20 @@ write_hrc2 <- function(corr_table,
     stop("hier_lead_string should be 1 single character")
   }
 
-  # Warn about presence of NAs
-  if (sum(is.na(corr_table))>0){
-    warning("Missing values in correspondence table will be ignored (see documentation).
+
+  # Error if presence of NAs on the last column
+  if(sum(is.na(corr_table[[d[2]]]))>0){
+    stop(
+    "Missing values on the last column of the correspondence table is not allowed. If relevant, you could fill in with the value of the previous column"
+    )
+  }
+
+  # Warn about presence of NAs elsewhere
+  if(sum(is.na(corr_table))>0){
+
+    warning("Missing values in correspondence table will be filled in (see documentation).
             If unintended, this can cause errors when using the .hrc file with tau-Argus.")
+    corr_table <- zoo::na.locf(corr_table)
   }
   # (Todo : lister cas de NA non gênantes et bloquer les autres)
 
@@ -327,13 +344,14 @@ write_hrc2 <- function(corr_table,
   }
 
   # Check if all columns are character
-  suspects <- NULL
-  for (col in 1:d[2]){
-    if (!is.character(corr_table[,col])) {
-      suspects <- c(suspects, col)
-    }
-  }
-  if (!is.null(suspects))  message("Note : the following columns are not of character type : ", colnames(corr_table)[suspects], ". There may be an issue reading the table.")
+  # suspects <- NULL
+  # for (col in 1:d[2]){
+  #   if (!is.character(corr_table[,col])) {
+  #     suspects <- c(suspects, col)
+  #   }
+  # }
+  suspects <- names(corr_table[,!sapply(corr_table, is.character)])
+  if(length(suspects) > 0)  message("Note : the following columns are not of character type : ", colnames(corr_table)[suspects], ". There may be an issue reading the table.")
 
   #### Creating the hrc file
 
@@ -343,6 +361,11 @@ write_hrc2 <- function(corr_table,
       corr_table <- corr_table[
         order(corr_table[,d[2]-j+1])
         ,]
+      # CORR JJ à vérifier
+      # sort the table is not efficient if there are NA values !
+      # corr_table <- corr_table[
+      #   order(corr_table[,1])
+      #   ,]
     }
   }
 
@@ -364,12 +387,10 @@ write_hrc2 <- function(corr_table,
 
   # 2. Add a fitting number of hier_lead_string to all
 
-  depth_table <- as.data.frame(matrix(
-    nrow = d[1], ncol = d[2]
-  ))
-  for (colonne in 1:d[2]) {
-    depth_table[,colonne] <- colonne-1
-  }
+  depth_table <- as.data.frame(
+    matrix(0:(d[2]-1),nrow = d[1], ncol = d[2], byrow = TRUE)
+  )
+
   # the numeric values (from 0 to d2 -1) correspond to the depth in the
   # hierarchy, which will govern how many hier_lead_string are added when
   # writing the hrc.
@@ -383,10 +404,12 @@ write_hrc2 <- function(corr_table,
   ))
   depth_table <- depth_table - compare_col
 
-  for (col in 1:d[2]){
-    corr_table[,col] <- vect_aro(string = corr_table[,col],
-                                 number = depth_table[,col],
-                                 hier_lead_string)
+  for(col in 1:d[2]){
+    corr_table[,col] <- vect_aro(
+      string = corr_table[,col],
+      number = depth_table[,col],
+      hier_lead_string
+    )
   }
 
 
@@ -408,20 +431,29 @@ write_hrc2 <- function(corr_table,
 
   loc_file <- paste0(c(dir_name, "/", output_name, ".hrc"), collapse = "")
 
-  write.table(x = corr_table,
-              file = loc_file,
-              quote = FALSE,
-              row.names = FALSE,
-              col.names = FALSE,
-              sep="",
-              eol = "")
+  write.table(
+    x = corr_table,
+    file = loc_file,
+    quote = FALSE,
+    row.names = FALSE,
+    col.names = FALSE,
+    sep = "",
+    eol = ""
+  )
 
   invisible(loc_file)
 }
 
 arobase <- function(string, number, hier_lead_string){
-  paste0(paste0(rep(hier_lead_string, number), collapse = "")
-         , string, "\n", collapse = "")
+  if(is.na(number)){
+    return(NA)
+  }else{
+    return(
+      paste0(
+        paste0(rep(hier_lead_string, number), collapse = "")
+        , string, "\n", collapse = "")
+    )
+  }
 }
 vect_aro <- Vectorize(arobase, vectorize.args = c("string", "number"))
 
