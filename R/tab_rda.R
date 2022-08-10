@@ -499,7 +499,7 @@ tab_rda <- function(
       ordre_init = dplyr::row_number()
     )
 
-  # weight_var et holding_var ..........................................
+  # freq et maxscore ..........................................
 
   if (!is.null(freq)) {
     fwf_info_tabular$type_var[fwf_info_tabular$colname == freq] <- "FREQUENCY"
