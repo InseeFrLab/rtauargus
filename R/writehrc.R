@@ -1,3 +1,50 @@
+ajouter_feuille_unique <- function(table_passage,racine){
+
+  df_long <- data.frame()
+
+  for(i in 1 : (ncol(table_passage)-1)){
+    table_prov <- unique(table_passage[,i:(i+1)])
+    colnames(table_prov) <- c("parent","enfant")
+    table_prov$niveau <- i
+    filtre <- table_prov$parent != table_prov$enfant
+    table_prov <-  table_prov[filtre,]
+    df_long <- rbind(df_long,table_prov)
+  }
+  compte <- table(df_long$parent)
+  compte <- as.data.frame(compte)
+  colnames(compte) <- c("parent","nb_occur")
+  feuille_unique <- compte[compte$nb_occur == 1,]
+  table_unique <- df_long[df_long$parent %in% feuille_unique$parent,]
+
+  for (i in 1:nrow(table_unique)){
+    niveau <- table_unique$niveau[[i]]
+    enfant <- table_unique$enfant[[i]]
+    parent <- table_unique$parent[[i]]
+    ligne_a_recup <- which((table_passage[,niveau]==parent) & table_passage[,(niveau+1)]==enfant)[[1]]
+    sup_df <- table_passage[1:ligne_a_recup,]
+    inf_df <- table_passage[ligne_a_recup:nrow(table_passage),]
+    sup_df[ligne_a_recup,][(niveau+1):length(sup_df[ligne_a_recup,])] <- paste0(racine,sup_df[ligne_a_recup,][(niveau+1)])
+    res <- rbind(sup_df,inf_df)
+    table_passage <- res
+  }
+  return(res)
+}
+
+arobase <- function(string, number, hier_lead_string){
+  if(is.na(number)){
+    return(NA)
+  }else{
+    return(
+      paste0(
+        paste0(rep(hier_lead_string, number), collapse = "")
+        , string, "\n", collapse = "")
+    )
+  }
+}
+vect_aro <- Vectorize(arobase, vectorize.args = c("string", "number"))
+
+# vect_aro(string = c("ab", "abb"), number =  1:2, hier_lead_string = "!")
+
 #' .hrc writing
 #'
 #' Creates a .hrc hierarchy from a correspondence table. \cr
@@ -23,7 +70,20 @@
 #' hierarchy depth in the .hrc file
 #' \cr
 #' Caractère unique repérant le niveau de profondeur dans le .hrc
-#'
+#' @param adjust_unique_roots boolean. If TRUE will add fictional roots to the
+#' correspondence table, by doing so there will be no unique roots in the hrc file.
+#' With tabular function, unique roots are not handled by Tau-Argus. \cr
+#' Si TRUE la fonction va ajouter des feuilles fictives au fichier .hrc afin
+#' qu'il n'y ait plus de feuilles uniques. Les feuilles uniques peuvent générer
+#' des problèmes dans l'exécution de Tau-Argus
+#' @param add_char character If adjust_unique_roots is TRUE add_char is the string that will
+#' be used to create fictional roots, be sure that this string does not create
+#' duplicates.The string will be paste at the beginning of a unique root
+#'  default = "ZZZ" \cr
+#' character Si adjust_unique_roots est TRUE add_char est l'élément qui sera
+#' utilisé afin de créer des feuilles fictives, il faut être sur que cela
+#' ne crée pas de doublons dans la hiérarchie.La chaine de caractère sera
+#' ajouté au début d'une feuille unique. Par defaut :"ZZZ"
 #' @details Creates a .hrc hierarchy file adapted to tau-Argus from a
 #' correspondence table fully describing it. By default, lines are sorted
 #' alphabetically so as to regroup identical levels.
@@ -263,7 +323,9 @@ write_hrc2 <- function(corr_table,
                        dir_name = NULL,
                        sort_table = FALSE,
                        rev = FALSE,
-                       hier_lead_string = getOption("rtauargus.hierleadstring")
+                       hier_lead_string = getOption("rtauargus.hierleadstring"),
+                       adjust_unique_roots = FALSE,
+                       add_char = "ZZZ"
 ){
 
   if(! any(class(corr_table) %in% c("data.frame","matrix"))){
@@ -311,7 +373,7 @@ write_hrc2 <- function(corr_table,
   # Error if presence of NAs on the last column
   if(sum(is.na(corr_table[[d[2]]]))>0){
     stop(
-    "Missing values on the last column of the correspondence table is not allowed. If relevant, you could fill in with the value of the previous column"
+      "Missing values on the last column of the correspondence table is not allowed. If relevant, you could fill in with the value of the previous column"
     )
   }
 
@@ -321,6 +383,15 @@ write_hrc2 <- function(corr_table,
     warning("Missing values in correspondence table will be filled in (see documentation).
             If unintended, this can cause errors when using the .hrc file with tau-Argus.")
     corr_table <- zoo::na.locf(corr_table)
+  }
+
+  if(adjust_unique_roots==TRUE){
+    warning(paste0("If there is unique roots in the table, the function will create
+fictional roots to adjust the hrc file for Tau-Argus, they will be created
+by copying the unique roots and adding ",add_char," at the beginning
+of the root character, if this creates duplicates, change the add_char
+parameter"))
+    corr_table <- ajouter_feuille_unique(corr_table,add_char)
   }
   # (Todo : lister cas de NA non gênantes et bloquer les autres)
 
@@ -431,17 +502,4 @@ write_hrc2 <- function(corr_table,
   invisible(loc_file)
 }
 
-arobase <- function(string, number, hier_lead_string){
-  if(is.na(number)){
-    return(NA)
-  }else{
-    return(
-      paste0(
-        paste0(rep(hier_lead_string, number), collapse = "")
-        , string, "\n", collapse = "")
-    )
-  }
-}
-vect_aro <- Vectorize(arobase, vectorize.args = c("string", "number"))
 
-# vect_aro(string = c("ab", "abb"), number =  1:2, hier_lead_string = "!")
