@@ -38,7 +38,7 @@ df_op.rtauargus <- function(html = FALSE) {
     stringsAsFactors = FALSE
   )
 
-  fun_names <- c("micro_asc_rda", "micro_arb", "run_arb")
+  fun_names <- c("micro_asc_rda", "tab_rda", "micro_arb", "tab_arb", "run_arb")
 
   param_names <- lapply(fun_names, function(x) names(formals(get(x))))
   func <- data.frame(
