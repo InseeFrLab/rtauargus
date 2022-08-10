@@ -378,8 +378,8 @@ tab_rda <- function(
                    maxscore_2,
                    maxscore_3)
 
-  if (length(tabular[1,]) != length(col_tabular))
-  {warning("unspecified columns in table")}
+  # if (length(tabular[1,]) != length(col_tabular))
+  # {warning("unspecified columns in table")}
   # Controle hrc
   if(!all(names(hrc) %in% explanatory_vars))
   {stop(" error with label of the hierarchichal variable")}
@@ -474,6 +474,7 @@ tab_rda <- function(
   if (!is.null(secret_var)) tabular<-tabular[,!names(tabular)==secret_var]
   if (!is.null(cost_var)) tabular<-tabular[,!names(tabular)==cost_var]
 
+  tabular <- tabular[,c(explanatory_vars,value,freq,maxscore,maxscore_2,maxscore_3)]
 
   fwf_info_tabular <-
     gdata::write.fwf(
