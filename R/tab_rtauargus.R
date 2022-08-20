@@ -1,11 +1,9 @@
-#' Fonction qui ajuste la taille d'une chaîne de caractères en ajoutant
-#' un même caractère devant pour atteindre une taille souhaitée
-#'
-#' @param char string chaîne de caractères à modifier
-#' @param cible_char integer - longueur de la chaîne souhaitée
-#' @param add_char caractère à ajouter
-#'
-#' @return chaîne de caractère
+ # Fonction qui ajuste la taille d'une chaîne de caractères en ajoutant
+ # un même caractère devant pour atteindre une taille souhaitée
+ # @param char string chaîne de caractères à modifier
+ # @param cible_char integer - longueur de la chaîne souhaitée
+ # @param add_char caractère à ajouter
+ # @return chaîne de caractère
 trans_var_pour_tau_argus <- function(char='monchar', cible_char=12, add_char='*'){
   diff <- cible_char - nchar(char)
   if(diff > 0)
@@ -13,22 +11,22 @@ trans_var_pour_tau_argus <- function(char='monchar', cible_char=12, add_char='*'
   return(char)
 }
 
-#' Fonction vectorisée de la précédente. Cette fonction est à privilégier pour
-#' une utilisation sur un vecteur, une colonne d'un dataframe par exemple.
-#'
-#' @param char character vector
-#' @param cible_char integer - longueur de la chaîne souhaitée
-#' @param add_char caractère à ajouter
-#'
-#' @return character vector
+# Fonction vectorisée de la précédente. Cette fonction est à privilégier pour
+# une utilisation sur un vecteur, une colonne d'un dataframe par exemple.
+#
+# @param char character vector
+# @param cible_char integer - longueur de la chaîne souhaitée
+# @param add_char caractère à ajouter
+#
+# @return character vector
 v_trans_var_pour_tau_argus <- Vectorize(trans_var_pour_tau_argus, vectorize.args = 'char')
 
-#' Fonction vectorisée de la précédente. Cette fonction est à privilégier pour
-#' une utilisation sur un vecteur, une colonne d'un dataframe par exemple.
-#'
-#' @param char character vector - vecteur à modifier
-#'
-#' @return character vector
+# Fonction vectorisée de la précédente. Cette fonction est à privilégier pour
+# une utilisation sur un vecteur, une colonne d'un dataframe par exemple.
+#
+# @param char character vector - vecteur à modifier
+#
+# @return character vector
 rev_var_pour_tau_argus <- function(char='**monchar', del_char='*'){
   if(del_char %in% c('*','+','_',' ')){
     gsub(paste0("[",del_char,"]"),'',char)
@@ -37,7 +35,7 @@ rev_var_pour_tau_argus <- function(char='**monchar', del_char='*'){
 
 
 
-#' Title
+#' All in once for tabular
 #'
 #' @inheritParams tab_rda
 #' @inheritParams tab_arb
@@ -60,8 +58,6 @@ rev_var_pour_tau_argus <- function(char='**monchar', del_char='*'){
 #'
 #' If output_type doesn't equal to 4, then the raw result from tau-argus is returned.
 #'
-#' @details
-#'
 #' @section Standardization of explanatory variables and hierarchies
 #'
 #' The two boolean arguments \code{unif_hrc} and \code{unif_expl} are useful to
@@ -76,31 +72,40 @@ rev_var_pour_tau_argus <- function(char='**monchar', del_char='*'){
 #' only the tabular is modified.
 #'
 #' @examples
-#' #DON'T RUN
+#'\dontrun{
 #' library(dplyr)
-#' tabular_leg <- table_legumes_sp %>% mutate(n_obs = round(n_obs)) %>%
-#' select(ACTIVITY, treff, type_leg, tot, n_obs, max, is_secret_prim)
+#' data(red_vegetables)
+#' red_vegetables_ps <-red_vegetables %>%
+#' mutate(
+#'   is_secret_freq = n_obs<3 & n_obs>0,
+#'   is_secret_dom = max>0.85*tot,
+#'   is_secret_prim = is_secret_dom | is_secret_freq
+#'   )
+#'   options(
+#'     rtauargus.tauargus_exe =
+#'       "Y:/Logiciels/TauArgus/TauArgus4.2.2b1/TauArgus.exe"
+#'   )
 #' res <- tab_rtauargus(
-#' tabular = tabular_leg,
-#' files_name = "legumes_rouges",
-#' dir_name = "tauargus_files",
-#' explanatory_vars = c("ACTIVITY", "treff", "type_leg"),
-#' hrc = c(ACTIVITY = "legumes.hrc"),
-#' totcode = c(ACTIVITY = "Ensemble", treff = "Ensemble", type_leg="rouges"),
-#' secret_var = "is_secret_prim",
-#' value = "tot",
-#' freq = "n_obs",
-#' output_type = "4",
-#' output_options = "",
-#' is_tabular = TRUE,
-#' show_batch_console = FALSE,
-#' import = FALSE,
-#' separator = ",",
-#' verbose = FALSE,
-#' unif_hrc = TRUE,
-#' unif_expl = TRUE
+#'   tabular = red_vegetables_ps %>% mutate(n_obs = round(n_obs)),
+#'   files_name = "legumes_rouges",
+#'   dir_name = "tauargus_files",
+#'   explanatory_vars = c("ACTIVITY", "treff", "type_leg"),
+#'   hrc = c(ACTIVITY = "legumes.hrc"),
+#'   totcode = c(ACTIVITY = "Ensemble", treff = "Ensemble", type_leg="rouges"),
+#'   secret_var = "is_secret_prim",
+#'   value = "tot",
+#'   freq = "n_obs",
+#'   output_type = "4",
+#'   output_options = "",
+#'   is_tabular = TRUE,
+#'   show_batch_console = FALSE,
+#'   import = FALSE,
+#'   separator = ",",
+#'   verbose = FALSE,
+#'   unif_hrc = TRUE,
+#'   unif_expl = TRUE
 #' )
-
+#' }
 #' @export
 tab_rtauargus <- function(
     tabular,

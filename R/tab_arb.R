@@ -38,7 +38,7 @@ suppr_writetable_tab <- function(suppress,
 # Paramètre a priori ------------------------------------------------------
 
 # Normalise parametre "apriori" pour le faire passer dans la
-# fonction apriori_batch
+# fonction tab_apriori_batch
 
 norm_apriori_params_tab <- function(params) {
 
@@ -62,7 +62,7 @@ norm_apriori_params_tab <- function(params) {
 
 # Génère <APRIORI>s
 
-apriori_batch <- function(hst_names, sep = ',', ignore_err = 0 , exp_triv = 0) {
+tab_apriori_batch <- function(hst_names, sep = ',', ignore_err = 0 , exp_triv = 0) {
 
   paste0(
     '<APRIORI> "',
@@ -279,7 +279,7 @@ tab_arb <- function(arb_filename     = NULL,
 
     std_apriori <- norm_apriori_params_tab(hst_filename)
     ap_batch <-
-      apriori_batch(
+      tab_apriori_batch(
         hst_names = std_apriori[[1]],
         sep = std_apriori$sep,
         ignore_err = std_apriori$ignore_err,

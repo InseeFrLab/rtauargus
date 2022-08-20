@@ -258,10 +258,12 @@ vect_aro <- Vectorize(arobase, vectorize.args = c("string", "number"))
 #' # Exemple standard. La table sera écrite dans votre répertoire de travail.
 #' astral <- data.frame(
 #'   type      = c("planet", "planet", "star", "star", "star", "other", "other"),
-#'   details   = c("telluric", "gasgiant", "bluestar", "whitedwarf", "reddwarf", "blackhole", "pulsar")
+#'   details   = c(
+#'     "telluric", "gasgiant", "bluestar", "whitedwarf",
+#'     "reddwarf", "blackhole", "pulsar")
 #' )
 #' path <- write_hrc2(astral, hier_lead_string = "@")
-#' read.table(path)
+#' \dontrun{read.table(path)}
 #' # Note that line order was changed ('other' comes before 'planet'), to no
 #' # consequence whatsoever for Tau-Argus.
 #' # Remarque : l'ordre des lignes a été modifié ('other' arrive avant 'planet'),
@@ -270,11 +272,13 @@ vect_aro <- Vectorize(arobase, vectorize.args = c("string", "number"))
 #' # Wrong column order:
 #' # Mauvais ordonnancement des colonnes :
 #' astral_inv <- data.frame(
-#'   details   = c("telluric", "gasgiant", "bluestar", "whitedwarf", "reddwarf", "blackhole", "pulsar"),
-#'   type      = c("planet", "planet", "star", "star", "star", "other", "other")
+#'   details = c(
+#'     "telluric", "gasgiant", "bluestar", "whitedwarf",
+#'     "reddwarf", "blackhole", "pulsar"),
+#'     type = c("planet", "planet", "star", "star", "star", "other", "other")
 #' )
 #' path <- write_hrc2(astral_inv, hier_lead_string = "@")
-#' read.table(path)
+#' \dontrun{read.table(path)}
 #' # Because of the inverted order, everything is written backwards : planet is a
 #' # subtype of gasgiant, etc.
 #' # À cause de l'inversion des colonnes, tout est écrit à l'envers : planet est
@@ -282,19 +286,21 @@ vect_aro <- Vectorize(arobase, vectorize.args = c("string", "number"))
 #'
 #' # Correction :
 #' path <- write_hrc2(astral_inv, rev = TRUE, hier_lead_string = "@")
-#' read.table(path)
+#' \dontrun{read.table(path)}
 #'
 #' # 2.1 Sparse case
 #' # Cas creux
 #' astral_sparse <- data.frame(
 #'   type      = c("planet", NA, "star", NA, NA, "other", NA),
-#'   details   = c("telluric", "gasgiant", "bluestar", "whitedwarf", "reddwarf", "blackhole", "pulsar")
+#'   details   = c(
+#'     "telluric", "gasgiant", "bluestar", "whitedwarf",
+#'     "reddwarf", "blackhole", "pulsar")
 #' )
 #' # NAs in general are risky, but, in this case, the function works well.
-#' # Les valeurs manquantes causent un risque, mais, dans ce genre de cas, la fonction
-#' a le comportement attendu.
+#' # Les valeurs manquantes causent un risque, mais, dans ce genre de cas,
+#' # la fonction a le comportement attendu.
 #' path <- write_hrc2(astral_sparse, hier_lead_string = "@")
-#' read.table(path)
+#' \dontrun{read.table(path)}
 #'
 #' # 2.2 Non-uniform depth
 #' # Hiérarchie non-uniforme
@@ -304,8 +310,10 @@ vect_aro <- Vectorize(arobase, vectorize.args = c("string", "number"))
 #' )
 #' # The following code will generate an error
 #' # (see section Details about correspondence table & .hrc)
+#' \dontrun{
 #' path <- write_hrc2(astral_nu, hier_lead_string = "@")
-#' To fix the issue, you have to fill in the NAs beforehand.
+#' }
+#' #To fix the issue, you have to fill in the NAs beforehand.
 #'
 #' astral_nu_fill <- data.frame(
 #'   type      = c("planet", "planet", "star", "other", "other"),
@@ -313,7 +321,7 @@ vect_aro <- Vectorize(arobase, vectorize.args = c("string", "number"))
 #' )
 #' # The following code will work
 #' path <- write_hrc2(astral_nu_fill, hier_lead_string = "@")
-#' read.table(path)
+#' \dontrun{read.table(path)}
 #'
 #' @importFrom zoo na.locf
 #' @export
@@ -382,7 +390,7 @@ write_hrc2 <- function(corr_table,
 
     warning("Missing values in correspondence table will be filled in (see documentation).
             If unintended, this can cause errors when using the .hrc file with tau-Argus.")
-    corr_table <- zoo::na.locf(corr_table)
+    corr_table <- na.locf(corr_table)
   }
 
   if(adjust_unique_roots==TRUE){
