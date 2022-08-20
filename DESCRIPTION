@@ -1,6 +1,6 @@
 Package: rtauargus
 Type: Package
-Title: Tau-Argus depuis R
+Title: Using Tau-Argus from R
 Language: fr
 Version: 0.5.0.9000
 Depends: R (>= 3.3)
@@ -9,7 +9,8 @@ Imports:
     dplyr (>= 0.7),
     gdata,
     stringr,
-    rlang
+    rlang,
+    zoo
 Suggests:
     testthat,
     knitr,
@@ -30,13 +31,20 @@ Authors@R: c(
 	  email = "nathanael.rastout@insee.fr",
 	  role = c("aut")
 	),
+	person(
+	  "Jeanne", "Pointet",
+	  role = c("ctb")
+	),
+	person(
+	  "Félix", "Beroud",
+	  role = c("ctb")
+	),
     person(
       family = "Institut National de la Statistique et des Études Économiques",
       role = "cph"
     )
   )
-Description: Crée fichiers en entrée (asc, rda, arb), appelle Tau-Argus,
-    réimporte les tables secrétisées dans R.
+Description: Creates all the files required by Tau-Argus, runs Tau-Argus and fetches the result.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
