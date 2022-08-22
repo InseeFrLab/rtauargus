@@ -16,18 +16,20 @@ ajouter_feuille_unique <- function(table_passage,racine){
   feuille_unique <- compte[compte$nb_occur == 1,]
   table_unique <- df_long[df_long$parent %in% feuille_unique$parent,]
 
-  for (i in 1:nrow(table_unique)){
-    niveau <- table_unique$niveau[[i]]
-    enfant <- table_unique$enfant[[i]]
-    parent <- table_unique$parent[[i]]
-    ligne_a_recup <- which((table_passage[,niveau]==parent) & table_passage[,(niveau+1)]==enfant)[[1]]
-    sup_df <- table_passage[1:ligne_a_recup,]
-    inf_df <- table_passage[ligne_a_recup:nrow(table_passage),]
-    sup_df[ligne_a_recup,][(niveau+1):length(sup_df[ligne_a_recup,])] <- paste0(racine,sup_df[ligne_a_recup,][(niveau+1)])
-    res <- rbind(sup_df,inf_df)
-    table_passage <- res
+  if(nrow(table_unique)>0){
+    for (i in 1:nrow(table_unique)){
+      niveau <- table_unique$niveau[[i]]
+      enfant <- table_unique$enfant[[i]]
+      parent <- table_unique$parent[[i]]
+      ligne_a_recup <- which((table_passage[,niveau]==parent) & table_passage[,(niveau+1)]==enfant)[[1]]
+      sup_df <- table_passage[1:ligne_a_recup,]
+      inf_df <- table_passage[ligne_a_recup:nrow(table_passage),]
+      sup_df[ligne_a_recup,][(niveau+1):length(sup_df[ligne_a_recup,])] <- paste0(racine,sup_df[ligne_a_recup,][(niveau+1)])
+      res <- rbind(sup_df,inf_df)
+      table_passage <- res
+    }
   }
-  return(res)
+  return(table_passage)
 }
 
 arobase <- function(string, number, hier_lead_string){
