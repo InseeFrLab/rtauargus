@@ -7,12 +7,17 @@ multi_linked_tables <- function(
     liste_tbx,
     list_explanatory_vars,
     list_hrc,
+    dir_name = NULL,
     totcode = "total",
     value = "value",
     freq = "freq",
-    maxscore = "maxscore",
-    is_secret_primaire = "is_secret_prim",
-    num_iter_max = 1000
+    cost_var = NULL,
+    secret_var = "is_secret_prim",
+    func_to_call = "tab_rtauargus2",
+    ip_start = 1,
+    ip_end = 0,
+    num_iter_max = 1000,
+    ...
 ){
 
   #' Attendu :
@@ -29,6 +34,16 @@ multi_linked_tables <- function(
 
   ############################################################################
   ############################################################################
+
+  ####### Function to use to make secret ######
+  .dots = list(...)
+  params <- param_function(eval(parse(text=func_to_call)), .dots)
+  params$dir_name = dir_name
+  params$cost_var = cost_var
+  params$value = value
+  params$freq = freq
+
+
   ####### === A === INITIALISATION
 
   n_tbx = length(liste_tbx) # nombre de tableaux
@@ -94,7 +109,7 @@ multi_linked_tables <- function(
 
       tableau <- tableau %>%
         relocate(all_of(value),
-                 all_of(is_secret_primaire),
+                 all_of(secret_var),
                  all_of(freq),
                  all_of(maxscore), .after = last_col())
 
@@ -132,12 +147,15 @@ multi_linked_tables <- function(
   ############################################################################
   ####### === B === ITÉRATIONS
 
-  num_iter = 1
+  num_iter_par_tab = setNames(rep(0, length(liste_tbx)), noms_tbx)
+  num_iter_all = 0
   journal = list()
 
-  while (length(todolist) > 0 & num_iter <= num_iter_max){
+  while (length(todolist) > 0 & all(num_iter_par_tab <= num_iter_max)){
 
+    num_iter_all <- num_iter_all + 1
     num_tableau <- todolist[1]
+    num_iter_par_tab[num_tableau] <- num_iter_par_tab[num_tableau] + 1
     cat("\n #####  Traitement tableau ", num_tableau, " ###########\n")
     # nom_tableau <- names()
     nom_col_identifiante <- paste0("T_", num_tableau)
@@ -164,9 +182,9 @@ multi_linked_tables <- function(
     # table_majeure[[nom_nouveau_masque]] <- table_majeure[[nom_ancien_masque]]
 
     var_secret_apriori <- ifelse(
-      num_iter > 1,
-      paste0("is_secret_", num_iter-1, collapse = ""),
-      is_secret_primaire
+      num_iter_all > 1,
+      paste0("is_secret_", num_iter_all-1, collapse = ""),
+      secret_var
     )
     vrai_tableau <- table_majeure[tableau_a_traiter,]
 
@@ -175,20 +193,34 @@ multi_linked_tables <- function(
     vrai_tableau <- vrai_tableau %>%
       select(all_of(c(ex_var, value, freq, maxscore, var_secret_apriori )))
 
-    res <- traiter(
-      vrai_tableau,
-      explanatory_vars = ex_var,
-      hrc = list_hrc[[num_tableau]],
-      value = value,
-      freq = freq,
-      maxscore = maxscore,
-      secret_var = var_secret_apriori,
-      totcode = list_totcode[[num_tableau]]
-    )
-    var_secret <- paste0("is_secret_", num_iter)
+    # Other settings of the function to make secret ----
+    params$tabular = vrai_tableau
+    params$files_name = num_tableau
+    params$explanatory_vars = ex_var
+    params$totcode = list_totcode[[num_tableau]]
+    params$hrc = list_hrc[[num_tableau]]
+    params$secret_var = var_secret_apriori
+    params$ip = if(num_iter_par_tab[num_tableau] == 1) ip_start else ip_end
+
+    res <- do.call(func_to_call, params)
+    res$is_secret <- res$Status != "V"
+    print(table(res$Status))
+    res <- subset(res, select = -Status)
+
+    # res <- traiter(
+    #   vrai_tableau,
+    #   explanatory_vars = ex_var,
+    #   hrc = list_hrc[[num_tableau]],
+    #   value = value,
+    #   freq = freq,
+    #   maxscore = maxscore,
+    #   secret_var = var_secret_apriori,
+    #   totcode = list_totcode[[num_tableau]]
+    # )
+    var_secret <- paste0("is_secret_", num_iter_all)
     table_majeure <- merge(table_majeure, res, all = TRUE)
     table_majeure[[var_secret]] <- table_majeure$is_secret
-    table_majeure <- table_majeure[,names(table_majeure) != "is_secret"]
+    table_majeure <- subset(table_majeure, select = -is_secret)
     # Rappel : traiter(...) renvoie un masque de secret (une colonne de booléens)
     # avec une ligne pour chaque ligne du tableau d'origine
 
@@ -251,11 +283,12 @@ multi_linked_tables <- function(
     #     # lignes_concernees = tableau_a_traiter,
     #     # lignes_touchees = lignes_modifs
     #   )
-
-    num_iter <- num_iter+1
   }
 
-  cat("End of iterating after ", num_iter, " iterations\n")
+  purrr::iwalk(
+    num_iter_par_tab,
+    function(num,tab) cat("End of iterating after ", num, " iterations for ", tab, "\n")
+  )
   ############################################################################
   ############################################################################
   ####### === C === FINALISATION
