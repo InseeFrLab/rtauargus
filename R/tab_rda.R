@@ -350,7 +350,10 @@ tab_rda <- function(
   # parametres non renseignés  ...........................................
   if (is.null(rda_filename)) rda_filename <- tempfile("RTA_", fileext = ".rda")
   if (is.null(tab_filename)) tab_filename <- "tabular.tab"
-  if (is.null(hst_filename)) hst_filename <- "apriori.hst"
+  if ((is.null(hst_filename)) & ((!is.null(secret_var))|!is.null(cost_var))) {
+    hst_filename <- "apriori.hst"} else if ((is.null(hst_filename)) & (is.null(secret_var)) & (is.null(cost_var))){
+      hst_filename <- NULL
+    }
 
   #Gestion du chemin des fichiers
   name_rda <- basename(rda_filename)
@@ -363,10 +366,13 @@ tab_rda <- function(
   if(!(dir.exists(directory_tab)))
   {dir.create(directory_tab, recursive = TRUE)}
 
+  if ((!is.null(hst_filename)) | (!is.null(secret_var))|(!is.null(cost_var))){
   name_hst <- basename(hst_filename)
   directory_hst <- stringr::str_replace(hst_filename, pattern = name_hst, replacement="")
   if(!(dir.exists(directory_hst)))
   {dir.create(directory_hst, recursive = TRUE)}
+  }
+
   # Controle sur le nombre de colonnes
 
   col_tabular <- c(explanatory_vars,
@@ -448,15 +454,13 @@ tab_rda <- function(
 
   if(!is.null(cost_var) && !is.null(secret_var)){
     hst <- rbind(hst_secret_prim,hst_cost)
-  }
-  else if (is.null(cost_var) && !is.null(secret_var)){
+  } else if (is.null(cost_var) && !is.null(secret_var)){
     hst <- hst_secret_prim
-  }
-  else if (!is.null(cost_var) && is.null(secret_var)){
+  } else if (!is.null(cost_var) && is.null(secret_var)){
     hst <- hst_cost
   }
 
-  if( !is.null(secret_var)) {
+  if( !is.null(secret_var) | !is.null(cost_var)) {
     if (nrow(hst)==0) message("no cells are unsafe : hst file is empty")
 
     write.table(
@@ -586,7 +590,8 @@ tab_rda <- function(
     list(
       tab_filename = normPath2(tab_filename),
       rda_filename = normPath2(rda_filename),
-      hst_filename = normPath2(hst_filename)
+      hst_filename = if(!is.null(hst_filename)){
+        normPath2(hst_filename)} else{NULL}
     )
   )
 
