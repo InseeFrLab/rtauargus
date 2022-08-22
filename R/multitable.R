@@ -2,17 +2,17 @@ library(dplyr)
 # source("fonction_traiter2.R") # fonction qui ajoute du "secret" au hasard
 # #source("fonction_traiter0.R") # fonction qui appelle tau-argus
 
+
 multi_linked_tables <- function(
     liste_tbx,
     list_explanatory_vars,
     list_hrc,
+    totcode = "total",
     value = "value",
     freq = "freq",
     maxscore = "maxscore",
-    is_secret_primaire = "is_secret_primaire",
-    num_iter_max = 1000,
-    totcode = "total",
-    indice_depart_tableau = 1
+    is_secret_primaire = "is_secret_prim",
+    num_iter_max = 1000
 ){
 
   #' Attendu :
@@ -32,12 +32,50 @@ multi_linked_tables <- function(
   ####### === A === INITIALISATION
 
   n_tbx = length(liste_tbx) # nombre de tableaux
+
   if(is.null(names(liste_tbx))){
     names(liste_tbx) <- paste0("tab", 1:n_tbx)
     names(list_explanatory_vars) <- paste0("tab", 1:n_tbx)
     names(list_hrc) <- paste0("tab", 1:n_tbx)
   }
   noms_tbx <- names(liste_tbx)
+  all_expl_vars <- unique(unname(unlist(list_explanatory_vars)))
+  # list_totcode management
+  # first case : list_totcode is one length-character vector :
+  # all the expl variables in all the tables have the same value to refer to the total
+  if(is.character(totcode)){
+    if(length(totcode) == 1){
+      list_totcode <- purrr::map(
+        list_explanatory_vars,
+        function(nom_tab){
+          setNames(
+            rep(totcode, length(nom_tab)),
+            nom_tab
+          )
+        }
+      )
+    }else if(length(totcode) == length(all_expl_vars)){
+      if(is.null(names(totcode))){
+        stop("totcode of length > 1 must have names (explanatory_vars)")
+      }else{
+        if(!all(sort(names(totcode)) == sort(all_expl_vars))){
+          stop("Names of explanatory vars mentioned in totcode are not consistent with those used in list_explanatory_vars")
+        }else{
+          list_totcode <- purrr::map(
+            list_explanatory_vars,
+            function(nom_vars){
+              totcode[nom_vars]
+            }
+          )
+        }
+      }
+    }else{
+      stop("totcode has to be a character vector of length 1 or a named vector of length equal to the number of unique explanatory vars")
+    }
+  }else{
+    stop("totcode has to be a character vector of length 1 or a named vector of length equal to the number of unique explanatory vars")
+  }
+
   # 1. Mise en forme préalable
 
   noms_vars_init <- c()
@@ -51,7 +89,7 @@ multi_linked_tables <- function(
     .f = function(tableau,nom_tab){
       var_a_ajouter <- setdiff(noms_vars_init, names(tableau))
       for (nom_col in var_a_ajouter){
-        tableau[[nom_col]] <- totcode
+        tableau[[nom_col]] <- list_totcode[[nom_tab]][nom_col]
       }
 
       tableau <- tableau %>%
@@ -141,11 +179,11 @@ multi_linked_tables <- function(
       vrai_tableau,
       explanatory_vars = ex_var,
       hrc = list_hrc[[num_tableau]],
-      # value,
-      # freq,
-      # maxscore,
+      value = value,
+      freq = freq,
+      maxscore = maxscore,
       secret_var = var_secret_apriori,
-      totcode = totcode
+      totcode = list_totcode[[num_tableau]]
     )
     var_secret <- paste0("is_secret_", num_iter)
     table_majeure <- merge(table_majeure, res, all = TRUE)
@@ -257,10 +295,3 @@ multi_linked_tables <- function(
 
   return(liste_tbx_res)
 }
-
-
-
-
-
-
-
