@@ -285,7 +285,8 @@ tab_rtauargus <- function(
       header = FALSE,
       col.names = c(explanatory_vars, value, freq, "Status","Dom"),
       colClasses = c(rep("character", length(explanatory_vars)), rep("numeric",2), "character", "numeric"),
-      stringsAsFactors = FALSE
+      stringsAsFactors = FALSE,
+      na.strings = ""
     )
     res <- cbind.data.frame(
       apply(res[,explanatory_vars], 2, rev_var_pour_tau_argus),
@@ -305,5 +306,73 @@ tab_rtauargus <- function(
   }else{
     return(res)
   }
+
+}
+
+#' Title
+#'
+#' @param tabular
+#' @param files_name
+#' @param dir_name
+#' @param explanatory_vars
+#' @param totcode
+#' @param hrc
+#' @param secret_var
+#' @param cost_var
+#' @param value
+#' @param freq
+#' @param ip
+#' @param suppress
+#' @param ...
+#'
+#' @return
+#' @export
+#'
+#' @examples
+tab_rtauargus2 <- function(
+    tabular,
+    files_name = NULL,
+    dir_name = NULL,
+    explanatory_vars,
+    totcode,
+    hrc = NULL,
+    secret_var = NULL,
+    cost_var = NULL,
+    value = "value",
+    freq = "freq",
+    ip = 10,
+    suppress = "MOD(1,5,1,0,0)",
+    ...
+){
+  .dots = list(...)
+
+  params <- param_function(tab_rtauargus, .dots)
+  params$tabular = tabular
+  params$files_name = files_name
+  params$dir_name = dir_name
+  params$explanatory_vars = explanatory_vars
+  params$totcode = totcode
+  params$hrc = hrc
+  params$secret_var = secret_var
+  params$cost_var = cost_var
+  params$value = value
+  params$freq = freq
+  if(is.null(ip)){
+    if(!"safety_rules" %in% names(params)){
+      stop("Either ip or safety_rules has to be set.")
+    }
+  }else{
+    params$safety_rules = paste0("MAN(",ip,")")
+  }
+  params$suppress = suppress
+  params$show_batch_console = FALSE
+  params$output_type = 4
+  params$output_options = ""
+  params$unif_hrc = TRUE
+  params$unif_expl = TRUE
+  params$separator = ","
+  params$verbose = FALSE
+
+  do.call("tab_rtauargus", params)
 
 }
