@@ -111,7 +111,7 @@ multi_linked_tables <- function(
         relocate(all_of(value),
                  all_of(secret_var),
                  all_of(freq),
-                 all_of(maxscore), .after = last_col())
+                 .after = last_col())
 
       nom_col_Tj <- paste0("T_", nom_tab)
       tableau[[nom_col_Tj]] <- TRUE
@@ -191,7 +191,7 @@ multi_linked_tables <- function(
     ex_var <- list_explanatory_vars[[num_tableau]]
 
     vrai_tableau <- vrai_tableau %>%
-      select(all_of(c(ex_var, value, freq, maxscore, var_secret_apriori )))
+      select(all_of(c(ex_var, value, freq, var_secret_apriori )))
 
     # Other settings of the function to make secret ----
     params$tabular = vrai_tableau
