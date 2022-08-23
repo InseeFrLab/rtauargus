@@ -289,7 +289,7 @@ tab_rtauargus <- function(
       na.strings = ""
     )
     res <- cbind.data.frame(
-      apply(res[,explanatory_vars], 2, rev_var_pour_tau_argus),
+      apply(res[,explanatory_vars,drop=FALSE], 2, rev_var_pour_tau_argus),
       res[, !names(res) %in% explanatory_vars]
     )
     mask <- merge(tabular_original, res[,c(explanatory_vars,"Status")], by = explanatory_vars, all = TRUE)
