@@ -9,55 +9,6 @@ options(
     "Y:/Logiciels/TauArgus/TauArgus4.2.2b1/TauArgus.exe"
 )
 
-traiter <- function(
-  tabular,
-  files_name = "link",
-  dir_name = "tests_multitable/tauargus_files",
-  explanatory_vars,
-  hrc,
-  totcode = "Ensemble",
-  secret_var
-){
-  res <- tab_rtauargus(
-    tabular = tabular,
-    files_name = files_name,
-    dir_name = dir_name,
-    explanatory_vars = explanatory_vars,
-    hrc = hrc,
-    totcode = rep(totcode, length(explanatory_vars)),
-    secret_var = secret_var,
-    cost_var = NULL,
-    value          = "tot",
-    freq           = "n_obs",
-    maxscore       = "max",
-    safety_rules = "MAN(0)",
-    output_type        = "4",
-    output_options     = "",
-    is_tabular = TRUE,
-    show_batch_console = FALSE,
-    import = FALSE,
-    separator = ",",
-    verbose = FALSE,
-    unif_hrc = TRUE,
-    unif_expl = TRUE
-  ) %>%
-    mutate(
-      is_secret = Status != "V"
-    )
-
-  print(res %>% count(Status))
-
-  return(res %>% select(-Status))
-}
-
-
-# res <- traiter(
-#   list_data_2_tabs$act_treff,
-#   explanatory_vars = c("ACTIVITY","treff"),
-#   hrc = c(ACTIVITY = "tests_multitable/legumes.hrc"),
-#   secret_var = "is_secret_prim"
-# )
-
 # Test 1 -----
 # Liste de deux tables liées
 
@@ -77,7 +28,6 @@ list_data_2_tabs <- list(
     }
   )
 
-
 res_1 <- multi_linked_tables(
   liste_tbx = list_data_2_tabs,
   list_explanatory_vars = list(act_treff = c("ACTIVITY", "treff"), act_cj = c("ACTIVITY", "cj")),
@@ -85,14 +35,23 @@ res_1 <- multi_linked_tables(
     act_treff = c(ACTIVITY = "tests_multitable/legumes.hrc"),
     act_cj = c(ACTIVITY = "tests_multitable/legumes.hrc")
   ),
+  dir_name = "tests_multitable/test_1/tauargus_files",
   value = "tot",
   freq = "n_obs",
-  maxscore = "max",
-  is_secret_primaire = "is_secret_prim",
+  secret_var = "is_secret_prim",
   num_iter_max = 5,
-  totcode =  "Ensemble",
-  indice_depart_tableau = 1
+  totcode =  "Ensemble"
 )
+
+# controle de cohérence des masques sur les cases communes
+res_1$act_treff %>% filter(treff == "Ensemble") %>%
+  select(ACTIVITY, tot, n_obs, is_secret_prim, is_secret_treff = last_col()) %>%
+  full_join(
+    res_1$act_cj %>% filter(cj == "Ensemble") %>%
+      select(ACTIVITY, tot, n_obs, is_secret_prim, is_secret_cj = last_col())
+  ) %>%
+  mutate(pb = is_secret_cj != is_secret_treff) %>%
+  filter(pb)
 
 
 # Test 2 ----
@@ -132,13 +91,12 @@ res_2 <- multi_linked_tables(
     nuts_treff = c(NUTS = file_nuts_hrc),
     nuts_cj = c(NUTS = file_nuts_hrc)
   ),
+  dir_name = "tests_multitable/test_2/tauargus_files",
   value = "tot",
   freq = "n_obs",
-  maxscore = "max",
-  is_secret_primaire = "is_secret_prim",
-  num_iter_max = 20,
-  totcode =  "Ensemble",
-  indice_depart_tableau = 1
+  secret_var = "is_secret_prim",
+  num_iter_max = 5,
+  totcode =  "Ensemble"
 )
 
 
