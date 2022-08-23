@@ -2,6 +2,15 @@ library(dplyr)
 # source("fonction_traiter2.R") # fonction qui ajoute du "secret" au hasard
 # #source("fonction_traiter0.R") # fonction qui appelle tau-argus
 
+journal_add_break_line <- function(journal){
+  sep_char_jour <- "-----------------------------------------"
+  cat(sep_char_jour, file = journal, fill = TRUE, append = TRUE)
+}
+
+journal_add_line <- function(journal,...){
+  cat(..., file = journal, fill = TRUE, append = TRUE)
+}
+
 
 multi_linked_tables <- function(
     liste_tbx,
@@ -14,7 +23,7 @@ multi_linked_tables <- function(
     cost_var = NULL,
     secret_var = "is_secret_prim",
     func_to_call = "tab_rtauargus2",
-    ip_start = 1,
+    ip_start = 10,
     ip_end = 0,
     num_iter_max = 1000,
     ...
@@ -34,6 +43,14 @@ multi_linked_tables <- function(
 
   ############################################################################
   ############################################################################
+  dir_name <- if(is.null(dir_name)) getwd() else dir_name
+  dir.create(dir_name, recursive = TRUE, showWarnings = FALSE)
+  journal <- file.path(dir_name,"journal.txt")
+  if(file.exists(journal)) invisible(file.remove(journal))
+
+  # cat("Start time: ", format(Sys.time(), "%Y-%m-%d  %H:%M:%S"), "\n", file = journal, fill = TRUE, append = TRUE)
+  journal_add_line(journal, "Start time: ", format(Sys.time(), "%Y-%m-%d  %H:%M:%S"))
+  journal_add_break_line(journal)
 
   ####### Function to use to make secret ######
   .dots = list(...)
@@ -43,10 +60,16 @@ multi_linked_tables <- function(
   params$value = value
   params$freq = freq
 
+  journal_add_line(journal, "Function called to protect the tables: ", func_to_call)
+  journal_add_line(journal, "Interval Protection Level for first iteration: ", ip_start)
+  journal_add_line(journal, "Interval Protection Level for other iterations: ", ip_end)
 
   ####### === A === INITIALISATION
 
   n_tbx = length(liste_tbx) # nombre de tableaux
+  journal_add_line(journal, "Nb of tables to treat: ", n_tbx)
+  journal_add_break_line(journal)
+
 
   if(is.null(names(liste_tbx))){
     names(liste_tbx) <- paste0("tab", 1:n_tbx)
@@ -54,7 +77,11 @@ multi_linked_tables <- function(
     names(list_hrc) <- paste0("tab", 1:n_tbx)
   }
   noms_tbx <- names(liste_tbx)
+  journal_add_line(journal, "Tables to treat: ", noms_tbx)
+  journal_add_break_line(journal)
   all_expl_vars <- unique(unname(unlist(list_explanatory_vars)))
+  journal_add_line(journal, "All explanatory variables: ", all_expl_vars)
+  journal_add_break_line(journal)
   # list_totcode management
   # first case : list_totcode is one length-character vector :
   # all the expl variables in all the tables have the same value to refer to the total
@@ -116,13 +143,6 @@ multi_linked_tables <- function(
         )
       }
 
-      # tableau <- tableau %>%
-      #   relocate(all_of(value),
-      #            all_of(secret_var),
-      #            all_of(cost_var),
-      #            all_of(freq),
-      #            .after = last_col())
-
       tableau[[noms_col_T[[nom_tab]]]] <- TRUE
 
       return(tableau)
@@ -143,19 +163,8 @@ multi_linked_tables <- function(
   table_majeure[noms_col_T] <- tidyr::replace_na(table_majeure[noms_col_T],
                                                  replace = liste_pour_na)
 
-
   # 2. Préparation des listes de travail
-  # i0 = indice_depart_tableau
-  # num du tableau par lequel commencer
-  # i0 <- trouver_meilleur_point_de_depart()
-
-  todolist <- noms_tbx #list()
-  # todolist[[1]] <- noms_tbx[i0]
-  # en fait la todolist va juste contenir des numéros de tableaux
-
-  # oublis <- list()
-  # oublis <- as.list(noms_tbx[-i0]) #1:n_tbx
-  # oublis[i0] <- NULL
+  todolist <- noms_tbx
 
   ############################################################################
   ############################################################################
@@ -163,7 +172,13 @@ multi_linked_tables <- function(
 
   num_iter_par_tab = setNames(rep(0, length(liste_tbx)), noms_tbx)
   num_iter_all = 0
-  journal = list()
+
+  journal_add_line(journal, "Initialisation work completed")
+  journal_add_break_line(journal)
+  journal_add_break_line(journal)
+
+  common_cells_modified <- as.data.frame(matrix(ncol = length(all_expl_vars)+1))
+  names(common_cells_modified) <- c(all_expl_vars, "iteration")
 
   while (length(todolist) > 0 & all(num_iter_par_tab <= num_iter_max)){
 
@@ -171,29 +186,14 @@ multi_linked_tables <- function(
     num_tableau <- todolist[1]
     num_iter_par_tab[num_tableau] <- num_iter_par_tab[num_tableau] + 1
     cat("\n #####  Traitement tableau ", num_tableau, " ###########\n")
+    journal_add_line(journal, num_iter_all, "-Treatment of table ", num_tableau)
+    journal_add_break_line(journal)
+
     # nom_tableau <- names()
     nom_col_identifiante <- paste0("T_", num_tableau)
     tableau_a_traiter <- which(table_majeure[[nom_col_identifiante]])
 
-    # rappel : "todolist[[1]]" est un numéro (de tableau) ;
-    # corresp[,num_tableau] est une colonne donnant, pour chaque ligne de nrow(table_majeure),
-    # which(corresp...) est donc l'ens. des indices des lignes du tableau n°num_tableau
-
-    # if (num_tableau %in% oublis) oublis[[which(oublis == num_tableau)]] <- NULL
-
-
-    # 0. juste pour le journal :
-    souvenir_todolist <- todolist
-
-
     # 1. Traiter & récupérer le masque
-    # nom_nouveau_masque <- paste0("is_secret_aj_",num_iter, collapse = "")
-    # nom_ancien_masque <- ifelse(
-    #   num_iter > 1,
-    #   paste0("is_secret_aj_", num_iter-1, collapse = ""),
-    #   is_secret_primaire
-    # )
-    # table_majeure[[nom_nouveau_masque]] <- table_majeure[[nom_ancien_masque]]
 
     var_secret_apriori <- ifelse(
       num_iter_all > 1,
@@ -218,33 +218,19 @@ multi_linked_tables <- function(
 
     res <- do.call(func_to_call, params)
     res$is_secret <- res$Status != "V"
-    print(table(res$Status))
+    journal_add_line(journal, "New cells status counts: ")
+    journal_add_line(journal, "- apriori (primary) secret: ", table(res$Status)["B"], "(", round(table(res$Status)["B"]/nrow(res)*100,1), "%)")
+    journal_add_line(journal, "- secondary secret: ", table(res$Status)["D"], "(", round(table(res$Status)["D"]/nrow(res)*100,1), "%)")
+    journal_add_line(journal, "- valid cells: ", table(res$Status)["V"], "(", round(table(res$Status)["V"]/nrow(res)*100,1), "%)")
+    journal_add_break_line(journal)
+    # print(table(res$Status))
     res <- subset(res, select = -Status)
 
-    # res <- traiter(
-    #   vrai_tableau,
-    #   explanatory_vars = ex_var,
-    #   hrc = list_hrc[[num_tableau]],
-    #   value = value,
-    #   freq = freq,
-    #   maxscore = maxscore,
-    #   secret_var = var_secret_apriori,
-    #   totcode = list_totcode[[num_tableau]]
-    # )
     var_secret <- paste0("is_secret_", num_iter_all)
     table_majeure <- merge(table_majeure, res, all = TRUE)
     table_majeure[[var_secret]] <- table_majeure$is_secret
     table_majeure <- subset(table_majeure, select = -is_secret)
-    # Rappel : traiter(...) renvoie un masque de secret (une colonne de booléens)
-    # avec une ligne pour chaque ligne du tableau d'origine
 
-    # Rmq : ici on crée juste à chaque étape une nouvelle colonne de secret ajusté
-    # global. On ne crée pas la colonne intermédiaire avec masque local + des NA.
-    # TODO si c'est nécessaire.
-
-    # 2. Propager
-
-    # var_secret_aj <- paste0("is_secret_aj_", num_iter)
     table_majeure[[var_secret]] <- ifelse(
       is.na(table_majeure[[var_secret]]),
       table_majeure[[var_secret_apriori]],
@@ -257,71 +243,47 @@ multi_linked_tables <- function(
       # pour tout tableau j, si j n'est pas déjà dans la todolist
       # et s'il y a au moins 1 ligne de j qui a été modifiée, ajouter j à la todolist
       nom_col_identifiante <- paste0("T_", tab)
-      if (! (tab %in% todolist)
+      if( !(tab %in% todolist)
           & (any(table_majeure[[nom_col_identifiante]][lignes_modifs]))
-      ) # TODO parenthéser la négation
+      ){
         todolist <- append(todolist,tab)
+      }
     }
 
     todolist <- todolist[-1]
-    # Rmq : à ce stade, todolist[[1]] est le tableau qu'on est en train de
-    # traiter, donc son numéro ne va pas être ajouté à la todolist même si
-    # (évidemment) les lignes modifiées lui appartiennent.
 
-    # Rmq : c'est optimisé comme un tractopelle sur un circuit de formule 1
+    cur_tab <- paste0("T_", num_tableau)
+    common_cells <- purrr::map_dfr(
+      setdiff(noms_col_T, cur_tab),
+      function(col_T){
+        table_majeure[table_majeure[[col_T]] & table_majeure[[cur_tab]],]
+      }
+    ) %>% unique()
 
-    #Intermède : update du journal
-    # on enlève de la file ce tableau
+    modified <- common_cells[common_cells[[var_secret_apriori]] != common_cells[[var_secret]],all_expl_vars]
+    if(nrow(modified)>0){
+      common_cells_modified <- rbind(
+        common_cells_modified,
+        cbind(
+          modified,
+          iteration = num_iter_all
+        )
+      )
+    }
 
-    # 3. Sonder
-    # if (length(todolist) == 0 & length(oublis) > 0){
-    #   todolist[1] <- oublis[1]
-    #   oublis[1] <- NULL
-    # }
-    # journal[[paste0("step_",num_iter)]] <-
-    #   list(
-    #     explique = paste0(
-    #       "Le tableau en cours est le ",
-    #       num_tableau,
-    #       # ". Au debut de l'etape, la file contenait [",
-    #       # paste(unlist(souvenir_todolist), collapse = ", "),
-    #       # "] et maintenant elle contient [",
-    #       # paste(unlist(todolist), collapse = ", "),
-    #       # "]. Cette etape a modifie ", length(lignes_modifs), " lignes. ",
-    #       # "Tableaux non visites : ",
-    #       # ifelse(length(oublis) > 0,
-    #       #        paste(unlist(oublis), collapse = ", "),
-    #       #        "(plus aucun)")
-    #       collapse = " "),
-    #     tableau_en_cours = num_tableau
-    #     # lignes_concernees = tableau_a_traiter,
-    #     # lignes_touchees = lignes_modifs
-    #   )
+    journal_add_line(journal, "Nb of new common cells hit by the secret:", nrow(modified))
+    journal_add_break_line(journal)
+    journal_add_break_line(journal)
+    # print(common_cells_modified)
   }
 
   purrr::iwalk(
     num_iter_par_tab,
-    function(num,tab) cat("End of iterating after ", num, " iterations for ", tab, "\n")
+    function(num,tab) journal_add_line(journal, "End of iterating after ", num, " iterations for ", tab, "\n")
   )
   ############################################################################
   ############################################################################
   ####### === C === FINALISATION
-
-  # names(table_majeure)[ncol(table_majeure)] <- "is_secret_final"
-  #
-  # # Calcul des stats de secret en nombre de cases touchées & en valeur totale
-  # valeur_tot = sum(table_majeure[[value]])
-  # nombre_cases_tot = nrow(table_majeure)
-  # quantification <- data.frame(
-  #   prop_cases_secret = round(c(sum(table_majeure[["is_secret_primaire"]]),
-  #                               sum(table_majeure[["is_secret_final"]]),
-  #                               sum(!table_majeure[["is_secret_final"]]))/nombre_cases_tot,2),
-  #   prop_masse_secret = round(c(sum(table_majeure[[value]][which(table_majeure[["is_secret_primaire"]])]),
-  #                               sum(table_majeure[[value]][which(table_majeure[["is_secret_final"]])]),
-  #                               sum(table_majeure[[value]][which(!table_majeure[["is_secret_final"]])])
-  #   )/valeur_tot,2)
-  # )
-  # rownames(quantification) <- c("Secret primaire", "Secret secondaire", "Diffusable")
 
   # Reconstruire la liste des tableaux d'entrée
   liste_tbx_res <- purrr::imap(
@@ -329,16 +291,50 @@ multi_linked_tables <- function(
     function(tab,nom){
       expl_vars <- list_explanatory_vars[[nom]]
       tab_rows <- table_majeure[[paste0("T_", nom)]]
-      merge(tab, table_majeure[tab_rows, names(table_majeure) %in% c(expl_vars, paste0("is_secret_", 1:100))], all.x = TRUE, all.y = FALSE, by = expl_vars)
+      secret_vars <- names(table_majeure)[grep("^is_secret_[1-9]", names(table_majeure))]
+      secret_vars <- secret_vars[order(as.integer(gsub("is_secret_", "", secret_vars)))]
+      res <- merge(
+        tab,
+        table_majeure[tab_rows, c(expl_vars, secret_vars)],
+        all.x = TRUE, all.y = FALSE, by = expl_vars
+      )
+    }
+  )
+  last_secret <- paste0("is_secret_", num_iter_all)
+
+  stats <- purrr::imap_dfr(
+    liste_tbx_res,
+    function(tab, name){
+      # require(data.table)
+      tab$primary_secret <- tab[[secret_var]]
+      tab$total_secret <- tab[[last_secret]]
+      tab$secondary_secret <- tab$total_secret & !tab$primary_secret
+      tab$valid_cells <- !tab$total_secret
+      # tab <- data.table(tab)
+      res <- data.frame(
+        tab_name = name,
+        primary_secret = sum(tab$primary_secret),
+        secondary_secret = sum(tab$secondary_secret),
+        total_secret = sum(tab$total_secret),
+        valid_cells = sum(tab$valid_cells)
+        # tab[,lapply(.SD, sum), .SDcols = c("primary_secret","secondary_secret","total_secret", "valid_cells")]
+      )
     }
   )
 
-  # journal <- append(journal, list(quantification), after = 0)
-  # journal <- append(journal, list(table_majeure), after = 0)
-  # journal <- append(journal, list(liste_tbx2), after = 0)
-  #
-  # names(journal)[1:3] <- c("liste_tbx", "table_majeure", "quantification")
-  # return(journal)
+  journal_add_break_line(journal)
+  journal_add_line(journal, "Final Summary")
+  journal_add_break_line(journal)
+  journal_add_line(journal, "Secreted cells counts per table")
+  suppressWarnings(gdata::write.fwf(stats, file = journal, append = TRUE))
+  journal_add_break_line(journal)
+  journal_add_break_line(journal)
+  journal_add_line(journal, "Common cells hit by the secret:")
+  # width <- max(nchar(colnames(common_cells_modified)), sapply(common_cells_modified[-1,], function(var) max(nchar(var))))
+  suppressWarnings(gdata::write.fwf(common_cells_modified[-1,], file = journal, append = TRUE))
+  journal_add_break_line(journal)
+  journal_add_line(journal, "End time: ", format(Sys.time(), "%Y-%m-%d  %H:%M:%S"))
+  journal_add_break_line(journal)
 
   return(liste_tbx_res)
 }
