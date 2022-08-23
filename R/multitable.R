@@ -99,35 +99,49 @@ multi_linked_tables <- function(
   }
   noms_vars_init <- noms_vars_init[!duplicated(noms_vars_init)]
 
+  noms_col_T <- setNames(paste0("T_", noms_tbx), noms_tbx)
+
   table_majeure <- purrr::imap(
     .x = liste_tbx,
     .f = function(tableau,nom_tab){
-      var_a_ajouter <- setdiff(noms_vars_init, names(tableau))
+
+      tableau <- tableau[, c(list_explanatory_vars[[nom_tab]], value, freq, cost_var, secret_var)]
+
+      var_a_ajouter <- setdiff(all_expl_vars, names(tableau))
       for (nom_col in var_a_ajouter){
-        tableau[[nom_col]] <- list_totcode[[nom_tab]][nom_col]
+        tableau[[nom_col]] <- unname(
+          purrr::keep(
+            list_totcode, function(x) nom_col %in% names(x)
+          )[[1]][nom_col]
+        )
       }
 
-      tableau <- tableau %>%
-        relocate(all_of(value),
-                 all_of(secret_var),
-                 all_of(freq),
-                 .after = last_col())
+      # tableau <- tableau %>%
+      #   relocate(all_of(value),
+      #            all_of(secret_var),
+      #            all_of(cost_var),
+      #            all_of(freq),
+      #            .after = last_col())
 
-      nom_col_Tj <- paste0("T_", nom_tab)
-      tableau[[nom_col_Tj]] <- TRUE
+      tableau[[noms_col_T[[nom_tab]]]] <- TRUE
 
       return(tableau)
     }
   )
-  table_majeure <- purrr::reduce(.x = table_majeure,
-                                 .f = full_join)
 
-  noms_cols_corres <- setdiff(names(table_majeure),noms_vars_init)
-  liste_pour_na <- as.list(rep(F,length(noms_cols_corres)))
-  names(liste_pour_na) <- noms_cols_corres
+  by_vars = setdiff(unique(unlist(purrr::map(table_majeure, names))), noms_col_T)
+  table_majeure <- purrr::reduce(
+    .x = table_majeure,
+    .f = merge,
+    by = by_vars,
+    all = TRUE
+  )
 
-  table_majeure[noms_cols_corres] <- tidyr::replace_na(table_majeure[noms_cols_corres],
-                                                       replace = liste_pour_na)
+  # noms_cols_corres <- setdiff(names(table_majeure),noms_vars_init)
+  liste_pour_na <- setNames(as.list(rep(F,length(noms_col_T))), noms_col_T)
+
+  table_majeure[noms_col_T] <- tidyr::replace_na(table_majeure[noms_col_T],
+                                                 replace = liste_pour_na)
 
 
   # 2. Préparation des listes de travail
