@@ -18,6 +18,32 @@ options(
     "Y:/Logiciels/TauArgus/TauArgus4.2.2b1/TauArgus.exe"
 )
 
+# Ajout des tables au data/ du package
+# nuts23_fr_corr_table <- corr_table_nuts23_fr %>%
+#   rename_with(toupper)
+#
+# usethis::use_data(
+#   turnover_act_size,
+#   turnover_act_cj,
+#   turnover_nuts_cj,
+#   turnover_nuts_size,
+#   nuts23_fr_corr_table,
+#   activity_corr_table,
+#   overwrite = TRUE
+# )
+#
+# purrr::walk(
+#   list(
+#     turnover_act_size,
+#     turnover_act_cj,
+#     turnover_nuts_cj,
+#     turnover_nuts_size,
+#     nuts23_fr_corr_table,
+#     activity_corr_table
+#   ),
+#   str
+# )
+
 # Test 1 -----
 # Liste de deux tables liées
 
@@ -37,7 +63,7 @@ list_data_2_tabs <- list(
     }
   )
 
-res_1 <- multi_linked_tables(
+res_1 <- tab_multi_manager(
   list_tables = list_data_2_tabs,
   list_explanatory_vars = list(
     act_size = c("ACTIVITY", "SIZE"),
@@ -84,7 +110,7 @@ list_data_4_tabs <- list(
     }
   )
 
-res_2 <- multi_linked_tables(
+res_2 <- tab_multi_manager(
   list_tables = list_data_4_tabs,
   list_explanatory_vars = list(
     act_size = c("ACTIVITY", "SIZE"), act_cj = c("ACTIVITY", "CJ"),
