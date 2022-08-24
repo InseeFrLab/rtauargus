@@ -6,8 +6,7 @@
 \usage{
 write_hrc2(
   corr_table,
-  output_name = NULL,
-  dir_name = NULL,
+  file_name = NULL,
   sort_table = FALSE,
   rev = FALSE,
   hier_lead_string = getOption("rtauargus.hierleadstring"),
@@ -16,19 +15,15 @@ write_hrc2(
 )
 }
 \arguments{
-\item{corr_table}{Data frame. Correspondence table, from most aggregated to most detailed
+\item{corr_table}{Data frame. Correspondence table, from most aggregated level to most detailed one
 \cr
-Table de correspondance, du plus agrégé au plus fin}
+Table de correspondance, du niveau le plus agrégé au niveau le plus fin}
 
-\item{output_name}{character string. Name for the output file (with no
-extension) ; default is set to the same name as the correspondence table
+\item{file_name}{character string. Name for the output file (with .hrc extension or not).
+If NULL (default), file_name is set to the same name as the correspondence table
 \cr
-Nom du fichier en sortie (sans extension) ; par défaut,
-identique au nom de la table de correspondance}
-
-\item{dir_name}{character string. Directory name for the hrc file
-\cr
-Nom du répertoire dans lequel écrire le fichier hrc}
+Nom du fichier en sortie (avec ou sans l'extension .hrc) ; Si NULL (par défaut),
+le nom du fichier sera identique au nom de la table de correspondance.}
 
 \item{sort_table}{boolean. If TRUE, table will be sorted beforehand.
 (default to FALSE)\cr
@@ -38,7 +33,8 @@ Si TRUE, la table sera triée avant traitement. (défaut à FALSE)}
 Si TRUE, inverse l'ordre des colonnes.}
 
 \item{hier_lead_string}{character. (Single) character indicating the
-hierarchy depth in the .hrc file
+hierarchy depth in the .hrc file. By default, the value is set to the current
+value mentionned in the package options (i.e. "@" at the package startup).
 \cr
 Caractère unique repérant le niveau de profondeur dans le .hrc}
 
@@ -242,10 +238,12 @@ If relevant, you could fill in with the value of the previous column}
 # Exemple standard. La table sera écrite dans votre répertoire de travail.
 astral <- data.frame(
   type      = c("planet", "planet", "star", "star", "star", "other", "other"),
-  details   = c("telluric", "gasgiant", "bluestar", "whitedwarf", "reddwarf", "blackhole", "pulsar")
+  details   = c(
+    "telluric", "gasgiant", "bluestar", "whitedwarf",
+    "reddwarf", "blackhole", "pulsar")
 )
-path <- write_hrc2(astral, hier_lead_string = "@")
-read.table(path)
+path <- write_hrc2(astral)
+\dontrun{read.table(path)}
 # Note that line order was changed ('other' comes before 'planet'), to no
 # consequence whatsoever for Tau-Argus.
 # Remarque : l'ordre des lignes a été modifié ('other' arrive avant 'planet'),
@@ -254,31 +252,35 @@ read.table(path)
 # Wrong column order:
 # Mauvais ordonnancement des colonnes :
 astral_inv <- data.frame(
-  details   = c("telluric", "gasgiant", "bluestar", "whitedwarf", "reddwarf", "blackhole", "pulsar"),
-  type      = c("planet", "planet", "star", "star", "star", "other", "other")
+  details = c(
+    "telluric", "gasgiant", "bluestar", "whitedwarf",
+    "reddwarf", "blackhole", "pulsar"),
+    type = c("planet", "planet", "star", "star", "star", "other", "other")
 )
-path <- write_hrc2(astral_inv, hier_lead_string = "@")
-read.table(path)
+path <- write_hrc2(astral_inv)
+\dontrun{read.table(path)}
 # Because of the inverted order, everything is written backwards : planet is a
 # subtype of gasgiant, etc.
 # À cause de l'inversion des colonnes, tout est écrit à l'envers : planet est
 # devenu une sous-catégorie de gasgiant, par exemple.
 
 # Correction :
-path <- write_hrc2(astral_inv, rev = TRUE, hier_lead_string = "@")
-read.table(path)
+path <- write_hrc2(astral_inv, rev = TRUE)
+\dontrun{read.table(path)}
 
 # 2.1 Sparse case
 # Cas creux
 astral_sparse <- data.frame(
   type      = c("planet", NA, "star", NA, NA, "other", NA),
-  details   = c("telluric", "gasgiant", "bluestar", "whitedwarf", "reddwarf", "blackhole", "pulsar")
+  details   = c(
+    "telluric", "gasgiant", "bluestar", "whitedwarf",
+    "reddwarf", "blackhole", "pulsar")
 )
 # NAs in general are risky, but, in this case, the function works well.
-# Les valeurs manquantes causent un risque, mais, dans ce genre de cas, la fonction
-a le comportement attendu.
-path <- write_hrc2(astral_sparse, hier_lead_string = "@")
-read.table(path)
+# Les valeurs manquantes causent un risque, mais, dans ce genre de cas,
+# la fonction a le comportement attendu.
+path <- write_hrc2(astral_sparse)
+\dontrun{read.table(path)}
 
 # 2.2 Non-uniform depth
 # Hiérarchie non-uniforme
@@ -288,15 +290,17 @@ astral_nu <- data.frame(
 )
 # The following code will generate an error
 # (see section Details about correspondence table & .hrc)
-path <- write_hrc2(astral_nu, hier_lead_string = "@")
-To fix the issue, you have to fill in the NAs beforehand.
+\dontrun{
+path <- write_hrc2(astral_nu)
+}
+#To fix the issue, you have to fill in the NAs beforehand.
 
 astral_nu_fill <- data.frame(
   type      = c("planet", "planet", "star", "other", "other"),
   details  = c("telluric", "gasgiant", "star", "blackhole", "pulsar")
 )
 # The following code will work
-path <- write_hrc2(astral_nu_fill, hier_lead_string = "@")
-read.table(path)
+path <- write_hrc2(astral_nu_fill)
+\dontrun{read.table(path)}
 
 }
