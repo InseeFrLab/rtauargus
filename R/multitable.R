@@ -1,5 +1,3 @@
-library(dplyr)
-
 journal_add_break_line <- function(journal){
   sep_char_jour <- "-----------------------------------------"
   cat(sep_char_jour, file = journal, fill = TRUE, append = TRUE)
@@ -9,31 +7,47 @@ journal_add_line <- function(journal,...){
   cat(..., file = journal, fill = TRUE, append = TRUE)
 }
 
-
+#' Manages the secondary secret of a list of tables
+#'
+#' @param list_tables named list of dataframes representing the tables to protect
+#' @param list_explanatory_vars named list of character vectors of explanatory variables of each table mentionned in list_tables. Names of the list are the same as of the list of tables.
+#' @param dir_name character, directory where to save tauargus files
+#' @param hrc named character vector, indicated the .hrc file's path of each hierarchical variables. The names of the vector are the names of the corresponding explanatory variable.
+#' @param totcode character vector: either a one length vector if all explanatory variable has the same total code (default to "Total") or a named character vector detailing the total code for each explanatory variable.
+#' @param value character : name of the response variable in the tables (mandatory)
+#' @param freq character: name of the frequency variable in the tables (mandatory)
+#' @param secret_var character: name of the boolean variable indicating if the cell doesn't respect the primary rules (apriori) - mandatory
+#' @param cost_var character: name of the cost variable (default to NULL)
+#' @param func_to_call character: name of the function to use to apply the secret (calling tau-argus). By default, the function is \code{tab_rtauargus2}
+#' @param ip_start integer: Interval protection level to apply at first treatment of each table
+#' @param ip_end integer: Interval protection level to apply at other treatments
+#' @param num_iter_max integer: Maximum of treatments to do on each table
+#' @param ... other arguments of func_to_call
+#'
+#' @return
+#' @export
+#'
+#' @examples
 multi_linked_tables <- function(
-    liste_tbx,
+    list_tables,
     list_explanatory_vars,
-    list_hrc,
     dir_name = NULL,
+    hrc = NULL,
     totcode = "total",
     value = "value",
     freq = "freq",
-    cost_var = NULL,
     secret_var = "is_secret_prim",
+    cost_var = NULL,
     func_to_call = "tab_rtauargus2",
     ip_start = 10,
     ip_end = 0,
     num_iter_max = 1000,
     ...
 ){
-
+  start_time <- Sys.time()
   dir_name <- if(is.null(dir_name)) getwd() else dir_name
   dir.create(dir_name, recursive = TRUE, showWarnings = FALSE)
-  journal <- file.path(dir_name,"journal.txt")
-  if(file.exists(journal)) invisible(file.remove(journal))
 
-  journal_add_line(journal, "Start time: ", format(Sys.time(), "%Y-%m-%d  %H:%M:%S"))
-  journal_add_break_line(journal)
 
   .dots = list(...)
   params <- param_function(eval(parse(text=func_to_call)), .dots)
@@ -42,26 +56,28 @@ multi_linked_tables <- function(
   params$value = value
   params$freq = freq
 
-  journal_add_line(journal, "Function called to protect the tables: ", func_to_call)
-  journal_add_line(journal, "Interval Protection Level for first iteration: ", ip_start)
-  journal_add_line(journal, "Interval Protection Level for other iterations: ", ip_end)
 
-  n_tbx = length(liste_tbx) # nombre de tableaux
-  journal_add_line(journal, "Nb of tables to treat: ", n_tbx)
-  journal_add_break_line(journal)
+  n_tbx = length(list_tables) # nombre de tableaux
 
-
-  if(is.null(names(liste_tbx))){
-    names(liste_tbx) <- paste0("tab", 1:n_tbx)
+  if(is.null(names(list_tables))){
+    names(list_tables) <- paste0("tab", 1:n_tbx)
     names(list_explanatory_vars) <- paste0("tab", 1:n_tbx)
     names(list_hrc) <- paste0("tab", 1:n_tbx)
   }
-  noms_tbx <- names(liste_tbx)
-  journal_add_line(journal, "Tables to treat: ", noms_tbx)
-  journal_add_break_line(journal)
+  noms_tbx <- names(list_tables)
   all_expl_vars <- unique(unname(unlist(list_explanatory_vars)))
-  journal_add_line(journal, "All explanatory variables: ", all_expl_vars)
-  journal_add_break_line(journal)
+
+  if( (!is.null(hrc)) & (length(names(hrc)) == 0)){
+    stop("hrc must have names corresponding to the adequate explanatory variables")
+  }else{
+    list_hrc <- purrr::map(
+      list_explanatory_vars,
+      function(nom_vars){
+        purrr::discard(hrc[nom_vars], is.na)
+      }
+    )
+  }
+
   # list_totcode management
   # first case : list_totcode is one length-character vector :
   # all the expl variables in all the tables have the same value to refer to the total
@@ -99,7 +115,7 @@ multi_linked_tables <- function(
   }
 
   noms_vars_init <- c()
-  for (tab in liste_tbx){
+  for (tab in list_tables){
     noms_vars_init <- c(noms_vars_init, names(tab))
   }
   noms_vars_init <- noms_vars_init[!duplicated(noms_vars_init)]
@@ -107,7 +123,7 @@ multi_linked_tables <- function(
   noms_col_T <- setNames(paste0("T_", noms_tbx), noms_tbx)
 
   table_majeure <- purrr::imap(
-    .x = liste_tbx,
+    .x = list_tables,
     .f = function(tableau,nom_tab){
 
       tableau <- tableau[, c(list_explanatory_vars[[nom_tab]], value, freq, cost_var, secret_var)]
@@ -146,26 +162,38 @@ multi_linked_tables <- function(
       )
     }
   )
-  todolist <- noms_tbx
+  todolist <- noms_tbx[1]
+  remainlist <- noms_tbx[-1]
 
-  num_iter_par_tab = setNames(rep(0, length(liste_tbx)), noms_tbx)
+  num_iter_par_tab = setNames(rep(0, length(list_tables)), noms_tbx)
   num_iter_all = 0
-
-  journal_add_line(journal, "Initialisation work completed")
-  journal_add_break_line(journal)
-  journal_add_break_line(journal)
 
   common_cells_modified <- as.data.frame(matrix(ncol = length(all_expl_vars)+1))
   names(common_cells_modified) <- c(all_expl_vars, "iteration")
 
-  while (length(todolist) > 0 & all(num_iter_par_tab <= num_iter_max)){
+  journal <- file.path(dir_name,"journal.txt")
+  if(file.exists(journal)) invisible(file.remove(journal))
+  journal_add_line(journal, "Start time:", format(start_time, "%Y-%m-%d  %H:%M:%S"))
+  journal_add_break_line(journal)
+  journal_add_line(journal, "Function called to protect the tables:", func_to_call)
+  journal_add_line(journal, "Interval Protection Level for first iteration:", ip_start)
+  journal_add_line(journal, "Interval Protection Level for other iterations:", ip_end)
+  journal_add_line(journal, "Nb of tables to treat: ", n_tbx)
+  journal_add_break_line(journal)
+  journal_add_line(journal, "Tables to treat:", noms_tbx)
+  journal_add_break_line(journal)
+  journal_add_line(journal, "All explanatory variables:", all_expl_vars)
+  journal_add_break_line(journal)
+  journal_add_line(journal, "Initialisation work completed")
+  journal_add_break_line(journal)
+  journal_add_break_line(journal)
+
+  while(length(todolist) > 0 & all(num_iter_par_tab <= num_iter_max)){
 
     num_iter_all <- num_iter_all + 1
     num_tableau <- todolist[1]
     num_iter_par_tab[num_tableau] <- num_iter_par_tab[num_tableau] + 1
-    cat("\n #####  Traitement tableau ", num_tableau, " ###########\n")
-    journal_add_line(journal, num_iter_all, "-Treatment of table ", num_tableau)
-    journal_add_break_line(journal)
+    cat("--- Current table to treat: ", num_tableau, "---\n")
 
     nom_col_identifiante <- paste0("T_", num_tableau)
     tableau_a_traiter <- which(table_majeure[[nom_col_identifiante]])
@@ -192,12 +220,10 @@ multi_linked_tables <- function(
 
     res <- do.call(func_to_call, params)
     res$is_secret <- res$Status != "V"
-
-    journal_add_line(journal, "New cells status counts: ")
-    journal_add_line(journal, "- apriori (primary) secret: ", table(res$Status)["B"], "(", round(table(res$Status)["B"]/nrow(res)*100,1), "%)")
-    journal_add_line(journal, "- secondary secret: ", table(res$Status)["D"], "(", round(table(res$Status)["D"]/nrow(res)*100,1), "%)")
-    journal_add_line(journal, "- valid cells: ", table(res$Status)["V"], "(", round(table(res$Status)["V"]/nrow(res)*100,1), "%)")
-    journal_add_break_line(journal)
+    prim_stat <- table(res$Status)["B"]
+    sec_stat <- table(res$Status)["D"]
+    valid_stat <- table(res$Status)["V"]
+    denom_stat <- nrow(res)*100
 
     res <- subset(res, select = -Status)
 
@@ -213,17 +239,6 @@ multi_linked_tables <- function(
     )
 
     lignes_modifs <- which(table_majeure[[var_secret_apriori]] != table_majeure[[var_secret]])
-
-    for (tab in noms_tbx){
-      nom_col_identifiante <- paste0("T_", tab)
-      if( !(tab %in% todolist)
-          & (any(table_majeure[[nom_col_identifiante]][lignes_modifs]))
-      ){
-        todolist <- append(todolist,tab)
-      }
-    }
-
-    todolist <- todolist[-1]
 
     cur_tab <- paste0("T_", num_tableau)
     common_cells <- purrr::map_dfr(
@@ -244,19 +259,40 @@ multi_linked_tables <- function(
       )
     }
 
+    for(tab in noms_tbx){
+      nom_col_identifiante <- paste0("T_", tab)
+      if( !(tab %in% todolist)
+          & (any(table_majeure[[nom_col_identifiante]][lignes_modifs]))
+      ){
+        todolist <- append(todolist,tab)
+        remainlist <- remainlist[remainlist != tab]
+      }
+    }
+
+    todolist <- todolist[-1]
+    if(length(todolist) == 0){
+      if(length(remainlist) > 0){
+        todolist <- remainlist[1]
+        remainlist <- remainlist[-1]
+      }
+    }
+
+    journal_add_line(journal, num_iter_all, "-Treatment of table", num_tableau)
+    journal_add_break_line(journal)
+    journal_add_line(journal, "New cells status counts: ")
+    journal_add_line(journal, "- apriori (primary) secret:", prim_stat, "(", round(prim_stat/denom_stat,1), "%)")
+    journal_add_line(journal, "- secondary secret:", sec_stat , "(", round(sec_stat/denom_stat,1), "%)")
+    journal_add_line(journal, "- valid cells:", valid_stat, "(", round(valid_stat/denom_stat,1), "%)")
+    journal_add_break_line(journal)
     journal_add_line(journal, "Nb of new common cells hit by the secret:", nrow(modified))
     journal_add_break_line(journal)
     journal_add_break_line(journal)
-  }
 
-  purrr::iwalk(
-    num_iter_par_tab,
-    function(num,tab) journal_add_line(journal, "End of iterating after ", num, " iterations for ", tab, "\n")
-  )
+  }
 
   # Reconstruire la liste des tableaux d'entrée
   liste_tbx_res <- purrr::imap(
-    liste_tbx,
+    list_tables,
     function(tab,nom){
       expl_vars <- list_explanatory_vars[[nom]]
       tab_rows <- table_majeure[[paste0("T_", nom)]]
@@ -288,6 +324,15 @@ multi_linked_tables <- function(
     }
   )
 
+  purrr::iwalk(
+    num_iter_par_tab,
+    function(num,tab){
+      journal_add_line(
+        journal,
+        "End of iterating after", num, "iterations for", tab
+      )
+    }
+  )
   journal_add_break_line(journal)
   journal_add_line(journal, "Final Summary")
   journal_add_break_line(journal)
