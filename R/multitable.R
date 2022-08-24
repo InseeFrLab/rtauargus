@@ -24,11 +24,66 @@ journal_add_line <- function(journal,...){
 #' @param num_iter_max integer: Maximum of treatments to do on each table
 #' @param ... other arguments of func_to_call
 #'
-#' @return
-#' @export
+#' @return original list of tables. Secret Results of each iteration is added to each table.
+#' For example, the result of first iteration is called 'is_secret_1' in each table.
+#' It's a boolean variable, whether the cell has to be masked or not.
+#'
+#' @seealso \code{tab_rtauargus2}
 #'
 #' @examples
-multi_linked_tables <- function(
+#' library(rtauargus)
+#' library(dplyr)
+#' data(turnover_act_size)
+#' data(turnover_act_cj)
+#' data(activity_corr_table)
+#'
+#' #0-Making hrc file of business sectors ----
+#' hrc_file_activity <- activity_corr_table %>%
+#'   write_hrc2(file_name = "hrc/activity")
+#'
+#' #1-Prepare data ----
+#' #Indicate whether each cell complies with the primary rules
+#' #Boolean variable created is TRUE if the cell doesn't comply.
+#' #Here the frequency rule is freq in (0;3)
+#' #and the dominance rule is NK(1,85)
+#' list_data_2_tabs <- list(
+#'   act_size = turnover_act_size,
+#'   act_cj = turnover_act_cj
+#' ) %>%
+#' purrr::map(
+#'   function(df){
+#'     df %>%
+#'       mutate(
+#'         is_secret_freq = N_OBS > 0 & N_OBS < 3,
+#'         is_secret_dom = ifelse(MAX == 0, FALSE, MAX/TOT>0.85),
+#'         is_secret_prim = is_secret_freq | is_secret_dom
+#'       )
+#'   }
+#' )
+#' \dontrun{
+#' options(
+#'   rtauargus.tauargus_exe =
+#'     "Y:/Logiciels/TauArgus/TauArgus4.2.2b1/TauArgus.exe"
+#' )
+#' res_1 <- tab_multi_manager(
+#'   list_tables = list_data_2_tabs,
+#'   list_explanatory_vars = list(
+#'     act_size = c("ACTIVITY", "SIZE"),
+#'     act_cj = c("ACTIVITY", "CJ")
+#'   ),
+#'   hrc = c(ACTIVITY = hrc_file_activity),
+#'   dir_name = "tauargus_files",
+#'   value = "TOT",
+#'   freq = "N_OBS",
+#'   secret_var = "is_secret_prim",
+#'   totcode =  "Total"
+#' )
+#' }
+#'
+#' @importFrom rlang .data
+#'
+#' @export
+tab_multi_manager <- function(
     list_tables,
     list_explanatory_vars,
     dir_name = NULL,
@@ -241,12 +296,14 @@ multi_linked_tables <- function(
     lignes_modifs <- which(table_majeure[[var_secret_apriori]] != table_majeure[[var_secret]])
 
     cur_tab <- paste0("T_", num_tableau)
-    common_cells <- purrr::map_dfr(
-      setdiff(noms_col_T, cur_tab),
-      function(col_T){
-        table_majeure[table_majeure[[col_T]] & table_majeure[[cur_tab]],]
-      }
-    ) %>% unique()
+    common_cells <- unique(
+      purrr::map_dfr(
+        setdiff(noms_col_T, cur_tab),
+        function(col_T){
+          table_majeure[table_majeure[[col_T]] & table_majeure[[cur_tab]],]
+        }
+      )
+    )
 
     modified <- common_cells[common_cells[[var_secret_apriori]] != common_cells[[var_secret]],all_expl_vars]
     if(nrow(modified)>0){
