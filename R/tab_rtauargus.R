@@ -58,7 +58,7 @@ rev_var_pour_tau_argus <- function(char='**monchar', del_char='*'){
 #'
 #' If output_type doesn't equal to 4, then the raw result from tau-argus is returned.
 #'
-#' @section Standardization of explanatory variables and hierarchies
+#' @section Standardization of explanatory variables and hierarchies:
 #'
 #' The two boolean arguments \code{unif_hrc} and \code{unif_expl} are useful to
 #' prevent some common errors in using Tau-Argus. Indeed, Tau-Argus needs that,
@@ -74,36 +74,38 @@ rev_var_pour_tau_argus <- function(char='**monchar', del_char='*'){
 #' @examples
 #'\dontrun{
 #' library(dplyr)
-#' data(red_vegetables)
-#' red_vegetables_ps <-red_vegetables %>%
-#' mutate(
-#'   is_secret_freq = n_obs<3 & n_obs>0,
-#'   is_secret_dom = max>0.85*tot,
-#'   is_secret_prim = is_secret_dom | is_secret_freq
+#' data(turnover_act_size)
+#'
+#' # Prepare data with primary secret ----
+#' turnover_act_size <- turnover_act_size %>%
+#'   mutate(
+#'     is_secret_freq = N_OBS > 0 & N_OBS < 3,
+#'     is_secret_dom = ifelse(MAX == 0, FALSE, MAX/TOT>0.85),
+#'     is_secret_prim = is_secret_freq | is_secret_dom
 #'   )
-#'   options(
-#'     rtauargus.tauargus_exe =
-#'       "Y:/Logiciels/TauArgus/TauArgus4.2.2b1/TauArgus.exe"
-#'   )
+#'
+#' # Make hrc file of business sectors ----
+#' data(activity_corr_table)
+#' hrc_file_activity <- activity_corr_table %>%
+#'   write_hrc2(file_name = "hrc/activity")
+#'
+#' # Compute the secondary secret ----
+#' options(
+#'   rtauargus.tauargus_exe =
+#'     "Y:/Logiciels/TauArgus/TauArgus4.2.2b1/TauArgus.exe"
+#' )
+#'
 #' res <- tab_rtauargus(
-#'   tabular = red_vegetables_ps %>% mutate(n_obs = round(n_obs)),
-#'   files_name = "legumes_rouges",
+#'   tabular = turnover_act_size,
+#'   files_name = "turn_act_size",
 #'   dir_name = "tauargus_files",
-#'   explanatory_vars = c("ACTIVITY", "treff", "type_leg"),
-#'   hrc = c(ACTIVITY = "legumes.hrc"),
-#'   totcode = c(ACTIVITY = "Ensemble", treff = "Ensemble", type_leg="rouges"),
+#'   explanatory_vars = c("ACTIVITY", "SIZE"),
+#'   hrc = c(ACTIVITY = hrc_file_activity),
+#'   totcode = c(ACTIVITY = "Total", SIZE = "Total"),
 #'   secret_var = "is_secret_prim",
-#'   value = "tot",
-#'   freq = "n_obs",
-#'   output_type = "4",
-#'   output_options = "",
-#'   is_tabular = TRUE,
-#'   show_batch_console = FALSE,
-#'   import = FALSE,
-#'   separator = ",",
-#'   verbose = FALSE,
-#'   unif_hrc = TRUE,
-#'   unif_expl = TRUE
+#'   value = "TOT",
+#'   freq = "N_OBS",
+#'   verbose = FALSE
 #' )
 #' }
 #' @export
@@ -309,26 +311,58 @@ tab_rtauargus <- function(
 
 }
 
-#' Title
+#' Wrapper of tab_rtauargus adapted for \code{tab_multi_manager} function.
 #'
-#' @param tabular
-#' @param files_name
-#' @param dir_name
-#' @param explanatory_vars
-#' @param totcode
-#' @param hrc
-#' @param secret_var
-#' @param cost_var
-#' @param value
-#' @param freq
-#' @param ip
-#' @param suppress
-#' @param ...
+#' @inheritParams tab_rtauargus
+#' @param ip Interval Protection Level (10 by default)
+#' @param ... Other arguments of \code{tab_rtauargus} function
 #'
 #' @return
+#' The original tabular is returned with a new
+#' column called Status, indicating the status of the cell coming from Tau-Argus :
+#' "A" for a primary secret due to frequency rule, "B" for a primary secret due
+#' to dominance rule, "D" for secondary secret and "V" for no secret cell.
+#'
+#' @seealso \code{tab_rtauargus}
+#'
 #' @export
 #'
 #' @examples
+#'\dontrun{
+#' library(dplyr)
+#' data(turnover_act_size)
+#'
+#' # Prepare data with primary secret ----
+#' turnover_act_size <- turnover_act_size %>%
+#'   mutate(
+#'     is_secret_freq = N_OBS > 0 & N_OBS < 3,
+#'     is_secret_dom = ifelse(MAX == 0, FALSE, MAX/TOT>0.85),
+#'     is_secret_prim = is_secret_freq | is_secret_dom
+#'   )
+#'
+#' # Make hrc file of business sectors ----
+#' data(activity_corr_table)
+#' hrc_file_activity <- activity_corr_table %>%
+#'   write_hrc2(file_name = "hrc/activity")
+#'
+#' # Compute the secondary secret ----
+#' options(
+#'   rtauargus.tauargus_exe =
+#'     "Y:/Logiciels/TauArgus/TauArgus4.2.2b1/TauArgus.exe"
+#' )
+#'
+#' res <- tab_rtauargus2(
+#'   tabular = turnover_act_size,
+#'   files_name = "turn_act_size",
+#'   dir_name = "tauargus_files",
+#'   explanatory_vars = c("ACTIVITY", "SIZE"),
+#'   hrc = c(ACTIVITY = hrc_file_activity),
+#'   totcode = c(ACTIVITY = "Total", SIZE = "Total"),
+#'   secret_var = "is_secret_prim",
+#'   value = "TOT",
+#'   freq = "N_OBS"
+#' )
+#' }
 tab_rtauargus2 <- function(
     tabular,
     files_name = NULL,
