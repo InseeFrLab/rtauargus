@@ -52,24 +52,22 @@ vect_aro <- Vectorize(arobase, vectorize.args = c("string", "number"))
 #' Creates a .hrc hierarchy from a correspondence table. \cr
 #' Ecrit une hiérarchie .hrc à partir d'une table de correspondance.
 #'
-#' @param corr_table Data frame. Correspondence table, from most aggregated to most detailed
+#' @param corr_table Data frame. Correspondence table, from most aggregated level to most detailed one
 #' \cr
-#' Table de correspondance, du plus agrégé au plus fin
-#' @param output_name character string. Name for the output file (with no
-#' extension) ; default is set to the same name as the correspondence table
+#' Table de correspondance, du niveau le plus agrégé au niveau le plus fin
+#' @param file_name character string. Name for the output file (with .hrc extension or not).
+#' If NULL (default), file_name is set to the same name as the correspondence table
 #' \cr
-#' Nom du fichier en sortie (sans extension) ; par défaut,
-#' identique au nom de la table de correspondance
-#' @param dir_name character string. Directory name for the hrc file
-#' \cr
-#' Nom du répertoire dans lequel écrire le fichier hrc
+#' Nom du fichier en sortie (avec ou sans l'extension .hrc) ; Si NULL (par défaut),
+#' le nom du fichier sera identique au nom de la table de correspondance.
 #' @param sort_table boolean. If TRUE, table will be sorted beforehand.
 #' (default to FALSE)\cr
 #' Si TRUE, la table sera triée avant traitement. (défaut à FALSE)
 #' @param rev boolean. If TRUE, column order is reversed.\cr
 #' Si TRUE, inverse l'ordre des colonnes.
 #' @param hier_lead_string character. (Single) character indicating the
-#' hierarchy depth in the .hrc file
+#' hierarchy depth in the .hrc file. By default, the value is set to the current
+#' value mentionned in the package options (i.e. "@" at the package startup).
 #' \cr
 #' Caractère unique repérant le niveau de profondeur dans le .hrc
 #' @param adjust_unique_roots boolean. If TRUE will add fictional roots to the
@@ -264,7 +262,7 @@ vect_aro <- Vectorize(arobase, vectorize.args = c("string", "number"))
 #'     "telluric", "gasgiant", "bluestar", "whitedwarf",
 #'     "reddwarf", "blackhole", "pulsar")
 #' )
-#' path <- write_hrc2(astral, hier_lead_string = "@")
+#' path <- write_hrc2(astral)
 #' \dontrun{read.table(path)}
 #' # Note that line order was changed ('other' comes before 'planet'), to no
 #' # consequence whatsoever for Tau-Argus.
@@ -279,7 +277,7 @@ vect_aro <- Vectorize(arobase, vectorize.args = c("string", "number"))
 #'     "reddwarf", "blackhole", "pulsar"),
 #'     type = c("planet", "planet", "star", "star", "star", "other", "other")
 #' )
-#' path <- write_hrc2(astral_inv, hier_lead_string = "@")
+#' path <- write_hrc2(astral_inv)
 #' \dontrun{read.table(path)}
 #' # Because of the inverted order, everything is written backwards : planet is a
 #' # subtype of gasgiant, etc.
@@ -287,7 +285,7 @@ vect_aro <- Vectorize(arobase, vectorize.args = c("string", "number"))
 #' # devenu une sous-catégorie de gasgiant, par exemple.
 #'
 #' # Correction :
-#' path <- write_hrc2(astral_inv, rev = TRUE, hier_lead_string = "@")
+#' path <- write_hrc2(astral_inv, rev = TRUE)
 #' \dontrun{read.table(path)}
 #'
 #' # 2.1 Sparse case
@@ -301,7 +299,7 @@ vect_aro <- Vectorize(arobase, vectorize.args = c("string", "number"))
 #' # NAs in general are risky, but, in this case, the function works well.
 #' # Les valeurs manquantes causent un risque, mais, dans ce genre de cas,
 #' # la fonction a le comportement attendu.
-#' path <- write_hrc2(astral_sparse, hier_lead_string = "@")
+#' path <- write_hrc2(astral_sparse)
 #' \dontrun{read.table(path)}
 #'
 #' # 2.2 Non-uniform depth
@@ -313,7 +311,7 @@ vect_aro <- Vectorize(arobase, vectorize.args = c("string", "number"))
 #' # The following code will generate an error
 #' # (see section Details about correspondence table & .hrc)
 #' \dontrun{
-#' path <- write_hrc2(astral_nu, hier_lead_string = "@")
+#' path <- write_hrc2(astral_nu)
 #' }
 #' #To fix the issue, you have to fill in the NAs beforehand.
 #'
@@ -322,20 +320,20 @@ vect_aro <- Vectorize(arobase, vectorize.args = c("string", "number"))
 #'   details  = c("telluric", "gasgiant", "star", "blackhole", "pulsar")
 #' )
 #' # The following code will work
-#' path <- write_hrc2(astral_nu_fill, hier_lead_string = "@")
+#' path <- write_hrc2(astral_nu_fill)
 #' \dontrun{read.table(path)}
 #'
 #' @importFrom zoo na.locf
 #' @export
 
-write_hrc2 <- function(corr_table,
-                       output_name = NULL,
-                       dir_name = NULL,
-                       sort_table = FALSE,
-                       rev = FALSE,
-                       hier_lead_string = getOption("rtauargus.hierleadstring"),
-                       adjust_unique_roots = FALSE,
-                       add_char = "ZZZ"
+write_hrc2 <- function(
+    corr_table,
+    file_name = NULL,
+    sort_table = FALSE,
+    rev = FALSE,
+    hier_lead_string = getOption("rtauargus.hierleadstring"),
+    adjust_unique_roots = FALSE,
+    add_char = "ZZZ"
 ){
 
   if(! any(class(corr_table) %in% c("data.frame","matrix"))){
@@ -343,18 +341,18 @@ write_hrc2 <- function(corr_table,
     stop(paste0("corr_table has to be a data frame or a matrix, not ", class_corr))
   }
   # Set default filename / directory
-  if (is.null(output_name)) {
+  if(is.null(file_name)) {
     givenfilename <- deparse(substitute(corr_table))
-    output_name <- givenfilename
+    file_name <- givenfilename
   }
 
-  if(is.null(dir_name)){
-    dir_name <- getwd()
-  }else if(dir_name == ""){
-    dir_name <- getwd()
-  } else if(! dir.exists(dir_name)){
-    stop(paste0("directory ", dir_name, " doesn't exist."))
-  }
+  # if(is.null(dir_name)){
+  #   dir_name <- getwd()
+  # }else if(dir_name == ""){
+  #   dir_name <- getwd()
+  # } else if(! dir.exists(dir_name)){
+  #   stop(paste0("directory ", dir_name, " doesn't exist."))
+  # }
 
   d = dim.data.frame(corr_table)
 
@@ -396,15 +394,13 @@ write_hrc2 <- function(corr_table,
   }
 
   if(adjust_unique_roots==TRUE){
-    warning(paste0("If there is unique roots in the table, the function will create
-fictional roots to adjust the hrc file for Tau-Argus, they will be created
-by copying the unique roots and adding ",add_char," at the beginning
-of the root character, if this creates duplicates, change the add_char
-parameter"))
+#     warning(paste0("If there is unique roots in the table, the function will create
+# fictional roots to adjust the hrc file for Tau-Argus, they will be created
+# by copying the unique roots and adding ",add_char," at the beginning
+# of the root character, if this creates duplicates, change the add_char
+# parameter"))
     corr_table <- ajouter_feuille_unique(corr_table,add_char)
   }
-  # (Todo : lister cas de NA non gênantes et bloquer les autres)
-
   # Try to detect a problem with detailed column
   if (sum(duplicated(corr_table[,d[2]]))>0) {
     warning("There are duplicates in the expectedly most detailed level
@@ -497,7 +493,7 @@ parameter"))
   # not been erased still hold a line break ("\n") so that there will be line
   # breaks only after non-void characters.
 
-  loc_file <- paste0(c(dir_name, "/", output_name, ".hrc"), collapse = "")
+  loc_file <- ifelse(length(grep(".hrc$", file_name)) == 0, paste0(file_name,".hrc"), file_name)
 
   write.table(
     x = corr_table,
