@@ -29,12 +29,9 @@ list_data_2_tabs <- list(
   )
 
 res_1 <- multi_linked_tables(
-  liste_tbx = list_data_2_tabs,
+  list_tables = list_data_2_tabs,
   list_explanatory_vars = list(act_treff = c("ACTIVITY", "treff"), act_cj = c("ACTIVITY", "cj")),
-  list_hrc = list(
-    act_treff = c(ACTIVITY = "tests_multitable/legumes.hrc"),
-    act_cj = c(ACTIVITY = "tests_multitable/legumes.hrc")
-  ),
+  hrc = c(ACTIVITY = "tests_multitable/legumes.hrc"),
   dir_name = "tests_multitable/test_1/tauargus_files",
   value = "tot",
   freq = "n_obs",
@@ -80,16 +77,14 @@ load(file = "tests_multitable/data/corr_table_nuts23_fr.RData")
 file_nuts_hrc <- corr_table_nuts23_fr %>% write_hrc2("nuts23", dir_name = "tests_multitable")
 
 res_2 <- multi_linked_tables(
-  liste_tbx = list_data_4_tabs,
+  list_tables = list_data_4_tabs,
   list_explanatory_vars = list(
     act_treff = c("ACTIVITY", "treff"), act_cj = c("ACTIVITY", "cj"),
     nuts_treff = c("NUTS", "treff"), nuts_cj = c("NUTS", "cj")
   ),
-  list_hrc = list(
-    act_treff = c(ACTIVITY = "tests_multitable/legumes.hrc"),
-    act_cj = c(ACTIVITY = "tests_multitable/legumes.hrc"),
-    nuts_treff = c(NUTS = file_nuts_hrc),
-    nuts_cj = c(NUTS = file_nuts_hrc)
+  hrc = c(
+    ACTIVITY = "tests_multitable/legumes.hrc",
+    NUTS = file_nuts_hrc
   ),
   dir_name = "tests_multitable/test_2/tauargus_files",
   value = "tot",

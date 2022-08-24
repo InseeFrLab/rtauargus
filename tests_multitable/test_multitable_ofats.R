@@ -144,7 +144,7 @@ all_masques <- purrr::map(
       t_off = all_tableaux[[var]]$off
     )
     res <- multi_linked_tables(
-      liste_tbx = list_data_2_tabs,
+      list_tables = list_data_2_tabs,
       list_explanatory_vars = list(t_zone = c("PAYS", "NACE"), t_off = c("PAYS", "NACE")),
       list_hrc = list(
         t_zone = c(PAYS = file_zone_hrc, NACE = file_nace_hrc),
