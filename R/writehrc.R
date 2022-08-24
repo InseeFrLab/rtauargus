@@ -344,6 +344,9 @@ write_hrc2 <- function(
   if(is.null(file_name)) {
     givenfilename <- deparse(substitute(corr_table))
     file_name <- givenfilename
+  }else{
+    dir <- dirname(path = file_name)
+    if(!dir.exists(dir)) dir.create(dir, recursive = FALSE)
   }
 
   # if(is.null(dir_name)){
