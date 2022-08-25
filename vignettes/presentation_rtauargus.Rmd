@@ -1,0 +1,285 @@
+---
+title: "vignette_presentation"
+output: html_document
+date: '2022-08-25'
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+<!-- ####################################################################### -->
+
+## Introduction
+
+### Presentation of the package
+
+The _rtauargus_ package offers an **R** interface for **&tau;-Argus**.
+It allows to :
+
+- create inputs (asc, tab and rda files) from R data;
+- generate the sequence of instructions to be executed in batch mode (arb file);
+- launch a batch &tau;-Argus ;
+- retrieve the results in R.
+
+The syntax of some of the arguments closely matches the _batch_ syntax of
+&tau;-Argus. This allows a large number of functions to be used without
+without multiplying the arguments of the functions. The package will also be able to adapt
+more easily to possible modifications of the software (new
+methods available, additional options...).
+The syntax rules for writing batch are given in the &tau;-Argus reference manual and will be specified in a dedicated help section.
+
+The package was developed on the basis of open source versions of &tau; > -Argus (versions 4.1 and higher), in particular the latest version
+> The package was developed on the basis of open source versions of &tau;-Argus (versions 4.1 and above), in particular the latest version available at the time of development (4.1.7).
+>
+> It is not compatible with version 3.5.**_
+
+### Purpose of this document
+
+This document aims to explains how the main functionalities of the package,
+using relatively simple examples.
+A detailed documentation of any function (exhaustive list of arguments,
+technical aspects...) is available via the dedicated help section.
+
+<p style="text-align: right">
+  <a href="#TOC" title="Return to summary">summary &uarr;</a>
+</p>
+
+
+<!-- ####################################################################### -->
+
+
+## Setup
+
+The following setup should be made before the first use (and no longer afterwards)
+
+### &tau;-Argus
+
+_rtauargus_ fonctions using &tau;-Argus requires that the software can be used from the workstation.
+&tau;-Argus can be downloaded from the [website](https://research.cbs.nl/casc/tau.htm) from
+CBS Statistics Netherlands
+
+### Dependancies
+
+ _rtauargus_ requires some other R packages.Those are the dependecies to install.
+ 
+ ```{r, echo = FALSE, comment = "•"}
+imports <- packageDescription("rtauargus", fields = "Imports")
+cat(gsub(", ", "\n", imports))
+```
+The package _rtauargus_ can be installed now.
+
+<p style="text-align: right">
+  <a href="#TOC" title="Return to summary">sommaire &uarr;</a>
+</p>
+
+
+<!-- ####################################################################### -->
+
+## Quick Start
+
+This section explains how to perform a minimal configuration of the package and
+how to apply suppressive methods in a single instruction.
+
+### Location of &tau;-Argus
+
+When loading the package, the console displays some information:
+
+```{r library}
+library(rtauargus)
+```
+
+In particular, a plausible location for the &tau;-Argus software is
+predefined. This can be changed for the duration of the R session. A
+message indicates that this location is unknown, so it is changed:
+
+```{r opt_exe, include = FALSE}
+loc_tauargus <-
+  # manual selection takes precedence over the proposed shortcuts
+  if (params$ta_lib_man != "?") {
+    params$ta_lib_man
+  } else {
+    unname(loc_tauargus[params$ta_lib])
+  }
+if (!file.exists(loc_tauargus)) {
+  # message affiché lorsque build échoue à cause absence Tau-Argus sur poste
+  stop(
+    "\n--- Logiciel Tau-Argus introuvable :",
+    "\n--- renseigner son emplacement dans la 1ere ligne",
+    "\n--- de 'vignettes/tauargus_exe.ini' (a creer si n'existe pas)",
+    "\n--- par exemple, D:/XKFZV9/TauArgus/TauArgus4.1.7b4/TauArgus.exe",
+    "\n "
+  )
+}
+
+options(rtauargus.tauargus_exe = loc_tauargus)
+```
+
+``` r
+options(rtauargus.tauargus_exe = "`r loc_tauargus`")
+```
+
+With this small adjustment done, the package is ready to be used.
+
+> _Pour une configuration plus personnalisée, consulter la section
+> <a href="#options-du-package">options du package</a>._
+
+For the following demonstration, a fictitious table will be used:
+
+```{r data}
+act_size <-
+  data.frame(
+    ACTIVITY = c("01","01","01","02","02","02","06","06","06","Total","Total","Total"),
+    SIZE = c("tr1","tr2","Total","tr1","tr2","Total","tr1","tr2","Total","tr1","tr2","Total"),
+    VAL = c(100,50,150,30,20,50,60,40,100,190,110,300),
+    N_OBS = c(10,5,15,2,5,7,8,6,14,20,16,36),
+    MAX = c(20,15,20,20,10,20,16,38,38,20,38,38)
+  )
+act_size
+```
+### Function `tab_rtauargus`
+
+The function `tab_rtauargus` performs a full processing to protect the table and retrieves the results immediately in R.
+
+Completely abstracting from the inner workings of &tau;-Argus, it allows the entire processing to be made in a single instruction in fact, all intermediate files are created in a directory.
+
+`tab_rtauargus` takes as mandatory arguments :
+
+- a data.frame containing the table ;
+- the directory for the outputs;
+- the name for the outputs;
+- the name of all explanatory variables;
+- the way to apply primary suppression (explain later)
+- the code for totals in the table
+
+All the arguments and their default options will be detailed ( where?). 
+
+#### Minimalist example
+
+```
+rtauargus_ex1, eval = params$eval_ta} # a modifier
+
+ex1 <- tab_rtauargus(data,
+                     dir_name = "my_dir",
+                     files_name = "data",
+                     explanatory_vars = c("ACTIVITY","SIZE"),
+                     safety_rules = "FREQ(3,10)|NK(1,85)",
+                     value = "VAL",
+                     freq = "N_OBS",
+                     maxscore = "MAX",
+                     totcode = c(ACTIVITY="Total",SIZE="Total")
+)
+```
+For primary suppression here, we apply 2 rules :
+
+- The n-k dominance rule with n=1 and k = 85
+- The minimum frequency rule with n = 3 and a safety range of 10.
+
+To get the results for the dominance rule, we need to specify the largest contributor to each cell, the maxscore.
+
+#### Results
+
+All the files generated by the function will be written in the specified directory.
+The default format for the protected table is csv but it can be changhed.
+All the &tau;-Argus files (.tab, .rda, .arb, etc...) will be written too.
+
+#### Another example
+
+Two arguments will be added, a hierarchy file and one for the primary secret to apply.
+The hierarchy file can be genrated through the function `write_hrc2` buy using a correspondence table.
+
+```
+write_hrc2(corr_table = activity_corr_table,
+           file_name = "act.hrc")
+```
+
+Then we will create the boolean to specify the primary secret for Tau-Argus.
+Using the same rules as before.
+
+```
+act_size <- act_size df %>%
+        mutate(
+          is_secret_freq = N_OBS > 0 & N_OBS < 3,
+          is_secret_dom = ifelse(MAX == 0, FALSE, MAX/TOT>0.85),
+          is_secret_prim = is_secret_freq | is_secret_dom
+        )
+```
+
+```{r rtauargus_ex2, eval = params$eval_ta}
+ex2 <- tab_rtauargus(act_size,
+                     dir_name = "Z:/",
+                     files_name = "act_size",
+                     explanatory_vars =c("ACTIVITY","SIZE"),
+                     value = "TOT",
+                     freq = "N_OBS",
+                     secret_var = "is_secret_prim",
+                     hrc = c(ACTIVITY = "act.hrc"),
+                     totcode = c(ACTIVITY="Total",SIZE="Total"),
+                     suppress = "OPT(1,5)"
+                     )
+```
+Since the primary suppression was already specified, no need to use the arguments,
+safety_rules and maxscore.
+The algorithm for secondary suppression can be changed, the default is modular.
+
+#### Treating multiple linked tables 
+
+The function `tab_multi_manager` can deal with a whole set of linked tables or not.
+It performs secondary suppression with one table at a time and ensure that the common cells have the same status. 
+It is an iterating process, it performs secondary suppression with one table at a time.
+When a common cell is concerned by secondary suppression it reverberate the secret on the tables that share this common cell. 
+The process ends when the secondary secret is consistent in every table.
+
+#### Example 
+
+For this example, two tables will be used : 
+
+- ACTIVITY x SIZE
+- ACTIVITY x CJ
+
+Since the two table share one common explanatory variable, they can't be treated separately.
+
+Indicate whether each cell complies with the primary rules
+Boolean variable created is TRUE if the cell doesn't comply.
+Here the frequency rule is FREQ(3,10)
+and the dominance rule is NK(1,85)
+
+```
+list_data_2_tabs <- list(
+   act_size = turnover_act_size,
+   act_cj = turnover_act_cj
+) %>%
+purrr::map(
+   function(df){
+     df %>%
+       mutate(
+         is_secret_freq = N_OBS > 0 & N_OBS < 3,
+         is_secret_dom = ifelse(MAX == 0, FALSE, MAX/TOT>0.85),
+         is_secret_prim = is_secret_freq | is_secret_dom
+       )
+   }
+)
+```
+Now that the primary secret has been specified for both tables, we can run the process.
+
+```
+res_1 <- tab_multi_manager(
+  list_tables = list_data_2_tabs,
+  list_explanatory_vars = list(
+     act_size = c("ACTIVITY", "SIZE"),
+     act_cj = c("ACTIVITY", "CJ")
+   ),
+   hrc = c(ACTIVITY = hrc_file_activity),
+   dir_name = "tauargus_files",
+   value = "TOT",
+   freq = "N_OBS",
+   secret_var = "is_secret_prim",
+   totcode =  "Total"
+)
+```
+
+The function uses tab_rtauargus with many default parameters that can be changed.
+The tables needs to share the same column names for :
+- value
+- freq
+- secret_var
