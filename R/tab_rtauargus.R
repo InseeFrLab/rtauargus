@@ -402,8 +402,8 @@ tab_rtauargus2 <- function(
   params$show_batch_console = FALSE
   params$output_type = 4
   params$output_options = ""
-  params$unif_hrc = TRUE
-  params$unif_expl = TRUE
+  if(! "unif_hrc" %in% names(params)) params$unif_hrc = TRUE
+  if(! "unif_expl" %in% names(params)) params$unif_expl = TRUE
   params$separator = ","
   params$verbose = FALSE
 

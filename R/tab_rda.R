@@ -395,10 +395,6 @@ tab_rda <- function(
   {stop("decimals are not allowed for frequency")}
 
   #Controles sur secret_var
-
-  if (is.null(secret_var) && is.null(safety_rules))
-  {stop("Please specify safety_rules of secret_var for primary suppression")}
-
   if ((!is.null(secret_var)) && (!secret_var %in% colnames(tabular)))
   {stop("secret_var does not exist in tabular")}
 
