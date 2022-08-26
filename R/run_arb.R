@@ -31,7 +31,7 @@
 #' @importFrom purrr transpose
 #' @importFrom dplyr %>%
 
-specif_decompose <- function(specif) {
+specif_decompose <- function(specif){
 
   ## extrait les infos contenus dans instructions <SPECIFYTABLE> d'un batch
   ## pour par exemple les utiliser dans reimport des données
@@ -70,7 +70,7 @@ specif_decompose <- function(specif) {
 
 }
 
-write_decompose <- function(write_cmd) {
+write_decompose <- function(write_cmd){
 
   ## extrait les infos contenus dans instructions <WRITETABLE> d'un batch
   ## pour par exemple les utiliser dans reimport des données
@@ -92,7 +92,7 @@ write_decompose <- function(write_cmd) {
 
 }
 
-apriori_decompose <- function(apriori_cmd) {
+apriori_decompose <- function(apriori_cmd){
 
   res <- NULL
 
@@ -116,11 +116,11 @@ apriori_decompose <- function(apriori_cmd) {
 #Affiche le logbook complet dans la console si verbose = TRUE, sinon que les erreurs
 
 display_console <- function (
-  verbose = FALSE,
-  logbook_file = NULL
+    verbose = FALSE,
+    logbook_file = NULL
 ){
 
-  if (is.null(logbook_file)){
+  if(is.null(logbook_file)){
     stop("logbook_file not filled in ")
   }
   logbook<-(readLines(logbook_file))
@@ -138,7 +138,7 @@ display_console <- function (
   dernier_logbook<-logbook_df[dernier_lancement:nrow(logbook_df),]
 
 
-  if (verbose){
+  if(verbose){
     writeLines(dernier_logbook)
   }else{
 
@@ -258,30 +258,31 @@ unquote <- function(s) sub("^[\"'](.+)[\"']$", "\\1", s)
 #'
 #' @export
 
-run_arb <- function(arb_filename,
-                    is_tabular = getOption("rtauargus.is_tabular"),
-                    missing_dir = getOption("rtauargus.missing_dir"),
-                    tauargus_exe = getOption("rtauargus.tauargus_exe"),
-                    logbook = NULL,
-                    show_batch_console = getOption("rtauargus.show_batch_console"),
-                    verbose = TRUE,
-                    import = getOption("rtauargus.import"),
-
-                    ...) {
+run_arb <- function(
+    arb_filename,
+    is_tabular = getOption("rtauargus.is_tabular"),
+    missing_dir = getOption("rtauargus.missing_dir"),
+    tauargus_exe = getOption("rtauargus.tauargus_exe"),
+    logbook = NULL,
+    show_batch_console = getOption("rtauargus.show_batch_console"),
+    verbose = TRUE,
+    import = getOption("rtauargus.import"),
+    ...
+){
 
   # valeur par défaut du package si option vide ................
 
-  if (is.null(missing_dir)) missing_dir <- op.rtauargus$rtauargus.missing_dir
-  if (is.null(tauargus_exe)) tauargus_exe <- op.rtauargus$rtauargus.tauargus_exe
+  if(is.null(missing_dir)) missing_dir <- op.rtauargus$rtauargus.missing_dir
+  if(is.null(tauargus_exe)) tauargus_exe <- op.rtauargus$rtauargus.tauargus_exe
   if(is.null(logbook)) logbook <- "logbook.txt"
-  if (is.null(show_batch_console)) {
+  if(is.null(show_batch_console)){
     show_batch_console <- op.rtauargus$rtauargus.show_batch_console
   }
-  if (is.null(import)) import <- op.rtauargus$rtauargus.import
+  if(is.null(import)) import <- op.rtauargus$rtauargus.import
 
   # présence TauArgus.exe ......................................
 
-  if (!file.exists(tauargus_exe)) {
+  if (!file.exists(tauargus_exe)){
     stop(
       "Tau-Argus cannot be found (", tauargus_exe, ")\n  ",
       "please specify the parammeter tauargus_exe or the option rtauargus.tauargus_exe"
@@ -290,7 +291,7 @@ run_arb <- function(arb_filename,
 
   # lecture contenu fichier arb pour vérifications .............
 
-  if (!file.exists(arb_filename)) {
+  if (!file.exists(arb_filename)){
     stop(
       "Batch file cannot be found : ", arb_filename
     )
@@ -298,22 +299,22 @@ run_arb <- function(arb_filename,
   infos_arb <- arb_contents(arb_filename)
 
   # présence des fichiers (input) ..............................
-  if (is_tabular!= TRUE){
-    if (!file.exists(infos_arb$openmicrodata)) {
+  if(is_tabular!= TRUE){
+    if (!file.exists(infos_arb$openmicrodata)){
       stop(
         "Microdata file cannot be found (.asc): ", infos_arb$openmicrodata
       )
     }
   }
-  if (!file.exists(infos_arb$openmetadata)) {
+  if(!file.exists(infos_arb$openmetadata)){
     stop(
       "Metadata file cannot be found (.rda) : ", infos_arb$openmetadata, "\n",
       "(utiliser `micro_asc_rda` pour creer un fichier rda)"
     )
   }
-  if (!is.null(infos_arb$apriori)) {
+  if(!is.null(infos_arb$apriori)){
     hst <- infos_arb$apriori$file
-    if (any(manq <- !file.exists(hst))) {
+    if(any(manq <- !file.exists(hst))){
       stop(
         "Apriori file cannot be found (.hst): ",
         paste(unique(hst[manq]), collapse = "\n")
@@ -326,15 +327,15 @@ run_arb <- function(arb_filename,
   output_names <- infos_arb$writetable$output_names
 
   ouput_dirs <- dirname(output_names)
-  if (any(manq <- !dir.exists(ouput_dirs))) {
+  if(any(manq <- !dir.exists(ouput_dirs))){
     missd <- unique(ouput_dirs[manq])
-    if (missing_dir == "stop") {
+    if(missing_dir == "stop"){
       stop(
         "\nDirectory cannot be found :\n  ",
         paste(missd, collapse = "\n  "),
         "\n(use missing_dir = \"create\" ?)"
       )
-    } else if (missing_dir == "create") {
+    }else if(missing_dir == "create"){
       warning(
         "Directory created :\n    ",
         paste(missd, collapse = "\n    ")
@@ -359,7 +360,7 @@ run_arb <- function(arb_filename,
   rda_vars <- vars_micro_rda(infos_arb$openmetadata)
 
   vars_manq <- setdiff(used_vars, rda_vars)
-  if (length(vars_manq)) {
+  if(length(vars_manq)){
     stop(
       "Variable(s) specified(s) missing(s) in the metadata file (rda) :\n    ",
       paste(vars_manq, collapse = "\n    ")
@@ -391,6 +392,6 @@ run_arb <- function(arb_filename,
   )
   display_console(verbose, logbook_file)
 
-  if (import) import(arb_filename) else invisible(NULL)
+  if(import) import(arb_filename) else invisible(NULL)
 
 }

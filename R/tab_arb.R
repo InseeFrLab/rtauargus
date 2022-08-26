@@ -200,18 +200,20 @@ tab_apriori_batch <- function(hst_names, sep = ',', ignore_err = 0 , exp_triv = 
 #' }
 #' @export
 
-tab_arb <- function(arb_filename     = NULL,
-                    tab_filename,
-                    rda_filename     = NULL,
-                    hst_filename     = NULL,
-                    explanatory_vars,
-                    value     = getOption("rtauargus.response_var"),
-                    safety_rules,
-                    suppress,
-                    output_names     = NULL,
-                    output_type      = getOption("rtauargus.output_type"),
-                    output_options   = getOption("rtauargus.output_options"),
-                    gointeractive    = FALSE) {
+tab_arb <- function(
+    arb_filename     = NULL,
+    tab_filename,
+    rda_filename     = NULL,
+    hst_filename     = NULL,
+    explanatory_vars,
+    value     = getOption("rtauargus.response_var"),
+    safety_rules,
+    suppress,
+    output_names     = NULL,
+    output_type      = getOption("rtauargus.output_type"),
+    output_options   = getOption("rtauargus.output_options"),
+    gointeractive    = FALSE
+){
 
   # valeur par défaut du package si option vide
   if (is.null(value)) value <- op.rtauargus$rtauargus.value

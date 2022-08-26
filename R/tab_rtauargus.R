@@ -114,7 +114,7 @@ tab_rtauargus <- function(
     files_name = NULL,
     dir_name = NULL,
     explanatory_vars,
-    totcode,
+    totcode = getOption("rtauargus.totcode"),
     hrc = NULL,
     secret_var = NULL,
     cost_var = NULL,
