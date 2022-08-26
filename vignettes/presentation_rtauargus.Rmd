@@ -281,15 +281,29 @@ ex2 <- tab_rtauargus(
 str(ex2)
 ```
 
+```{r}
+table(ex2$Status)
+```
+
+As we can see in the `table()` results, all the primary secret has the status "B" 
+in the output produced by &tau;-Argus. To adjust this, we can do:
+
+```{r}
+ex2 %>% 
+  mutate(
+    Status = dplyr::case_when(
+      is_secret_freq ~ "A",
+      TRUE ~ Status
+    )
+  ) %>% 
+  dplyr::count(Status)
+```
 
 
 #### Treating multiple linked tables 
 
-The function `tab_multi_manager` can deal with a whole set of linked tables or not.
-It performs secondary suppression with one table at a time and ensure that the common cells have the same status. 
-It is an iterating process, it performs secondary suppression with one table at a time.
-When a common cell is concerned by secondary suppression it reverberate the secret on the tables that share this common cell. 
-The process ends when the secondary secret is consistent in every table.
+The function `tab_multi_manager` can deal with a whole set of linked (or not) tables.
+It is an iterating process, performing secondary suppression with one table at a time and ensure that the common cells have the same status. When a common cell is concerned by secondary suppression it reverberates the secret on each table that shares this common cell. The process ends when the secondary secret is consistent in every tables.
 
 #### Example 
 
