@@ -396,7 +396,8 @@ tab_rda <- function(
 
   #Controles sur secret_var
 
-  if (is.null(secret_var) && is.null(cost_var)) message("secret_var and cost_var are NULL : no apriori file will be provided")
+  if (is.null(secret_var) && is.null(safety_rules))
+  {stop("Please specify safety_rules of secret_var for primary suppression")}
 
   if ((!is.null(secret_var)) && (!secret_var %in% colnames(tabular)))
   {stop("secret_var does not exist in tabular")}

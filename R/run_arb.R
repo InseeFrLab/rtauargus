@@ -284,8 +284,8 @@ run_arb <- function(
 
   if (!file.exists(tauargus_exe)){
     stop(
-      "Tau-Argus introuvable (", tauargus_exe, ")\n  ",
-      "renseigner le parametre tauargus_exe ou l'option rtauargus.tauargus_exe"
+      "Tau-Argus cannot be found (", tauargus_exe, ")\n  ",
+      "please specify the parammeter tauargus_exe or the option rtauargus.tauargus_exe"
     )
   }
 
@@ -293,8 +293,7 @@ run_arb <- function(
 
   if (!file.exists(arb_filename)){
     stop(
-      "Fichier introuvable : ", arb_filename, "\n",
-      "(utiliser `micro_arb` pour creer un fichier batch)"
+      "Batch file cannot be found : ", arb_filename
     )
   }
   infos_arb <- arb_contents(arb_filename)
@@ -303,14 +302,13 @@ run_arb <- function(
   if(is_tabular!= TRUE){
     if (!file.exists(infos_arb$openmicrodata)){
       stop(
-        "Fichier asc introuvable : ", infos_arb$openmicrodata, "\n",
-        "(utiliser `micro_asc_rda` pour creer un fichier asc)"
+        "Microdata file cannot be found (.asc): ", infos_arb$openmicrodata
       )
     }
   }
   if(!file.exists(infos_arb$openmetadata)){
     stop(
-      "Fichier rda introuvable : ", infos_arb$openmetadata, "\n",
+      "Metadata file cannot be found (.rda) : ", infos_arb$openmetadata, "\n",
       "(utiliser `micro_asc_rda` pour creer un fichier rda)"
     )
   }
@@ -318,7 +316,7 @@ run_arb <- function(
     hst <- infos_arb$apriori$file
     if(any(manq <- !file.exists(hst))){
       stop(
-        "Fichier(s) d'apriori introuvable(s) : ",
+        "Apriori file cannot be found (.hst): ",
         paste(unique(hst[manq]), collapse = "\n")
       )
     }
@@ -333,18 +331,18 @@ run_arb <- function(
     missd <- unique(ouput_dirs[manq])
     if(missing_dir == "stop"){
       stop(
-        "\nDossiers introuvable(s) :\n  ",
+        "\nDirectory cannot be found :\n  ",
         paste(missd, collapse = "\n  "),
-        "\n(utiliser missing_dir = \"create\" ?)"
+        "\n(use missing_dir = \"create\" ?)"
       )
     }else if(missing_dir == "create"){
       warning(
-        "Dossier(s) cree(s) :\n    ",
+        "Directory created :\n    ",
         paste(missd, collapse = "\n    ")
       )
       purrr::walk(missd, dir.create, recursive = TRUE)
-    }else {
-      stop("'missing_dir' incorrect. Valeurs permises : \"stop\", \"create\".")
+    } else {
+      stop("'missing_dir' incorrect. allowed values : \"stop\", \"create\".")
     }
   }
 
@@ -364,7 +362,7 @@ run_arb <- function(
   vars_manq <- setdiff(used_vars, rda_vars)
   if(length(vars_manq)){
     stop(
-      "Variable(s) specifiee(s) absente(s) des metadonnees (rda) :\n    ",
+      "Variable(s) specified(s) missing(s) in the metadata file (rda) :\n    ",
       paste(vars_manq, collapse = "\n    ")
     )
   }
