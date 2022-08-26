@@ -1,0 +1,43 @@
+image: rocker/tidyverse:latest
+
+stages:
+  - check
+  - deploy
+
+variables:
+  GIT_SSL_NO_VERIFY: "1"
+  PKG_NAME: "rtauargus"
+
+pkg_check:
+  stage: check
+  tags:
+    - poc-kube
+  script:
+    - R -e 'install.packages("gdata", repos = "https://nexus.insee.fr/repository/r-cran")'
+    - R -e 'devtools::check(check_dir = ".",
+                            error_on  = "error",
+                            cran      = FALSE,
+                            document  = FALSE,
+                            manual    = FALSE)'
+  artifacts:
+    paths:
+      - "${PKG_NAME}_*.tar.gz"
+  only:
+    - master
+    - developpement
+
+pages:
+  stage: deploy
+  image: colinfay/r-ci-tidyverse:3.6.0
+  tags:
+    - poc-kube
+  script:
+    - R -e 'install.packages("gdata", repos = "https://nexus.insee.fr/repository/r-cran")'
+    - R -e 'devtools::install(dependencies = FALSE)'
+    - R -e 'options(pkgdown.internet = FALSE) ; pkgdown::build_site()'
+  artifacts:
+    paths:
+      - public
+  when: manual # pour declencher manuellement le job quand version stable
+  only:
+    - master

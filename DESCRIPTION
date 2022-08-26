@@ -1,0 +1,54 @@
+Package: rtauargus
+Type: Package
+Title: Using Tau-Argus from R
+Language: fr
+Version: 0.5.0.9000
+Depends: R (>= 3.3)
+Imports:
+    purrr (>= 0.2),
+    dplyr (>= 0.7),
+    gdata,
+    stringr,
+    rlang,
+    zoo
+Suggests:
+    testthat,
+    knitr,
+    rmarkdown
+Authors@R: c(
+    person(
+      "Pierre-Yves", "Berrard",
+      email = "pierre-yves.berrard@insee.fr",
+      role = c("aut", "cre")
+    ),
+	person(
+	  "Julien", "Jamme",
+	  email = "julien.jamme@insee.fr",
+	  role = c("aut")
+	),
+	person(
+	  "Nathanaël", "Rastout",
+	  email = "nathanael.rastout@insee.fr",
+	  role = c("aut")
+	),
+	person(
+	  "Jeanne", "Pointet",
+	  role = c("ctb")
+	),
+	person(
+	  "Félix", "Beroud",
+	  role = c("ctb")
+	),
+    person(
+      family = "Institut National de la Statistique et des Études Économiques",
+      role = "cph"
+    )
+  )
+Description: Protects tables by calling Tau-Argus software from R.
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.1.2
+VignetteBuilder: knitr
+URL: https://github.com/inseefrlab/rtauargus, http://outilsconfidentialite.gitlab-pages.insee.fr/rtauargus, https://gitlab.insee.fr/outilsconfidentialite/rtauargus
+BugReports: https://github.com/inseefrlab/rtauargus/issues, https://gitlab.insee.fr/outilsconfidentialite/rtauargus/-/issues

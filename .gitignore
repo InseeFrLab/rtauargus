@@ -1,0 +1,9 @@
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+.Rprofile
+NEWS.html
+tmp
+inst/doc
+vignettes/tauargus_exe.ini
