@@ -367,10 +367,10 @@ tab_rda <- function(
   {dir.create(directory_tab, recursive = TRUE)}
 
   if ((!is.null(hst_filename)) | (!is.null(secret_var))|(!is.null(cost_var))){
-  name_hst <- basename(hst_filename)
-  directory_hst <- stringr::str_replace(hst_filename, pattern = name_hst, replacement="")
-  if(!(dir.exists(directory_hst)))
-  {dir.create(directory_hst, recursive = TRUE)}
+    name_hst <- basename(hst_filename)
+    directory_hst <- stringr::str_replace(hst_filename, pattern = name_hst, replacement="")
+    if(!(dir.exists(directory_hst)))
+    {dir.create(directory_hst, recursive = TRUE)}
   }
 
   # Controle sur le nombre de colonnes
@@ -397,7 +397,8 @@ tab_rda <- function(
 
   #Controles sur secret_var
 
-  if (is.null(secret_var) && is.null(cost_var)) message("secret_var and cost_var are NULL : no apriori file will be provided")
+  if (is.null(secret_var) && is.null(safety_rules))
+  {stop("Please specify safety_rules of secret_var for primary suppression")}
 
   if ((!is.null(secret_var)) && (!secret_var %in% colnames(tabular)))
   {stop("secret_var does not exist in tabular")}
