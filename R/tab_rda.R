@@ -358,31 +358,30 @@ tab_rda <- function(
   #Gestion du chemin des fichiers
   name_rda <- basename(rda_filename)
   directory_rda <- stringr::str_replace(rda_filename, pattern = name_rda, replacement="")
-  if(!(dir.exists(directory_rda)))
-  {dir.create(directory_rda, recursive = TRUE)}
+  if(!(dir.exists(directory_rda))) dir.create(directory_rda, recursive = TRUE, showWarnings = FALSE)
 
   name_tab <- basename(tab_filename)
   directory_tab <- stringr::str_replace(tab_filename, pattern = name_tab, replacement="")
-  if(!(dir.exists(directory_tab)))
-  {dir.create(directory_tab, recursive = TRUE)}
+  if(!(dir.exists(directory_tab))) dir.create(directory_tab, recursive = TRUE, showWarnings = FALSE)
 
-  if ((!is.null(hst_filename)) | (!is.null(secret_var))|(!is.null(cost_var))){
-  name_hst <- basename(hst_filename)
-  directory_hst <- stringr::str_replace(hst_filename, pattern = name_hst, replacement="")
-  if(!(dir.exists(directory_hst)))
-  {dir.create(directory_hst, recursive = TRUE)}
+  if((!is.null(hst_filename)) | (!is.null(secret_var))|(!is.null(cost_var))){
+    name_hst <- basename(hst_filename)
+    directory_hst <- stringr::str_replace(hst_filename, pattern = name_hst, replacement="")
+    if(!(dir.exists(directory_hst))) dir.create(directory_hst, recursive = TRUE, showWarnings = FALSE)
   }
 
   # Controle sur le nombre de colonnes
 
-  col_tabular <- c(explanatory_vars,
-                   secret_var,
-                   cost_var,
-                   value,
-                   freq,
-                   maxscore,
-                   maxscore_2,
-                   maxscore_3)
+  col_tabular <- c(
+    explanatory_vars,
+    secret_var,
+    cost_var,
+    value,
+    freq,
+    maxscore,
+    maxscore_2,
+    maxscore_3
+  )
 
   # if (length(tabular[1,]) != length(col_tabular))
   # {warning("unspecified columns in table")}
