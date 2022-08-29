@@ -196,7 +196,7 @@ tab_rtauargus <- function(
       names(hrc),
       function(var_name){
         file <- hrc[[var_name]]
-        df <- read.table(file)
+        df <- utils::read.table(file)
 
         v_gsub <- Vectorize(gsub, vectorize.args = c("pattern", "x"))
         df$aro <- unlist(regmatches(df$V1, gregexpr("^@*", df$V1)))
@@ -209,7 +209,7 @@ tab_rtauargus <- function(
 
         name <- gsub(".hrc$", "_unif.hrc", file)
 
-        write.table(
+        utils::write.table(
           x = as.data.frame(df$unif),
           file = name,
           quote = FALSE,
@@ -282,7 +282,7 @@ tab_rtauargus <- function(
   # RESULTAT .............................
   if(output_type == 4){
 
-    res <- read.csv(
+    res <- utils::read.csv(
       param_arb$output_names,
       header = FALSE,
       col.names = c(explanatory_vars, value, freq, "Status","Dom"),
@@ -297,7 +297,7 @@ tab_rtauargus <- function(
     mask <- merge(tabular_original, res[,c(explanatory_vars,"Status")], by = explanatory_vars, all = TRUE)
 
 
-    write.csv(
+    utils::write.csv(
       res,
       file = param_arb$output_names,
       row.names = FALSE

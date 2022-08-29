@@ -133,7 +133,7 @@ display_console <- function (
 
   start_batch<-(grep("Start of batch procedure", x=logbook, value=FALSE))
 
-  dernier_lancement<-tail(start_batch, n=1)
+  dernier_lancement<-utils::tail(start_batch, n=1)
 
   dernier_logbook<-logbook_df[dernier_lancement:nrow(logbook_df),]
 

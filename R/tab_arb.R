@@ -268,7 +268,7 @@ tab_arb <- function(
   tab_sp <-
     specify_tables_one_tab(
       expl = explanatory_vars,
-      res = value,
+      resp = value,
       safety_rules = safety_rules
     )
   res <- c(res, tab_sp)

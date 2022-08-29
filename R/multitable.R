@@ -141,7 +141,7 @@ tab_multi_manager <- function(
       list_totcode <- purrr::map(
         list_explanatory_vars,
         function(nom_tab){
-          setNames(
+          stats::setNames(
             rep(totcode, length(nom_tab)),
             nom_tab
           )
@@ -175,7 +175,7 @@ tab_multi_manager <- function(
   }
   noms_vars_init <- noms_vars_init[!duplicated(noms_vars_init)]
 
-  noms_col_T <- setNames(paste0("T_", noms_tbx), noms_tbx)
+  noms_col_T <- stats::setNames(paste0("T_", noms_tbx), noms_tbx)
 
   table_majeure <- purrr::imap(
     .x = list_tables,
@@ -220,7 +220,7 @@ tab_multi_manager <- function(
   todolist <- noms_tbx[1]
   remainlist <- noms_tbx[-1]
 
-  num_iter_par_tab = setNames(rep(0, length(list_tables)), noms_tbx)
+  num_iter_par_tab = stats::setNames(rep(0, length(list_tables)), noms_tbx)
   num_iter_all = 0
 
   common_cells_modified <- as.data.frame(matrix(ncol = length(all_expl_vars)+1))

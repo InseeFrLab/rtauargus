@@ -94,7 +94,6 @@
 #' \describe{
 #'   \item{NUTS2}{NUTS2 levels in France - equivalent of French "Régions"}
 #'   \item{NUTS3}{NUTS3 levels in France - equivalent of French "Départements"}
-#'   \item{A88}{business sectors in 88 categories}
 #' }
 #' @details Use the \code{write_hrc2} function to create a .hrc file from this
 #' correspondence table.

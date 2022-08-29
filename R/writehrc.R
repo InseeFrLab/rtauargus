@@ -498,7 +498,7 @@ write_hrc2 <- function(
 
   loc_file <- ifelse(length(grep(".hrc$", file_name)) == 0, paste0(file_name,".hrc"), file_name)
 
-  write.table(
+  utils::write.table(
     x = corr_table,
     file = loc_file,
     quote = FALSE,

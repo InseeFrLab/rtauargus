@@ -9,7 +9,7 @@ tab_multi_manager(
   list_explanatory_vars,
   dir_name = NULL,
   hrc = NULL,
-  totcode = "total",
+  totcode = getOption("rtauargus.totcode"),
   value = "value",
   freq = "freq",
   secret_var = "is_secret_prim",

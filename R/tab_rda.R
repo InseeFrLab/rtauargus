@@ -459,7 +459,7 @@ tab_rda <- function(
   if( !is.null(secret_var) | !is.null(cost_var)) {
     if (nrow(hst)==0) message("no cells are unsafe : hst file is empty")
 
-    write.table(
+    utils::write.table(
       hst,
       hst_filename,
       row.names=FALSE,
