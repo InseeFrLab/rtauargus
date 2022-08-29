@@ -53,10 +53,9 @@ write_rda_tab <- function(info_vars) {
 
 }
 
-#' Create rda files from tabular data \cr
-#' Crée les fichiers rda à partir de données tabulées
+#' Creates rda files from tabular data
 #'
-#' Create an apriori file for the primary secret,
+#' Creates an apriori file for the primary secret,
 #' a tabular file (tab) and a metadata file (rda)
 #' from tabulated data and additional information.\cr
 #'
@@ -64,22 +63,21 @@ write_rda_tab <- function(info_vars) {
 #' un fichier tabular (tab) et un fichier de métadonnées
 #' (rda) à partir de données tabulées et d'informations additionnelles.
 #'
-#' @param tabular [\strong{obligatoire/mandatory}]
+#' @param tabular [\strong{mandatory}]
 #' data.frame which contains the tabulated data and
 #' an additional boolean variable that indicates the primary secret of type boolean \cr
-#' data.frame contenant les données tabulées et
-#' une variable supplémentaire indiquant le secret primaire de type booléen
-#'
+#' ([\strong{obligatoire}] data.frame contenant les données tabulées et
+#' une variable supplémentaire indiquant le secret primaire de type booléen.)
 #' @param tab_filename tab file name (with .tab extension) \cr
 #' nom du fichier tab (avec extension .tab)
 #' @param rda_filename rda file name (with .rda extension) \cr
 #' nom du fichier rda (avec extension)
 #' @param hst_filename hst file name (with .hst extension) \cr
 #' nom du fichier hst (avec extension)
-#' @param explanatory_vars [\strong{obligatoire/mandatory}] Vector of explanatory variables \cr
-#' Variables catégorielles, sous forme  de vecteurs \cr
-#' Example : \code{c("A21", "TREFF", "REG")}
-#' table crossing \code{A21} x \code{TREFF} x \code{REG}
+#' @param explanatory_vars [\strong{mandatory}] Vector of explanatory variables \cr
+#' [\strong{obligatoire}] Variables catégorielles, sous forme  de vecteurs \cr
+#' Example : \code{c("A21", "TREFF", "REG")} for a table crossing
+#' \code{A21} x \code{TREFF} x \code{REG}
 #' @param secret_var Boolean variable which give the primary secret : equal to
 #' "TRUE" if a cell is concerned by the primary secret,"FALSE" otherwise.
 #' will  be exported in the apriori file \cr
@@ -90,21 +88,21 @@ write_rda_tab <- function(info_vars) {
 #' for secondary suppression, it's the value of the cell by default, can be
 #' specified for each cell, fill with NA if the cost doesn't need to be changed
 #' for all cells \cr
-#' Variable numeric qui permet de changer la coût de suppression d'une cellule,
+#' (Variable numeric qui permet de changer la coût de suppression d'une cellule,
 #' pris en compte dans les algorithmes de secret secondaire.Par défaut le coût
 #' correspond à la valeur de la cellule.  peut être spécifié pour chacune des cellules,
-#' peut contenir des NA pour les coûts que l'on ne souhaite pas modifier
+#' peut contenir des NA pour les coûts que l'on ne souhaite pas modifier.)
 #' @param decimals Minimum number of decimals to display
 #' (see section 'Number of decimals') \cr
 #' (nombre minimal de décimales à afficher (voir section 'Number of decimals').)
 #' @param hrc Informations of hierarchical variables (see section
 #' 'Hierarchical variables'). \cr
 #' (Informations sur les variables hiérarchiques (voir section
-#' 'Hierarchical variables').)#'
+#' 'Hierarchical variables').)
 #' @param hierleadstring  The character that is used to indicate the depth of a
 #' code in the hierarchy. \cr
 #' (Caractère qui, répété n fois, indique que la valeur est
-#' à n niveaux de profondeur dans la hiérarchie.)#'
+#' à n niveaux de profondeur dans la hiérarchie.)
 #' @param totcode Code(s) which represent the total of a categorical variable
 #' (see section 'Specific parameters' for this parameter's syntax).
 #' If unspecified for a variable(neither by default nor explicitly)
@@ -112,7 +110,7 @@ write_rda_tab <- function(info_vars) {
 #' (Code(s) pour le total d'une variable catégorielle (voir
 #' section 'Specific parameters' pour la syntaxe de ce paramètre). Les
 #' variables non spécifiées (ni par défaut, ni explicitement) se verront
-#' attribuer la valeur de \code{rtauargus.totcode}.)#'
+#' attribuer la valeur de \code{rtauargus.totcode}.)
 #' @param codelist file(s) containing labels of a categorical variables
 #' (see section 'Specific parameters' for the syntax of this parameter). \cr
 #' (Fichier(s) contenant les libellés des variables catégorielles
@@ -120,7 +118,7 @@ write_rda_tab <- function(info_vars) {
 #' @param value Name of the column containing the value of the cells. \cr
 #' (Nom de la colonne contenant la valeur des cellules)
 #' @param freq Name of the column containing the cell frequency. \cr
-#' (Nom de la colonne contenant les effectifs pour une cellule)#'
+#' (Nom de la colonne contenant les effectifs pour une cellule)
 #' @param maxscore Name of the column containing, the value of the largest
 #' contributor of a cell. \cr
 #' (Nom de la colonne contenant la valeur du plus gros contributeur
@@ -242,9 +240,6 @@ write_rda_tab <- function(info_vars) {
 #' variables réelles (double) mais pas aux variables entières (integer). Pour
 #' ajouter des zéros à une variable entière, la convertir avec \code{as.double}
 #' au préalable.)
-#'
-#'
-#' @section See also
 #'
 #'
 #' @examples

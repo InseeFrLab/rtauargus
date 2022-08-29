@@ -389,6 +389,7 @@ ex3 <- tab_multi_manager(
 ```
 
 By default, the function uses a wrapper of `tab_rtauargus()` function, called `tab_rtauargus2()`, to apply secondary secret with &tau;-Argus. Many default parameters are set. In particular:
+
 - Interval Protection fixed to 10;
 - Suppress method set to "MOD(1,5,1,0,0);
 - Output.

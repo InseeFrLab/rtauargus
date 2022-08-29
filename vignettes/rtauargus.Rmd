@@ -127,6 +127,11 @@ In particular, a plausible location for the &tau;-Argus software is
 predefined. This can be changed for the duration of the R session, as follows:
 
 
+```r
+loc_tauargus <- "Y:/Logiciels/TauArgus/TauArgus4.2.2b1/TauArgus.exe"
+
+options(rtauargus.tauargus_exe = loc_tauargus)
+```
 
 
 With this small adjustment done, the package is ready to be used.
