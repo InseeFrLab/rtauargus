@@ -14,6 +14,7 @@ pkg_check:
     - poc-kube
   script:
     - R -e 'install.packages("gdata", repos = "https://nexus.insee.fr/repository/r-cran")'
+    - R -e 'install.packages("zoo", repos = "https://nexus.insee.fr/repository/r-cran")'
     - R -e 'devtools::check(check_dir = ".",
                             error_on  = "error",
                             cran      = FALSE,
@@ -33,6 +34,7 @@ pages:
     - poc-kube
   script:
     - R -e 'install.packages("gdata", repos = "https://nexus.insee.fr/repository/r-cran")'
+    - R -e 'install.packages("zoo", repos = "https://nexus.insee.fr/repository/r-cran")'
     - R -e 'devtools::install(dependencies = FALSE)'
     - R -e 'options(pkgdown.internet = FALSE) ; pkgdown::build_site()'
   artifacts:
