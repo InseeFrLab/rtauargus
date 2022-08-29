@@ -384,6 +384,7 @@ normalise_hrc <- function(params_hrc,
 }
 
 #' @importFrom dplyr %>%
+#' @importFrom rlang .data
 
 df_hierlevels <- function(var_hrc, hierlevels) {
 

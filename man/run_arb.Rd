@@ -7,48 +7,54 @@
 \usage{
 run_arb(
   arb_filename,
-  is_tabular = NULL,
+  is_tabular = getOption("rtauargus.is_tabular"),
   missing_dir = getOption("rtauargus.missing_dir"),
   tauargus_exe = getOption("rtauargus.tauargus_exe"),
   logbook = NULL,
   show_batch_console = getOption("rtauargus.show_batch_console"),
+  verbose = TRUE,
   import = getOption("rtauargus.import"),
   ...
 )
 }
 \arguments{
-\item{arb_filename}{name of the batch file to execute.
+\item{arb_filename}{name of the batch file to execute. \cr
 (nom du fichier batch à exécuter.)}
 
-\item{is_tabular}{boolean, if the data is already tabulated or not
+\item{is_tabular}{boolean, if the data is already tabulated or not \cr
 (booléen, si les données sont déja tabulées ou non)}
 
 \item{missing_dir}{what to do if the folders where the results will be written
 results do not exist ("stop" to trigger an error, "create" to
-create the missing folders).
+create the missing folders). \cr
 (action si les dossiers où seront écrits les
   résultats n'existent pas ("stop" pour déclencher une erreur, "create" pour
   créer les dossiers manquants).)}
 
-\item{tauargus_exe}{directory and name of the Tau-Argus software.
+\item{tauargus_exe}{directory and name of the Tau-Argus software. \cr
 (répertoire et nom du logiciel Tau-Argus.)}
 
-\item{logbook}{name of the file where the error log is saved
-(optional).
-(nom du fichier où est enregistré le journal d'erreurs
-  (optionnel).)}
+\item{logbook}{name of the file where the error log is saved.
+If NULL, a "logbook.txt" file will be saved in the working directory). \cr
+(nom du fichier où est enregistré le journal d'erreurs.
+Si NULL, le fichier "logbook.txt" sera suavegardé sur le répertoire de travail.)}
 
 \item{show_batch_console}{to display the batch progress in the
-console.
+console. \cr
 (pour afficher le déroulement du batch dans la
   console.)}
 
+\item{verbose}{boolean, to display the batch execution (if TRUE) or
+only error messages if any (if FALSE) \cr
+(booléen, pour afficher l'exécution du batch (si TRUE) ou
+uniquement les messages d'erreurs, s'il y en a (si FALSE))}
+
 \item{import}{to import in R the files produced, \code{TRUE} by
-default.
+default. \cr
 (pour importer dans R les fichiers produits, \code{TRUE} par
   défaut.)}
 
-\item{...}{additional parameters for \code{system()}.
+\item{...}{additional parameters for \code{system()}. \cr
 (paramètres supplémentaires pour \code{system()}.)}
 }
 \value{
@@ -59,7 +65,7 @@ default.
 }
 }
 \description{
-Executes the instructions contained in an .arb file for Tau-Argus.
+Executes the instructions contained in an .arb file for Tau-Argus. \cr
 (Exécute les instructions contenues dans un fichier .arb pour Tau-Argus.)
 }
 \details{
@@ -77,7 +83,7 @@ time of the execution of the function).
 Checks are made before the actual launching of Tau-Argus:
 existence of the software on the computer, of the asc and rda files, of the folders where
 write the results, the variables to be used (crossings, response variable) in the
-response variable) in the metadata (rda file).
+response variable) in the metadata (rda file). \cr
 
 (Seul l’argument \code{arb_filename} est obligatoire, car toutes les
 informations nécessaires sont présentes dans ce fichier.
