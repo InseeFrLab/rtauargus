@@ -25,7 +25,7 @@ They allow to integrate the tasks performed by τ-Argus in a processing chain wr
 The package presents other additional functionalities, such as:  
 
 - managing the protection of several tables at once;
-- creating a hierarchical variable from correspondence table;
+- creating a hierarchical variable from correspondence table.
 
 It's possible to choose a tabular or microdata approach, but the tabular 
 one is, from now on, encouraged.

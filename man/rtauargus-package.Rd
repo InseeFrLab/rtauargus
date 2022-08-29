@@ -5,97 +5,77 @@
 
 \description{
 
-Le package \emph{rtauargus} offre une interface \strong{R} pour
+The \emph{rtauargus} provides an \strong{R} interface for
 \strong{Tau-Argus}.
 
 }
 
 \details{
 
-Le package permet d'intégrer à une chaîne de traitement R les tâches réalisées
-par Tau-Argus. Ses fonctionnalités principales sont de :
+It allows to:
 
 \itemize{
-  \item{créer les inputs (fichiers asc et rda) à partir de données au format
-     R ;}
-  \item{générer la séquence d'instructions à exécuter en mode batch
-    (fichier arb) ;}
-  \item{lancer le batch Tau-Argus en ligne de commande ;}
-  \item{récupérer les résultats dans R.}
+  \item{create inputs (rda, arb, hst and tab files) from data in R format ;}
+  \item{generate the sequence of instructions to be executed in batch mode (arb file);}
+  \item{launch a τ-Argus batch in command line;}
+  \item{retrieve the results in R.}
 }
 
-Ces différentes opérations peuvent être exécutées en une seule fois, mais aussi
-de manière modulaire.
+These different operations can be executed in one go, but also in a modular way.
+They allow to integrate the tasks performed by τ-Argus in a processing chain written in R.
 
-La syntaxe de certains arguments colle au plus près à la syntaxe batch de
-Tau-Argus. Ceci permet d’utiliser un grand nombre de fonctionnalités sans
-multiplier les arguments des fonctions. Le package pourra en outre s’adapter
-plus facilement à d’éventuelles modifications du logiciel (nouvelles méthodes
-disponibles, options supplémentaires…). Les règles de syntaxe pour l’écriture de
-batch figurent dans le manuel de référence de Tau-Argus.
+The package presents other additional functionalities, such as:  
 
-}
+- managing the protection of several tables at once;
+- creating a hierarchical variable from correspondence table.
 
-\section{Précautions d'usage}{
+It's possible to choose a tabular or microdata approach, but the tabular 
+one is, from now on, encouraged.
 
-Le package a été développé sur la base des versions open source de Tau-Argus
-(versions 4.1 et supérieures), en particulier la dernière version disponible
-lors du développement (4.1.7). \strong{Il n'est pas compatible avec la version
-3.5} (du fait notamment de l'utilisation d'options supplémentaires dans
-<WRITETABLE> en mode batch).
-
-Pour l'instant, \strong{seules les microdonnées sont acceptées} en entrée
-(pas les données déjà tabulées).
+The syntax of some arguments is very close to the batch syntax of
+Tau-Argus batch syntax. This allows to use a large number of functions without
+multiplying the arguments of the functions. Moreover, the package can be adapted
+more easily to possible modifications of the software (new available methods,
+additional options...). The syntax rules for writing batch can be found 
+in the Tau-Argus reference manual.
 
 }
 
-\section{Emplacement de TauArgus.exe}{
+\section{Note}{
 
-La fonction \code{\link{run_arb}} doit connaître l'emplacement du
-programme Tau-Argus sur le disque. Cet emplacement est renseigné de manière
-globale via l'option \code{rtauargus.tauargus_exe}. Il perdure ainsi pour la
-session R courante.
+The package was developped with Tau-Argus software v.4.2. It is not compatible 
+with the v.3.5 of Tau-Argus and earlier.
 
-Au chargement du package, si \code{rtauargus.tauargus_exe} n'est pas déjà
-renseigné, une valeur par défaut lui est attribuée. Pour changer cet
-emplacement, exécuter l'instruction :
-
-\code{options(rtauargus.tauargus_exe = "chemin/vers/TauArgus.exe")}
-
-Placer cette instruction dans un programme pour que l'emplacement soit conservé
-uniquement pour la session. Pour qu'il soit conservé de manière permanente pour
-un utilisateur, placer l'instruction dans un fichier de configuration de R
-(.Rprofile...).
-
-La fonction (expérimentale) \code{\link{tauargus_info}} tente de récupérer
-le numéro de version et la date de parution du programme Tau-Argus utilisé par
-rtauargus.
 
 }
 
-\section{Autres options}{
+\section{Localisation of TauArgus.exe}{
 
-En plus de \code{rtauargus.tauargus_exe}, d'autres options permettent de
-paramétrer des comportements par défaut.
+The function \code{\link{tab_rtauargus}}, \emph{via} \code{\link{run_arb}},
+needs to know where the TauArgus.exe file is located on your disk. 
+The option \code{rtauargus.tauargus_exe} contains the information 
+of its location and has to be filled just after the loading of the package.
+The code to modify the default location is:
+\code{options(rtauargus.tauargus_exe = "path/to/TauArgus.exe")}
+It persists for all the current R session.
 
-Leurs noms commencent par \code{"rtauargus."}. La partie après le préfixe
-correspond à un nom de paramètre d'une fonction. Par exemple,
-\code{rtauargus.decimals} sera la valeur utilisée si le paramètre
-\code{decimals} de la fonction \code{micro_asc_rda} n'est pas renseigné par
-l'utilisateur.
+This instruction can be placed in a specific program file to persist during 
+the session. It's also possible to keep this information permanently 
+by writing it in .Rprofile for example.
 
-Voir \code{\link{rtauargus_options}} pour plus de détails.
 }
 
 \references{
 
 Tau-Argus : \itemize{
 
-  \item{\href{https://research.cbs.nl/casc/tau.htm}{téléchargement et documentation}
-  (sur le site de l'office néerlandais de statistiques)}
+  \item{\href{https://github.com/sdcTools/tauargus}{source code, 
+  last release to download, support}(sdcTools github repository)}
+  
+  \item{\href{https://research.cbs.nl/casc/tau.htm}{manual}
+  (on CBS website)}
 
-  \item{\href{https://github.com/sdcTools}{code source et support}
-  (sur github.com)}
+  
 
 }
 

@@ -2,7 +2,7 @@
 % Please edit documentation in R/writehrc.R
 \name{write_hrc2}
 \alias{write_hrc2}
-\title{.hrc writing}
+\title{Creates a hrc file from correspondence table}
 \usage{
 write_hrc2(
   corr_table,
@@ -83,16 +83,17 @@ This function mimicks some of its rigidities.
 
 Here is how a correspondence table is assumed to look like:
 
-| (**type**)   | (**details**)   |
-|--------|------------|
-  | planet | telluric   |
-  | planet | gasgiant   |
-  | star   | bluestar   |
-  | star   | whitedwarf |
-  | star   | browndwarf |
-  | other  | blackhole  |
-  | other  | pulsar     |
-
+\tabular{lll}{
+\strong{type} \tab \strong{details} \cr
+ \code{-------}  \tab  \code{------} \cr
+planet \tab telluric   \cr
+planet \tab gasgiant   \cr
+star   \tab bluestar   \cr
+star   \tab whitedwarf \cr
+star   \tab reddwarf   \cr
+other  \tab blackhole  \cr
+other  \tab pulsar     \cr
+}
 
 Columns must be ordered from most aggregated to most detailed.
 If they are in reverse order, you may want to use rev = TRUE. In any other
@@ -121,15 +122,17 @@ resulting .hrc file, or consider filling in NAs beforehand.
 Hierarchy is sparse when NAs are inserted instead of repeating under a given
 level.
 
-| (**type**)   | (**details**)   |
-|--------|------------|
-| planet | telluric   |
-|        | gasgiant   |
-| star   | bluestar   |
-|        | whitedwarf |
-|        | reddwarf   |
-| other  | blackhole  |
-|        | pulsar     |
+\tabular{lll}{
+\strong{type} \tab \strong{details} \cr
+ \code{-------}  \tab  \code{------} \cr
+planet \tab telluric   \cr
+       \tab gasgiant   \cr
+star   \tab bluestar   \cr
+       \tab whitedwarf \cr
+       \tab reddwarf   \cr
+other  \tab blackhole  \cr
+       \tab pulsar     \cr
+}
 
 Such cases still issue a warning for the presence of NAs, but do not pose
 any problem, if \strong{sort=FALSE} is set.
@@ -138,13 +141,15 @@ any problem, if \strong{sort=FALSE} is set.
 Hierarchies with non-uniform depth happen when some levels are not detailed
 to the  lowest detail, creating NAs.
 
-| (**type**)   | (**details**)   |
-|--------|------------|
-  | planet | telluric   |
-  | planet | gasgiant   |
-  | star   |            |
-  | other  | blackhole  |
-  | other  | pulsar     |
+\tabular{lll}{
+\strong{type} \tab \strong{details} \cr
+ \code{-------}  \tab  \code{------} \cr
+planet \tab telluric   \cr
+planet \tab gasgiant   \cr
+star   \tab            \cr
+other  \tab blackhole  \cr
+other  \tab pulsar     \cr
+}
 
 Processing such a file will generate an error with the following messages:
 \emph{Missing values on the last column of the correspondence table is not allowed.
@@ -161,15 +166,17 @@ rigidités sont reproduites par cette fonction.
 
 Voici l'aspect général que devrait avoir une table de correspondance :
 
-| (**type**)   | (**details**)   |
-|--------|------------|
-  | planet | telluric   |
-  | planet | gasgiant   |
-  | star   | bluestar   |
-  | star   | whitedwarf |
-  | star   | browndwarf |
-  | other  | blackhole  |
-  | other  | pulsar     |
+\tabular{lll}{
+\strong{type} \tab \strong{details} \cr
+ \code{-------}  \tab  \code{------} \cr
+planet \tab telluric   \cr
+planet \tab gasgiant   \cr
+star   \tab bluestar   \cr
+star   \tab whitedwarf \cr
+star   \tab reddwarf   \cr
+other  \tab blackhole  \cr
+other  \tab pulsar     \cr
+}
 
 Les colonnes doivent être ordonnées du niveau le plus agrégé au plus fin.
 Si elles sont en sens inverse, l'option rev = TRUE permet de les mettre en
@@ -202,15 +209,17 @@ le fichier .hrc résultant ou envisagez de remplir les NAs à l'avance.
 Une hiérarchie est creuse si des NAs sont insérées au lieu de répéter un
 niveau donné verticalement.
 
-| (**type**)   | (**details**)   |
-|--------|------------|
-| planet | telluric   |
-|        | gasgiant   |
-| star   | bluestar   |
-|        | whitedwarf |
-|        | reddwarf   |
-| other  | blackhole  |
-|        | pulsar     |
+\tabular{lll}{
+\strong{type} \tab \strong{details} \cr
+ \code{-------}  \tab  \code{------} \cr
+planet \tab telluric   \cr
+       \tab gasgiant   \cr
+star   \tab bluestar   \cr
+       \tab whitedwarf \cr
+       \tab reddwarf   \cr
+other  \tab blackhole  \cr
+       \tab pulsar     \cr
+}
 
 De tels cas émettent toujours un avertissement du fait de la présence de NA,
 mais ne posent aucun problème, si on utilise \strong{sort=FALSE}.
@@ -220,13 +229,15 @@ Les hiérarchies à profondeur non-uniforme correspondent aux cas où certains
 niveaux ne sont pas détaillés jusqu'au bout, la fin de certaines lignes étant
 manquante.
 
-| (**type**)   | (**details**)   |
-|--------|------------|
-  | planet | telluric   |
-  | planet | gasgiant   |
-  | star   |            |
-  | other  | blackhole  |
-  | other  | pulsar     |
+\tabular{lll}{
+\strong{type} \tab \strong{details} \cr
+ \code{-------}  \tab  \code{------} \cr
+planet \tab telluric   \cr
+planet \tab gasgiant   \cr
+star   \tab            \cr
+other  \tab blackhole  \cr
+other  \tab pulsar     \cr
+}
 
 Le traitement d'un tel fichier générera une erreur avec les messages suivants :
 \emph{Missing values on the last column of the correspondence table is not allowed.

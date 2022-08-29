@@ -2,7 +2,7 @@
 % Please edit documentation in R/hrc.R
 \name{write_hrc}
 \alias{write_hrc}
-\title{Crée un fichier hrc à partir de microdonnées}
+\title{Creates a hrc file from microdata}
 \usage{
 write_hrc(
   microdata,
@@ -18,42 +18,85 @@ write_hrc(
 \item{microdata}{[\strong{required}] data.frame containing the microdata. \cr
 ([\strong{obligatoire}] data.frame contenant les microdonnées.)}
 
-\item{vars_hrc}{\strong{[obligatoire]} vecteur des noms des variables
-constituant la hiérarchie, du niveau le plus fin au niveau le plus agrégé.}
+\item{vars_hrc}{\strong{[mandatory]} vector of variable names
+constituting the hierarchy, from the finest to the most aggregated level.\cr
+(\strong{[obligatoire]} vecteur des noms des variables
+  constituant la hiérarchie, du niveau le plus fin au niveau le plus agrégé.)}
 
 \item{hierleadstring}{character which, repeated n times, indicates that the value is
 at n levels deep in the hierarchy. \cr
 (caractère qui, répété n fois, indique que la valeur est
 à n niveaux de profondeur dans la hiérarchie.)}
 
-\item{hrc_filename}{nom et emplacement du fichier hrc produit. Si non
-renseigné, un fichier temporaire.}
+\item{hrc_filename}{name and location of the produced hrc file. If not
+filled, a temporary file.\cr
+(nom et emplacement du fichier hrc produit. Si non renseigné, un fichier temporaire.)}
 
-\item{fill_na}{remplissage d'éventuelles valeurs manquantes, à l'aide d'une
-autre variable :\itemize{
-  \item{\code{"up"} (défaut) : variable hiérarchique de niveau
-     immédiatement supérieur}
-  \item{\code{"down"} : variable hiérarchique de niveau immédiatement
-     inférieur}
- }}
+\item{fill_na}{fill in any missing values, using an other variable :
+\itemize{
+\item{\code{"up"} (default) : hierarchical variable of the level level
+immediately above}
+\item{\code{"down"} : hierarchical variable of the level immediately
+lower}
+}\cr
+(remplissage d'éventuelles valeurs manquantes, à l'aide d'une
+  autre variable :\itemize{
+    \item{\code{"up"} (défaut) : variable hiérarchique de niveau
+       immédiatement supérieur}
+    \item{\code{"down"} : variable hiérarchique de niveau immédiatement
+       inférieur}
+   })}
 
-\item{compact}{pour élaguer les branches répétant une unique valeur jusqu'au
-plus bas niveau de profondeur (\code{TRUE} par défaut).}
+\item{compact}{to prune branches repeating a single value to the
+lowest level of depth (\code{TRUE} by default).\cr
+(pour élaguer les branches répétant une unique valeur jusqu'au
+  plus bas niveau de profondeur (\code{TRUE} par défaut).)}
 
-\item{hierlevels}{si une seule variable est spécifiée dans \code{vars_hrc},
-permet de générer la hiérarchie selon la position des caractères dans la
-chaîne. Par exemple, \code{hierlevels = "2 3"} pour construire une
-hiérarchie département-commune à partir d'un code commune.}
+\item{hierlevels}{if only one variable is specified in \code{vars_hrc},
+allows to generate the hierarchy according to the position of the characters in the
+string. For example, \code{hierlevels = "2 3"} to build a
+hierarchy from a common code.\cr
+(si une seule variable est spécifiée dans \code{vars_hrc},
+  permet de générer la hiérarchie selon la position des caractères dans la
+  chaîne. Par exemple, \code{hierlevels = "2 3"} pour construire une
+  hiérarchie département-commune à partir d'un code commune.)}
 }
 \value{
-Le nom du fichier hrc (utile dans le cas d'un fichier temporaire au
-  nom aléatoire).
+The name of the hrc file (useful in the case of a temporary file with
+random name).\cr
+(Le nom du fichier hrc (utile dans le cas d'un fichier temporaire au
+  nom aléatoire).)
 }
 \description{
+Creates an hrc file (hierarchy) from several variables in a set of
+microdata set.\cr
 Crée un fichier hrc (hiérarchie) à partir de plusieurs variables d'un jeu de
 microdonnées.
 }
 \details{
+The function reconstructs the variable hierarchy from the levels
+present in the data. The variables in \code{vars_hrc} must be
+\strong{classified from the finest to the most aggregated}.
+
+The relationship between each hierarchical level must be an application (in the
+mathematical sense of the term), i.e. each fine level must have a
+single corresponding aggregated level. The creation of the hierarchy is
+impossible if this condition is not met.
+
+If the name of the output file is not specified, a temporary file is
+created. It will be deleted at the end of the session. The path to this file can be
+retrieved in the return value of the function.
+
+Missing values in the hierarchical variables will be
+imputed beforehand using another hierarchical variable (parameter
+\code{fill_na}). In ascending strategy (\code{"up"}), the variables are
+from the most aggregated to the most refined, and vice versa in the
+downward strategy (\code{"down"}).
+
+The parameter \code{compact} allows to create hierarchies with variable
+depths. The idea is to cut the branches consisting of a single value
+repeated up to the maximum depth (see examples).\cr
+
 La fonction reconstitue la hiérarchie des variables à partir des niveaux
 présents dans les données. Les variables dans \code{vars_hrc} doivent être
 \strong{classées de la plus fine à la plus agrégée}.
@@ -78,7 +121,7 @@ variables. L'idée est de couper les branches constituées d'une seule valeur
 répétée jusqu'à la profondeur maximale (voir exemples).
 }
 \examples{
-# Hierarchie "complete" ............................
+# Full Hierarchy ............................
 
 df_naf <- data.frame(
   A10 = c("AZ", "BE", "BE", "BE", "BE", "BE", "BE"),
@@ -92,7 +135,7 @@ file.show(tmp_file, pager = "console")
 tmp_file <- write_hrc(df_naf, c("A88", "A10"), hierleadstring = ":")
 file.show(tmp_file, pager = "console")
 
-# Hierarchie de profondeur variable  ...............
+# Hierarchy with varying depth  ...............
 
 df <- data.frame(
   niv1 = c("A"  , "A"  , "A"  , "B"  , "C"  , "C" ),

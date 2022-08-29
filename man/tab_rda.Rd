@@ -2,8 +2,7 @@
 % Please edit documentation in R/tab_rda.R
 \name{tab_rda}
 \alias{tab_rda}
-\title{Create rda files from tabular data \cr
-Crée les fichiers rda à partir de données tabulées}
+\title{Creates rda files from tabular data}
 \usage{
 tab_rda(
   tabular,
@@ -27,11 +26,11 @@ tab_rda(
 )
 }
 \arguments{
-\item{tabular}{[\strong{obligatoire/mandatory}]
+\item{tabular}{[\strong{mandatory}]
 data.frame which contains the tabulated data and
 an additional boolean variable that indicates the primary secret of type boolean \cr
-data.frame contenant les données tabulées et
-une variable supplémentaire indiquant le secret primaire de type booléen}
+([\strong{obligatoire}] data.frame contenant les données tabulées et
+une variable supplémentaire indiquant le secret primaire de type booléen.)}
 
 \item{tab_filename}{tab file name (with .tab extension) \cr
 nom du fichier tab (avec extension .tab)}
@@ -42,10 +41,10 @@ nom du fichier rda (avec extension)}
 \item{hst_filename}{hst file name (with .hst extension) \cr
 nom du fichier hst (avec extension)}
 
-\item{explanatory_vars}{[\strong{obligatoire/mandatory}] Vector of explanatory variables \cr
-Variables catégorielles, sous forme  de vecteurs \cr
-Example : \code{c("A21", "TREFF", "REG")}
-table crossing \code{A21} x \code{TREFF} x \code{REG}}
+\item{explanatory_vars}{[\strong{mandatory}] Vector of explanatory variables \cr
+[\strong{obligatoire}] Variables catégorielles, sous forme  de vecteurs \cr
+Example : \code{c("A21", "TREFF", "REG")} for a table crossing
+\code{A21} x \code{TREFF} x \code{REG}}
 
 \item{secret_var}{Boolean variable which give the primary secret : equal to
 "TRUE" if a cell is concerned by the primary secret,"FALSE" otherwise.
@@ -58,10 +57,10 @@ par le secret primaire, "FALSE" sinon. Permet de créer un fichier d'apriori)}
 for secondary suppression, it's the value of the cell by default, can be
 specified for each cell, fill with NA if the cost doesn't need to be changed
 for all cells \cr
-Variable numeric qui permet de changer la coût de suppression d'une cellule,
+(Variable numeric qui permet de changer la coût de suppression d'une cellule,
 pris en compte dans les algorithmes de secret secondaire.Par défaut le coût
 correspond à la valeur de la cellule.  peut être spécifié pour chacune des cellules,
-peut contenir des NA pour les coûts que l'on ne souhaite pas modifier}
+peut contenir des NA pour les coûts que l'on ne souhaite pas modifier.)}
 
 \item{decimals}{Minimum number of decimals to display
 (see section 'Number of decimals') \cr
@@ -70,12 +69,12 @@ peut contenir des NA pour les coûts que l'on ne souhaite pas modifier}
 \item{hrc}{Informations of hierarchical variables (see section
 'Hierarchical variables'). \cr
 (Informations sur les variables hiérarchiques (voir section
-'Hierarchical variables').)#'}
+'Hierarchical variables').)}
 
 \item{hierleadstring}{The character that is used to indicate the depth of a
 code in the hierarchy. \cr
 (Caractère qui, répété n fois, indique que la valeur est
-à n niveaux de profondeur dans la hiérarchie.)#'}
+à n niveaux de profondeur dans la hiérarchie.)}
 
 \item{totcode}{Code(s) which represent the total of a categorical variable
 (see section 'Specific parameters' for this parameter's syntax).
@@ -84,7 +83,7 @@ it will be set to  \code{rtauargus.totcode}. \cr
 (Code(s) pour le total d'une variable catégorielle (voir
 section 'Specific parameters' pour la syntaxe de ce paramètre). Les
 variables non spécifiées (ni par défaut, ni explicitement) se verront
-attribuer la valeur de \code{rtauargus.totcode}.)#'}
+attribuer la valeur de \code{rtauargus.totcode}.)}
 
 \item{codelist}{file(s) containing labels of a categorical variables
 (see section 'Specific parameters' for the syntax of this parameter). \cr
@@ -95,7 +94,7 @@ attribuer la valeur de \code{rtauargus.totcode}.)#'}
 (Nom de la colonne contenant la valeur des cellules)}
 
 \item{freq}{Name of the column containing the cell frequency. \cr
-(Nom de la colonne contenant les effectifs pour une cellule)#'}
+(Nom de la colonne contenant les effectifs pour une cellule)}
 
 \item{maxscore}{Name of the column containing, the value of the largest
 contributor of a cell. \cr
@@ -121,7 +120,7 @@ Return the rda file name as a list (invisible).\cr
 manière invisible).)
 }
 \description{
-Create an apriori file for the primary secret,
+Creates an apriori file for the primary secret,
 a tabular file (tab) and a metadata file (rda)
 from tabulated data and additional information.\cr
 }
@@ -233,10 +232,6 @@ effectivement présent dans \code{tabular}). Il s'applique à toutes les
 variables réelles (double) mais pas aux variables entières (integer). Pour
 ajouter des zéros à une variable entière, la convertir avec \code{as.double}
 au préalable.)
-}
-
-\section{See also}{
-NA
 }
 
 \examples{
