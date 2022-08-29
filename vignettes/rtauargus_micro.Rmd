@@ -197,13 +197,13 @@ rtauargus(
   safety_rules     = "FREQ(3,10)",
   suppress         = "GH(1,100)"
 )
-#> Start of batch procedure; file: C:\Users\TMM7AN.AD\AppData\Local\Temp\Rtmp61UGwX\RTA_8a082ec41c3a.arb
-#> <OPENMICRODATA> "C:\Users\TMM7AN.AD\AppData\Local\Temp\Rtmp61UGwX\RTA_8a085ee11766.asc"
-#> <OPENMETADATA> "C:\Users\TMM7AN.AD\AppData\Local\Temp\Rtmp61UGwX\RTA_8a085ee11766.rda"
+#> Start of batch procedure; file: C:\Users\TMM7AN.AD\AppData\Local\Temp\Rtmp61UGwX\RTA_8a085a1f69b4.arb
+#> <OPENMICRODATA> "C:\Users\TMM7AN.AD\AppData\Local\Temp\Rtmp61UGwX\RTA_8a08596b203f.asc"
+#> <OPENMETADATA> "C:\Users\TMM7AN.AD\AppData\Local\Temp\Rtmp61UGwX\RTA_8a08596b203f.rda"
 #> <SPECIFYTABLE> "V1"|"<freq>"||
 #> <SAFETYRULE> FREQ(3,10)
 #> <READMICRODATA>
-#> Start explore file: C:\Users\TMM7AN.AD\AppData\Local\Temp\Rtmp61UGwX\RTA_8a085ee11766.asc
+#> Start explore file: C:\Users\TMM7AN.AD\AppData\Local\Temp\Rtmp61UGwX\RTA_8a08596b203f.asc
 #> Start computing tables
 #> Table: V1 | <freq> has been specified
 #> Tables have been computed
@@ -215,9 +215,9 @@ rtauargus(
 #>                    Number of suppressions: 1
 #> The hypercube procedure has been applied
 #>                    1 cells have been suppressed
-#> <WRITETABLE> (1,4,,"C:\Users\TMM7AN.AD\AppData\Local\Temp\Rtmp61UGwX\RTA_8a084b484594.sbs")
+#> <WRITETABLE> (1,4,AS+SE+,"C:\Users\TMM7AN.AD\AppData\Local\Temp\Rtmp61UGwX\RTA_8a08205066f9.sbs")
 #> Table: V1 | <freq> has been written
-#>                    Output file name: C:\Users\TMM7AN.AD\AppData\Local\Temp\Rtmp61UGwX\RTA_8a084b484594.sbs
+#>                    Output file name: C:\Users\TMM7AN.AD\AppData\Local\Temp\Rtmp61UGwX\RTA_8a08205066f9.sbs
 #> End of TauArgus run
 #> NULL
 ```
@@ -250,15 +250,15 @@ secret1 <-
     output_options     = c("", "AS+"), # pas de statut pour le 1er tableau
     show_batch_console = FALSE         # pour masquer le journal
   )
-#> Start of batch procedure; file: C:\Users\TMM7AN.AD\AppData\Local\Temp\Rtmp61UGwX\RTA_8a08174a789b.arb
-#> <OPENMICRODATA> "C:\Users\TMM7AN.AD\AppData\Local\Temp\Rtmp61UGwX\RTA_8a085ff527ce.asc"
-#> <OPENMETADATA> "C:\Users\TMM7AN.AD\AppData\Local\Temp\Rtmp61UGwX\RTA_8a085ff527ce.rda"
+#> Start of batch procedure; file: C:\Users\TMM7AN.AD\AppData\Local\Temp\Rtmp61UGwX\RTA_8a0854ff2636.arb
+#> <OPENMICRODATA> "C:\Users\TMM7AN.AD\AppData\Local\Temp\Rtmp61UGwX\RTA_8a0834261517.asc"
+#> <OPENMETADATA> "C:\Users\TMM7AN.AD\AppData\Local\Temp\Rtmp61UGwX\RTA_8a0834261517.rda"
 #> <SPECIFYTABLE> "V1"|"<freq>"||
 #> <SAFETYRULE> FREQ(3,10)
 #> <SPECIFYTABLE> "V1""V2"|"<freq>"||
 #> <SAFETYRULE> FREQ(3,10)
 #> <READMICRODATA>
-#> Start explore file: C:\Users\TMM7AN.AD\AppData\Local\Temp\Rtmp61UGwX\RTA_8a085ff527ce.asc
+#> Start explore file: C:\Users\TMM7AN.AD\AppData\Local\Temp\Rtmp61UGwX\RTA_8a0834261517.asc
 #> Start computing tables
 #> Table: V1 | <freq> has been specified
 #> Table: V1 x V2 | <freq> has been specified
@@ -271,18 +271,18 @@ secret1 <-
 #>                    Number of suppressions: 1
 #> The hypercube procedure has been applied
 #>                    1 cells have been suppressed
-#> <WRITETABLE> (1,4,,"C:\Users\TMM7AN.AD\AppData\Local\Temp\Rtmp61UGwX\RTA_8a084f543d8a.sbs")
+#> <WRITETABLE> (1,4,,"C:\Users\TMM7AN.AD\AppData\Local\Temp\Rtmp61UGwX\RTA_8a0838cf21a8.sbs")
 #> Table: V1 | <freq> has been written
-#>                    Output file name: C:\Users\TMM7AN.AD\AppData\Local\Temp\Rtmp61UGwX\RTA_8a084f543d8a.sbs
+#>                    Output file name: C:\Users\TMM7AN.AD\AppData\Local\Temp\Rtmp61UGwX\RTA_8a0838cf21a8.sbs
 #> <SUPPRESS> GH(2,100)
 #> Start of the hypercube protection for table V1 x V2 | <freq>
 #> End of hypercube protection. Time used 1 seconds
 #>                    Number of suppressions: 2
 #> The hypercube procedure has been applied
 #>                    2 cells have been suppressed
-#> <WRITETABLE> (2,4,AS+,"C:\Users\TMM7AN.AD\AppData\Local\Temp\Rtmp61UGwX\RTA_8a0850c12a03.sbs")
+#> <WRITETABLE> (2,4,AS+,"C:\Users\TMM7AN.AD\AppData\Local\Temp\Rtmp61UGwX\RTA_8a081d492361.sbs")
 #> Table: V1 x V2 | <freq> has been written
-#>                    Output file name: C:\Users\TMM7AN.AD\AppData\Local\Temp\Rtmp61UGwX\RTA_8a0850c12a03.sbs
+#>                    Output file name: C:\Users\TMM7AN.AD\AppData\Local\Temp\Rtmp61UGwX\RTA_8a081d492361.sbs
 #> End of TauArgus run
 
 secret1
@@ -443,10 +443,10 @@ dans un dossier temporaire. Il est possible de récupérer l'emplacement et le n
 noms_asc_rda <- micro_asc_rda(donnees)
 noms_asc_rda
 #> $asc_filename
-#> [1] "C:\\Users\\TMM7AN.AD\\AppData\\Local\\Temp\\Rtmp61UGwX\\RTA_8a085484716d.asc"
+#> [1] "C:\\Users\\TMM7AN.AD\\AppData\\Local\\Temp\\Rtmp61UGwX\\RTA_8a087f3c4c78.asc"
 #> 
 #> $rda_filename
-#> [1] "C:\\Users\\TMM7AN.AD\\AppData\\Local\\Temp\\Rtmp61UGwX\\RTA_8a085484716d.rda"
+#> [1] "C:\\Users\\TMM7AN.AD\\AppData\\Local\\Temp\\Rtmp61UGwX\\RTA_8a087f3c4c78.rda"
 ```
 
 <p style="text-align: right">
@@ -494,14 +494,14 @@ file.show("Z:/donnees.arb", pager = "internal")
 
 ```
 // Batch generated by package *rtauargus*
-// (2022-08-29 10:57:20 CEST)
+// (2022-08-29 22:59:36 CEST)
 <OPENMICRODATA> "Z:\donnees.asc"
 <OPENMETADATA> "Z:\donnees.rda"
 <SPECIFYTABLE> "V1"|"<freq>"||
 <SAFETYRULE> FREQ(3,10)
 <READMICRODATA>
 <SUPPRESS> GH(1,100)
-<WRITETABLE> (1,4,,"Z:\resultats\secretV1.csv")
+<WRITETABLE> (1,4,AS+SE+,"Z:\resultats\secretV1.csv")
 ```
 
 #### Exemple élaboré
@@ -541,7 +541,7 @@ file.show("Z:/donnees.arb", pager = "internal")
 
 ```
 // Batch generated by package *rtauargus*
-// (2022-08-29 10:57:20 CEST)
+// (2022-08-29 22:59:36 CEST)
 <OPENMICRODATA> "Z:\donnees.asc"
 <OPENMETADATA> "Z:\donnees.rda"
 <SPECIFYTABLE> "V1"|"VAL"||
@@ -550,9 +550,9 @@ file.show("Z:/donnees.arb", pager = "internal")
 <SAFETYRULE> FREQ(3,10)|NK(1,85)
 <READMICRODATA>
 <SUPPRESS> GH(1,100)
-<WRITETABLE> (1,4,AS+SE+,"C:\Users\TMM7AN.AD\AppData\Local\Temp\Rtmp61UGwX\RTA_8a0835954f5.sbs")
+<WRITETABLE> (1,4,AS+SE+,"C:\Users\TMM7AN.AD\AppData\Local\Temp\Rtmp61UGwX\RTA_8a084e8a3ffe.sbs")
 <SUPPRESS> GH(2,100)
-<WRITETABLE> (2,4,AS+SE+,"C:\Users\TMM7AN.AD\AppData\Local\Temp\Rtmp61UGwX\RTA_8a087b832a76.sbs")
+<WRITETABLE> (2,4,AS+SE+,"C:\Users\TMM7AN.AD\AppData\Local\Temp\Rtmp61UGwX\RTA_8a08183a7c1.sbs")
 ```
 
 #### Fichiers temporaires
@@ -574,11 +574,11 @@ infos_arb <-
   )
 infos_arb
 #> $arb_filename
-#> [1] "C:\\Users\\TMM7AN.AD\\AppData\\Local\\Temp\\Rtmp61UGwX\\RTA_8a083b26327f.arb"
+#> [1] "C:\\Users\\TMM7AN.AD\\AppData\\Local\\Temp\\Rtmp61UGwX\\RTA_8a0866fb2f84.arb"
 #> 
 #> $output_names
-#> [1] "C:\\Users\\TMM7AN.AD\\AppData\\Local\\Temp\\Rtmp61UGwX\\RTA_8a08651721df.sbs"
-#> [2] "C:\\Users\\TMM7AN.AD\\AppData\\Local\\Temp\\Rtmp61UGwX\\RTA_8a08199c8fa.sbs"
+#> [1] "C:\\Users\\TMM7AN.AD\\AppData\\Local\\Temp\\Rtmp61UGwX\\RTA_8a08424e4084.sbs"
+#> [2] "C:\\Users\\TMM7AN.AD\\AppData\\Local\\Temp\\Rtmp61UGwX\\RTA_8a083988272e.sbs"
 ```
 
 <p style="text-align: right">
@@ -616,18 +616,18 @@ secret2 <- run_arb("Z:/donnees.arb")
 #>                    Number of suppressions: 1
 #> The hypercube procedure has been applied
 #>                    1 cells have been suppressed
-#> <WRITETABLE> (1,4,AS+SE+,"C:\Users\TMM7AN.AD\AppData\Local\Temp\Rtmp61UGwX\RTA_8a0835954f5.sbs")
+#> <WRITETABLE> (1,4,AS+SE+,"C:\Users\TMM7AN.AD\AppData\Local\Temp\Rtmp61UGwX\RTA_8a084e8a3ffe.sbs")
 #> Table: V1 | VAL has been written
-#>                    Output file name: C:\Users\TMM7AN.AD\AppData\Local\Temp\Rtmp61UGwX\RTA_8a0835954f5.sbs
+#>                    Output file name: C:\Users\TMM7AN.AD\AppData\Local\Temp\Rtmp61UGwX\RTA_8a084e8a3ffe.sbs
 #> <SUPPRESS> GH(2,100)
 #> Start of the hypercube protection for table V2 x V3 | VAL
 #> End of hypercube protection. Time used 1 seconds
 #>                    Number of suppressions: 2
 #> The hypercube procedure has been applied
 #>                    2 cells have been suppressed
-#> <WRITETABLE> (2,4,AS+SE+,"C:\Users\TMM7AN.AD\AppData\Local\Temp\Rtmp61UGwX\RTA_8a087b832a76.sbs")
+#> <WRITETABLE> (2,4,AS+SE+,"C:\Users\TMM7AN.AD\AppData\Local\Temp\Rtmp61UGwX\RTA_8a08183a7c1.sbs")
 #> Table: V2 x V3 | VAL has been written
-#>                    Output file name: C:\Users\TMM7AN.AD\AppData\Local\Temp\Rtmp61UGwX\RTA_8a087b832a76.sbs
+#>                    Output file name: C:\Users\TMM7AN.AD\AppData\Local\Temp\Rtmp61UGwX\RTA_8a08183a7c1.sbs
 #> End of TauArgus run
 
 secret2
@@ -788,7 +788,7 @@ rtauargus_options()
 #> [1] "stop"
 #> 
 #> $rtauargus.output_options
-#> [1] ""
+#> [1] "AS+SE+"
 #> 
 #> $rtauargus.output_type
 #> [1] "4"
@@ -960,8 +960,8 @@ Pour tout retour ou signalement d'erreur, utiliser de préférence
 
 - Auteur : **<a href="mailto:pierre-yves.berrard@insee.fr">Pierre-Yves Berrard</a>**
 - Dernière mise à jour : **29/08/2022**
-- Version de rtauargus utilisée : **0.5.0.9000**
-- Version de &tau;-Argus utilisée : **4.2.2**
+- Version de rtauargus utilisée : **0.9.0.0**
+- Version de &tau;-Argus utilisée : **TauArgus 4.2.2b1**
 - Version de R utilisée :  **4.1.3**
 
 <p style="text-align: right">

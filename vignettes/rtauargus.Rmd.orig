@@ -29,10 +29,6 @@ knitr::opts_knit$set(root.dir = getwd())
 
 <!-- ####################################################################### -->
 
-```{r}
-devtools::load_all()
-```
-
 
 ## Introduction
 

@@ -684,7 +684,7 @@ Pour tout retour ou signalement d'erreur, utiliser de préférence
 - Auteur : **<a href="mailto:pierre-yves.berrard@insee.fr">Pierre-Yves Berrard</a>**
 - Dernière mise à jour : **`r format(Sys.time(), "%d/%m/%Y")`**
 - Version de rtauargus utilisée : **`r packageVersion("rtauargus")`**
-- Version de &tau;-Argus utilisée : **`r unname(tauargus_info()["version"])`**
+- Version de &tau;-Argus utilisée : **TauArgus 4.2.2b1**
 - Version de R utilisée :  **`r packageVersion("base")`**
 
 <p style="text-align: right">
