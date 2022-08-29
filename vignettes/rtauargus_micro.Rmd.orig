@@ -1,0 +1,699 @@
+---
+title: "&tau;-Argus depuis R"
+subtitle: <h2>![logo R](R_logo_small.png)![logo &tau;-Argus](TauBall2_small.png)<br/>Package {rtauargus}</h2>
+output:
+  rmarkdown::html_vignette:
+    toc: true
+    toc_depth: 3
+vignette: >
+  %\VignetteIndexEntry{Tau-Argus depuis R}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+
+<!--
+  NE JAMAIS MODIFIER DIRECTEMENT `rtauargus.Rmd`
+  MODIFIER `rtauargus.Rmd.orig` ET EXECUTER `precompilation.R`
+  Voir : https://ropensci.org/technotes/2019/12/08/precompute-vignettes
+-->
+
+
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  eval = TRUE,
+  warning = FALSE
+)
+```
+
+<!-- ####################################################################### -->
+
+## Introduction
+
+### Présentation du package
+
+Le package _rtauargus_ offre une interface **R** pour **&tau;-Argus**.
+Il permet de :
+
+- créer les inputs (fichiers asc et rda) à partir de données au format R ;
+- générer la séquence d'instructions à exécuter en mode batch (fichier arb) ;
+- lancer un batch &tau;-Argus en ligne de commande ;
+- récupérer les résultats dans R.
+
+Ces différentes opérations peuvent être exécutées en une seule fois, mais aussi
+de manière modulaire. Elles permettent d'intégrer les tâches réalisées par
+&tau;-Argus dans une chaîne de traitement écrite en R.
+
+La syntaxe de certains arguments colle au plus près à la syntaxe _batch_ de
+&tau;-Argus. Ceci permet d'utiliser un grand nombre de fonctionnalités sans
+multiplier les arguments des fonctions. Le package pourra en outre s'adapter
+plus facilement à d'éventuelles modifications du logiciel (nouvelles
+méthodes disponibles, options supplémentaires...). Les règles de syntaxe pour
+l'écriture de batch figurent dans le manuel de référence de &tau;-Argus.
+
+> _Le package a été développé sur la base des versions open source de &tau;
+> -Argus (versions 4.1 et supérieures), en particulier la dernière version
+> disponible lors du développement (4.1.7)._
+>
+> _**Il n'est pas compatible avec la version 3.5.**_
+>
+> Pour l'instant, **seules les microdonnées sont acceptées** en entrée (pas les
+> données déjà tabulées).
+
+### Objectif de ce document
+
+Ce document vise à montrer comment les fonctionnalités principales du package
+peuvent être articulées, à partir d'exemples relativement simples. Une
+documentation détaillée d'une fonction (liste exhaustive des arguments,
+aspects techniques...) est disponible via la rubrique d'aide dédiée.
+
+Pour la démonstration qui va suivre, un jeu de microdonnées fictif sera
+utilisé :
+
+```{r donnees}
+donnees <-
+  data.frame(
+    V1    = c("A", "A", "A", "A", "B", "B", "B", "C"),
+    V2    = c("Y", "Z"),
+    V3    = c("T1", "T2", "T1", "S_", "T1", "T1", "T1", "S_"),
+    VAL   = c(100, 0, 7, 25, 0, 4, 0, 5),
+    POIDS = c(1, 2.71, 4.2, 1)
+  )
+donnees
+```
+
+<p style="text-align: right">
+  <a href="#TOC" title="Retour sommaire">sommaire &uarr;</a>
+</p>
+
+
+<!-- ####################################################################### -->
+
+## Installation
+
+Les installations suivantes sont à réaliser avant la première utilisation (et
+plus par la suite).
+
+### &tau;-Argus
+
+Les fonctions de _rtauargus_ appelant &tau;-Argus nécessitent que ce logiciel
+soit accessible depuis le poste de travail. Le téléchargement de &tau;-Argus
+se fait sur la [page dédiée](https://research.cbs.nl/casc/tau.htm) du site de
+l'office néerlandais de statistiques.
+
+Cependant, toutes les fonctions n'exécutent pas &tau;-Argus (création des
+microdonnées...). Ne pas l'avoir sur son poste n'est donc pas bloquant.
+
+### Dépendances
+
+Pour fonctionner, _rtauargus_ dépend d'autres packages R. Ceux-ci sont à
+installer au préalable (entre parenthèses les versions minimales requises).
+
+```{r, echo = FALSE, comment = "•"}
+imports <- packageDescription("rtauargus", fields = "Imports")
+cat(gsub(", ", "\n", imports))
+```
+
+### Package
+
+Le package _rtauargus_ est prêt à être installé.
+
+<p style="text-align: right">
+  <a href="#TOC" title="Retour sommaire">sommaire &uarr;</a>
+</p>
+
+
+<!-- ####################################################################### -->
+
+## Prise en main rapide
+
+Cette partie explique comment effectuer une configuration minimale du package et
+comment appliquer le secret statistique en une seule instruction.
+
+### Emplacement de &tau;-Argus
+
+Au chargement du package, la console affiche quelques informations :
+
+```{r library}
+library(rtauargus)
+```
+
+En particulier, un emplacement plausible pour le logiciel &tau;-Argus est
+prédéfini. Il est possible de le changer pour toute la durée de la session R. Un
+message indique que cet emplacement est inconnu, on le modifie donc :
+
+```{r opt_exe}
+loc_tauargus <- "Y:/Logiciels/TauArgus/TauArgus4.2.2b1/TauArgus.exe"
+
+options(rtauargus.tauargus_exe = loc_tauargus)
+```
+
+Ce petit réglage effectué, le package est prêt à être utilisé.
+
+> _Pour une configuration plus personnalisée, consulter la section
+> <a href="#options-du-package">options du package</a>._
+
+
+### Fonction `rtauargus`
+
+La fonction éponyme `rtauargus` effectue un traitement et récupère les
+résultats immédiatement dans R.
+
+S'abstrayant totalement des rouages internes de &tau;-Argus, elle permet de
+réaliser l'ensemble du traitement en une seule instruction (concrètement, tous
+les fichiers intermédiaires sont créés dans un répertoire temporaire qui est
+effacé à la fin de la session R).
+
+`rtauargus` prend comme arguments obligatoires :
+
+- un data.frame contenant les microdonnées ;
+- une liste de 1 à 10 tabulations composées de variables du data.frame (une
+  seule dans l'exemple ci-après) ;
+- la (les) règle(s) à appliquer pour le secret primaire ;
+- la (les) méthode(s) pour la suppression des cases en secret secondaire.
+
+Les deux derniers arguments utilisent la syntaxe batch &tau;-Argus.
+
+#### Exemple minimaliste
+
+```{r rtauargus_ex1}
+rtauargus(
+  microdata        = donnees,
+  explanatory_vars = "V1",
+  safety_rules     = "FREQ(3,10)",
+  suppress         = "GH(1,100)"
+)
+```
+
+Comme aucune variable de réponse n'est renseignée, un comptage est effectué
+("&lt;freq&gt;").
+
+#### Exemple élaboré
+
+D'autres paramètres sont disponibles. On peut par exemple compléter
+l'instruction précédente avec :
+
+ - une deuxième tabulation (les deux tableaux seront traités indépendamment) ;
+ - un paramètre permettant de ne pas afficher le statut du secret pour le
+   premier tableau ;
+ - un paramètre permettant de masquer le journal de &tau;-Argus dans la console.
+
+De plus, les tables produites ne sont plus simplement envoyées dans la console.
+Elles sont stockées dans un objet `secret1` (une liste constituée de deux
+data.frame), que l'on pourra continuer de manipuler.
+
+```{r rtauargus_ex2}
+secret1 <-
+  rtauargus(
+    microdata          = donnees,
+    explanatory_vars   = list("V1", c("V1", "V2")), # 2 tabulations (V1, V1xV2)
+    safety_rules       = "FREQ(3,10)",
+    suppress           = "GH(.,100)",  # . remplace le numéro de tabulation
+    output_options     = c("", "AS+"), # pas de statut pour le 1er tableau
+    show_batch_console = FALSE         # pour masquer le journal
+  )
+
+secret1
+```
+
+> _Note sur l'écriture `suppress = "GH(.,100)"` :_
+>
+> _Le premier paramètre attendu par &tau;-Argus est le numéro de la tabulation.
+> Ici, on souhaite appliquer la même méthode de suppression du secret secondaire
+> à chaque tableau. S'il n'y a qu'une méthode et plusieurs tabulations, les
+> caractères entre la parenthèse et la première virgule sont ignorés et les
+> numéros des tabulations calculés automatiquement._
+
+L'aide de la fonction ne décrit que les 4 arguments obligatoires. Les arguments
+optionnels disponibles sont documentés dans les fonctions élémentaires la
+constituant (`micro_asc_rda`, `micro_arb`, `run_arb`, `import`). Tout
+argument de ces fonctions peut être utilisé dans `rtauargus`. Leur
+fonctionnement est détaillé dans la section qui suit.
+
+<p style="text-align: right">
+  <a href="#TOC" title="Retour sommaire">sommaire &uarr;</a>
+</p>
+
+
+<!-- ####################################################################### -->
+
+## Décomposition du processus
+
+
+Utiliser la fonction `rtauargus` est pratique en terme de lignes de code à
+saisir. Toutefois, cette manière de procéder peut s'avérer assez lourde
+si les tableaux à secrétiser ont en commun un certain nombre de
+caractéristiques.
+
+On voudrait par exemple ne générer que les fichiers asc et rda, puis lancer
+plusieurs batch utilisant ces mêmes fichiers. Ce n'était pas le cas dans les
+exemples vus jusqu'à maintenant, où tous les fichiers intermédiaires étaient
+systématiquement regénérés, même si leur contenu était identique.
+
+Pour cela, on peut utiliser les fonctions appelées successivement par la
+fonction `rtauargus`, à savoir :
+
+> **[micro_asc_rda()](#fonction-micro_asc_rda) &nbsp;&nbsp;&rarr;&nbsp;&nbsp;
+    [micro_arb()](#fonction-micro_arb)         &nbsp;&nbsp;&rarr;&nbsp;&nbsp;
+    [run_arb()](#fonction-run_arb)             &nbsp;&nbsp;&rarr;&nbsp;&nbsp;
+    [import()](#fonction-import)**
+
+### [1] Fonction `micro_asc_rda`
+
+&tau;-Argus n'accepte en entrée que des microdonnées sous une forme bien
+spécifique :
+
+- un fichier texte aux colonnes de longueur fixe, sans en-tête de colonnes
+  (fichier .asc) ;
+- un fichier de description des variables (fichier .rda).
+
+La fonction `micro_asc_rda` produit ces deux fichiers à partir d'un data.frame.
+
+#### Exemple minimaliste
+
+On ne renseigne ici que les données et le nom du fichier asc. Comme le nom du
+fichier de métadonnées n'est pas spécifié, il prend le même nom que le fichier
+asc, mais avec l'extension .rda.
+
+```{r asc_rda_1}
+micro_asc_rda(donnees, asc_filename = "Z:/donnees.asc")
+```
+
+Contenu des fichiers créés :
+```{r file_show_asc_rda, eval = FALSE}
+file.show("Z:/donnees.asc", "Z:/donnees.rda", pager = "internal")
+````
+```{r show_asc_rda, echo = FALSE, comment = ""}
+donnees.asc <- c("", readLines("Z:/donnees.asc"))
+donnees.rda <- c("", readLines("Z:/donnees.rda"))
+na <- length(donnees.asc)
+nr <- length(donnees.rda)
+# suppose que rda a plus de lignes que asc
+donnees.asc[(na + 1):nr] <- ""
+donnees.asc <- paste(donnees.asc, "      ")
+print.data.frame(
+  data.frame(donnees.asc, donnees.rda),
+  row.names = FALSE,
+  right = FALSE
+)
+```
+
+> _Les fonctions du package acceptent les emplacements de fichiers sous forme
+> de chemin relatif. Par exemple, `asc_filename = "donnees.asc"` avec un
+> répertoire de travail sur `Z:/` est équivalent à
+> `asc_filename = "Z:/donnees.asc"`._
+
+#### Exemple élaboré
+
+On ajoute à l'exemple précédent :
+
+- une variable de poids ;
+- les informations sur une variable hiérarchique ;
+- des codes différenciés pour les totaux ;
+- un nombre minimal de décimales à écrire pour les variables numériques.
+
+```{r asc_rda_2}
+micro_asc_rda(
+  microdata    = donnees,
+  asc_filename = "Z:/donnees.asc",
+  weight_var   = "POIDS",
+  hrc          = c(V3 = "1 1"),
+  totcode      = c("Ensemble", V2 = "TOTAL"),
+  decimals     = 1
+)
+
+```
+Contenu des fichiers créés :
+```{r file_show_asc_rda2, ref.label = 'file_show_asc_rda', eval = FALSE}
+````
+```{r show_asc_rda2, ref.label = 'show_asc_rda', echo = FALSE, comment = ""}
+```
+
+#### Fichiers temporaires
+
+Pour tout paramètre `*_filename` non renseigné, les fichiers générés sont placés
+dans un dossier temporaire. Il est possible de récupérer l'emplacement et le nom
+(aléatoire) de ces fichiers dans la valeur de retour de la fonction.
+
+```{r temp_asc_rda}
+noms_asc_rda <- micro_asc_rda(donnees)
+noms_asc_rda
+```
+
+<p style="text-align: right">
+  <a href="#TOC" title="Retour sommaire">sommaire &uarr;</a>
+</p>
+
+### [2] Fonction `micro_arb`
+
+Cette fonction construit un fichier batch exécutable par &tau;-Argus. Elle prend
+comme arguments obligatoires :
+
+- nom du fichier asc ;
+- tabulation(s) (jusqu'à 10, sous forme de liste) ;
+- règle(s) de secret primaire ;
+- méthode(s) de gestion du secret secondaire.
+
+La fonction a également besoin du nom du fichier rda. S'il n'est pas spécifié,
+le même nom que le fichier asc avec l'extension .rda est utilisé.
+
+> _La fonction ne vérifie pas l'existence des répertoires ou fichiers spécifiés.
+> Elle ne fait que générer un fichier d'instructions, sans en évaluer la
+> validité._
+
+#### Exemple minimaliste
+
+```{r arb, eval = TRUE}
+micro_arb(
+  arb_filename     = "Z:/donnees.arb",
+  asc_filename     = "Z:/donnees.asc",
+  explanatory_vars = "V1",
+  safety_rules     = "FREQ(3,10)",
+  suppress         = "GH(.,100)",
+  output_names     = "Z:/resultats/secretV1.csv"
+)
+```
+
+Contenu du fichier créé :
+```{r file_show_arb, eval = FALSE}
+file.show("Z:/donnees.arb", pager = "internal")
+````
+
+```{r show_arb, echo = FALSE, comment = ""}
+cat(readLines("Z:/donnees.arb"), sep = "\n")
+```
+
+#### Exemple élaboré
+
+On complète l'exemple précédent avec :
+
+- une deuxième tabulation ;
+- une variable de réponse à sommer (au lieu d'un comptage) ;
+- l'ajout d'une dominance à 85 % pour le deuxième tableau ;
+- une pondération au premier tableau (mais pas au deuxième) ;
+- la suppression des croisements vides dans les deux tableaux (SE+).
+
+Passer une seule valeur pour une option applique le même traitement à chaque
+tabulation. Pour des options différenciées, il faut impérativement passer un
+vecteur contenant autant de valeurs que de tabulations.
+
+```{r arb2}
+micro_arb(
+  arb_filename     = "Z:/donnees.arb",
+  asc_filename     = "Z:/donnees.asc",
+  explanatory_vars = list("V1", c("V2", "V3")),
+  response_var     = "VAL",
+  safety_rules     = c("FREQ(3,10)", "FREQ(3,10)|NK(1,85)"),
+  weighted         = c(TRUE, FALSE),
+  suppress         = "GH(.,100)",
+  output_options   = "AS+SE+"
+)
+```
+
+```{r file_show_arb2, ref.label = 'file_show_arb', eval = FALSE}
+````
+
+```{r show_arb2, ref.label = 'show_arb', echo = FALSE, eval = TRUE, comment = ""}
+```
+
+#### Fichiers temporaires
+
+Dans l'exemple précédent, les noms des fichiers en sortie (`output_names`)
+n'étaient pas précisés, ce qui a conduit à la génération de noms de fichiers
+temporaires. Préciser le nom du fichier .arb n'est pas obligatoire non plus. Ces
+informations sont récupérables dans la valeur de retour de la fonction.
+
+```{r arb_tmp}
+infos_arb <-
+  micro_arb(
+    asc_filename     = "Z:/donnees.asc",
+    explanatory_vars = list("V1", c("V2", "V3")),
+    safety_rules     = "FREQ(3,10)",
+    suppress         = "GH(.,100)",
+    output_type      = "4"
+  )
+infos_arb
+```
+
+<p style="text-align: right">
+  <a href="#TOC" title="Retour sommaire">sommaire &uarr;</a>
+</p>
+
+
+### [3] Fonction `run_arb`
+
+Maintenant que les instructions ont été générées dans un fichier .arb, on peut
+le soumettre à &tau;-Argus en mode batch. On récupère la liste des tableaux
+secrétisés :
+
+```{r run1}
+secret2 <- run_arb("Z:/donnees.arb")
+
+secret2
+```
+
+`run_arb` est la seule fonction du package qui exécute &tau;-Argus. Elle
+nécessite donc que le logiciel soit accessible depuis le poste de travail.
+
+Seul l'argument `arb_filename` est obligatoire, car toutes les informations
+nécessaires sont présentes dans le fichier .arb. Des paramètres optionnels sont
+également disponibles :
+
+- `missing_dir` : action à effectuer si un dossier où sera écrit le résultat
+  n'existe pas (déclencher une erreur ou le créer)
+- `tauargus_exe` : pour changer l'exécutable (surcharge l'option
+  `rtauargus.tauargus_exe` le temps de la fonction) ;
+- `logbook` : emplacement et nom du fichier contenant le journal d'erreurs ;
+- `show_batch_on_console` : pour afficher ou non le déroulement du batch dans la
+  console ;
+- `import` : si désactivé, la fonction ne fait que générer les fichiers texte
+  sans les importer dans R (voir section suivante pour plus de détails).
+
+Si les tabulations ont reçu un nom dans `micro_arb`, ces noms sont utilisés pour
+la liste de data.frames en sortie de `run_arb` (pas de noms définis dans
+l'exemple ci-dessus).
+
+> _Des vérifications sont effectuées avant le lancement effectif de &tau;-Argus :
+> existence du logiciel sur le poste, des fichiers asc et rda, des dossiers où
+> écrire les résultats, des variables à utiliser (croisements, variable de
+> réponse, ...) dans les métadonnées (fichier rda)._
+
+<p style="text-align: right">
+  <a href="#TOC" title="Retour sommaire">sommaire &uarr;</a>
+</p>
+
+### [4] Fonction `import`
+
+Cette fonction importe les résultats produits par &tau;-Argus (fichiers texte) à
+partir des informations contenues dans un fichier arb. Elle nécessite donc que
+le batch se soit déroulé sans erreur et que les fichiers soient toujours
+présents.
+
+Pour cette dernière raison, la fonction `import` est typiquement appelée depuis
+`run_arb` en paramétrant `import = TRUE`. Elle est aussi utilisable de
+manière indépendante (par exemple si on ne souhaite pas relancer un batch qui a
+mis beaucoup de temps à s'exécuter).
+
+```{r import, results = "hide", eval = FALSE}
+secret2 <- import("Z:/donnees.arb")
+#  produit le même résultat que run_arb("Z:/donnees.arb", import = TRUE)
+```
+
+#### Formats acceptés
+
+Il n'est possible (à l'heure actuelle) que d'importer les résultats de type :
+
+- `"2"` : csv for pivot-table
+- `"4"` : sbs output format
+
+Si l'import est impossible pour une tabulation donnée, un data.frame vide est
+retourné (avec un message d'avertissement).
+
+#### Attributs des tabulations
+
+À chaque data.frame de la liste est associé un ensemble d'attributs, des
+métadonnées gardant une trace des spécifications passées à &tau;-Argus.
+
+Par exemple, pour `secret2[[2]]` (le deuxième tableau de `secret2`), on y
+retrouve les paramètres que l'on a transmis à la fonction (les autres
+correspondent à des valeurs par défaut du package).
+
+```{r attributs}
+str(secret2[[2]])
+```
+
+<p style="text-align: right">
+  <a href="#TOC" title="Retour sommaire">sommaire &uarr;</a>
+</p>
+
+
+<!-- ####################################################################### -->
+
+## Options du package
+
+
+Les options du package définissent les comportements par défaut des fonctions.
+
+Ces options sont utilisées si un argument obligatoire d'une fonction n'est pas
+renseigné. Elles permettent de ne pas répéter systématiquement le même paramètre
+à chaque appel d'une fonction. Le nom de l'option est le nom de l'argument d'une
+fonction précédé de `rtauargus.` :
+
+> Par exemple, `rtauargus.decimals` sera la valeur utilisée si l'argument
+> `decimals` de la fonction `micro_asc_rda` n'est pas renseigné par
+> l'utilisateur.
+
+Au chargement, le package attribue une valeur par défaut à toutes les options
+de rtauargus qui ne sont pas encore déclarées. Les options déjà définies par
+l'utilisateur gardent leurs valeurs.
+
+Les options disponibles ainsi que leurs valeurs par défaut sont listées
+ci-dessous :
+
+```{r tab_val_defaut, echo = FALSE}
+knitr::kable(
+  rtauargus:::df_op.rtauargus(html = TRUE),
+  row.names = FALSE,
+  align = "lllr",
+  col.names = c("Option", "Valeur par défaut", "Type", "Fonction concernée")
+)
+```
+
+### Affichage
+
+Pour afficher les options définies pour la session en cours :
+
+```{r opt}
+rtauargus_options()
+```
+
+Les valeurs sont identiques aux valeurs par défaut, hormis l'emplacement de
+&tau;-Argus, qui a été préalablement modifié. Elles apparaissent dans l'ordre
+alphabétique.
+
+<p style="text-align: right">
+  <a href="#TOC" title="Retour sommaire">sommaire &uarr;</a>
+</p>
+
+### Modification, réinitialisation
+
+Pour modifier une ou plusieurs options, utiliser la syntaxe suivante (la même
+que celle employée pour modifier l'emplacement de &tau;-Argus) :
+
+```{r opt_modif}
+options(
+  rtauargus.show_batch_console = FALSE,
+  rtauargus.output_options     = "AS+SE+",
+  rtauargus.output_type        = "4",
+  rtauargus.response_var       = "VAL"
+)
+
+str(rtauargus_options())
+```
+
+Pour réinitialiser certaines options :
+
+```{r opt_reset}
+reset_rtauargus_options("rtauargus.response_var", "rtauargus.output_type")
+
+# Il est possible d'omettre le préfixe 'rtauargus.'
+# L'instruction suivante est équivalente :
+reset_rtauargus_options("response_var", "output_type")
+
+str(rtauargus_options())
+```
+
+Pour remettre toutes les valeurs par défaut (y compris le chemin vers
+&tau;-Argus modifié en début de démonstration), ne spécifier aucun argument :
+
+```{r opt_reset_all, eval = FALSE}
+reset_rtauargus_options()
+```
+
+<p style="text-align: right">
+  <a href="#TOC" title="Retour sommaire">sommaire &uarr;</a>
+</p>
+
+### Portée locale ou globale
+
+Comme toute fonction R, le paramétrage s'effectue en spécifiant chacun des
+arguments au moment de l'appel de la fonction (portée locale).
+
+Le système d'options du package permet par les instructions
+`options(rtauargus.<option> = <valeur>)` de définir des options de manière plus
+globale. Selon l'endroit où sont écrites ces instructions, la configuration
+perdurera plus ou moins longtemps :
+
+  - dans le script, pour un effet sur la session en cours uniquement ;
+  - dans un fichier de configuration utilisateur (.Rprofile...), pour permettre
+    à un utilisateur de garder en mémoire ses préréglages d'une session sur
+    l'autre.
+
+_Le deuxième façon de procéder est **à déconseiller si la chaîne de
+traitement se veut reproductible**. En effet, un script identique
+exécuté sur deux machines différentes pourrait produire deux résultats
+différents._
+
+<p style="text-align: right">
+  <a href="#TOC" title="Retour sommaire">sommaire &uarr;</a>
+</p>
+
+
+<!-- ####################################################################### -->
+
+## Autres informations
+
+#### Autres fonctionnalités
+
+Certaines fonctionnalités du package ne sont pas évoquées dans ce document de
+prise en main :
+
+- gestion de tableaux liés (argument `linked` dans `micro_arb`)
+- création de variables hiérarchiques à partir de microdonnées (fonction
+  `write_hrc`).
+- prise en compte de fichier apriori (argument `apriori` dans `micro_arb`)
+- utilisation de la fonction `rtauargus` à partir de microdonnées déjà sous
+  forme de fichier texte (et non de data.frame)
+- lancement optimisé d'un grand nombre de croisements ayant les mêmes paramètres
+  (règles de secret primaire, méthode de secret secondaire, ...) : fonction
+  `rtauargus_plus`
+
+Consulter l'aide de ces fonctions pour plus d'informations.
+
+#### Idées pour la suite
+
+- implémenter paramètres `request`...
+- prendre en compte des données tabulées en entrée
+- ...
+
+#### Signaler un problème, suggérer une amélioration
+
+Le package est en cours de construction. Toutes les fonctionnalités de
+&tau;-Argus n'ont pas été intégrées (la finalité n'est pas de les intégrer
+toutes, seulement les plus fréquemment utilisées).
+
+Pour tout retour ou signalement d'erreur, utiliser de préférence
+[ce lien](https://gitlab.insee.fr/outilsconfidentialite/rtauargus/-/issues)
+(cliquer sur **"New issue"**). Nécessite d'être connecté au gitlab-Insee.
+
+#### À propos de cette vignette
+
+- Auteur : **<a href="mailto:pierre-yves.berrard@insee.fr">Pierre-Yves Berrard</a>**
+- Dernière mise à jour : **`r format(Sys.time(), "%d/%m/%Y")`**
+- Version de rtauargus utilisée : **`r packageVersion("rtauargus")`**
+- Version de &tau;-Argus utilisée : **`r unname(tauargus_info()["version"])`**
+- Version de R utilisée :  **`r packageVersion("base")`**
+
+<p style="text-align: right">
+  <a href="#TOC" title="Retour sommaire">sommaire &uarr;</a>
+</p>
+
+
+<!-- ####################################################################### -->
+
+```{r menage, include = FALSE}
+unlink(paste0("Z:/donnees.", c("arb", "asc", "rda")))
+```
