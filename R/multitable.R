@@ -344,9 +344,12 @@ tab_multi_manager <- function(
     res <- do.call(func_to_call, params)
     res$is_secret <- res$Status != "V"
     prim_stat <- table(res$Status)["B"]
+    prim_stat <- ifelse(is.na(prim_stat), 0, prim_stat)
     sec_stat <- table(res$Status)["D"]
+    sec_stat <- ifelse(is.na(sec_stat), 0, sec_stat)
     valid_stat <- table(res$Status)["V"]
-    denom_stat <- nrow(res)*100
+    valid_stat <- ifelse(is.na(valid_stat), 0, valid_stat)
+    denom_stat <- nrow(res)
 
     res <- subset(res, select = -Status)
 
@@ -405,9 +408,9 @@ tab_multi_manager <- function(
     journal_add_line(journal, num_iter_all, "-Treatment of table", num_tableau)
     journal_add_break_line(journal)
     journal_add_line(journal, "New cells status counts: ")
-    journal_add_line(journal, "- apriori (primary) secret:", prim_stat, "(", round(prim_stat/denom_stat,1), "%)")
-    journal_add_line(journal, "- secondary secret:", sec_stat , "(", round(sec_stat/denom_stat,1), "%)")
-    journal_add_line(journal, "- valid cells:", valid_stat, "(", round(valid_stat/denom_stat,1), "%)")
+    journal_add_line(journal, "- apriori (primary) secret:", prim_stat, "(", round(prim_stat/denom_stat*100,1), "%)")
+    journal_add_line(journal, "- secondary secret:", sec_stat , "(", round(sec_stat/denom_stat*100,1), "%)")
+    journal_add_line(journal, "- valid cells:", valid_stat, "(", round(valid_stat/denom_stat*100,1), "%)")
     journal_add_break_line(journal)
     journal_add_line(journal, "Nb of new common cells hit by the secret:", nrow(modified))
     journal_add_break_line(journal)
@@ -418,6 +421,11 @@ tab_multi_manager <- function(
   table_majeure <- cbind.data.frame(
     apply(table_majeure[,all_expl_vars,drop=FALSE], 2, rev_var_pour_tau_argus),
     table_majeure[, !names(table_majeure) %in% all_expl_vars]
+  )
+
+  common_cells_modified <- cbind.data.frame(
+    apply(common_cells_modified[-1,all_expl_vars,drop=FALSE], 2, rev_var_pour_tau_argus),
+    common_cells_modified[-1, !names(common_cells_modified) %in% all_expl_vars]
   )
 
   # Reconstruire la liste des tableaux d'entrée
@@ -471,7 +479,7 @@ tab_multi_manager <- function(
   journal_add_break_line(journal)
   journal_add_break_line(journal)
   journal_add_line(journal, "Common cells hit by the secret:")
-  suppressWarnings(gdata::write.fwf(common_cells_modified[-1,], file = journal, append = TRUE))
+  suppressWarnings(gdata::write.fwf(common_cells_modified, file = journal, append = TRUE))
   journal_add_break_line(journal)
   journal_add_line(journal, "End time: ", format(Sys.time(), "%Y-%m-%d  %H:%M:%S"))
   journal_add_break_line(journal)
