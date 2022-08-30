@@ -7,6 +7,64 @@ journal_add_line <- function(journal,...){
   cat(..., file = journal, fill = TRUE, append = TRUE)
 }
 
+uniformize_labels_hrc_file <- function(hrc_file, totcode){
+  df <- utils::read.table(hrc_file)
+
+  v_gsub <- Vectorize(gsub, vectorize.args = c("pattern", "x"))
+  df$aro <- unlist(regmatches(df$V1, gregexpr("^@*", df$V1)))
+  df$lab <- v_gsub(df$aro, "", df$V1)
+
+  df <- df[df$lab != totcode,]
+  max_char = max(nchar(df$lab))
+  df$lab <- v_trans_var_pour_tau_argus(df$lab, max_char)
+  df$unif <- paste0(df$aro,df$lab)
+
+  name <- gsub(".hrc$", "_unif.hrc", hrc_file)
+
+  utils::write.table(
+    x = as.data.frame(df$unif),
+    file = name,
+    quote = FALSE,
+    row.names = FALSE,
+    col.names = FALSE,
+    sep = "",
+    eol = "\n"
+  )
+  print(paste0(name, " has been created"))
+  return(list(hrc_unif = name, max_char = max_char))
+}
+
+
+uniformize_labels <- function(data, expl_vars, hrc_files, list_totcode){
+
+  vars_expl_hrc <- names(hrc_files)
+  hrc_unif_files <- list()
+
+  for(var_hrc in vars_expl_hrc){
+    totcode <- purrr::flatten(list_totcode)[[var_hrc]]
+    hrc_file <- hrc_files[[var_hrc]]
+    res <- uniformize_labels_hrc_file(hrc_file, totcode)
+    hrc_unif_files[[var_hrc]] <- res$hrc_unif
+    data[[var_hrc]] <- ifelse(
+      data[[var_hrc]] == totcode,
+      data[[var_hrc]],
+      v_trans_var_pour_tau_argus(data[[var_hrc]], cible_char = res$max_char)
+    )
+  }
+
+  for(expl in setdiff(expl_vars, vars_expl_hrc)){
+    totcode <- purrr::flatten(list_totcode)[[expl]]
+    max_char = max(nchar(setdiff(data[[expl]], totcode)))
+    data[[expl]] <- ifelse(
+      data[[expl]] == totcode,
+      data[[expl]],
+      v_trans_var_pour_tau_argus(data[[expl]], cible_char = max_char)
+    )
+  }
+
+  return(list(hrc_unif = hrc_unif_files, data = data))
+}
+
 #' Manages the secondary secret of a list of tables
 #'
 #' @param list_tables named list of dataframes representing the tables to protect
@@ -117,20 +175,15 @@ tab_multi_manager <- function(
   if(is.null(names(list_tables))){
     names(list_tables) <- paste0("tab", 1:n_tbx)
     names(list_explanatory_vars) <- paste0("tab", 1:n_tbx)
-    names(list_hrc) <- paste0("tab", 1:n_tbx)
   }
   noms_tbx <- names(list_tables)
   all_expl_vars <- unique(unname(unlist(list_explanatory_vars)))
 
   if( (!is.null(hrc)) & (length(names(hrc)) == 0)){
     stop("hrc must have names corresponding to the adequate explanatory variables")
-  }else{
-    list_hrc <- purrr::map(
-      list_explanatory_vars,
-      function(nom_vars){
-        purrr::discard(hrc[nom_vars], is.na)
-      }
-    )
+  }
+  if(length(setdiff(names(hrc), all_expl_vars)) > 0){
+    stop("names in hrc file are not mentionned in list_explanatory_vars")
   }
 
   # list_totcode management
@@ -217,6 +270,21 @@ tab_multi_manager <- function(
       )
     }
   )
+
+  # Uniformisation des libelles des variables explicatives
+  res_unif <- uniformize_labels(table_majeure, all_expl_vars, hrc, list_totcode)
+  table_majeure <- res_unif$data
+  hrc_unif <- res_unif$hrc_unif
+
+  list_hrc <- purrr::map(
+      list_explanatory_vars,
+      function(nom_vars){
+        purrr::discard(hrc_unif[nom_vars], is.null) %>%  unlist()
+      }
+    )
+
+
+  # listes de travail
   todolist <- noms_tbx[1]
   remainlist <- noms_tbx[-1]
 
@@ -346,6 +414,11 @@ tab_multi_manager <- function(
     journal_add_break_line(journal)
 
   }
+
+  table_majeure <- cbind.data.frame(
+    apply(table_majeure[,all_expl_vars,drop=FALSE], 2, rev_var_pour_tau_argus),
+    table_majeure[, !names(table_majeure) %in% all_expl_vars]
+  )
 
   # Reconstruire la liste des tableaux d'entrée
   liste_tbx_res <- purrr::imap(

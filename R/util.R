@@ -129,3 +129,39 @@ used_var <- function(explanatory_vars,
   unique(setdiff(res, "<freq>"))
 
 }
+
+
+# Fonction qui ajuste la taille d'une chaîne de caractères en ajoutant
+# un même caractère devant pour atteindre une taille souhaitée
+# @param char string chaîne de caractères à modifier
+# @param cible_char integer - longueur de la chaîne souhaitée
+# @param add_char caractère à ajouter
+# @return chaîne de caractère
+trans_var_pour_tau_argus <- function(char='monchar', cible_char=12, add_char='*'){
+  diff <- cible_char - nchar(char)
+  if(diff > 0)
+    char = paste0(paste0(rep(add_char,diff), collapse=''),char)
+  return(char)
+}
+
+# Fonction vectorisée de la précédente. Cette fonction est à privilégier pour
+# une utilisation sur un vecteur, une colonne d'un dataframe par exemple.
+#
+# @param char character vector
+# @param cible_char integer - longueur de la chaîne souhaitée
+# @param add_char caractère à ajouter
+#
+# @return character vector
+v_trans_var_pour_tau_argus <- Vectorize(trans_var_pour_tau_argus, vectorize.args = 'char')
+
+# Fonction vectorisée de la précédente. Cette fonction est à privilégier pour
+# une utilisation sur un vecteur, une colonne d'un dataframe par exemple.
+#
+# @param char character vector - vecteur à modifier
+#
+# @return character vector
+rev_var_pour_tau_argus <- function(char='**monchar', del_char='*'){
+  if(del_char %in% c('*','+','_',' ')){
+    gsub(paste0("[",del_char,"]"),'',char)
+  }else gsub(del_char, '', char)
+}

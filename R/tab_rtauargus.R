@@ -1,40 +1,3 @@
- # Fonction qui ajuste la taille d'une chaîne de caractères en ajoutant
- # un même caractère devant pour atteindre une taille souhaitée
- # @param char string chaîne de caractères à modifier
- # @param cible_char integer - longueur de la chaîne souhaitée
- # @param add_char caractère à ajouter
- # @return chaîne de caractère
-trans_var_pour_tau_argus <- function(char='monchar', cible_char=12, add_char='*'){
-  diff <- cible_char - nchar(char)
-  if(diff > 0)
-    char = paste0(paste0(rep(add_char,diff), collapse=''),char)
-  return(char)
-}
-
-# Fonction vectorisée de la précédente. Cette fonction est à privilégier pour
-# une utilisation sur un vecteur, une colonne d'un dataframe par exemple.
-#
-# @param char character vector
-# @param cible_char integer - longueur de la chaîne souhaitée
-# @param add_char caractère à ajouter
-#
-# @return character vector
-v_trans_var_pour_tau_argus <- Vectorize(trans_var_pour_tau_argus, vectorize.args = 'char')
-
-# Fonction vectorisée de la précédente. Cette fonction est à privilégier pour
-# une utilisation sur un vecteur, une colonne d'un dataframe par exemple.
-#
-# @param char character vector - vecteur à modifier
-#
-# @return character vector
-rev_var_pour_tau_argus <- function(char='**monchar', del_char='*'){
-  if(del_char %in% c('*','+','_',' ')){
-    gsub(paste0("[",del_char,"]"),'',char)
-  }else gsub(del_char, '', char)
-}
-
-
-
 #' All in once for tabular
 #'
 #' @inheritParams tab_rda
@@ -290,10 +253,12 @@ tab_rtauargus <- function(
       stringsAsFactors = FALSE,
       na.strings = ""
     )
-    res <- cbind.data.frame(
-      apply(res[,explanatory_vars,drop=FALSE], 2, rev_var_pour_tau_argus),
-      res[, !names(res) %in% explanatory_vars]
-    )
+    if(unif_expl){
+      res <- cbind.data.frame(
+        apply(res[,explanatory_vars,drop=FALSE], 2, rev_var_pour_tau_argus),
+        res[, !names(res) %in% explanatory_vars]
+      )
+    }
     mask <- merge(tabular_original, res[,c(explanatory_vars,"Status")], by = explanatory_vars, all = TRUE)
 
 
@@ -402,8 +367,8 @@ tab_rtauargus2 <- function(
   params$show_batch_console = FALSE
   params$output_type = 4
   params$output_options = ""
-  if(! "unif_hrc" %in% names(params)) params$unif_hrc = TRUE
-  if(! "unif_expl" %in% names(params)) params$unif_expl = TRUE
+  if(! "unif_hrc" %in% names(params)) params$unif_hrc = FALSE
+  if(! "unif_expl" %in% names(params)) params$unif_expl = FALSE
   params$separator = ","
   params$verbose = FALSE
 
