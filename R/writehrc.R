@@ -414,6 +414,7 @@ write_hrc2 <- function(
 # of the root character, if this creates duplicates, change the add_char
 # parameter"))
     corr_table <- ajouter_feuille_unique(corr_table,add_char)
+    d = dim.data.frame(corr_table)
   }
   # Try to detect a problem with detailed column
   if (sum(duplicated(corr_table[,d[2]]))>0) {
