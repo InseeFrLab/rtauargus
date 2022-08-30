@@ -14,7 +14,7 @@ navbar:
       icon: fas fa-home fa-lg
       href: index.html
     intro:
-      text: Mode d'emploi
+      text: Introduction
       href: articles/rtauargus.html
     reference:
       text: Fonctions

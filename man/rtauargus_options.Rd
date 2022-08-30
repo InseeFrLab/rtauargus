@@ -3,7 +3,7 @@
 \name{rtauargus_options}
 \alias{rtauargus_options}
 \alias{reset_rtauargus_options}
-\title{Options du package rtauargus}
+\title{Manages options of rtauargus package}
 \usage{
 rtauargus_options()
 
@@ -12,18 +12,44 @@ rtauargus_options()
 reset_rtauargus_options(...)
 }
 \arguments{
-\item{...}{noms des options à réinitialiser, séparés par des virgules. Si
-aucun nom n'est spécifié, toutes les options du package seront
-réinitialisées. Le préfixe \code{"rtauargus."} est facultatif.}
+\item{...}{names of the options to reset, separated by commas. If no name is
+specified, all the options will be reset. The prefix \code{"rtauargus."}
+is not required. \cr
+noms des options à réinitialiser, séparés par des virgules. Si
+  aucun nom n'est spécifié, toutes les options du package seront
+  réinitialisées. Le préfixe \code{"rtauargus."} est facultatif.}
 }
 \description{
+Manages (displays, modifies, resets) the options of rtauargus package. \cr
 Gère les options du package (affiche, modifie, réinitialise).
 }
 \details{
+The options of the package define the default behaviour of the functions.
+
+These options are used if a mandatory argument of a function is not set
+by the user. They let not to systematically repeat the same parameter
+for each call of a function. The name of the option is the same as the
+name of the function prefixed by \code{rtauargus.} :
+
+\emph{For example, \code{rtauargus.decimals} will be used if the argument
+\code{decimals} in the \code{micro_asc_rda} function is not set by the
+user.}
+
+On loading the package, all the rtauargus options, that are not already
+been set by the user, are set with their default values (see table below).
+The already defined options keep the values set by the user.
+
+The options can be set during a session with the following instruction
+\code{options(rtauargus.}...\code{ = }...\code{)}, or with a configuration
+file where the user have written its own options with such instructions,
+but this latter is not a proper way if reproducibility is sought.
 Les options du package définissent les comportements par défaut des
 fonctions.
 
-Ces options sont utilisées si un argument obligatoire d’une fonction n’est
+If the user inadvertently removes some options, the functions will use
+the default values of the package. \cr
+
+(Ces options sont utilisées si un argument obligatoire d’une fonction n’est
 pas renseigné. Elles permettent de ne pas répéter systématiquement le même
 paramètre à chaque appel d'une fonction. Le nom de l’option est le nom de
 l’argument d’une fonction précédé de \code{rtauargus.} :
@@ -43,12 +69,12 @@ l'utilisateur (fortement déconseillé si le programme a vocation à être
 reproductible).
 
 En cas d'effacement accidentel d'une option par l'utilisateur, les fonctions
-utiliseront les valeurs par défaut du package.
+utiliseront les valeurs par défaut du package.)
 }
-\section{Liste des options}{
+\section{List of options}{
 
 \tabular{lll}{
- \strong{Option}                  \tab  \strong{Valeur par défaut}                                    \tab \strong{Fonction}   \cr
+ \strong{Option}                  \tab  \strong{Default Value}                                    \tab \strong{Function}   \cr
  \code{------------------------}  \tab  \code{---------------------------------}                      \tab \code{-------------}\cr
  rtauargus.decimals               \tab  \Sexpr{rtauargus:::op.rtauargus$rtauargus.decimals}           \tab \link{micro_asc_rda}\cr
  rtauargus.totcode                \tab "\Sexpr{rtauargus:::op.rtauargus$rtauargus.totcode}"           \tab                     \cr
@@ -71,7 +97,7 @@ utiliseront les valeurs par défaut du package.
 \examples{
 rtauargus_options()
 
-# modifie certaines options
+# modifies some options
 options(
   rtauargus.tauargus_exe = "Z:/tmp/TauArgus.exe",
   rtauargus.output_type = "4",
@@ -79,15 +105,15 @@ options(
 )
 str(rtauargus_options())
 
-# reinitialise une partie des options (prefixe "rtauargus." facultatif)
+# resets some options (prefix "rtauargus." facultatif)
 reset_rtauargus_options("output_type", "rtauargus.tauargus_exe")
 str(rtauargus_options())
 
-# reinitialise tout
+# resets everything
 reset_rtauargus_options()
 str(rtauargus_options())
 }
 \seealso{
-\link{options}, le système d'options de R dans lequel s'insèrent les
-  options de ce package.
+\link{options}, R options system \cr
+le système d'options de R dans lequel s'insèrent les options de ce package.
 }

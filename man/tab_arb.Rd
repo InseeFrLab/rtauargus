@@ -2,158 +2,153 @@
 % Please edit documentation in R/tab_arb.R
 \name{tab_arb}
 \alias{tab_arb}
-\title{Crée un fichier batch (.arb) pour données tabulées}
+\title{Creates a batch file (.arb) for tabular data in order to run Tau Argus}
 \usage{
 tab_arb(
   arb_filename = NULL,
   tab_filename,
   rda_filename = NULL,
+  hst_filename = NULL,
   explanatory_vars,
-  response_var = getOption("rtauargus.response_var"),
-  shadow_var = NULL,
-  cost_var = NULL,
+  value = getOption("rtauargus.response_var"),
   safety_rules,
   suppress,
-  linked = getOption("rtauargus.linked"),
   output_names = NULL,
   output_type = getOption("rtauargus.output_type"),
   output_options = getOption("rtauargus.output_options"),
-  apriori = NULL,
   gointeractive = FALSE
 )
 }
 \arguments{
-\item{arb_filename}{nom du fichier arb généré (avec
-extension). Si non renseigné, un fichier temporaire.}
+\item{arb_filename}{path of the arb filename, if unspecified, creates a temporary
+file \cr
+(nom du fichier arb généré (avec extension). Si non renseigné, un fichier temporaire.)}
 
-\item{tab_filename}{[\strong{obligatoire}] nom du fichier .tab (avec extension).}
+\item{tab_filename}{[\strong{mandatory}] path of the tab_filename.\cr
+([\strong{obligatoire}]nom du fichier .tab (avec extension).)}
 
 \item{rda_filename}{rda file name (with .rda extension) \cr
 nom du fichier rda (avec extension)}
 
-\item{explanatory_vars}{[\strong{obligatoire}] variables catégorielles, sous
-forme de liste de vecteurs. Chaque élément de la liste est un vecteur des
-noms des variables formant une tabulation.
-Exemple : \code{list(c("CJ", "A21"), c("SEXE", "REGION"))} pour le premier
-tableau croisant \code{CJ} x \code{A21} et le deuxième tableau croisant
-\code{SEXE} x \code{REGION}.
-Si une seule tabulation, un simple vecteur des variables à croiser est
-accepté (pas besoin de \code{list(...)}).}
+\item{hst_filename}{Apriori file name, syntax detailed below,
+Example : hst_filename = "path_to_file/apriori.hst"\cr
+(fichier(s) d'informations \emph{a priori}. Voir ci-dessous
+pour la syntaxe. Exemple : hst_filename = "path_to_file/apriori.hst")}
 
-\item{response_var}{variable de réponse à sommer, ou comptage si
-\code{"<freq>"}. Une seule valeur ou autant de valeurs que de tabulations.}
+\item{explanatory_vars}{[\strong{mandatory}]
+Explanatory vars in a vector
+Example : \code{c("CJ", "A21")} for the tabular \code{CJ} x \code{A21} \cr
+([\strong{obligatoire}] variables catégorielles, sous forme de vecteur.
+Exemple : \code{c("CJ", "A21")} pour le premier
+Pour un tableau croisant \code{CJ} x \code{A21})}
 
-\item{shadow_var}{variable(s) pour l'application du secret primaire. Si non
-renseigné, \code{response_var} sera utilisé par Tau-Argus.}
+\item{value}{Colname for response variable in the tabular
+\code{"<freq>"}. For frequency table \cr
+(Nom de la variable de réponse dans le tableau
+\code{"<freq>"}. Permet de tariter les tableaux de fréquence)}
 
-\item{cost_var}{variable(s) de coût pour le secret secondaire.}
+\item{safety_rules}{[\strong{mandatory}]
+Rules for primary suppression with Argus syntax, if the primary suppression
+has been dealt with an apriori file specify manual safety range :"MAN(10)"
+for example.\cr
+([\strong{obligatoire}] Règle(s) de secret primaire.
+Chaîne de caractères en syntaxe batch Tau-Argus. Si le secret primaire
+a été traité dans un fichier d'apriori : utiliser "MAN(10)")}
 
-\item{safety_rules}{[\strong{obligatoire}] règle(s) de secret primaire.
-Chaîne de caractères en syntaxe batch Tau-Argus. La pondération est traitée
-dans un paramètre à part (ne pas spécifier WGT ici, utiliser le paramètre
-\code{weighted}).}
+\item{suppress}{[\strong{mandatory}]
+Algortihm for secondary suppression (Tau-Argus batch syntax), and the
+parameters for it.\cr
+([\strong{obligatoire}] Algorithme de gestion du secret secondaire
+(syntaxe batch de Tau-Argus), ainsi que les potentiels paramètres associés)}
 
-\item{suppress}{[\strong{obligatoire}] méthode(s) de gestion du secret
-secondaire (syntaxe batch de Tau-Argus). Si la méthode est la même pour
-chaque tabulation, le premier paramètre (numéro du tableau) sera ignoré et
-renuméroté automatiquement (voir la section 'Syntaxe').}
+\item{output_names}{output file name\cr
+(nom du fichier en sortie.)}
 
-\item{linked}{pour traiter le secret secondaire conjointement sur toutes les
-tabulations. Une seule commande suppress autorisée dans ce cas (appliquée à
-tous les tableaux).}
+\item{output_type}{Type of the output file (Argus codification)
+By default \code{"2"} (csv for pivot-table).
+For SBS files use \code{"4"}\cr
+(Format des fichiers en sortie (codification Tau-Argus).
+Valeur par défaut du package : \code{"2"} (csv for pivot-table).
+Pour le format SBS utiliser \code{"4"})}
 
-\item{output_names}{noms des fichiers en sortie. Si renseigné,
-obligatoirement autant de noms de fichiers que de tabulations. Si laissé
-vide, autant de noms de fichiers temporaires que de tabulations seront
-générés.}
+\item{output_options}{Additionnal parameter for the output,
+by default : code{"AS+"} (print Status). To specify no options : \code{""}.\cr
+(Options supplémentaires des fichiers en sortie. Valeur
+  par défaut du package : \code{"AS+"} (affichage du statut). Pour ne
+  spécifier aucune option, \code{""}.)}
 
-\item{output_type}{format des fichiers en sortie (codification Tau-Argus).
-Valeur par défaut du package : \code{"2"} (csv for pivot-table).}
-
-\item{output_options}{options supplémentaires des fichiers en sortie. Valeur
-par défaut du package : \code{"AS+"} (affichage du statut). Pour ne
-spécifier aucune option, \code{""}.}
-
-\item{apriori}{fichier(s) d'informations \emph{a priori}. Voir ci-dessous
-pour la syntaxe.}
-
-\item{gointeractive}{pour avoir la possibilité de lancer le batch depuis le
-menu de Tau-Argus (\code{FALSE} par défaut).}
+\item{gointeractive}{Boolean, if TRUE will open a Tau-Argus window and launch
+the batch in it (\code{FALSE} by default). \cr
+(Possibilité de lancer le batch depuis le menu de Tau-Argus
+ (\code{FALSE} par défaut).)}
 }
 \value{
-Une liste de deux éléments : le nom du fichier arb, les noms des
-  fichiers en sortie (utile pour récupérer les noms générés aléatoirement).
+A list containing two elements :
+ the arb file name and the output name (usefull if the name is generated randomly) \cr
+ (Une liste de deux éléments : le nom du fichier arb, le nom
+  fichiers en sortie (utile pour récupérer les noms générés aléatoirement).)
 }
 \description{
-Crée un fichier batch pour données tabulées, exécutable par Tau-Argus en ligne de
-commande.
-}
-\details{
-La fonction ne vérifie pas si les fichiers asc et rda existent.
+Function doesn't check if the asc and rda files exists\cr
+(Crée un fichier batch (.arb) pour données tabulées exécutable par
+Tau-Argus en ligne de commande. La fonction ne vérifie pas
+si les fichiers asc et rda existent.)
 }
 \section{Syntaxe}{
 
-Tau-Argus peut traiter plusieurs tabulations pour un même jeu de
-données. Passer une seule valeur pour une option appliquera le même
-traitement à chaque tabulation. Pour des options différenciées, passer un
-vecteur contenant autant de valeurs que de tabulations. Si les longueurs ne
-correspondent pas (déconseillé), un recyclage est effectué.
 
+For tabular data, this function secures only one table at a time#'
+Unless specific details, use syntax from Tau-Argus manual \cr
 Sauf mention contraire, utiliser la syntaxe mentionnée dans la documentation
 de Tau-Argus.
 
-Syntaxe spéciale pour \code{suppress} : le premier paramètre dans la
-syntaxe Tau-Argus est le numéro de la tabulation. Si la méthode est identique
-pour toutes les tabulations, ce premier paramètre sera ignoré et les numéros
-recalculés automatiquement pour le batch. Dans l'écriture
-\code{suppress = "GH(n,100)"}, n sera ainsi transformé en 1 pour la première
-tabulation, en 2 pour la deuxième tabulation, etc.
+Syntax pour \code{suppress} :
+First parameter is the table number, in this case it will always be 1 \cr
+
+(Pour les données tabulées la fonction traite un tableau à la fois
+Syntaxe spéciale pour \code{suppress} :
+le premier paramètre dans la syntaxe Tau-Argus est le numéro du tableau.
+Dans le cas de cette fonction ce sera toujours 1)
 }
 
-\section{Identifiants des tableaux}{
+\section{Informations \emph{hst_filename}}{
 
-Si la liste \code{explanatory_vars} comporte des noms, ceux-ci seront
-utilisés dans le batch pour donner un identifiant au tableau, sous la forme
-d'une ligne de commentaire (\code{// <TABLE_ID> "..."}). Ils seront
-réutilisés par la fonction \code{import} pour nommer les tableaux formats R
-en sortie.
-}
+It's possible to add an apriori file (.hst) for a tabular, it can be generated
+by the table_rda() function.
 
-\section{Informations \emph{a priori}}{
+Other options are not mandatory. To modify default value use a vector with the
+.hst file path as first element and then complete with those parameters :
+\code{sep} for the separator,
+\code{ignore_err} for IgnoreError and \code{exp_triv} for ExpandTrivial. \cr
 
-Il est possible de fournir un fichier a priori (.hst) pour chaque tabulation.
-
-La manière la plus simple est de passer un vecteur contenant autant de noms de
-fichiers hst que de tabulations. Si le fichier est le même pour toutes les
-tabulations, spécifier le nom de ce fichier (il sera utilisé pour toutes les
-tabulations).
+(Il est possible de fournir un fichier apriori (.hst) pour un tableau,
+il peut être fourni par la fonction table_rda()
+Exemple : hst_filename = "mon_chemin/apriori.hst" \cr
 
 Les options supplémentaires sont facultatives. Pour modifier les valeurs par
 défaut, passer une liste ayant comme premier élément le(s) fichier(s) hst et
 compléter avec les éléments portant les noms \code{sep} pour le séparateur,
 \code{ignore_err} pour IgnoreError et \code{exp_triv} pour ExpandTrivial.
 Comme pour les noms de fichiers, spécifier une seule valeur par paramètre ou
-autant de valeurs que de tabulations.
-}
-
-\section{Voir aussi}{
-
+autant de valeurs que de tabulations.)
 }
 
 \examples{
 \dontrun{
-# creation fichier arb
+# creating arb file
 infos_arb <- tab_arb(
-  tab_filename = "donnees.tab",
-  explanatory_vars = list(c("REGION", "CJ"), c("REGION")),
-  response_var = c("CA", "<freq>"),
-  safety_rules = c("NK(1,85)|FREQ(3,10)", "FREQ(3,10)"),
-  suppress = "GH(.,100)",
-  output_names = c("tab1.csv", "~/tab2.csv"),
-  output_options = c("AS+SE+", "SE+"),
-  output_type = "2"
+  arb_filename = "path/tab1.arb",
+  tab_filename = "path/tab1.tab",
+  rda_filename = "path/tab1.rda",
+  explanatory_vars = c("REGION", "CJ"),
+  value = "CA",
+  safety_rules = "NK(1,85)|FREQ(3,10)",
+  suppress = "GH(1,100)",
+  output_names = "path/tab1.csv",
+  output_options = "AS+SE+",
+  output_type = "4"
 )
-
+# show the content of the file in console
 # visualisation du contenu du fichier dans la console
 file.show(infos_arb$arb_filename, pager = "console")
 }

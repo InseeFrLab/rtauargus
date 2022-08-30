@@ -2,8 +2,7 @@
 % Please edit documentation in R/tab_rda.R
 \name{tab_rda}
 \alias{tab_rda}
-\title{Create rda files from tabulated data \cr
-Crée les fichiers rda à partir de données tabulées}
+\title{Creates rda files from tabular data}
 \usage{
 tab_rda(
   tabular,
@@ -12,24 +11,26 @@ tab_rda(
   hst_filename = NULL,
   explanatory_vars = NULL,
   secret_var = NULL,
+  cost_var = NULL,
   decimals = getOption("rtauargus.decimals"),
   hrc = NULL,
   hierleadstring = getOption("rtauargus.hierleadstring"),
   totcode = getOption("rtauargus.totcode"),
-  missing = getOption("rtauargus.missing"),
   codelist = NULL,
   value = NULL,
   freq = NULL,
   maxscore = NULL,
-  separator = ","
+  maxscore_2 = NULL,
+  maxscore_3 = NULL,
+  separator = getOption("rtauargus.separator")
 )
 }
 \arguments{
-\item{tabular}{[\strong{obligatoire}]
+\item{tabular}{[\strong{mandatory}]
 data.frame which contains the tabulated data and
 an additional boolean variable that indicates the primary secret of type boolean \cr
-data.frame contenant les données tabulées et
-une variable supplémentaire indiquant le secret primaire de type booléen}
+([\strong{obligatoire}] data.frame contenant les données tabulées et
+une variable supplémentaire indiquant le secret primaire de type booléen.)}
 
 \item{tab_filename}{tab file name (with .tab extension) \cr
 nom du fichier tab (avec extension .tab)}
@@ -40,76 +41,86 @@ nom du fichier rda (avec extension)}
 \item{hst_filename}{hst file name (with .hst extension) \cr
 nom du fichier hst (avec extension)}
 
-\item{explanatory_vars}{[\strong{obligatoire}] Vector of categorical variables
-\cr
-Variables catégorielles, sous forme de liste de vecteurs
-
-Example : \code{list(c("A21", "TREFF", "REG")}
-table crossing \code{A21} x \code{TREFF} x \code{REG}}
+\item{explanatory_vars}{[\strong{mandatory}] Vector of explanatory variables \cr
+[\strong{obligatoire}] Variables catégorielles, sous forme  de vecteurs \cr
+Example : \code{c("A21", "TREFF", "REG")} for a table crossing
+\code{A21} x \code{TREFF} x \code{REG}}
 
 \item{secret_var}{Boolean variable which give the primary secret : equal to
 "TRUE" if a cell is concerned by the primary secret,"FALSE" otherwise.
-\cr
-variable indiquant le secret primaire de type booléen:
+will  be exported in the apriori file \cr
+(Variable indiquant le secret primaire de type booléen:
 prend la valeur "TRUE" quand les cellules du tableau doivent être masquées
-par le secret primaire, "FALSE" sinon.}
+par le secret primaire, "FALSE" sinon. Permet de créer un fichier d'apriori)}
 
-\item{decimals}{Minimum number of decimals to be displayed
+\item{cost_var}{Numeric variable allow to change the cost suppression of a cell
+for secondary suppression, it's the value of the cell by default, can be
+specified for each cell, fill with NA if the cost doesn't need to be changed
+for all cells \cr
+(Variable numeric qui permet de changer la coût de suppression d'une cellule,
+pris en compte dans les algorithmes de secret secondaire.Par défaut le coût
+correspond à la valeur de la cellule.  peut être spécifié pour chacune des cellules,
+peut contenir des NA pour les coûts que l'on ne souhaite pas modifier.)}
+
+\item{decimals}{Minimum number of decimals to display
 (see section 'Number of decimals') \cr
-nombre minimal de décimales à afficher (voir section 'Nombre
-de décimales').}
+(nombre minimal de décimales à afficher (voir section 'Number of decimals').)}
 
-\item{hrc}{Informations on hierarchical variables (see section 'hierarchical
-variable'). \cr
-informations sur les variables hiérarchiques (voir section
-'Variables hiérarchiques').}
+\item{hrc}{Informations of hierarchical variables (see section
+'Hierarchical variables'). \cr
+(Informations sur les variables hiérarchiques (voir section
+'Hierarchical variables').)}
 
-\item{hierleadstring}{Character which, repeated n times,
-indicates that the value is at n levels of depth in the hierarchy. \cr
-caractère qui, répété n fois, indique que la valeur est
-à n niveaux de profondeur dans la hiérarchie.}
+\item{hierleadstring}{The character that is used to indicate the depth of a
+code in the hierarchy. \cr
+(Caractère qui, répété n fois, indique que la valeur est
+à n niveaux de profondeur dans la hiérarchie.)}
 
 \item{totcode}{Code(s) which represent the total of a categorical variable
-(see section 'Specific parameters' for the syntax of this parameter).
-Variables not specified (neither by default nor explicitly)
-will be assigned the value of \code{rtauargus.totcode}.\cr
-code(s) pour le total d'une variable catégorielle (voir
-section 'Paramètres spécifiques' pour la syntaxe de ce paramètre). Les
+(see section 'Specific parameters' for this parameter's syntax).
+If unspecified for a variable(neither by default nor explicitly)
+it will be set to  \code{rtauargus.totcode}. \cr
+(Code(s) pour le total d'une variable catégorielle (voir
+section 'Specific parameters' pour la syntaxe de ce paramètre). Les
 variables non spécifiées (ni par défaut, ni explicitement) se verront
-attribuer la valeur de \code{rtauargus.totcode}.}
+attribuer la valeur de \code{rtauargus.totcode}.)}
 
-\item{missing}{Code(s) for a missing value (see section 'Specific parameters'
-for the syntax of this parameter). \cr
-code(s) pour une valeur manquante (voir section
-'Paramètres spécifiques' pour la syntaxe de ce paramètre).}
-
-\item{codelist}{file(s) containing labels of the categorical variables
-(see section 'Specific parameters' for the syntax of this parameter).\cr
-fichier(s) contenant les libellés des variables catégorielles
-(voir section 'Paramètres spécifiques' pour la syntaxe de ce paramètre).}
+\item{codelist}{file(s) containing labels of a categorical variables
+(see section 'Specific parameters' for the syntax of this parameter). \cr
+(Fichier(s) contenant les libellés des variables catégorielles
+(voir section 'Specific parameters' pour la syntaxe de ce paramètre).)}
 
 \item{value}{Name of the column containing the value of the cells. \cr
-nom de la colonne contenant la valeur des cellules}
+(Nom de la colonne contenant la valeur des cellules)}
 
-\item{freq}{Name of the column containing the the numbers for a cell. \cr
-Nom de la colonne contenant les effectifs pour une cellule}
+\item{freq}{Name of the column containing the cell frequency. \cr
+(Nom de la colonne contenant les effectifs pour une cellule)}
 
-\item{maxscore}{Name of the column containing
-the value of the largest contributor of a cell. \cr
+\item{maxscore}{Name of the column containing, the value of the largest
+contributor of a cell. \cr
+(Nom de la colonne contenant la valeur du plus gros contributeur
+d'une cellule)}
 
-Nom de la colonne contenant la valeur du plus gros contributeur
-d'une cellule}
+\item{maxscore_2}{Name of the column containing, the value of the second largest
+contributor to a cell. \cr
+(Nom de la colonne contenant la valeur du deuxième plus gros contributeur
+d'une cellule)}
 
-\item{separator}{character used as separator in the .tab file. \cr
-caractère utilisé en tant que separateur dans le fichier .tab}
+\item{maxscore_3}{Name of the column containing, the value of the third largest
+contributor to a cell. \cr
+(Nom de la colonne contenant la valeur du troisième plus gros contributeur
+d'une cellule)}
+
+\item{separator}{Character used as separator in the .tab file. \cr
+(Caractère utilisé en tant que separateur dans le fichier .tab)}
 }
 \value{
 Return the rda file name as a list (invisible).\cr
-Renvoie le nom du fichier rda sous forme de liste (de
-manière invisible).
+(Renvoie le nom du fichier rda sous forme de liste (de
+manière invisible).)
 }
 \description{
-Create an apriori file for the primary secret,
+Creates an apriori file for the primary secret,
 a tabular file (tab) and a metadata file (rda)
 from tabulated data and additional information.\cr
 }
@@ -123,16 +134,15 @@ un fichier tabular (tab) et un fichier de métadonnées
 
 The apriori file (.hst) summarizes for each value of the table
 if they are concerned by the primary secret or not.
-With this file tauargus will not need to set the primary secret itself.
+With this file tau-argus will not need to set the primary secret itself.
 The parameter \code{secret_var} indicates the name of the primary secret variable.
 If there is the additional boolean variable which indicates the primary secret
 in the table (of tabulated data), the function tab_rda will create
-an apriori file in a format conforming to tauargus.\cr
-
+an apriori file in a format conforming to tauargus. \cr
 
 Le fichier d'apriori (.hst) récapitule pour chaque valeurs
 du tableau si elles sont concernées par le secret primaire ou non.
-Avec ce fichier tauargus n'aura plus besoin de poser le secret primaire lui même,
+Avec ce fichier tau-argus n'aura plus besoin de poser le secret primaire lui même,
 il se basera sur le fichier d'apriori pour le faire.
 Le paramètre \code{secret_var} indique le nom de la variable du secret primaire.
 Si l'on rajoute cette variable supplémentaire indiquant
@@ -143,46 +153,56 @@ tab_rda permet de créer un fichier d'apriori au format conforme pour tauargus.
 \section{Specific parameters}{
 
 
-The parameters \code{totcode}, \code{missing} and \code{codelist}
+
+The parameters \code{totcode}, and \code{codelist}
 must be given in the form of a vector indicating the value to take for each variable.
 The names of the elements of the vector give the variable concerned and
 the elements of the vector give the value of the parameter for Tau-Argus.
-An unnamed element will be the default value.\cr
+An unnamed element will set the default value for each variable. \cr
 
-Les paramètres \code{totcode}, \code{missing} et \code{codelist}
+(Les paramètres \code{totcode},  et \code{codelist}
 sont à renseigner sous la forme d'un vecteur indiquant la valeur à prendre
 pour chaque variable.
 
 Les noms des éléments du vecteur donnent la variable concernée, les éléments
 du vecteur donnent la valeur du paramètre pour Tau-Argus. Un élément non
 nommé constituera la valeur par défaut, qui sera attribuée à toutes les
-variables pouvant prendre ce paramètre.
+variables pouvant prendre ce paramètre.)
 
 For example :
 \itemize{
+  \item{\code{totcode = "global"} : writes \code{<TOTCODE> "global"} for each
+  explanatory vars}
+  \item{\code{totcode = c("global", size="total", income="total")} :
+  \code{<TOTCODE> "global"} for each variable except for \code{size} and
+  \code{income}} assigned with \code{<TOTCODE> "total"}
+  by default : {<TOTCODE> "Total"}
   \item{\code{totcode = "global"} : écrit \code{<TOTCODE> "global"} pour
     toutes les variables catégorielles}
   \item{\code{totcode = c("global", size="total", income="total")} :
-  idem, sauf pour les variables \code{size}et \code{income}}
+  \code{<TOTCODE> "global"} pour toutes les variables catégorielles
+  sauf  \code{size} and \code{income}} qui se verront affecter
+  le total : \code{<TOTCODE> "total"}
+  Par defaut : {<TOTCODE> "Total"}
 }
 }
 
 \section{Hierarchical variables}{
 
-
-Parameter \code{hrc} has the same syntax as \code{totcode},\code{missing} and
+Parameter \code{hrc} has the same syntax as \code{totcode} and
 \code{codelist} (named vector containing as many elements as variables to describe).
 Hierarchy is defined in an separate hrc file (\strong{hiercodelist}).
 which can be written with the function \code{link{write_hrc2}}.
 The function expects the location of this file (and a possible \code{hierleadstring}
-if it differs from the default option of the package).
+if it differs from the default option of the package : @.
 The path to the existing file is explicitly given.
 The elements of the vector in parameter must be named (with the name of the variable),
-even if there is only one element
-emph{Example :}\code{c(category="category.hrc")}
+even if there is only one element.
 
-Le paramètre \code{hrc} obéit aux mêmes règles de syntaxe que \code{totcode},
-\code{missing} et \code{codelist} (vecteur nommé contenant autant d'éléments
+emph{Example :}\code{c(category="category.hrc")} \cr
+
+(Le paramètre \code{hrc} obéit aux mêmes règles de syntaxe que \code{totcode}
+ et \code{codelist} (vecteur nommé contenant autant d'éléments
 que de variables à décrire).
 
 La hiérarchie est définie dans un fichier hrc à part (\strong{hiercodelist})
@@ -192,9 +212,9 @@ La fonction attend l'emplacement de ce fichier (et un éventuel \code{hierleadst
 s'il diffère de l'option par défaut du package).
 Le chemin vers le fichier existant est explicitement donné.
 Les éléments du vecteur en paramètre doivent nommés (avec le nom de la variable),
-même s'il n'y a qu'un seul
-élément.
-\emph{Exemple :}\code{c(category="category.hrc")}
+même s'il n'y a qu'un seul élément.
+
+\emph{Exemple :}\code{c(category="category.hrc")})
 }
 
 \section{Number of decimals}{
@@ -205,16 +225,12 @@ include in the output file
 It applies to all real variables (double) but not to integer variables.
 To add zeros to an integer variable, convert it with \code{as.double} beforehand.\cr
 
-Le paramètre \code{decimals} indique le nombre minimal de décimales à faire
+(Le paramètre \code{decimals} indique le nombre minimal de décimales à faire
 figurer dans le fichier en sortie (quel que soit le nombre de décimales
 effectivement présent dans \code{tabular}). Il s'applique à toutes les
 variables réelles (double) mais pas aux variables entières (integer). Pour
 ajouter des zéros à une variable entière, la convertir avec \code{as.double}
-au préalable.
-}
-
-\section{Voir aussi}{
-
+au préalable.)
 }
 
 \examples{
@@ -228,7 +244,8 @@ area           = c( "07",  "01",  "04",  "06",  "02",  "06"),
 income         = c(  100,     4,     7,    14,    42,    85),
 freq           = c(    2,     6,     8,    45,   100,     1),
 max            = c(   54,     2,     1,    13,    19,    85),
-primary_secret = c( TRUE, FALSE, FALSE,  TRUE, FALSE,  TRUE)
+primary_secret = c( TRUE, FALSE, FALSE,  TRUE, FALSE,  TRUE),
+cost           = c(   NA,    NA,    NA,     1,     5,    NA)
 )
 
 # rda creation
@@ -242,11 +259,11 @@ files_names <-
   hrc              = c(category = "category.hrc"),
   explanatory_vars = c("category" , "size", "area"),
   secret_var       = "primary_secret",
+  cost_var         = "cost"
   totcode          = c(
     category = "global",
     size     = "total",
-    area     = "global",
-    income   = "total"
+    area     = "global"
   ),
   value            = "income",
   freq             = "freq"
