@@ -28,12 +28,20 @@ navbar:
       icon: fa-gitlab
 
 reference:
-  - title: Secrétiser en une seule instruction
+  - title: Poser le secret sur des tableaux
+    contents:
+      - tab_multi_manager
+      - write_hrc2
+      - tab_rtauargus
+      - tab_rtauargus2
+  - title: Poser le secret à partir de microdonnées
     contents:
       - rtauargus
       - rtauargus_plus
   - title: Secrétiser étape par étape
     contents:
+      - tab_rda
+      - tab_arb
       - micro_asc_rda
       - micro_arb
       - run_arb
