@@ -22,6 +22,12 @@ reference:
     - write_hrc2
     - tab_rtauargus
     - tab_rtauargus2
+    - activity_corr_table
+    - nuts23_fr_corr_table
+    - turnover_act_cj
+    - turnover_act_size
+    - turnover_nuts_cj
+    - turnover_nuts_size
   - title: Protect tables from microdata
     desc: >
       Functions for protecting magnitude and frequency tables, i.e. from
