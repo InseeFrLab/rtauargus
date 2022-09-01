@@ -380,31 +380,38 @@ tab_rda <- function(
   # if (length(tabular[1,]) != length(col_tabular))
   # {warning("unspecified columns in table")}
   # Controle hrc
-  if(!all(names(hrc) %in% explanatory_vars))
-  {stop(" error with label of the hierarchichal variable")}
+  if(!all(names(hrc) %in% explanatory_vars)){
+    stop(" error with label of the hierarchichal variable")
+    }
 
   # Controle sur frequency
 
-  if (any(tabular[[freq]] != round(tabular[[freq]],0)))
-  {stop("decimals are not allowed for frequency")}
+  if (any(tabular[[freq]] != round(tabular[[freq]],0))){
+    stop("decimals are not allowed for frequency")
+  }
 
   #Controles sur secret_var
-  if ((!is.null(secret_var)) && (!secret_var %in% colnames(tabular)))
-  {stop("secret_var does not exist in tabular")}
+  if ((!is.null(secret_var)) && (!secret_var %in% colnames(tabular))){
+    stop("secret_var does not exist in tabular")
+    }
 
-  if((!is.null(secret_var)) && (any(!is.na(tabular[[secret_var]]))) && (!is.logical(tabular[[secret_var]])))
-  {stop("unexpected type : secret_var must be a  boolean variable")}
+  if((!is.null(secret_var)) && (any(!is.na(tabular[[secret_var]]))) && (!is.logical(tabular[[secret_var]]))){
+    stop("unexpected type : secret_var must be a  boolean variable")
+    }
 
-  if((!is.null(secret_var)) && any(is.na(tabular[[secret_var]])))
-  {stop("NAs in secret_var are not allowed")}
+  if((!is.null(secret_var)) && any(is.na(tabular[[secret_var]]))){
+    stop("NAs in secret_var are not allowed")
+    }
 
   # Controles sur cost_var
 
-  if ((!is.null(cost_var)) && (!cost_var %in%  colnames(tabular)))
-  {stop("cost_var_var does not exist in tabular")}
+  if ((!is.null(cost_var)) && (!cost_var %in%  colnames(tabular))){
+    stop("cost_var does not exist in tabular")
+    }
 
-  if((!is.null(cost_var)) && (!is.numeric(tabular[[cost_var]])))
-  {stop("unexpected type : secret_var must be a  numeric variable")}
+  if((!is.null(cost_var)) && (!is.numeric(tabular[[cost_var]]))){
+    stop("unexpected type : secret_var must be a  numeric variable")
+    }
 
   #Genere le fichier hst lié au secret primaire
 
@@ -421,11 +428,11 @@ tab_rda <- function(
 
   if ((!is.null(cost_var)) && (is.numeric(tabular[[cost_var]]))&&
       (!is.null(secret_var))){
-    tabular[cost_var]<-ifelse(!is.na(tabular[[cost_var]] && tabular[[secret_var]] == "s"),
+    tabular[cost_var]<-ifelse(!is.na(tabular[[cost_var]]) & tabular[[secret_var]] == "s",
                               paste0("c,",tabular[[cost_var]]),"no_cost")
 
     hst_cost=tabular[
-      tabular[cost_var]!="no_cost",
+      tabular[[cost_var]]!="no_cost",
       c(explanatory_vars[(explanatory_vars %in% colnames(tabular))], cost_var)
     ]
   }
@@ -436,13 +443,14 @@ tab_rda <- function(
                               paste0("c,",tabular[[cost_var]]),"no_cost")
 
     hst_cost=tabular[
-      tabular[cost_var]!="no_cost",
+      tabular[[cost_var]]!="no_cost",
       c(explanatory_vars[(explanatory_vars %in% colnames(tabular))], cost_var)
     ]
   }
 
 
   if(!is.null(cost_var) && !is.null(secret_var)){
+    names(hst_cost) <- names(hst_secret_prim)
     hst <- rbind(hst_secret_prim,hst_cost)
   } else if (is.null(cost_var) && !is.null(secret_var)){
     hst <- hst_secret_prim
