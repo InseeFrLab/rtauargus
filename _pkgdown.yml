@@ -12,25 +12,6 @@ navbar:
   structure:
     left:  [intro, reference, articles, tutorials, news]
     right: [search, gitlab]
-  components:
-   articles:
-    text: Articles
-    menu:
-    - text: Tabular data
-    - text: Main steps to deal with tabular datasets
-      href: articles/rtauargus.html
-    - text: Protect a set of linked tables
-      href: articles/protect_multi_tables.html
-    - text: -------
-    - text: Microdata
-      href: articles/rtauargus_micro.html
-    - text: -------
-    - text: Safety rules and Suppress Methods
-      href: articles/options_safety_rules.html
-   reference:
-    - text: Functions
-      href: reference/index.html
-
 reference:
   - title: Protection tables from tabular
     desc: >
