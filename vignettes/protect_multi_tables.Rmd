@@ -1,0 +1,22 @@
+---
+title: "Simple Way to Protect Multiple Linked Tables At Once"
+subtitle: <h2>![logo R](R_logo_small.png)![logo &tau;-Argus](TauBall2_small.png)<br/>Package {rtauargus}</h2>
+output:
+  rmarkdown::html_vignette:
+    toc: true
+    toc_depth: 3
+vignette: >
+  %\VignetteIndexEntry{Simple Way to Protect Multiple Linked Tables At Once}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+<!--
+  NE JAMAIS MODIFIER DIRECTEMENT `rtauargus.Rmd`
+  MODIFIER `rtauargus.Rmd.orig` ET EXECUTER `precompilation.R`
+  Voir : https://ropensci.org/technotes/2019/12/08/precompute-vignettes
+-->
+
+
+
+## Multitable Examples

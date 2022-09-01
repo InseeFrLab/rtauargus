@@ -2,7 +2,7 @@
 % Please edit documentation in R/micro_arb.R
 \name{micro_arb}
 \alias{micro_arb}
-\title{Crée un fichier batch (.arb) pour microdonnées}
+\title{Creates a batch file (.arb) for microdata}
 \usage{
 micro_arb(
   arb_filename = NULL,
@@ -24,79 +24,143 @@ micro_arb(
 )
 }
 \arguments{
-\item{arb_filename}{nom du fichier arb généré (avec
-extension). Si non renseigné, un fichier temporaire.}
+\item{arb_filename}{name of the generated arb file (with
+extension). If not specified, a temporary file. \cr
+(nom du fichier arb généré (avec extension). Si non renseigné, un fichier
+temporaire.)}
 
-\item{asc_filename}{[\strong{obligatoire}] nom du fichier asc (avec extension).}
+\item{asc_filename}{[\strong{required}] name of the asc file
+(with extension). \cr
+([\strong{obligatoire}] nom du fichier asc (avec extension).)}
 
-\item{rda_filename}{nom du fichier rda (avec extension). Si non renseigné,
-\code{asc_filename} avec l'extension "rda" à la place de "asc".}
+\item{rda_filename}{name of the rda file (with extension). If not filled in,
+\code{asc_filename} with the extension "rda" instead of "asc". \cr
+(nom du fichier rda (avec extension). Si non renseigné,
+\code{asc_filename} avec l'extension "rda" à la place de "asc".)}
 
-\item{explanatory_vars}{[\strong{obligatoire}] variables catégorielles, sous
+\item{explanatory_vars}{[\strong{required}] categorical variables, in
+form of a list of vectors. Each element of the list is a vector of
+variable names forming a tab.
+Example: \code{list(c("CJ", "A21"), c("SEX", "REGION"))} for the first
+table crossing \code{CJ} x \code{A21} and the second table crossing
+\code{SEXE} x \code{REGION}.
+If a single tabulation, a simple vector of the variables to be crossed is
+accepted (no need for \code{list(...)}). \cr
+([\strong{obligatoire}] variables catégorielles, sous
 forme de liste de vecteurs. Chaque élément de la liste est un vecteur des
 noms des variables formant une tabulation.
-Exemple : \code{list(c("CJ", "A21"), c("SEXE", "REGION"))} pour le premier
-tableau croisant \code{CJ} x \code{A21} et le deuxième tableau croisant
-\code{SEXE} x \code{REGION}.
+Exemple: \code{list(c("CJ", "A21"), c("SEX", "REGION"))} pour la première
+table croisant \code{CJ} x \code{A21} et la seconde croisant
+\code{SEXE} x \code{REGION}
 Si une seule tabulation, un simple vecteur des variables à croiser est
-accepté (pas besoin de \code{list(...)}).}
+accepté (pas besoin de \code{list(...)}).)}
 
-\item{response_var}{variable de réponse à sommer, ou comptage si
-\code{"<freq>"}. Une seule valeur ou autant de valeurs que de tabulations.}
+\item{response_var}{response variable to be summed, or counted if
+\code{"<freq>"}. A single value or as many values as there are tabs. \cr
+(variable de réponse à sommer, ou comptage si \code{"<freq>"}.
+Une seule valeur ou autant de valeurs que de tabulations.)}
 
-\item{shadow_var}{variable(s) pour l'application du secret primaire. Si non
-renseigné, \code{response_var} sera utilisé par Tau-Argus.}
+\item{shadow_var}{variable(s) for applying the primary secret. If not
+filled in, \code{response_var} will be used by Tau-Argus. \cr
+(variable(s) pour l'application du secret primaire. Si non
+renseigné, \code{response_var} sera utilisé par Tau-Argus.)}
 
-\item{cost_var}{variable(s) de coût pour le secret secondaire.}
+\item{cost_var}{cost variable(s) for the secondary secret. \cr
+(variable(s) de coût pour le secret secondaire.)}
 
-\item{safety_rules}{[\strong{obligatoire}] règle(s) de secret primaire.
+\item{safety_rules}{[\strong{required}] primary secret rule(s).
+String in Tau-Argus batch syntax. The weighting is treated
+in a separate parameter (do not specify WGT here, use the
+\code{weighted}). \cr
+([\strong{obligatoire}] règle(s) de secret primaire.
 Chaîne de caractères en syntaxe batch Tau-Argus. La pondération est traitée
 dans un paramètre à part (ne pas spécifier WGT ici, utiliser le paramètre
-\code{weighted}).}
+\code{weighted}).)}
 
-\item{weighted}{indicatrice(s) de pondération (booléen).}
+\item{weighted}{indicator(s) (boolean). \cr
+(indicatrice(s) de pondération (booléen).)}
 
-\item{suppress}{[\strong{obligatoire}] méthode(s) de gestion du secret
+\item{suppress}{[\strong{required}] secret management method(s)
+secondary (Tau-Argus batch syntax). If the method is the same for
+each tabulation, the first parameter (table number) will be ignored and
+renumbered automatically (see section 'Syntax'). \cr
+([\strong{obligatoire}] méthode(s) de gestion du secret
 secondaire (syntaxe batch de Tau-Argus). Si la méthode est la même pour
 chaque tabulation, le premier paramètre (numéro du tableau) sera ignoré et
-renuméroté automatiquement (voir la section 'Syntaxe').}
+renuméroté automatiquement (voir la section 'Syntax').)}
 
-\item{linked}{pour traiter le secret secondaire conjointement sur toutes les
+\item{linked}{to process the secondary secret jointly on all
+tabs. Only one delete command is allowed in this case (applied to all
+all tables). \cr
+(pour traiter le secret secondaire conjointement sur toutes les
 tabulations. Une seule commande suppress autorisée dans ce cas (appliquée à
-tous les tableaux).}
+tous les tableaux).)}
 
-\item{output_names}{noms des fichiers en sortie. Si renseigné,
-obligatoirement autant de noms de fichiers que de tabulations. Si laissé
+\item{output_names}{names of output files. If filled in,
+the number of file names must be the same as the number of tabs. If left
+empty, as many temporary file names as there are tabs will be
+generated. \cr
+(noms des fichiers en sortie. Si renseigné, obligatoirement autant de noms
+de fichiers que de tabulations. Si laissé
 vide, autant de noms de fichiers temporaires que de tabulations seront
-générés.}
+générés.)}
 
-\item{output_type}{format des fichiers en sortie (codification Tau-Argus).
-Valeur par défaut du package : \code{"2"} (csv for pivot-table).}
+\item{output_type}{format of output files (Tau-Argus codification).
+Default value of the package: \code{"2"} (csv for pivot-table). \cr
+(format des fichiers en sortie (codification Tau-Argus).
+Valeur par défaut du package : \code{"2"} (csv for pivot-table).)}
 
-\item{output_options}{options supplémentaires des fichiers en sortie. Valeur
+\item{output_options}{additional options for output files. default value of
+the package: \code{"AS+"} (status display). To specify no option, \code{""}. \cr
+(options supplémentaires des fichiers en sortie. Valeur
 par défaut du package : \code{"AS+"} (affichage du statut). Pour ne
-spécifier aucune option, \code{""}.}
+spécifier aucune option, \code{""}.)}
 
-\item{apriori}{fichier(s) d'informations \emph{a priori}. Voir ci-dessous
-pour la syntaxe.}
+\item{apriori}{information file(s) \emph{a priori}. See below
+for the syntax. \cr
+(fichier(s) d'informations \emph{a priori}. Voir ci-dessous
+pour la syntaxe.)}
 
-\item{gointeractive}{pour avoir la possibilité de lancer le batch depuis le
-menu de Tau-Argus (\code{FALSE} par défaut).}
+\item{gointeractive}{to have the possibility to launch the batch from the
+menu of Tau-Argus. \cr
+(pour avoir la possibilité de lancer le batch depuis le
+menu de Tau-Argus (\code{FALSE} par défaut).)}
 }
 \value{
-Une liste de deux éléments : le nom du fichier arb, les noms des
-  fichiers en sortie (utile pour récupérer les noms générés aléatoirement).
+A list of two elements: arb filename and names of output files
+(useful to get back the randomly generated names) \cr
+(Une liste de deux éléments : le nom du fichier arb, les noms des
+fichiers en sortie (utile pour récupérer les noms générés aléatoirement).)
 }
 \description{
-Crée un fichier batch pour microdonnées, exécutable par Tau-Argus en ligne de
-commande.
+Creates a batch file for microdata, executable by Tau-Argus in
+command line. \cr
+(Crée un fichier batch pour microdonnées, exécutable par Tau-Argus en ligne
+de commande.)
 }
 \details{
-La fonction ne vérifie pas si les fichiers asc et rda existent.
+The function does not check if asc and rda files exist. \cr
+(La fonction ne vérifie pas si les fichiers asc et rda existent.)
 }
-\section{Syntaxe}{
+\section{Syntax}{
 
-Tau-Argus peut traiter plusieurs tabulations pour un même jeu de
+Tau-Argus can handle multiple tabs for the same set of
+microdata. Passing a single value for an option will apply the same
+processing to each tab. For differentiated options, passing a
+vector containing as many values as there are tabs. If the lengths do not
+match (not recommended), a recycling is performed.
+
+Unless otherwise stated, use the syntax mentioned in the documentation
+of Tau-Argus.
+
+Special syntax for \code{suppress} : the first parameter in the
+Tau-Argus syntax is the tab number. If the method is identical
+for all tabs, this first parameter will be ignored and the numbers
+are automatically recalculated for the batch. In the writing
+\code{suppress = "GH(n,100)"}, n will thus be transformed into 1 for the
+first tab, into 2 for the second tab, etc.
+
+(Tau-Argus peut traiter plusieurs tabulations pour un même jeu de
 microdonnées. Passer une seule valeur pour une option appliquera le même
 traitement à chaque tabulation. Pour des options différenciées, passer un
 vecteur contenant autant de valeurs que de tabulations. Si les longueurs ne
@@ -110,24 +174,43 @@ syntaxe Tau-Argus est le numéro de la tabulation. Si la méthode est identique
 pour toutes les tabulations, ce premier paramètre sera ignoré et les numéros
 recalculés automatiquement pour le batch. Dans l'écriture
 \code{suppress = "GH(n,100)"}, n sera ainsi transformé en 1 pour la première
-tabulation, en 2 pour la deuxième tabulation, etc.
+tabulation, en 2 pour la deuxième tabulation, etc.)
 }
 
-\section{Identifiants des tableaux}{
+\section{Table identifiers}{
 
-Si la liste \code{explanatory_vars} comporte des noms, ceux-ci seront
+If the list \code{explanatory_vars} has names, these will be
+used in the batch to give an identifier to the table, in the form of
+of a comment line (\code{// <TABLE_ID> "..."}). They will be
+reused by the \code{import} function to name the R format arrays
+tables in output.
+
+(Si la liste \code{explanatory_vars} comporte des noms, ceux-ci seront
 utilisés dans le batch pour donner un identifiant au tableau, sous la forme
 d'une ligne de commentaire (\code{// <TABLE_ID> "..."}). Ils seront
 réutilisés par la fonction \code{import} pour nommer les tableaux formats R
-en sortie.
+en sortie.)
 }
 
-\section{Informations \emph{a priori}}{
+\section{Use an apriori file}{
 
-Il est possible de fournir un fichier a priori (.hst) pour chaque tabulation.
+It is possible to provide an apriori file (.hst) for each tabulation.
 
-La manière la plus simple est de passer un vecteur contenant autant de noms de
-fichiers hst que de tabulations. Si le fichier est le même pour toutes les
+The easiest way is to pass a vector containing as many
+hst files as there are tabs. If the file is the same for all
+tabs, specify the name of this file (it will be used for all
+tabs).
+
+The additional options are optional. To change the default values,
+pass a list with the hst file(s) as the first item and
+complete with the elements having the names \code{sep} for the separator,
+\code{ignore_err} for IgnoreError and \code{exp_triv} for ExpandTrivial.
+As for filenames, specify only one value per parameter or
+as many values as there are tabs.
+(Il est possible de fournir un fichier apriori (.hst) pour chaque tabulation.
+
+La manière la plus simple est de passer un vecteur contenant autant de noms
+de fichiers hst que de tabulations. Si le fichier est le même pour toutes les
 tabulations, spécifier le nom de ce fichier (il sera utilisé pour toutes les
 tabulations).
 
@@ -136,16 +219,20 @@ défaut, passer une liste ayant comme premier élément le(s) fichier(s) hst et
 compléter avec les éléments portant les noms \code{sep} pour le séparateur,
 \code{ignore_err} pour IgnoreError et \code{exp_triv} pour ExpandTrivial.
 Comme pour les noms de fichiers, spécifier une seule valeur par paramètre ou
-autant de valeurs que de tabulations.
+autant de valeurs que de tabulations.)
 }
 
-\section{Voir aussi}{
- La fonction \code{\link{rtauargus}}, qui utilise cette
-fonction et hérite de ses paramètres.
+\section{See also}{
+
+
+The function \code{\link{rtauargus}}, which uses this
+function and inherits its parameters. \cr
+(La fonction \code{\link{rtauargus}}, qui utilise cette
+fonction et hérite de ses paramètres.)
 }
 
 \examples{
-# creation fichier arb
+# creation of the .arb file
 infos_arb <- micro_arb(
   asc_filename = "donnees.asc",
   explanatory_vars = list(c("REGION", "CJ"), c("REGION")),
@@ -157,6 +244,7 @@ infos_arb <- micro_arb(
   output_type = "2"
 )
 
-# visualisation du contenu du fichier dans la console
+# Content of the created file visible in the R console
+# (Visualisation du contenu du fichier dans la console)
 file.show(infos_arb$arb_filename, pager = "console")
 }

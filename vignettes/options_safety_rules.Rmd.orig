@@ -1,0 +1,97 @@
+---
+title: "Safety rules and Suppress Options"
+subtitle: <h2>![logo R](R_logo_small.png)![logo &tau;-Argus](TauBall2_small.png)<br/>Package {rtauargus}</h2>
+output:
+  rmarkdown::html_vignette:
+    toc: true
+    toc_depth: 3
+vignette: >
+  %\VignetteIndexEntry{Safety rules and Suppress Options}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+## Primary suppression with the `safety_rules` options :
+
+In `tab_rtauargus()` function, the primary suppression options have to be set in the `safety_rules` argument. By default this parameter is set to **"MAN(10)"**, useful when using
+apriori and Interval protection level of 10%.
+
+If you want to set rules for primary suppression the syntax is :
+- *"rule_number1|rule_number2|rule_number3|..."*
+At least one safety rule is required.
+
+These are all allowed rules according to &tau;-Argus manual.
+
+The most common rules are :
+
+- The dominance rule **NK(n,k)** with :
+  - n the size of the coalition
+  - k the max percentage
+- The treshold rule **Freq(n,p)** with :
+  - n the minimum frequency allowed
+  - p the Frequency Safety Range
+- The p percent rule **P(p,n)** with :
+  - the maximum accuracy of the estimation in percent
+  - n (optional, default = 1), the size of the coalition
+- The safety margin **MAN(p)** with :
+  - p the margin to use in percent
+
+The other ones :
+
+- The request rule **REQ(p1,p2,SafetyMargin)**
+- The zero safety range parameter **ZERO(p)**
+- The status of missing codes **MIS(b)** with :
+  - b = 0 (default) cells with a missing code is unsafe if the safety rules ares are violated
+  - b = 1 these cells are always safe
+
+Some rules can appear multiple times **(P,NK)**
+
+You can get more details with the &tau;-Argus manual in the sections :
+- _4.4.4 Specify Tables_
+- _5.7 The Batch command file_
+
+## The suppress options :
+
+The default options is **"MOD(1,5,1,0,0)"**
+It fits for our business statistics.
+
+For each of the following parameters, the number of the table is needed, in our case it will always be **1**.
+
+The possible options are :
+
+- **MOD: Modular** :
+  - MOD(TabNo, MaxTimePerSubtable, SingleSingle,SingleMultiple, MinFreq)
+  - The last 3 parameters are the singleton options.
+  Each parameter can be 0 or 1. If 1 the option is activated.
+
+ - **OPT: Optimal** :
+   - OPT(TabNo, MaxComputingTime)
+
+- **GH  Hypercube** :
+  - GH(TabNo, A priori Bounds Percentage, ModelSize,ApplySingleton)
+  - ModelSize 0 = normal, 1 indicates the large model.
+  - ApplySingleton: 1 = yes,0 = no; default = yes if the table has frequency-information, no if not.
+
+- **NET: Network** :
+   - NET(TabNo)
+
+- **RND: Controlled rounding** :
+  - RND(TabNo, RoundingBase, Steps, MaxTime, Partitions, StopRule)
+  - Steps: number of steps allowed, normally 0 (default)
+   - MaxTime: Max computing time (10 = default)
+   - Partitions: 0, 1 (0 = no partitioning (default), 1 = apply the partitioning procedure)
+   - StopRule: 1 = Rapid only, 2 = First feasible solution, 3 = optimal solution (3 =default)
+
+- **CTA: Controlled Tabular Adjustment** :
+  - CTA(TabNo)
+
+More details are available in the &tau;-Argus manual, especially in the section **4.2.3**
+
+
+

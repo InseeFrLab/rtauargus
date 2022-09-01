@@ -1,63 +1,19 @@
-specify_tables_one_tab <- function(expl, resp, shad, cost) {
-  paste0(
+specify_tables_one_tab <- function(expl, resp, safety_rules) {
+  specif_table <- paste0(
     paste(cite(expl), collapse = ""), '|',
-    cite(resp), '|',
-    cite(shad), '|',
-    cite(cost)
+    cite(resp), '||'
   )
-}
-
-# Genere partie SPECIFYTABLE et SAFETYRULE
-specif_safety_tab <- function(explanatory_vars,
-                          response_var,
-                          shadow_var,
-                          cost_var,
-                          safety_rules
-                          ) {
-
-  specify_tables <-
-    mapply(
-      specify_tables_one_tab,
-      explanatory_vars,
-      response_var,
-      shadow_var,
-      cost_var
-    )
-
-  specify_tables <- paste("<SPECIFYTABLE>", specify_tables)
-
-  if (!is.null(names(explanatory_vars))) {
-    table_ids <- sprintf('// <TABLE_ID> "%s"', names(explanatory_vars))
-    specify_tables <- paste(table_ids, specify_tables, sep = "\n")
-  }
-
+  specif_table <- paste("<SPECIFYTABLE>", specif_table)
   safety_rules <- paste("<SAFETYRULE>", safety_rules)
-
-  mapply(paste, specify_tables,safety_rules, sep = "\n", USE.NAMES = FALSE)
-
+  paste(specif_table,safety_rules, sep = "\n")
 }
+
 
 # Genere partie SUPPRESS et WRITETABLE
 suppr_writetable_tab <- function(suppress,
-                             linked,
-                             output_names,
-                             output_type,
-                             output_options) {
-
-  # numero table
-  num_table <- seq_along(output_names)
-
-  if (linked & length(suppress) > 1) {
-    stop("un seul suppress permis quand linked = TRUE")
-  }
-
-  # methode suppr
-  if (length(suppress) == 1) {
-    if (linked) suppr_n <- 0 else suppr_n <- num_table
-    suppress <- gsub(" ", "", suppress) # supprime tout espace
-    suppress_fmt <- sub("\\([^),]+(,*.*)\\)", "(%i\\1)", suppress)
-    suppress <- sprintf(suppress_fmt, suppr_n)
-  }
+                                 output_names,
+                                 output_type,
+                                 output_options) {
 
   # chemin complet sorties
   output_names <- normPath2(output_names)
@@ -67,29 +23,22 @@ suppr_writetable_tab <- function(suppress,
   write_cmd <-
     paste0(
       '<WRITETABLE> (',
-      num_table, ',',
+      1, ',',
       output_type, ',',
       output_options, ',"',
       output_names, '")'
     )
 
-  if (linked) {
-    c(
-      suppr_cmd,
-      mapply(paste, write_cmd, sep = "\n", USE.NAMES = FALSE)
-    )
-  } else {
-    mapply(paste, suppr_cmd, write_cmd, sep = "\n", USE.NAMES = FALSE)
-  }
+  paste (suppr_cmd, write_cmd, sep = "\n")
+
 
 
 }
 
-
 # Paramètre a priori ------------------------------------------------------
 
 # Normalise parametre "apriori" pour le faire passer dans la
-# fonction apriori_batch
+# fonction tab_apriori_batch
 
 norm_apriori_params_tab <- function(params) {
 
@@ -113,17 +62,12 @@ norm_apriori_params_tab <- function(params) {
 
 # Génère <APRIORI>s
 
-apriori_batch <- function(ntab, hst_names, sep = ',', ignore_err = 0 , exp_triv = 0) {
-
-  # verif pour éviter recyclage qd longueurs args > 1 ne correspondent pas
-  n <- lengths(list(hst_names, sep, ignore_err, exp_triv))
-  if (any(ntab > 1 & n > 1 & n != ntab)) stop("longueur arguments")
-  if (any(ntab == 1 & n != 1)) stop("longueur arguments")
+tab_apriori_batch <- function(hst_names, sep = ',', ignore_err = 0 , exp_triv = 0) {
 
   paste0(
     '<APRIORI> "',
     normPath2(hst_names), '",',
-    seq(ntab), ',"',
+    1, ',"',
     sep, '",',
     ignore_err, ',',
     exp_triv
@@ -134,178 +78,174 @@ apriori_batch <- function(ntab, hst_names, sep = ',', ignore_err = 0 , exp_triv 
 
 # Exportée ----------------------------------------------------------------
 
-#' Crée un fichier batch (.arb) pour données tabulées
+#' Creates a batch file (.arb) for tabular data in order to run Tau Argus
 #'
-#' Crée un fichier batch pour données tabulées, exécutable par Tau-Argus en ligne de
-#' commande.
-#'
-#' La fonction ne vérifie pas si les fichiers asc et rda existent.
+#' Function doesn't check if the asc and rda files exists\cr
+#' (Crée un fichier batch (.arb) pour données tabulées exécutable par
+#' Tau-Argus en ligne de commande. La fonction ne vérifie pas
+#' si les fichiers asc et rda existent.)
 #'
 #' @section Syntaxe:
-#' Tau-Argus peut traiter plusieurs tabulations pour un même jeu de
-#' données. Passer une seule valeur pour une option appliquera le même
-#' traitement à chaque tabulation. Pour des options différenciées, passer un
-#' vecteur contenant autant de valeurs que de tabulations. Si les longueurs ne
-#' correspondent pas (déconseillé), un recyclage est effectué.
 #'
+#' For tabular data, this function secures only one table at a time#'
+#' Unless specific details, use syntax from Tau-Argus manual \cr
 #' Sauf mention contraire, utiliser la syntaxe mentionnée dans la documentation
 #' de Tau-Argus.
 #'
-#' Syntaxe spéciale pour \code{suppress} : le premier paramètre dans la
-#' syntaxe Tau-Argus est le numéro de la tabulation. Si la méthode est identique
-#' pour toutes les tabulations, ce premier paramètre sera ignoré et les numéros
-#' recalculés automatiquement pour le batch. Dans l'écriture
-#' \code{suppress = "GH(n,100)"}, n sera ainsi transformé en 1 pour la première
-#' tabulation, en 2 pour la deuxième tabulation, etc.
+#' Syntax pour \code{suppress} :
+#' First parameter is the table number, in this case it will always be 1 \cr
 #'
-#' @section Identifiants des tableaux:
-#' Si la liste \code{explanatory_vars} comporte des noms, ceux-ci seront
-#' utilisés dans le batch pour donner un identifiant au tableau, sous la forme
-#' d'une ligne de commentaire (\code{// <TABLE_ID> "..."}). Ils seront
-#' réutilisés par la fonction \code{import} pour nommer les tableaux formats R
-#' en sortie.
+#' (Pour les données tabulées la fonction traite un tableau à la fois
+#' Syntaxe spéciale pour \code{suppress} :
+#' le premier paramètre dans la syntaxe Tau-Argus est le numéro du tableau.
+#' Dans le cas de cette fonction ce sera toujours 1)
 #'
-#' @section Informations \emph{a priori}:
-#' Il est possible de fournir un fichier a priori (.hst) pour chaque tabulation.
 #'
-#' La manière la plus simple est de passer un vecteur contenant autant de noms de
-#' fichiers hst que de tabulations. Si le fichier est le même pour toutes les
-#' tabulations, spécifier le nom de ce fichier (il sera utilisé pour toutes les
-#' tabulations).
+#' @section Informations \emph{hst_filename}:
+#' It's possible to add an apriori file (.hst) for a tabular, it can be generated
+#' by the table_rda() function.
+#'
+#' Other options are not mandatory. To modify default value use a vector with the
+#' .hst file path as first element and then complete with those parameters :
+#' \code{sep} for the separator,
+#' \code{ignore_err} for IgnoreError and \code{exp_triv} for ExpandTrivial. \cr
+#'
+#' (Il est possible de fournir un fichier apriori (.hst) pour un tableau,
+#' il peut être fourni par la fonction table_rda()
+#' Exemple : hst_filename = "mon_chemin/apriori.hst" \cr
 #'
 #' Les options supplémentaires sont facultatives. Pour modifier les valeurs par
 #' défaut, passer une liste ayant comme premier élément le(s) fichier(s) hst et
 #' compléter avec les éléments portant les noms \code{sep} pour le séparateur,
 #' \code{ignore_err} pour IgnoreError et \code{exp_triv} pour ExpandTrivial.
 #' Comme pour les noms de fichiers, spécifier une seule valeur par paramètre ou
-#' autant de valeurs que de tabulations.
+#' autant de valeurs que de tabulations.)
 #'
-#' @param arb_filename nom du fichier arb généré (avec
-#'   extension). Si non renseigné, un fichier temporaire.
-#' @param tab_filename [\strong{obligatoire}] nom du fichier .tab (avec extension).
+#' @param arb_filename path of the arb filename, if unspecified, creates a temporary
+#' file \cr
+#' (nom du fichier arb généré (avec extension). Si non renseigné, un fichier temporaire.)
+#' @param tab_filename [\strong{mandatory}] path of the tab_filename.\cr
+#' ([\strong{obligatoire}]nom du fichier .tab (avec extension).)
 #' @inheritParams tab_rda
-#' @param explanatory_vars [\strong{obligatoire}] variables catégorielles, sous
-#'   forme de liste de vecteurs. Chaque élément de la liste est un vecteur des
-#'   noms des variables formant une tabulation.
-#'   Exemple : \code{list(c("CJ", "A21"), c("SEXE", "REGION"))} pour le premier
-#'   tableau croisant \code{CJ} x \code{A21} et le deuxième tableau croisant
-#'   \code{SEXE} x \code{REGION}.
-#'   Si une seule tabulation, un simple vecteur des variables à croiser est
-#'   accepté (pas besoin de \code{list(...)}).
-#' @param response_var variable de réponse à sommer, ou comptage si
-#'   \code{"<freq>"}. Une seule valeur ou autant de valeurs que de tabulations.
-#' @param shadow_var variable(s) pour l'application du secret primaire. Si non
-#'   renseigné, \code{response_var} sera utilisé par Tau-Argus.
-#' @param cost_var variable(s) de coût pour le secret secondaire.
-#' @param safety_rules [\strong{obligatoire}] règle(s) de secret primaire.
-#'   Chaîne de caractères en syntaxe batch Tau-Argus. La pondération est traitée
-#'   dans un paramètre à part (ne pas spécifier WGT ici, utiliser le paramètre
-#'   \code{weighted}).
-#' @param suppress [\strong{obligatoire}] méthode(s) de gestion du secret
-#'   secondaire (syntaxe batch de Tau-Argus). Si la méthode est la même pour
-#'   chaque tabulation, le premier paramètre (numéro du tableau) sera ignoré et
-#'   renuméroté automatiquement (voir la section 'Syntaxe').
-#' @param linked pour traiter le secret secondaire conjointement sur toutes les
-#'   tabulations. Une seule commande suppress autorisée dans ce cas (appliquée à
-#'   tous les tableaux).
-#' @param output_names noms des fichiers en sortie. Si renseigné,
-#'   obligatoirement autant de noms de fichiers que de tabulations. Si laissé
-#'   vide, autant de noms de fichiers temporaires que de tabulations seront
-#'   générés.
-#' @param output_type format des fichiers en sortie (codification Tau-Argus).
-#'   Valeur par défaut du package : \code{"2"} (csv for pivot-table).
-#' @param output_options options supplémentaires des fichiers en sortie. Valeur
+#' @param hst_filename Apriori file name, syntax detailed below,
+#' Example : hst_filename = "path_to_file/apriori.hst"\cr
+#' (fichier(s) d'informations \emph{a priori}. Voir ci-dessous
+#' pour la syntaxe. Exemple : hst_filename = "path_to_file/apriori.hst")
+#' @param explanatory_vars [\strong{mandatory}]
+#' Explanatory vars in a vector
+#' Example : \code{c("CJ", "A21")} for the tabular \code{CJ} x \code{A21} \cr
+#' ([\strong{obligatoire}] variables catégorielles, sous forme de vecteur.
+#' Exemple : \code{c("CJ", "A21")} pour le premier
+#' Pour un tableau croisant \code{CJ} x \code{A21})
+#' @param value Colname for response variable in the tabular
+#' \code{"<freq>"}. For frequency table \cr
+#' (Nom de la variable de réponse dans le tableau
+#' \code{"<freq>"}. Permet de tariter les tableaux de fréquence)
+#' @param safety_rules [\strong{mandatory}]
+#' Rules for primary suppression with Argus syntax, if the primary suppression
+#' has been dealt with an apriori file specify manual safety range :"MAN(10)"
+#' for example.\cr
+#' ([\strong{obligatoire}] Règle(s) de secret primaire.
+#' Chaîne de caractères en syntaxe batch Tau-Argus. Si le secret primaire
+#' a été traité dans un fichier d'apriori : utiliser "MAN(10)")
+#' @param suppress [\strong{mandatory}]
+#' Algortihm for secondary suppression (Tau-Argus batch syntax), and the
+#' parameters for it.\cr
+#' ([\strong{obligatoire}] Algorithme de gestion du secret secondaire
+#' (syntaxe batch de Tau-Argus), ainsi que les potentiels paramètres associés)
+#' @param output_names output file name\cr
+#' (nom du fichier en sortie.)
+#' @param output_type Type of the output file (Argus codification)
+#' By default \code{"2"} (csv for pivot-table).
+#' For SBS files use \code{"4"}\cr
+#' (Format des fichiers en sortie (codification Tau-Argus).
+#' Valeur par défaut du package : \code{"2"} (csv for pivot-table).
+#' Pour le format SBS utiliser \code{"4"})
+#' @param output_options Additionnal parameter for the output,
+#' by default : code{"AS+"} (print Status). To specify no options : \code{""}.\cr
+#' (Options supplémentaires des fichiers en sortie. Valeur
 #'   par défaut du package : \code{"AS+"} (affichage du statut). Pour ne
-#'   spécifier aucune option, \code{""}.
-#' @param apriori fichier(s) d'informations \emph{a priori}. Voir ci-dessous
-#'   pour la syntaxe.
-#' @param gointeractive pour avoir la possibilité de lancer le batch depuis le
-#'   menu de Tau-Argus (\code{FALSE} par défaut).
+#'   spécifier aucune option, \code{""}.)
+#' @param gointeractive Boolean, if TRUE will open a Tau-Argus window and launch
+#' the batch in it (\code{FALSE} by default). \cr
+#' (Possibilité de lancer le batch depuis le menu de Tau-Argus
+#'  (\code{FALSE} par défaut).)
 #'
-#' @return Une liste de deux éléments : le nom du fichier arb, les noms des
-#'   fichiers en sortie (utile pour récupérer les noms générés aléatoirement).
+#' @return A list containing two elements :
+#'  the arb file name and the output name (usefull if the name is generated randomly) \cr
+#'  (Une liste de deux éléments : le nom du fichier arb, le nom
+#'   fichiers en sortie (utile pour récupérer les noms générés aléatoirement).)
 #'
-#' @inheritSection tab_rda Voir aussi
 #'
 #' @examples
 #' \dontrun{
-#' # creation fichier arb
+#' # creating arb file
 #' infos_arb <- tab_arb(
-#'   tab_filename = "donnees.tab",
-#'   explanatory_vars = list(c("REGION", "CJ"), c("REGION")),
-#'   response_var = c("CA", "<freq>"),
-#'   safety_rules = c("NK(1,85)|FREQ(3,10)", "FREQ(3,10)"),
-#'   suppress = "GH(.,100)",
-#'   output_names = c("tab1.csv", "~/tab2.csv"),
-#'   output_options = c("AS+SE+", "SE+"),
-#'   output_type = "2"
+#'   arb_filename = "path/tab1.arb",
+#'   tab_filename = "path/tab1.tab",
+#'   rda_filename = "path/tab1.rda",
+#'   explanatory_vars = c("REGION", "CJ"),
+#'   value = "CA",
+#'   safety_rules = "NK(1,85)|FREQ(3,10)",
+#'   suppress = "GH(1,100)",
+#'   output_names = "path/tab1.csv",
+#'   output_options = "AS+SE+",
+#'   output_type = "4"
 #' )
-#'
+#' # show the content of the file in console
 #' # visualisation du contenu du fichier dans la console
 #' file.show(infos_arb$arb_filename, pager = "console")
 #' }
 #' @export
 
-tab_arb <- function(arb_filename     = NULL,
-                      tab_filename,
-                      rda_filename     = NULL,
-                      explanatory_vars,
-                      response_var     = getOption("rtauargus.response_var"),
-                      shadow_var       = NULL,
-                      cost_var         = NULL,
-                      safety_rules,
-                      suppress,
-                      linked           = getOption("rtauargus.linked"),
-                      output_names     = NULL,
-                      output_type      = getOption("rtauargus.output_type"),
-                      output_options   = getOption("rtauargus.output_options"),
-                      apriori          = NULL,
-                      gointeractive    = FALSE) {
+tab_arb <- function(
+    arb_filename     = NULL,
+    tab_filename,
+    rda_filename     = NULL,
+    hst_filename     = NULL,
+    explanatory_vars,
+    value     = getOption("rtauargus.response_var"),
+    safety_rules,
+    suppress,
+    output_names     = NULL,
+    output_type      = getOption("rtauargus.output_type"),
+    output_options   = getOption("rtauargus.output_options"),
+    gointeractive    = FALSE
+){
 
   # valeur par défaut du package si option vide
-  if (is.null(response_var)) response_var <- op.rtauargus$rtauargus.response_var
-  if (is.null(linked)) linked <- op.rtauargus$rtauargus.linked
+  if (is.null(value)) value <- op.rtauargus$rtauargus.value
   if (is.null(output_type)) output_type <- op.rtauargus$rtauargus.output_type
   if (is.null(output_options)) {
     output_options <- op.rtauargus$rtauargus.output_options
   }
 
-  # si une seule tabulation, vecteur autorisé
-  if (is.atomic(explanatory_vars)) explanatory_vars <- list(explanatory_vars)
-  nb_tabul <- length(explanatory_vars)
-
   # parametres non renseignés
   if (is.null(arb_filename)) arb_filename <- tempfile("RTA_", fileext = ".arb")
   if (is.null(rda_filename)) rda_filename <- sub("tab$", "rda", tab_filename)
-  if (is.null(shadow_var)) shadow_var <- ""
-  if (is.null(cost_var)) cost_var <- ""
   if (is.null(output_names)) {
     if (length(output_type) == 1) {
-      ext <- rep(output_extensions[output_type], nb_tabul)
+      ext <- output_extensions[output_type]
     } else {
-      stopifnot(length(output_type) == nb_tabul)
+      stopifnot(length(output_type) == 1)
       ext <- output_extensions[output_type]
     }
     output_names <- tempfile("RTA_", fileext = ext)
   }
   if (is.null(output_options)) output_options <- ""
 
-  # correspondance nombre tab et nombre fichiers sortie
-  if (length(explanatory_vars) != length(output_names)) {
-    stop("renseigner autant de noms de fichiers que de tabulations")
-  }
 
   # interdit 'WGT' dans safety_rules
   if (length(grep("WGT", safety_rules, ignore.case = TRUE))) {
     stop(
-      "Le poids est applique a la creation de la  table', "
+      "Weight need to be used when the table is created', "
     )
   }
 
   # output_names doivent comporter une extension de fichier
   # (sinon Tau-Argus plante)
   if (!all(grepl("\\.", basename(output_names)))) {
-    stop("output_names doivent comporter une extension de fichier")
+    stop("output_names needs to specify the type of file expected")
   }
 
   # chemins absolus
@@ -324,11 +264,9 @@ tab_arb <- function(arb_filename     = NULL,
 
   # tabulations + secret primaire
   tab_sp <-
-    specif_safety_tab(
-      explanatory_vars = explanatory_vars,
-      response_var = response_var,
-      shadow_var = shadow_var,
-      cost_var = cost_var,
+    specify_tables_one_tab(
+      expl = explanatory_vars,
+      resp = value,
       safety_rules = safety_rules
     )
   res <- c(res, tab_sp)
@@ -337,12 +275,11 @@ tab_arb <- function(arb_filename     = NULL,
   res <- c(res, "<READTABLE> 1")
 
   # apriori (doit figurer avant suppress)
-  if (!is.null(apriori)) {
+  if (!is.null(hst_filename)) {
 
-    std_apriori <- norm_apriori_params_tab(apriori)
+    std_apriori <- norm_apriori_params_tab(hst_filename)
     ap_batch <-
-      apriori_batch(
-        ntab = length(explanatory_vars),
+      tab_apriori_batch(
         hst_names = std_apriori[[1]],
         sep = std_apriori$sep,
         ignore_err = std_apriori$ignore_err,
@@ -357,7 +294,6 @@ tab_arb <- function(arb_filename     = NULL,
   sw <-
     suppr_writetable_tab(
       suppress,
-      linked,
       output_names,
       output_type,
       output_options

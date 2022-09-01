@@ -7,3 +7,10 @@ NEWS.html
 tmp
 inst/doc
 vignettes/tauargus_exe.ini
+.hrc
+.rda
+.asc
+.arb
+.hst
+
+docs
