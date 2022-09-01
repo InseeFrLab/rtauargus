@@ -22,6 +22,10 @@ vignette: >
 <!-- ####################################################################### -->
 
 
+```r
+library(dplyr)
+```
+
 ## Introduction
 
 ### Presentation of the package
@@ -351,10 +355,9 @@ ex2 <- tab_rtauargus(
   hrc = c(ACTIVITY = hrc_file_activity),
   totcode = c(ACTIVITY="Total",SIZE="Total"),
   suppress = "OPT(1,5)",
-  verbose=FALSE,
-  unif_hrc = FALSE,
-  unif_expl = FALSE
+  verbose=FALSE
 )
+#> [1] "hrc/activity_unif.hrc has been created"
 ```
 
 ##### Result
@@ -476,12 +479,10 @@ ex3 <- tab_multi_manager(
   secret_var = "is_secret_prim",
   totcode =  "Total"
 )
-#> --- Current table to treat:  act_size ---
 #> [1] "hrc/activity_unif.hrc has been created"
+#> --- Current table to treat:  act_size ---
 #> --- Current table to treat:  act_cj ---
-#> [1] "hrc/activity_unif.hrc has been created"
 #> --- Current table to treat:  act_size ---
-#> [1] "hrc/activity_unif.hrc has been created"
 ```
 
 By default, the function uses a wrapper of `tab_rtauargus()` function, called `tab_rtauargus2()`, to apply secondary secret with &tau;-Argus. Many default parameters are set. In particular:
