@@ -234,7 +234,12 @@ tab_multi_manager <- function(
     .x = list_tables,
     .f = function(tableau,nom_tab){
 
-      tableau <- tableau[, c(list_explanatory_vars[[nom_tab]], value, freq, cost_var, secret_var)]
+      if(!is.null(cost_var)){
+        cost_var_tab <- if(cost_var %in% names(tableau)) cost_var else NULL
+      }else{
+        cost_var_tab <- NULL
+      }
+      tableau <- tableau[, c(list_explanatory_vars[[nom_tab]], value, freq, cost_var_tab, secret_var)]
 
       var_a_ajouter <- setdiff(all_expl_vars, names(tableau))
       for (nom_col in var_a_ajouter){
@@ -251,7 +256,8 @@ tab_multi_manager <- function(
     }
   )
 
-  by_vars = setdiff(unique(unlist(purrr::map(table_majeure, names))), noms_col_T)
+  # by_vars = setdiff(unique(unlist(purrr::map(table_majeure, names))), noms_col_T)
+  by_vars = purrr::reduce(purrr::map(table_majeure, names), intersect)
   table_majeure <- purrr::reduce(
     .x = table_majeure,
     .f = merge,
@@ -330,7 +336,7 @@ tab_multi_manager <- function(
 
     ex_var <- list_explanatory_vars[[num_tableau]]
 
-    vrai_tableau <- vrai_tableau[,c(ex_var, value, freq, var_secret_apriori)]
+    vrai_tableau <- vrai_tableau[,c(ex_var, value, freq, var_secret_apriori, cost_var)]
 
     # Other settings of the function to make secret ----
     params$tabular = vrai_tableau
@@ -418,15 +424,19 @@ tab_multi_manager <- function(
 
   }
 
+  not_expl_vars <- names(table_majeure)[!names(table_majeure) %in% all_expl_vars]
   table_majeure <- cbind.data.frame(
     apply(table_majeure[,all_expl_vars,drop=FALSE], 2, rev_var_pour_tau_argus),
-    table_majeure[, !names(table_majeure) %in% all_expl_vars]
+    table_majeure[, not_expl_vars]
   )
+  names(table_majeure) <- c(all_expl_vars, not_expl_vars)
 
+  not_expl_vars <- names(common_cells_modified)[!names(common_cells_modified) %in% all_expl_vars]
   common_cells_modified <- cbind.data.frame(
     apply(common_cells_modified[-1,all_expl_vars,drop=FALSE], 2, rev_var_pour_tau_argus),
-    common_cells_modified[-1, !names(common_cells_modified) %in% all_expl_vars]
+    common_cells_modified[-1, not_expl_vars]
   )
+  names(common_cells_modified) <- c(all_expl_vars, not_expl_vars)
 
   # Reconstruire la liste des tableaux d'entrée
   liste_tbx_res <- purrr::imap(
@@ -475,7 +485,19 @@ tab_multi_manager <- function(
   journal_add_line(journal, "Final Summary")
   journal_add_break_line(journal)
   journal_add_line(journal, "Secreted cells counts per table")
-  suppressWarnings(gdata::write.fwf(stats, file = journal, append = TRUE))
+  journal_add_break_line(journal)
+  purrr::walk(
+    noms_tbx,
+    function(tab){
+      journal_add_line(
+        journal,
+        "---TAB ", tab, " ---"
+      )
+      df <- t(stats[stats$tab_name == tab,])
+      suppressWarnings(gdata::write.fwf(df, rownames = TRUE, colnames = FALSE, file = journal, append = TRUE))
+      journal_add_break_line(journal)
+    }
+  )
   journal_add_break_line(journal)
   journal_add_break_line(journal)
   journal_add_line(journal, "Common cells hit by the secret:")
