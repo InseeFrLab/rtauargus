@@ -129,3 +129,99 @@ used_var <- function(explanatory_vars,
   unique(setdiff(res, "<freq>"))
 
 }
+
+
+# Fonction qui ajuste la taille d'une chaîne de caractères en ajoutant
+# un même caractère devant pour atteindre une taille souhaitée
+# @param char string chaîne de caractères à modifier
+# @param cible_char integer - longueur de la chaîne souhaitée
+# @param add_char caractère à ajouter
+# @return chaîne de caractère
+trans_var_pour_tau_argus <- function(char='monchar', cible_char=12, add_char='*'){
+  diff <- cible_char - nchar(char)
+  if(diff > 0)
+    char = paste0(paste0(rep(add_char,diff), collapse=''),char)
+  return(char)
+}
+
+# Fonction vectorisée de la précédente. Cette fonction est à privilégier pour
+# une utilisation sur un vecteur, une colonne d'un dataframe par exemple.
+#
+# @param char character vector
+# @param cible_char integer - longueur de la chaîne souhaitée
+# @param add_char caractère à ajouter
+#
+# @return character vector
+v_trans_var_pour_tau_argus <- Vectorize(trans_var_pour_tau_argus, vectorize.args = 'char')
+
+# Fonction vectorisée de la précédente. Cette fonction est à privilégier pour
+# une utilisation sur un vecteur, une colonne d'un dataframe par exemple.
+#
+# @param char character vector - vecteur à modifier
+#
+# @return character vector
+rev_var_pour_tau_argus <- function(char='**monchar', del_char='*'){
+  if(del_char %in% c('*','+','_',' ')){
+    gsub(paste0("[",del_char,"]"),'',char)
+  }else gsub(del_char, '', char)
+}
+
+# Uniformize labels before running tau-argus
+# in hrc file
+uniformize_labels_hrc_file <- function(hrc_file, totcode){
+  df <- utils::read.table(hrc_file)
+
+  v_gsub <- Vectorize(gsub, vectorize.args = c("pattern", "x"))
+  df$aro <- unlist(regmatches(df$V1, gregexpr("^@*", df$V1)))
+  df$lab <- v_gsub(df$aro, "", df$V1)
+
+  df <- df[df$lab != totcode,]
+  max_char = max(nchar(df$lab))
+  df$lab <- v_trans_var_pour_tau_argus(df$lab, max_char)
+  df$unif <- paste0(df$aro,df$lab)
+
+  name <- gsub(".hrc$", "_unif.hrc", hrc_file)
+
+  utils::write.table(
+    x = as.data.frame(df$unif),
+    file = name,
+    quote = FALSE,
+    row.names = FALSE,
+    col.names = FALSE,
+    sep = "",
+    eol = "\n"
+  )
+  print(paste0(name, " has been created"))
+  return(list(hrc_unif = name, max_char = max_char))
+}
+
+# in the data and hrc file
+uniformize_labels <- function(data, expl_vars, hrc_files, list_totcode){
+
+  vars_expl_hrc <- names(hrc_files)
+  hrc_unif_files <- list()
+
+  for(var_hrc in vars_expl_hrc){
+    totcode <- if(is.list(list_totcode)) purrr::flatten(list_totcode)[[var_hrc]] else list_totcode[[var_hrc]]
+    hrc_file <- hrc_files[[var_hrc]]
+    res <- uniformize_labels_hrc_file(hrc_file, totcode)
+    hrc_unif_files[[var_hrc]] <- res$hrc_unif
+    data[[var_hrc]] <- ifelse(
+      data[[var_hrc]] == totcode,
+      data[[var_hrc]],
+      v_trans_var_pour_tau_argus(data[[var_hrc]], cible_char = res$max_char)
+    )
+  }
+
+  for(expl in setdiff(expl_vars, vars_expl_hrc)){
+    totcode <- if(is.list(list_totcode)) purrr::flatten(list_totcode)[[expl]] else list_totcode[[expl]]
+    max_char = max(nchar(setdiff(data[[expl]], totcode)))
+    data[[expl]] <- ifelse(
+      data[[expl]] == totcode,
+      data[[expl]],
+      v_trans_var_pour_tau_argus(data[[expl]], cible_char = max_char)
+    )
+  }
+
+  return(list(hrc_unif = hrc_unif_files, data = data))
+}

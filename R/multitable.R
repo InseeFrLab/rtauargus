@@ -8,17 +8,9 @@ journal_add_line <- function(journal,...){
 }
 
 #' Manages the secondary secret of a list of tables
-#'
+#' @inheritParams tab_rtauargus
 #' @param list_tables named list of dataframes representing the tables to protect
 #' @param list_explanatory_vars named list of character vectors of explanatory variables of each table mentionned in list_tables. Names of the list are the same as of the list of tables.
-#' @param dir_name character, directory where to save tauargus files
-#' @param hrc named character vector, indicated the .hrc file's path of each hierarchical variables. The names of the vector are the names of the corresponding explanatory variable.
-#' @param totcode character vector: either a one length vector if all explanatory variable has the same total code (default to "Total") or a named character vector detailing the total code for each explanatory variable.
-#' @param value character : name of the response variable in the tables (mandatory)
-#' @param freq character: name of the frequency variable in the tables (mandatory)
-#' @param secret_var character: name of the boolean variable indicating if the cell doesn't respect the primary rules (apriori) - mandatory
-#' @param cost_var character: name of the cost variable (default to NULL)
-#' @param func_to_call character: name of the function to use to apply the secret (calling tau-argus). By default, the function is \code{tab_rtauargus2}
 #' @param ip_start integer: Interval protection level to apply at first treatment of each table
 #' @param ip_end integer: Interval protection level to apply at other treatments
 #' @param num_iter_max integer: Maximum of treatments to do on each table
@@ -93,7 +85,7 @@ tab_multi_manager <- function(
     freq = "freq",
     secret_var = "is_secret_prim",
     cost_var = NULL,
-    func_to_call = "tab_rtauargus2",
+    suppress = "MOD(1,5,1,0,0)",
     ip_start = 10,
     ip_end = 0,
     num_iter_max = 1000,
@@ -104,12 +96,14 @@ tab_multi_manager <- function(
   dir.create(dir_name, recursive = TRUE, showWarnings = FALSE)
 
 
+  func_to_call <- "tab_rtauargus2"
   .dots = list(...)
   params <- param_function(eval(parse(text=func_to_call)), .dots)
   params$dir_name = dir_name
   params$cost_var = cost_var
   params$value = value
   params$freq = freq
+  params$suppress = suppress
 
 
   n_tbx = length(list_tables) # nombre de tableaux
@@ -117,20 +111,15 @@ tab_multi_manager <- function(
   if(is.null(names(list_tables))){
     names(list_tables) <- paste0("tab", 1:n_tbx)
     names(list_explanatory_vars) <- paste0("tab", 1:n_tbx)
-    names(list_hrc) <- paste0("tab", 1:n_tbx)
   }
   noms_tbx <- names(list_tables)
   all_expl_vars <- unique(unname(unlist(list_explanatory_vars)))
 
   if( (!is.null(hrc)) & (length(names(hrc)) == 0)){
     stop("hrc must have names corresponding to the adequate explanatory variables")
-  }else{
-    list_hrc <- purrr::map(
-      list_explanatory_vars,
-      function(nom_vars){
-        purrr::discard(hrc[nom_vars], is.na)
-      }
-    )
+  }
+  if(length(setdiff(names(hrc), all_expl_vars)) > 0){
+    stop("names in hrc file are not mentionned in list_explanatory_vars")
   }
 
   # list_totcode management
@@ -181,7 +170,12 @@ tab_multi_manager <- function(
     .x = list_tables,
     .f = function(tableau,nom_tab){
 
-      tableau <- tableau[, c(list_explanatory_vars[[nom_tab]], value, freq, cost_var, secret_var)]
+      if(!is.null(cost_var)){
+        cost_var_tab <- if(cost_var %in% names(tableau)) cost_var else NULL
+      }else{
+        cost_var_tab <- NULL
+      }
+      tableau <- tableau[, c(list_explanatory_vars[[nom_tab]], value, freq, cost_var_tab, secret_var)]
 
       var_a_ajouter <- setdiff(all_expl_vars, names(tableau))
       for (nom_col in var_a_ajouter){
@@ -198,7 +192,8 @@ tab_multi_manager <- function(
     }
   )
 
-  by_vars = setdiff(unique(unlist(purrr::map(table_majeure, names))), noms_col_T)
+  # by_vars = setdiff(unique(unlist(purrr::map(table_majeure, names))), noms_col_T)
+  by_vars = purrr::reduce(purrr::map(table_majeure, names), intersect)
   table_majeure <- purrr::reduce(
     .x = table_majeure,
     .f = merge,
@@ -217,6 +212,21 @@ tab_multi_manager <- function(
       )
     }
   )
+
+  # Uniformisation des libelles des variables explicatives
+  res_unif <- uniformize_labels(table_majeure, all_expl_vars, hrc, list_totcode)
+  table_majeure <- res_unif$data
+  hrc_unif <- res_unif$hrc_unif
+
+  list_hrc <- purrr::map(
+      list_explanatory_vars,
+      function(nom_vars){
+        purrr::discard(hrc_unif[nom_vars], is.null) %>%  unlist()
+      }
+    )
+
+
+  # listes de travail
   todolist <- noms_tbx[1]
   remainlist <- noms_tbx[-1]
 
@@ -262,7 +272,7 @@ tab_multi_manager <- function(
 
     ex_var <- list_explanatory_vars[[num_tableau]]
 
-    vrai_tableau <- vrai_tableau[,c(ex_var, value, freq, var_secret_apriori)]
+    vrai_tableau <- vrai_tableau[,c(ex_var, value, freq, var_secret_apriori, cost_var)]
 
     # Other settings of the function to make secret ----
     params$tabular = vrai_tableau
@@ -276,9 +286,12 @@ tab_multi_manager <- function(
     res <- do.call(func_to_call, params)
     res$is_secret <- res$Status != "V"
     prim_stat <- table(res$Status)["B"]
+    prim_stat <- ifelse(is.na(prim_stat), 0, prim_stat)
     sec_stat <- table(res$Status)["D"]
+    sec_stat <- ifelse(is.na(sec_stat), 0, sec_stat)
     valid_stat <- table(res$Status)["V"]
-    denom_stat <- nrow(res)*100
+    valid_stat <- ifelse(is.na(valid_stat), 0, valid_stat)
+    denom_stat <- nrow(res)
 
     res <- subset(res, select = -Status)
 
@@ -337,15 +350,29 @@ tab_multi_manager <- function(
     journal_add_line(journal, num_iter_all, "-Treatment of table", num_tableau)
     journal_add_break_line(journal)
     journal_add_line(journal, "New cells status counts: ")
-    journal_add_line(journal, "- apriori (primary) secret:", prim_stat, "(", round(prim_stat/denom_stat,1), "%)")
-    journal_add_line(journal, "- secondary secret:", sec_stat , "(", round(sec_stat/denom_stat,1), "%)")
-    journal_add_line(journal, "- valid cells:", valid_stat, "(", round(valid_stat/denom_stat,1), "%)")
+    journal_add_line(journal, "- apriori (primary) secret:", prim_stat, "(", round(prim_stat/denom_stat*100,1), "%)")
+    journal_add_line(journal, "- secondary secret:", sec_stat , "(", round(sec_stat/denom_stat*100,1), "%)")
+    journal_add_line(journal, "- valid cells:", valid_stat, "(", round(valid_stat/denom_stat*100,1), "%)")
     journal_add_break_line(journal)
     journal_add_line(journal, "Nb of new common cells hit by the secret:", nrow(modified))
     journal_add_break_line(journal)
     journal_add_break_line(journal)
 
   }
+
+  not_expl_vars <- names(table_majeure)[!names(table_majeure) %in% all_expl_vars]
+  table_majeure <- cbind.data.frame(
+    apply(table_majeure[,all_expl_vars,drop=FALSE], 2, rev_var_pour_tau_argus),
+    table_majeure[, not_expl_vars]
+  )
+  names(table_majeure) <- c(all_expl_vars, not_expl_vars)
+
+  not_expl_vars <- names(common_cells_modified)[!names(common_cells_modified) %in% all_expl_vars]
+  common_cells_modified <- cbind.data.frame(
+    apply(common_cells_modified[-1,all_expl_vars,drop=FALSE], 2, rev_var_pour_tau_argus),
+    common_cells_modified[-1, not_expl_vars]
+  )
+  names(common_cells_modified) <- c(all_expl_vars, not_expl_vars)
 
   # Reconstruire la liste des tableaux d'entrée
   liste_tbx_res <- purrr::imap(
@@ -394,11 +421,22 @@ tab_multi_manager <- function(
   journal_add_line(journal, "Final Summary")
   journal_add_break_line(journal)
   journal_add_line(journal, "Secreted cells counts per table")
-  suppressWarnings(gdata::write.fwf(stats, file = journal, append = TRUE))
   journal_add_break_line(journal)
+  purrr::walk(
+    noms_tbx,
+    function(tab){
+      journal_add_line(
+        journal,
+        "---TAB ", tab, " ---"
+      )
+      df <- t(stats[stats$tab_name == tab,-1,drop=FALSE])
+      suppressWarnings(gdata::write.fwf(df, rownames = TRUE, colnames = FALSE, file = journal, append = TRUE))
+      journal_add_break_line(journal)
+    }
+  )
   journal_add_break_line(journal)
   journal_add_line(journal, "Common cells hit by the secret:")
-  suppressWarnings(gdata::write.fwf(common_cells_modified[-1,], file = journal, append = TRUE))
+  suppressWarnings(gdata::write.fwf(common_cells_modified, file = journal, append = TRUE))
   journal_add_break_line(journal)
   journal_add_line(journal, "End time: ", format(Sys.time(), "%Y-%m-%d  %H:%M:%S"))
   journal_add_break_line(journal)

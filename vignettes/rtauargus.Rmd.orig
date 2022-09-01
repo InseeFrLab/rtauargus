@@ -24,11 +24,13 @@ knitr::opts_chunk$set(
   comment = "#>",
   warning = FALSE
 )
-knitr::opts_knit$set(root.dir = getwd())
 ```
 
 <!-- ####################################################################### -->
 
+```{r message=FALSE}
+library(dplyr)
+```
 
 ## Introduction
 
@@ -287,9 +289,7 @@ ex2 <- tab_rtauargus(
   hrc = c(ACTIVITY = hrc_file_activity),
   totcode = c(ACTIVITY="Total",SIZE="Total"),
   suppress = "OPT(1,5)",
-  verbose=FALSE,
-  unif_hrc = FALSE,
-  unif_expl = FALSE
+  verbose=FALSE
 )
 ```
 

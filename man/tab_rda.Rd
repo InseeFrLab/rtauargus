@@ -140,6 +140,7 @@ If there is the additional boolean variable which indicates the primary secret
 in the table (of tabulated data), the function tab_rda will create
 an apriori file in a format conforming to tauargus. \cr
 
+
 Le fichier d'apriori (.hst) récapitule pour chaque valeurs
 du tableau si elles sont concernées par le secret primaire ou non.
 Avec ce fichier tau-argus n'aura plus besoin de poser le secret primaire lui même,
@@ -151,7 +152,6 @@ tab_rda permet de créer un fichier d'apriori au format conforme pour tauargus.
 }
 
 \section{Specific parameters}{
-
 
 
 The parameters \code{totcode}, and \code{codelist}
@@ -188,6 +188,7 @@ For example :
 }
 
 \section{Hierarchical variables}{
+
 
 Parameter \code{hrc} has the same syntax as \code{totcode} and
 \code{codelist} (named vector containing as many elements as variables to describe).

@@ -21,8 +21,7 @@ tab_rtauargus(
   show_batch_console = FALSE,
   output_type = 4,
   output_options = "",
-  unif_hrc = TRUE,
-  unif_expl = TRUE,
+  unif_labels = TRUE,
   ...
 )
 }
@@ -117,9 +116,7 @@ by default : code{"AS+"} (print Status). To specify no options : \code{""}.\cr
   par défaut du package : \code{"AS+"} (affichage du statut). Pour ne
   spécifier aucune option, \code{""}.)}
 
-\item{unif_hrc}{boolean, if hrc files have to be standardized (especially for internal use)}
-
-\item{unif_expl}{boolean, if explanatory variables have to be standardized (especially for internal use)}
+\item{unif_labels}{boolean, if explanatory variables have to be standardized}
 
 \item{...}{any parameter of the tab_rda, tab_arb or run_arb functions, relevant
 for the treatment of tabular.}
@@ -138,16 +135,15 @@ All in once for tabular
 \section{Standardization of explanatory variables and hierarchies}{
 
 
-The two boolean arguments \code{unif_hrc} and \code{unif_expl} are useful to
+The boolean argument \code{unif_labels} is useful to
 prevent some common errors in using Tau-Argus. Indeed, Tau-Argus needs that,
 within a same level of a hierarchy, the labels have the same number of
-characters. When the two arguments are set to TRUE, \code{tab_rtauargus}
+characters. When the argument is set to TRUE, \code{tab_rtauargus}
 standardizes the explanatory variables to prevent this issue.
-For hierarchical explanatory variables (explanatory variables associated to
+Hierarchical explanatory variables (explanatory variables associated to
 a hrc file) are then modified in the tabular data and an another hrc file is
 created to be relevant with the tabular. In the output, these modifications
-are removed. For non hierarchical explanatory variables,
-only the tabular is modified.
+are removed.
 }
 
 \examples{

@@ -20,13 +20,13 @@
   packageStartupMessage(
     '\n',
     'Tau-Argus : "', ta_exe, '"\n',
-    if (!file.exists(ta_exe)) '  (note : emplacement inconnu)\n',
+    if (!file.exists(ta_exe)) '  (note: unknown location)\n',
     '\n',
-    '  Pour changer ce repertoire :\n',
+    '  To change this directory :\n',
     '    options(rtauargus.tauargus_exe = "chemin/vers/TauArgus.exe")\n\n',
-    '  Pour revenir a l\'emplacement par defaut :\n',
+    '  To return to the default location,\n',
     '    reset_rtauargus_options("tauargus_exe")\n\n',
-    '  Pour afficher l\'ensemble des options du package :\n',
+    '  To display all the options of the package :\n',
     '    rtauargus_options()',
     '\n'
   )
@@ -36,6 +36,6 @@
 .onUnload <- function(libpath) {
 
   options(purrr::map(op.rtauargus, ~ NULL))
-  packageStartupMessage('rtauargus : options du package desactivees')
+  packageStartupMessage('rtauargus : package options disabled')
 
 }

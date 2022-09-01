@@ -155,7 +155,7 @@ same directory, too. To go further, you can consult the latest version of the
 [https://research.cbs.nl/casc/Software/TauManualV4.1.pdf](https://research.cbs.nl/casc/Software/TauManualV4.1.pdf).
 
 
-**A detailed overview is available via `thumbnail("rtauargus")`.**
+**A detailed overview is available via `vignette("rtauargus")`.**
 
 ### Important notes
 
