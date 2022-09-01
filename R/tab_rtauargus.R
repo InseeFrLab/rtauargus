@@ -138,7 +138,7 @@ tab_rtauargus <- function(
   if(unif_labels){
     res_unif <- uniformize_labels(tabular, explanatory_vars, hrc, totcode)
     tabular <- res_unif$data
-    hrc <- res_unif$hrc_unif
+    if(!is.null(hrc)) hrc <- res_unif$hrc_unif
   }
 
   # parametres
