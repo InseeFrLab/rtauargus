@@ -246,14 +246,14 @@ write_rda_tab <- function(info_vars) {
 #' # donnees fictives
 #'
 #' tab <-data.frame(
-#' category       = c( "A" ,   "B",   "C",   "D",   "E",   "F"),
-#' size           = c("tr1", "tr3", "tr2", "tr1", "tr1", "tr2"),
-#' area           = c( "07",  "01",  "04",  "06",  "02",  "06"),
-#' income         = c(  100,     4,     7,    14,    42,    85),
-#' freq           = c(    2,     6,     8,    45,   100,     1),
-#' max            = c(   54,     2,     1,    13,    19,    85),
-#' primary_secret = c( TRUE, FALSE, FALSE,  TRUE, FALSE,  TRUE),
-#' cost           = c(   NA,    NA,    NA,     1,     5,    NA)
+#'  category       = c( "A" ,   "B",   "C",   "D",   "E",   "F"),
+#'  size           = c("tr1", "tr3", "tr2", "tr1", "tr1", "tr2"),
+#'  area           = c( "07",  "01",  "04",  "06",  "02",  "06"),
+#'  income         = c(  100,     4,     7,    14,    42,    85),
+#'  freq           = c(    2,     6,     8,    45,   100,     1),
+#'  max            = c(   54,     2,     1,    13,    19,    85),
+#'  primary_secret = c( TRUE, FALSE, FALSE,  TRUE, FALSE,  TRUE),
+#'  cost           = c(   NA,    NA,    NA,     1,     5,    NA)
 #' )
 #'
 #' # rda creation

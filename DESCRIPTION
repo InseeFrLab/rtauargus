@@ -50,5 +50,7 @@ Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.2
 VignetteBuilder: knitr
-URL: https://github.com/inseefrlab/rtauargus, http://outilsconfidentialite.gitlab-pages.insee.fr/rtauargus, https://gitlab.insee.fr/outilsconfidentialite/rtauargus
+URL: https://inseefrlab.github.io/rtauargus,
+    https://github.com/inseefrlab/rtauargus,
+    https://inseefrlab.github.io/rtauargus/
 BugReports: https://github.com/inseefrlab/rtauargus/issues
