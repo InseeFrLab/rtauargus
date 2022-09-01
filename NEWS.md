@@ -3,6 +3,14 @@ title: Package ‘rtauargus’
 subtitle: Historique des modifications
 output: rmarkdown::html_vignette
 ---
+## rtauargus 1.0.0
+
+[01/09/2022]
+
+* English documentation  
+* **tab_arb()** : argument *value* is now called *response_var* as in the **tab_rda()** function.  
+* **tab_arb()** : argument *apriori* is now called *hst_filename* as in the **tab_rda()** function.  
+* **write_hrc2()** : new function to creat a hrc file from a correspondence table  
 
 ## rtauargus 0.5.0
 
