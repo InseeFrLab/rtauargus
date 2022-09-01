@@ -41,7 +41,6 @@ reference:
   - title: Others
     contents:
     - rtauargus_options
-    - tauargus_info
     - write_hrc
     - rtauargus-package
 
