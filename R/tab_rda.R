@@ -382,7 +382,7 @@ tab_rda <- function(
   # Controle hrc
   if(!all(names(hrc) %in% explanatory_vars)){
     stop(" error with label of the hierarchichal variable")
-    }
+  }
 
   # Controle sur frequency
 
@@ -393,25 +393,25 @@ tab_rda <- function(
   #Controles sur secret_var
   if ((!is.null(secret_var)) && (!secret_var %in% colnames(tabular))){
     stop("secret_var does not exist in tabular")
-    }
+  }
 
   if((!is.null(secret_var)) && (any(!is.na(tabular[[secret_var]]))) && (!is.logical(tabular[[secret_var]]))){
     stop("unexpected type : secret_var must be a  boolean variable")
-    }
+  }
 
   if((!is.null(secret_var)) && any(is.na(tabular[[secret_var]]))){
     stop("NAs in secret_var are not allowed")
-    }
+  }
 
   # Controles sur cost_var
 
   if ((!is.null(cost_var)) && (!cost_var %in%  colnames(tabular))){
     stop("cost_var does not exist in tabular")
-    }
+  }
 
   if((!is.null(cost_var)) && (!is.numeric(tabular[[cost_var]]))){
     stop("unexpected type : secret_var must be a  numeric variable")
-    }
+  }
 
   #Genere le fichier hst lié au secret primaire
 
@@ -521,11 +521,11 @@ tab_rda <- function(
 
   #  totcode, codelist  ........................................
 
-  var_quanti <- names(tabular)[!num]
+  var_quali <- names(tabular)[!num]
 
-  codelist_df <- df_param_defaut(var_quanti, "codelist", codelist)
+  codelist_df <- df_param_defaut(var_quali, "codelist", codelist)
   totcode_df  <-
-    df_param_defaut(var_quanti, "totcode", totcode) %>%
+    df_param_defaut(var_quali, "totcode", totcode) %>%
     mutate(totcode = dplyr::coalesce(totcode, getOption("rtauargus.totcode")))
 
 
@@ -536,14 +536,14 @@ tab_rda <- function(
     stop("missing name for hrc. Example : hrc = c(VAR = \"var.hrc\")")
   }
 
-  norm_hrc <-
-    normalise_hrc(
-      hrc,
-      tabular,
-      hierleadstring = hierleadstring
-    )
+  norm_hrc <- purrr::map(hrc, normalizePath)
+    # normalise_hrc(
+    #   hrc[[1]],
+    #   tabular,
+    #   hierleadstring = hierleadstring
+    # )
 
-  hrc_df <- df_param_defaut(var_quanti, "hierarchical", norm_hrc)
+  hrc_df <- df_param_defaut(var_quali, "hierarchical", norm_hrc)
   hrc_df$hierleadstring <- NA_character_
   need_leadstring <- grepl("\\.hrc$", hrc_df$hierarchical)
 

@@ -7,76 +7,10 @@ journal_add_line <- function(journal,...){
   cat(..., file = journal, fill = TRUE, append = TRUE)
 }
 
-uniformize_labels_hrc_file <- function(hrc_file, totcode){
-  df <- utils::read.table(hrc_file)
-
-  v_gsub <- Vectorize(gsub, vectorize.args = c("pattern", "x"))
-  df$aro <- unlist(regmatches(df$V1, gregexpr("^@*", df$V1)))
-  df$lab <- v_gsub(df$aro, "", df$V1)
-
-  df <- df[df$lab != totcode,]
-  max_char = max(nchar(df$lab))
-  df$lab <- v_trans_var_pour_tau_argus(df$lab, max_char)
-  df$unif <- paste0(df$aro,df$lab)
-
-  name <- gsub(".hrc$", "_unif.hrc", hrc_file)
-
-  utils::write.table(
-    x = as.data.frame(df$unif),
-    file = name,
-    quote = FALSE,
-    row.names = FALSE,
-    col.names = FALSE,
-    sep = "",
-    eol = "\n"
-  )
-  print(paste0(name, " has been created"))
-  return(list(hrc_unif = name, max_char = max_char))
-}
-
-
-uniformize_labels <- function(data, expl_vars, hrc_files, list_totcode){
-
-  vars_expl_hrc <- names(hrc_files)
-  hrc_unif_files <- list()
-
-  for(var_hrc in vars_expl_hrc){
-    totcode <- purrr::flatten(list_totcode)[[var_hrc]]
-    hrc_file <- hrc_files[[var_hrc]]
-    res <- uniformize_labels_hrc_file(hrc_file, totcode)
-    hrc_unif_files[[var_hrc]] <- res$hrc_unif
-    data[[var_hrc]] <- ifelse(
-      data[[var_hrc]] == totcode,
-      data[[var_hrc]],
-      v_trans_var_pour_tau_argus(data[[var_hrc]], cible_char = res$max_char)
-    )
-  }
-
-  for(expl in setdiff(expl_vars, vars_expl_hrc)){
-    totcode <- purrr::flatten(list_totcode)[[expl]]
-    max_char = max(nchar(setdiff(data[[expl]], totcode)))
-    data[[expl]] <- ifelse(
-      data[[expl]] == totcode,
-      data[[expl]],
-      v_trans_var_pour_tau_argus(data[[expl]], cible_char = max_char)
-    )
-  }
-
-  return(list(hrc_unif = hrc_unif_files, data = data))
-}
-
 #' Manages the secondary secret of a list of tables
-#'
+#' @inheritParams tab_rtauargus
 #' @param list_tables named list of dataframes representing the tables to protect
 #' @param list_explanatory_vars named list of character vectors of explanatory variables of each table mentionned in list_tables. Names of the list are the same as of the list of tables.
-#' @param dir_name character, directory where to save tauargus files
-#' @param hrc named character vector, indicated the .hrc file's path of each hierarchical variables. The names of the vector are the names of the corresponding explanatory variable.
-#' @param totcode character vector: either a one length vector if all explanatory variable has the same total code (default to "Total") or a named character vector detailing the total code for each explanatory variable.
-#' @param value character : name of the response variable in the tables (mandatory)
-#' @param freq character: name of the frequency variable in the tables (mandatory)
-#' @param secret_var character: name of the boolean variable indicating if the cell doesn't respect the primary rules (apriori) - mandatory
-#' @param cost_var character: name of the cost variable (default to NULL)
-#' @param func_to_call character: name of the function to use to apply the secret (calling tau-argus). By default, the function is \code{tab_rtauargus2}
 #' @param ip_start integer: Interval protection level to apply at first treatment of each table
 #' @param ip_end integer: Interval protection level to apply at other treatments
 #' @param num_iter_max integer: Maximum of treatments to do on each table
@@ -151,7 +85,7 @@ tab_multi_manager <- function(
     freq = "freq",
     secret_var = "is_secret_prim",
     cost_var = NULL,
-    func_to_call = "tab_rtauargus2",
+    suppress = "MOD(1,5,1,0,0)",
     ip_start = 10,
     ip_end = 0,
     num_iter_max = 1000,
@@ -162,12 +96,14 @@ tab_multi_manager <- function(
   dir.create(dir_name, recursive = TRUE, showWarnings = FALSE)
 
 
+  func_to_call <- "tab_rtauargus2"
   .dots = list(...)
   params <- param_function(eval(parse(text=func_to_call)), .dots)
   params$dir_name = dir_name
   params$cost_var = cost_var
   params$value = value
   params$freq = freq
+  params$suppress = suppress
 
 
   n_tbx = length(list_tables) # nombre de tableaux
@@ -493,12 +429,11 @@ tab_multi_manager <- function(
         journal,
         "---TAB ", tab, " ---"
       )
-      df <- t(stats[stats$tab_name == tab,])
+      df <- t(stats[stats$tab_name == tab,-1,drop=FALSE])
       suppressWarnings(gdata::write.fwf(df, rownames = TRUE, colnames = FALSE, file = journal, append = TRUE))
       journal_add_break_line(journal)
     }
   )
-  journal_add_break_line(journal)
   journal_add_break_line(journal)
   journal_add_line(journal, "Common cells hit by the secret:")
   suppressWarnings(gdata::write.fwf(common_cells_modified, file = journal, append = TRUE))
