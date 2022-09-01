@@ -1,0 +1,54 @@
+destination: public
+
+navbar:
+  structure:
+    left:
+      - home
+      - intro
+      - reference
+      - news
+    right:
+      - gitlab
+  components:
+    home:
+      icon: fas fa-home fa-lg
+      href: index.html
+    intro:
+      text: Introduction
+      href: articles/rtauargus.html
+    reference:
+      text: Fonctions
+      href: reference/index.html
+    news:
+      text: NEWS
+      href: news/index.html
+    gitlab:
+      text: Contribuer
+      href: https://gitlab.insee.fr/outilsconfidentialite/rtauargus
+      icon: fa-gitlab
+
+reference:
+  - title: Poser le secret sur des tableaux
+    contents:
+      - tab_multi_manager
+      - write_hrc2
+      - tab_rtauargus
+      - tab_rtauargus2
+  - title: Poser le secret à partir de microdonnées
+    contents:
+      - rtauargus
+      - rtauargus_plus
+  - title: Secrétiser étape par étape
+    contents:
+      - tab_rda
+      - tab_arb
+      - micro_asc_rda
+      - micro_arb
+      - run_arb
+      - import
+  - title: Autres
+    contents:
+      - rtauargus_options
+      - tauargus_info
+      - write_hrc
+      - rtauargus-package

@@ -1,44 +1,49 @@
-destination: public
-
+url: ~
+development:
+  mode: auto
+template:
+  bootstrap: 5
+  bootswatch: sandstone
+  theme: breeze-light
+home:
+  sidebar:
+    structure: [links, license, community, citation, authors, dev]
 navbar:
   structure:
-    left:
-      - home
-      - intro
-      - reference
-      - news
-    right:
-      - gitlab
+    left:  [intro, reference, articles, tutorials, news]
+    right: [search, gitlab]
   components:
-    home:
-      icon: fas fa-home fa-lg
-      href: index.html
-    intro:
-      text: Introduction
+   articles:
+    text: Articles
+    menu:
+    - text: Tabular data
+    - text: Main steps to deal with tabular datasets
       href: articles/rtauargus.html
-    reference:
-      text: Fonctions
+    - text: Protect a set of linked tables
+      href: articles/protect_multi_tables.html
+    - text: -------
+    - text: Microdata
+      href: articles/rtauargus_micro.html
+    - text: -------
+    - text: Safety rules and Suppress Methods
+      href: articles/options_safety_rules.html
+   reference:
+    - text: Functions
       href: reference/index.html
-    news:
-      text: NEWS
-      href: news/index.html
-    gitlab:
-      text: Contribuer
-      href: https://gitlab.insee.fr/outilsconfidentialite/rtauargus
-      icon: fa-gitlab
+
 
 reference:
-  - title: Poser le secret sur des tableaux
+  - title: Protection tables from tabular
     contents:
       - tab_multi_manager
       - write_hrc2
       - tab_rtauargus
       - tab_rtauargus2
-  - title: Poser le secret à partir de microdonnées
+  - title: Protect tables from microdata
     contents:
       - rtauargus
       - rtauargus_plus
-  - title: Secrétiser étape par étape
+  - title: Step by step functions
     contents:
       - tab_rda
       - tab_arb
@@ -46,9 +51,10 @@ reference:
       - micro_arb
       - run_arb
       - import
-  - title: Autres
+  - title: Others
     contents:
       - rtauargus_options
       - tauargus_info
       - write_hrc
       - rtauargus-package
+
