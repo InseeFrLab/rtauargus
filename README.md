@@ -57,7 +57,7 @@ one is, from now on, encouraged.
 To install a specific version, add to the directory a reference
 ([commit](https://github.com/inseefrlab/rtauargus/commits/master) or
 [tag](https://github.com/inseefrlab/rtauargus/tags)),
-par exemple `"inseefrlab/rtauargus@v-0.4.1"`.
+for example `"inseefrlab/rtauargus@v-0.4.1"`.
 
 ### Simple example
 

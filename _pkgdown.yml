@@ -1,4 +1,4 @@
-url: ~
+url: https://inseefrlab.github.io/rtauargus/
 development:
   mode: auto
 template:
@@ -12,49 +12,43 @@ navbar:
   structure:
     left:  [intro, reference, articles, tutorials, news]
     right: [search, gitlab]
-  components:
-   articles:
-    text: Articles
-    menu:
-    - text: Tabular data
-    - text: Main steps to deal with tabular datasets
-      href: articles/rtauargus.html
-    - text: Protect a set of linked tables
-      href: articles/protect_multi_tables.html
-    - text: -------
-    - text: Microdata
-      href: articles/rtauargus_micro.html
-    - text: -------
-    - text: Safety rules and Suppress Methods
-      href: articles/options_safety_rules.html
-   reference:
-    - text: Functions
-      href: reference/index.html
-
-
 reference:
   - title: Protection tables from tabular
+    desc: >
+      Functions for protecting magnitude and frequency tables from
+      one tabular data or from a set of linked tables.
     contents:
-      - tab_multi_manager
-      - write_hrc2
-      - tab_rtauargus
-      - tab_rtauargus2
+    - tab_multi_manager
+    - write_hrc2
+    - tab_rtauargus
+    - tab_rtauargus2
+    - activity_corr_table
+    - nuts23_fr_corr_table
+    - turnover_act_cj
+    - turnover_act_size
+    - turnover_nuts_cj
+    - turnover_nuts_size
   - title: Protect tables from microdata
+    desc: >
+      Functions for protecting magnitude and frequency tables, i.e. from
+      a microdataset. Original way to proceed but no longer the favored one.
     contents:
-      - rtauargus
-      - rtauargus_plus
+    - rtauargus
+    - rtauargus_plus
   - title: Step by step functions
+    desc: "Mostly internal functions"
     contents:
-      - tab_rda
-      - tab_arb
-      - micro_asc_rda
-      - micro_arb
-      - run_arb
-      - import
+    - tab_rda
+    - tab_arb
+    - micro_asc_rda
+    - micro_arb
+    - run_arb
+    - import
   - title: Others
     contents:
-      - rtauargus_options
-      - tauargus_info
-      - write_hrc
-      - rtauargus-package
+    - rtauargus_options
+    - write_hrc
+    - rtauargus-package
+
+
 

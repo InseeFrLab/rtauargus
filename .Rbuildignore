@@ -10,3 +10,5 @@
 ^vignettes/precompilation.R$
 ^\.gitlab-ci\.yml$
 ^_pkgdown\.yml$
+^docs$
+^pkgdown$
