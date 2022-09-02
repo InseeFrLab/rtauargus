@@ -367,12 +367,16 @@ tab_multi_manager <- function(
   )
   names(table_majeure) <- c(all_expl_vars, not_expl_vars)
 
-  not_expl_vars <- names(common_cells_modified)[!names(common_cells_modified) %in% all_expl_vars]
-  common_cells_modified <- cbind.data.frame(
-    apply(common_cells_modified[-1,all_expl_vars,drop=FALSE], 2, rev_var_pour_tau_argus),
-    common_cells_modified[-1, not_expl_vars]
-  )
-  names(common_cells_modified) <- c(all_expl_vars, not_expl_vars)
+  if(nrow(common_cells_modified) > 1){
+    not_expl_vars <- names(common_cells_modified)[!names(common_cells_modified) %in% all_expl_vars]
+    common_cells_modified <- cbind.data.frame(
+      apply(common_cells_modified[-1,all_expl_vars,drop=FALSE], 2, rev_var_pour_tau_argus),
+      common_cells_modified[-1, not_expl_vars, drop=FALSE]
+    )
+    names(common_cells_modified) <- c(all_expl_vars, not_expl_vars)
+  }else{
+    common_cells_modified <- common_cells_modified[-1,]
+  }
 
   # Reconstruire la liste des tableaux d'entrée
   liste_tbx_res <- purrr::imap(
