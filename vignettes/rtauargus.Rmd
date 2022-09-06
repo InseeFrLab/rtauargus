@@ -6,7 +6,7 @@ output:
     toc: true
     toc_depth: 3
 vignette: >
-  %\VignetteIndexEntry{Tau-Argus from R - tabular version}
+  %\VignetteIndexEntry{&tau;-Argus from R - tabular version}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -183,7 +183,7 @@ To get the results for the dominance rule, we need to specify the largest contri
 ```r
 ex1 <- tab_rtauargus(
   act_size,
-  dir_name = "tauargus_files",
+  dir_name = "tauargus_files/ex1",
   files_name = "ex1",
   explanatory_vars = c("ACTIVITY","SIZE"),
   safety_rules = "FREQ(3,10)|NK(1,85)",
@@ -192,9 +192,9 @@ ex1 <- tab_rtauargus(
   maxscore = "MAX",
   totcode = c(ACTIVITY="Total",SIZE="Total")
 )
-#> Start of batch procedure; file: Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex1.arb
-#> <OPENTABLEDATA> "Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex1.tab"
-#> <OPENMETADATA> "Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex1.rda"
+#> Start of batch procedure; file: Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex1\ex1.arb
+#> <OPENTABLEDATA> "Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex1\ex1.tab"
+#> <OPENMETADATA> "Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex1\ex1.rda"
 #> <SPECIFYTABLE> "ACTIVITY""SIZE"|"VAL"||
 #> <SAFETYRULE> FREQ(3,10)|NK(1,85)
 #> <READTABLE> 1
@@ -203,9 +203,9 @@ ex1 <- tab_rtauargus(
 #> Start of the modular protection for table ACTIVITY x SIZE | VAL
 #> End of modular protection. Time used 0 seconds
 #>                    Number of suppressions: 2
-#> <WRITETABLE> (1,4,,"Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex1.csv")
+#> <WRITETABLE> (1,4,,"Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex1\ex1.csv")
 #> Table: ACTIVITY x SIZE | VAL has been written
-#>                    Output file name: Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex1.csv
+#>                    Output file name: Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex1\ex1.csv
 #> End of TauArgus run
 ```
 
@@ -346,7 +346,7 @@ By default, `tab_rtauargus()` runs the Modular method to perform the secondary s
 ```r
 ex2 <- tab_rtauargus(
   turnover_act_size,
-  dir_name = "tauargus_files/",
+  dir_name = "tauargus_files/ex2",
   files_name = "ex2",
   explanatory_vars = c("ACTIVITY","SIZE"),
   value = "TOT",
@@ -473,7 +473,7 @@ ex3 <- tab_multi_manager(
     act_cj = c("ACTIVITY", "CJ")
   ),
   hrc = c(ACTIVITY = hrc_file_activity),
-  dir_name = "ex3",
+  dir_name = "tauargus_files/ex3",
   value = "TOT",
   freq = "N_OBS",
   secret_var = "is_secret_prim",
