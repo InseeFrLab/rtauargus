@@ -357,7 +357,6 @@ ex2 <- tab_rtauargus(
   suppress = "OPT(1,5)",
   verbose=FALSE
 )
-#> [1] "hrc/activity_unif.hrc has been created"
 ```
 
 ##### Result
@@ -479,7 +478,6 @@ ex3 <- tab_multi_manager(
   secret_var = "is_secret_prim",
   totcode =  "Total"
 )
-#> [1] "hrc/activity_unif.hrc has been created"
 #> --- Current table to treat:  act_size ---
 #> --- Current table to treat:  act_cj ---
 #> --- Current table to treat:  act_size ---
