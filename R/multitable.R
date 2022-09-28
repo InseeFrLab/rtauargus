@@ -10,13 +10,14 @@ journal_add_line <- function(journal,...){
 #' Manages the secondary secret of a list of tables
 #' @inheritParams tab_rtauargus
 #' @param list_tables named list of dataframes representing the tables to protect
-#' @param list_explanatory_vars named list of character vectors of explanatory variables of each table mentionned in list_tables. Names of the list are the same as of the list of tables.
-#' @param alt_hrc named list for alternative hierarchies
+#' @param list_explanatory_vars named list of character vectors of explanatory
+#' variables of each table mentionned in list_tables. Names of the list are the same as of the list of tables.
+#' @param alt_hrc named list for alternative hierarchies (useful for non nested-hierarchies)
 #' @param alt_totcode named list for alternative codes
 #' @param ip_start integer: Interval protection level to apply at first treatment of each table
 #' @param ip_end integer: Interval protection level to apply at other treatments
-#' @param num_iter_max integer: Maximum of treatments to do on each table
-#' @param ... other arguments of func_to_call
+#' @param num_iter_max integer: Maximum of treatments to do on each table (default to 10)
+#' @param ... other arguments of \code{tab_rtauargus2()}
 #'
 #' @return original list of tables. Secret Results of each iteration is added to each table.
 #' For example, the result of first iteration is called 'is_secret_1' in each table.
@@ -92,7 +93,7 @@ tab_multi_manager <- function(
     suppress = "MOD(1,5,1,0,0)",
     ip_start = 10,
     ip_end = 0,
-    num_iter_max = 1000,
+    num_iter_max = 10,
     ...
 ){
   start_time <- Sys.time()
@@ -118,6 +119,8 @@ tab_multi_manager <- function(
   }
   noms_tbx <- names(list_tables)
   all_expl_vars <- unique(unname(unlist(list_explanatory_vars)))
+
+  if( (!is.null(hrc)) & is.list(hrc)) hrc <- unlist(hrc)
 
   if( (!is.null(hrc)) & (length(names(hrc)) == 0)){
     stop("hrc must have names corresponding to the adequate explanatory variables")
@@ -320,6 +323,19 @@ tab_multi_manager <- function(
     params$totcode = list_totcode[[num_tableau]]
     params$hrc = list_hrc[[num_tableau]]
     params$secret_var = var_secret_apriori
+    params$suppress = if(
+      substr(suppress,1,3) == "MOD" & num_iter_par_tab[num_tableau] != 1
+    ){
+      # if modular deactivation of singleton and multisingleton after the first iteration
+      paste0(
+        paste(
+          c(strsplit(suppress, split = ",")[[1]][1:2], rep("0",3)), collapse = ","
+        ),
+        ")"
+      )
+    }else{
+      suppress
+    }
     params$ip = if(num_iter_par_tab[num_tableau] == 1) ip_start else ip_end
 
     res <- do.call(func_to_call, params)
