@@ -325,7 +325,7 @@ tab_rtauargus2 <- function(
   params$show_batch_console = FALSE
   params$output_type = 4
   params$output_options = ""
-  params$unif_labels = FALSE
+  params$unif_labels = TRUE
   params$separator = ","
   params$verbose = FALSE
 

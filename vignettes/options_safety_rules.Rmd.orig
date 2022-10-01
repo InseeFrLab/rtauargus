@@ -93,5 +93,15 @@ The possible options are :
 
 More details are available in the &tau;-Argus manual, especially in the section **4.2.3**
 
+#### About this vignette
 
+- Authors: **<a href="mailto:nathanael.rastout@insee.fr">Nathanael Rastout</a>**
+- Last update: **`r format(Sys.time(), "%d/%m/%Y")`**
+- Version of rtauargus used: **`r packageVersion("rtauargus")`**
+- Version of &tau;-Argus used : **TauArgus 4.2.2b1**
+- R version used :  **`r packageVersion("base")`**
+
+<p style="text-align: right">
+  <a href="#TOC" title="Back to summary">summary &uarr;</a>
+</p>
 

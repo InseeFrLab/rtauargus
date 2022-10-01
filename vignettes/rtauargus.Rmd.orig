@@ -395,3 +395,14 @@ When running, the function displays at each iteration which table is treated.
 The vignette *Manage the protection of linked tables* provides a full presentation
 of `tab_multi_manager()` function.
 
+#### About this vignette
+
+- Authors: **<a href="mailto:julien.jamme@insee.fr">Julien Jamme</a>** & **<a href="mailto:nathanael.rastout@insee.fr">Nathanael Rastout</a>**
+- Last update: **`r format(Sys.time(), "%d/%m/%Y")`**
+- Version of rtauargus used: **`r packageVersion("rtauargus")`**
+- Version of &tau;-Argus used : **TauArgus 4.2.2b1**
+- R version used :  **`r packageVersion("base")`**
+
+<p style="text-align: right">
+  <a href="#TOC" title="Back to summary">summary &uarr;</a>
+</p>

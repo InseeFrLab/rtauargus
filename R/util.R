@@ -168,7 +168,8 @@ rev_var_pour_tau_argus <- function(char='**monchar', del_char='*'){
 
 # Uniformize labels before running tau-argus
 # in hrc file
-uniformize_labels_hrc_file <- function(hrc_file, totcode){
+
+get_max_char_hrc_file <- function(hrc_file, totcode){
   df <- utils::read.table(hrc_file)
 
   v_gsub <- Vectorize(gsub, vectorize.args = c("pattern", "x"))
@@ -177,13 +178,19 @@ uniformize_labels_hrc_file <- function(hrc_file, totcode){
 
   df <- df[df$lab != totcode,]
   max_char = max(nchar(df$lab))
-  df$lab <- v_trans_var_pour_tau_argus(df$lab, max_char)
-  df$unif <- paste0(df$aro,df$lab)
+  return(list(hrc_df = df, hrc_name = hrc_file, max_char = max_char))
+}
 
-  name <- gsub(".hrc$", "_unif.hrc", hrc_file)
+
+uniformize_labels_hrc_file <- function(hrc_df, hrc_name, max_char){
+
+  hrc_df$lab <- v_trans_var_pour_tau_argus(hrc_df$lab, max_char)
+  hrc_df$unif <- paste0(hrc_df$aro,hrc_df$lab)
+
+  name <- gsub(".hrc$", "_unif.hrc", hrc_name)
 
   utils::write.table(
-    x = as.data.frame(df$unif),
+    x = as.data.frame(hrc_df$unif),
     file = name,
     quote = FALSE,
     row.names = FALSE,
@@ -191,7 +198,7 @@ uniformize_labels_hrc_file <- function(hrc_file, totcode){
     sep = "",
     eol = "\n"
   )
-  print(paste0(name, " has been created"))
+  #print(paste0(name, " has been created"))
   return(list(hrc_unif = name, max_char = max_char))
 }
 
@@ -204,12 +211,13 @@ uniformize_labels <- function(data, expl_vars, hrc_files, list_totcode){
   for(var_hrc in vars_expl_hrc){
     totcode <- if(is.list(list_totcode)) purrr::flatten(list_totcode)[[var_hrc]] else list_totcode[[var_hrc]]
     hrc_file <- hrc_files[[var_hrc]]
-    res <- uniformize_labels_hrc_file(hrc_file, totcode)
-    hrc_unif_files[[var_hrc]] <- res$hrc_unif
+    res <- get_max_char_hrc_file(hrc_file, totcode)
+    res_unif_hrc <- uniformize_labels_hrc_file(res$hrc_df, res$hrc_name, res$max_char)
+    hrc_unif_files[[var_hrc]] <- res_unif_hrc$hrc_unif
     data[[var_hrc]] <- ifelse(
       data[[var_hrc]] == totcode,
       data[[var_hrc]],
-      v_trans_var_pour_tau_argus(data[[var_hrc]], cible_char = res$max_char)
+      v_trans_var_pour_tau_argus(data[[var_hrc]], cible_char = res_unif_hrc$max_char)
     )
   }
 
