@@ -269,10 +269,22 @@ tab_multi_manager <- function(
   )
 
   # listes de travail
-  todolist <- noms_tbx[1]
-  remainlist <- noms_tbx[-1]
+
+  has_primary_secret <- purrr::map_lgl(
+    list_tables,
+    function(tab){
+      sum(tab[[secret_var]]) != 0
+    }
+  )
+  if(sum(has_primary_secret) == 0){
+    message("None of the tables have any primary secret cells")
+    return(list_tables)
+  }
+  todolist <- noms_tbx[has_primary_secret][1]
+  remainlist <- noms_tbx[has_primary_secret][-1]
 
   num_iter_par_tab = stats::setNames(rep(0, length(list_tables)), noms_tbx)
+  num_iter_par_tab[!has_primary_secret] <- 1
   num_iter_all = 0
 
   common_cells_modified <- as.data.frame(matrix(ncol = length(all_expl_vars)+1))
@@ -414,24 +426,6 @@ tab_multi_manager <- function(
     journal_add_break_line(journal)
 
   }
-
-  # not_expl_vars <- names(table_majeure)[!names(table_majeure) %in% all_expl_vars]
-  # table_majeure <- cbind.data.frame(
-  #   apply(table_majeure[,all_expl_vars,drop=FALSE], 2, rev_var_pour_tau_argus),
-  #   table_majeure[, not_expl_vars]
-  # )
-  # names(table_majeure) <- c(all_expl_vars, not_expl_vars)
-
-  # if(nrow(common_cells_modified) > 1){
-  #   not_expl_vars <- names(common_cells_modified)[!names(common_cells_modified) %in% all_expl_vars]
-  #   common_cells_modified <- cbind.data.frame(
-  #     apply(common_cells_modified[-1,all_expl_vars,drop=FALSE], 2, rev_var_pour_tau_argus),
-  #     common_cells_modified[-1, not_expl_vars, drop=FALSE]
-  #   )
-  #   names(common_cells_modified) <- c(all_expl_vars, not_expl_vars)
-  # }else{
-  #   common_cells_modified <- common_cells_modified[-1,]
-  # }
 
   # Reconstruire la liste des tableaux d'entrée
   liste_tbx_res <- purrr::imap(
