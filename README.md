@@ -2,10 +2,10 @@
 [![pipeline status](https://gitlab.insee.fr/outilsconfidentialite/rtauargus/badges/master/pipeline.svg)](https://gitlab.insee.fr/outilsconfidentialite/rtauargus/-/pipelines)
 <!-- badges: end -->
 
-rtauargus
+rtauargus <a href=' https://inseefrlab.github.io/rtauargus/'><img src='man/figures/rtauargus_logo.png' align="right" height="139" /></a>
 =========
 
-![](vignettes/R_logo_small.png) ![](vignettes/TauBall2_small.png)
+<!--![](vignettes/R_logo_small.png) ![](vignettes/TauBall2_small.png)-->
 
 
 ### τ-Argus from R
