@@ -10,11 +10,14 @@ journal_add_line <- function(journal,...){
 #' Manages the secondary secret of a list of tables
 #' @inheritParams tab_rtauargus
 #' @param list_tables named list of dataframes representing the tables to protect
-#' @param list_explanatory_vars named list of character vectors of explanatory variables of each table mentionned in list_tables. Names of the list are the same as of the list of tables.
+#' @param list_explanatory_vars named list of character vectors of explanatory
+#' variables of each table mentionned in list_tables. Names of the list are the same as of the list of tables.
+#' @param alt_hrc named list for alternative hierarchies (useful for non nested-hierarchies)
+#' @param alt_totcode named list for alternative codes
 #' @param ip_start integer: Interval protection level to apply at first treatment of each table
 #' @param ip_end integer: Interval protection level to apply at other treatments
-#' @param num_iter_max integer: Maximum of treatments to do on each table
-#' @param ... other arguments of func_to_call
+#' @param num_iter_max integer: Maximum of treatments to do on each table (default to 10)
+#' @param ... other arguments of \code{tab_rtauargus2()}
 #'
 #' @return original list of tables. Secret Results of each iteration is added to each table.
 #' For example, the result of first iteration is called 'is_secret_1' in each table.
@@ -80,7 +83,9 @@ tab_multi_manager <- function(
     list_explanatory_vars,
     dir_name = NULL,
     hrc = NULL,
+    alt_hrc = NULL,
     totcode = getOption("rtauargus.totcode"),
+    alt_totcode = NULL,
     value = "value",
     freq = "freq",
     secret_var = "is_secret_prim",
@@ -88,7 +93,7 @@ tab_multi_manager <- function(
     suppress = "MOD(1,5,1,0,0)",
     ip_start = 10,
     ip_end = 0,
-    num_iter_max = 1000,
+    num_iter_max = 10,
     ...
 ){
   start_time <- Sys.time()
@@ -115,11 +120,29 @@ tab_multi_manager <- function(
   noms_tbx <- names(list_tables)
   all_expl_vars <- unique(unname(unlist(list_explanatory_vars)))
 
+  if( (!is.null(hrc)) & is.list(hrc)) hrc <- unlist(hrc)
+
   if( (!is.null(hrc)) & (length(names(hrc)) == 0)){
     stop("hrc must have names corresponding to the adequate explanatory variables")
   }
   if(length(setdiff(names(hrc), all_expl_vars)) > 0){
-    stop("names in hrc file are not mentionned in list_explanatory_vars")
+    stop("some names in hrc argument are not mentionned in list_explanatory_vars")
+  }
+  if(!is.null(alt_hrc)){
+    if((length(names(alt_hrc)) == 0)){
+      stop("alt_hrc must have names corresponding to the adequate tables names")
+    }
+    if(length(setdiff(names(alt_hrc), noms_tbx)) > 0){
+      stop("some names in alt_hrc argument are not mentionned in list_tables")
+    }
+  }
+  if(!is.null(alt_totcode)){
+    if((length(names(alt_totcode)) == 0)){
+      stop("alt_totcode must have names corresponding to the adequate tables names")
+    }
+    if(length(setdiff(names(alt_totcode), noms_tbx)) > 0){
+      stop("some names in alt_totcode argument are not mentionned in list_tables")
+    }
   }
 
   # list_totcode management
@@ -157,6 +180,16 @@ tab_multi_manager <- function(
   }else{
     stop("totcode has to be a character vector of length 1 or a named vector of length equal to the number of unique explanatory vars")
   }
+
+  purrr::walk(
+    names(alt_totcode),
+    function(tab){
+      purrr::walk(
+        names(alt_totcode[[tab]]),
+        function(var) list_totcode[[tab]][[var]] <<- alt_totcode[[tab]][[var]]
+      )
+    }
+  )
 
   noms_vars_init <- c()
   for (tab in list_tables){
@@ -214,23 +247,44 @@ tab_multi_manager <- function(
   )
 
   # Uniformisation des libelles des variables explicatives
-  res_unif <- uniformize_labels(table_majeure, all_expl_vars, hrc, list_totcode)
-  table_majeure <- res_unif$data
-  hrc_unif <- res_unif$hrc_unif
+  # res_unif <- uniformize_labels(table_majeure, all_expl_vars, hrc, list_totcode)
+  # table_majeure <- res_unif$data
+  # hrc_unif <- res_unif$hrc_unif
 
   list_hrc <- purrr::map(
       list_explanatory_vars,
       function(nom_vars){
-        purrr::discard(hrc_unif[nom_vars], is.null) %>%  unlist()
+        purrr::discard(hrc[nom_vars], is.na) %>%  unlist()
       }
     )
 
+  purrr::walk(
+    names(alt_hrc),
+    function(tab){
+      purrr::walk(
+        names(alt_hrc[[tab]]),
+        function(var) list_hrc[[tab]][[var]] <<- alt_hrc[[tab]][[var]]
+      )
+    }
+  )
 
   # listes de travail
-  todolist <- noms_tbx[1]
-  remainlist <- noms_tbx[-1]
+
+  has_primary_secret <- purrr::map_lgl(
+    list_tables,
+    function(tab){
+      sum(tab[[secret_var]]) != 0
+    }
+  )
+  if(sum(has_primary_secret) == 0){
+    message("None of the tables have any primary secret cells")
+    return(list_tables)
+  }
+  todolist <- noms_tbx[has_primary_secret][1]
+  remainlist <- noms_tbx[has_primary_secret][-1]
 
   num_iter_par_tab = stats::setNames(rep(0, length(list_tables)), noms_tbx)
+  num_iter_par_tab[!has_primary_secret] <- 1
   num_iter_all = 0
 
   common_cells_modified <- as.data.frame(matrix(ncol = length(all_expl_vars)+1))
@@ -281,6 +335,19 @@ tab_multi_manager <- function(
     params$totcode = list_totcode[[num_tableau]]
     params$hrc = list_hrc[[num_tableau]]
     params$secret_var = var_secret_apriori
+    params$suppress = if(
+      substr(suppress,1,3) == "MOD" & num_iter_par_tab[num_tableau] != 1
+    ){
+      # if modular deactivation of singleton and multisingleton after the first iteration
+      paste0(
+        paste(
+          c(strsplit(suppress, split = ",")[[1]][1:2], rep("0",3)), collapse = ","
+        ),
+        ")"
+      )
+    }else{
+      suppress
+    }
     params$ip = if(num_iter_par_tab[num_tableau] == 1) ip_start else ip_end
 
     res <- do.call(func_to_call, params)
@@ -360,20 +427,6 @@ tab_multi_manager <- function(
 
   }
 
-  not_expl_vars <- names(table_majeure)[!names(table_majeure) %in% all_expl_vars]
-  table_majeure <- cbind.data.frame(
-    apply(table_majeure[,all_expl_vars,drop=FALSE], 2, rev_var_pour_tau_argus),
-    table_majeure[, not_expl_vars]
-  )
-  names(table_majeure) <- c(all_expl_vars, not_expl_vars)
-
-  not_expl_vars <- names(common_cells_modified)[!names(common_cells_modified) %in% all_expl_vars]
-  common_cells_modified <- cbind.data.frame(
-    apply(common_cells_modified[-1,all_expl_vars,drop=FALSE], 2, rev_var_pour_tau_argus),
-    common_cells_modified[-1, not_expl_vars]
-  )
-  names(common_cells_modified) <- c(all_expl_vars, not_expl_vars)
-
   # Reconstruire la liste des tableaux d'entrée
   liste_tbx_res <- purrr::imap(
     list_tables,
@@ -436,7 +489,7 @@ tab_multi_manager <- function(
   )
   journal_add_break_line(journal)
   journal_add_line(journal, "Common cells hit by the secret:")
-  suppressWarnings(gdata::write.fwf(common_cells_modified, file = journal, append = TRUE))
+  suppressWarnings(gdata::write.fwf(common_cells_modified[-1,], file = journal, append = TRUE))
   journal_add_break_line(journal)
   journal_add_line(journal, "End time: ", format(Sys.time(), "%Y-%m-%d  %H:%M:%S"))
   journal_add_break_line(journal)

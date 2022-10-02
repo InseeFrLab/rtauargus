@@ -2,7 +2,7 @@ Package: rtauargus
 Type: Package
 Title: Using Tau-Argus from R
 Language: fr
-Version: 1.0.0
+Version: 1.1.0
 Depends: R (>= 3.5.0)
 Imports:
     purrr (>= 0.2),
@@ -19,12 +19,12 @@ Authors@R: c(
     person(
       "Pierre-Yves", "Berrard",
       email = "pierre-yves.berrard@insee.fr",
-      role = c("aut", "cre")
+      role = c("aut")
     ),
 	person(
 	  "Julien", "Jamme",
 	  email = "julien.jamme@insee.fr",
-	  role = c("aut")
+	  role = c("aut","cre")
 	),
 	person(
 	  "Nathanaël", "Rastout",
@@ -33,11 +33,11 @@ Authors@R: c(
 	),
 	person(
 	  "Jeanne", "Pointet",
-	  role = c("ctb")
+	  role = c("aut")
 	),
 	person(
 	  "Félix", "Beroud",
-	  role = c("ctb")
+	  role = c("aut")
 	),
     person(
       family = "Institut National de la Statistique et des Études Économiques",
