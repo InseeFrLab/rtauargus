@@ -6,7 +6,7 @@ output:
     toc: true
     toc_depth: 3
 vignette: >
-  %\VignetteIndexEntry{Tau-Argus from R - tabular version}
+  %\VignetteIndexEntry{&tau;-Argus from R - tabular version}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -167,7 +167,7 @@ To get the results for the dominance rule, we need to specify the largest contri
 ```{r rtauargus_ex1}
 ex1 <- tab_rtauargus(
   act_size,
-  dir_name = "tauargus_files",
+  dir_name = "tauargus_files/ex1",
   files_name = "ex1",
   explanatory_vars = c("ACTIVITY","SIZE"),
   safety_rules = "FREQ(3,10)|NK(1,85)",
@@ -280,7 +280,7 @@ By default, `tab_rtauargus()` runs the Modular method to perform the secondary s
 ```{r rtauargus_ex2}
 ex2 <- tab_rtauargus(
   turnover_act_size,
-  dir_name = "tauargus_files/",
+  dir_name = "tauargus_files/ex2",
   files_name = "ex2",
   explanatory_vars = c("ACTIVITY","SIZE"),
   value = "TOT",
@@ -376,7 +376,7 @@ ex3 <- tab_multi_manager(
     act_cj = c("ACTIVITY", "CJ")
   ),
   hrc = c(ACTIVITY = hrc_file_activity),
-  dir_name = "ex3",
+  dir_name = "tauargus_files/ex3",
   value = "TOT",
   freq = "N_OBS",
   secret_var = "is_secret_prim",
@@ -395,3 +395,14 @@ When running, the function displays at each iteration which table is treated.
 The vignette *Manage the protection of linked tables* provides a full presentation
 of `tab_multi_manager()` function.
 
+#### About this vignette
+
+- Authors: **<a href="mailto:julien.jamme@insee.fr">Julien Jamme</a>** & **<a href="mailto:nathanael.rastout@insee.fr">Nathanael Rastout</a>**
+- Last update: **`r format(Sys.time(), "%d/%m/%Y")`**
+- Version of rtauargus used: **`r packageVersion("rtauargus")`**
+- Version of &tau;-Argus used : **TauArgus 4.2.2b1**
+- R version used :  **`r packageVersion("base")`**
+
+<p style="text-align: right">
+  <a href="#TOC" title="Back to summary">summary &uarr;</a>
+</p>

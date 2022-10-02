@@ -14,6 +14,12 @@ knitr::knit(
 )
 
 knitr::knit(
+  "vignettes/rtauargus_micro_fr.Rmd.orig",
+  "vignettes/rtauargus_micro_fr.Rmd",
+  encoding = "UTF-8"
+)
+
+knitr::knit(
   "vignettes/rtauargus_micro.Rmd.orig",
   "vignettes/rtauargus_micro.Rmd",
   encoding = "UTF-8"

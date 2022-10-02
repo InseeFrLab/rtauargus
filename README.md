@@ -1,14 +1,13 @@
+# rtauargus <a href=' https://inseefrlab.github.io/rtauargus/'><img src='man/figures/rtauargus_logo.png' align="right" height="139" /></a>  
+
 <!-- badges: start -->
 [![pipeline status](https://gitlab.insee.fr/outilsconfidentialite/rtauargus/badges/master/pipeline.svg)](https://gitlab.insee.fr/outilsconfidentialite/rtauargus/-/pipelines)
 <!-- badges: end -->
 
-rtauargus
-=========
+<!--![](vignettes/R_logo_small.png) ![](vignettes/TauBall2_small.png)-->
 
-![](vignettes/R_logo_small.png) ![](vignettes/TauBall2_small.png)
-
-
-### τ-Argus from R
+  
+## τ-Argus from R
 
 The *rtauargus* package provides an **R** interface for **τ-Argus**.
 
@@ -30,7 +29,7 @@ The package presents other additional functionalities, such as:
 It's possible to choose a tabular or microdata approach, but the tabular 
 one is, from now on, encouraged.
 
-### Installation
+## Installation
 
 * **most recent stable version** (recommended)
 
@@ -59,7 +58,7 @@ To install a specific version, add to the directory a reference
 [tag](https://github.com/inseefrlab/rtauargus/tags)),
 for example `"inseefrlab/rtauargus@v-0.4.1"`.
 
-### Simple example
+## Simple example
 
 When loading the package, the console displays some information:
 
@@ -157,7 +156,7 @@ same directory, too. To go further, you can consult the latest version of the
 
 **A detailed overview is available via `vignette("rtauargus")`.**
 
-### Important notes
+## Important notes
 
 The functions of *rtauargus* calling τ-Argus require that this software be accessible from the workstation. The download of τ-Argus is done on the [dedicated page](https://github.com/sdcTools/tauargus/releases) of the *sdcTools* git repository.
 

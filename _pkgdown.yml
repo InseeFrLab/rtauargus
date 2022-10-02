@@ -13,7 +13,7 @@ navbar:
     left:  [intro, reference, articles, tutorials, news]
     right: [search, gitlab]
 reference:
-  - title: Protection tables from tabular
+  - title: Protect tables from tabular
     desc: >
       Functions for protecting magnitude and frequency tables from
       one tabular data or from a set of linked tables.
