@@ -6,7 +6,8 @@ articles:
   protect_multi_tables: protect_multi_tables.html
   rtauargus: rtauargus.html
   rtauargus_micro: rtauargus_micro.html
-last_built: 2022-09-01T22:22Z
+  rtauargus_micro_fr: rtauargus_micro_fr.html
+last_built: 2022-10-02T22:00Z
 urls:
   reference: https://inseefrlab.github.io/rtauargus/reference
   article: https://inseefrlab.github.io/rtauargus/articles
