@@ -3,7 +3,7 @@
 \docType{data}
 \name{activity_corr_table}
 \alias{activity_corr_table}
-\title{Correspondence table describing the business sectors hierarchy.}
+\title{data - Correspondence table describing the business sectors hierarchy.}
 \format{
 A data frame with 92 rows and 3 variables:
 \describe{

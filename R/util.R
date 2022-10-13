@@ -44,7 +44,7 @@ df_param_defaut <- function(varnames, param_name, valvar) {
   row.names(res) <- varnames
   names(res)[2] <- param_name
 
-  res[names(specifique), 2] <- specifique
+  res[names(specifique), 2] <- unlist(specifique)
 
   res
 

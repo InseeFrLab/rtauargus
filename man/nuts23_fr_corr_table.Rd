@@ -3,7 +3,7 @@
 \docType{data}
 \name{nuts23_fr_corr_table}
 \alias{nuts23_fr_corr_table}
-\title{Correspondence table describing the NUTS hierarchy.}
+\title{data - Correspondence table describing the NUTS hierarchy.}
 \format{
 A data frame with 92 rows and 3 variables:
 \describe{

@@ -3,7 +3,7 @@
 \docType{data}
 \name{turnover_nuts_cj}
 \alias{turnover_nuts_cj}
-\title{Turnover broken down by NUTS and size of French companies (fake values).}
+\title{data - Turnover broken down by NUTS and size of French companies (fake values).}
 \format{
 A tibble/data frame with 452 rows and 5 variables:
 \describe{
