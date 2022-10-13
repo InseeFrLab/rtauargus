@@ -37,7 +37,8 @@ one is, from now on, encouraged.
     ```r
     install.packages(
       "rtauargus",
-      repos = "https://nexus.insee.fr/repository/r-public"
+      repos = "https://nexus.insee.fr/repository/r-public",
+      type = "source"
     )
     ```
     
