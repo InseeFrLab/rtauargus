@@ -447,7 +447,7 @@ submit it to &tau;-Argus in batch mode. We get the list of tables
 secreted :
 
 ```{r run1}
-secret2 <- run_arb("Z:/microdata.arb")
+secret2 <- run_arb("Z:/microdata.arb", missing_dir = "create")
 
 secret2
 ```
