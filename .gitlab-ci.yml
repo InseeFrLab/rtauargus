@@ -1,4 +1,4 @@
-image: rocker/tidyverse:latest
+image: inseefrlab/onyxia-rstudio:latest
 
 stages:
   - check
@@ -7,11 +7,14 @@ stages:
 variables:
   GIT_SSL_NO_VERIFY: "1"
   PKG_NAME: "rtauargus"
+  HTTP_PROXY: http://proxy-app.insee.fr:3128
+  HTTPS_PROXY: http://proxy-app.insee.fr:3128
+  NO_PROXY: insee.test,insee.intra,insee.fr,localhost
 
 pkg_check:
   stage: check
   tags:
-    - poc-kube
+    - docker
   script:
     - R -e 'install.packages("gdata", repos = "https://nexus.insee.fr/repository/r-cran")'
     - R -e 'install.packages("zoo", repos = "https://nexus.insee.fr/repository/r-cran")'
@@ -23,19 +26,17 @@ pkg_check:
   artifacts:
     paths:
       - "${PKG_NAME}_*.tar.gz"
-  only:
-    - master
-    - developpement
+  # only:
+  #   - master
+  #   - developpement
 
 pages:
   stage: deploy
-  image: colinfay/r-ci-tidyverse:3.6.0
   tags:
-    - poc-kube
+    - docker
   script:
     - R -e 'install.packages("gdata", repos = "https://nexus.insee.fr/repository/r-cran")'
     - R -e 'install.packages("zoo", repos = "https://nexus.insee.fr/repository/r-cran")'
-    - R -e 'devtools::install(dependencies = FALSE)'
     - R -e 'options(pkgdown.internet = FALSE) ; pkgdown::build_site()'
   artifacts:
     paths:
