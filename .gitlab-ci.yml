@@ -27,9 +27,9 @@ pkg_check:
   artifacts:
     paths:
       - "${PKG_NAME}_*.tar.gz"
-  # only:
-  #   - master
-  #   - developpement
+  only:
+    - master
+    - developpement
 
 pages:
   stage: deploy
