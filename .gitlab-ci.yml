@@ -16,6 +16,7 @@ pkg_check:
   tags:
     - docker
   script:
+    - bash <(curl -s https://gitlab.insee.fr/infrastructure/lss/runner/-/raw/main/ca-certificates.sh)
     - R -e 'install.packages("gdata", repos = "https://nexus.insee.fr/repository/r-cran")'
     - R -e 'install.packages("zoo", repos = "https://nexus.insee.fr/repository/r-cran")'
     - R -e 'devtools::check(check_dir = ".",
