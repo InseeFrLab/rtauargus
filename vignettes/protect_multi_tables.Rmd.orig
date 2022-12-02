@@ -105,7 +105,7 @@ all common cells that have been hit, mentionning the iteration of when each has 
 
 - **dir_name**
 the directory that will contain all the created files, if non existing it will be created.
-example : dir_names = "my_directory"
+example : dir_name = "my_directory"
 
 - **hrc**
 A named vector specifying the path to the hrc file for each hierarchical variables.
@@ -144,7 +144,7 @@ The colname of the response variable in the tables, it MUST be the same name for
 For example : value = "turnover"
 Default : "value"
 
-- **frequency**
+- **freq**
 The colname of the frequency variable in the tables, it MUST be the same name for
 each tables.
 For example : freq = "frequency"
@@ -206,7 +206,7 @@ data("turnover_nuts_cj")
 ACTIVITY X SIZE named turnover_act_size
 ACTIVITY X CJ named turnover_act_cj
 NUTS X SIZE named turnover_nuts_size
-NUTS X CJ turnover_nuts_cj
+NUTS X CJ named turnover_nuts_cj
 
 
 ```{r}
@@ -215,7 +215,7 @@ str(turnover_nuts_cj)
 ```
 
 The first step is to create a list containing our four tables, it is advised to
-give a name to each tables. By doing so it will be easier to tack secondary suppression.
+give a name to each tables. By doing so it will be easier to track secondary suppression.
 
 ```{r}
 list_data_4_tabs <- list(
@@ -269,7 +269,7 @@ The names of the list have to be the names of the corresponding tables in the
 ### Preparing the list of total codes
 
 The labels used to mention the total for each variable have to declared by the user,
-in a nmaed list. However, when all of the variables have the same label to refer
+in a named list. However, when all of the variables have the same label to refer
 to the total, the information can be mentionned as follows:
 
 ```{r totcodes}
