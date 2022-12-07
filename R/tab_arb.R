@@ -62,7 +62,7 @@ norm_apriori_params_tab <- function(params) {
 
 # Génère <APRIORI>s
 
-tab_apriori_batch <- function(hst_names, sep = ',', ignore_err = 0 , exp_triv = 0) {
+tab_apriori_batch <- function(hst_names, sep = separator, ignore_err = 0 , exp_triv = 0) {
 
   paste0(
     '<APRIORI> "',
@@ -207,6 +207,7 @@ tab_arb <- function(
     value     = getOption("rtauargus.response_var"),
     safety_rules,
     suppress,
+    separator      = getOption("rtauargus.separator"),
     output_names     = NULL,
     output_type      = getOption("rtauargus.output_type"),
     output_options   = getOption("rtauargus.output_options"),
