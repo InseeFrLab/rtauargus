@@ -1,5 +1,5 @@
 ---
-title: "&tau;-Argus from R"
+title: "&tau;-Argus from R - microdata version"
 subtitle: <h2>![logo R](R_logo_small.png)![logo &tau;-Argus](TauBall2_small.png)<br/>Package {rtauargus}</h2>
 output:
   rmarkdown::html_vignette:

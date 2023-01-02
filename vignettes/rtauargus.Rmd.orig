@@ -6,7 +6,7 @@ output:
     toc: true
     toc_depth: 3
 vignette: >
-  %\VignetteIndexEntry{&tau;-Argus from R - tabular version}
+  %\VignetteIndexEntry{Tau-Argus from R - tabular version}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

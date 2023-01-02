@@ -17,18 +17,12 @@ vignette: >
   Voir : https://ropensci.org/technotes/2019/12/08/precompute-vignettes
 -->
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(
-  echo = TRUE,
-  collapse = TRUE,
-  comment = "#>",
-  warning = FALSE
-)
-```
+
 
 <!-- ####################################################################### -->
 
-```{r message=FALSE}
+
+```r
 library(dplyr)
 ```
 
@@ -84,9 +78,14 @@ Les dernières versions peuvent être téléchargées ici : [https://github.com/
 
 _rtauargus_ nécessite quelques autres packages R. Voici les dépendances à installer.
 
-```{r, echo = FALSE, comment = "•"}
-imports <- packageDescription("rtauargus", fields = "Imports")
-cat(gsub(", ", "\n", imports))
+
+```
+• purrr (>= 0.2)
+• dplyr (>= 0.7)
+• gdata
+• stringr
+• rlang
+• zoo
 ```
 Le package _rtauargus_ peut être installé maintenant.
 
@@ -106,7 +105,8 @@ comment appliquer des méthodes de suppression en une seule instruction.
 
 Lors du chargement du package, la console affiche quelques informations :
 
-```{r library}
+
+```r
 library(rtauargus)
 ```
 
@@ -114,7 +114,8 @@ En particulier, un emplacement plausible pour le logiciel &tau;-Argus est
 prédéfini. Celui-ci peut être modifié pour la durée de la session R, comme suit :
 
 
-```{r opt_exe}
+
+```r
 loc_tauargus <- "Y:/Logiciels/TauArgus/TauArgus4.2.2b1/TauArgus.exe"
 
 options(rtauargus.tauargus_exe = loc_tauargus)
@@ -147,7 +148,8 @@ Tous les arguments et leurs options par défaut seront détaillés ( où ?).
 Pour la présentation un tableau fictif sera utilisé :
 
 
-```{r data}
+
+```r
 act_size <-
   data.frame(
     ACTIVITY = c("01","01","01","02","02","02","06","06","06","Total","Total","Total"),
@@ -157,6 +159,19 @@ act_size <-
     MAX = c(20,15,20,20,10,20,16,38,38,20,38,38)
   )
 act_size
+#>    ACTIVITY  SIZE VAL N_OBS MAX
+#> 1        01   tr1 100    10  20
+#> 2        01   tr2  50     5  15
+#> 3        01 Total 150    15  20
+#> 4        02   tr1  30     2  20
+#> 5        02   tr2  20     5  10
+#> 6        02 Total  50     7  20
+#> 7        06   tr1  60     8  16
+#> 8        06   tr2  40     6  38
+#> 9        06 Total 100    14  38
+#> 10    Total   tr1 190    20  20
+#> 11    Total   tr2 110    16  38
+#> 12    Total Total 300    36  38
 ```
 
 Nous utiliserons ces deux règles de secret primaire :
@@ -166,7 +181,8 @@ Nous utiliserons ces deux règles de secret primaire :
 
 Pour obtenir les résultats de la règle de dominance, nous devons spécifier le plus grand contributeur de chaque cellule, correspondant à la variable `MAX` dans les données tabulées.
 
-```{r rtauargus_ex1}
+
+```r
 ex1 <- tab_rtauargus(
   act_size,
   dir_name = "tauargus_files/ex1",
@@ -178,6 +194,21 @@ ex1 <- tab_rtauargus(
   maxscore = "MAX",
   totcode = c(ACTIVITY="Total",SIZE="Total")
 )
+#> Start of batch procedure; file: Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex1\ex1.arb
+#> <OPENTABLEDATA> "Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex1\ex1.tab"
+#> <OPENMETADATA> "Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex1\ex1.rda"
+#> <SPECIFYTABLE> "ACTIVITY""SIZE"|"VAL"||
+#> <SAFETYRULE> FREQ(3,10)|NK(1,85)
+#> <READTABLE> 1
+#> Tables have been read
+#> <SUPPRESS> MOD(1,5,1,0,0)
+#> Start of the modular protection for table ACTIVITY x SIZE | VAL
+#> End of modular protection. Time used 0 seconds
+#>                    Number of suppressions: 2
+#> <WRITETABLE> (1,4,,"Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex1\ex1.csv")
+#> Table: ACTIVITY x SIZE | VAL has been written
+#>                    Output file name: Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex1\ex1.csv
+#> End of TauArgus run
 ```
 
 Par défaut, la fonction affiche dans la console le contenu du journal de bord dans lequel
@@ -193,8 +224,22 @@ chaque cellule comme suit :
 -`D` : cellule en secret secondaire ;
 -`V` : cellules valides - pas besoin de masquer.
 
-```{r}
+
+```r
 ex1
+#>    ACTIVITY  SIZE VAL N_OBS MAX Status
+#> 1        01 Total 150    15  20      V
+#> 2        01   tr1 100    10  20      V
+#> 3        01   tr2  50     5  15      V
+#> 4        02 Total  50     7  20      V
+#> 5        02   tr1  30     2  20      A
+#> 6        02   tr2  20     5  10      D
+#> 7        06 Total 100    14  38      V
+#> 8        06   tr1  60     8  16      D
+#> 9        06   tr2  40     6  38      B
+#> 10    Total Total 300    36  38      V
+#> 11    Total   tr1 190    20  20      V
+#> 12    Total   tr2 110    16  38      V
 ```
 
 
@@ -209,9 +254,19 @@ Tous les fichiers générés par la fonction sont écrits dans le répertoire sp
 
 Dans cet exemple, nous souhaitons protéger un tableau dans lequel le chiffre d'affaires des entreprises est ventilé par secteur d'activité et par taille. Pour charger les données :
 
-```{r load_data}
+
+```r
 data("turnover_act_size")
 head(turnover_act_size)
+#> # A tibble: 6 x 5
+#>   ACTIVITY SIZE  N_OBS       TOT       MAX
+#>   <chr>    <chr> <int>     <dbl>     <dbl>
+#> 1 AZ       Total   405    44475.     6212.
+#> 2 BE       Total 12878 24827613.  1442029.
+#> 3 FZ       Total 28043  8907311.  1065833.
+#> 4 GI       Total 62053 26962063.  3084242.
+#> 5 JZ       Total  8135  8584917.  3957364.
+#> 6 KZ       Total  8140 62556596. 10018017.
 ```
 
 La signification de chaque variable est la suivante :
@@ -231,12 +286,21 @@ A partir d'un tableau de correspondance, la fonction `write_hrc2()` fait le trav
 
 Ici, le tableau de correspondance décrit l'imbrication des trois niveaux de secteurs d'activité, du plus agrégé au moins agrégé :
 
-```{r}
+
+```r
 data(activity_corr_table)
 head(activity_corr_table)
+#>   A10 A21 A88
+#> 1  AZ   A  01
+#> 2  AZ   A  02
+#> 3  AZ   X   X
+#> 4  BE   B  06
+#> 5  BE   B  07
+#> 6  BE   B  08
 ```
 
-```{r hierarchy}
+
+```r
 hrc_file_activity <- write_hrc2(
   corr_table = activity_corr_table,
   file_name = "hrc/activity.hrc"
@@ -252,7 +316,8 @@ quelles cellules ne respectent pas les règles du secret primaire. En utilisant 
 on obtient :
 
 
-```{r prim_secret}
+
+```r
 turnover_act_size <- turnover_act_size %>%
   mutate(
     is_secret_freq = N_OBS > 0 & N_OBS < 3,
@@ -274,7 +339,8 @@ Puisque le secret primaire a été spécifié, il n'est pas nécessaire d'utilis
 Par défaut, `tab_rtauargus()` exécute la méthode Modular pour effectuer le secret secondaire. Ici, nous choisissons d'utiliser la méthode Optimal en modifiant l'argument `suppress`.
 
 
-```{r rtauargus_ex2}
+
+```r
 ex2 <- tab_rtauargus(
   turnover_act_size,
   dir_name = "tauargus_files/ex2",
@@ -292,18 +358,34 @@ ex2 <- tab_rtauargus(
 
 ##### Résultat
 
-```{r}
+
+```r
 str(ex2)
+#> 'data.frame':	414 obs. of  9 variables:
+#>  $ ACTIVITY      : chr  "01" "01" "02" "02" ...
+#>  $ SIZE          : chr  "Total" "tr1" "Total" "tr1" ...
+#>  $ N_OBS         : int  18 18 387 381 6 1 1 4 4 84 ...
+#>  $ TOT           : num  853 853 43623 35503 8120 ...
+#>  $ MAX           : num  303 303 6212 6212 4812 ...
+#>  $ is_secret_freq: logi  FALSE FALSE FALSE FALSE FALSE TRUE ...
+#>  $ is_secret_dom : logi  FALSE FALSE FALSE FALSE FALSE TRUE ...
+#>  $ is_secret_prim: logi  FALSE FALSE FALSE FALSE FALSE TRUE ...
+#>  $ Status        : chr  "V" "V" "V" "V" ...
 ```
 
-```{r}
+
+```r
 table(ex2$Status)
+#> 
+#>   B   D   V 
+#>  77  64 273
 ```
 
 Comme on peut le voir dans les résultats du `table()`,dans la sortie produite par &tau;-Argus tous les secrets primaires ont le statut "B".
 Pour corriger cela, nous pouvons faire :
 
-```{r}
+
+```r
 ex2 %>%
   mutate(
     Status = dplyr::case_when(
@@ -312,6 +394,11 @@ ex2 %>%
     )
   ) %>%
   dplyr::count(Status)
+#>   Status   n
+#> 1      A  52
+#> 2      B  25
+#> 3      D  64
+#> 4      V 273
 ```
 
 
@@ -325,10 +412,17 @@ C'est un processus itératif, qui effectue la pose de secret secondaire d'un tab
 Pour cet exemple, deux tableaux seront utilisés :
 
 
-```{r}
+
+```r
 data("turnover_act_size")
 data("turnover_act_cj")
 str(turnover_act_cj)
+#> tibble [406 x 5] (S3: tbl_df/tbl/data.frame)
+#>  $ ACTIVITY: chr [1:406] "AZ" "BE" "FZ" "GI" ...
+#>  $ CJ      : chr [1:406] "Total" "Total" "Total" "Total" ...
+#>  $ N_OBS   : int [1:406] 405 12878 28043 62053 8135 8140 11961 41359 26686 25108 ...
+#>  $ TOT     : num [1:406] 44475 24827613 8907311 26962063 8584917 ...
+#>  $ MAX     : num [1:406] 6212 1442029 1065833 3084242 3957364 ...
 ```
 
 
@@ -345,7 +439,8 @@ ou non. Une variable booléenne est créée, égale à TRUE si la cellule n'est 
 Ici, on utilise les mêmes règles que précédemment.
 
 
-```{r}
+
+```r
 list_data_2_tabs <- list(
   act_size = turnover_act_size,
   act_cj = turnover_act_cj
@@ -368,7 +463,8 @@ list_data_2_tabs <- list(
 Maintenant que le secret primaire a été spécifié pour les deux tableaux, nous pouvons lancer le processus.
 
 
-```{r}
+
+```r
 ex3 <- tab_multi_manager(
   list_tables = list_data_2_tabs,
   list_explanatory_vars = list(
@@ -382,6 +478,9 @@ ex3 <- tab_multi_manager(
   secret_var = "is_secret_prim",
   totcode =  "Total"
 )
+#> --- Current table to treat:  act_size ---
+#> --- Current table to treat:  act_cj ---
+#> --- Current table to treat:  act_size ---
 ```
 
 Par défaut, la fonction utilise un wrapper de la fonction `tab_rtauargus()`, appelé `tab_rtauargus2()`, pour appliquer le secret secondaire avec &tau;-Argus. De nombreux paramètres par défaut sont définis. En particulier :
@@ -398,10 +497,10 @@ de la fonction `tab_multi_manager()`.
 #### Détail de la vignette
 
 - Authors: **<a href="mailto:julien.jamme@insee.fr">Julien Jamme</a>** & **<a href="mailto:nathanael.rastout@insee.fr">Nathanael Rastout</a>**
-- Last update: **`r format(Sys.time(), "%d/%m/%Y")`**
-- Version of rtauargus used: **`r packageVersion("rtauargus")`**
+- Last update: **02/01/2023**
+- Version of rtauargus used: **1.1.1**
 - Version of &tau;-Argus used : **TauArgus 4.2.2b1**
-- R version used :  **`r packageVersion("base")`**
+- R version used :  **4.1.3**
 
 <p style="text-align: right">
   <a href="#TOC" title="Back to summary">summary &uarr;</a>

@@ -8,7 +8,7 @@ output:
     number_section: true
     fig_caption: true
 vignette: >
-  %\VignetteIndexEntry{Tau-Argus from R - tabular version}
+  %\VignetteIndexEntry{Protect several tables}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -97,7 +97,7 @@ all common cells that have been hit, mentionning the iteration of when each has 
 
 - **dir_name**
 the directory that will contain all the created files, if non existing it will be created.
-example : dir_names = "my_directory"
+example : dir_name = "my_directory"
 
 - **hrc**
 A named vector specifying the path to the hrc file for each hierarchical variables.
@@ -136,7 +136,7 @@ The colname of the response variable in the tables, it MUST be the same name for
 For example : value = "turnover"
 Default : "value"
 
-- **frequency**
+- **freq**
 The colname of the frequency variable in the tables, it MUST be the same name for
 each tables.
 For example : freq = "frequency"
@@ -200,7 +200,7 @@ data("turnover_nuts_cj")
 ACTIVITY X SIZE named turnover_act_size
 ACTIVITY X CJ named turnover_act_cj
 NUTS X SIZE named turnover_nuts_size
-NUTS X CJ turnover_nuts_cj
+NUTS X CJ named turnover_nuts_cj
 
 
 
@@ -222,7 +222,7 @@ str(turnover_nuts_cj)
 ```
 
 The first step is to create a list containing our four tables, it is advised to
-give a name to each tables. By doing so it will be easier to tack secondary suppression.
+give a name to each tables. By doing so it will be easier to track secondary suppression.
 
 
 ```r
@@ -352,7 +352,7 @@ The names of the list have to be the names of the corresponding tables in the
 ### Preparing the list of total codes
 
 The labels used to mention the total for each variable have to declared by the user,
-in a nmaed list. However, when all of the variables have the same label to refer
+in a named list. However, when all of the variables have the same label to refer
 to the total, the information can be mentionned as follows:
 
 
@@ -638,7 +638,7 @@ res <- tab_multi_manager(
 #### About this vignette
 
 - Authors: **<a href="mailto:julien.jamme@insee.fr">Julien Jamme</a>** & **<a href="mailto:nathanael.rastout@insee.fr">Nathanael Rastout</a>**
-- Last update: **16/10/2022**
+- Last update: **02/01/2023**
 - Version of rtauargus used: **1.1.1**
 - Version of &tau;-Argus used : **TauArgus 4.2.2b1**
 - R version used :  **4.1.3**

@@ -19,15 +19,7 @@ MODIFIER `rtauargus.Rmd.orig` ET EXECUTER `precompilation.R`
 Voir : https://ropensci.org/technotes/2019/12/08/precompute-vignettes
 -->
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(
-  echo = TRUE,
-  collapse = TRUE,
-  comment = "#>",
-  warning = FALSE
-)
-knitr::opts_knit$set(root.dir = getwd())
-```
+
 
 # Introduction
 
@@ -203,7 +195,8 @@ la même variable de réponse, à savoir le chiffre d'affaires.
 
 ### Préparation des données
 
-```{r load_data}
+
+```r
 data("turnover_act_size")
 data("turnover_act_cj")
 data ("turnover_nuts_size")
@@ -216,16 +209,30 @@ NUTS X SIZE nommé turnover_nuts_size
 NUTS X CJ nommé turnover_nuts_cj
 
 
-```{r}
+
+```r
 str(turnover_act_size)
+#> tibble [414 x 5] (S3: tbl_df/tbl/data.frame)
+#>  $ ACTIVITY: chr [1:414] "AZ" "BE" "FZ" "GI" ...
+#>  $ SIZE    : chr [1:414] "Total" "Total" "Total" "Total" ...
+#>  $ N_OBS   : int [1:414] 405 12878 28043 62053 8135 8140 11961 41359 26686 25108 ...
+#>  $ TOT     : num [1:414] 44475 24827613 8907311 26962063 8584917 ...
+#>  $ MAX     : num [1:414] 6212 1442029 1065833 3084242 3957364 ...
 str(turnover_nuts_cj)
+#> tibble [452 x 5] (S3: tbl_df/tbl/data.frame)
+#>  $ NUTS : chr [1:452] "FR10" "FR21" "FR22" "FR23" ...
+#>  $ CJ   : chr [1:452] "Total" "Total" "Total" "Total" ...
+#>  $ N_OBS: int [1:452] 38462 6769 4561 5090 8611 7811 5643 10411 8179 5163 ...
+#>  $ TOT  : num [1:452] 33026385 2947560 1917663 3701935 5089279 ...
+#>  $ MAX  : num [1:452] 3084242 544763 651848 298134 1165019 ...
 ```
 
 La première étape consiste à créer une liste contenant nos quatre tableaux, il est
 conseillé de de donner un nom à chaque table. En faisant cela, il sera plus facile
 de suivre le déroulement de la pose du secret secondaire.
 
-```{r}
+
+```r
 list_data_4_tabs <- list(
   act_size = turnover_act_size,
   act_cj = turnover_act_cj,
@@ -233,6 +240,31 @@ list_data_4_tabs <- list(
   nuts_cj = turnover_nuts_cj
 )
 str(list_data_4_tabs)
+#> List of 4
+#>  $ act_size : tibble [414 x 5] (S3: tbl_df/tbl/data.frame)
+#>   ..$ ACTIVITY: chr [1:414] "AZ" "BE" "FZ" "GI" ...
+#>   ..$ SIZE    : chr [1:414] "Total" "Total" "Total" "Total" ...
+#>   ..$ N_OBS   : int [1:414] 405 12878 28043 62053 8135 8140 11961 41359 26686 25108 ...
+#>   ..$ TOT     : num [1:414] 44475 24827613 8907311 26962063 8584917 ...
+#>   ..$ MAX     : num [1:414] 6212 1442029 1065833 3084242 3957364 ...
+#>  $ act_cj   : tibble [406 x 5] (S3: tbl_df/tbl/data.frame)
+#>   ..$ ACTIVITY: chr [1:406] "AZ" "BE" "FZ" "GI" ...
+#>   ..$ CJ      : chr [1:406] "Total" "Total" "Total" "Total" ...
+#>   ..$ N_OBS   : int [1:406] 405 12878 28043 62053 8135 8140 11961 41359 26686 25108 ...
+#>   ..$ TOT     : num [1:406] 44475 24827613 8907311 26962063 8584917 ...
+#>   ..$ MAX     : num [1:406] 6212 1442029 1065833 3084242 3957364 ...
+#>  $ nuts_size: tibble [460 x 5] (S3: tbl_df/tbl/data.frame)
+#>   ..$ NUTS : chr [1:460] "FR10" "FR21" "FR22" "FR23" ...
+#>   ..$ SIZE : chr [1:460] "Total" "Total" "Total" "Total" ...
+#>   ..$ N_OBS: int [1:460] 38462 6769 4561 5090 8611 7811 5643 10411 8179 5163 ...
+#>   ..$ TOT  : num [1:460] 33026385 2947560 1917663 3701935 5089279 ...
+#>   ..$ MAX  : num [1:460] 3084242 544763 651848 298134 1165019 ...
+#>  $ nuts_cj  : tibble [452 x 5] (S3: tbl_df/tbl/data.frame)
+#>   ..$ NUTS : chr [1:452] "FR10" "FR21" "FR22" "FR23" ...
+#>   ..$ CJ   : chr [1:452] "Total" "Total" "Total" "Total" ...
+#>   ..$ N_OBS: int [1:452] 38462 6769 4561 5090 8611 7811 5643 10411 8179 5163 ...
+#>   ..$ TOT  : num [1:452] 33026385 2947560 1917663 3701935 5089279 ...
+#>   ..$ MAX  : num [1:452] 3084242 544763 651848 298134 1165019 ...
 ```
 
 ### Appliquer les règles de secret primaire
@@ -241,7 +273,8 @@ Ensuite, nous devons appliquer les règles de secret primaire pour chaque table.
 Ici, nous appliquons 2 règles :
 La règle de dominance à 85% NK(1,85) et la règle de fréquence avec un seuil fixé à 3.
 
-```{r}
+
+```r
 list_data_4_tabs <- list_data_4_tabs %>%
   purrr::map(
     function(df){
@@ -254,6 +287,43 @@ list_data_4_tabs <- list_data_4_tabs %>%
     }
   )
 str(list_data_4_tabs)
+#> List of 4
+#>  $ act_size : tibble [414 x 8] (S3: tbl_df/tbl/data.frame)
+#>   ..$ ACTIVITY      : chr [1:414] "AZ" "BE" "FZ" "GI" ...
+#>   ..$ SIZE          : chr [1:414] "Total" "Total" "Total" "Total" ...
+#>   ..$ N_OBS         : int [1:414] 405 12878 28043 62053 8135 8140 11961 41359 26686 25108 ...
+#>   ..$ TOT           : num [1:414] 44475 24827613 8907311 26962063 8584917 ...
+#>   ..$ MAX           : num [1:414] 6212 1442029 1065833 3084242 3957364 ...
+#>   ..$ is_secret_freq: logi [1:414] FALSE FALSE FALSE FALSE FALSE FALSE ...
+#>   ..$ is_secret_dom : logi [1:414] FALSE FALSE FALSE FALSE FALSE FALSE ...
+#>   ..$ is_secret_prim: logi [1:414] FALSE FALSE FALSE FALSE FALSE FALSE ...
+#>  $ act_cj   : tibble [406 x 8] (S3: tbl_df/tbl/data.frame)
+#>   ..$ ACTIVITY      : chr [1:406] "AZ" "BE" "FZ" "GI" ...
+#>   ..$ CJ            : chr [1:406] "Total" "Total" "Total" "Total" ...
+#>   ..$ N_OBS         : int [1:406] 405 12878 28043 62053 8135 8140 11961 41359 26686 25108 ...
+#>   ..$ TOT           : num [1:406] 44475 24827613 8907311 26962063 8584917 ...
+#>   ..$ MAX           : num [1:406] 6212 1442029 1065833 3084242 3957364 ...
+#>   ..$ is_secret_freq: logi [1:406] FALSE FALSE FALSE FALSE FALSE FALSE ...
+#>   ..$ is_secret_dom : logi [1:406] FALSE FALSE FALSE FALSE FALSE FALSE ...
+#>   ..$ is_secret_prim: logi [1:406] FALSE FALSE FALSE FALSE FALSE FALSE ...
+#>  $ nuts_size: tibble [460 x 8] (S3: tbl_df/tbl/data.frame)
+#>   ..$ NUTS          : chr [1:460] "FR10" "FR21" "FR22" "FR23" ...
+#>   ..$ SIZE          : chr [1:460] "Total" "Total" "Total" "Total" ...
+#>   ..$ N_OBS         : int [1:460] 38462 6769 4561 5090 8611 7811 5643 10411 8179 5163 ...
+#>   ..$ TOT           : num [1:460] 33026385 2947560 1917663 3701935 5089279 ...
+#>   ..$ MAX           : num [1:460] 3084242 544763 651848 298134 1165019 ...
+#>   ..$ is_secret_freq: logi [1:460] FALSE FALSE FALSE FALSE FALSE FALSE ...
+#>   ..$ is_secret_dom : logi [1:460] FALSE FALSE FALSE FALSE FALSE FALSE ...
+#>   ..$ is_secret_prim: logi [1:460] FALSE FALSE FALSE FALSE FALSE FALSE ...
+#>  $ nuts_cj  : tibble [452 x 8] (S3: tbl_df/tbl/data.frame)
+#>   ..$ NUTS          : chr [1:452] "FR10" "FR21" "FR22" "FR23" ...
+#>   ..$ CJ            : chr [1:452] "Total" "Total" "Total" "Total" ...
+#>   ..$ N_OBS         : int [1:452] 38462 6769 4561 5090 8611 7811 5643 10411 8179 5163 ...
+#>   ..$ TOT           : num [1:452] 33026385 2947560 1917663 3701935 5089279 ...
+#>   ..$ MAX           : num [1:452] 3084242 544763 651848 298134 1165019 ...
+#>   ..$ is_secret_freq: logi [1:452] FALSE FALSE FALSE FALSE FALSE FALSE ...
+#>   ..$ is_secret_dom : logi [1:452] FALSE FALSE FALSE FALSE FALSE FALSE ...
+#>   ..$ is_secret_prim: logi [1:452] FALSE FALSE FALSE FALSE FALSE FALSE ...
 ```
 
 Trois variables ont été ajoutées à chaque tableau. Seule la dernière sera utilisée
@@ -265,12 +335,24 @@ l'état final des cellules.
 Nous allons ensuite créer la liste des variables explicatives des tableaux.
 Dans notre cas, les variables explicatives sont les 2 premières colonnes de chaque tableau.
 
-```{r}
+
+```r
 nom_var_list <- purrr::map(
   list_data_4_tabs,
   function(data) colnames(data)[1:2]
 )
 nom_var_list
+#> $act_size
+#> [1] "ACTIVITY" "SIZE"    
+#> 
+#> $act_cj
+#> [1] "ACTIVITY" "CJ"      
+#> 
+#> $nuts_size
+#> [1] "NUTS" "SIZE"
+#> 
+#> $nuts_cj
+#> [1] "NUTS" "CJ"
 ```
 
 Les noms de la liste doivent être identiques aux noms des tableaux présent dans le paramètre
@@ -283,7 +365,8 @@ déclarées par l'utilisateur, dans une liste nominative. Toutefois, lorsque tou
 les variables ont la même modalité pour pour le total, l'information peut être
 spécifiée de la manière suivante :
 
-```{r totcodes}
+
+```r
 total_codes <- "Total"
 ```
 
@@ -293,12 +376,14 @@ total_codes <- "Total"
 correspondance pour chacunes d'entre  elles pour créer le fichier .hrc dont &tau;-Argus
 a besoin.
 
-```{r corr_tables}
+
+```r
 data(activity_corr_table)
 data(nuts23_fr_corr_table)
 ```
 
-```{r hierarchy}
+
+```r
 hrc_file_activity <- write_hrc2(
   corr_table = activity_corr_table,
   file_name = "hrc/activity.hrc"
@@ -311,7 +396,8 @@ hrc_file_nuts <- write_hrc2(
 
 Pour spécifier les nom des fichiers hrc, on crée un vecteur nommé (ou une liste) :
 
-```{r hrc_files}
+
+```r
 hrc_files <- list(
   ACTIVITY = hrc_file_activity,
   NUTS = hrc_file_nuts
@@ -323,7 +409,8 @@ présentes dans la table
 
 ### Protéger tous les tableaux en un seul appel
 
-```{r}
+
+```r
 res <- tab_multi_manager(
     list_tables = list_data_4_tabs,
     list_explanatory_vars = nom_var_list,
@@ -334,12 +421,18 @@ res <- tab_multi_manager(
     freq = "N_OBS",
     secret_var = "is_secret_prim"
 )
+#> --- Current table to treat:  act_size ---
+#> --- Current table to treat:  act_cj ---
+#> --- Current table to treat:  act_size ---
+#> --- Current table to treat:  nuts_size ---
+#> --- Current table to treat:  nuts_cj ---
 ```
 
 
 ### Résultats
 
-```{r}
+
+```r
 list_with_status <- res %>%
   purrr::map(
     function(df){
@@ -357,9 +450,16 @@ list_with_status <- res %>%
     }
   )
 str(list_with_status$act_size)
+#> 'data.frame':	414 obs. of  5 variables:
+#>  $ ACTIVITY: chr  "01" "01" "02" "02" ...
+#>  $ SIZE    : chr  "Total" "tr1" "Total" "tr1" ...
+#>  $ TOT     : num  853 853 43623 35503 8120 ...
+#>  $ N_OBS   : int  18 18 387 381 6 1 1 4 4 84 ...
+#>  $ status  : chr  "V" "V" "V" "V" ...
 ```
 
-```{r}
+
+```r
 list_with_status %>%
   purrr::iwalk(
     function(df,name){
@@ -367,6 +467,30 @@ list_with_status %>%
       df %>% count(status) %>% print()
     }
   )
+#> act_size 
+#>   status   n
+#> 1      A  52
+#> 2      B  25
+#> 3      D  83
+#> 4      V 254
+#> act_cj 
+#>   status   n
+#> 1      A  35
+#> 2      B  25
+#> 3      D  90
+#> 4      V 256
+#> nuts_size 
+#>   status   n
+#> 1      A  55
+#> 2      B  17
+#> 3      D  82
+#> 4      V 306
+#> nuts_cj 
+#>   status   n
+#> 1      A  45
+#> 2      B  20
+#> 3      D 101
+#> 4      V 286
 ```
 
 ## Traiter les hiérarchies non emboitées
@@ -378,28 +502,53 @@ Pour confirmer le non-emboîtement des deux hiérarchies, affichons un extrait d
 
 Extrait de la hiérarchie principale :
 
-```{r hier}
+
+```r
 sdcHierarchies::hier_create(
   root="Total",
   nodes = activity_corr_table$A10 %>% unique()
 ) %>%
   sdcHierarchies::hier_display()
+#> Total
+#> +-AZ
+#> +-BE
+#> +-FZ
+#> +-GI
+#> +-JZ
+#> +-KZ
+#> +-LZ
+#> +-MN
+#> +-OQ
+#> \-RU
 ```
 
 Extrait de la hiérarchie alternative:
 
-```{r alt_hier}
+
+```r
 sdcHierarchies::hier_create(
   root="D_TO_M",
   nodes = activity_corr_table_D_TO_M$A21
 ) %>%
   sdcHierarchies::hier_display()
+#> D_TO_M
+#> +-D
+#> +-E
+#> +-F
+#> +-G
+#> +-H
+#> +-I
+#> +-J
+#> +-K
+#> +-L
+#> \-M
 ```
 
 Pour traiter ce cas, l'approche préférée est de créer un troisième tableau croisant
 `ACTIVITY` et `SIZE` avec les modalités D à M et le sous-total `D_TO_M` :
 
-```{r }
+
+```r
 turnover_act_size_D_TO_M <- turnover_act_size %>%
   filter(
     ACTIVITY %in% LETTERS[4:13]
@@ -414,11 +563,18 @@ turnover_act_size_D_TO_M <- turnover_act_size %>%
       mutate(ACTIVITY = "D_TO_M")
   )
 str(turnover_act_size_D_TO_M)
+#> tibble [44 x 5] (S3: tbl_df/tbl/data.frame)
+#>  $ ACTIVITY: chr [1:44] "D" "E" "F" "G" ...
+#>  $ SIZE    : chr [1:44] "Total" "Total" "Total" "Total" ...
+#>  $ N_OBS   : int [1:44] 1411 828 28043 41624 6524 13905 8135 8140 11961 28221 ...
+#>  $ TOT     : num [1:44] 2438454 2264393 8907311 18244309 6273334 ...
+#>  $ MAX     : num [1:44] 981369 306905 1065833 765244 3084242 ...
 ```
 
 Créons le fichier correspondant à cette hiérarchie :
 
-```{r }
+
+```r
 activity_corr_table_D_TO_M <- activity_corr_table %>%
   filter(A21 %in% LETTERS[4:13]) %>%
   select(-A88) %>%
@@ -433,7 +589,8 @@ hrc_file_activity_D_TO_M <- activity_corr_table_D_TO_M %>%
 Ensuite, construisons la liste des tableaux et appliquons les règles de secret
 primaire dessus.
 
-```{r}
+
+```r
 list_data_3_tabs_nn <- list(
   act_size = turnover_act_size,
   act_size_D_TO_M = turnover_act_size_D_TO_M,
@@ -464,7 +621,8 @@ alternatives doivent être appliquées.
 
 Le même raisonnement est utilisé pour remplir l'argument `alt_totcode`.
 
-```{r}
+
+```r
 res <- tab_multi_manager(
   list_tables = list_data_3_tabs_nn,
   list_explanatory_vars = list(
@@ -485,15 +643,22 @@ res <- tab_multi_manager(
     act_size_D_TO_M = c(ACTIVITY = "D_TO_M")
   )
 )
+#> --- Current table to treat:  act_size ---
+#> --- Current table to treat:  act_size_D_TO_M ---
+#> --- Current table to treat:  act_cj ---
+#> --- Current table to treat:  act_size ---
+#> --- Current table to treat:  act_size_D_TO_M ---
+#> --- Current table to treat:  act_size ---
+#> --- Current table to treat:  act_cj ---
 ```
 
 #### Détail de la vignette
 
 - Authors: **<a href="mailto:julien.jamme@insee.fr">Julien Jamme</a>** & **<a href="mailto:nathanael.rastout@insee.fr">Nathanael Rastout</a>**
-  - Last update: **`r format(Sys.time(), "%d/%m/%Y")`**
-  - Version of rtauargus used: **`r packageVersion("rtauargus")`**
+  - Last update: **02/01/2023**
+  - Version of rtauargus used: **1.1.1**
   - Version of &tau;-Argus used : **TauArgus 4.2.2b1**
-  - R version used :  **`r packageVersion("base")`**
+  - R version used :  **4.1.3**
 
   <p style="text-align: right">
   <a href="#TOC" title="Back to summary">summary &uarr;</a>

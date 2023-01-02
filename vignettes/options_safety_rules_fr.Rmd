@@ -12,9 +12,7 @@ vignette: >
 ---
 
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
+
 
 ## Application du secret primaire avec le paramètre `safety_rules` :
 
@@ -96,10 +94,10 @@ Plus de détails sont disponibles dans le manuel de &tau;-Argus, notamment dans 
 #### About this vignette
 
 - Authors: **<a href="mailto:nathanael.rastout@insee.fr">Nathanael Rastout</a>**
-- Last update: **`r format(Sys.time(), "%d/%m/%Y")`**
-- Version of rtauargus used: **`r packageVersion("rtauargus")`**
+- Last update: **02/01/2023**
+- Version of rtauargus used: **1.1.1**
 - Version of &tau;-Argus used : **TauArgus 4.2.2b1**
-- R version used :  **`r packageVersion("base")`**
+- R version used :  **4.1.3**
 
 <p style="text-align: right">
   <a href="#TOC" title="Back to summary">summary &uarr;</a>

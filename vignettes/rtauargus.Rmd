@@ -6,7 +6,7 @@ output:
     toc: true
     toc_depth: 3
 vignette: >
-  %\VignetteIndexEntry{&tau;-Argus from R - tabular version}
+  %\VignetteIndexEntry{Tau-Argus from R - tabular version}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -80,11 +80,11 @@ The latest releases can be downloaded here: [https://github.com/sdcTools/tauargu
 
 
 ```
-• purrr (>= 0.2),
-• dplyr (>= 0.7),
-• gdata,
-• stringr,
-• rlang,
+• purrr (>= 0.2)
+• dplyr (>= 0.7)
+• gdata
+• stringr
+• rlang
 • zoo
 ```
 The package _rtauargus_ can be installed now.
@@ -497,7 +497,7 @@ of `tab_multi_manager()` function.
 #### About this vignette
 
 - Authors: **<a href="mailto:julien.jamme@insee.fr">Julien Jamme</a>** & **<a href="mailto:nathanael.rastout@insee.fr">Nathanael Rastout</a>**
-- Last update: **16/10/2022**
+- Last update: **02/01/2023**
 - Version of rtauargus used: **1.1.1**
 - Version of &tau;-Argus used : **TauArgus 4.2.2b1**
 - R version used :  **4.1.3**

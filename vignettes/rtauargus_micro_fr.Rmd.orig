@@ -1,12 +1,12 @@
 ---
-title: "&tau;-Argus depuis R"
+title: "&tau;-Argus depuis R - avec microdonnées"
 subtitle: <h2>![logo R](R_logo_small.png)![logo &tau;-Argus](TauBall2_small.png)<br/>Package {rtauargus}</h2>
 output:
   rmarkdown::html_vignette:
     toc: true
     toc_depth: 3
 vignette: >
-  %\VignetteIndexEntry{Tau-Argus depuis R - microdata}
+  %\VignetteIndexEntry{Tau-Argus depuis R - avec microdonnées}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

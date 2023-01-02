@@ -8,7 +8,7 @@ output:
     number_section: true
     fig_caption: true
 vignette: >
-  %\VignetteIndexEntry{Tau-Argus from R - tabular version}
+  %\VignetteIndexEntry{Protect several tables}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
