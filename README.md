@@ -1,4 +1,4 @@
-# rtauargus <a href=' https://inseefrlab.github.io/rtauargus/'><img src='man/figures/rtauargus_logo.png' align="right" height="139" /></a>  
+# rtauargus <a href='https://inseefrlab.github.io/rtauargus/'><img src='man/figures/rtauargus_logo.png' align="right" height="40" /></a>  
 
 <!-- badges: start -->
 [![pipeline status](https://gitlab.insee.fr/outilsconfidentialite/rtauargus/badges/master/pipeline.svg)](https://gitlab.insee.fr/outilsconfidentialite/rtauargus/-/pipelines)
@@ -7,7 +7,7 @@
 <!--![](vignettes/R_logo_small.png) ![](vignettes/TauBall2_small.png)-->
 
   
-## τ-Argus from R
+## Run τ-Argus from R
 
 The *rtauargus* package provides an **R** interface for **τ-Argus**.
 
@@ -21,7 +21,7 @@ It allows to:
 These different operations can be executed in one go, but also in a modular way.
 They allow to integrate the tasks performed by τ-Argus in a processing chain written in R.
 
-The package presents other additional functionalities, such as:  
+The package presents other **additional functionalities**, such as:  
 
 - managing the protection of several tables at once;
 - creating a hierarchical variable from correspondence table.
