@@ -1,16 +1,16 @@
 ---
-  title: "Protéger des tableaux liés"
+title: "Protéger des tableaux liés"
 subtitle: <h2>![logo R](R_logo_small.png)![logo &tau;-Argus](TauBall2_small.png)<br/>Package {rtauargus}</h2>
-  output:
+output:
   rmarkdown::html_vignette:
-  toc: true
-toc_depth: 2
-number_section: true
-fig_caption: true
+    toc: true
+    toc_depth: 2
+    number_section: true
+    fig_caption: true
 vignette: >
   %\VignetteIndexEntry{Protéger des tableaux liés}
-%\VignetteEngine{knitr::rmarkdown}
-%\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
 
   <!--
