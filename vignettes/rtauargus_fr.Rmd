@@ -1,12 +1,12 @@
 ---
-title: "&tau;-Argus depuis R - avec données tabulées"
+title: "Tau-Argus depuis R - données tabulées"
 subtitle: <h2>![logo R](R_logo_small.png)![logo &tau;-Argus](TauBall2_small.png)<br/>Package {rtauargus}</h2>
 output:
   rmarkdown::html_vignette:
     toc: true
     toc_depth: 3
 vignette: >
-  %\VignetteIndexEntry{Tau-Argus from R - avec données tabulées}
+  %\VignetteIndexEntry{Tau-Argus depuis R - données tabulées}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -497,7 +497,7 @@ de la fonction `tab_multi_manager()`.
 #### Détail de la vignette
 
 - Authors: **<a href="mailto:julien.jamme@insee.fr">Julien Jamme</a>** & **<a href="mailto:nathanael.rastout@insee.fr">Nathanael Rastout</a>**
-- Last update: **02/01/2023**
+- Last update: **05/01/2023**
 - Version of rtauargus used: **1.1.1**
 - Version of &tau;-Argus used : **TauArgus 4.2.2b1**
 - R version used :  **4.1.3**

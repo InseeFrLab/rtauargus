@@ -1,12 +1,12 @@
 ---
-title: "Compléments sur les arguments Safety rules et Suppress"
+title: "Les arguments Safety rules et Suppress"
 subtitle: <h2>![logo R](R_logo_small.png)![logo &tau;-Argus](TauBall2_small.png)<br/>Package {rtauargus}</h2>
 output:
   rmarkdown::html_vignette:
     toc: true
     toc_depth: 3
 vignette: >
-  %\VignetteIndexEntry{Compléments sur Safety rules et Suppress}
+  %\VignetteIndexEntry{Les arguments Safety rules et Suppress}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -94,7 +94,7 @@ Plus de détails sont disponibles dans le manuel de &tau;-Argus, notamment dans 
 #### About this vignette
 
 - Authors: **<a href="mailto:nathanael.rastout@insee.fr">Nathanael Rastout</a>**
-- Last update: **02/01/2023**
+- Last update: **05/01/2023**
 - Version of rtauargus used: **1.1.1**
 - Version of &tau;-Argus used : **TauArgus 4.2.2b1**
 - R version used :  **4.1.3**

@@ -1,12 +1,12 @@
 ---
-title: "Compléments sur les arguments Safety rules et Suppress"
+title: "Les arguments Safety rules et Suppress"
 subtitle: <h2>![logo R](R_logo_small.png)![logo &tau;-Argus](TauBall2_small.png)<br/>Package {rtauargus}</h2>
 output:
   rmarkdown::html_vignette:
     toc: true
     toc_depth: 3
 vignette: >
-  %\VignetteIndexEntry{Compléments sur Safety rules et Suppress}
+  %\VignetteIndexEntry{Les arguments Safety rules et Suppress}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
