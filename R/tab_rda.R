@@ -506,6 +506,14 @@ tab_rda <- function(
     stop("unexpected type : ip must be a  numeric variable")
   }
 
+  if((!is.null(ip)) && (ip < 0)){
+    stop("unexpected value : ip must be a positive integer")
+  }
+
+  if((!is.null(ip)) && (ip > 100)){
+    stop("unexpected value : ip is over 100, it is too high")
+  }
+
 
 
   #Genere le fichier hst lié au secret primaire
