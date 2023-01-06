@@ -178,8 +178,8 @@ write_rda_tab <- function(info_vars) {
 #' (Nom de la colonne contenant la valeur des cellules)
 #' @param freq Name of the column containing the cell frequency. \cr
 #' (Nom de la colonne contenant les effectifs pour une cellule)
-#' @param ip Value of the safety margin in % (must be an integer).
-#' (Valeur pour les intervalles de protection en %, doit être entier )
+#' @param ip Value of the safety margin in \% (must be an integer).
+#' (Valeur pour les intervalles de protection en \%, doit être entier )
 #' @param maxscore Name of the column containing, the value of the largest
 #' contributor of a cell. \cr
 #' (Nom de la colonne contenant la valeur du plus gros contributeur

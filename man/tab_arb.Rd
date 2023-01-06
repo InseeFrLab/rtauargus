@@ -13,6 +13,7 @@ tab_arb(
   value = getOption("rtauargus.response_var"),
   safety_rules,
   suppress,
+  separator = getOption("rtauargus.separator"),
   output_names = NULL,
   output_type = getOption("rtauargus.output_type"),
   output_options = getOption("rtauargus.output_options"),
@@ -60,6 +61,9 @@ Algortihm for secondary suppression (Tau-Argus batch syntax), and the
 parameters for it.\cr
 ([\strong{obligatoire}] Algorithme de gestion du secret secondaire
 (syntaxe batch de Tau-Argus), ainsi que les potentiels paramètres associés)}
+
+\item{separator}{Character used as separator in the .tab file. \cr
+(Caractère utilisé en tant que separateur dans le fichier .tab)}
 
 \item{output_names}{output file name\cr
 (nom du fichier en sortie.)}
