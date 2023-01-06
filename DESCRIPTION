@@ -2,7 +2,7 @@ Package: rtauargus
 Type: Package
 Title: Using Tau-Argus from R
 Language: fr
-Version: 1.1.1
+Version: 1.1.2
 Depends: R (>= 3.5.0)
 Imports:
     purrr (>= 0.2),
