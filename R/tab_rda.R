@@ -142,13 +142,10 @@ write_rda_tab <- function(info_vars) {
 #' [\strong{obligatoire}] Variables catégorielles, sous forme  de vecteurs \cr
 #' Example : \code{c("A21", "TREFF", "REG")} for a table crossing
 #' \code{A21} x \code{TREFF} x \code{REG}
-#' @param secret_prim Boolean variable which give the primary secret : equal to
-#' "TRUE" if a cell is concerned by the primary secret,"FALSE" otherwise.
-#' will  be exported in the apriori file \cr
 #' (Variable indiquant le secret primaire de type booléen:
 #' prend la valeur "TRUE" quand les cellules du tableau doivent être masquées
 #' par le secret primaire, "FALSE" sinon. Permet de créer un fichier d'apriori)
-#' @param secret_var Boolean variable which specify the secret, primary or not :
+#' @param secret_var Boolean variable which specifies the secret, primary or not :
 #'  equal to "TRUE" if a cell is concerned by the secret,"FALSE" otherwise.
 #' will  be exported in the apriori file. \cr
 #' (Variable indiquant le secret  de type booléen:
@@ -162,15 +159,11 @@ write_rda_tab <- function(info_vars) {
 #' pris en compte dans les algorithmes de secret secondaire.Par défaut le coût
 #' correspond à la valeur de la cellule.  peut être spécifié pour chacune des cellules,
 #' peut contenir des NA pour les coûts que l'on ne souhaite pas modifier.)
-#' @param decimals Minimum number of decimals to display
-#' (see section 'Number of decimals') \cr
 #' (nombre minimal de décimales à afficher (voir section 'Number of decimals').)
 #' @param hrc Informations of hierarchical variables (see section
 #' 'Hierarchical variables'). \cr
 #' (Informations sur les variables hiérarchiques (voir section
 #' 'Hierarchical variables').)
-#' @param hierleadstring  The character that is used to indicate the depth of a
-#' code in the hierarchy. \cr
 #' (Caractère qui, répété n fois, indique que la valeur est
 #' à n niveaux de profondeur dans la hiérarchie.)
 #' @param totcode Code(s) which represent the total of a categorical variable
@@ -181,16 +174,12 @@ write_rda_tab <- function(info_vars) {
 #' section 'Specific parameters' pour la syntaxe de ce paramètre). Les
 #' variables non spécifiées (ni par défaut, ni explicitement) se verront
 #' attribuer la valeur de \code{rtauargus.totcode}.)
-#' @param codelist file(s) containing labels of a categorical variables
-#' (see section 'Specific parameters' for the syntax of this parameter). \cr
-#' (Fichier(s) contenant les libellés des variables catégorielles
-#' (voir section 'Specific parameters' pour la syntaxe de ce paramètre).)
 #' @param value Name of the column containing the value of the cells. \cr
 #' (Nom de la colonne contenant la valeur des cellules)
 #' @param freq Name of the column containing the cell frequency. \cr
 #' (Nom de la colonne contenant les effectifs pour une cellule)
-#' @param ip Value of the safety margin in % (must be and integer).
-#' (Valeur pour les intervalles de protection, doit être entier )
+#' @param ip Value of the safety margin in % (must be an integer).
+#' (Valeur pour les intervalles de protection en %, doit être entier )
 #' @param maxscore Name of the column containing, the value of the largest
 #' contributor of a cell. \cr
 #' (Nom de la colonne contenant la valeur du plus gros contributeur
@@ -203,10 +192,20 @@ write_rda_tab <- function(info_vars) {
 #' contributor to a cell. \cr
 #' (Nom de la colonne contenant la valeur du troisième plus gros contributeur
 #' d'une cellule)
+#' @param decimals Minimum number of decimals to display
+#' (see section 'Number of decimals') \cr
 #' @param separator Character used as separator in the .tab file. \cr
 #' (Caractère utilisé en tant que separateur dans le fichier .tab)
+#' @param hierleadstring  The character that is used to indicate the depth of a
+#' code in the hierarchy. \cr
+#' @param codelist file(s) containing labels of a categorical variables
+#' (see section 'Specific parameters' for the syntax of this parameter). \cr
+#' (Fichier(s) contenant les libellés des variables catégorielles
+#' (voir section 'Specific parameters' pour la syntaxe de ce paramètre).)
+#' @param secret_prim Boolean variable which gives the primary secret : equal to
+#' "TRUE" if a cell is concerned by the primary secret,"FALSE" otherwise.
+#' will  be exported in the apriori file \cr
 #'
-#'ü
 #' @return Return the rda file name as a list (invisible).\cr
 #' (Renvoie le nom du fichier rda sous forme de liste (de
 #' manière invisible).)
@@ -371,21 +370,21 @@ tab_rda <- function(
     hst_filename   = NULL,
     explanatory_vars = NULL,
     secret_var     = NULL,
-    secret_prim    = NULL,
     cost_var       = NULL,
-    decimals       = getOption("rtauargus.decimals"),
     hrc            = NULL,
-    hierleadstring = getOption("rtauargus.hierleadstring"),
     totcode        = getOption("rtauargus.totcode"),
-    codelist       = NULL,
     value          = NULL,
     freq           = NULL,
-    ip             = NULL,
     maxscore       = NULL,
+    ip             = NULL,
     maxscore_2     = NULL,
     maxscore_3     = NULL,
-    separator      = getOption("rtauargus.separator")
-) {
+    decimals       = getOption("rtauargus.decimals"),
+    hierleadstring = getOption("rtauargus.hierleadstring"),
+    codelist       = NULL,
+    separator      = getOption("rtauargus.separator"),
+    secret_prim    = NULL
+){
 
 
   tabular <- as.data.frame(tabular) # (probleme avec tibble notamment)
