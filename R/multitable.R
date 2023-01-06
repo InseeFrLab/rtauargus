@@ -113,6 +113,12 @@ tab_multi_manager <- function(
 
   n_tbx = length(list_tables) # nombre de tableaux
 
+  if(n_tbx == 0){
+    stop("Your list of tables is empty !")
+  }
+  if(n_tbx == 1){
+    stop("To protect a single table, please use the function `tab_rtauargus`.")
+  }
   if(is.null(names(list_tables))){
     names(list_tables) <- paste0("tab", 1:n_tbx)
     names(list_explanatory_vars) <- paste0("tab", 1:n_tbx)
