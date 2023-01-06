@@ -80,11 +80,11 @@ The latest releases can be downloaded here: [https://github.com/sdcTools/tauargu
 
 
 ```
-• purrr (>= 0.2)
-• dplyr (>= 0.7)
-• gdata
-• stringr
-• rlang
+• purrr (>= 0.2),
+• dplyr (>= 0.7),
+• gdata,
+• stringr,
+• rlang,
 • zoo
 ```
 The package _rtauargus_ can be installed now.
@@ -108,18 +108,6 @@ When loading the package, the console displays some information:
 
 ```r
 library(rtauargus)
-#> 
-#> Tau-Argus : "Y:/Logiciels/TauArgus/TauArgus.exe"
-#>   (note: unknown location)
-#> 
-#>   To change this directory :
-#>     options(rtauargus.tauargus_exe = "chemin/vers/TauArgus.exe")
-#> 
-#>   To return to the default location,
-#>     reset_rtauargus_options("tauargus_exe")
-#> 
-#>   To display all the options of the package :
-#>     rtauargus_options()
 ```
 
 In particular, a plausible location for the &tau;-Argus software is
@@ -509,7 +497,7 @@ of `tab_multi_manager()` function.
 #### About this vignette
 
 - Authors: **<a href="mailto:julien.jamme@insee.fr">Julien Jamme</a>** & **<a href="mailto:nathanael.rastout@insee.fr">Nathanael Rastout</a>**
-- Last update: **05/01/2023**
+- Last update: **06/01/2023**
 - Version of rtauargus used: **1.1.1**
 - Version of &tau;-Argus used : **TauArgus 4.2.2b1**
 - R version used :  **4.1.3**
