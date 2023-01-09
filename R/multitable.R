@@ -113,6 +113,12 @@ tab_multi_manager <- function(
 
   n_tbx = length(list_tables) # nombre de tableaux
 
+  if(n_tbx == 0){
+    stop("Your list of tables is empty !")
+  }
+  if(n_tbx == 1){
+    stop("To protect a single table, please use the function `tab_rtauargus`.")
+  }
   if(is.null(names(list_tables))){
     names(list_tables) <- paste0("tab", 1:n_tbx)
     names(list_explanatory_vars) <- paste0("tab", 1:n_tbx)
@@ -317,16 +323,20 @@ tab_multi_manager <- function(
     nom_col_identifiante <- paste0("T_", num_tableau)
     tableau_a_traiter <- which(table_majeure[[nom_col_identifiante]])
 
-    var_secret_apriori <- ifelse(
-      num_iter_all > 1,
-      paste0("is_secret_", num_iter_all-1, collapse = ""),
-      secret_var
-    )
+    var_secret_prim <- secret_var
+
+    var_secret_apriori <- paste0("is_secret_", num_iter_all-1, collapse = "")
+
     vrai_tableau <- table_majeure[tableau_a_traiter,]
+
+    if (num_iter_all == 1){
+      vrai_tableau[,var_secret_apriori] <- vrai_tableau[,var_secret_prim]
+    }
 
     ex_var <- list_explanatory_vars[[num_tableau]]
 
-    vrai_tableau <- vrai_tableau[,c(ex_var, value, freq, var_secret_apriori, cost_var)]
+    vrai_tableau <- vrai_tableau[,c(ex_var, value, freq, var_secret_prim, var_secret_apriori, cost_var)]
+
 
     # Other settings of the function to make secret ----
     params$tabular = vrai_tableau
@@ -334,6 +344,7 @@ tab_multi_manager <- function(
     params$explanatory_vars = ex_var
     params$totcode = list_totcode[[num_tableau]]
     params$hrc = list_hrc[[num_tableau]]
+    params$secret_prim = var_secret_prim
     params$secret_var = var_secret_apriori
     params$suppress = if(
       substr(suppress,1,3) == "MOD" & num_iter_par_tab[num_tableau] != 1
@@ -366,6 +377,10 @@ tab_multi_manager <- function(
     table_majeure <- merge(table_majeure, res, all = TRUE)
     table_majeure[[var_secret]] <- table_majeure$is_secret
     table_majeure <- subset(table_majeure, select = -is_secret)
+
+    if(num_iter_all == 1) {
+      var_secret_apriori <- var_secret_prim
+    }
 
     table_majeure[[var_secret]] <- ifelse(
       is.na(table_majeure[[var_secret]]),

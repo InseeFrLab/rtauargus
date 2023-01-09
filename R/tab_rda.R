@@ -1,3 +1,67 @@
+creer_hst <- function(tabular,
+                      explanatory_vars,
+                      value,
+                      secret_var,
+                      secret_prim,
+                      cost_var,
+                      ip,
+                      separator) {
+
+  if(any(!is.null(c(secret_var,secret_prim)))){
+    if(is.null(secret_prim)){
+      secret_prim <- secret_var
+    }
+
+    if(is.null(secret_var)){
+      secret_var <- secret_prim
+    }
+  }
+
+  if((!is.null(secret_var))) {
+
+    tabular$label_apriori <-ifelse(tabular[[secret_var]],"u","s")
+    tab_hst_secret = tabular[
+      tabular[[secret_var]],
+      c(explanatory_vars[(explanatory_vars %in% colnames(tabular))],"label_apriori")
+    ]
+  } else {tab_hst_secret <- data.frame()}
+
+  #Genere le fichier hst lié au coût
+
+  if ((!is.null(cost_var)) ){
+
+    tabular$label_apriori <-paste0("c",separator,tabular[[cost_var]])
+
+  if(any(!is.null(c(secret_var,secret_prim)))){
+    tab_hst_cost = tabular[
+      tabular[[secret_var]],
+      c(explanatory_vars[(explanatory_vars %in% colnames(tabular))],"label_apriori")
+    ]
+      } else {
+        tab_hst_cost = tabular[,
+          c(explanatory_vars[(explanatory_vars %in% colnames(tabular))],"label_apriori")
+        ]
+    }
+
+  } else {tab_hst_cost <- data.frame()}
+
+  if ((!is.null(ip)) & (is.numeric(ip)) & any(!is.null(c(secret_var,secret_prim)))) {
+    tabular$val_ip <- ifelse(tabular[[secret_prim]] & (tabular[[value]] != 0),
+                             round((ip/100)*tabular[[value]],1),
+                             format(0.00001,scientific = F))
+
+    tabular$label_apriori <- paste0("pl",separator,tabular[["val_ip"]],separator,tabular[["val_ip"]])
+
+    tab_hst_pl = tabular[
+      tabular[[secret_var]],
+      c(explanatory_vars[(explanatory_vars %in% colnames(tabular))],"label_apriori")
+    ]
+  } else {tab_hst_pl <- data.frame()}
+
+  apriori <- rbind(tab_hst_secret,tab_hst_cost)
+  apriori <- rbind(apriori,tab_hst_pl)
+
+}
 
 write_rda_1var_tab <- function(info_var) {
 
@@ -78,12 +142,15 @@ write_rda_tab <- function(info_vars) {
 #' [\strong{obligatoire}] Variables catégorielles, sous forme  de vecteurs \cr
 #' Example : \code{c("A21", "TREFF", "REG")} for a table crossing
 #' \code{A21} x \code{TREFF} x \code{REG}
-#' @param secret_var Boolean variable which give the primary secret : equal to
-#' "TRUE" if a cell is concerned by the primary secret,"FALSE" otherwise.
-#' will  be exported in the apriori file \cr
 #' (Variable indiquant le secret primaire de type booléen:
 #' prend la valeur "TRUE" quand les cellules du tableau doivent être masquées
 #' par le secret primaire, "FALSE" sinon. Permet de créer un fichier d'apriori)
+#' @param secret_var Boolean variable which specifies the secret, primary or not :
+#'  equal to "TRUE" if a cell is concerned by the secret,"FALSE" otherwise.
+#' will  be exported in the apriori file. \cr
+#' (Variable indiquant le secret  de type booléen:
+#' prend la valeur "TRUE" quand les cellules du tableau doivent être masquées
+#'"FALSE" sinon. Permet de créer un fichier d'apriori)
 #' @param cost_var Numeric variable allow to change the cost suppression of a cell
 #' for secondary suppression, it's the value of the cell by default, can be
 #' specified for each cell, fill with NA if the cost doesn't need to be changed
@@ -92,15 +159,11 @@ write_rda_tab <- function(info_vars) {
 #' pris en compte dans les algorithmes de secret secondaire.Par défaut le coût
 #' correspond à la valeur de la cellule.  peut être spécifié pour chacune des cellules,
 #' peut contenir des NA pour les coûts que l'on ne souhaite pas modifier.)
-#' @param decimals Minimum number of decimals to display
-#' (see section 'Number of decimals') \cr
 #' (nombre minimal de décimales à afficher (voir section 'Number of decimals').)
 #' @param hrc Informations of hierarchical variables (see section
 #' 'Hierarchical variables'). \cr
 #' (Informations sur les variables hiérarchiques (voir section
 #' 'Hierarchical variables').)
-#' @param hierleadstring  The character that is used to indicate the depth of a
-#' code in the hierarchy. \cr
 #' (Caractère qui, répété n fois, indique que la valeur est
 #' à n niveaux de profondeur dans la hiérarchie.)
 #' @param totcode Code(s) which represent the total of a categorical variable
@@ -111,14 +174,12 @@ write_rda_tab <- function(info_vars) {
 #' section 'Specific parameters' pour la syntaxe de ce paramètre). Les
 #' variables non spécifiées (ni par défaut, ni explicitement) se verront
 #' attribuer la valeur de \code{rtauargus.totcode}.)
-#' @param codelist file(s) containing labels of a categorical variables
-#' (see section 'Specific parameters' for the syntax of this parameter). \cr
-#' (Fichier(s) contenant les libellés des variables catégorielles
-#' (voir section 'Specific parameters' pour la syntaxe de ce paramètre).)
 #' @param value Name of the column containing the value of the cells. \cr
 #' (Nom de la colonne contenant la valeur des cellules)
 #' @param freq Name of the column containing the cell frequency. \cr
 #' (Nom de la colonne contenant les effectifs pour une cellule)
+#' @param ip Value of the safety margin in \% (must be an integer).
+#' (Valeur pour les intervalles de protection en \%, doit être entier )
 #' @param maxscore Name of the column containing, the value of the largest
 #' contributor of a cell. \cr
 #' (Nom de la colonne contenant la valeur du plus gros contributeur
@@ -131,9 +192,19 @@ write_rda_tab <- function(info_vars) {
 #' contributor to a cell. \cr
 #' (Nom de la colonne contenant la valeur du troisième plus gros contributeur
 #' d'une cellule)
+#' @param decimals Minimum number of decimals to display
+#' (see section 'Number of decimals') \cr
 #' @param separator Character used as separator in the .tab file. \cr
 #' (Caractère utilisé en tant que separateur dans le fichier .tab)
-#'
+#' @param hierleadstring  The character that is used to indicate the depth of a
+#' code in the hierarchy. \cr
+#' @param codelist file(s) containing labels of a categorical variables
+#' (see section 'Specific parameters' for the syntax of this parameter). \cr
+#' (Fichier(s) contenant les libellés des variables catégorielles
+#' (voir section 'Specific parameters' pour la syntaxe de ce paramètre).)
+#' @param secret_prim Boolean variable which gives the primary secret : equal to
+#' "TRUE" if a cell is concerned by the primary secret,"FALSE" otherwise.
+#' will  be exported in the apriori file \cr
 #'
 #' @return Return the rda file name as a list (invisible).\cr
 #' (Renvoie le nom du fichier rda sous forme de liste (de
@@ -298,20 +369,22 @@ tab_rda <- function(
     rda_filename   = NULL,
     hst_filename   = NULL,
     explanatory_vars = NULL,
-    secret_var = NULL,
-    cost_var = NULL,
-    decimals       = getOption("rtauargus.decimals"),
+    secret_var     = NULL,
+    cost_var       = NULL,
     hrc            = NULL,
-    hierleadstring = getOption("rtauargus.hierleadstring"),
     totcode        = getOption("rtauargus.totcode"),
-    codelist       = NULL,
     value          = NULL,
     freq           = NULL,
     maxscore       = NULL,
+    ip             = NULL,
     maxscore_2     = NULL,
     maxscore_3     = NULL,
-    separator      = getOption("rtauargus.separator")
-) {
+    decimals       = getOption("rtauargus.decimals"),
+    hierleadstring = getOption("rtauargus.hierleadstring"),
+    codelist       = NULL,
+    separator      = getOption("rtauargus.separator"),
+    secret_prim    = NULL
+){
 
 
   tabular <- as.data.frame(tabular) # (probleme avec tibble notamment)
@@ -369,6 +442,7 @@ tab_rda <- function(
   col_tabular <- c(
     explanatory_vars,
     secret_var,
+    secret_prim,
     cost_var,
     value,
     freq,
@@ -402,6 +476,18 @@ tab_rda <- function(
   if((!is.null(secret_var)) && any(is.na(tabular[[secret_var]]))){
     stop("NAs in secret_var are not allowed")
   }
+  #Controles sur secret_prim, identiques à secret_var
+  if ((!is.null(secret_prim)) && (!secret_prim %in% colnames(tabular))){
+    stop("secret_prim does not exist in tabular")
+  }
+
+  if((!is.null(secret_prim)) && (any(!is.na(tabular[[secret_prim]]))) && (!is.logical(tabular[[secret_prim]]))){
+    stop("unexpected type : secret_prim must be a  boolean variable")
+  }
+
+  if((!is.null(secret_prim)) && any(is.na(tabular[[secret_prim]]))){
+    stop("NAs in secret_prim are not allowed")
+  }
 
   # Controles sur cost_var
 
@@ -410,70 +496,55 @@ tab_rda <- function(
   }
 
   if((!is.null(cost_var)) && (!is.numeric(tabular[[cost_var]]))){
-    stop("unexpected type : secret_var must be a  numeric variable")
+    stop("unexpected type : cost_var must be a  numeric variable")
   }
+
+  # Controles sur ip
+
+  if((!is.null(ip)) && (!is.numeric(ip))){
+    stop("unexpected type : ip must be a  numeric variable")
+  }
+
+  if((!is.null(ip)) && (ip < 0)){
+    stop("unexpected value : ip must be a positive integer")
+  }
+
+  if((!is.null(ip)) && (ip > 100)){
+    stop("unexpected value : ip is over 100, it is too high")
+  }
+
+
 
   #Genere le fichier hst lié au secret primaire
-
-  if((!is.null(secret_var)) && (is.logical(tabular[[secret_var]]))) {
-
-    tabular[secret_var]<-ifelse(tabular[[secret_var]],"u","s")
-    hst_secret_prim=tabular[
-      tabular[secret_var]=="u",
-      c(explanatory_vars[(explanatory_vars %in% colnames(tabular))], secret_var)
-    ]
-  }
-
-  #Genere le fichier hst lié au coût
-
-  if ((!is.null(cost_var)) && (is.numeric(tabular[[cost_var]]))&&
-      (!is.null(secret_var))){
-    tabular[cost_var]<-ifelse(!is.na(tabular[[cost_var]]) & tabular[[secret_var]] == "s",
-                              paste0("c,",tabular[[cost_var]]),"no_cost")
-
-    hst_cost=tabular[
-      tabular[[cost_var]]!="no_cost",
-      c(explanatory_vars[(explanatory_vars %in% colnames(tabular))], cost_var)
-    ]
-  }
-
-  if ((!is.null(cost_var)) && (is.numeric(tabular[[cost_var]]))&&
-      (is.null(secret_var))){
-    tabular[cost_var]<-ifelse(!is.na(tabular[[cost_var]]),
-                              paste0("c,",tabular[[cost_var]]),"no_cost")
-
-    hst_cost=tabular[
-      tabular[[cost_var]]!="no_cost",
-      c(explanatory_vars[(explanatory_vars %in% colnames(tabular))], cost_var)
-    ]
-  }
+  if(any(!is.null(c(ip,secret_var,secret_prim,cost_var)))){
+    hst <- creer_hst (tabular,
+                      explanatory_vars,
+                      value,
+                      secret_var,
+                      secret_prim,
+                      cost_var,
+                      ip,
+                      separator)
 
 
-  if(!is.null(cost_var) && !is.null(secret_var)){
-    names(hst_cost) <- names(hst_secret_prim)
-    hst <- rbind(hst_secret_prim,hst_cost)
-  } else if (is.null(cost_var) && !is.null(secret_var)){
-    hst <- hst_secret_prim
-  } else if (!is.null(cost_var) && is.null(secret_var)){
-    hst <- hst_cost
-  }
+    if( !is.null(secret_var) | !is.null(cost_var)| !is.null(secret_prim)) {
+      if (nrow(hst)==0) message("no cells are unsafe : hst file is empty")
 
-  if( !is.null(secret_var) | !is.null(cost_var)) {
-    if (nrow(hst)==0) message("no cells are unsafe : hst file is empty")
-
-    utils::write.table(
-      hst,
-      hst_filename,
-      row.names=FALSE,
-      col.names = FALSE,
-      sep=",",
-      quote=FALSE
-    )
+      utils::write.table(
+        hst,
+        hst_filename,
+        row.names=FALSE,
+        col.names = FALSE,
+        sep= separator,
+        quote=FALSE
+      )
+    }
   }
 
   # genere fichier longueur fixe (le fichier .tab) dans le dossier indiqué et infos associees  .....................
 
   if (!is.null(secret_var)) tabular<-tabular[,!names(tabular)==secret_var]
+  if (!is.null(secret_prim)) tabular<-tabular[,!names(tabular)==secret_prim]
   if (!is.null(cost_var)) tabular<-tabular[,!names(tabular)==cost_var]
 
   tabular <- tabular[,c(explanatory_vars,value,freq,maxscore,maxscore_2,maxscore_3)]
@@ -537,11 +608,11 @@ tab_rda <- function(
   }
 
   norm_hrc <- purrr::map(hrc, normalizePath)
-    # normalise_hrc(
-    #   hrc[[1]],
-    #   tabular,
-    #   hierleadstring = hierleadstring
-    # )
+  # normalise_hrc(
+  #   hrc[[1]],
+  #   tabular,
+  #   hierleadstring = hierleadstring
+  # )
 
   hrc_df <- df_param_defaut(var_quali, "hierarchical", norm_hrc)
   hrc_df$hierleadstring <- NA_character_

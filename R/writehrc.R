@@ -408,11 +408,11 @@ write_hrc2 <- function(
   }
 
   if(adjust_unique_roots==TRUE){
-#     warning(paste0("If there is unique roots in the table, the function will create
-# fictional roots to adjust the hrc file for Tau-Argus, they will be created
-# by copying the unique roots and adding ",add_char," at the beginning
-# of the root character, if this creates duplicates, change the add_char
-# parameter"))
+    #     warning(paste0("If there is unique roots in the table, the function will create
+    # fictional roots to adjust the hrc file for Tau-Argus, they will be created
+    # by copying the unique roots and adding ",add_char," at the beginning
+    # of the root character, if this creates duplicates, change the add_char
+    # parameter"))
     corr_table <- ajouter_feuille_unique(corr_table,add_char)
     d = dim.data.frame(corr_table)
   }
@@ -446,6 +446,11 @@ write_hrc2 <- function(
       #   order(corr_table[,1])
       #   ,]
     }
+  }
+
+  # 0.b Remove total if needed
+  if(length(unique(as.character(corr_table[,1]))) == 1){
+    corr_table <- corr_table[,-1]
   }
 
   # 1. Compare cell values in order to erase duplicates (vertically / horizontally)
@@ -490,14 +495,6 @@ write_hrc2 <- function(
       hier_lead_string
     )
   }
-
-
-  # for (colonne in 1:d[2]) {
-  #   corr_table[,colonne] <- paste0(
-  #     paste0(rep(hier_lead_string, colonne-1), collapse = ""),
-  #     corr_table[,colonne],
-  #     "\n")
-  # }
 
   corr_table[compare] <- ""
   corr_table[compare_left] <- ""

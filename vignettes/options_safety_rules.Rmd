@@ -94,7 +94,7 @@ More details are available in the &tau;-Argus manual, especially in the section 
 #### About this vignette
 
 - Authors: **<a href="mailto:nathanael.rastout@insee.fr">Nathanael Rastout</a>**
-- Last update: **05/01/2023**
+- Last update: **06/01/2023**
 - Version of rtauargus used: **1.1.1**
 - Version of &tau;-Argus used : **TauArgus 4.2.2b1**
 - R version used :  **4.1.3**
