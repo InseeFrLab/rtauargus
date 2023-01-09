@@ -3,7 +3,7 @@
 \docType{data}
 \name{turnover_act_size}
 \alias{turnover_act_size}
-\title{Turnover broken down by business sector and size of French companies (fake values).}
+\title{data - Turnover broken down by business sector and size of French companies (fake values).}
 \format{
 A tibble/data frame with 414 rows and 5 variables:
 \describe{
@@ -20,7 +20,7 @@ A tibble/data frame with 414 rows and 5 variables:
 turnover_act_size
 }
 \description{
-A tabular dataset containing the turnover broken down by Business sector sector
+A tabular dataset containing the turnover broken down by Business sector
 and Size of companies. Useful for playing with tab_ functions.
 }
 \seealso{

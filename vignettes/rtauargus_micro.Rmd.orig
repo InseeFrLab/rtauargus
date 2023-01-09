@@ -1,5 +1,5 @@
 ---
-title: "&tau;-Argus from R"
+title: "&tau;-Argus from R - microdata version"
 subtitle: <h2>![logo R](R_logo_small.png)![logo &tau;-Argus](TauBall2_small.png)<br/>Package {rtauargus}</h2>
 output:
   rmarkdown::html_vignette:
@@ -447,7 +447,7 @@ submit it to &tau;-Argus in batch mode. We get the list of tables
 secreted :
 
 ```{r run1}
-secret2 <- run_arb("Z:/microdata.arb")
+secret2 <- run_arb("Z:/microdata.arb", missing_dir = "create")
 
 secret2
 ```

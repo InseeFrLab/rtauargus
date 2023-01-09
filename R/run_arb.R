@@ -309,7 +309,7 @@ run_arb <- function(
   if(!file.exists(infos_arb$openmetadata)){
     stop(
       "Metadata file cannot be found (.rda) : ", infos_arb$openmetadata, "\n",
-      "(utiliser `micro_asc_rda` pour creer un fichier rda)"
+      "(Use `tab_rda` or `micro_asc_rda` to create a rda file)"
     )
   }
   if(!is.null(infos_arb$apriori)){

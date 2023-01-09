@@ -1,0 +1,408 @@
+---
+title: "Tau-Argus depuis R - données tabulées"
+subtitle: <h2>![logo R](R_logo_small.png)![logo &tau;-Argus](TauBall2_small.png)<br/>Package {rtauargus}</h2>
+output:
+  rmarkdown::html_vignette:
+    toc: true
+    toc_depth: 3
+vignette: >
+  %\VignetteIndexEntry{Tau-Argus depuis R - données tabulées}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+<!--
+  NE JAMAIS MODIFIER DIRECTEMENT `rtauargus.Rmd`
+  MODIFIER `rtauargus.Rmd.orig` ET EXECUTER `precompilation.R`
+  Voir : https://ropensci.org/technotes/2019/12/08/precompute-vignettes
+-->
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = TRUE,
+  collapse = TRUE,
+  comment = "#>",
+  warning = FALSE
+)
+```
+
+<!-- ####################################################################### -->
+
+```{r message=FALSE}
+library(dplyr)
+```
+
+## Introduction
+
+### Présentation du package
+
+Le package _rtauargus_ offre une interface **R** pour **&tau;-Argus**.
+Il permet de :
+
+- créer des input (fichiers asc, tab et rda) à partir de données R ;
+- de générer la séquence d'instructions à exécuter en mode batch (fichier arb) ;
+- lancer un batch &tau;-Argus ;
+- récupérer les résultats dans R.
+
+La syntaxe de certains des arguments correspond étroitement à la syntaxe _batch_ de
+&tau;-Argus. Cela permet d'utiliser un nombre important de fonctions sans
+multiplier les arguments des fonctions. Le package pourra également s'adapter
+plus facilement aux éventuelles modifications du logiciel (nouveaux
+algorithmes disponibles, options supplémentaires...).
+Les règles de syntaxes d'écriture du batch sont détaillés dans le manuel de référence de &tau;-Argus et sont égalements précisées dans la vignette *options_safety_rules*.
+
+> Le package a été développé sur la base de versions open source de &tau;-Argus (versions 4.2 et supérieures), en particulier la dernière version disponible au moment du développement (4.2.2b1).
+>
+> Il n'est pas compatible avec la version 3.5.**_.
+
+### But de ce document
+
+Ce document a pour but d'expliquer les principales fonctionnalités du package,
+en utilisant des exemples relativement simples.
+Une documentation détaillée de toute fonction (liste exhaustive des arguments,
+aspects techniques...) est disponible *via* la section d'aide dédiée.
+
+<p style="text-align: right">
+  <a href="#TOC" title="Return to summary">summary &uarr;</a>
+</p>
+
+
+<!-- ####################################################################### -->
+
+
+## Configuration
+
+Le paramétrage suivant doit être fait avant la première utilisation (et plus après).
+
+### &tau;-Argus
+
+_rtauargus_ fonctions utilisant &tau;-Argus nécessite que le logiciel puisse être utilisé depuis le poste de travail.
+Le dépôt github de &tau;-Argus est ici : [https://github.com/sdcTools/tauargus](https://github.com/sdcTools/tauargus).
+Les dernières versions peuvent être téléchargées ici : [https://github.com/sdcTools/tauargus/releases](https://github.com/sdcTools/tauargus/releases).
+
+### Dépendances
+
+_rtauargus_ nécessite quelques autres packages R. Voici les dépendances à installer.
+
+```{r, echo = FALSE, comment = "•"}
+imports <- packageDescription("rtauargus", fields = "Imports")
+cat(gsub(", ", "\n", imports))
+```
+Le package _rtauargus_ peut être installé maintenant.
+
+<p style="text-align: right">
+  <a href="#TOC" title="Return to summary">summary &uarr;</a>
+</p>
+
+
+<!-- ####################################################################### -->
+
+## Prise en main
+
+Cette section explique comment effectuer une configuration minimale du package et
+comment appliquer des méthodes de suppression en une seule instruction.
+
+### Location de &tau;-Argus
+
+Lors du chargement du package, la console affiche quelques informations :
+
+```{r library}
+library(rtauargus)
+```
+
+En particulier, un emplacement plausible pour le logiciel &tau;-Argus est
+prédéfini. Celui-ci peut être modifié pour la durée de la session R, comme suit :
+
+
+```{r opt_exe}
+loc_tauargus <- "Y:/Logiciels/TauArgus/TauArgus4.2.2b1/TauArgus.exe"
+
+options(rtauargus.tauargus_exe = loc_tauargus)
+```
+
+
+Une fois ce petit ajustement effectué, le package est prêt à être utilisé.
+
+> _Pour une configuration plus personnalisée, voir les vignettes spécifiques_.
+
+### Protéger un seul tableau avec la fonction `tab_rtauargus()`.
+
+La fonction `tab_rtauargus()` effectue un traitement complet pour protéger le tableau et récupère immédiatement les résultats dans R.
+
+En s'abstrayant complètement du fonctionnement interne de &tau;-Argus, elle permet de réaliser l'ensemble des traitements en une seule instruction. Tous les fichiers intermédiaires sont créés dans un répertoire local.
+
+`tab_rtauargus()` requiert les arguments suivants :
+
+- `tabular` : un data.frame contenant le tableau ;
+- `dir_name` : le répertoire pour les sorties ;
+- `files_name` : tous les fichiers &tau;-Argus seront nommés ainsi(différentes extensions) ;
+- `explanatory_vars` : le nom de toutes les variables explicatives dans `tabular` ;
+- `secret_var` ou `safety_rules` : la manière d'appliquer la suppression primaire (expliqué plus tard)
+- `totcode` : le code pour le total de chaque variable explicative dans `tabular`.
+
+Tous les arguments et leurs options par défaut seront détaillés ( où ?).
+
+#### Exemple minimal
+
+Pour la présentation un tableau fictif sera utilisé :
+
+
+```{r data}
+act_size <-
+  data.frame(
+    ACTIVITY = c("01","01","01","02","02","02","06","06","06","Total","Total","Total"),
+    SIZE = c("tr1","tr2","Total","tr1","tr2","Total","tr1","tr2","Total","tr1","tr2","Total"),
+    VAL = c(100,50,150,30,20,50,60,40,100,190,110,300),
+    N_OBS = c(10,5,15,2,5,7,8,6,14,20,16,36),
+    MAX = c(20,15,20,20,10,20,16,38,38,20,38,38)
+  )
+act_size
+```
+
+Nous utiliserons ces deux règles de secret primaire :
+
+- La règle de dominance n-k avec n=1 et k = 85.
+- La règle de fréquence minimale avec n = 3 et un intervalle de protection à 10%.
+
+Pour obtenir les résultats de la règle de dominance, nous devons spécifier le plus grand contributeur de chaque cellule, correspondant à la variable `MAX` dans les données tabulées.
+
+```{r rtauargus_ex1}
+ex1 <- tab_rtauargus(
+  act_size,
+  dir_name = "tauargus_files/ex1",
+  files_name = "ex1",
+  explanatory_vars = c("ACTIVITY","SIZE"),
+  safety_rules = "FREQ(3,10)|NK(1,85)",
+  value = "VAL",
+  freq = "N_OBS",
+  maxscore = "MAX",
+  totcode = c(ACTIVITY="Total",SIZE="Total")
+)
+```
+
+Par défaut, la fonction affiche dans la console le contenu du journal de bord dans lequel
+l'utilisateur peut lire toutes les étapes exécutées par &tau;-Argus. Ceci peut être récupéré dans le fichier logbook.txt. Avec `verbose = FALSE`, les étapes seront seulement conservées dans le journal.
+
+Par défaut, la fonction renvoie le tableau fournit en entrée avec une variable de plus
+appelée `Status`, issue directement de &tau;-Argus et décrivant le statut de
+chaque cellule comme suit :
+
+-`A` : cellule en secret primaire en raison de la règle de fréquence ;
+-`B` : cellule en secret primaire en raison de la règle de dominance (1er contributeur) ;
+-`C` : cellule en secret primaire en raison de la règle de dominance(plus de contributeurs dans le cas où n>1) ;
+-`D` : cellule en secret secondaire ;
+-`V` : cellules valides - pas besoin de masquer.
+
+```{r}
+ex1
+```
+
+
+Tous les fichiers générés par la fonction sont écrits dans le répertoire spécifié
+(argument `dir_name`). Le format par défaut du tableau protégé est csv mais il peut être modifié. Tous les fichiers &tau;-Argus (.tab, .rda, .arb et .txt) sont écrits dans le même répertoire. Pour aller plus loin, vous pouvez consulter la dernière version du manuel de &tau;-Argus téléchargeable ici :
+[https://research.cbs.nl/casc/Software/TauManualV4.1.pdf](https://research.cbs.nl/casc/Software/TauManualV4.1.pdf).
+
+
+#### Exemple avec une hiérarchie et pose du secret primaire via R
+
+##### Données
+
+Dans cet exemple, nous souhaitons protéger un tableau dans lequel le chiffre d'affaires des entreprises est ventilé par secteur d'activité et par taille. Pour charger les données :
+
+```{r load_data}
+data("turnover_act_size")
+head(turnover_act_size)
+```
+
+La signification de chaque variable est la suivante :
+
+-`ACTIVITY` : secteur d'activité, variables hiérarchiques à trois niveaux décrites
+dans l'ensemble de données `activity_corr_table`. La racine est notée "Total" ;
+-`SIZE` : taille des entreprises (Nombre d'employés dans trois modalités
++ la marge "Total") ;
+-`N_OBS` : Fréquence, nombre d'entreprises ;
+-`TOT` : valeur du chiffre d'affaires en euros ;
+-`MAX` : chiffre d'affaires de l'entreprise qui contribue le plus à la cellule.
+
+##### Fichier hiérarchique
+
+Avant d'exécuter la fonction `tab_rtauargus()`, nous devons renseigner les imbrications de la hiérarchie dans le format approprié pour &tau;-Argus, *.i.e.* un fichier `.hrc`.
+A partir d'un tableau de correspondance, la fonction `write_hrc2()` fait le travail pour vous.
+
+Ici, le tableau de correspondance décrit l'imbrication des trois niveaux de secteurs d'activité, du plus agrégé au moins agrégé :
+
+```{r}
+data(activity_corr_table)
+head(activity_corr_table)
+```
+
+```{r hierarchy}
+hrc_file_activity <- write_hrc2(
+  corr_table = activity_corr_table,
+  file_name = "hrc/activity.hrc"
+)
+```
+
+##### Secret primaire
+
+Dans cet exemple, nous appliquerons nous-mêmes le secret primaire, *c'est-à-dire* sans
+l'aide de &tau;-Argus. L'idée est d'utiliser &tau;-Argus avec un fichier apriori (.hst). Qui permet de spécifier directement au logiciel quelles cellules sont à placer en secret primaire.
+Pour cela, nous créons une variable booléenne pour spécifier
+quelles cellules ne respectent pas les règles du secret primaire. En utilisant les mêmes règles que précédemment,
+on obtient :
+
+
+```{r prim_secret}
+turnover_act_size <- turnover_act_size %>%
+  mutate(
+    is_secret_freq = N_OBS > 0 & N_OBS < 3,
+    is_secret_dom = MAX > TOT*0.85,
+    is_secret_prim = is_secret_freq | is_secret_dom
+  )
+```
+
+##### Exécution de &tau;-Argus
+
+Deux arguments doivent être ajoutés à la fonction `tab_rtauargus()` :
+
+-`secret_var`, indiquant le nom de la variable dans `tabular` qui renseigne le secret primaire ;
+-`hrc`, indiquant le nom du fichier hiérarchique à utiliser pour la variable `ACTIVITY`.
+
+Puisque le secret primaire a été spécifié, il n'est pas nécessaire d'utiliser les arguments,
+`safety_rules` et `maxscore`. Le premier est fixé par défaut à "MAN(10)", afin d'appliquer un intervalle de protection à 10%.
+
+Par défaut, `tab_rtauargus()` exécute la méthode Modular pour effectuer le secret secondaire. Ici, nous choisissons d'utiliser la méthode Optimal en modifiant l'argument `suppress`.
+
+
+```{r rtauargus_ex2}
+ex2 <- tab_rtauargus(
+  turnover_act_size,
+  dir_name = "tauargus_files/ex2",
+  files_name = "ex2",
+  explanatory_vars = c("ACTIVITY","SIZE"),
+  value = "TOT",
+  freq = "N_OBS",
+  secret_var = "is_secret_prim",
+  hrc = c(ACTIVITY = hrc_file_activity),
+  totcode = c(ACTIVITY="Total",SIZE="Total"),
+  suppress = "OPT(1,5)",
+  verbose=FALSE
+)
+```
+
+##### Résultat
+
+```{r}
+str(ex2)
+```
+
+```{r}
+table(ex2$Status)
+```
+
+Comme on peut le voir dans les résultats du `table()`,dans la sortie produite par &tau;-Argus tous les secrets primaires ont le statut "B".
+Pour corriger cela, nous pouvons faire :
+
+```{r}
+ex2 %>%
+  mutate(
+    Status = dplyr::case_when(
+      is_secret_freq ~ "A",
+      TRUE ~ Status
+    )
+  ) %>%
+  dplyr::count(Status)
+```
+
+
+### Protéger plusieurs tableaux en même temps, avec la fonction `tab_muli_manager()`.
+
+La fonction `tab_multi_manager()` permet de traiter un ensemble de tableaux (liés ou non).
+C'est un processus itératif, qui effectue la pose de secret secondaire d'un tableau à la fois et qui s'assure que les cellules communes ont le même statut. Lorsqu'une cellule commune est concernée par le secret secondaire, elle répercute le secret sur chaque tableau qui partage cette cellule commune. Le processus se termine lorsque le secret secondaire est cohérent pour tous les tableaux. Voir plus de détails dans les vignettes *Gérer la protection des tableaux liés*.
+
+#### Données
+
+Pour cet exemple, deux tableaux seront utilisés :
+
+
+```{r}
+data("turnover_act_size")
+data("turnover_act_cj")
+str(turnover_act_cj)
+```
+
+
+Le deuxième tableau fournit le chiffre d'affaires des entreprises ventilé par
+secteurs d'activité (`ACTIVITY`) et par type d'entreprise (`CJ`).
+
+Les deux tableaux ayant une variable explicative commune (`ACTIVITY`), ils ne peuvent être traités séparément sans générer risque de rupture du secret secondaire.
+
+#### Secret primaire
+
+La première étape consiste à indiquer si chaque cellule respecte les règles primaires,
+ou non. Une variable booléenne est créée, égale à TRUE si la cellule n'est pas conforme.
+
+Ici, on utilise les mêmes règles que précédemment.
+
+
+```{r}
+list_data_2_tabs <- list(
+  act_size = turnover_act_size,
+  act_cj = turnover_act_cj
+) %>%
+  purrr::map(
+    function(df){
+      df %>%
+        mutate(
+          is_secret_freq = N_OBS > 0 & N_OBS < 3,
+          is_secret_dom = MAX > TOT*0.85,
+          is_secret_prim = is_secret_freq | is_secret_dom
+        )
+    }
+  )
+```
+
+
+#### Exécution de &tau;-Argus
+
+Maintenant que le secret primaire a été spécifié pour les deux tableaux, nous pouvons lancer le processus.
+
+
+```{r}
+ex3 <- tab_multi_manager(
+  list_tables = list_data_2_tabs,
+  list_explanatory_vars = list(
+    act_size = c("ACTIVITY", "SIZE"),
+    act_cj = c("ACTIVITY", "CJ")
+  ),
+  hrc = c(ACTIVITY = hrc_file_activity),
+  dir_name = "tauargus_files/ex3",
+  value = "TOT",
+  freq = "N_OBS",
+  secret_var = "is_secret_prim",
+  totcode =  "Total"
+)
+```
+
+Par défaut, la fonction utilise un wrapper de la fonction `tab_rtauargus()`, appelé `tab_rtauargus2()`, pour appliquer le secret secondaire avec &tau;-Argus. De nombreux paramètres par défaut sont définis. En particulier :
+
+- Intervalle de protection fixé à 10 ;
+- Méthode de suppression fixée à "MOD(1,5,1,0,0) ;
+- Output au format csv.
+
+Lors de son exécution, la fonction affiche à chaque itération quel tableau est traité.
+
+La vignette *Gérer la protection des tableaux liés* fournit une présentation complète
+de la fonction `tab_multi_manager()`.
+
+#### Détail de la vignette
+
+- Authors: **<a href="mailto:julien.jamme@insee.fr">Julien Jamme</a>** & **<a href="mailto:nathanael.rastout@insee.fr">Nathanael Rastout</a>**
+- Last update: **`r format(Sys.time(), "%d/%m/%Y")`**
+- Version of rtauargus used: **`r packageVersion("rtauargus")`**
+- Version of &tau;-Argus used : **TauArgus 4.2.2b1**
+- R version used :  **`r packageVersion("base")`**
+
+<p style="text-align: right">
+  <a href="#TOC" title="Back to summary">summary &uarr;</a>
+</p>

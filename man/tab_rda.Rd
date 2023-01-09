@@ -12,17 +12,19 @@ tab_rda(
   explanatory_vars = NULL,
   secret_var = NULL,
   cost_var = NULL,
-  decimals = getOption("rtauargus.decimals"),
   hrc = NULL,
-  hierleadstring = getOption("rtauargus.hierleadstring"),
   totcode = getOption("rtauargus.totcode"),
-  codelist = NULL,
   value = NULL,
   freq = NULL,
   maxscore = NULL,
+  ip = NULL,
   maxscore_2 = NULL,
   maxscore_3 = NULL,
-  separator = getOption("rtauargus.separator")
+  decimals = getOption("rtauargus.decimals"),
+  hierleadstring = getOption("rtauargus.hierleadstring"),
+  codelist = NULL,
+  separator = getOption("rtauargus.separator"),
+  secret_prim = NULL
 )
 }
 \arguments{
@@ -44,14 +46,17 @@ nom du fichier hst (avec extension)}
 \item{explanatory_vars}{[\strong{mandatory}] Vector of explanatory variables \cr
 [\strong{obligatoire}] Variables catégorielles, sous forme  de vecteurs \cr
 Example : \code{c("A21", "TREFF", "REG")} for a table crossing
-\code{A21} x \code{TREFF} x \code{REG}}
-
-\item{secret_var}{Boolean variable which give the primary secret : equal to
-"TRUE" if a cell is concerned by the primary secret,"FALSE" otherwise.
-will  be exported in the apriori file \cr
+\code{A21} x \code{TREFF} x \code{REG}
 (Variable indiquant le secret primaire de type booléen:
 prend la valeur "TRUE" quand les cellules du tableau doivent être masquées
 par le secret primaire, "FALSE" sinon. Permet de créer un fichier d'apriori)}
+
+\item{secret_var}{Boolean variable which specifies the secret, primary or not :
+ equal to "TRUE" if a cell is concerned by the secret,"FALSE" otherwise.
+will  be exported in the apriori file. \cr
+(Variable indiquant le secret  de type booléen:
+prend la valeur "TRUE" quand les cellules du tableau doivent être masquées
+"FALSE" sinon. Permet de créer un fichier d'apriori)}
 
 \item{cost_var}{Numeric variable allow to change the cost suppression of a cell
 for secondary suppression, it's the value of the cell by default, can be
@@ -60,19 +65,13 @@ for all cells \cr
 (Variable numeric qui permet de changer la coût de suppression d'une cellule,
 pris en compte dans les algorithmes de secret secondaire.Par défaut le coût
 correspond à la valeur de la cellule.  peut être spécifié pour chacune des cellules,
-peut contenir des NA pour les coûts que l'on ne souhaite pas modifier.)}
-
-\item{decimals}{Minimum number of decimals to display
-(see section 'Number of decimals') \cr
+peut contenir des NA pour les coûts que l'on ne souhaite pas modifier.)
 (nombre minimal de décimales à afficher (voir section 'Number of decimals').)}
 
 \item{hrc}{Informations of hierarchical variables (see section
 'Hierarchical variables'). \cr
 (Informations sur les variables hiérarchiques (voir section
-'Hierarchical variables').)}
-
-\item{hierleadstring}{The character that is used to indicate the depth of a
-code in the hierarchy. \cr
+'Hierarchical variables').)
 (Caractère qui, répété n fois, indique que la valeur est
 à n niveaux de profondeur dans la hiérarchie.)}
 
@@ -85,11 +84,6 @@ section 'Specific parameters' pour la syntaxe de ce paramètre). Les
 variables non spécifiées (ni par défaut, ni explicitement) se verront
 attribuer la valeur de \code{rtauargus.totcode}.)}
 
-\item{codelist}{file(s) containing labels of a categorical variables
-(see section 'Specific parameters' for the syntax of this parameter). \cr
-(Fichier(s) contenant les libellés des variables catégorielles
-(voir section 'Specific parameters' pour la syntaxe de ce paramètre).)}
-
 \item{value}{Name of the column containing the value of the cells. \cr
 (Nom de la colonne contenant la valeur des cellules)}
 
@@ -101,6 +95,9 @@ contributor of a cell. \cr
 (Nom de la colonne contenant la valeur du plus gros contributeur
 d'une cellule)}
 
+\item{ip}{Value of the safety margin in \% (must be an integer).
+(Valeur pour les intervalles de protection en \%, doit être entier )}
+
 \item{maxscore_2}{Name of the column containing, the value of the second largest
 contributor to a cell. \cr
 (Nom de la colonne contenant la valeur du deuxième plus gros contributeur
@@ -111,8 +108,23 @@ contributor to a cell. \cr
 (Nom de la colonne contenant la valeur du troisième plus gros contributeur
 d'une cellule)}
 
+\item{decimals}{Minimum number of decimals to display
+(see section 'Number of decimals') \cr}
+
+\item{hierleadstring}{The character that is used to indicate the depth of a
+code in the hierarchy. \cr}
+
+\item{codelist}{file(s) containing labels of a categorical variables
+(see section 'Specific parameters' for the syntax of this parameter). \cr
+(Fichier(s) contenant les libellés des variables catégorielles
+(voir section 'Specific parameters' pour la syntaxe de ce paramètre).)}
+
 \item{separator}{Character used as separator in the .tab file. \cr
 (Caractère utilisé en tant que separateur dans le fichier .tab)}
+
+\item{secret_prim}{Boolean variable which gives the primary secret : equal to
+"TRUE" if a cell is concerned by the primary secret,"FALSE" otherwise.
+will  be exported in the apriori file \cr}
 }
 \value{
 Return the rda file name as a list (invisible).\cr
