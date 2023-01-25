@@ -7,21 +7,18 @@ stages:
 variables:
   GIT_SSL_NO_VERIFY: "1"
   PKG_NAME: "rtauargus"
-  HTTP_PROXY: http://proxy-app.insee.fr:3128
-  HTTPS_PROXY: http://proxy-app.insee.fr:3128
-  NO_PROXY: insee.test,insee.intra,insee.fr,localhost
 
 pkg_check:
   stage: check
   tags:
     - docker
   script:
-    - R -e 'install.packages(c("zoo", "gdata"))'
-    - R -e 'devtools::check(check_dir = ".",
-                            error_on  = "error",
-                            cran      = FALSE,
-                            document  = FALSE,
-                            manual    = FALSE)'
+    - Rscript -e 'install.packages(c("zoo", "gdata"))'
+    - Rscript -e 'devtools::check(check_dir = ".",
+                                  error_on  = "error",
+                                  cran      = FALSE,
+                                  document  = FALSE,
+                                  manual    = FALSE)'
   artifacts:
     paths:
       - "${PKG_NAME}_*.tar.gz"
@@ -34,8 +31,8 @@ pages:
   tags:
     - docker
   script:
-    - R -e 'install.packages(c("zoo", "gdata"))'
-    - R -e 'options(pkgdown.internet = FALSE) ; pkgdown::build_site()'
+    - Rscript -e 'install.packages(c("zoo", "gdata"))'
+    - Rscript -e 'options(pkgdown.internet = FALSE) ; pkgdown::build_site()'
   artifacts:
     paths:
       - public
