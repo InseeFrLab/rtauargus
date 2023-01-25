@@ -1,4 +1,4 @@
-image: inseefrlab/onyxia-rstudio:latest
+image: gitlab-registry.insee.fr/kubernetes/images/build/r-toolbox/onyxia-rstudio-insee:r4.2.1
 
 stages:
   - check
@@ -16,9 +16,7 @@ pkg_check:
   tags:
     - docker
   script:
-    - bash <(curl -s https://gitlab.insee.fr/infrastructure/lss/runner/-/raw/main/ca-certificates.sh)
-    - R -e 'install.packages("gdata", repos = "https://nexus.insee.fr/repository/r-cran")'
-    - R -e 'install.packages("zoo", repos = "https://nexus.insee.fr/repository/r-cran")'
+    - R -e 'install.packages(c("zoo", "gdata"))'
     - R -e 'devtools::check(check_dir = ".",
                             error_on  = "error",
                             cran      = FALSE,
@@ -36,8 +34,7 @@ pages:
   tags:
     - docker
   script:
-    - R -e 'install.packages("gdata", repos = "https://nexus.insee.fr/repository/r-cran")'
-    - R -e 'install.packages("zoo", repos = "https://nexus.insee.fr/repository/r-cran")'
+    - R -e 'install.packages(c("zoo", "gdata"))'
     - R -e 'options(pkgdown.internet = FALSE) ; pkgdown::build_site()'
   artifacts:
     paths:
