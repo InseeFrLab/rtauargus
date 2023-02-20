@@ -28,6 +28,7 @@ reference:
     - turnover_act_size
     - turnover_nuts_cj
     - turnover_nuts_size
+    - turnover_act_nuts_size
   - title: Protect tables from microdata
     desc: >
       Functions for protecting magnitude and frequency tables, i.e. from
@@ -49,6 +50,21 @@ reference:
     - rtauargus_options
     - write_hrc
     - rtauargus-package
+articles:
+  - title: Work with tabular data (Advised)
+    navbar: tabular-wise
+    contents:
+    - rtauargus
+    - rtauargus_fr
+    - protect_multi_tables
+    - protect_multi_tables_fr
+    - options_safety_rules
+    - options_safety_rules_fr
+  - title: Work with microdata data (old version)
+    navbar: micro-wise
+    contents:
+    - rtauargus_micro
+    - rtauargus_micro_fr
 
 
 
