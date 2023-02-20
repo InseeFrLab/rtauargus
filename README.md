@@ -1,4 +1,4 @@
-# rtauargus <a href='https://inseefrlab.github.io/rtauargus/'><img src='man/figures/rtauargus_logo.png' align="right" height="40" /></a>  
+# rtauargus <a href='https://inseefrlab.github.io/rtauargus/'><img src='man/figures/rtauargus_logo_small.png' align="right" height="40" /></a>  
 
 <!-- badges: start -->
 [![pipeline status](https://gitlab.insee.fr/outilsconfidentialite/rtauargus/badges/master/pipeline.svg)](https://gitlab.insee.fr/outilsconfidentialite/rtauargus/-/pipelines)
