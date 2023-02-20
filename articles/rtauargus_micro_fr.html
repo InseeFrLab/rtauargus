@@ -6,12 +6,12 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="description" content="rtauargus">
-<title>τ-Argus depuis R • rtauargus</title>
+<title>Tau-Argus depuis R - sur microdonnées • rtauargus</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.1.3/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.1.3/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
+<link href="../deps/bootstrap-5.2.2/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.2.2/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
-<!-- bootstrap-toc --><script src="https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.js"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="τ-Argus depuis R">
+<!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Tau-Argus depuis R - sur microdonnées">
 <meta property="og:description" content="rtauargus">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">rtauargus</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.1.2</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -44,10 +44,16 @@
 <li class="active nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <a class="dropdown-item" href="../articles/options_safety_rules.html">Safety rules and Suppress Options</a>
+    <h6 class="dropdown-header" data-toc-skip>tabular-wise</h6>
+    <a class="dropdown-item" href="../articles/rtauargus_fr.html">Tau-Argus depuis R - données tabulées</a>
     <a class="dropdown-item" href="../articles/protect_multi_tables.html">Protect several linked tables at once</a>
-    <a class="dropdown-item" href="../articles/rtauargus_micro.html">&amp;tau;-Argus from R</a>
-    <a class="dropdown-item" href="../articles/rtauargus_micro_fr.html">&amp;tau;-Argus depuis R</a>
+    <a class="dropdown-item" href="../articles/protect_multi_tables_fr.html">Protéger des tableaux liés</a>
+    <a class="dropdown-item" href="../articles/options_safety_rules.html">Safety rules and Suppress Options</a>
+    <a class="dropdown-item" href="../articles/options_safety_rules_fr.html">Les arguments Safety rules et Suppress</a>
+    <div class="dropdown-divider"></div>
+    <h6 class="dropdown-header" data-toc-skip>micro-wise</h6>
+    <a class="dropdown-item" href="../articles/rtauargus_micro.html">&amp;tau;-Argus from R - microdata version</a>
+    <a class="dropdown-item" href="../articles/rtauargus_micro_fr.html">Tau-Argus depuis R - sur microdonnées</a>
   </div>
 </li>
 <li class="nav-item">
@@ -69,7 +75,7 @@
 
 <script src="rtauargus_micro_fr_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
-      <img src="" class="logo" alt=""><h1>τ-Argus depuis R</h1>
+      <img src="" class="logo" alt=""><h1>Tau-Argus depuis R - sur microdonnées</h1>
             <h3 data-toc-skip class="subtitle"><h2>
 <img src="R_logo_small.png" alt="logo R"><img src="TauBall2_small.png" alt="logo τ-Argus"><br>Package {rtauargus}
 </h2></h3>
@@ -212,13 +218,13 @@
 <span>  safety_rules     <span class="op">=</span> <span class="st">"FREQ(3,10)"</span>,</span>
 <span>  suppress         <span class="op">=</span> <span class="st">"GH(1,100)"</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt; Start of batch procedure; file: C:\Users\TMM7AN\AppData\Local\Temp\Rtmpq6q240\RTA_adac13d12703.arb</span></span>
-<span><span class="co">#&gt; &lt;OPENMICRODATA&gt; "C:\Users\TMM7AN\AppData\Local\Temp\Rtmpq6q240\RTA_adac4a5b2bb2.asc"</span></span>
-<span><span class="co">#&gt; &lt;OPENMETADATA&gt; "C:\Users\TMM7AN\AppData\Local\Temp\Rtmpq6q240\RTA_adac4a5b2bb2.rda"</span></span>
+<span><span class="co">#&gt; Start of batch procedure; file: C:\Users\TMM7AN\AppData\Local\Temp\RtmpUjZH4W\RTA_81206895bcf.arb</span></span>
+<span><span class="co">#&gt; &lt;OPENMICRODATA&gt; "C:\Users\TMM7AN\AppData\Local\Temp\RtmpUjZH4W\RTA_812031f6796d.asc"</span></span>
+<span><span class="co">#&gt; &lt;OPENMETADATA&gt; "C:\Users\TMM7AN\AppData\Local\Temp\RtmpUjZH4W\RTA_812031f6796d.rda"</span></span>
 <span><span class="co">#&gt; &lt;SPECIFYTABLE&gt; "V1"|"&lt;freq&gt;"||</span></span>
 <span><span class="co">#&gt; &lt;SAFETYRULE&gt; FREQ(3,10)</span></span>
 <span><span class="co">#&gt; &lt;READMICRODATA&gt;</span></span>
-<span><span class="co">#&gt; Start explore file: C:\Users\TMM7AN\AppData\Local\Temp\Rtmpq6q240\RTA_adac4a5b2bb2.asc</span></span>
+<span><span class="co">#&gt; Start explore file: C:\Users\TMM7AN\AppData\Local\Temp\RtmpUjZH4W\RTA_812031f6796d.asc</span></span>
 <span><span class="co">#&gt; Start computing tables</span></span>
 <span><span class="co">#&gt; Table: V1 | &lt;freq&gt; has been specified</span></span>
 <span><span class="co">#&gt; Tables have been computed</span></span>
@@ -230,9 +236,9 @@
 <span><span class="co">#&gt;                    Number of suppressions: 1</span></span>
 <span><span class="co">#&gt; The hypercube procedure has been applied</span></span>
 <span><span class="co">#&gt;                    1 cells have been suppressed</span></span>
-<span><span class="co">#&gt; &lt;WRITETABLE&gt; (1,4,AS+SE+,"C:\Users\TMM7AN\AppData\Local\Temp\Rtmpq6q240\RTA_adac3ab77f07.sbs")</span></span>
+<span><span class="co">#&gt; &lt;WRITETABLE&gt; (1,4,AS+SE+,"C:\Users\TMM7AN\AppData\Local\Temp\RtmpUjZH4W\RTA_8120677543.sbs")</span></span>
 <span><span class="co">#&gt; Table: V1 | &lt;freq&gt; has been written</span></span>
-<span><span class="co">#&gt;                    Output file name: C:\Users\TMM7AN\AppData\Local\Temp\Rtmpq6q240\RTA_adac3ab77f07.sbs</span></span>
+<span><span class="co">#&gt;                    Output file name: C:\Users\TMM7AN\AppData\Local\Temp\RtmpUjZH4W\RTA_8120677543.sbs</span></span>
 <span><span class="co">#&gt; End of TauArgus run</span></span>
 <span><span class="co">#&gt; NULL</span></span></code></pre></div>
 <p>Comme aucune variable de réponse n’est renseignée, un comptage est effectué (“&lt;freq&gt;”).</p>
@@ -257,15 +263,15 @@
 <span>    output_options     <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">""</span>, <span class="st">"AS+"</span><span class="op">)</span>, <span class="co"># pas de statut pour le 1er tableau</span></span>
 <span>    show_batch_console <span class="op">=</span> <span class="cn">FALSE</span>         <span class="co"># pour masquer le journal</span></span>
 <span>  <span class="op">)</span></span>
-<span><span class="co">#&gt; Start of batch procedure; file: C:\Users\TMM7AN\AppData\Local\Temp\Rtmpq6q240\RTA_adac414f572b.arb</span></span>
-<span><span class="co">#&gt; &lt;OPENMICRODATA&gt; "C:\Users\TMM7AN\AppData\Local\Temp\Rtmpq6q240\RTA_adac42477e0.asc"</span></span>
-<span><span class="co">#&gt; &lt;OPENMETADATA&gt; "C:\Users\TMM7AN\AppData\Local\Temp\Rtmpq6q240\RTA_adac42477e0.rda"</span></span>
+<span><span class="co">#&gt; Start of batch procedure; file: C:\Users\TMM7AN\AppData\Local\Temp\RtmpUjZH4W\RTA_8120162912aa.arb</span></span>
+<span><span class="co">#&gt; &lt;OPENMICRODATA&gt; "C:\Users\TMM7AN\AppData\Local\Temp\RtmpUjZH4W\RTA_81202ad4acf.asc"</span></span>
+<span><span class="co">#&gt; &lt;OPENMETADATA&gt; "C:\Users\TMM7AN\AppData\Local\Temp\RtmpUjZH4W\RTA_81202ad4acf.rda"</span></span>
 <span><span class="co">#&gt; &lt;SPECIFYTABLE&gt; "V1"|"&lt;freq&gt;"||</span></span>
 <span><span class="co">#&gt; &lt;SAFETYRULE&gt; FREQ(3,10)</span></span>
 <span><span class="co">#&gt; &lt;SPECIFYTABLE&gt; "V1""V2"|"&lt;freq&gt;"||</span></span>
 <span><span class="co">#&gt; &lt;SAFETYRULE&gt; FREQ(3,10)</span></span>
 <span><span class="co">#&gt; &lt;READMICRODATA&gt;</span></span>
-<span><span class="co">#&gt; Start explore file: C:\Users\TMM7AN\AppData\Local\Temp\Rtmpq6q240\RTA_adac42477e0.asc</span></span>
+<span><span class="co">#&gt; Start explore file: C:\Users\TMM7AN\AppData\Local\Temp\RtmpUjZH4W\RTA_81202ad4acf.asc</span></span>
 <span><span class="co">#&gt; Start computing tables</span></span>
 <span><span class="co">#&gt; Table: V1 | &lt;freq&gt; has been specified</span></span>
 <span><span class="co">#&gt; Table: V1 x V2 | &lt;freq&gt; has been specified</span></span>
@@ -278,18 +284,18 @@
 <span><span class="co">#&gt;                    Number of suppressions: 1</span></span>
 <span><span class="co">#&gt; The hypercube procedure has been applied</span></span>
 <span><span class="co">#&gt;                    1 cells have been suppressed</span></span>
-<span><span class="co">#&gt; &lt;WRITETABLE&gt; (1,4,,"C:\Users\TMM7AN\AppData\Local\Temp\Rtmpq6q240\RTA_adac4ee1392e.sbs")</span></span>
+<span><span class="co">#&gt; &lt;WRITETABLE&gt; (1,4,,"C:\Users\TMM7AN\AppData\Local\Temp\RtmpUjZH4W\RTA_812020b86297.sbs")</span></span>
 <span><span class="co">#&gt; Table: V1 | &lt;freq&gt; has been written</span></span>
-<span><span class="co">#&gt;                    Output file name: C:\Users\TMM7AN\AppData\Local\Temp\Rtmpq6q240\RTA_adac4ee1392e.sbs</span></span>
+<span><span class="co">#&gt;                    Output file name: C:\Users\TMM7AN\AppData\Local\Temp\RtmpUjZH4W\RTA_812020b86297.sbs</span></span>
 <span><span class="co">#&gt; &lt;SUPPRESS&gt; GH(2,100)</span></span>
 <span><span class="co">#&gt; Start of the hypercube protection for table V1 x V2 | &lt;freq&gt;</span></span>
 <span><span class="co">#&gt; End of hypercube protection. Time used 1 seconds</span></span>
 <span><span class="co">#&gt;                    Number of suppressions: 2</span></span>
 <span><span class="co">#&gt; The hypercube procedure has been applied</span></span>
 <span><span class="co">#&gt;                    2 cells have been suppressed</span></span>
-<span><span class="co">#&gt; &lt;WRITETABLE&gt; (2,4,AS+,"C:\Users\TMM7AN\AppData\Local\Temp\Rtmpq6q240\RTA_adac6d507546.sbs")</span></span>
+<span><span class="co">#&gt; &lt;WRITETABLE&gt; (2,4,AS+,"C:\Users\TMM7AN\AppData\Local\Temp\RtmpUjZH4W\RTA_81202d404386.sbs")</span></span>
 <span><span class="co">#&gt; Table: V1 x V2 | &lt;freq&gt; has been written</span></span>
-<span><span class="co">#&gt;                    Output file name: C:\Users\TMM7AN\AppData\Local\Temp\Rtmpq6q240\RTA_adac6d507546.sbs</span></span>
+<span><span class="co">#&gt;                    Output file name: C:\Users\TMM7AN\AppData\Local\Temp\RtmpUjZH4W\RTA_81202d404386.sbs</span></span>
 <span><span class="co">#&gt; End of TauArgus run</span></span>
 <span></span>
 <span><span class="va">secret1</span></span>
@@ -404,10 +410,10 @@
 <code class="sourceCode R"><span><span class="va">noms_asc_rda</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/micro_asc_rda.html">micro_asc_rda</a></span><span class="op">(</span><span class="va">donnees</span><span class="op">)</span></span>
 <span><span class="va">noms_asc_rda</span></span>
 <span><span class="co">#&gt; $asc_filename</span></span>
-<span><span class="co">#&gt; [1] "C:\\Users\\TMM7AN\\AppData\\Local\\Temp\\Rtmpq6q240\\RTA_adac68155c78.asc"</span></span>
+<span><span class="co">#&gt; [1] "C:\\Users\\TMM7AN\\AppData\\Local\\Temp\\RtmpUjZH4W\\RTA_812041431d18.asc"</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $rda_filename</span></span>
-<span><span class="co">#&gt; [1] "C:\\Users\\TMM7AN\\AppData\\Local\\Temp\\Rtmpq6q240\\RTA_adac68155c78.rda"</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] "C:\\Users\\TMM7AN\\AppData\\Local\\Temp\\RtmpUjZH4W\\RTA_812041431d18.rda"</span></span></code></pre></div>
 <p style="text-align: right">
 <a href="#TOC" title="Retour sommaire">sommaire ↑</a>
 </p>
@@ -443,7 +449,7 @@
 <div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a><span class="kw">file.show</span>(<span class="st">"Z:/donnees.arb"</span>, <span class="dt">pager =</span> <span class="st">"internal"</span>)</span>
 <span id="cb15-2"><a href="#cb15-2"></a><span class="st">````</span></span></code></pre></div>
 <pre><code>// Batch generated by package *rtauargus*
-// (2022-10-02 00:14:30 CEST)
+// (2023-01-06 16:42:02 CET)
 &lt;OPENMICRODATA&gt; "Z:\donnees.asc"
 &lt;OPENMETADATA&gt; "Z:\donnees.rda"
 &lt;SPECIFYTABLE&gt; "V1"|"&lt;freq&gt;"||
@@ -478,7 +484,7 @@
 <div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a><span class="kw">file.show</span>(<span class="st">"Z:/donnees.arb"</span>, <span class="dt">pager =</span> <span class="st">"internal"</span>)</span>
 <span id="cb18-2"><a href="#cb18-2"></a><span class="st">````</span></span></code></pre></div>
 <pre><code>// Batch generated by package *rtauargus*
-// (2022-10-02 00:14:30 CEST)
+// (2023-01-06 16:42:02 CET)
 &lt;OPENMICRODATA&gt; "Z:\donnees.asc"
 &lt;OPENMETADATA&gt; "Z:\donnees.rda"
 &lt;SPECIFYTABLE&gt; "V1"|"VAL"||
@@ -487,9 +493,9 @@
 &lt;SAFETYRULE&gt; FREQ(3,10)|NK(1,85)
 &lt;READMICRODATA&gt;
 &lt;SUPPRESS&gt; GH(1,100)
-&lt;WRITETABLE&gt; (1,4,AS+SE+,"C:\Users\TMM7AN\AppData\Local\Temp\Rtmpq6q240\RTA_adac745d4e40.sbs")
+&lt;WRITETABLE&gt; (1,4,AS+SE+,"C:\Users\TMM7AN\AppData\Local\Temp\RtmpUjZH4W\RTA_81207dcc37da.sbs")
 &lt;SUPPRESS&gt; GH(2,100)
-&lt;WRITETABLE&gt; (2,4,AS+SE+,"C:\Users\TMM7AN\AppData\Local\Temp\Rtmpq6q240\RTA_adac3d842e78.sbs")</code></pre>
+&lt;WRITETABLE&gt; (2,4,AS+SE+,"C:\Users\TMM7AN\AppData\Local\Temp\RtmpUjZH4W\RTA_8120449fd77.sbs")</code></pre>
 </div>
 <div class="section level4">
 <h4 id="fichiers-temporaires-1">Fichiers temporaires<a class="anchor" aria-label="anchor" href="#fichiers-temporaires-1"></a>
@@ -506,11 +512,11 @@
 <span>  <span class="op">)</span></span>
 <span><span class="va">infos_arb</span></span>
 <span><span class="co">#&gt; $arb_filename</span></span>
-<span><span class="co">#&gt; [1] "C:\\Users\\TMM7AN\\AppData\\Local\\Temp\\Rtmpq6q240\\RTA_adac3b365bc5.arb"</span></span>
+<span><span class="co">#&gt; [1] "C:\\Users\\TMM7AN\\AppData\\Local\\Temp\\RtmpUjZH4W\\RTA_81204a096641.arb"</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $output_names</span></span>
-<span><span class="co">#&gt; [1] "C:\\Users\\TMM7AN\\AppData\\Local\\Temp\\Rtmpq6q240\\RTA_adac104552d8.sbs"</span></span>
-<span><span class="co">#&gt; [2] "C:\\Users\\TMM7AN\\AppData\\Local\\Temp\\Rtmpq6q240\\RTA_adac164a1870.sbs"</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] "C:\\Users\\TMM7AN\\AppData\\Local\\Temp\\RtmpUjZH4W\\RTA_812068be1986.sbs"</span></span>
+<span><span class="co">#&gt; [2] "C:\\Users\\TMM7AN\\AppData\\Local\\Temp\\RtmpUjZH4W\\RTA_812075c6777b.sbs"</span></span></code></pre></div>
 <p style="text-align: right">
 <a href="#TOC" title="Retour sommaire">sommaire ↑</a>
 </p>
@@ -543,18 +549,18 @@
 <span><span class="co">#&gt;                    Number of suppressions: 1</span></span>
 <span><span class="co">#&gt; The hypercube procedure has been applied</span></span>
 <span><span class="co">#&gt;                    1 cells have been suppressed</span></span>
-<span><span class="co">#&gt; &lt;WRITETABLE&gt; (1,4,AS+SE+,"C:\Users\TMM7AN\AppData\Local\Temp\Rtmpq6q240\RTA_adac745d4e40.sbs")</span></span>
+<span><span class="co">#&gt; &lt;WRITETABLE&gt; (1,4,AS+SE+,"C:\Users\TMM7AN\AppData\Local\Temp\RtmpUjZH4W\RTA_81207dcc37da.sbs")</span></span>
 <span><span class="co">#&gt; Table: V1 | VAL has been written</span></span>
-<span><span class="co">#&gt;                    Output file name: C:\Users\TMM7AN\AppData\Local\Temp\Rtmpq6q240\RTA_adac745d4e40.sbs</span></span>
+<span><span class="co">#&gt;                    Output file name: C:\Users\TMM7AN\AppData\Local\Temp\RtmpUjZH4W\RTA_81207dcc37da.sbs</span></span>
 <span><span class="co">#&gt; &lt;SUPPRESS&gt; GH(2,100)</span></span>
 <span><span class="co">#&gt; Start of the hypercube protection for table V2 x V3 | VAL</span></span>
 <span><span class="co">#&gt; End of hypercube protection. Time used 1 seconds</span></span>
 <span><span class="co">#&gt;                    Number of suppressions: 2</span></span>
 <span><span class="co">#&gt; The hypercube procedure has been applied</span></span>
 <span><span class="co">#&gt;                    2 cells have been suppressed</span></span>
-<span><span class="co">#&gt; &lt;WRITETABLE&gt; (2,4,AS+SE+,"C:\Users\TMM7AN\AppData\Local\Temp\Rtmpq6q240\RTA_adac3d842e78.sbs")</span></span>
+<span><span class="co">#&gt; &lt;WRITETABLE&gt; (2,4,AS+SE+,"C:\Users\TMM7AN\AppData\Local\Temp\RtmpUjZH4W\RTA_8120449fd77.sbs")</span></span>
 <span><span class="co">#&gt; Table: V2 x V3 | VAL has been written</span></span>
-<span><span class="co">#&gt;                    Output file name: C:\Users\TMM7AN\AppData\Local\Temp\Rtmpq6q240\RTA_adac3d842e78.sbs</span></span>
+<span><span class="co">#&gt;                    Output file name: C:\Users\TMM7AN\AppData\Local\Temp\RtmpUjZH4W\RTA_8120449fd77.sbs</span></span>
 <span><span class="co">#&gt; End of TauArgus run</span></span>
 <span></span>
 <span><span class="va">secret2</span></span>
@@ -644,13 +650,13 @@
 <td align="left">rtauargus.decimals</td>
 <td align="left">0</td>
 <td align="left">integer</td>
-<td align="right">micro_asc_rda</td>
+<td align="right">tab_rda</td>
 </tr>
 <tr class="even">
 <td align="left">rtauargus.decimals</td>
 <td align="left">0</td>
 <td align="left">integer</td>
-<td align="right">tab_rda</td>
+<td align="right">micro_asc_rda</td>
 </tr>
 <tr class="odd">
 <td align="left">rtauargus.totcode</td>
@@ -674,53 +680,53 @@
 <td align="left">rtauargus.hierleadstring</td>
 <td align="left">“@”</td>
 <td align="left">character</td>
-<td align="right">tab_rda</td>
+<td align="right">micro_asc_rda</td>
 </tr>
 <tr class="odd">
 <td align="left">rtauargus.hierleadstring</td>
 <td align="left">“@”</td>
 <td align="left">character</td>
-<td align="right">micro_asc_rda</td>
+<td align="right">tab_rda</td>
 </tr>
 <tr class="even">
 <td align="left">rtauargus.separator</td>
 <td align="left">“,”</td>
 <td align="left">character</td>
-<td align="right">tab_rda</td>
+<td align="right">tab_arb</td>
 </tr>
 <tr class="odd">
+<td align="left">rtauargus.separator</td>
+<td align="left">“,”</td>
+<td align="left">character</td>
+<td align="right">tab_rda</td>
+</tr>
+<tr class="even">
 <td align="left">rtauargus.response_var</td>
 <td align="left">“&lt;freq&gt;”</td>
 <td align="left">character</td>
 <td align="right">micro_arb</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">rtauargus.weighted</td>
 <td align="left">FALSE</td>
 <td align="left">logical</td>
 <td align="right">micro_arb</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">rtauargus.linked</td>
 <td align="left">FALSE</td>
 <td align="left">logical</td>
 <td align="right">micro_arb</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">rtauargus.output_type</td>
 <td align="left">“4”</td>
 <td align="left">character</td>
 <td align="right">tab_arb</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">rtauargus.output_type</td>
 <td align="left">“4”</td>
-<td align="left">character</td>
-<td align="right">micro_arb</td>
-</tr>
-<tr class="even">
-<td align="left">rtauargus.output_options</td>
-<td align="left">""</td>
 <td align="left">character</td>
 <td align="right">micro_arb</td>
 </tr>
@@ -728,33 +734,39 @@
 <td align="left">rtauargus.output_options</td>
 <td align="left">""</td>
 <td align="left">character</td>
-<td align="right">tab_arb</td>
+<td align="right">micro_arb</td>
 </tr>
 <tr class="even">
+<td align="left">rtauargus.output_options</td>
+<td align="left">""</td>
+<td align="left">character</td>
+<td align="right">tab_arb</td>
+</tr>
+<tr class="odd">
 <td align="left">rtauargus.missing_dir</td>
 <td align="left">“stop”</td>
 <td align="left">character</td>
 <td align="right">run_arb</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">rtauargus.tauargus_exe</td>
 <td align="left">“Y:/Logiciels/TauArgus/TauArgus.exe”</td>
 <td align="left">character</td>
 <td align="right">run_arb</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">rtauargus.show_batch_console</td>
 <td align="left">FALSE</td>
 <td align="left">logical</td>
 <td align="right">run_arb</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">rtauargus.import</td>
 <td align="left">FALSE</td>
 <td align="left">logical</td>
 <td align="right">run_arb</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">rtauargus.is_tabular</td>
 <td align="left">TRUE</td>
 <td align="left">logical</td>
@@ -932,9 +944,9 @@
 <ul>
 <li>Auteur : <strong><a href="mailto:pierre-yves.berrard@insee.fr">Pierre-Yves Berrard</a></strong>
 </li>
-<li>Dernière mise à jour : <strong>02/10/2022</strong>
+<li>Dernière mise à jour : <strong>06/01/2023</strong>
 </li>
-<li>Version de rtauargus utilisée : <strong>1.1.0</strong>
+<li>Version de rtauargus utilisée : <strong>1.1.1</strong>
 </li>
 <li>Version de τ-Argus utilisée : <strong>TauArgus 4.2.2b1</strong>
 </li>
@@ -960,7 +972,7 @@
 
 <div class="pkgdown-footer-right">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
     </footer>
