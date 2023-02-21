@@ -72,7 +72,7 @@
 </nav><div class="container template-home">
 <div class="row">
   <main id="main" class="col-md-9"><div class="section level1">
-<div class="page-header"><h1 id="rtauargus-">rtauargus <a href="https://inseefrlab.github.io/rtauargus/"><img src="reference/figures/rtauargus_logo_small.png" align="right" height="40"></a>
+<div class="page-header"><h1 id="rtauargus-">rtauargus <a href="https://inseefrlab.github.io/rtauargus/"><img src="reference/figures/rtauargus_logo_small.png" align="right" width="120"></a>
 <a class="anchor" aria-label="anchor" href="#rtauargus-"></a>
 </h1></div>
 <!-- badges: start -->
@@ -132,7 +132,19 @@
 </h2>
 <p>When loading the package, the console displays some information:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://inseefrlab.github.io/rtauargus">rtauargus</a></span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://inseefrlab.github.io/rtauargus">rtauargus</a></span><span class="op">)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Tau-Argus : "Y:/Logiciels/TauArgus/TauArgus.exe"</span></span>
+<span><span class="co">#&gt;   (note: unknown location)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;   To change this directory :</span></span>
+<span><span class="co">#&gt;     options(rtauargus.tauargus_exe = "chemin/vers/TauArgus.exe")</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;   To return to the default location,</span></span>
+<span><span class="co">#&gt;     reset_rtauargus_options("tauargus_exe")</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;   To display all the options of the package :</span></span>
+<span><span class="co">#&gt;     rtauargus_options()</span></span></code></pre></div>
 <p>In particular, a plausible location for the τ-Argus software is predefined. This can be changed for the duration of the R session, as follows:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">loc_tauargus</span> <span class="op">&lt;-</span> <span class="st">"Y:/Logiciels/TauArgus/TauArgus4.2.2b1/TauArgus.exe"</span></span>
@@ -165,7 +177,22 @@
 <span>  freq <span class="op">=</span> <span class="st">"N_OBS"</span>,</span>
 <span>  maxscore <span class="op">=</span> <span class="st">"MAX"</span>,</span>
 <span>  totcode <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>ACTIVITY<span class="op">=</span><span class="st">"Total"</span>,SIZE<span class="op">=</span><span class="st">"Total"</span><span class="op">)</span></span>
-<span><span class="op">)</span></span></code></pre></div>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt; Start of batch procedure; file: Z:\SDC\OutilsConfidentialite\rtauargus\tauargus_files\ex1.arb</span></span>
+<span><span class="co">#&gt; &lt;OPENTABLEDATA&gt; "Z:\SDC\OutilsConfidentialite\rtauargus\tauargus_files\ex1.tab"</span></span>
+<span><span class="co">#&gt; &lt;OPENMETADATA&gt; "Z:\SDC\OutilsConfidentialite\rtauargus\tauargus_files\ex1.rda"</span></span>
+<span><span class="co">#&gt; &lt;SPECIFYTABLE&gt; "ACTIVITY""SIZE"|"VAL"||</span></span>
+<span><span class="co">#&gt; &lt;SAFETYRULE&gt; FREQ(3,10)|NK(1,85)</span></span>
+<span><span class="co">#&gt; &lt;READTABLE&gt; 1</span></span>
+<span><span class="co">#&gt; Tables have been read</span></span>
+<span><span class="co">#&gt; &lt;SUPPRESS&gt; MOD(1,5,1,0,0)</span></span>
+<span><span class="co">#&gt; Start of the modular protection for table ACTIVITY x SIZE | VAL</span></span>
+<span><span class="co">#&gt; End of modular protection. Time used 0 seconds</span></span>
+<span><span class="co">#&gt;                    Number of suppressions: 2</span></span>
+<span><span class="co">#&gt; &lt;WRITETABLE&gt; (1,4,,"Z:\SDC\OutilsConfidentialite\rtauargus\tauargus_files\ex1.csv")</span></span>
+<span><span class="co">#&gt; Table: ACTIVITY x SIZE | VAL has been written</span></span>
+<span><span class="co">#&gt;                    Output file name: Z:\SDC\OutilsConfidentialite\rtauargus\tauargus_files\ex1.csv</span></span>
+<span><span class="co">#&gt; End of TauArgus run</span></span></code></pre></div>
 <p>By default, the function displays in the console the logbook content in which user can read all steps run by τ-Argus. This can be retrieved in the logbook.txt file. With <code>verbose = FALSE</code>, the function can be silenced.</p>
 <p>By default, the function returns the original dataset with one variable more, called <code>Status</code>, directly resulting from τ-Argus and describing the status of each cell as follows:</p>
 <p>-<code>A</code>: primary secret cell because of frequency rule;<br>
@@ -188,7 +215,7 @@
 <span><span class="co">#&gt; 10    Total Total 300    36  38      V</span></span>
 <span><span class="co">#&gt; 11    Total   tr1 190    20  20      V</span></span>
 <span><span class="co">#&gt; 12    Total   tr2 110    16  38      V</span></span></code></pre></div>
-<p>All the files generated by the function are written in the specified directory (<code>dir_name</code> argument). The default format for the protected table is csv but it can be changed. All the τ-Argus files (.tab, .rda, .arb and .txt) are written in the same directory, too. To go further, you can consult the latest version of the τ-Argus manual is downloadable here: <a href="https://research.cbs.nl/casc/Software/TauManualV4.1.pdf" class="external-link">https://research.cbs.nl/casc/Software/TauManualV4.1.pdf</a>.</p>
+<p>All the files generated by the function are written in the specified directory (<code>dir_name</code> argument). The default format for the protected table is csv but it can be changed. All the τ-Argus files (.tab, .rda, .arb and .txt) are written in the same directory, too. To go further, you can consult the latest version of the τ-Argus manual is downloadable here: <a href="https://research.cbs.nl/casc/Software/TauManualV4.1.pdf" class="external-link uri">https://research.cbs.nl/casc/Software/TauManualV4.1.pdf</a>.</p>
 <p><strong>A detailed overview is available via <code><a href="articles/rtauargus.html">vignette("rtauargus")</a></code>.</strong></p>
 </div>
 <div class="section level2">
