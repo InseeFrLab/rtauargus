@@ -1,77 +1,97 @@
-# rtauargus <a href='https://inseefrlab.github.io/rtauargus/'><img src='man/figures/rtauargus_logo_small.png' align="right" height="40" /></a>  
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+# rtauargus <a href='https://inseefrlab.github.io/rtauargus/'><img src='man/figures/rtauargus_logo_small.png' align="right" width="120" /></a>
 
 <!-- badges: start -->
-[![pipeline status](https://gitlab.insee.fr/outilsconfidentialite/rtauargus/badges/master/pipeline.svg)](https://gitlab.insee.fr/outilsconfidentialite/rtauargus/-/pipelines)
+
+[![pipeline
+status](https://gitlab.insee.fr/outilsconfidentialite/rtauargus/badges/master/pipeline.svg)](https://gitlab.insee.fr/outilsconfidentialite/rtauargus/-/pipelines)
 <!-- badges: end -->
 
 <!--![](vignettes/R_logo_small.png) ![](vignettes/TauBall2_small.png)-->
 
-  
 ## Run τ-Argus from R
 
 The *rtauargus* package provides an **R** interface for **τ-Argus**.
 
 It allows to:
 
-- create inputs (rda, arb, hst and tab files) from data in R format ;
-- generate the sequence of instructions to be executed in batch mode (arb file);
-- launch a τ-Argus batch in command line;
-- retrieve the results in R.
+-   create inputs (rda, arb, hst and tab files) from data in R format ;
+-   generate the sequence of instructions to be executed in batch mode
+    (arb file);
+-   launch a τ-Argus batch in command line;
+-   retrieve the results in R.
 
-These different operations can be executed in one go, but also in a modular way.
-They allow to integrate the tasks performed by τ-Argus in a processing chain written in R.
+These different operations can be executed in one go, but also in a
+modular way. They allow to integrate the tasks performed by τ-Argus in a
+processing chain written in R.
 
-The package presents other **additional functionalities**, such as:  
+The package presents other **additional functionalities**, such as:
 
-- managing the protection of several tables at once;
-- creating a hierarchical variable from correspondence table.
+-   managing the protection of several tables at once;
+-   creating a hierarchical variable from correspondence table.
 
-It's possible to choose a tabular or microdata approach, but the tabular 
+It’s possible to choose a tabular or microdata approach, but the tabular
 one is, from now on, encouraged.
 
 ## Installation
 
-* **most recent stable version** (recommended)
+-   **most recent stable version** (recommended)
 
-  - For Insee agents:  
-    ```r
-    install.packages(
-      "rtauargus",
-      repos = "https://nexus.insee.fr/repository/r-public",
-      type = "source"
-    )
-    ```
-    
-  - Elsewhere:
-    ```r
-    install.packages("remotes")
-    remotes::install_github(
-      "InseeFrLab/rtauargus",
-      build_vignettes = FALSE,
-      upgrade = "never"
-    )
-    ```
+    -   For Insee agents:
 
-* **version in development**
+        ``` r
+        install.packages(
+          "rtauargus",
+          repos = "https://nexus.insee.fr/repository/r-public",
+          type = "source"
+        )
+        ```
+
+    -   Elsewhere:
+
+        ``` r
+        install.packages("remotes")
+        remotes::install_github(
+          "InseeFrLab/rtauargus",
+          build_vignettes = FALSE,
+          upgrade = "never"
+        )
+        ```
+
+-   **version in development**
 
 To install a specific version, add to the directory a reference
 ([commit](https://github.com/inseefrlab/rtauargus/commits/master) or
-[tag](https://github.com/inseefrlab/rtauargus/tags)),
-for example `"inseefrlab/rtauargus@v-0.4.1"`.
+[tag](https://github.com/inseefrlab/rtauargus/tags)), for example
+`"inseefrlab/rtauargus@v-0.4.1"`.
 
 ## Simple example
 
 When loading the package, the console displays some information:
 
-
-```r
+``` r
 library(rtauargus)
+#> 
+#> Tau-Argus : "Y:/Logiciels/TauArgus/TauArgus.exe"
+#>   (note: unknown location)
+#> 
+#>   To change this directory :
+#>     options(rtauargus.tauargus_exe = "chemin/vers/TauArgus.exe")
+#> 
+#>   To return to the default location,
+#>     reset_rtauargus_options("tauargus_exe")
+#> 
+#>   To display all the options of the package :
+#>     rtauargus_options()
 ```
 
-In particular, a plausible location for the &tau;-Argus software is
-predefined. This can be changed for the duration of the R session, as follows:
+In particular, a plausible location for the τ-Argus software is
+predefined. This can be changed for the duration of the R session, as
+follows:
 
-```r
+``` r
 loc_tauargus <- "Y:/Logiciels/TauArgus/TauArgus4.2.2b1/TauArgus.exe"
 options(rtauargus.tauargus_exe = loc_tauargus)
 ```
@@ -80,7 +100,7 @@ With this small adjustment done, the package is ready to be used.
 
 For the following demonstration, a fictitious table will be used:
 
-```r
+``` r
 act_size <-
   data.frame(
     ACTIVITY = c("01","01","01","02","02","02","06","06","06","Total","Total","Total"),
@@ -93,13 +113,14 @@ act_size <-
 
 As primary rules, we use the two following ones:
 
-- The n-k dominance rule with n=1 and k = 85
-- The minimum frequency rule with n = 3 and a safety range of 10.
+-   The n-k dominance rule with n=1 and k = 85
+-   The minimum frequency rule with n = 3 and a safety range of 10.
 
-To get the results for the dominance rule, we need to specify the largest 
-contributor to each cell, corresponding to the `MAX` variable in the tabular data.
+To get the results for the dominance rule, we need to specify the
+largest contributor to each cell, corresponding to the `MAX` variable in
+the tabular data.
 
-```r
+``` r
 ex1 <- tab_rtauargus(
   act_size,
   dir_name = "tauargus_files",
@@ -111,24 +132,40 @@ ex1 <- tab_rtauargus(
   maxscore = "MAX",
   totcode = c(ACTIVITY="Total",SIZE="Total")
 )
+#> Start of batch procedure; file: Z:\SDC\OutilsConfidentialite\rtauargus\tauargus_files\ex1.arb
+#> <OPENTABLEDATA> "Z:\SDC\OutilsConfidentialite\rtauargus\tauargus_files\ex1.tab"
+#> <OPENMETADATA> "Z:\SDC\OutilsConfidentialite\rtauargus\tauargus_files\ex1.rda"
+#> <SPECIFYTABLE> "ACTIVITY""SIZE"|"VAL"||
+#> <SAFETYRULE> FREQ(3,10)|NK(1,85)
+#> <READTABLE> 1
+#> Tables have been read
+#> <SUPPRESS> MOD(1,5,1,0,0)
+#> Start of the modular protection for table ACTIVITY x SIZE | VAL
+#> End of modular protection. Time used 0 seconds
+#>                    Number of suppressions: 2
+#> <WRITETABLE> (1,4,,"Z:\SDC\OutilsConfidentialite\rtauargus\tauargus_files\ex1.csv")
+#> Table: ACTIVITY x SIZE | VAL has been written
+#>                    Output file name: Z:\SDC\OutilsConfidentialite\rtauargus\tauargus_files\ex1.csv
+#> End of TauArgus run
 ```
 
-By default, the function displays in the console the logbook content in which
-user can read all steps run by &tau;-Argus. This can be retrieved in the logbook.txt file.
-With `verbose = FALSE`, the function can be silenced.
+By default, the function displays in the console the logbook content in
+which user can read all steps run by τ-Argus. This can be retrieved in
+the logbook.txt file. With `verbose = FALSE`, the function can be
+silenced.
 
-By default, the function returns the original dataset with one variable more,
-called `Status`, directly resulting from &tau;-Argus and describing the status of
-each cell as follows:
-  
--`A`: primary secret cell because of frequency rule;  
+By default, the function returns the original dataset with one variable
+more, called `Status`, directly resulting from τ-Argus and describing
+the status of each cell as follows:
+
+\-`A`: primary secret cell because of frequency rule;  
 -`B`: primary secret cell because of dominance rule (1st contributor);  
--`C`: primary secret cell because of frequency rule (more contributors in case when n>1);  
+-`C`: primary secret cell because of frequency rule (more contributors
+in case when n\>1);  
 -`D`: secondary secret cell;  
 -`V`: valid cells - no need to mask.
 
-
-```r
+``` r
 ex1
 #>    ACTIVITY  SIZE VAL N_OBS MAX Status
 #> 1        01 Total 150    15  20      V
@@ -145,22 +182,23 @@ ex1
 #> 12    Total   tr2 110    16  38      V
 ```
 
-
-All the files generated by the function are written in the specified directory
-(`dir_name` argument). 
-The default format for the protected table is csv but it can be changed.
-All the &tau;-Argus files (.tab, .rda, .arb and .txt) are written in the
-same directory, too. To go further, you can consult the latest version of the 
-&tau;-Argus manual is downloadable here:
-[https://research.cbs.nl/casc/Software/TauManualV4.1.pdf](https://research.cbs.nl/casc/Software/TauManualV4.1.pdf).
-
+All the files generated by the function are written in the specified
+directory (`dir_name` argument). The default format for the protected
+table is csv but it can be changed. All the τ-Argus files (.tab, .rda,
+.arb and .txt) are written in the same directory, too. To go further,
+you can consult the latest version of the τ-Argus manual is downloadable
+here: <https://research.cbs.nl/casc/Software/TauManualV4.1.pdf>.
 
 **A detailed overview is available via `vignette("rtauargus")`.**
 
 ## Important notes
 
-The functions of *rtauargus* calling τ-Argus require that this software be accessible from the workstation. The download of τ-Argus is done on the [dedicated page](https://github.com/sdcTools/tauargus/releases) of the *sdcTools* git repository.
+The functions of *rtauargus* calling τ-Argus require that this software
+be accessible from the workstation. The download of τ-Argus is done on
+the [dedicated page](https://github.com/sdcTools/tauargus/releases) of
+the *sdcTools* git repository.
 
-_The package was developed on the basis of open source versions of &tau;-Argus 
-(versions 4.2 and above), in particular the latest version available at the 
-time of development (4.2.2b1). It is not compatible with version 3.5.**_
+\_The package was developed on the basis of open source versions of
+τ-Argus (versions 4.2 and above), in particular the latest version
+available at the time of development (4.2.2b1). It is not compatible
+with version 3.5.\*\*\_
