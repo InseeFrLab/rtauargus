@@ -4,6 +4,17 @@ subtitle: History of changes / Historique des modifications
 output: rmarkdown::html_vignette
 ---
 
+## rtauargus 1.1.2
+
+[01/02/2023]
+
+* Improvement in handling Interval Protection Level while using **tab_multi_manager()**:
+
+> The IP levels are now set automatically into the apriori files for actual Primary Suppressed Cells 
+and only them. This ensures IP to be applied only for the actual primary secret and limits the 
+propagation of suppressions due to IP manipulation. In some very particular cases, this can lead to 
+significantly reduce  the suppressions.
+
 ## rtauargus 1.1.0
 
 [01/10/2022]
