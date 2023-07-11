@@ -71,7 +71,8 @@ journal_add_line <- function(journal,...){
 #'   value = "TOT",
 #'   freq = "N_OBS",
 #'   secret_var = "is_secret_prim",
-#'   totcode =  "Total"
+#'   totcode =  "Total",
+#'   ip_end = 0.001
 #' )
 #' }
 #'
@@ -214,8 +215,14 @@ tab_multi_manager <- function(
       }else{
         cost_var_tab <- NULL
       }
-      tableau <- tableau[, c(list_explanatory_vars[[nom_tab]], value, freq, cost_var_tab, secret_var)]
+        secret_var_tab <- if(!is.null(params$secret_no_pl)) c(secret_var,params$secret_no_pl) else secret_var
 
+      tableau <- tableau[, c(list_explanatory_vars[[nom_tab]], value, freq, cost_var_tab, secret_var_tab)]
+      if(!is.null(params$secret_no_pl)){
+        names(tableau)[names(tableau) == params$secret_no_pl] = "secret_no_pl"
+      } else {
+        tableau$secret_no_pl <- FALSE
+      }
       var_a_ajouter <- setdiff(all_expl_vars, names(tableau))
       for (nom_col in var_a_ajouter){
         tableau[[nom_col]] <- unname(
@@ -239,6 +246,9 @@ tab_multi_manager <- function(
     by = by_vars,
     all = TRUE
   )
+
+  table_majeure$secret_no_pl_iter <- table_majeure$secret_no_pl
+  secret_no_pl_iter <- "secret_no_pl_iter"
 
   purrr::walk(
     noms_col_T,
@@ -325,19 +335,17 @@ tab_multi_manager <- function(
     nom_col_identifiante <- paste0("T_", num_tableau)
     tableau_a_traiter <- which(table_majeure[[nom_col_identifiante]])
 
-    var_secret_prim <- secret_var
-
-    var_secret_apriori <- paste0("is_secret_", num_iter_all-1, collapse = "")
+    if (num_iter_all == 1){
+      var_secret_apriori <- secret_var
+    } else {
+      var_secret_apriori <- paste0("is_secret_", num_iter_all-1, collapse = "")
+    }
 
     vrai_tableau <- table_majeure[tableau_a_traiter,]
 
-    if (num_iter_all == 1){
-      vrai_tableau[,var_secret_apriori] <- vrai_tableau[,var_secret_prim]
-    }
-
     ex_var <- list_explanatory_vars[[num_tableau]]
 
-    vrai_tableau <- vrai_tableau[,c(ex_var, value, freq, var_secret_prim, var_secret_apriori, cost_var)]
+    vrai_tableau <- vrai_tableau[,c(ex_var, value, freq,var_secret_apriori,secret_no_pl_iter, cost_var)]
 
 
     # Other settings of the function to make secret ----
@@ -346,8 +354,8 @@ tab_multi_manager <- function(
     params$explanatory_vars = ex_var
     params$totcode = list_totcode[[num_tableau]]
     params$hrc = list_hrc[[num_tableau]]
-    params$secret_prim = var_secret_prim
     params$secret_var = var_secret_apriori
+    params$secret_no_pl = secret_no_pl_iter
     params$suppress = if(
       substr(suppress,1,3) == "MOD" & num_iter_par_tab[num_tableau] != 1
     ){
@@ -379,13 +387,16 @@ tab_multi_manager <- function(
     table_majeure[[var_secret]] <- table_majeure$is_secret
     table_majeure <- subset(table_majeure, select = -is_secret)
 
-    if(num_iter_all == 1) {
-      var_secret_apriori <- var_secret_prim
-    }
 
     table_majeure[[var_secret]] <- ifelse(
       is.na(table_majeure[[var_secret]]),
       table_majeure[[var_secret_apriori]],
+      table_majeure[[var_secret]]
+    )
+
+    table_majeure$secret_no_pl_iter <- ifelse(
+      table_majeure[[secret_var]],
+      table_majeure$secret_no_pl,
       table_majeure[[var_secret]]
     )
 

@@ -78,7 +78,7 @@ tab_rtauargus <- function(
     totcode = getOption("rtauargus.totcode"),
     hrc = NULL,
     secret_var = NULL,
-    secret_prim = NULL,
+    secret_no_pl = NULL,
     cost_var = NULL,
     value = "value",
     freq = "freq",
@@ -148,13 +148,13 @@ tab_rtauargus <- function(
   param_tab_rda$tabular <- tabular
   param_tab_rda$tab_filename <- file.path(dir_name, paste0(files_name, ".tab"))
   param_tab_rda$rda_filename <- file.path(dir_name, paste0(files_name, ".rda"))
-  param_tab_rda$hst_filename <- if(is.null(secret_var) & is.null(cost_var) & is.null(secret_prim)) NULL else file.path(dir_name, paste0(files_name, ".hst"))
+  param_tab_rda$hst_filename <- if(is.null(secret_var) & is.null(cost_var)) NULL else file.path(dir_name, paste0(files_name, ".hst"))
   param_tab_rda$explanatory_vars <- explanatory_vars
   param_tab_rda$hrc <- hrc
 
   param_tab_rda$totcode <- totcode
   param_tab_rda$secret_var <- secret_var
-  param_tab_rda$secret_prim <- secret_prim
+  param_tab_rda$secret_no_pl <- secret_no_pl
   param_tab_rda$cost_var <- cost_var
   param_tab_rda$value <- value
   param_tab_rda$freq <- freq
@@ -298,7 +298,7 @@ tab_rtauargus2 <- function(
     totcode,
     hrc = NULL,
     secret_var = NULL,
-    secret_prim = NULL,
+    secret_no_pl = NULL,
     cost_var = NULL,
     value = "value",
     freq = "freq",
@@ -316,7 +316,7 @@ tab_rtauargus2 <- function(
   params$totcode = totcode
   params$hrc = hrc
   params$secret_var = secret_var
-  params$secret_prim = secret_prim
+  params$secret_no_pl = secret_no_pl
   params$cost_var = cost_var
   params$value = value
   params$freq = freq
