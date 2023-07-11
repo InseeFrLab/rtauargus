@@ -343,7 +343,7 @@ write_hrc2 <- function(
     sort_table = FALSE,
     rev = FALSE,
     hier_lead_string = getOption("rtauargus.hierleadstring"),
-    adjust_unique_roots = FALSE,
+    adjust_unique_roots = TRUE,
     add_char = "ZZZ"
 ){
 
