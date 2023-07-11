@@ -258,11 +258,11 @@ tab_multi_manager <- function(
   # hrc_unif <- res_unif$hrc_unif
 
   list_hrc <- purrr::map(
-      list_explanatory_vars,
-      function(nom_vars){
-        purrr::discard(hrc[nom_vars], is.na) %>%  unlist()
-      }
-    )
+    list_explanatory_vars,
+    function(nom_vars){
+      purrr::discard(hrc[nom_vars], is.na) %>%  unlist()
+    }
+  )
 
   purrr::walk(
     names(alt_hrc),
@@ -293,8 +293,10 @@ tab_multi_manager <- function(
   num_iter_par_tab[!has_primary_secret] <- 1
   num_iter_all = 0
 
-  common_cells_modified <- as.data.frame(matrix(ncol = length(all_expl_vars)+1))
-  names(common_cells_modified) <- c(all_expl_vars, "iteration")
+  # common_cells_modified <- as.data.frame(matrix(ncol = length(all_expl_vars)+1))
+  # names(common_cells_modified) <- c(all_expl_vars, "iteration")
+
+  n_common_cells_modified <- 0
 
   journal <- file.path(dir_name,"journal.txt")
   if(file.exists(journal)) invisible(file.remove(journal))
@@ -363,12 +365,11 @@ tab_multi_manager <- function(
 
     res <- do.call(func_to_call, params)
     res$is_secret <- res$Status != "V"
-    prim_stat <- table(res$Status)["B"]
-    prim_stat <- ifelse(is.na(prim_stat), 0, prim_stat)
-    sec_stat <- table(res$Status)["D"]
-    sec_stat <- ifelse(is.na(sec_stat), 0, sec_stat)
-    valid_stat <- table(res$Status)["V"]
-    valid_stat <- ifelse(is.na(valid_stat), 0, valid_stat)
+
+    # Statistiques
+    prim_stat <- sum(res$Status == "B", na.rm = TRUE)
+    sec_stat <- sum(res$Status == "D", na.rm = TRUE)
+    valid_stat <- sum(res$Status == "V", na.rm = TRUE)
     denom_stat <- nrow(res)
 
     res <- subset(res, select = -Status)
@@ -400,16 +401,13 @@ tab_multi_manager <- function(
       )
     )
 
+    # update of common cells that have been modified
     modified <- common_cells[common_cells[[var_secret_apriori]] != common_cells[[var_secret]],all_expl_vars]
-    modified <- if(sum(is.na(modified))>0) modified[1,][-1,] else modified
-    if(nrow(modified)>0){
-      common_cells_modified <- rbind(
-        common_cells_modified,
-        cbind(
-          modified,
-          iteration = num_iter_all
-        )
-      )
+    # modified <- if(sum(is.na(modified))>0) modified[1,][-1,] else modified
+    if(nrow(modified) > 0){
+      modified <- cbind(modified, iteration = num_iter_all)
+      common_cells_modified <- if(n_common_cells_modified == 0) modified else rbind(common_cells_modified, modified)
+      n_common_cells_modified <- n_common_cells_modified + nrow(modified)
     }
 
     for(tab in noms_tbx){
@@ -505,7 +503,9 @@ tab_multi_manager <- function(
   )
   journal_add_break_line(journal)
   journal_add_line(journal, "Common cells hit by the secret:")
-  suppressWarnings(gdata::write.fwf(common_cells_modified[-1,], file = journal, append = TRUE))
+  if(n_common_cells_modified > 0){
+    suppressWarnings(gdata::write.fwf(common_cells_modified, file = journal, append = TRUE))
+  }
   journal_add_break_line(journal)
   journal_add_line(journal, "End time: ", format(Sys.time(), "%Y-%m-%d  %H:%M:%S"))
   journal_add_break_line(journal)
