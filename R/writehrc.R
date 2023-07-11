@@ -70,7 +70,7 @@ vect_aro <- Vectorize(arobase, vectorize.args = c("string", "number"))
 #' value mentionned in the package options (i.e. "@" at the package startup).
 #' \cr
 #' Caractère unique repérant le niveau de profondeur dans le .hrc
-#' @param adjust_unique_roots boolean. If TRUE will add fictional roots to the
+#' @param adjust_unique_roots boolean. If TRUE (default) will add fictional roots to the
 #' correspondence table, by doing so there will be no unique roots in the hrc file.
 #' With tabular function, unique roots are not handled by Tau-Argus. \cr
 #' Si TRUE la fonction va ajouter des feuilles fictives au fichier .hrc afin
@@ -343,7 +343,7 @@ write_hrc2 <- function(
     sort_table = FALSE,
     rev = FALSE,
     hier_lead_string = getOption("rtauargus.hierleadstring"),
-    adjust_unique_roots = FALSE,
+    adjust_unique_roots = TRUE,
     add_char = "ZZZ"
 ){
 
