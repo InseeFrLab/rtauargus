@@ -363,12 +363,11 @@ tab_multi_manager <- function(
 
     res <- do.call(func_to_call, params)
     res$is_secret <- res$Status != "V"
-    prim_stat <- table(res$Status)["B"]
-    prim_stat <- ifelse(is.na(prim_stat), 0, prim_stat)
-    sec_stat <- table(res$Status)["D"]
-    sec_stat <- ifelse(is.na(sec_stat), 0, sec_stat)
-    valid_stat <- table(res$Status)["V"]
-    valid_stat <- ifelse(is.na(valid_stat), 0, valid_stat)
+
+    # Statistiques
+    prim_stat <- sum(res$Status == "B", na.rm = TRUE)
+    sec_stat <- sum(res$Status == "D", na.rm = TRUE)
+    valid_stat <- sum(res$Status == "V", na.rm = TRUE)
     denom_stat <- nrow(res)
 
     res <- subset(res, select = -Status)
