@@ -227,7 +227,7 @@ tab_multi_manager <- function(
 
       tableau[[noms_col_T[[nom_tab]]]] <- TRUE
 
-      return(tableau)
+      return(as.data.frame(tableau))
     }
   )
 
