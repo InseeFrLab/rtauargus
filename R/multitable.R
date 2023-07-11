@@ -9,7 +9,7 @@ journal_add_line <- function(journal,...){
 
 #' Manages the secondary secret of a list of tables
 #' @inheritParams tab_rtauargus
-#' @param list_tables named list of dataframes representing the tables to protect
+#' @param list_tables named list of `data.frame` or `data.table` representing the tables to protect
 #' @param list_explanatory_vars named list of character vectors of explanatory
 #' variables of each table mentionned in list_tables. Names of the list are the same as of the list of tables.
 #' @param alt_hrc named list for alternative hierarchies (useful for non nested-hierarchies)
@@ -227,7 +227,7 @@ tab_multi_manager <- function(
 
       tableau[[noms_col_T[[nom_tab]]]] <- TRUE
 
-      return(tableau)
+      return(as.data.frame(tableau))
     }
   )
 
