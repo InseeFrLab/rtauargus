@@ -141,7 +141,7 @@ write_rda_tab <- function(info_vars) {
 #' (Variable indiquant le secret primaire de type booléen:
 #' prend la valeur "TRUE" quand les cellules du tableau doivent être masquées
 #' par le secret primaire, "FALSE" sinon. Permet de créer un fichier d'apriori)
-#' @param secret_var Boolean variable which specifies the secret, primary or not :
+#' @param secret_var Nae of the boolean variable which specifies the secret, primary or not :
 #'  equal to "TRUE" if a cell is concerned by the secret,"FALSE" otherwise.
 #' will  be exported in the apriori file. \cr
 #' (Variable indiquant le secret  de type booléen:
@@ -198,9 +198,9 @@ write_rda_tab <- function(info_vars) {
 #' (see section 'Specific parameters' for the syntax of this parameter). \cr
 #' (Fichier(s) contenant les libellés des variables catégorielles
 #' (voir section 'Specific parameters' pour la syntaxe de ce paramètre).)
-#' @param secret_no_pl Boolean variable which gives the primary secret : equal to
-#' "TRUE" if a cell is concerned by the primary secret,"FALSE" otherwise.
-#' will  be exported in the apriori file \cr
+#' @param secret_no_pl name of boolean variable which indicates if a cell should be
+#' concerned by the protection levels "TRUE" if a cell is not concerned by the
+#' protection levels,"FALSE" otherwise. will  be exported in the apriori file \cr
 #'
 #' @return Return the rda file name as a list (invisible).\cr
 #' (Renvoie le nom du fichier rda sous forme de liste (de
