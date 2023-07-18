@@ -77,6 +77,7 @@ journal_add_line <- function(journal,...){
 #' @importFrom rlang .data
 #'
 #' @export
+
 tab_multi_manager <- function(
     list_tables,
     list_explanatory_vars,
