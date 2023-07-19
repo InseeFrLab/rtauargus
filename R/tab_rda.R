@@ -30,7 +30,7 @@ creer_hst <- function(tabular,
 
   if(!is.null(secret_var)){
     tab_hst_cost = tabular[
-      tabular[[!secret_var]],
+      !tabular[[secret_var]],
       c(explanatory_vars[(explanatory_vars %in% colnames(tabular))],"label_apriori")
     ]
       } else {
