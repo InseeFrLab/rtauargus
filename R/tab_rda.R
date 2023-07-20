@@ -10,6 +10,7 @@ creer_hst <- function(tabular,
   if(!is.null(secret_var)){
     if(is.null(secret_no_pl)){
       tabular$secret_no_pl <- FALSE
+      secret_no_pl <- "secret_no_pl"
     }
   }
 
