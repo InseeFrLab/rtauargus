@@ -407,7 +407,7 @@ write_hrc2 <- function(
     corr_table <- na.locf(corr_table)
   }
 
-  if(adjust_unique_roots==TRUE){
+  if(adjust_unique_roots==TRUE & ncol(corr_table) > 1){
     #     warning(paste0("If there is unique roots in the table, the function will create
     # fictional roots to adjust the hrc file for Tau-Argus, they will be created
     # by copying the unique roots and adding ",add_char," at the beginning
@@ -433,91 +433,110 @@ write_hrc2 <- function(
   if(length(suspects) > 0)  message("Note : the following columns are not of character type : ", colnames(corr_table)[suspects], ". There may be an issue reading the table.")
 
   #### Creating the hrc file
-
-  # 0. Sort the correspondence table
-  if (sort_table){
-    for (j in 1:d[2]){
-      corr_table <- corr_table[
-        order(corr_table[,d[2]-j+1])
-        ,]
-      # CORR JJ à vérifier
-      # sort the table is not efficient if there are NA values !
-      # corr_table <- corr_table[
-      #   order(corr_table[,1])
-      #   ,]
-    }
-  }
-
-  # 0.b Remove total if needed
-  if(length(unique(as.character(corr_table[,1]))) == 1){
-    corr_table <- corr_table[,-1]
-  }
-
-  # 1. Compare cell values in order to erase duplicates (vertically / horizontally)
-
-  corr_table_decale <- rbind(
-    rep("line1"),
-    corr_table[1:(d[1]-1),]
-  )
-  corr_table_dec_left <- cbind(
-    w = rep("col1"),
-    corr_table[,1:d[2]-1]
-  )
-
-  compare <- corr_table == corr_table_decale #<-- cells identical to their upper
-  # neighbour
-  compare_left <- corr_table == corr_table_dec_left
-  missing <- is.na(corr_table)
-
-  # 2. Add a fitting number of hier_lead_string to all
-
-  depth_table <- as.data.frame(
-    matrix(0:(d[2]-1),nrow = d[1], ncol = d[2], byrow = TRUE)
-  )
-
-  # the numeric values (from 0 to d2 -1) correspond to the depth in the
-  # hierarchy, which will govern how many hier_lead_string are added when
-  # writing the hrc.
-  # One adjustment has to be done for cases when a same level is repeated
-  # in a line :
-
-  compare_col <- t(apply(
-    compare_left,
-    MARGIN = 1,
-    cumsum
-  ))
-  depth_table <- depth_table - compare_col
-
-  for(col in 1:d[2]){
-    corr_table[,col] <- vect_aro(
-      string = corr_table[,col],
-      number = depth_table[,col],
-      hier_lead_string
-    )
-  }
-
-  corr_table[compare] <- ""
-  corr_table[compare_left] <- ""
-  corr_table[missing] <- ""
-
-  # 3. Write corresponding table
-  # Note that columns & cells are not separated by anything, but cells that have
-  # not been erased still hold a line break ("\n") so that there will be line
-  # breaks only after non-void characters.
-
   loc_file <- ifelse(length(grep(".hrc$", file_name)) == 0, paste0(file_name,".hrc"), file_name)
 
-  utils::write.table(
-    x = corr_table,
-    file = loc_file,
-    quote = FALSE,
-    row.names = FALSE,
-    col.names = FALSE,
-    sep = "",
-    eol = ""
-  )
+  # 00. Case of a one column table
+  if(ncol(corr_table) == 1){
 
-  invisible(loc_file)
+    utils::write.table(
+      x = if(sort_table) corr_table[order(corr_table[,1]),, drop=FALSE] else corr_table,
+      file = loc_file,
+      quote = FALSE,
+      row.names = FALSE,
+      col.names = FALSE,
+      sep = "",
+      eol = "\n"
+    )
+    invisible(loc_file)
+  }else{
+
+    # 0. Sort the correspondence table
+    if (sort_table){
+      for (j in 1:d[2]){
+        corr_table <- corr_table[
+          order(corr_table[,d[2]-j+1])
+          ,]
+        # CORR JJ à vérifier
+        # sort the table is not efficient if there are NA values !
+        # corr_table <- corr_table[
+        #   order(corr_table[,1])
+        #   ,]
+      }
+    }
+
+    # 0.b Remove total if needed
+    if(length(unique(as.character(corr_table[,1]))) == 1){
+      corr_table <- corr_table[,-1]
+    }
+
+    # 1. Compare cell values in order to erase duplicates (vertically / horizontally)
+
+    corr_table_decale <- rbind(
+      rep("line1"),
+      corr_table[1:(d[1]-1),]
+    )
+    corr_table_dec_left <- cbind(
+      w = rep("col1"),
+      corr_table[,1:d[2]-1]
+    )
+
+    compare <- corr_table == corr_table_decale #<-- cells identical to their upper
+    # neighbour
+    compare_left <- corr_table == corr_table_dec_left
+    missing <- is.na(corr_table)
+
+    # 2. Add a fitting number of hier_lead_string to all
+
+    depth_table <- as.data.frame(
+      matrix(0:(d[2]-1),nrow = d[1], ncol = d[2], byrow = TRUE)
+    )
+
+    # the numeric values (from 0 to d2 -1) correspond to the depth in the
+    # hierarchy, which will govern how many hier_lead_string are added when
+    # writing the hrc.
+    # One adjustment has to be done for cases when a same level is repeated
+    # in a line :
+
+    compare_col <- t(apply(
+      compare_left,
+      MARGIN = 1,
+      cumsum
+    ))
+    depth_table <- depth_table - compare_col
+
+    for(col in 1:d[2]){
+      corr_table[,col] <- vect_aro(
+        string = corr_table[,col],
+        number = depth_table[,col],
+        hier_lead_string
+      )
+    }
+
+    corr_table[compare] <- ""
+    corr_table[compare_left] <- ""
+    corr_table[missing] <- ""
+
+    # 3. Write corresponding table
+    # Note that columns & cells are not separated by anything, but cells that have
+    # not been erased still hold a line break ("\n") so that there will be line
+    # breaks only after non-void characters.
+
+
+
+    utils::write.table(
+      x = corr_table,
+      file = loc_file,
+      quote = FALSE,
+      row.names = FALSE,
+      col.names = FALSE,
+      sep = "",
+      eol = ""
+    )
+
+    invisible(loc_file)
+  }
+
+
 }
 
 

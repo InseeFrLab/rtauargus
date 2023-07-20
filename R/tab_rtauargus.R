@@ -306,6 +306,7 @@ tab_rtauargus2 <- function(
     suppress = "MOD(1,5,1,0,0)",
     ...
 ){
+
   .dots = list(...)
 
   params <- param_function(tab_rtauargus, .dots)
