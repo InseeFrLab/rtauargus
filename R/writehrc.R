@@ -357,7 +357,7 @@ write_hrc2 <- function(
     file_name <- givenfilename
   }else{
     dir <- dirname(path = file_name)
-    if(!dir.exists(dir)) dir.create(dir, recursive = FALSE)
+    if(!dir.exists(dir)) dir.create(dir, recursive = TRUE)
   }
 
   # if(is.null(dir_name)){
