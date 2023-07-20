@@ -377,12 +377,15 @@ tab_multi_manager <- function(
     valid_stat <- sum(res$Status == "V", na.rm = TRUE)
     denom_stat <- nrow(res)
 
-    res <- subset(res, select = -Status)
+    res <- subset(res, select = setdiff(names(res), "Status"))
 
     var_secret <- paste0("is_secret_", num_iter_all)
     table_majeure <- merge(table_majeure, res, all = TRUE)
     table_majeure[[var_secret]] <- table_majeure$is_secret
-    table_majeure <- subset(table_majeure, select = -is_secret)
+    table_majeure <- subset(
+      table_majeure,
+      select = setdiff(names(table_majeure), "is_secret")
+    )
 
 
     table_majeure[[var_secret]] <- ifelse(
