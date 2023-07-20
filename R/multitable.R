@@ -15,7 +15,6 @@ journal_add_line <- function(journal,...){
 #' @param alt_hrc named list for alternative hierarchies (useful for non nested-hierarchies)
 #' @param alt_totcode named list for alternative codes
 #' @param ip_start integer: Interval protection level to apply at first treatment of each table
-#' @param ip_end integer: Interval protection level to apply at other treatments
 #' @param num_iter_max integer: Maximum of treatments to do on each table (default to 10)
 #' @param ... other arguments of \code{tab_rtauargus2()}
 #'
@@ -78,6 +77,7 @@ journal_add_line <- function(journal,...){
 #' @importFrom rlang .data
 #'
 #' @export
+
 tab_multi_manager <- function(
     list_tables,
     list_explanatory_vars,
@@ -92,7 +92,6 @@ tab_multi_manager <- function(
     cost_var = NULL,
     suppress = "MOD(1,5,1,0,0)",
     ip_start = 10,
-    ip_end = 0,
     num_iter_max = 10,
     ...
 ){
@@ -214,8 +213,14 @@ tab_multi_manager <- function(
       }else{
         cost_var_tab <- NULL
       }
-      tableau <- tableau[, c(list_explanatory_vars[[nom_tab]], value, freq, cost_var_tab, secret_var)]
+        secret_var_tab <- if(!is.null(params$secret_no_pl)) c(secret_var,params$secret_no_pl) else secret_var
 
+      tableau <- tableau[, c(list_explanatory_vars[[nom_tab]], value, freq, cost_var_tab, secret_var_tab)]
+      if(!is.null(params$secret_no_pl)){
+        names(tableau)[names(tableau) == params$secret_no_pl] = "secret_no_pl"
+      } else {
+        tableau$secret_no_pl <- FALSE
+      }
       var_a_ajouter <- setdiff(all_expl_vars, names(tableau))
       for (nom_col in var_a_ajouter){
         tableau[[nom_col]] <- unname(
@@ -239,6 +244,9 @@ tab_multi_manager <- function(
     by = by_vars,
     all = TRUE
   )
+
+  table_majeure$secret_no_pl_iter <- table_majeure$secret_no_pl
+  secret_no_pl_iter <- "secret_no_pl_iter"
 
   purrr::walk(
     noms_col_T,
@@ -303,8 +311,7 @@ tab_multi_manager <- function(
   journal_add_line(journal, "Start time:", format(start_time, "%Y-%m-%d  %H:%M:%S"))
   journal_add_break_line(journal)
   journal_add_line(journal, "Function called to protect the tables:", func_to_call)
-  journal_add_line(journal, "Interval Protection Level for first iteration:", ip_start)
-  journal_add_line(journal, "Interval Protection Level for other iterations:", ip_end)
+  journal_add_line(journal, "Interval Protection Level for primary secret cells:", ip_start)
   journal_add_line(journal, "Nb of tables to treat: ", n_tbx)
   journal_add_break_line(journal)
   journal_add_line(journal, "Tables to treat:", noms_tbx)
@@ -325,19 +332,17 @@ tab_multi_manager <- function(
     nom_col_identifiante <- paste0("T_", num_tableau)
     tableau_a_traiter <- which(table_majeure[[nom_col_identifiante]])
 
-    var_secret_prim <- secret_var
-
-    var_secret_apriori <- paste0("is_secret_", num_iter_all-1, collapse = "")
+    if (num_iter_all == 1){
+      var_secret_apriori <- secret_var
+    } else {
+      var_secret_apriori <- paste0("is_secret_", num_iter_all-1, collapse = "")
+    }
 
     vrai_tableau <- table_majeure[tableau_a_traiter,]
 
-    if (num_iter_all == 1){
-      vrai_tableau[,var_secret_apriori] <- vrai_tableau[,var_secret_prim]
-    }
-
     ex_var <- list_explanatory_vars[[num_tableau]]
 
-    vrai_tableau <- vrai_tableau[,c(ex_var, value, freq, var_secret_prim, var_secret_apriori, cost_var)]
+    vrai_tableau <- vrai_tableau[,c(ex_var, value, freq,var_secret_apriori,secret_no_pl_iter, cost_var)]
 
 
     # Other settings of the function to make secret ----
@@ -346,8 +351,8 @@ tab_multi_manager <- function(
     params$explanatory_vars = ex_var
     params$totcode = list_totcode[[num_tableau]]
     params$hrc = list_hrc[[num_tableau]]
-    params$secret_prim = var_secret_prim
     params$secret_var = var_secret_apriori
+    params$secret_no_pl = secret_no_pl_iter
     params$suppress = if(
       substr(suppress,1,3) == "MOD" & num_iter_par_tab[num_tableau] != 1
     ){
@@ -361,7 +366,7 @@ tab_multi_manager <- function(
     }else{
       suppress
     }
-    params$ip = if(num_iter_par_tab[num_tableau] == 1) ip_start else ip_end
+    params$ip = ip_start
 
     res <- do.call(func_to_call, params)
     res$is_secret <- res$Status != "V"
@@ -379,13 +384,16 @@ tab_multi_manager <- function(
     table_majeure[[var_secret]] <- table_majeure$is_secret
     table_majeure <- subset(table_majeure, select = -is_secret)
 
-    if(num_iter_all == 1) {
-      var_secret_apriori <- var_secret_prim
-    }
 
     table_majeure[[var_secret]] <- ifelse(
       is.na(table_majeure[[var_secret]]),
       table_majeure[[var_secret_apriori]],
+      table_majeure[[var_secret]]
+    )
+
+    table_majeure$secret_no_pl_iter <- ifelse(
+      table_majeure[[secret_var]],
+      table_majeure$secret_no_pl,
       table_majeure[[var_secret]]
     )
 
