@@ -213,14 +213,16 @@ tab_multi_manager <- function(
       }else{
         cost_var_tab <- NULL
       }
-        secret_var_tab <- if(!is.null(params$secret_no_pl)) c(secret_var,params$secret_no_pl) else secret_var
+      secret_var_tab <- if(!is.null(params$secret_no_pl)) c(secret_var,params$secret_no_pl) else secret_var
 
       tableau <- tableau[, c(list_explanatory_vars[[nom_tab]], value, freq, cost_var_tab, secret_var_tab)]
+
       if(!is.null(params$secret_no_pl)){
         names(tableau)[names(tableau) == params$secret_no_pl] = "secret_no_pl"
       } else {
         tableau$secret_no_pl <- FALSE
       }
+
       var_a_ajouter <- setdiff(all_expl_vars, names(tableau))
       for (nom_col in var_a_ajouter){
         tableau[[nom_col]] <- unname(
@@ -398,7 +400,7 @@ tab_multi_manager <- function(
       table_majeure[[secret_var]],
       table_majeure$secret_no_pl,
       table_majeure[[var_secret]]
-    )
+    ) #TODO A REVOIR PR CORRIGER LES PL
 
     lignes_modifs <- which(table_majeure[[var_secret_apriori]] != table_majeure[[var_secret]])
 

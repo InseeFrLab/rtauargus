@@ -199,9 +199,10 @@ write_rda_tab <- function(info_vars) {
 #' (see section 'Specific parameters' for the syntax of this parameter). \cr
 #' (Fichier(s) contenant les libellés des variables catégorielles
 #' (voir section 'Specific parameters' pour la syntaxe de ce paramètre).)
-#' @param secret_no_pl name of boolean variable which indicates if a cell should be
-#' concerned by the protection levels "TRUE" if a cell is not concerned by the
-#' protection levels,"FALSE" otherwise. will  be exported in the apriori file \cr
+#' @param secret_no_pl name of a boolean variable which indicates the cells
+#' on which the protection levels won't be applied. If `secret_no_pl = NULL`
+#' (default), the protection levels are applied on each cell which gets a `TRUE`
+#' status for the `secret_var`.\cr
 #'
 #' @return Return the rda file name as a list (invisible).\cr
 #' (Renvoie le nom du fichier rda sous forme de liste (de
