@@ -56,7 +56,7 @@ l'écriture de batch figurent dans le manuel de référence de &tau;-Argus.
 
 > _Le package a été développé sur la base des versions open source de &tau;
 > -Argus (versions 4.1 et supérieures), en particulier la dernière version
-> disponible lors du développement (4.1.7)._
+> disponible lors du développement (4.2.3)._
 >
 > _**Il n'est pas compatible avec la version 3.5.**_
 >
@@ -146,7 +146,7 @@ prédéfini. Il est possible de le changer pour toute la durée de la session R.
 message indique que cet emplacement est inconnu, on le modifie donc :
 
 ```{r opt_exe}
-loc_tauargus <- "Y:/Logiciels/TauArgus/TauArgus4.2.2b1/TauArgus.exe"
+loc_tauargus <- "Y:/Logiciels/TauArgus/TauArgus4.2.3/TauArgus.exe"
 
 options(rtauargus.tauargus_exe = loc_tauargus)
 ```
@@ -285,7 +285,8 @@ micro_asc_rda(donnees, asc_filename = "Z:/donnees.asc")
 Contenu des fichiers créés :
 ```{r file_show_asc_rda, eval = FALSE}
 file.show("Z:/donnees.asc", "Z:/donnees.rda", pager = "internal")
-````
+```
+
 ```{r show_asc_rda, echo = FALSE, comment = ""}
 donnees.asc <- c("", readLines("Z:/donnees.asc"))
 donnees.rda <- c("", readLines("Z:/donnees.rda"))
@@ -328,7 +329,8 @@ micro_asc_rda(
 ```
 Contenu des fichiers créés :
 ```{r file_show_asc_rda2, ref.label = 'file_show_asc_rda', eval = FALSE}
-````
+```
+
 ```{r show_asc_rda2, ref.label = 'show_asc_rda', echo = FALSE, comment = ""}
 ```
 
@@ -380,7 +382,7 @@ micro_arb(
 Contenu du fichier créé :
 ```{r file_show_arb, eval = FALSE}
 file.show("Z:/donnees.arb", pager = "internal")
-````
+```
 
 ```{r show_arb, echo = FALSE, comment = ""}
 cat(readLines("Z:/donnees.arb"), sep = "\n")
@@ -414,7 +416,7 @@ micro_arb(
 ```
 
 ```{r file_show_arb2, ref.label = 'file_show_arb', eval = FALSE}
-````
+```
 
 ```{r show_arb2, ref.label = 'show_arb', echo = FALSE, eval = TRUE, comment = ""}
 ```
@@ -684,7 +686,7 @@ Pour tout retour ou signalement d'erreur, utiliser de préférence
 - Auteur : **<a href="mailto:pierre-yves.berrard@insee.fr">Pierre-Yves Berrard</a>**
 - Dernière mise à jour : **`r format(Sys.time(), "%d/%m/%Y")`**
 - Version de rtauargus utilisée : **`r packageVersion("rtauargus")`**
-- Version de &tau;-Argus utilisée : **TauArgus 4.2.2b1**
+- Version de &tau;-Argus utilisée : **TauArgus 4.2.3**
 - Version de R utilisée :  **`r packageVersion("base")`**
 
 <p style="text-align: right">

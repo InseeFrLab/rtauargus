@@ -185,7 +185,7 @@ Let's specify the location of the TauArgus.exe file in our computer:
 ```{r version}
 options(
   rtauargus.tauargus_exe =
-    "Y:/Logiciels/TauArgus/TauArgus4.2.2b1/TauArgus.exe"
+    "Y:/Logiciels/TauArgus/TauArgus4.2.3/TauArgus.exe"
 )
 ```
 
@@ -474,7 +474,7 @@ res <- tab_multi_manager(
 - Authors: **<a href="mailto:julien.jamme@insee.fr">Julien Jamme</a>** & **<a href="mailto:nathanael.rastout@insee.fr">Nathanael Rastout</a>**
 - Last update: **`r format(Sys.time(), "%d/%m/%Y")`**
 - Version of rtauargus used: **`r packageVersion("rtauargus")`**
-- Version of &tau;-Argus used : **TauArgus 4.2.2b1**
+- Version of &tau;-Argus used : **TauArgus 4.2.3**
 - R version used :  **`r packageVersion("base")`**
 
 <p style="text-align: right">

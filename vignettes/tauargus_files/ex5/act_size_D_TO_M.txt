@@ -1,0 +1,152 @@
+28-juil.-2023 14:26:18 : Start of batch procedure; file: Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex5\act_size_D_TO_M.arb
+28-juil.-2023 14:26:18 : <OPENTABLEDATA> "Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex5\act_size_D_TO_M.tab"
+28-juil.-2023 14:26:18 : <OPENMETADATA> "Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex5\act_size_D_TO_M.rda"
+28-juil.-2023 14:26:18 : <SPECIFYTABLE> "ACTIVITY""SIZE"|"TOT"||
+28-juil.-2023 14:26:18 : <SAFETYRULE> MAN(10)
+28-juil.-2023 14:26:18 : <READTABLE> 1
+28-juil.-2023 14:26:18 : Tables have been read
+28-juil.-2023 14:26:18 : <APRIORI> "Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex5\act_size_D_TO_M.hst",1,",",0,0
+28-juil.-2023 14:26:18 : Apriory file: Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex5\act_size_D_TO_M.hst has been applied
+                       to table: ACTIVITY x SIZE | TOT
+28-juil.-2023 14:26:18 : Apriori file Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex5\act_size_D_TO_M.hst has been read
+28-juil.-2023 14:26:18 : <SUPPRESS> MOD(1,5,1,0,0)
+28-juil.-2023 14:26:18 : Start of the modular protection for table ACTIVITY x SIZE | TOT
+28-juil.-2023 14:26:18 : End of modular protection. Time used 0 seconds
+                       Number of suppressions: 1
+28-juil.-2023 14:26:18 : <WRITETABLE> (1,4,,"Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex5\act_size_D_TO_M.csv")
+28-juil.-2023 14:26:18 : Table: ACTIVITY x SIZE | TOT has been written
+                       Output file name: Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex5\act_size_D_TO_M.csv
+28-juil.-2023 14:26:18 : End of TauArgus run
+28-juil.-2023 14:26:28 : Start of batch procedure; file: Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex5\act_size_D_TO_M.arb
+28-juil.-2023 14:26:28 : <OPENTABLEDATA> "Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex5\act_size_D_TO_M.tab"
+28-juil.-2023 14:26:28 : <OPENMETADATA> "Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex5\act_size_D_TO_M.rda"
+28-juil.-2023 14:26:28 : <SPECIFYTABLE> "ACTIVITY""SIZE"|"TOT"||
+28-juil.-2023 14:26:28 : <SAFETYRULE> MAN(10)
+28-juil.-2023 14:26:28 : <READTABLE> 1
+28-juil.-2023 14:26:28 : Tables have been read
+28-juil.-2023 14:26:28 : <APRIORI> "Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex5\act_size_D_TO_M.hst",1,",",0,0
+28-juil.-2023 14:26:28 : Apriory file: Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex5\act_size_D_TO_M.hst has been applied
+                       to table: ACTIVITY x SIZE | TOT
+28-juil.-2023 14:26:28 : Apriori file Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex5\act_size_D_TO_M.hst has been read
+28-juil.-2023 14:26:28 : <SUPPRESS> MOD(1,5,0,0,0)
+28-juil.-2023 14:26:28 : Start of the modular protection for table ACTIVITY x SIZE | TOT
+28-juil.-2023 14:26:28 : End of modular protection. Time used 0 seconds
+                       Number of suppressions: 1
+28-juil.-2023 14:26:28 : <WRITETABLE> (1,4,,"Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex5\act_size_D_TO_M.csv")
+28-juil.-2023 14:26:28 : Table: ACTIVITY x SIZE | TOT has been written
+                       Output file name: Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex5\act_size_D_TO_M.csv
+28-juil.-2023 14:26:28 : End of TauArgus run
+28-juil.-2023 14:27:30 : Start of batch procedure; file: Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex5\act_size_D_TO_M.arb
+28-juil.-2023 14:27:30 : <OPENTABLEDATA> "Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex5\act_size_D_TO_M.tab"
+28-juil.-2023 14:27:30 : <OPENMETADATA> "Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex5\act_size_D_TO_M.rda"
+28-juil.-2023 14:27:30 : <SPECIFYTABLE> "ACTIVITY""SIZE"|"TOT"||
+28-juil.-2023 14:27:30 : <SAFETYRULE> MAN(10)
+28-juil.-2023 14:27:30 : <READTABLE> 1
+28-juil.-2023 14:27:30 : Tables have been read
+28-juil.-2023 14:27:30 : <APRIORI> "Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex5\act_size_D_TO_M.hst",1,",",0,0
+28-juil.-2023 14:27:30 : Apriory file: Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex5\act_size_D_TO_M.hst has been applied
+                       to table: ACTIVITY x SIZE | TOT
+28-juil.-2023 14:27:30 : Apriori file Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex5\act_size_D_TO_M.hst has been read
+28-juil.-2023 14:27:30 : <SUPPRESS> MOD(1,5,1,0,0)
+28-juil.-2023 14:27:30 : Start of the modular protection for table ACTIVITY x SIZE | TOT
+28-juil.-2023 14:27:30 : End of modular protection. Time used 0 seconds
+                       Number of suppressions: 1
+28-juil.-2023 14:27:30 : <WRITETABLE> (1,4,,"Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex5\act_size_D_TO_M.csv")
+28-juil.-2023 14:27:30 : Table: ACTIVITY x SIZE | TOT has been written
+                       Output file name: Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex5\act_size_D_TO_M.csv
+28-juil.-2023 14:27:30 : End of TauArgus run
+28-juil.-2023 14:27:39 : Start of batch procedure; file: Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex5\act_size_D_TO_M.arb
+28-juil.-2023 14:27:39 : <OPENTABLEDATA> "Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex5\act_size_D_TO_M.tab"
+28-juil.-2023 14:27:39 : <OPENMETADATA> "Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex5\act_size_D_TO_M.rda"
+28-juil.-2023 14:27:39 : <SPECIFYTABLE> "ACTIVITY""SIZE"|"TOT"||
+28-juil.-2023 14:27:39 : <SAFETYRULE> MAN(10)
+28-juil.-2023 14:27:39 : <READTABLE> 1
+28-juil.-2023 14:27:39 : Tables have been read
+28-juil.-2023 14:27:39 : <APRIORI> "Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex5\act_size_D_TO_M.hst",1,",",0,0
+28-juil.-2023 14:27:39 : Apriory file: Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex5\act_size_D_TO_M.hst has been applied
+                       to table: ACTIVITY x SIZE | TOT
+28-juil.-2023 14:27:39 : Apriori file Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex5\act_size_D_TO_M.hst has been read
+28-juil.-2023 14:27:39 : <SUPPRESS> MOD(1,5,0,0,0)
+28-juil.-2023 14:27:39 : Start of the modular protection for table ACTIVITY x SIZE | TOT
+28-juil.-2023 14:27:40 : End of modular protection. Time used 0 seconds
+                       Number of suppressions: 1
+28-juil.-2023 14:27:40 : <WRITETABLE> (1,4,,"Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex5\act_size_D_TO_M.csv")
+28-juil.-2023 14:27:40 : Table: ACTIVITY x SIZE | TOT has been written
+                       Output file name: Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex5\act_size_D_TO_M.csv
+28-juil.-2023 14:27:40 : End of TauArgus run
+28-juil.-2023 14:37:46 : Start of batch procedure; file: Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex5\act_size_D_TO_M.arb
+28-juil.-2023 14:37:46 : <OPENTABLEDATA> "Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex5\act_size_D_TO_M.tab"
+28-juil.-2023 14:37:46 : <OPENMETADATA> "Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex5\act_size_D_TO_M.rda"
+28-juil.-2023 14:37:46 : <SPECIFYTABLE> "ACTIVITY""SIZE"|"TOT"||
+28-juil.-2023 14:37:46 : <SAFETYRULE> MAN(10)
+28-juil.-2023 14:37:46 : <READTABLE> 1
+28-juil.-2023 14:37:46 : Tables have been read
+28-juil.-2023 14:37:46 : <APRIORI> "Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex5\act_size_D_TO_M.hst",1,",",0,0
+28-juil.-2023 14:37:46 : Apriory file: Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex5\act_size_D_TO_M.hst has been applied
+                       to table: ACTIVITY x SIZE | TOT
+28-juil.-2023 14:37:46 : Apriori file Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex5\act_size_D_TO_M.hst has been read
+28-juil.-2023 14:37:46 : <SUPPRESS> MOD(1,5,1,0,0)
+28-juil.-2023 14:37:46 : Start of the modular protection for table ACTIVITY x SIZE | TOT
+28-juil.-2023 14:37:46 : End of modular protection. Time used 0 seconds
+                       Number of suppressions: 1
+28-juil.-2023 14:37:46 : <WRITETABLE> (1,4,,"Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex5\act_size_D_TO_M.csv")
+28-juil.-2023 14:37:46 : Table: ACTIVITY x SIZE | TOT has been written
+                       Output file name: Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex5\act_size_D_TO_M.csv
+28-juil.-2023 14:37:46 : End of TauArgus run
+28-juil.-2023 14:37:56 : Start of batch procedure; file: Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex5\act_size_D_TO_M.arb
+28-juil.-2023 14:37:56 : <OPENTABLEDATA> "Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex5\act_size_D_TO_M.tab"
+28-juil.-2023 14:37:56 : <OPENMETADATA> "Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex5\act_size_D_TO_M.rda"
+28-juil.-2023 14:37:56 : <SPECIFYTABLE> "ACTIVITY""SIZE"|"TOT"||
+28-juil.-2023 14:37:56 : <SAFETYRULE> MAN(10)
+28-juil.-2023 14:37:56 : <READTABLE> 1
+28-juil.-2023 14:37:56 : Tables have been read
+28-juil.-2023 14:37:56 : <APRIORI> "Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex5\act_size_D_TO_M.hst",1,",",0,0
+28-juil.-2023 14:37:56 : Apriory file: Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex5\act_size_D_TO_M.hst has been applied
+                       to table: ACTIVITY x SIZE | TOT
+28-juil.-2023 14:37:56 : Apriori file Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex5\act_size_D_TO_M.hst has been read
+28-juil.-2023 14:37:56 : <SUPPRESS> MOD(1,5,0,0,0)
+28-juil.-2023 14:37:56 : Start of the modular protection for table ACTIVITY x SIZE | TOT
+28-juil.-2023 14:37:56 : End of modular protection. Time used 0 seconds
+                       Number of suppressions: 1
+28-juil.-2023 14:37:56 : <WRITETABLE> (1,4,,"Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex5\act_size_D_TO_M.csv")
+28-juil.-2023 14:37:56 : Table: ACTIVITY x SIZE | TOT has been written
+                       Output file name: Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex5\act_size_D_TO_M.csv
+28-juil.-2023 14:37:56 : End of TauArgus run
+28-juil.-2023 14:38:57 : Start of batch procedure; file: Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex5\act_size_D_TO_M.arb
+28-juil.-2023 14:38:57 : <OPENTABLEDATA> "Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex5\act_size_D_TO_M.tab"
+28-juil.-2023 14:38:57 : <OPENMETADATA> "Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex5\act_size_D_TO_M.rda"
+28-juil.-2023 14:38:57 : <SPECIFYTABLE> "ACTIVITY""SIZE"|"TOT"||
+28-juil.-2023 14:38:57 : <SAFETYRULE> MAN(10)
+28-juil.-2023 14:38:57 : <READTABLE> 1
+28-juil.-2023 14:38:57 : Tables have been read
+28-juil.-2023 14:38:57 : <APRIORI> "Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex5\act_size_D_TO_M.hst",1,",",0,0
+28-juil.-2023 14:38:57 : Apriory file: Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex5\act_size_D_TO_M.hst has been applied
+                       to table: ACTIVITY x SIZE | TOT
+28-juil.-2023 14:38:57 : Apriori file Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex5\act_size_D_TO_M.hst has been read
+28-juil.-2023 14:38:57 : <SUPPRESS> MOD(1,5,1,0,0)
+28-juil.-2023 14:38:57 : Start of the modular protection for table ACTIVITY x SIZE | TOT
+28-juil.-2023 14:38:57 : End of modular protection. Time used 0 seconds
+                       Number of suppressions: 1
+28-juil.-2023 14:38:57 : <WRITETABLE> (1,4,,"Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex5\act_size_D_TO_M.csv")
+28-juil.-2023 14:38:57 : Table: ACTIVITY x SIZE | TOT has been written
+                       Output file name: Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex5\act_size_D_TO_M.csv
+28-juil.-2023 14:38:57 : End of TauArgus run
+28-juil.-2023 14:39:07 : Start of batch procedure; file: Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex5\act_size_D_TO_M.arb
+28-juil.-2023 14:39:07 : <OPENTABLEDATA> "Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex5\act_size_D_TO_M.tab"
+28-juil.-2023 14:39:07 : <OPENMETADATA> "Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex5\act_size_D_TO_M.rda"
+28-juil.-2023 14:39:07 : <SPECIFYTABLE> "ACTIVITY""SIZE"|"TOT"||
+28-juil.-2023 14:39:07 : <SAFETYRULE> MAN(10)
+28-juil.-2023 14:39:07 : <READTABLE> 1
+28-juil.-2023 14:39:07 : Tables have been read
+28-juil.-2023 14:39:07 : <APRIORI> "Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex5\act_size_D_TO_M.hst",1,",",0,0
+28-juil.-2023 14:39:07 : Apriory file: Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex5\act_size_D_TO_M.hst has been applied
+                       to table: ACTIVITY x SIZE | TOT
+28-juil.-2023 14:39:07 : Apriori file Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex5\act_size_D_TO_M.hst has been read
+28-juil.-2023 14:39:07 : <SUPPRESS> MOD(1,5,0,0,0)
+28-juil.-2023 14:39:07 : Start of the modular protection for table ACTIVITY x SIZE | TOT
+28-juil.-2023 14:39:07 : End of modular protection. Time used 0 seconds
+                       Number of suppressions: 1
+28-juil.-2023 14:39:07 : <WRITETABLE> (1,4,,"Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex5\act_size_D_TO_M.csv")
+28-juil.-2023 14:39:07 : Table: ACTIVITY x SIZE | TOT has been written
+                       Output file name: Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex5\act_size_D_TO_M.csv
+28-juil.-2023 14:39:07 : End of TauArgus run

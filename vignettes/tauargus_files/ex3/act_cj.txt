@@ -1,0 +1,76 @@
+28-juil.-2023 14:25:47 : Start of batch procedure; file: Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex3\act_cj.arb
+28-juil.-2023 14:25:47 : <OPENTABLEDATA> "Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex3\act_cj.tab"
+28-juil.-2023 14:25:47 : <OPENMETADATA> "Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex3\act_cj.rda"
+28-juil.-2023 14:25:47 : <SPECIFYTABLE> "ACTIVITY""CJ"|"TOT"||
+28-juil.-2023 14:25:47 : <SAFETYRULE> MAN(10)
+28-juil.-2023 14:25:47 : <READTABLE> 1
+28-juil.-2023 14:25:47 : Tables have been read
+28-juil.-2023 14:25:47 : <APRIORI> "Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex3\act_cj.hst",1,",",0,0
+28-juil.-2023 14:25:47 : Apriory file: Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex3\act_cj.hst has been applied
+                       to table: ACTIVITY x CJ | TOT
+28-juil.-2023 14:25:47 : Apriori file Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex3\act_cj.hst has been read
+28-juil.-2023 14:25:47 : <SUPPRESS> MOD(1,5,1,0,0)
+28-juil.-2023 14:25:47 : Start of the modular protection for table ACTIVITY x CJ | TOT
+28-juil.-2023 14:25:48 : End of modular protection. Time used 0 seconds
+                       Number of suppressions: 77
+28-juil.-2023 14:25:48 : <WRITETABLE> (1,4,,"Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex3\act_cj.csv")
+28-juil.-2023 14:25:48 : Table: ACTIVITY x CJ | TOT has been written
+                       Output file name: Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex3\act_cj.csv
+28-juil.-2023 14:25:48 : End of TauArgus run
+28-juil.-2023 14:26:59 : Start of batch procedure; file: Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex3\act_cj.arb
+28-juil.-2023 14:26:59 : <OPENTABLEDATA> "Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex3\act_cj.tab"
+28-juil.-2023 14:26:59 : <OPENMETADATA> "Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex3\act_cj.rda"
+28-juil.-2023 14:26:59 : <SPECIFYTABLE> "ACTIVITY""CJ"|"TOT"||
+28-juil.-2023 14:26:59 : <SAFETYRULE> MAN(10)
+28-juil.-2023 14:26:59 : <READTABLE> 1
+28-juil.-2023 14:27:00 : Tables have been read
+28-juil.-2023 14:27:00 : <APRIORI> "Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex3\act_cj.hst",1,",",0,0
+28-juil.-2023 14:27:00 : Apriory file: Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex3\act_cj.hst has been applied
+                       to table: ACTIVITY x CJ | TOT
+28-juil.-2023 14:27:00 : Apriori file Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex3\act_cj.hst has been read
+28-juil.-2023 14:27:00 : <SUPPRESS> MOD(1,5,1,0,0)
+28-juil.-2023 14:27:00 : Start of the modular protection for table ACTIVITY x CJ | TOT
+28-juil.-2023 14:27:00 : End of modular protection. Time used 0 seconds
+                       Number of suppressions: 77
+28-juil.-2023 14:27:00 : <WRITETABLE> (1,4,,"Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex3\act_cj.csv")
+28-juil.-2023 14:27:00 : Table: ACTIVITY x CJ | TOT has been written
+                       Output file name: Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex3\act_cj.csv
+28-juil.-2023 14:27:00 : End of TauArgus run
+28-juil.-2023 14:37:17 : Start of batch procedure; file: Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex3\act_cj.arb
+28-juil.-2023 14:37:17 : <OPENTABLEDATA> "Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex3\act_cj.tab"
+28-juil.-2023 14:37:17 : <OPENMETADATA> "Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex3\act_cj.rda"
+28-juil.-2023 14:37:17 : <SPECIFYTABLE> "ACTIVITY""CJ"|"TOT"||
+28-juil.-2023 14:37:17 : <SAFETYRULE> MAN(10)
+28-juil.-2023 14:37:17 : <READTABLE> 1
+28-juil.-2023 14:37:17 : Tables have been read
+28-juil.-2023 14:37:17 : <APRIORI> "Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex3\act_cj.hst",1,",",0,0
+28-juil.-2023 14:37:17 : Apriory file: Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex3\act_cj.hst has been applied
+                       to table: ACTIVITY x CJ | TOT
+28-juil.-2023 14:37:17 : Apriori file Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex3\act_cj.hst has been read
+28-juil.-2023 14:37:17 : <SUPPRESS> MOD(1,5,1,0,0)
+28-juil.-2023 14:37:17 : Start of the modular protection for table ACTIVITY x CJ | TOT
+28-juil.-2023 14:37:18 : End of modular protection. Time used 0 seconds
+                       Number of suppressions: 77
+28-juil.-2023 14:37:18 : <WRITETABLE> (1,4,,"Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex3\act_cj.csv")
+28-juil.-2023 14:37:18 : Table: ACTIVITY x CJ | TOT has been written
+                       Output file name: Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex3\act_cj.csv
+28-juil.-2023 14:37:18 : End of TauArgus run
+28-juil.-2023 14:38:27 : Start of batch procedure; file: Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex3\act_cj.arb
+28-juil.-2023 14:38:27 : <OPENTABLEDATA> "Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex3\act_cj.tab"
+28-juil.-2023 14:38:27 : <OPENMETADATA> "Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex3\act_cj.rda"
+28-juil.-2023 14:38:27 : <SPECIFYTABLE> "ACTIVITY""CJ"|"TOT"||
+28-juil.-2023 14:38:27 : <SAFETYRULE> MAN(10)
+28-juil.-2023 14:38:27 : <READTABLE> 1
+28-juil.-2023 14:38:27 : Tables have been read
+28-juil.-2023 14:38:27 : <APRIORI> "Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex3\act_cj.hst",1,",",0,0
+28-juil.-2023 14:38:27 : Apriory file: Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex3\act_cj.hst has been applied
+                       to table: ACTIVITY x CJ | TOT
+28-juil.-2023 14:38:27 : Apriori file Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex3\act_cj.hst has been read
+28-juil.-2023 14:38:27 : <SUPPRESS> MOD(1,5,1,0,0)
+28-juil.-2023 14:38:27 : Start of the modular protection for table ACTIVITY x CJ | TOT
+28-juil.-2023 14:38:28 : End of modular protection. Time used 0 seconds
+                       Number of suppressions: 77
+28-juil.-2023 14:38:28 : <WRITETABLE> (1,4,,"Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex3\act_cj.csv")
+28-juil.-2023 14:38:28 : Table: ACTIVITY x CJ | TOT has been written
+                       Output file name: Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex3\act_cj.csv
+28-juil.-2023 14:38:28 : End of TauArgus run

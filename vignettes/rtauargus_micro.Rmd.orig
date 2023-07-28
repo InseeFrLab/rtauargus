@@ -56,7 +56,7 @@ the batch writing are in the reference manual of &tau;-Argus.
 
 > The package was developed on the basis of open source versions of &tau;
 > Argus (versions 4.1 and higher), especially the latest version
-> available during development (4.1.7)._
+> available during development (4.2.3)._
 >
 > It is not compatible with version 3.5.**_
 >
@@ -145,7 +145,7 @@ predefined. It is possible to change it for the duration of the R session. A
 message indicates that this location is unknown, so we modify it:
 
 ```{r opt_exe}
-loc_tauargus <- "Y:/Logiciels/TauArgus/TauArgus4.2.2b1/TauArgus.exe"
+loc_tauargus <- "Y:/Logiciels/TauArgus/TauArgus4.2.3/TauArgus.exe"
 
 options(rtauargus.tauargus_exe = loc_tauargus)
 ```
@@ -282,7 +282,8 @@ micro_asc_rda(microdata, asc_filename = "Z:/microdata.asc")
 Content of the files created :
 ```{r file_show_asc_rda, eval = FALSE}
 file.show("Z:/microdata.asc", "Z:/microdata.rda", pager = "internal")
-````
+```
+
 ```{r show_asc_rda, echo = FALSE, comment = ""}
 microdata.asc <- c("", readLines("Z:/microdata.asc"))
 microdata.rda <- c("", readLines("Z:/microdata.rda"))
@@ -325,7 +326,8 @@ micro_asc_rda(
 ```
 Content of the files created :
 ```{r file_show_asc_rda2, ref.label = 'file_show_asc_rda', eval = FALSE}
-````
+```
+
 ```{r show_asc_rda2, ref.label = 'show_asc_rda', echo = FALSE, comment = ""}
 ```
 
@@ -377,7 +379,7 @@ micro_arb(
 Content of the file created :
 ```{r file_show_arb, eval = FALSE}
 file.show("Z:/microdata.arb", pager = "internal")
-````
+```
 
 ```{r show_arb, echo = FALSE, comment = ""}
 cat(readLines("Z:/microdata.arb"), sep = "\n")
@@ -411,7 +413,7 @@ micro_arb(
 ```
 
 ```{r file_show_arb2, ref.label = 'file_show_arb', eval = FALSE}
-````
+```
 
 ```{r show_arb2, ref.label = 'show_arb', echo = FALSE, eval = TRUE, comment = ""}
 ```
@@ -682,7 +684,7 @@ For any return or error report, please use
 - Updated by: **<a href="mailto:julien.jamme@insee.fr">Julien Jamme</a>**
 - Last update: **`r format(Sys.time(), "%d/%m/%Y")`**
 - Version of rtauargus used: **`r packageVersion("rtauargus")`**
-- Version of &tau;-Argus used : **TauArgus 4.2.2b1**
+- Version of &tau;-Argus used : **TauArgus 4.2.3**
 - R version used :  **`r packageVersion("base")`**
 
 <p style="text-align: right">

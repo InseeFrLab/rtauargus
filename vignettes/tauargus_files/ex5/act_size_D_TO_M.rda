@@ -1,0 +1,18 @@
+   <SEPARATOR> ","
+   <SAFE> "s"
+   <UNSAFE> "u"
+   <PROTECT> "p"
+ACTIVITY
+  <RECODEABLE>
+  <TOTCODE> "D_TO_M"
+  <HIERARCHICAL>
+  <HIERCODELIST> "Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\hrc\activity_D_TO_M_unif.hrc"
+  <HIERLEADSTRING> "@"
+SIZE
+  <RECODEABLE>
+  <TOTCODE> "Total"
+TOT
+  <NUMERIC>
+  <DECIMALS> 4
+N_OBS
+  <FREQUENCY>
