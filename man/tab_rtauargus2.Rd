@@ -12,7 +12,7 @@ tab_rtauargus2(
   totcode,
   hrc = NULL,
   secret_var = NULL,
-  secret_prim = NULL,
+  secret_no_pl = NULL,
   cost_var = NULL,
   value = "value",
   freq = "freq",
@@ -58,16 +58,17 @@ attribuer la valeur de \code{rtauargus.totcode}.)}
 (Caractère qui, répété n fois, indique que la valeur est
 à n niveaux de profondeur dans la hiérarchie.)}
 
-\item{secret_var}{Boolean variable which specifies the secret, primary or not :
+\item{secret_var}{Nae of the boolean variable which specifies the secret, primary or not :
  equal to "TRUE" if a cell is concerned by the secret,"FALSE" otherwise.
 will  be exported in the apriori file. \cr
 (Variable indiquant le secret  de type booléen:
 prend la valeur "TRUE" quand les cellules du tableau doivent être masquées
 "FALSE" sinon. Permet de créer un fichier d'apriori)}
 
-\item{secret_prim}{Boolean variable which gives the primary secret : equal to
-"TRUE" if a cell is concerned by the primary secret,"FALSE" otherwise.
-will  be exported in the apriori file \cr}
+\item{secret_no_pl}{name of a boolean variable which indicates the cells
+on which the protection levels won't be applied. If `secret_no_pl = NULL`
+(default), the protection levels are applied on each cell which gets a `TRUE`
+status for the `secret_var`.\cr}
 
 \item{cost_var}{Numeric variable allow to change the cost suppression of a cell
 for secondary suppression, it's the value of the cell by default, can be

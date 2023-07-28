@@ -24,7 +24,7 @@ tab_rda(
   hierleadstring = getOption("rtauargus.hierleadstring"),
   codelist = NULL,
   separator = getOption("rtauargus.separator"),
-  secret_prim = NULL
+  secret_no_pl = NULL
 )
 }
 \arguments{
@@ -51,7 +51,7 @@ Example : \code{c("A21", "TREFF", "REG")} for a table crossing
 prend la valeur "TRUE" quand les cellules du tableau doivent être masquées
 par le secret primaire, "FALSE" sinon. Permet de créer un fichier d'apriori)}
 
-\item{secret_var}{Boolean variable which specifies the secret, primary or not :
+\item{secret_var}{Nae of the boolean variable which specifies the secret, primary or not :
  equal to "TRUE" if a cell is concerned by the secret,"FALSE" otherwise.
 will  be exported in the apriori file. \cr
 (Variable indiquant le secret  de type booléen:
@@ -122,9 +122,10 @@ code in the hierarchy. \cr}
 \item{separator}{Character used as separator in the .tab file. \cr
 (Caractère utilisé en tant que separateur dans le fichier .tab)}
 
-\item{secret_prim}{Boolean variable which gives the primary secret : equal to
-"TRUE" if a cell is concerned by the primary secret,"FALSE" otherwise.
-will  be exported in the apriori file \cr}
+\item{secret_no_pl}{name of a boolean variable which indicates the cells
+on which the protection levels won't be applied. If `secret_no_pl = NULL`
+(default), the protection levels are applied on each cell which gets a `TRUE`
+status for the `secret_var`.\cr}
 }
 \value{
 Return the rda file name as a list (invisible).\cr

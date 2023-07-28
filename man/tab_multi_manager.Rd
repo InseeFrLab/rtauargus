@@ -18,13 +18,12 @@ tab_multi_manager(
   cost_var = NULL,
   suppress = "MOD(1,5,1,0,0)",
   ip_start = 10,
-  ip_end = 0,
   num_iter_max = 10,
   ...
 )
 }
 \arguments{
-\item{list_tables}{named list of dataframes representing the tables to protect}
+\item{list_tables}{named list of `data.frame` or `data.table` representing the tables to protect}
 
 \item{list_explanatory_vars}{named list of character vectors of explanatory
 variables of each table mentionned in list_tables. Names of the list are the same as of the list of tables.}
@@ -58,7 +57,7 @@ attribuer la valeur de \code{rtauargus.totcode}.)}
 \item{freq}{Name of the column containing the cell frequency. \cr
 (Nom de la colonne contenant les effectifs pour une cellule)}
 
-\item{secret_var}{Boolean variable which specifies the secret, primary or not :
+\item{secret_var}{Nae of the boolean variable which specifies the secret, primary or not :
  equal to "TRUE" if a cell is concerned by the secret,"FALSE" otherwise.
 will  be exported in the apriori file. \cr
 (Variable indiquant le secret  de type booléen:
@@ -82,8 +81,6 @@ parameters for it.\cr
 (syntaxe batch de Tau-Argus), ainsi que les potentiels paramètres associés)}
 
 \item{ip_start}{integer: Interval protection level to apply at first treatment of each table}
-
-\item{ip_end}{integer: Interval protection level to apply at other treatments}
 
 \item{num_iter_max}{integer: Maximum of treatments to do on each table (default to 10)}
 
