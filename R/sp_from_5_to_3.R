@@ -2,7 +2,7 @@
 # Expects 2 arguments:
 # - Either a named list and a variable,
 # - Or an hrc (hierarchical file) and hrc_name = FALSE
-nb_noeuds <- function(hrcfiles, v = NULL, hrc_name = TRUE) {
+nb_nodes <- function(hrcfiles, v = NULL, hrc_name = TRUE) {
   # Check if the variable has an associated hrc file or if hrc_name == FALSE
   if (hrc_name && !(v %in% names(hrcfiles)) || (!hrc_name && is.null(hrcfiles))) {
     # Non-hierarchical variable or hrcfiles == NULL
@@ -209,7 +209,7 @@ from_5_to_3 <- function(
                       maximize_nb_tabs = maximize_nb_tabs)
 
     # We check if the merged variable has fewer nodes than the selected variable
-    nb_noeuds_v3 <- nb_noeuds(hrcfiles2, v=v3)
+    nb_noeuds_v3 <- nb_nodes(hrcfiles2, v=v3)
     if (!is.null(v4)){
       # We need to do two different if statements otherwise NULL != new_var crashes!
       if (v4 != new_var & maximize_nb_tabs == TRUE){
@@ -239,7 +239,7 @@ from_5_to_3 <- function(
                       maximize_nb_tabs = maximize_nb_tabs)
 
     # We check if the merged variable has fewer nodes than the selected variable
-    nb_noeuds_v4 <- nb_noeuds(hrcfiles2, v=v4)
+    nb_noeuds_v4 <- nb_nodes(hrcfiles2, v=v4)
     # Rq : v3 can not be NULL
     if (v3 != new_var & maximize_nb_tabs == TRUE){
       v4 <- new_var
@@ -303,11 +303,11 @@ from_5_to_3 <- function(
     # Store the name of the variable that is not new_var in a new object
     non_fused_var <- ifelse(v3 == new_var, v4, v3)
 
-    # Calculate the value of nb_noeuds once for each res_5_4$hrcs[[x]]
+    # Calculate the value of nb_nodes once for each res_5_4$hrcs[[x]]
     # to avoid calculating the same quantity twice
     results <- lapply(1:length(res_5_4$hrcs), function(x) {
-      nb_noeuds_val <- 2 * nb_noeuds(res_5_4$hrcs[[x]], hrc_name = FALSE) *
-                           nb_noeuds(hrcfiles2, non_fused_var)
+      nb_noeuds_val <- 2 * nb_nodes(res_5_4$hrcs[[x]], hrc_name = FALSE) *
+                           nb_nodes(hrcfiles2, non_fused_var)
 
       # Use the calculated value for hrcs5_4 and alt_tot5_4
       list(

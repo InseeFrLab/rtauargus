@@ -332,8 +332,6 @@ generate_a_triplet <- function(totcode) {
 #' @examples
 #' library(dplyr)
 #'
-#' source("R/length_tabs.R")
-#' source("R/nb_tab.R")
 #'
 #' # Dimension 4
 #' data <- expand.grid(
@@ -734,8 +732,6 @@ import_hierarchy <- function(hrcfile) {
 #' @examples
 #' library(dplyr)
 #'
-#' source("R/passage_5_3.R", encoding = "UTF-8")
-#' source("R/nb_tab.R")
 #'
 #' # Dimension 4
 #' data <- expand.grid(

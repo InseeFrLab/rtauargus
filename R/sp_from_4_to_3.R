@@ -4,7 +4,7 @@
 plus_petit_hrc <- function(hrcfiles) {
   v <- list()
   for (i in 1:length(hrcfiles)) {
-    v <- append(v, nb_noeuds(hrcfiles, names(hrcfiles[i])))
+    v <- append(v, nb_nodes(hrcfiles, names(hrcfiles[i])))
   }
   indice_petit_hrc <- which.min(v)
   nom_plus_petit_hrc <- names(hrcfiles)[indice_petit_hrc]
@@ -57,7 +57,7 @@ choisir_var_priorite_non_hierarchique <- function(dfs,totcode,hrcfiles){
 plus_grand_hrc <- function(hrcfiles) {
   v <- list()
   for (i in 1:length(hrcfiles)) {
-    v <- append(v, nb_noeuds(hrcfiles, names(hrcfiles[i])))
+    v <- append(v, nb_nodes(hrcfiles, names(hrcfiles[i])))
   }
   indice_grand_hrc <- which.max(v)
   nom_plus_grand_hrc <- names(hrcfiles)[indice_grand_hrc]
