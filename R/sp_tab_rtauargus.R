@@ -33,6 +33,7 @@
 #' are removed.
 #'
 #' @examples
+#'
 #'\dontrun{
 #' library(dplyr)
 #' data(turnover_act_size)
@@ -55,12 +56,8 @@
 #'   rtauargus.tauargus_exe =
 #'     "Y:/Logiciels/TauArgus/TauArgus4.2.2b1/TauArgus.exe"
 #' )
-#' load(data/ca_test_0hrc)
-#' library(stringr)
 #'
-#'
-#'
-#' res <- tab_rtauargus4(
+#' res <- tab_rtauargus(
 #'   tabular = turnover_act_size,
 #'   files_name = "turn_act_size",
 #'   dir_name = "tauargus_files",
@@ -74,7 +71,7 @@
 #' )
 #' }
 #' @export
-tab_rtauargus4 <- function(
+tab_rtauargus <- function(
     tabular,
     files_name = NULL,
     dir_name = NULL,
@@ -135,54 +132,6 @@ tab_rtauargus4 <- function(
 
   if(is.null(files_name)) files_name <- paste0("tau_argus_file_", format.Date(Sys.time(), format = '%Y_%m_%d_%H:%M:%S'))
   if(is.null(dir_name)) dir_name <- getwd()
-
-  #
-  # masq_1table <- tab_rtauargus(
-  #   data_sp,
-  #   files_name = nom_table,
-  #   explanatory_vars = c("treff","A10","type_distrib","cj"),
-  #   dir_name = dir_1table,
-  #   totcode = totcodes,
-  #   value = "pizzas_tot",
-  #   freq = "nb_obs",
-  #   secret_var = "is_secret_prim",
-  #   verbose = FALSE
-  # )
-  #
-  if (length(explanatory_vars) %in% c(4, 5)) {
-    print(totcode)
-
-    list_tables<-reduce_dims(dfs=tabular,
-                nom_dfs=files_name,
-                totcode=totcode,
-                hrcfiles=hrc,
-                hrc_dir=dir_name,
-                nb_tab = "smart", # de base pour éviter les erreurs
-                LIMIT = 14700,
-                split = TRUE,
-                vec_sep = c("\\_+_", "\\_!_", "\\_?_","___","_z_z_z_z"),
-                verbose = FALSE)
-
-    masq_list<-tab_multi_manager(
-      list_tables = list_tables$tabs,
-      list_explanatory_vars = list_tables$vars ,
-      dir_name = dir_name,
-      hrc=list_tables$hrcfile,
-      totcode = list_tables$totcode,
-      alt_hrc = list_tables$hrcs,
-      alt_totcode = list_tables$alt_tot,
-      value = "pizzas_tot",
-      maxscore = "pizzas_max",
-      freq = "nb_obs",
-      secret_var = "is_secret_prim",
-    )
-
-    result<-restore_format(masq_list,list_tables)
-    return(result)
-  } else {
-
-
-
 
 
   ## 1. TAB_RDA  .....................
@@ -287,7 +236,7 @@ tab_rtauargus4 <- function(
     }
     return(res)
   }
-}
+
 }
 
 #' Wrapper of tab_rtauargus adapted for \code{tab_multi_manager} function.
