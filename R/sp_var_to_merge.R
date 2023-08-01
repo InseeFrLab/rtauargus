@@ -2,7 +2,7 @@
 #' limiting the number of generated tables while ensuring not to generate
 #' tables that are too large.
 #'
-#' @param dfs data.frame
+#' @param tab_to_split data.frame
 #' @param totcode named vector of totals for categorical variables
 #' @param hrcfiles named vector of hrc files for categorical variables
 #' @param nb_var number of variables to merge
@@ -55,51 +55,51 @@
 #' hrcfiles <- c(ACT = hrc_act, GEO = hrc_geo)
 #'
 #' # Consistent: choose two hierarchical variables
-#' res1 <- var_to_merge(dfs = data,
+#' res1 <- var_to_merge(tab_to_split = data,
 #'                                         totcode = totcode,
 #'                                         hrcfiles = hrcfiles,
 #'                                         nb_var = 2,
 #'                                         nb_tab = 'max')
 #' res1
-#' max(unlist(length_tabs(dfs = data,
+#' max(unlist(length_tabs(tab_to_split = data,
 #'                        hrcfiles = hrcfiles,
 #'                        totcode = totcode,
 #'                        v1 = res1$vars[1], v2 = res1$vars[2])))
 #'
 #' # Consistent: choose two non-hierarchical variables
-#' res2 <- var_to_merge(dfs = data,
+#' res2 <- var_to_merge(tab_to_split = data,
 #'                                 totcode = totcode,
 #'                                 hrcfiles = hrcfiles,
 #'                                 nb_var = 2,
 #'                                 nb_tab = 'min')
 #' res2
-#' max(unlist(length_tabs(dfs = data,
+#' max(unlist(length_tabs(tab_to_split = data,
 #'                        hrcfiles = hrcfiles,
 #'                        totcode = totcode,
 #'                        v1 = res2$vars[1], v2 = res2$vars[2])))
 #'
-#' res3 <- var_to_merge(dfs = data,
+#' res3 <- var_to_merge(tab_to_split = data,
 #'                                 totcode = totcode,
 #'                                 hrcfiles = hrcfiles,
 #'                                 LIMIT = 200,
 #'                                 nb_var = 2,
 #'                                 nb_tab = 'smart')
 #' res3
-#' max(unlist(length_tabs(dfs = data,
+#' max(unlist(length_tabs(tab_to_split = data,
 #'                        hrcfiles = hrcfiles,
 #'                        totcode = totcode,
 #'                        v1 = res3$vars[1], v2 = res3$vars[2])))
 #'
 #' # Obtains 147, which is well below 200
 #'
-#' res4 <- var_to_merge(dfs = data,
+#' res4 <- var_to_merge(tab_to_split = data,
 #'                                 totcode = totcode,
 #'                                 hrcfiles = hrcfiles,
 #'                                 LIMIT = 5,
 #'                                 nb_var = 2,
 #'                                 nb_tab = 'smart')
 #' res4
-#' max(unlist(length_tabs(dfs = data,
+#' max(unlist(length_tabs(tab_to_split = data,
 #'                        hrcfiles = hrcfiles,
 #'                        totcode = totcode,
 #'                        v1 = res4$vars[1], v2 = res4$vars[2])))
@@ -109,7 +109,7 @@
 #' # -> this is what reduces the table size)
 #' # And the warning announces 63 rows, which is consistent with the output
 var_to_merge <- function(
-    dfs,
+    tab_to_split,
     totcode,
     hrcfiles = NULL,
     nb_var = 4,
@@ -129,7 +129,7 @@ var_to_merge <- function(
     result_comb <- generate_a_pair(totcode)
   }
 
-  return(var_to_merge_fragment(dfs = dfs,
+  return(var_to_merge_fragment(tab_to_split = tab_to_split,
                                  result_comb = result_comb,
                                  totcode = totcode,
                                  hrcfiles = hrcfiles,
@@ -138,7 +138,7 @@ var_to_merge <- function(
 }
 
 var_to_merge_fragment <- function(
-    dfs,
+    tab_to_split,
     result_comb,
     totcode,
     hrcfiles = NULL,
@@ -147,7 +147,7 @@ var_to_merge_fragment <- function(
 {
   # Calculate the number of tables and maximum rows for each combination of variables
   res_func <- lapply(result_comb, function(x) length_tabs(
-    dfs = data,
+    tab_to_split = tab_to_split,
     v1 = x[1],
     v2 = x[2],
     v3 = x[3],
@@ -309,7 +309,7 @@ generate_a_triplet <- function(totcode) {
 #' Calculation of the table sizes generated a priori during the reduction of dimension
 #' from 4 or 5 dimensions to 3 dimensions
 #'
-#' @param dfs a data.frame
+#' @param tab_to_split a data.frame
 #'
 #' Variable in the 5->4 or 4->3 step
 #' @param v1 the first merged variable
@@ -359,7 +359,7 @@ generate_a_triplet <- function(totcode) {
 #'
 #' # Function results
 #'
-#' res1 <- length_tabs(dfs = data,
+#' res1 <- length_tabs(tab_to_split = data,
 #'                     hrcfiles = c(ACT = hrc_act),
 #'                     totcode = c(SEX="Total",AGE="Total", GEO="Total", ACT="Total"),
 #'                     v1 = "ACT",
@@ -399,7 +399,7 @@ generate_a_triplet <- function(totcode) {
 #'   select(levels) %>%
 #'   write.table(file = hrc_geo, row.names = F, col.names = F, quote = F)
 #'
-#' res2 <- length_tabs(dfs = data,
+#' res2 <- length_tabs(tab_to_split = data,
 #'                     hrcfiles = c(ACT = hrc_act, GEO = hrc_geo),
 #'                     totcode = c(SEX="Total_S",AGE="Ensemble", GEO="Total_G",
 #'                                 ACT="Total_A", ECO = "PIB"),
@@ -408,13 +408,13 @@ generate_a_triplet <- function(totcode) {
 #'
 #' # Warning : The ouput in case of hierarchical variables
 #' # is not in the right order
-#' res3 <- length_tabs(dfs = data,
+#' res3 <- length_tabs(tab_to_split = data,
 #'                     hrcfiles = c(ACT = hrc_act, GEO = hrc_geo),
 #'                     totcode = c(SEX="Total_S",AGE="Ensemble", GEO="Total_G",
 #'                                 ACT="Total_A", ECO = "PIB"),
 #'                     v1 = "ACT",v2 = "AGE",v3 = "GEO")
 length_tabs <- function(
-  dfs,
+  tab_to_split,
   v1,
   v2,
   v3 = NULL,
@@ -428,7 +428,7 @@ length_tabs <- function(
 
   # If 4 variables are specified -> 5 dimensions case, 2 couples are created
   if (!is.null(v4)) {
-    return(length_tabs_5_4_var(dfs = dfs,
+    return(length_tabs_5_4_var(tab_to_split = tab_to_split,
                                hrcfiles = hrcfiles,
                                v1 = v1, v2 = v2,
                                v3 = v3, v4 = v4,
@@ -436,14 +436,14 @@ length_tabs <- function(
 
     # If 3 variables are specified -> 5 dimensions case, a trio is merged
   } else if (!is.null(v3)) {
-    return(length_tabs_5_3_var(dfs = dfs,
+    return(length_tabs_5_3_var(tab_to_split = tab_to_split,
                                hrcfiles = hrcfiles,
                                v1 = v1, v2 = v2, v3 = v3,
                                totcode = totcode))
 
     # If 2 variables are specified -> 4 dimensions case
   } else {
-    return(length_tabs_4(dfs = dfs,
+    return(length_tabs_4(tab_to_split = tab_to_split,
                          hrcfiles = hrcfiles,
                          v1 = v1, v2 = v2,
                          totcode = totcode))
@@ -451,7 +451,7 @@ length_tabs <- function(
 }
 
 # case : 4 dimensions
-length_tabs_4 <- function(dfs,v1,v2,totcode,hrcfiles=NULL){
+length_tabs_4 <- function(tab_to_split,v1,v2,totcode,hrcfiles=NULL){
 
   # Retrieval of groupings {nodes + branch}
   # based on whether the variable is hierarchical or not
@@ -461,12 +461,12 @@ length_tabs_4 <- function(dfs,v1,v2,totcode,hrcfiles=NULL){
   # instead of returning all the nodes
   level_v1 <- unlist(ifelse(v1 %in% names(hrcfiles),
                             list(import_hierarchy(hrcfiles[[v1]])),
-                            list(list(unique(dfs[[v1]])))),
+                            list(list(unique(tab_to_split[[v1]])))),
                      recursive = FALSE)
 
   level_v2 <- unlist(ifelse(v2 %in% names(hrcfiles),
                             list(import_hierarchy(hrcfiles[[v2]])),
-                            list(list(unique(dfs[[v2]])))),
+                            list(list(unique(tab_to_split[[v2]])))),
                      recursive = FALSE)
 
   # If case 1 non hrc (not hierarchical) and v2 in hrcfiles, then we need to reorder
@@ -496,7 +496,7 @@ length_tabs_4 <- function(dfs,v1,v2,totcode,hrcfiles=NULL){
   list_non_merged_vars <- names(totcode[!(names(totcode) %in% c(v1, v2))])
 
   mod_non_merged_vars <- lapply(list_non_merged_vars,
-                                function(x)  length(unique(dfs[[x]])))
+                                function(x)  length(unique(tab_to_split[[x]])))
 
   prod_numbers <- prod(unlist(mod_non_merged_vars))
 
@@ -506,19 +506,19 @@ length_tabs_4 <- function(dfs,v1,v2,totcode,hrcfiles=NULL){
 }
 
 # case : 5 dimensions, two pairs of merged variables
-length_tabs_5_4_var <- function(dfs, v1, v2, v3, v4, totcode, hrcfiles = NULL) {
+length_tabs_5_4_var <- function(tab_to_split, v1, v2, v3, v4, totcode, hrcfiles = NULL) {
 
   # Retrieve groupings {nodes + branches} based on whether the variable is hierarchical or not, transitioning from 5 dimensions to 4 dimensions.
 
   # List and then unlist the results; ifelse returns all nodes instead of just the first one.
   level_v1 <- unlist(ifelse(v1 %in% names(hrcfiles),
                             list(import_hierarchy(hrcfiles[[v1]])),
-                            list(list(unique(dfs[[v1]])))),
+                            list(list(unique(tab_to_split[[v1]])))),
                      recursive = FALSE)
 
   level_v2 <- unlist(ifelse(v2 %in% names(hrcfiles),
                             list(import_hierarchy(hrcfiles[[v2]])),
-                            list(list(unique(dfs[[v2]])))),
+                            list(list(unique(tab_to_split[[v2]])))),
                      recursive = FALSE)
 
   # Swap level_v1 and level_v2 in case v2 is not hierarchical but v1 is (to maintain order).
@@ -530,12 +530,12 @@ length_tabs_5_4_var <- function(dfs, v1, v2, v3, v4, totcode, hrcfiles = NULL) {
 
   level_v3 <- unlist(ifelse(v3 %in% names(hrcfiles),
                             list(import_hierarchy(hrcfiles[[v3]])),
-                            list(list(unique(dfs[[v3]])))),
+                            list(list(unique(tab_to_split[[v3]])))),
                      recursive = FALSE)
 
   level_v4 <- unlist(ifelse(v4 %in% names(hrcfiles),
                             list(import_hierarchy(hrcfiles[[v4]])),
-                            list(list(unique(dfs[[v4]])))),
+                            list(list(unique(tab_to_split[[v4]])))),
                      recursive = FALSE)
 
   # Swap level_v3 and level_v4 in case v4 is not hierarchical but v3 is (to maintain order).
@@ -589,7 +589,7 @@ length_tabs_5_4_var <- function(dfs, v1, v2, v3, v4, totcode, hrcfiles = NULL) {
   list_var_non_fusionnées <- names(totcode[!(names(totcode) %in% c(v1, v2, v3, v4))])
 
   mod_var_non_fusionnées <- lapply(list_var_non_fusionnées,
-                                   function(x)  length(unique(dfs[[x]])))
+                                   function(x)  length(unique(tab_to_split[[x]])))
 
   prod_numbers <- prod(unlist(mod_var_non_fusionnées))
 
@@ -599,7 +599,7 @@ length_tabs_5_4_var <- function(dfs, v1, v2, v3, v4, totcode, hrcfiles = NULL) {
 }
 
 # case : 5 dimensions, three variables merged into one
-length_tabs_5_3_var <- function(dfs, v1, v2, v3, totcode, hrcfiles = NULL) {
+length_tabs_5_3_var <- function(tab_to_split, v1, v2, v3, totcode, hrcfiles = NULL) {
 
   # Case of at least one hierarchical variable
   if (length(setdiff(names(hrcfiles), c(v1, v2, v3))) != length(hrcfiles)) {
@@ -616,12 +616,12 @@ length_tabs_5_3_var <- function(dfs, v1, v2, v3, totcode, hrcfiles = NULL) {
     # List and then unlist the results; ifelse returns all nodes instead of just the first one.
     level_v1 <- unlist(ifelse(v1 %in% names(hrcfiles),
                               list(import_hierarchy(hrcfiles[[v1]])),
-                              list(list(unique(dfs[[v1]])))),
+                              list(list(unique(tab_to_split[[v1]])))),
                        recursive = FALSE)
 
     level_v2 <- unlist(ifelse(v2 %in% names(hrcfiles),
                               list(import_hierarchy(hrcfiles[[v2]])),
-                              list(list(unique(dfs[[v2]])))),
+                              list(list(unique(tab_to_split[[v2]])))),
                        recursive = FALSE)
 
     # Swap level_v1 and level_v2 if v2 is not hierarchical but v1 is (to maintain order).
@@ -636,7 +636,7 @@ length_tabs_5_3_var <- function(dfs, v1, v2, v3, totcode, hrcfiles = NULL) {
     # List and then unlist the results; ifelse returns all nodes instead of just the first one.
     level_v3 <- unlist(ifelse(v3 %in% names(hrcfiles),
                               list(import_hierarchy(hrcfiles[[v3]])),
-                              list(list(unique(dfs[[v3]])))),
+                              list(list(unique(tab_to_split[[v3]])))),
                        recursive = FALSE)
 
 
@@ -672,9 +672,9 @@ length_tabs_5_3_var <- function(dfs, v1, v2, v3, totcode, hrcfiles = NULL) {
     # Case of 3 non-hierarchical variables: exact result (the length of table i is known)
   } else {
 
-    n_mod_v1 <- length(unique(dfs[[v1]]))
-    n_mod_v2 <- length(unique(dfs[[v2]]))
-    n_mod_v3 <- length(unique(dfs[[v3]]))
+    n_mod_v1 <- length(unique(tab_to_split[[v1]]))
+    n_mod_v2 <- length(unique(tab_to_split[[v2]]))
+    n_mod_v3 <- length(unique(tab_to_split[[v3]]))
 
     nb_rows <- c(
       1 + (n_mod_v3 - 1) * n_mod_v1,
@@ -695,7 +695,7 @@ length_tabs_5_3_var <- function(dfs, v1, v2, v3, totcode, hrcfiles = NULL) {
   list_var_non_fusionnées <- names(totcode[!(names(totcode) %in% c(v1, v2, v3))])
 
   mod_var_non_fusionnées <- lapply(list_var_non_fusionnées,
-                                   function(x)  length(unique(dfs[[x]])))
+                                   function(x)  length(unique(tab_to_split[[x]])))
 
   prod_numbers <- prod(unlist(mod_var_non_fusionnées))
 

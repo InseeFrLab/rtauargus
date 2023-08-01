@@ -55,10 +55,8 @@
 #'   rtauargus.tauargus_exe =
 #'     "Y:/Logiciels/TauArgus/TauArgus4.2.2b1/TauArgus.exe"
 #' )
-#' load(data/ca_test_0hrc)
+#'
 #' library(stringr)
-#'
-#'
 #'
 #' res <- tab_rtauargus4(
 #'   tabular = turnover_act_size,
@@ -71,6 +69,43 @@
 #'   value = "TOT",
 #'   freq = "N_OBS",
 #'   verbose = FALSE
+#' )
+#'
+#' # Reduce dims feature
+#' load("donnees/ca_test_0_hrc.RData")
+#'
+#' res_all_dtp <- res_all_dtp %>%
+#'   mutate(
+#'     is_secret_freq = nb_obs > 0 & nb_obs < 3,
+#'     is_secret_dom = ifelse(pizzas_max == 0, FALSE, pizzas_max/pizzas_tot>0.85),
+#'     is_secret_prim = is_secret_freq | is_secret_dom
+#'   )
+#'
+#' res_dim4 <- tab_rtauargus4(
+#'   tabular = res_all_dtp,
+#'   files_name = "ca_test_0_hrc",
+#'   dir_name = "ca_test_0_hrc",
+#'   explanatory_vars = c("A10", "treff","type_distrib","cj"),
+#'   totcode = c(A10 = "Total", treff = "Total",type_distrib = "Total",cj = "Total"),
+#'   secret_var = "is_secret_prim",
+#'   value = "pizzas_tot",
+#'   freq = "nb_obs",
+#'   verbose = TRUE,
+#'   nb_tab = "smart",
+#'   split_tab = TRUE
+#' )
+#'
+#' res_dim5 <- tab_rtauargus4(
+#'   tabular = turnover_act_size,
+#'   files_name = "turn_act_size",
+#'   dir_name = "tauargus_files",
+#'   explanatory_vars = c("ACTIVITY", "SIZE"),
+#'   hrc = c(ACTIVITY = hrc_file_activity),
+#'   totcode = c(ACTIVITY = "Total", SIZE = "Total"),
+#'   secret_var = "is_secret_prim",
+#'   value = "TOT",
+#'   freq = "N_OBS",
+#'   verbose = FALSE,
 #' )
 #' }
 #' @export
@@ -94,6 +129,9 @@ tab_rtauargus4 <- function(
     output_type = 4,
     output_options = "",
     unif_labels = TRUE,
+    split_tab = TRUE,
+    LIMIT = 14700,
+    nb_tab = "smart",
     ...
 ){
 
@@ -136,54 +174,48 @@ tab_rtauargus4 <- function(
   if(is.null(files_name)) files_name <- paste0("tau_argus_file_", format.Date(Sys.time(), format = '%Y_%m_%d_%H:%M:%S'))
   if(is.null(dir_name)) dir_name <- getwd()
 
-  #
-  # masq_1table <- tab_rtauargus(
-  #   data_sp,
-  #   files_name = nom_table,
-  #   explanatory_vars = c("treff","A10","type_distrib","cj"),
-  #   dir_name = dir_1table,
-  #   totcode = totcodes,
-  #   value = "pizzas_tot",
-  #   freq = "nb_obs",
-  #   secret_var = "is_secret_prim",
-  #   verbose = FALSE
-  # )
-  #
-  if (length(explanatory_vars) %in% c(4, 5)) {
-    print(totcode)
+  # Reduce dims for 4 or 5 dimensions table
+  if (split_tab) {
+    if (length(explanatory_vars) %in% c(4, 5)) {
+      list_tables <- reduce_dims(
+        tabular = tabular,
+        nom_dfs = files_name,
+        totcode = totcode,
+        hrcfiles = hrc,
+        hrc_dir = dir_name,
+        nb_tab = nb_tab,
+        LIMIT = LIMIT,
+        split = TRUE,
+        vec_sep = c("\\_+_", "\\_!_", "\\_?_",
+                    "___", "_z_z_z_z"),
+        verbose = TRUE
+      )
 
-    list_tables<-reduce_dims(dfs=tabular,
-                nom_dfs=files_name,
-                totcode=totcode,
-                hrcfiles=hrc,
-                hrc_dir=dir_name,
-                nb_tab = "smart", # de base pour éviter les erreurs
-                LIMIT = 14700,
-                split = TRUE,
-                vec_sep = c("\\_+_", "\\_!_", "\\_?_","___","_z_z_z_z"),
-                verbose = FALSE)
+      masq_list <- tab_multi_manager(
+        list_tables = list_tables$tabs,
+        list_explanatory_vars = list_tables$vars ,
+        dir_name = dir_name,
+        hrc = list_tables$hrcfile,
+        totcode = list_tables$totcode,
+        alt_hrc = list_tables$hrcs,
+        alt_totcode = list_tables$alt_tot,
+        value = value,
+        maxscore = maxscore,
+        freq = freq,
+        secret_var = secret_var,
+        suppress = suppress
+      )
 
-    masq_list<-tab_multi_manager(
-      list_tables = list_tables$tabs,
-      list_explanatory_vars = list_tables$vars ,
-      dir_name = dir_name,
-      hrc=list_tables$hrcfile,
-      totcode = list_tables$totcode,
-      alt_hrc = list_tables$hrcs,
-      alt_totcode = list_tables$alt_tot,
-      value = "pizzas_tot",
-      maxscore = "pizzas_max",
-      freq = "nb_obs",
-      secret_var = "is_secret_prim",
-    )
+      result <- restore_format(masq_list, list_tables)
 
-    result<-restore_format(masq_list,list_tables)
-    return(result)
-  } else {
-
-
-
-
+      return(result)
+    } else {
+      warning(
+        "You cannot reduce the dims of your table since it has not a dimension of 4 or 5.
+        Normal process is in progress."
+      )
+    }
+  }
 
   ## 1. TAB_RDA  .....................
   tabular_original <- tabular
@@ -288,7 +320,7 @@ tab_rtauargus4 <- function(
     return(res)
   }
 }
-}
+
 
 #' Wrapper of tab_rtauargus adapted for \code{tab_multi_manager} function.
 #'

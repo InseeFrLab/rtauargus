@@ -33,7 +33,6 @@
 #' are removed.
 #'
 #' @examples
-#'
 #'\dontrun{
 #' library(dplyr)
 #' data(turnover_act_size)
@@ -57,7 +56,9 @@
 #'     "Y:/Logiciels/TauArgus/TauArgus4.2.2b1/TauArgus.exe"
 #' )
 #'
-#' res <- tab_rtauargus(
+#' library(stringr)
+#'
+#' res <- tab_rtauargus4(
 #'   tabular = turnover_act_size,
 #'   files_name = "turn_act_size",
 #'   dir_name = "tauargus_files",
@@ -69,9 +70,49 @@
 #'   freq = "N_OBS",
 #'   verbose = FALSE
 #' )
+#'
+#' # Reduce dims feature
+#' load("donnees/ca_test_0_hrc.RData")
+#'
+#' res_all_dtp <- res_all_dtp %>%
+#'   mutate(
+#'     is_secret_freq = nb_obs > 0 & nb_obs < 3,
+#'     is_secret_dom = ifelse(pizzas_max == 0, FALSE, pizzas_max/pizzas_tot>0.85),
+#'     is_secret_prim = is_secret_freq | is_secret_dom,
+#'     nb_obs = ceiling(nb_obs),
+#'     pizzas_tot=abs(pizzas_tot)
+#'   )
+#'
+#' res_dim4 <- tab_rtauargus4(
+#'   tabular = res_all_dtp,
+#'   files_name = "ca_test_0_hrc",
+#'   dir_name = "ca_test_0_hrc",
+#'   explanatory_vars = c("A10", "treff","type_distrib","cj"),
+#'   totcode = c(A10 = "Total", treff = "Total",type_distrib = "Total",cj = "Total"),
+#'   secret_var = "is_secret_prim",
+#'   value = "pizzas_tot",
+#'   freq = "nb_obs",
+#'   verbose = TRUE,
+#'   nb_tab = "min",
+#'   split_tab = TRUE,
+#'   verbose = TRUE
+#' )
+#'
+#' res_dim5 <- tab_rtauargus4(
+#'   tabular = turnover_act_size,
+#'   files_name = "turn_act_size",
+#'   dir_name = "tauargus_files",
+#'   explanatory_vars = c("ACTIVITY", "SIZE"),
+#'   hrc = c(ACTIVITY = hrc_file_activity),
+#'   totcode = c(ACTIVITY = "Total", SIZE = "Total"),
+#'   secret_var = "is_secret_prim",
+#'   value = "TOT",
+#'   freq = "N_OBS",
+#'   verbose = FALSE,
+#' )
 #' }
 #' @export
-tab_rtauargus <- function(
+tab_rtauargus4 <- function(
     tabular,
     files_name = NULL,
     dir_name = NULL,
@@ -91,6 +132,9 @@ tab_rtauargus <- function(
     output_type = 4,
     output_options = "",
     unif_labels = TRUE,
+    split_tab = TRUE,
+    LIMIT = 14700,
+    nb_tab = "smart",
     ...
 ){
 
@@ -133,6 +177,47 @@ tab_rtauargus <- function(
   if(is.null(files_name)) files_name <- paste0("tau_argus_file_", format.Date(Sys.time(), format = '%Y_%m_%d_%H:%M:%S'))
   if(is.null(dir_name)) dir_name <- getwd()
 
+  # Reduce dims for 4 or 5 dimensions table
+  if (split_tab) {
+    if (length(explanatory_vars) %in% c(4, 5)) {
+      list_tables <- reduce_dims(
+        tab_to_split = tabular,
+        nom_dfs = files_name,
+        totcode = totcode,
+        hrcfiles = hrc,
+        hrc_dir = dir_name,
+        nb_tab = nb_tab,
+        LIMIT = LIMIT,
+        split = TRUE,
+        vec_sep = c("___"),
+        verbose = TRUE
+      )
+
+      masq_list <- tab_multi_manager(
+        list_tables = list_tables$tabs,
+        list_explanatory_vars = list_tables$vars ,
+        dir_name = dir_name,
+        hrc = list_tables$hrcfile,
+        totcode = list_tables$totcode,
+        alt_hrc = list_tables$hrcs,
+        alt_totcode = list_tables$alt_tot,
+        value = value,
+        maxscore = maxscore,
+        freq = freq,
+        secret_var = secret_var,
+        suppress = suppress
+      )
+
+      result <- restore_format(masq_list, list_tables)
+
+      return(result)
+    } else {
+      warning(
+        "You cannot reduce the dims of your table since it has not a dimension of 4 or 5.
+        Normal process is in progress."
+      )
+    }
+  }
 
   ## 1. TAB_RDA  .....................
   tabular_original <- tabular
@@ -236,8 +321,8 @@ tab_rtauargus <- function(
     }
     return(res)
   }
-
 }
+
 
 #' Wrapper of tab_rtauargus adapted for \code{tab_multi_manager} function.
 #'

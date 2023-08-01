@@ -1,10 +1,10 @@
 #' General function that selects the appropriate separator and applies dimension reduction.
 #'
-#' @param dfs data.frame with 4 or 5 categorical variables
+#' @param tab_to_split data.frame with 4 or 5 categorical variables
 #' @param nom_dfs name of the data.frame in the list provided by the user
 #' @param totcode named vector of totals for categorical variables
 #' @param hrcfiles named vector indicating the hrc files of hierarchical variables
-#' among the categorical variables of dfs
+#' among the categorical variables of tab_to_split
 #' @param sep_dir allows forcing the writing of hrc into a separate folder,
 #' default is FALSE
 #' @param hrc_dir folder to write hrc files if writing to a new folder is forced
@@ -68,7 +68,7 @@
 #'
 #' # Reduce dim by forcing variables to be merged
 #' res1 <- reduce_dims(
-#'   dfs = data,
+#'   tab_to_split = data,
 #'   nom_dfs = "tab",
 #'   totcode = c(SEX = "Total", AGE = "Total", GEO = "Total", ACT = "Total"),
 #'   hrcfiles = c(ACT = hrc_act),
@@ -79,7 +79,7 @@
 #'
 #' # Split the output in order to be under the limit & forcing variables to be merged
 #' res1b <- reduce_dims(
-#'   dfs = data,
+#'   tab_to_split = data,
 #'   nom_dfs = "tab",
 #'   totcode = c(SEX = "Total", AGE = "Total", GEO = "Total", ACT = "Total"),
 #'   hrcfiles = c(ACT = hrc_act),
@@ -91,7 +91,7 @@
 #'
 #' # Result of the function (minimizes the number of created tables by default)
 #' res2 <- reduce_dims(
-#'   dfs = data,
+#'   tab_to_split = data,
 #'   nom_dfs = "tab",
 #'   totcode = c(SEX = "Total", AGE = "Total", GEO = "Total", ACT = "Total"),
 #'   hrcfiles = c(ACT = hrc_act),
@@ -101,7 +101,7 @@
 #'
 #' # Result of the function (maximize the number of created tables)
 #' res3 <- reduce_dims(
-#'   dfs = data,
+#'   tab_to_split = data,
 #'   nom_dfs = "tab",
 #'   totcode = c(SEX = "Total", AGE = "Total", GEO = "Total", ACT = "Total"),
 #'   hrcfiles = c(ACT = hrc_act),
@@ -148,7 +148,7 @@
 #'
 #' # Results of the function
 #' res4 <- reduce_dims(
-#'   dfs = data,
+#'   tab_to_split = data,
 #'   nom_dfs = "tab",
 #'   totcode = c(SEX = "Total_S", AGE = "Ensemble", GEO = "Total_G", ACT = "Total_A", ECO = "PIB"),
 #'   hrcfiles = c(ACT = hrc_act, GEO = hrc_geo),
@@ -157,7 +157,7 @@
 #' )
 #'
 #' res5 <- reduce_dims(
-#'   dfs = data,
+#'   tab_to_split = data,
 #'   nom_dfs = "tab",
 #'   totcode = c(SEX = "Total_S", AGE = "Ensemble", GEO = "Total_G", ACT = "Total_A", ECO = "PIB"),
 #'   hrcfiles = c(ACT = hrc_act, GEO = hrc_geo),
@@ -169,7 +169,7 @@
 #' )
 #'
 #' res6 <- reduce_dims(
-#'   dfs = data,
+#'   tab_to_split = data,
 #'   nom_dfs = "tab",
 #'   totcode = c(SEX = "Total_S", AGE = "Ensemble", GEO = "Total_G", ACT = "Total_A", ECO = "PIB"),
 #'   hrcfiles = c(ACT = hrc_act, GEO = hrc_geo),
@@ -181,7 +181,7 @@
 #'   split = TRUE
 #' )
 reduce_dims <- function(
-    dfs,
+    tab_to_split,
     nom_dfs,
     totcode,
     hrcfiles = NULL,
@@ -197,16 +197,16 @@ reduce_dims <- function(
   require(sdcHierarchies)
   require(stringr)
 
-  dfs <- as.data.frame(dfs)
+  tab_to_split <- as.data.frame(tab_to_split)
 
   # Check if nom_dfs is a character string
   if (!is.character(nom_dfs)){
     stop("nom_dfs must be a character string.")
   }
 
-  # Check if all modalities of totcode are present in dfs
-  if (any(!names(totcode) %in% names(dfs))){
-    stop("At least one modality in totcode is not present in dfs!")
+  # Check if all modalities of totcode are present in tab_to_split
+  if (any(!names(totcode) %in% names(tab_to_split))){
+    stop("At least one modality in totcode is not present in tab_to_split!")
   }
 
   # Check if the number of dimensions in totcode is either 4 or 5
@@ -224,9 +224,9 @@ reduce_dims <- function(
     stop("For 5-dimensional data, please specify 2 or 3 variables or leave vars_a_fusionner as NULL!")
   }
 
-  # Check if all modalities of hrcfiles are present in dfs
-  if (any(!names(hrcfiles) %in% names(dfs))){
-    stop("At least one modality in hrcfiles is not present in dfs!")
+  # Check if all modalities of hrcfiles are present in tab_to_split
+  if (any(!names(hrcfiles) %in% names(tab_to_split))){
+    stop("At least one modality in hrcfiles is not present in tab_to_split!")
   }
 
   # Check if sep_dir is a logical value
@@ -280,7 +280,7 @@ reduce_dims <- function(
 
 
   # Choose the separator
-  data_var_cat <- dfs[names(dfs) %in% names(totcode)]
+  data_var_cat <- tab_to_split[names(tab_to_split) %in% names(totcode)]
   sep <- choisir_sep(data_var_cat, vec_sep)
 
   if (length(totcode) == 5) {
@@ -307,14 +307,14 @@ reduce_dims <- function(
         }
 
         # Propose combinations of variables to merge
-        choix_3_var <- var_to_merge(dfs = data,
+        choix_3_var <- var_to_merge(tab_to_split = tab_to_split,
 								   totcode = totcode,
 								   hrcfiles = hrcfiles,
 								   nb_var = 3,
 								   LIMIT = LIMIT,
 								   nb_tab = nb_tab)
 
-        choix_4_var <- var_to_merge(dfs = data,
+        choix_4_var <- var_to_merge(tab_to_split = tab_to_split,
 								   totcode = totcode,
 								   hrcfiles = hrcfiles,
 								   nb_var = 4,
@@ -360,7 +360,7 @@ reduce_dims <- function(
       print("Reducing from 5 to 4...")
     }
 
-    res <- from_5_to_3(dfs = dfs,
+    res <- from_5_to_3(tab_to_split = tab_to_split,
 					   nom_dfs = nom_dfs,
 					   totcode = totcode,
 					   hrcfiles = hrcfiles,
@@ -388,7 +388,8 @@ reduce_dims <- function(
           print("Choosing variables...")
         }
 
-        choix_2_var <- var_to_merge(dfs = data,
+
+        choix_2_var <- var_to_merge(tab_to_split = tab_to_split,
 								   totcode = totcode,
 								   hrcfiles = hrcfiles,
 								   nb_var = 2,
@@ -411,7 +412,7 @@ reduce_dims <- function(
       print("Reducing from 4 to 3...")
     }
 
-    res <- from_4_to_3(dfs = dfs,
+    res <- from_4_to_3(tab_to_split = tab_to_split,
 					   nom_dfs = nom_dfs,
 					   totcode = totcode,
 					   hrcfiles = hrcfiles,
@@ -717,7 +718,7 @@ choisir_sep <- function(
 #'
 #' # Results of the function
 #' res1 <- from_4_to_3(
-#'   dfs = data,
+#'   tab_to_split = data,
 #'   nom_dfs = "tab",
 #'   totcode = c(SEX = "Total", AGE = "Total", GEO = "Total", ACT = "Total"),
 #'   hrcfiles = c(ACT = hrc_act),

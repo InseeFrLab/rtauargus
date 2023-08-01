@@ -25,11 +25,11 @@ nb_nodes <- function(hrcfiles, v = NULL, hrc_name = TRUE) {
 
 #' Function reducing from 5 to 3 categorical variables
 #'
-#' @param dfs data.frame with 5 categorical variables (n >= 3 in the general case)
+#' @param tab_to_split data.frame with 5 categorical variables (n >= 3 in the general case)
 #' @param nom_dfs name of the data.frame in the list provided by the user
 #' @param totcode named vector of totals for categorical variables
 #' @param hrcfiles named vector indicating the hrc files of hierarchical variables
-#' among the categorical variables of dfs
+#' among the categorical variables of tab_to_split
 #' @param sep_dir allows forcing the writing of hrc files in a separate folder
 #' defaulted to FALSE
 #' @param hrc_dir folder where to write the hrc files if forcing the writing
@@ -110,7 +110,7 @@ nb_nodes <- function(hrcfiles, v = NULL, hrc_name = TRUE) {
 #'
 #' # Results of the function
 #' res1 <- from_5_to_3(
-#'   dfs = data,
+#'   tab_to_split = data,
 #'   nom_dfs = "tab",
 #'   totcode = c(SEX="Total",AGE="Total", GEO="Total", ACT="Total", ECO = "PIB"),
 #'   hrcfiles = c(ACT = hrc_act, GEO = hrc_geo, SEX = hrc_sex),
@@ -123,7 +123,7 @@ nb_nodes <- function(hrcfiles, v = NULL, hrc_name = TRUE) {
 #' )
 #'
 #' res2 <- from_5_to_3(
-#'   dfs = data,
+#'   tab_to_split = data,
 #'   nom_dfs = "tab",
 #'   totcode = c(SEX="Total",AGE="Total", GEO="Total", ACT="Total", ECO = "PIB"),
 #'   hrcfiles = c(ACT = hrc_act, GEO = hrc_geo, SEX = hrc_sex),
@@ -132,7 +132,7 @@ nb_nodes <- function(hrcfiles, v = NULL, hrc_name = TRUE) {
 #'   verbose = TRUE
 #' )
 from_5_to_3 <- function(
-    dfs,
+    tab_to_split,
     nom_dfs,
     totcode,
     hrcfiles = NULL,
@@ -154,7 +154,7 @@ from_5_to_3 <- function(
   }
 
   # We remove a dimension from our starting dataframe
-  res_5_4 <- from_4_to_3(dfs = dfs,
+  res_5_4 <- from_4_to_3(tab_to_split = tab_to_split,
                                  nom_dfs = nom_dfs,
                                  totcode = totcode,
                                  hrcfiles = hrcfiles,
@@ -187,7 +187,7 @@ from_5_to_3 <- function(
   var_cat <- c(names(totcode2),new_var)
 
   var_sans_hier <- intersect(
-    setdiff(names(dfs), names(hrcfiles2)),
+    setdiff(names(tab_to_split), names(hrcfiles2)),
     var_cat
   )
 
@@ -203,7 +203,7 @@ from_5_to_3 <- function(
     }
   } else {
     # we choose a variable avoiding v4
-    v3 <- choisir_var(dfs = dfs[setdiff(names(dfs),v4)],
+    v3 <- choisir_var(tab_to_split = tab_to_split[setdiff(names(tab_to_split),v4)],
                       totcode = totcode2[setdiff(names(totcode2),v4)],
                       hrcfiles = hrcfiles2[setdiff(names(hrcfiles2),v4)],
                       maximize_nb_tabs = maximize_nb_tabs)
@@ -233,7 +233,7 @@ from_5_to_3 <- function(
 
   } else {
     # we choose a variable avoiding v3
-    v4 <- choisir_var(dfs = dfs[setdiff(names(dfs),v3)],
+    v4 <- choisir_var(tab_to_split = tab_to_split[setdiff(names(tab_to_split),v3)],
                       totcode = totcode2[setdiff(names(totcode2),v3)],
                       hrcfiles = hrcfiles2[setdiff(names(hrcfiles2),v3)],
                       maximize_nb_tabs = maximize_nb_tabs)
@@ -255,7 +255,7 @@ from_5_to_3 <- function(
 
     totcode2[[new_var]] <- res_5_4$alt_tot[[nom_dfsb]]
 
-    from_4_to_3(dfs = dfsb,
+    from_4_to_3(tab_to_split = dfsb,
                         nom_dfs = nom_dfsb,
                         totcode = totcode2,
                         hrcfiles = hrcfiles2b,

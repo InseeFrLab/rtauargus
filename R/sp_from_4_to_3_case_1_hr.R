@@ -1,13 +1,13 @@
 #' Transition from 4 to 3 variables by merging a hierarchical
 #' and a non-hierarchical variable
 #'
-#' @param dfs data.frame with 4 categorical variables (n >= 2 in the general case)
+#' @param tab_to_split data.frame with 4 categorical variables (n >= 2 in the general case)
 #' @param nom_dfs name of the data.frame in the list provided by the user
 #' @param v1 non-hierarchical categorical variable
 #' @param v2 hierarchical categorical variable
 #' @param totcode named vector of totals for categorical variables
 #' @param hrcfiles named vector indicating the hrc files of hierarchical variables
-#' among the categorical variables of dfs
+#' among the categorical variables of tab_to_split
 #' @param dir_name directory where to write the hrc files
 #' if no folder is specified in hrcfiles
 #' @param sep separator used when concatenating variables
@@ -54,7 +54,7 @@
 #'   select(levels) %>%
 #'   write.table(file = hrc_sex, row.names = F, col.names = F, quote = F)
 #'
-#' res1 <- from_4_to_3_case_1_hr(dfs = data,
+#' res1 <- from_4_to_3_case_1_hr(tab_to_split = data,
 #'                                 nom_dfs = "nom_dfs",
 #'                                 v1 = "ECO",v2 = "SEX",
 #'                                 totcode = c(ACT = "Total",SEX = "Total",
@@ -62,7 +62,7 @@
 #'                                 hrcfiles = c(ACT = hrc_act, SEX = hrc_sex),
 #'                                 dir_name = "output")
 from_4_to_3_case_1_hr <- function(
-  dfs,
+  tab_to_split,
   nom_dfs,
   v1,
   v2,
@@ -94,21 +94,21 @@ from_4_to_3_case_1_hr <- function(
   liste_df_4_var_2_non_hr <- lapply(
     codes_split,
     function(codes){
-      res <- dfs %>%
-        filter(dfs[[v2]] %in% codes)
+      res <- tab_to_split %>%
+        filter(tab_to_split[[v2]] %in% codes)
     }
   )
   # We now have data.frames with 2 non-hierarchical variables
   # therefore we can apply the dedicated method
 
   # Updating the arguments then call the function cas_2_non_hrc
-  appel_4_3_non_hier <- function(dfs, i){
+  appel_4_3_non_hier <- function(tab_to_split, i){
 
     if (i <= length(codes_split)) {
       totcode[v2] <- codes_split[[i]][1]
       nom_dfs <- paste(nom_dfs, totcode[v2], sep = "_")
 
-      from_4_to_3_case_0_hr(dfs = dfs,
+      from_4_to_3_case_0_hr(tab_to_split = tab_to_split,
                                nom_dfs = nom_dfs,
                                v1 = v1,
                                v2 = v2,

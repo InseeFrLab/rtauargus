@@ -1,6 +1,6 @@
 #' Transition from 4 to 3 variables by merging two non-hierarchical variables
 #'
-#' @param dfs data.frame with 4 categorical variables (n >= 2 in the general case)
+#' @param tab_to_split data.frame with 4 categorical variables (n >= 2 in the general case)
 #' @param nom_dfs name of the data.frame in the list provided by the user
 #' @param v1 non-hierarchical categorical variable
 #' @param v2 non-hierarchical categorical variable
@@ -51,14 +51,14 @@
 #'   select(levels) %>%
 #'   write.table(file = hrc_sex, row.names = F, col.names = F, quote = F)
 #'
-#' res1 <- from_4_to_3_case_0_hr(dfs = data,
+#' res1 <- from_4_to_3_case_0_hr(tab_to_split = data,
 #'                                 nom_dfs = "nom_dfs",
 #'                                 v1 = "ECO",v2 = "AGE",
 #'                                 totcode = c(ACT = "Total",SEX = "Total",
 #'                                             AGE = "Total",ECO = "PIB"),
 #'                                 dir_name = "output")
 from_4_to_3_case_0_hr <- function(
-    dfs,
+    tab_to_split,
     nom_dfs,
     v1,
     v2,
@@ -71,8 +71,8 @@ from_4_to_3_case_0_hr <- function(
   var2_total <- totcode[v2]
 
   # the different modalities of the 2 variables
-  mods1 <- unique(dfs[[v1]])
-  mods2 <- unique(dfs[[v2]])
+  mods1 <- unique(tab_to_split[[v1]])
+  mods2 <- unique(tab_to_split[[v2]])
 
   var1_mods_except_total <- mods1[mods1 != var1_total]
   var2_mods_except_total <- mods2[mods2 != var2_total]
@@ -129,8 +129,8 @@ from_4_to_3_case_0_hr <- function(
       stringsAsFactors = FALSE
     )
 
-    tabi <- dfs[(dfs[[vi]] != var_i_total) |
-                  (dfs[[vi]] == var_i_total & dfs[[vj]] == var_j_total), ]
+    tabi <- tab_to_split[(tab_to_split[[vi]] != var_i_total) |
+                  (tab_to_split[[vi]] == var_i_total & tab_to_split[[vj]] == var_j_total), ]
     tabi[[paste(v1, v2, sep = sep)]]<- paste(tabi[[v1]],tabi[[v2]],sep = sep)
 
     tabi[[v1]]<-NULL

@@ -12,25 +12,25 @@ plus_petit_hrc <- function(hrcfiles) {
 }
 
 # Returns the variable with the fewest modalities
-plus_petit_mod <- function(dfs) {
+plus_petit_mod <- function(tab_to_split) {
   v <- list()
-  for (colonne in dfs) {
+  for (colonne in tab_to_split) {
     v <- append(v,length(unique(colonne)))
   }
   indice_petit_mod <- which.min(v)
-  nom_plus_petit_mod <- names(dfs)[indice_petit_mod]
+  nom_plus_petit_mod <- names(tab_to_split)[indice_petit_mod]
   return(nom_plus_petit_mod)
 }
 
 # Choose a categorical variable
 # Preferably the non-hierarchical one with the fewest modalities
 # If not available, the hierarchical variable with the fewest nodes
-choisir_var_priorite_non_hierarchique <- function(dfs,totcode,hrcfiles){
+choisir_var_priorite_non_hierarchique <- function(tab_to_split,totcode,hrcfiles){
   # The categorical variables without hierarchy
   var_cat <- names(totcode)
 
   var_sans_hier <- intersect(
-    setdiff(names(dfs), names(hrcfiles)),
+    setdiff(names(tab_to_split), names(hrcfiles)),
     var_cat
   )
 
@@ -41,7 +41,7 @@ choisir_var_priorite_non_hierarchique <- function(dfs,totcode,hrcfiles){
   # If more than 1, look at the variables with the fewest modalities
   # to create fewer dataframes later
   if (n_vars_sans_hier > 1){
-    dfs_var_sans_hier <- subset(dfs,select = var_sans_hier)
+    dfs_var_sans_hier <- subset(tab_to_split,select = var_sans_hier)
     return (plus_petit_mod(dfs_var_sans_hier))
   }
   else if(n_vars_sans_hier == 1){
@@ -65,46 +65,46 @@ plus_grand_hrc <- function(hrcfiles) {
 }
 
 # Returns the variable with the most modalities
-plus_grand_mod <- function(dfs) {
+plus_grand_mod <- function(tab_to_split) {
   v <- list()
-  for (colonne in dfs) {
+  for (colonne in tab_to_split) {
     v <- append(v, length(unique(colonne)))
   }
   indice_grand_mod <- which.max(v)
-  nom_plus_grand_mod <- names(dfs)[indice_grand_mod]
+  nom_plus_grand_mod <- names(tab_to_split)[indice_grand_mod]
   return(nom_plus_grand_mod)
 }
 
 # Choose a categorical variable
 # Preferably the hierarchical one with the most nodes
 # If not available, the non-hierarchical variable with the most modalities
-choisir_var_priorite_hierarchique <- function(dfs, totcode, hrcfiles) {
+choisir_var_priorite_hierarchique <- function(tab_to_split, totcode, hrcfiles) {
   # Principle: preferably choose hierarchical variables
 
   # If no hierarchical variable, choose non-hierarchical variable with the most modalities
   if (length(hrcfiles) == 0) {
-    return(plus_grand_mod(dfs[names(dfs) %in% names(totcode)]))
+    return(plus_grand_mod(tab_to_split[names(tab_to_split) %in% names(totcode)]))
     # Otherwise, choose the hierarchical variable with the most subtotals
   } else {
     return(plus_grand_hrc(hrcfiles))
   }
 }
 
-choisir_var <- function(dfs, totcode, hrcfiles, maximize_nb_tabs = FALSE) {
+choisir_var <- function(tab_to_split, totcode, hrcfiles, maximize_nb_tabs = FALSE) {
   if(maximize_nb_tabs){
-    return(choisir_var_priorite_hierarchique(dfs, totcode, hrcfiles))
+    return(choisir_var_priorite_hierarchique(tab_to_split, totcode, hrcfiles))
   } else {
-    return(choisir_var_priorite_non_hierarchique(dfs, totcode, hrcfiles))
+    return(choisir_var_priorite_non_hierarchique(tab_to_split, totcode, hrcfiles))
   }
 }
 
 #' Function reducing from 4 to 3 categorical variables
 #'
-#' @param dfs data.frame with 4 categorical variables (n >= 2 in the general case)
+#' @param tab_to_split data.frame with 4 categorical variables (n >= 2 in the general case)
 #' @param nom_dfs name of the dataframe
 #' @param totcode named vector of totals for categorical variables
 #' @param hrcfiles named vector indicating the hrc files of hierarchical variables
-#' among the categorical variables of dfs
+#' among the categorical variables of tab_to_split
 #' @param sep_dir allows forcing the writing of hrc into a separate folder,
 #' default is FALSE
 #' @param hrc_dir folder to write hrc files if writing to a new folder is forced
@@ -154,7 +154,7 @@ choisir_var <- function(dfs, totcode, hrcfiles, maximize_nb_tabs = FALSE) {
 #'
 #' # Results of the function
 #' res1 <- from_4_to_3(
-#'   dfs = data,
+#'   tab_to_split = data,
 #'   nom_dfs = "tab",
 #'   totcode = c(SEX = "Total", AGE = "Total", GEO = "Total", ACT = "Total"),
 #'   hrcfiles = c(ACT = hrc_act),
@@ -164,7 +164,7 @@ choisir_var <- function(dfs, totcode, hrcfiles, maximize_nb_tabs = FALSE) {
 #'
 #' # Maximize the number of tables
 #' res2 <- from_4_to_3(
-#'   dfs = data,
+#'   tab_to_split = data,
 #'   nom_dfs = "tab",
 #'   totcode = c(SEX = "Total", AGE = "Total", GEO = "Total", ACT = "Total"),
 #'   hrcfiles = c(ACT = hrc_act),
@@ -173,7 +173,7 @@ choisir_var <- function(dfs, totcode, hrcfiles, maximize_nb_tabs = FALSE) {
 #'   maximize_nb_tabs = TRUE
 #' )
 from_4_to_3 <- function(
-  dfs,
+  tab_to_split,
   nom_dfs,
   totcode,
   hrcfiles = NULL,
@@ -195,7 +195,7 @@ from_4_to_3 <- function(
   var_cat <- names(totcode)
 
   var_sans_hier <- intersect(
-    setdiff(names(dfs), names(hrcfiles)),
+    setdiff(names(tab_to_split), names(hrcfiles)),
     var_cat
   )
 
@@ -211,7 +211,7 @@ from_4_to_3 <- function(
     }
   } else {
     # a variable is chosen, avoiding v2
-    v1 <- choisir_var(dfs = dfs[setdiff(names(dfs),v2)],
+    v1 <- choisir_var(tab_to_split = tab_to_split[setdiff(names(tab_to_split),v2)],
                       totcode = totcode[setdiff(names(totcode),v2)],
                       hrcfiles = hrcfiles[setdiff(names(hrcfiles),v2)],
                       maximize_nb_tabs = maximize_nb_tabs)
@@ -234,7 +234,7 @@ from_4_to_3 <- function(
 
   } else {
     # a variable is chosen, avoiding v1
-    v2 <- choisir_var(dfs = dfs[setdiff(names(dfs),v1)],
+    v2 <- choisir_var(tab_to_split = tab_to_split[setdiff(names(tab_to_split),v1)],
                       totcode = totcode[setdiff(names(totcode),v1)],
                       hrcfiles = hrcfiles[!(names(hrcfiles) == v1)],
                       maximize_nb_tabs = maximize_nb_tabs)
@@ -249,7 +249,7 @@ from_4_to_3 <- function(
 
   # Case 2 non-hierarchical variables
   if(n_vars_sans_hier == 2){
-    return(from_4_to_3_case_0_hr(dfs = dfs,
+    return(from_4_to_3_case_0_hr(tab_to_split = tab_to_split,
                                     nom_dfs = nom_dfs,
                                     v1 = v1,
                                     v2 = v2,
@@ -267,7 +267,7 @@ from_4_to_3 <- function(
       v2 <- v1
       v1 <- tmp
     }
-    return(from_4_to_3_case_1_hr(dfs = dfs,
+    return(from_4_to_3_case_1_hr(tab_to_split = tab_to_split,
                                     nom_dfs = nom_dfs,
                                     v1 = v1,
                                     v2 = v2,
@@ -279,7 +279,7 @@ from_4_to_3 <- function(
 
   # Case 0 non-hierarchical variable
   }else{
-    return(from_4_to_3_case_2_hr(dfs = dfs,
+    return(from_4_to_3_case_2_hr(tab_to_split = tab_to_split,
                                     nom_dfs = nom_dfs,
                                     v1 = v1,
                                     v2 = v2,
