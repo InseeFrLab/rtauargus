@@ -728,11 +728,11 @@ choisir_sep <- function(
 #' )
 #'
 #' format(res1,
-#'         nom_dfs = "tab",
-#'         sep = "_",
-#'         totcode = c(SEX="Total",AGE="Total",
+#'        nom_dfs = "tab",
+#'        sep = "_",
+#'        totcode = c(SEX="Total",AGE="Total",
 #'                    GEO="Total", ACT="Total"),
-#'         hrcfiles = c(ACT = hrc_act)
+#'        hrcfiles = c(ACT = hrc_act)
 #'        )
 format <- function(
   res,
