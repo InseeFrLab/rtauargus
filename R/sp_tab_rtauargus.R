@@ -98,17 +98,30 @@
 #'   verbose = TRUE
 #' )
 #'
+#' load("donnees/test_5_var.RData")
+#'
+#' test_5_var <- test_5_var %>%
+#'   mutate(
+#'     is_secret_freq = nb_obs > 0 & nb_obs < 3,
+#'     is_secret_dom = ifelse(pizzas_max == 0, FALSE, pizzas_max/pizzas_tot>0.85),
+#'     is_secret_prim = is_secret_freq | is_secret_dom,
+#'     nb_obs = ceiling(nb_obs),
+#'     pizzas_tot=abs(pizzas_tot)
+#'   )
+#'
 #' res_dim5 <- tab_rtauargus4(
-#'   tabular = turnover_act_size,
-#'   files_name = "turn_act_size",
-#'   dir_name = "tauargus_files",
-#'   explanatory_vars = c("ACTIVITY", "SIZE"),
-#'   hrc = c(ACTIVITY = hrc_file_activity),
-#'   totcode = c(ACTIVITY = "Total", SIZE = "Total"),
+#'   tabular = test_5_var,
+#'   files_name = "test_5_var",
+#'   dir_name = "test_5_var",
+#'   explanatory_vars = c("A10", "treff","type_distrib","cj","nuts1"),
+#'   totcode = c(A10 = "Total", treff = "Total",type_distrib = "Total",cj = "Total",nuts1 = "Total"),
 #'   secret_var = "is_secret_prim",
-#'   value = "TOT",
-#'   freq = "N_OBS",
-#'   verbose = FALSE,
+#'   value = "pizzas_tot",
+#'   freq = "nb_obs",
+#'   verbose = TRUE,
+#'   nb_tab = "max",
+#'   split_tab = TRUE,
+#'   verbose = TRUE
 #' )
 #' }
 #' @export
@@ -211,11 +224,6 @@ tab_rtauargus4 <- function(
       result <- restore_format(masq_list, list_tables)
 
       return(result)
-    } else {
-      warning(
-        "You cannot reduce the dims of your table since it has not a dimension of 4 or 5.
-        Normal process is in progress."
-      )
     }
   }
 

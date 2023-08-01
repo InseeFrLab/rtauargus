@@ -168,6 +168,11 @@ separer5_3 <- function(df, v1, v2, v3,v3_v4, sep_regex) {
   df[[v1]] <- sapply(splits, `[`, 2)
   df[[v2]] <- sapply(splits, `[`, 3)
   df[[v3_v4]] <- NULL
+
+  # Réorganiser les colonnes
+  new_order <- c(v3, v1, v2, setdiff(names(df), c(v3, v1, v2)))
+  df <- df[, new_order]
+
   df
 }
 
@@ -178,5 +183,9 @@ separer4_3 <- function(df, v1, v2, v1_v2, sep_regex) {
   df[[v1]] <- sapply(splits, `[`, 1)
   df[[v2]] <- sapply(splits, `[`, 2)
   df[[v1_v2]] <- NULL
+
+  # Réorganiser les colonnes
+  new_order <- c(v1, v2, setdiff(names(df), c(v1, v2)))
+  df <- df[, new_order]
   df
 }
