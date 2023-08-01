@@ -55,8 +55,12 @@
 #'   rtauargus.tauargus_exe =
 #'     "Y:/Logiciels/TauArgus/TauArgus4.2.2b1/TauArgus.exe"
 #' )
+#' load(data/ca_test_0hrc)
+#' library(stringr)
 #'
-#' res <- tab_rtauargus(
+#'
+#'
+#' res <- tab_rtauargus4(
 #'   tabular = turnover_act_size,
 #'   files_name = "turn_act_size",
 #'   dir_name = "tauargus_files",
@@ -70,7 +74,7 @@
 #' )
 #' }
 #' @export
-tab_rtauargus <- function(
+tab_rtauargus4 <- function(
     tabular,
     files_name = NULL,
     dir_name = NULL,
@@ -145,7 +149,8 @@ tab_rtauargus <- function(
   #   verbose = FALSE
   # )
   #
-  if (length(totcode) %in% c(4, 5)) {
+  if (length(explanatory_vars) %in% c(4, 5)) {
+    print(totcode)
 
     list_tables<-reduce_dims(dfs=tabular,
                 nom_dfs=files_name,
@@ -174,7 +179,7 @@ tab_rtauargus <- function(
 
     result<-restore_format(masq_list,list_tables)
     return(result)
-  }
+  } else {
 
 
 
@@ -282,7 +287,7 @@ tab_rtauargus <- function(
     }
     return(res)
   }
-
+}
 }
 
 #' Wrapper of tab_rtauargus adapted for \code{tab_multi_manager} function.

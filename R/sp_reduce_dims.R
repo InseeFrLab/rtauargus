@@ -427,7 +427,7 @@ reduce_dims <- function(
   }
 
   # Put a format usable by rtauargus
-  res <- format(res = res,
+  res <- sp_format(res = res,
                 nom_dfs = nom_dfs,
                 sep = sep,
                 totcode = totcode,
@@ -727,14 +727,14 @@ choisir_sep <- function(
 #'   sep = "_'
 #' )
 #'
-#' format(res1,
+#' sp_format(res1,
 #'         nom_dfs = "tab",
 #'         sep = "_",
 #'         totcode = c(SEX="Total",AGE="Total",
 #'                    GEO="Total", ACT="Total"),
 #'         hrcfiles = c(ACT = hrc_act)
 #'        )
-format <- function(
+sp_format <- function(
   res,
   nom_dfs,
   sep,
@@ -840,7 +840,7 @@ format5 <- function(res, nom_dfs, sep, totcode, hrcfiles) {
         sep = sep,
         fus_vars = c(v3, v4)
       )
-      res2 <- format(res2, nom_dfs, sep, totcode, hrcfiles)
+      res2 <- sp_format(res2, nom_dfs, sep, totcode, hrcfiles)
 
       # On garde l'information des variables fusionnés à chaque étape
       res2$fus_vars<-res$vars

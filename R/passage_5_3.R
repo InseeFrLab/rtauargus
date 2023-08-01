@@ -160,7 +160,7 @@ passer_de_5_a_3_var <- function(
   }
   
   # We remove a dimension from our starting dataframe
-  res_5_4 <- passer_de_4_a_3_var(dfs = dfs,
+  res_5_4 <- from_4_to_3(dfs = dfs,
                                  nom_dfs = nom_dfs,
                                  totcode = totcode,
                                  hrcfiles = hrcfiles,
@@ -261,7 +261,7 @@ passer_de_5_a_3_var <- function(
     
     totcode2[[new_var]] <- res_5_4$alt_tot[[nom_dfsb]]
     
-    passer_de_4_a_3_var(dfs = dfsb,
+    from_4_to_3(dfs = dfsb,
                         nom_dfs = nom_dfsb,
                         totcode = totcode2,
                         hrcfiles = hrcfiles2b,
