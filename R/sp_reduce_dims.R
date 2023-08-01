@@ -715,16 +715,14 @@ choisir_sep <- function(
 #'   select(levels) %>%
 #'   write.table(file = hrc_act, row.names = F, col.names = F, quote = F)
 #'
-#' # Résultats de la fonction
+#' # Results of the function
 #' res1 <- from_4_to_3(
 #'   dfs = data,
 #'   nom_dfs = "tab",
-#'   totcode = c(SEX="Total",AGE="Total",
-#'               GEO="Total", ACT="Total"),
+#'   totcode = c(SEX = "Total", AGE = "Total", GEO = "Total", ACT = "Total"),
 #'   hrcfiles = c(ACT = hrc_act),
 #'   sep_dir = TRUE,
-#'   hrc_dir = "output",
-#'   sep = "_'
+#'   hrc_dir = "output"
 #' )
 #'
 #' sp_format(res1,
