@@ -512,10 +512,7 @@ reduce_dims <- function(
 #' fus_vars: named vector of vectors representing the merged variables during dimension reduction
 #' @export
 #'
-#' @examples examples in test/test_split_table.R
-
-
-
+#' @examples
 split_tab <- function(res, var_fus, LIMIT) {
   # table to split because they are too big
 
@@ -628,7 +625,6 @@ split_tab <- function(res, var_fus, LIMIT) {
 #' library(dplyr)
 #' library(stringr)
 #'
-#' source("R/choisir_sep.R")
 #'
 #' data <- expand.grid(
 #'   AGE = c("+", "How are you?", "No, Not possible!!!"),
@@ -697,12 +693,6 @@ choisir_sep <- function(
 #'
 #' library(dplyr)
 #'
-#' source("R/passage_4_3_cas_0_non_hrc.R",encoding = "UTF-8")
-#' source("R/passage_4_3_cas_1_non_hrc.R",encoding = "UTF-8")
-#' source("R/passage_4_3_cas_2_non_hrc.R",encoding = "UTF-8")
-#' source("R/passage_4_3.R",encoding = "UTF-8")
-#' source("R/passage_5_3.R",encoding = "UTF-8")
-#' source("R/format.R",encoding = "UTF-8")
 #' data <- expand.grid(
 #'   ACT = c("Total", "A", "B", "A1", "A2", "B1", "B2"),
 #'   GEO = c("Total", "G1", "G2"),
@@ -738,11 +728,11 @@ choisir_sep <- function(
 #' )
 #'
 #' format(res1,
-#'        nom_dfs = "tab",
-#'        sep = "_",
-#'        totcode = c(SEX="Total",AGE="Total",
+#'         nom_dfs = "tab",
+#'         sep = "_",
+#'         totcode = c(SEX="Total",AGE="Total",
 #'                    GEO="Total", ACT="Total"),
-#'        hrcfiles = c(ACT = hrc_act)
+#'         hrcfiles = c(ACT = hrc_act)
 #'        )
 format <- function(
   res,
