@@ -790,7 +790,7 @@ format4 <- function(res, nom_dfs, sep, totcode, hrcfiles) {
     ),
     paste(nom_dfs, seq_along(res$tabs), sep = "")
   )
-  if (length(hrcfiles)==0){res2<-NULL}
+
   #Noms des sous_totaux
   res3 <- setNames(
     lapply(
@@ -872,7 +872,6 @@ format5 <- function(res, nom_dfs, sep, totcode, hrcfiles) {
       c(list1, list2)
     }),
     paste(nom_dfs, seq_along(res$tabs), sep = ""))
-    if (length(hrcfiles)==0){res2<-NULL}
 
     #Noms des sous_totaux
 
