@@ -445,7 +445,7 @@ Reducing from 4 to 3...\n")
   }
 
   if (verbose) {
-    cat(paste(nom_dfs,"has generated",length(res$tabs),"tables in total\n"))
+    cat(paste(nom_dfs,"has generated",length(res$tabs),"tables in total\n\n"))
   }
 
   # Put a format usable by rtauargus

@@ -80,7 +80,7 @@
 #'   verbose = TRUE
 #' )
 #'
-#' # Do not run : it takes a lot of time !
+#' # We use hyerpcube to save time !
 #' load("donnees/test_5_var.RData")
 #'
 #' test_5_var <- test_5_var %>%
@@ -104,9 +104,10 @@
 #'   value = "pizzas_tot",
 #'   freq = "nb_obs",
 #'   verbose = TRUE,
-#'   nb_tab = "max",
+#'   nb_tab = "min",
 #'   split_tab = TRUE,
-#'   verbose = TRUE
+#'   verbose = TRUE,
+#'   suppress = "GH(1,100)"
 #' )
 #' }
 #' @export
