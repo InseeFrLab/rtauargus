@@ -98,6 +98,7 @@
 #'   verbose = TRUE
 #' )
 #'
+#' # Do not run : it takes a lot of time !
 #' load("donnees/test_5_var.RData")
 #'
 #' test_5_var <- test_5_var %>%
