@@ -165,8 +165,8 @@ from_5_to_3 <- function(
                                  sep = sep,
                                  maximize_nb_tabs = maximize_nb_tabs)
   if (verbose){
-    print(paste(length(res_5_4$tabs),"tables created"))
-    print(c("Reducing from 4 to 3..."))
+    cat(paste(nom_dfs,"has generated",length(res_5_4$tabs),"tables in total\n"))
+    cat("Reducing from 4 to 3...\n")
   }
 
   # Retrieving the merged variables

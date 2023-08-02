@@ -77,6 +77,7 @@ from_4_to_3_case_0_hr <- function(
   var1_mods_except_total <- mods1[mods1 != var1_total]
   var2_mods_except_total <- mods2[mods2 != var2_total]
 
+  # Traitement ad hoc des feuilles uniques (pour Julien)
   # Add a fake modality if there is only one modality except total
   # to avoid error with rtauargus::write_hrc2
   if (length(var1_mods_except_total)==1){
@@ -180,7 +181,8 @@ from_4_to_3_case_0_hr <- function(
                                                       paste("hrc",nom_dfs,
                                                             v1,sep = "_"),
                                                       ".hrc",
-                                                      sep="")
+                                                      sep=""),
+                                    adjust_unique_roots = TRUE
   )
 
   hrc_tab2 <- rtauargus::write_hrc2(tab2_corresp,
@@ -188,7 +190,8 @@ from_4_to_3_case_0_hr <- function(
                                                       paste("hrc",nom_dfs,
                                                             v2,sep = "_"),
                                                       ".hrc",
-                                                      sep="")
+                                                      sep=""),
+                                    adjust_unique_roots = TRUE
   )
 
   tabs <- list(tab1, tab2)

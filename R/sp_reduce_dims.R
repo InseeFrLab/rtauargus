@@ -303,7 +303,7 @@ reduce_dims <- function(
       if (nb_tab == 'smart') {
 
         if (verbose) {
-          print("Choosing variables...")
+          cat("Choosing variables...\n")
         }
 
         # Propose combinations of variables to merge
@@ -357,7 +357,7 @@ reduce_dims <- function(
     }
 
     if (verbose) {
-      print("Reducing from 5 to 4...")
+      cat("Reducing from 5 to 4...\n")
     }
 
     res <- from_5_to_3(tab_to_split = tab_to_split,
@@ -385,7 +385,7 @@ reduce_dims <- function(
       if (nb_tab == 'smart') {
 
         if (verbose) {
-          print("Choosing variables...")
+          cat("Choosing variables...\n")
         }
 
 
@@ -409,7 +409,7 @@ reduce_dims <- function(
     }
 
     if (verbose) {
-      print("Reducing from 4 to 3...")
+      cat("Reducing from 4 to 3...\n")
     }
 
     res <- from_4_to_3(tab_to_split = tab_to_split,
@@ -424,7 +424,7 @@ reduce_dims <- function(
   }
 
   if (verbose) {
-    print(paste(length(res$tabs), "tables created"))
+    cat(paste(nom_dfs,"has generated",length(res$tabs),"tables in total\n"))
   }
 
   # Put a format usable by rtauargus
@@ -438,7 +438,7 @@ reduce_dims <- function(
   if (split) {
 
     if (verbose) {
-      print("Spliting...")
+      cat("Spliting...\n")
     }
 
     # Collect of created vars
@@ -469,7 +469,7 @@ reduce_dims <- function(
     for (var_fus in liste_var_fus){
 
       if (verbose) {
-        print(var_fus)
+        cat(paste(var_fus,"\n"))
       }
 
       res <- split_tab(res = res,
@@ -478,7 +478,7 @@ reduce_dims <- function(
     }
 
     if (verbose) {
-      print(paste(length(res$tabs), "tables created"))
+      cat(paste(nom_dfs,"has generated",length(res$tabs),"tables in total\n\n\n"))
     }
   }
 

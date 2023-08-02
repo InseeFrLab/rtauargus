@@ -35,40 +35,12 @@
 #' @examples
 #'\dontrun{
 #' library(dplyr)
-#' data(turnover_act_size)
-#'
-#' # Prepare data with primary secret ----
-#' turnover_act_size <- turnover_act_size %>%
-#'   mutate(
-#'     is_secret_freq = N_OBS > 0 & N_OBS < 3,
-#'     is_secret_dom = ifelse(MAX == 0, FALSE, MAX/TOT>0.85),
-#'     is_secret_prim = is_secret_freq | is_secret_dom
-#'   )
-#'
-#' # Make hrc file of business sectors ----
-#' data(activity_corr_table)
-#' hrc_file_activity <- activity_corr_table %>%
-#'   write_hrc2(file_name = "hrc/activity")
+#' library(stringr)
 #'
 #' # Compute the secondary secret ----
 #' options(
 #'   rtauargus.tauargus_exe =
 #'     "Y:/Logiciels/TauArgus/TauArgus4.2.2b1/TauArgus.exe"
-#' )
-#'
-#' library(stringr)
-#'
-#' res <- tab_rtauargus4(
-#'   tabular = turnover_act_size,
-#'   files_name = "turn_act_size",
-#'   dir_name = "tauargus_files",
-#'   explanatory_vars = c("ACTIVITY", "SIZE"),
-#'   hrc = c(ACTIVITY = hrc_file_activity),
-#'   totcode = c(ACTIVITY = "Total", SIZE = "Total"),
-#'   secret_var = "is_secret_prim",
-#'   value = "TOT",
-#'   freq = "N_OBS",
-#'   verbose = FALSE
 #' )
 #'
 #' # Reduce dims feature
@@ -94,7 +66,6 @@
 #'   freq = "nb_obs",
 #'   verbose = TRUE,
 #'   nb_tab = "min",
-#'   split_tab = TRUE,
 #'   verbose = TRUE
 #' )
 #'
@@ -109,6 +80,8 @@
 #'     nb_obs = ceiling(nb_obs),
 #'     pizzas_tot=abs(pizzas_tot)
 #'   )
+#'
+#' test_5_var$is_secret_prim %>% sum()
 #'
 #' res_dim5 <- tab_rtauargus4(
 #'   tabular = test_5_var,
@@ -146,7 +119,6 @@ tab_rtauargus4 <- function(
     output_type = 4,
     output_options = "",
     unif_labels = TRUE,
-    split_tab = TRUE,
     LIMIT = 14700,
     nb_tab = "smart",
     ...
@@ -154,284 +126,44 @@ tab_rtauargus4 <- function(
 
   .dots <- list(...)
 
-  ## 0. CONFLITS PARAMETRES .................
-
-  # tabular not a data.frame
-  if(!is.data.frame(tabular)){
-    stop("tabular has to be a dataframe.")
-  }
-  if(any(!explanatory_vars %in% names(tabular))){
-    stop("At least one of the explanatory vars is not a tabular's column name")
-  }
-  if(any(!c(value, freq) %in% names(tabular))){
-    stop(paste0(value, " or ", freq, " is not a tabular's column name"))
-  }
-  if(!is.null(maxscore)){
-    if(!maxscore %in% names(tabular)){
-      stop(paste0(maxscore, " is not a tabular's column name"))
-    }
-  }
-  if(!is.null(cost_var)){
-    if(!cost_var %in% names(tabular)){
-      stop(paste0(cost_var, " is not a tabular's column name"))
-    }
-  }
-  if(!is.null(secret_var)){
-    if(!secret_var %in% names(tabular)){
-      stop(paste0(secret_var, " is not a tabular's column name"))
-    }
-  }
-  if(length(totcode) < length(explanatory_vars)){
-    stop("totcode must have the same length as explanatory_vars")
-  }
-  if(length(names(totcode)) < length(explanatory_vars)){
-    names(totcode) <- explanatory_vars
-  }
-
-  if(is.null(files_name)) files_name <- paste0("tau_argus_file_", format.Date(Sys.time(), format = '%Y_%m_%d_%H:%M:%S'))
-  if(is.null(dir_name)) dir_name <- getwd()
-
   # Reduce dims for 4 or 5 dimensions table
-  if (split_tab) {
-    if (length(explanatory_vars) %in% c(4, 5)) {
-      list_tables <- reduce_dims(
-        tab_to_split = tabular,
-        nom_dfs = files_name,
-        totcode = totcode,
-        hrcfiles = hrc,
-        hrc_dir = dir_name,
-        nb_tab = nb_tab,
-        LIMIT = LIMIT,
-        split = TRUE,
-        vec_sep = c("___"),
-        verbose = TRUE
-      )
+  if (length(explanatory_vars) %in% c(4, 5)) {
 
-      masq_list <- tab_multi_manager(
-        list_tables = list_tables$tabs,
-        list_explanatory_vars = list_tables$vars ,
-        dir_name = dir_name,
-        hrc = list_tables$hrcfile,
-        totcode = list_tables$totcode,
-        alt_hrc = list_tables$hrcs,
-        alt_totcode = list_tables$alt_tot,
-        value = value,
-        maxscore = maxscore,
-        freq = freq,
-        secret_var = secret_var,
-        suppress = suppress
-      )
+    cat("
+Reducing dims...\n",files_name,"\n\n")
 
-      result <- restore_format(masq_list, list_tables)
-
-      return(result)
-    }
-  }
-
-  ## 1. TAB_RDA  .....................
-  tabular_original <- tabular
-  # uniformisation des chaines de caractères des variables catégorielles, hors total
-  # tabular ......................
-  if(unif_labels){
-    res_unif <- uniformize_labels(tabular, explanatory_vars, hrc, totcode)
-    tabular <- res_unif$data
-    if(!is.null(hrc)) hrc <- res_unif$hrc_unif
-  }
-
-  # parametres
-  param_tab_rda <- param_function(tab_rda, .dots)
-  param_tab_rda$tabular <- tabular
-  param_tab_rda$tab_filename <- file.path(dir_name, paste0(files_name, ".tab"))
-  param_tab_rda$rda_filename <- file.path(dir_name, paste0(files_name, ".rda"))
-  param_tab_rda$hst_filename <- if(is.null(secret_var) & is.null(cost_var)) NULL else file.path(dir_name, paste0(files_name, ".hst"))
-  param_tab_rda$explanatory_vars <- explanatory_vars
-  param_tab_rda$hrc <- hrc
-
-  param_tab_rda$totcode <- totcode
-  param_tab_rda$secret_var <- secret_var
-  param_tab_rda$secret_no_pl <- secret_no_pl
-  param_tab_rda$cost_var <- cost_var
-  param_tab_rda$value <- value
-  param_tab_rda$freq <- freq
-  param_tab_rda$ip <- ip
-  param_tab_rda$maxscore <- maxscore
-
-  # appel (+ récuperation noms tab hst et rda)
-  input <- do.call(tab_rda, param_tab_rda)
-
-
-  ## 2. TAB_ARB .........................
-
-  # parametres
-  param_arb <- param_function(tab_arb, .dots)
-  param_arb$tab_filename <- input$tab_filename
-  param_arb$rda_filename <- input$rda_filename
-  param_arb$hst_filename <- input$hst_filename
-  param_arb$arb_filename <- file.path(dir_name, paste0(files_name, ".arb"))
-  param_arb$output_names <- file.path(dir_name, paste0(files_name, ".csv"))
-  #TODO : generaliser le choix de l'extension
-  param_arb$output_type <- output_type
-  param_arb$output_options <- output_options
-  param_arb$explanatory_vars <- explanatory_vars
-  param_arb$value <- value
-  param_arb$safety_rules <- safety_rules
-  param_arb$suppress <- suppress
-
-  # appel (+ récupération nom batch)
-  batch <- do.call(tab_arb, param_arb)
-
-  ## 3. RUN_ARB ...........................
-
-  # parametres
-  param_run0 <- param_function(run_arb, .dots)
-  param_system <- param_function(system, .dots)
-  param_run <- c(param_run0, param_system)
-  param_run$arb_filename <- param_arb$arb_filename
-  param_run$logbook <- file.path(dir_name, paste0(files_name, ".txt"))
-  param_run$is_tabular <- TRUE
-  param_run$show_batch_console <- show_batch_console
-
-  # appel
-  res <- do.call(run_arb, param_run)
-
-  # RESULTAT .............................
-  if(output_type == 4){
-
-    res_import <- utils::read.csv(
-      param_arb$output_names,
-      header = FALSE,
-      col.names = c(explanatory_vars, value, freq, "Status","Dom"),
-      colClasses = c(rep("character", length(explanatory_vars)), rep("numeric",2), "character", "numeric"),
-      stringsAsFactors = FALSE,
-      na.strings = ""
-    )
-    if(unif_labels){
-      res_import <- cbind.data.frame(
-        apply(res_import[,explanatory_vars,drop=FALSE], 2, rev_var_pour_tau_argus),
-        res_import[, !names(res_import) %in% explanatory_vars]
-      )
-    }
-    mask <- merge(tabular_original, res_import[,c(explanatory_vars,"Status")], by = explanatory_vars, all = TRUE)
-
-    utils::write.csv(
-      res_import,
-      file = param_arb$output_names,
-      row.names = FALSE
+    list_tables <- reduce_dims(
+      tab_to_split = tabular,
+      nom_dfs = files_name,
+      totcode = totcode,
+      hrcfiles = hrc,
+      hrc_dir = dir_name,
+      nb_tab = nb_tab,
+      LIMIT = LIMIT,
+      split = TRUE,
+      vec_sep = c("___"),
+      verbose = TRUE
     )
 
-    return(mask)
+    masq_list <- tab_multi_manager(
+      list_tables = list_tables$tabs,
+      list_explanatory_vars = list_tables$vars ,
+      dir_name = dir_name,
+      hrc = list_tables$hrc,
+      totcode = list_tables$totcode,
+      alt_hrc = list_tables$alt_hrc,
+      alt_totcode = list_tables$alt_totcode,
+      value = value,
+      maxscore = maxscore,
+      freq = freq,
+      secret_var = secret_var,
+      suppress = suppress
+    )
 
-  }else{
-    if(unif_labels){
-      res <- cbind.data.frame(
-        apply(res[,explanatory_vars,drop=FALSE], 2, rev_var_pour_tau_argus),
-        res[, !names(res) %in% explanatory_vars]
-      )
-    }
-    return(res)
+    result <- restore_format(masq_list, list_tables)
+
+    return(result)
+  } else {
+    stop("Do not use table with more than 5 dimensions. Split_tab = TRUE is not compatible with these large tables.")
   }
-}
-
-
-#' Wrapper of tab_rtauargus adapted for \code{tab_multi_manager} function.
-#'
-#' @inheritParams tab_rtauargus
-#' @param ip Interval Protection Level (10 by default)
-#' @param ... Other arguments of \code{tab_rtauargus} function
-#'
-#' @return
-#' The original tabular is returned with a new
-#' column called Status, indicating the status of the cell coming from Tau-Argus :
-#' "A" for a primary secret due to frequency rule, "B" for a primary secret due
-#' to dominance rule, "D" for secondary secret and "V" for no secret cell.
-#'
-#' @seealso \code{tab_rtauargus}
-#'
-#' @export
-#'
-#' @examples
-#'\dontrun{
-#' library(dplyr)
-#' data(turnover_act_size)
-#'
-#' # Prepare data with primary secret ----
-#' turnover_act_size <- turnover_act_size %>%
-#'   mutate(
-#'     is_secret_freq = N_OBS > 0 & N_OBS < 3,
-#'     is_secret_dom = ifelse(MAX == 0, FALSE, MAX/TOT>0.85),
-#'     is_secret_prim = is_secret_freq | is_secret_dom
-#'   )
-#'
-#' # Make hrc file of business sectors ----
-#' data(activity_corr_table)
-#' hrc_file_activity <- activity_corr_table %>%
-#'   write_hrc2(file_name = "hrc/activity")
-#'
-#' # Compute the secondary secret ----
-#' options(
-#'   rtauargus.tauargus_exe =
-#'     "Y:/Logiciels/TauArgus/TauArgus4.2.2b1/TauArgus.exe"
-#' )
-#'
-#' res <- tab_rtauargus2(
-#'   tabular = turnover_act_size,
-#'   files_name = "turn_act_size",
-#'   dir_name = "tauargus_files",
-#'   explanatory_vars = c("ACTIVITY", "SIZE"),
-#'   hrc = c(ACTIVITY = hrc_file_activity),
-#'   totcode = c(ACTIVITY = "Total", SIZE = "Total"),
-#'   secret_var = "is_secret_prim",
-#'   value = "TOT",
-#'   freq = "N_OBS"
-#' )
-#' }
-tab_rtauargus2 <- function(
-    tabular,
-    files_name = NULL,
-    dir_name = NULL,
-    explanatory_vars,
-    totcode,
-    hrc = NULL,
-    secret_var = NULL,
-    secret_no_pl = NULL,
-    cost_var = NULL,
-    value = "value",
-    freq = "freq",
-    ip = 10,
-    suppress = "MOD(1,5,1,0,0)",
-    ...
-){
-
-  .dots = list(...)
-
-  params <- param_function(tab_rtauargus, .dots)
-  params$tabular = tabular
-  params$files_name = files_name
-  params$dir_name = dir_name
-  params$explanatory_vars = explanatory_vars
-  params$totcode = totcode
-  params$hrc = hrc
-  params$secret_var = secret_var
-  params$secret_no_pl = secret_no_pl
-  params$cost_var = cost_var
-  params$value = value
-  params$freq = freq
-  if(is.null(ip)){
-    if(!"safety_rules" %in% names(params)){
-      stop("Either ip or safety_rules has to be set.")
-    }
-  }else{
-    params$safety_rules = paste0("MAN(",ip,")")
-  }
-  params$ip = ip
-  params$suppress = suppress
-  params$show_batch_console = FALSE
-  params$output_type = 4
-  params$output_options = ""
-  params$unif_labels = TRUE
-  params$separator = ","
-  params$verbose = FALSE
-
-  do.call("tab_rtauargus", params)
-
 }
