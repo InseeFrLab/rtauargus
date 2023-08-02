@@ -55,7 +55,7 @@
 #' data <- data %>% mutate(VALUE = 1)
 #'
 #'
-#' hrc_act <- "output/hrc_ACT.hrc"
+#' hrc_act <- "hrc/hrc_ACT4.hrc"
 #'
 #' sdcHierarchies::hier_create(root = "Total", nodes = c("A","B","C","D","E","F","G")) %>%
 #'   sdcHierarchies::hier_add(root = "A", nodes = c("A1","A2","A3")) %>%
@@ -126,7 +126,7 @@
 #'
 #' data <- data %>% mutate(VALUE = 1:n())
 #'
-#' hrc_act <- "output/hrc_ACT.hrc"
+#' hrc_act <- "hrc/hrc_ACT5.hrc"
 #' sdcHierarchies::hier_create(root = "Total_A", nodes = paste0("A", seq(1,5),"_")) %>%
 #'   sdcHierarchies::hier_add(root = "A1_", nodes = paste0("A1_", seq(1,7))) %>%
 #'   sdcHierarchies::hier_add(root = "A2_", nodes = paste0("A2_", seq(1,9))) %>%
@@ -136,7 +136,7 @@
 #'   select(levels) %>%
 #'   write.table(file = hrc_act, row.names = F, col.names = F, quote = F)
 #'
-#' hrc_geo <- "output/hrc_GEO.hrc"
+#' hrc_geo <- "hrc/hrc_GEO5.hrc"
 #' sdcHierarchies::hier_create(root = "Total_G", nodes = c("GA","GB")) %>%
 #'   sdcHierarchies::hier_add(root = "GA", nodes = c("GA1","GA2","GA3")) %>%
 #'   sdcHierarchies::hier_add(root = "GB", nodes = c("GB1","GB2","GB3","GB4")) %>%
