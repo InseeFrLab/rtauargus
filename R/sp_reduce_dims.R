@@ -21,10 +21,10 @@
 #' @param vec_sep vector of candidate separators to use
 #' @param verbose print the different steps of the function to inform the user of progress
 #'
-#' @return list(tabs, hrcs, alt_tot, vars, sep, totcode, hrcfiles, fus_vars)
+#' @return list(tabs, alt_hrc, alt_totcode, vars, sep, totcode, hrc, fus_vars)
 #' tabs: named list of 3-dimensional dataframes with nested hierarchies
-#' hrcs: named list of hrc specific to the variables created during merging to go to dimension 3
-#' alt_tot: named list of totals specific to the variables created during merging to go to dimension 3
+#' alt_hrc: named list of hrc specific to the variables created during merging to go to dimension 3
+#' alt_totcode: named list of totals specific to the variables created during merging to go to dimension 3
 #' vars: categorical variables of the output dataframes
 #' sep: separator used to link the variables
 #' totcode: named vector of totals for all categorical variables
@@ -502,10 +502,10 @@ reduce_dims <- function(
 #' @param var_fus the fused variables during reduce_dims
 #' @param LIMIT the LIMIT of rows of the tables (use a LIMIT for rtauargus )
 #'
-#' @return list(tabs, hrcs, alt_tot, vars, sep, totcode, hrcfiles, fus_vars)
+#' @return list(tabs, alt_hrc, alt_totcode, vars, sep, totcode, hrcfiles, fus_vars)
 #' tabs: named list of 3-dimensional dataframes with nested hierarchies
-#' hrcs: named list of hrc specific to the variables created during merging to go to dimension 3
-#' alt_tot: named list of totals specific to the variables created during merging to go to dimension 3
+#' alt_hrc: named list of hrc specific to the variables created during merging to go to dimension 3
+#' alt_totcode: named list of totals specific to the variables created during merging to go to dimension 3
 #' vars: categorical variables of the output dataframes
 #' sep: separator used to link the variables
 #' totcode: named vector of totals for all categorical variables
@@ -533,9 +533,9 @@ split_tab <- function(res, var_fus, LIMIT) {
 
     # Create of how to split
 
-    hrc <- res$hrcs[[t]][[var_fus]]
-    total <- res$alt_tot[[t]][[var_fus]]
-    autre_totaux <-res$alt_tot[[t]][names(res$alt_tot[[t]]) != (var_fus)]
+    hrc <- res$alt_hrc[[t]][[var_fus]]
+    total <- res$alt_totcode[[t]][[var_fus]]
+    autre_totaux <-res$alt_totcode[[t]][names(res$alt_totcode[[t]]) != (var_fus)]
 
     res_sdc <-sdcHierarchies::hier_import(inp = hrc, from = "hrc",root = total) %>%
       sdcHierarchies::hier_convert(as = "sdc")
@@ -556,7 +556,7 @@ split_tab <- function(res, var_fus, LIMIT) {
     names(tabs) <- noms
     tabs2 <- append(tabs2, tabs)
 
-    # alt_tot for tauargus
+    # alt_totcode for tauargus
 
     liste_alt_tot <- setNames(lapply(1:n, function(i) {
       totali <- c(codes_split[[i]][1])
@@ -574,12 +574,12 @@ split_tab <- function(res, var_fus, LIMIT) {
 
     # remove hierarchies from the variable we split and naming it
 
-    res$hrcs[[t]][[var_fus]] <- NULL
+    res$alt_hrc[[t]][[var_fus]] <- NULL
 
-    if (length(res$hrcs[[t]]) != 0) {
+    if (length(res$alt_hrc[[t]]) != 0) {
 
-      hrc_e <- list(res$hrcs[[t]])
-      names(hrc_e) <- names(res$hrcs[[t]])
+      hrc_e <- list(res$alt_hrc[[t]])
+      names(hrc_e) <- names(res$alt_hrc[[t]])
 
       alt_hrcs <- replicate(n, hrc_e)
       names(alt_hrcs) <- noms
@@ -592,9 +592,9 @@ split_tab <- function(res, var_fus, LIMIT) {
 
   table <- names(res$tabs[!(names(res$tabs) %in% table_a_gerer)])
   tabs_tot <- append(res$tabs[table], tabs2)
-  alt_tot <- append(res$alt_tot[table],all_tot_stock)
+  alt_totcode <- append(res$alt_totcode[table],all_tot_stock)
   vars <- append(res$vars[table], list_vars)
-  hrcs <- append( res$hrcs[table],list_alt_hrcs)
+  hrcs <- append( res$alt_hrc[table],list_alt_hrcs)
   if (length(hrcs) == 0) { hrcs <- NULL }
 
 
@@ -602,10 +602,10 @@ split_tab <- function(res, var_fus, LIMIT) {
     tabs = tabs_tot,
     vars = vars,
     sep = res$sep,
-    hrcs = hrcs,
+    alt_hrc = hrcs,
     totcode = res$totcode,
-    alt_tot = alt_tot,
-    hrcfile = res$hrcfile,
+    alt_totcode = alt_totcode,
+    hrc = res$hrc,
     fus_vars = res$fus_vars
   )
   return(res)
@@ -781,7 +781,7 @@ format4 <- function(res, nom_dfs, sep, totcode, hrcfiles) {
   names(tabs) <- c(paste0(nom_dfs, 1:n, sep = ""))
 
 
-  #Noms des hrcs
+  #Noms des alt_hrc
   res2 <- setNames(
     lapply(
       seq_along(res$tabs),
@@ -804,12 +804,12 @@ format4 <- function(res, nom_dfs, sep, totcode, hrcfiles) {
   return (
     list(
       tabs = tabs,
-      hrcs = res2,
-      alt_tot = res3,
+      alt_hrc = res2,
+      alt_totcode = res3,
       vars = list_vars,
       sep = sep,
       totcode = totcode_2,
-      hrcfile = hrcfiles,
+      hrc = hrcfiles,
       fus_vars = res$vars
     )
   )
@@ -863,7 +863,7 @@ format5 <- function(res, nom_dfs, sep, totcode, hrcfiles) {
     names(list_vars) <- c(paste0(nom_dfs, 1:n, sep = ""))
     names(tabs) <- c(paste0(nom_dfs, 1:n, sep = ""))
 
-    #Noms des hrcs
+    #Noms des alt_hrc
 
     res2 <- setNames(lapply(seq_along(res$tabs), function(i) {
       list1 <- setNames(list(res$hrcs4_3[[i]]), var_cross)
@@ -887,12 +887,12 @@ format5 <- function(res, nom_dfs, sep, totcode, hrcfiles) {
   return (
     list(
       tabs = tabs,
-      hrcs = res2,
-      alt_tot = res3,
+      alt_hrc = res2,
+      alt_totcode = res3,
       vars = list_vars,
       sep = sep,
       totcode = totcode_2,
-      hrcfile = hrcfiles,
+      hrc = hrcfiles,
       fus_vars = res$vars
     )
   )
