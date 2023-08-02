@@ -102,8 +102,9 @@
 #'   secret_var = "is_secret_prim",
 #'   value = "pizzas_tot",
 #'   freq = "nb_obs",
-#'   nb_tab = "min",
-#'   split_tab = TRUE
+#'   nb_tab = "smart",
+#'   split_tab = TRUE,
+#'   LIMIT = 400
 #' )
 #' }
 #' @export

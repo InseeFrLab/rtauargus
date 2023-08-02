@@ -337,11 +337,24 @@ reduce_dims <- function(
           v2 <- choix_3_var$vars[[2]]
           v3 <- choix_3_var$vars[[3]]
           v4 <- paste(v1, v2, sep = sep)
+
+          if (choix_3_var$max_row > LIMIT){
+          cat(c("Warning when choosing variables:
+The limit of ",LIMIT," cannot be achieved.
+The largest table has ",choix_3_var$max_row," rows.\n"))
+          }
+
         } else {
           v1 <- choix_4_var$vars[[1]]
           v2 <- choix_4_var$vars[[2]]
           v3 <- choix_4_var$vars[[3]]
           v4 <- choix_4_var$vars[[4]]
+
+          if (choix_3_var$max_row > LIMIT){
+            cat(c("Warning when choosing variables:
+The limit of ",LIMIT," cannot be achieved.
+The largest table has ",choix_3_var$max_row," rows.\n"))
+          }
         }
 
         # Return to the primitive implementation to minimize or maximize
@@ -357,7 +370,8 @@ reduce_dims <- function(
     }
 
     if (verbose) {
-      cat("Reducing from 5 to 4...\n")
+      cat("
+Reducing from 5 to 4...\n")
     }
 
     res <- from_5_to_3(tab_to_split = tab_to_split,
@@ -398,6 +412,12 @@ reduce_dims <- function(
         v1 <- choix_2_var$vars[[1]]
         v2 <- choix_2_var$vars[[2]]
 
+        if (choix_2_var$max_row > LIMIT){
+          cat(c("Warning when choosing variables:
+The limit of ",LIMIT," cannot be achieved.
+The largest table has ",choix_2_var$max_row," rows.\n"))
+        }
+
         # Return to the primitive implementation to minimize or maximize
         # the number of tables since the old implementation is not bad and is
         # faster than calculating the size and number of generated tables
@@ -409,7 +429,8 @@ reduce_dims <- function(
     }
 
     if (verbose) {
-      cat("Reducing from 4 to 3...\n")
+      cat("
+Reducing from 4 to 3...\n")
     }
 
     res <- from_4_to_3(tab_to_split = tab_to_split,
@@ -469,7 +490,7 @@ reduce_dims <- function(
     for (var_fus in liste_var_fus){
 
       if (verbose) {
-        cat(paste(var_fus,"\n"))
+        cat(paste("",var_fus,"\n"))
       }
 
       res <- split_tab(res = res,
@@ -478,7 +499,7 @@ reduce_dims <- function(
     }
 
     if (verbose) {
-      cat(paste(nom_dfs,"has generated",length(res$tabs),"tables in total\n\n\n"))
+      cat(paste(nom_dfs,"has generated",length(res$tabs),"tables in total\n\n"))
     }
   }
 
@@ -487,9 +508,9 @@ reduce_dims <- function(
     max_row <- max(sapply(res$tabs, nrow))
 
     if (max_row > LIMIT){
-      warning(c("
-      The limit of ",LIMIT," cannot be achieved.
-      The largest table has ",max_row," rows."))
+      cat(c("Warning after splitting :
+The limit of ",LIMIT," cannot be achieved.
+The largest table has ",max_row," rows.\n\n"))
     }
   }
 

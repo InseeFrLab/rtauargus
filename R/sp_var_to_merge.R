@@ -217,9 +217,11 @@ var_to_merge_fragment <- function(
       # Return the result with the fewest tables among those
       # with the shortest tables
       min_res_max <- min(df$res_max)
-      warning(c("
-      The limit of ",LIMIT," cannot be achieved.
-      The largest table has ",min_res_max," rows."))
+
+      # Silence warning since it is only display at the end...
+      # warning(c("
+      # The limit of ",LIMIT," cannot be achieved.
+      # The largest table has ",min_res_max," rows."))
 
       filtered_df <- df[df$res_max == min_res_max, ]
 
