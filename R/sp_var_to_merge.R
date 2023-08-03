@@ -241,10 +241,10 @@ var_to_merge_fragment <- function(
 
 generate_a_pair <- function(totcode) {
   # Retrieve the categorical variables from the dataframe
-  var_cat <- names(totcode)
+  cat_vars <- names(totcode)
 
   # Use combn to get all combinations of two elements
-  comb <- combn(var_cat, 2)
+  comb <- combn(cat_vars, 2)
 
   # Transform the results into a list of vectors
   result <- split(t(comb), seq(ncol(comb)))
@@ -254,10 +254,10 @@ generate_a_pair <- function(totcode) {
 
 generate_two_pairs <- function(totcode) {
   # Retrieve the categorical variables from the dataframe
-  var_cat <- names(totcode)
+  cat_vars <- names(totcode)
 
   # Get all combinations of four elements
-  comb <- combn(var_cat, 4)
+  comb <- combn(cat_vars, 4)
 
   # For each combination, obtain two disjoint pairs
   result <- lapply(seq(ncol(comb)), function(i) {
@@ -297,10 +297,10 @@ generate_two_pairs <- function(totcode) {
 
 generate_a_triplet <- function(totcode) {
   # Retrieve the categorical variables from the dataframe
-  var_cat <- names(totcode)
+  cat_vars <- names(totcode)
 
   # Get all combinations of three elements
-  comb <- combn(var_cat, 3)
+  comb <- combn(cat_vars, 3)
 
   # Transform the result into a list of vectors
   result <- split(t(comb), seq(ncol(comb)))
@@ -337,7 +337,7 @@ generate_a_triplet <- function(totcode) {
 #'
 #' # Dimension 4
 #' data <- expand.grid(
-#'   ACT = c("Total", "A", "B", "A1", "A2","A3", "B1", "B2","B3","B4","C","D","E","F","G","B5"),
+#'   ACT = c("Total", "A", "B", "A1", "A2","A3", "B1", "B2","B3","B4","C","name_non_changed_vars","E","F","G","B5"),
 #'   GEO = c("Total", "G1", "G2"),
 #'   SEX = c("Total", "F", "M"),
 #'   AGE = c("Total", "AGE1", "AGE2"),
@@ -350,7 +350,7 @@ generate_a_triplet <- function(totcode) {
 #'
 #' hrc_act <- "output/hrc_ACT.hrc"
 #'
-#' sdcHierarchies::hier_create(root = "Total", nodes = c("A","B","C","D","E","F","G")) %>%
+#' sdcHierarchies::hier_create(root = "Total", nodes = c("A","B","C","name_non_changed_vars","E","F","G")) %>%
 #'   sdcHierarchies::hier_add(root = "A", nodes = c("A1","A2","A3")) %>%
 #'   sdcHierarchies::hier_add(root = "B", nodes = c("B1","B2","B3","B4","B5")) %>%
 #'   sdcHierarchies::hier_convert(as = "argus") %>%
@@ -588,12 +588,12 @@ length_tabs_5_4_var <- function(dfs, v1, v2, v3, v4, totcode, hrcfiles = NULL) {
 
   # Calculate the total number of rows by multiplying with the unique modalities of non-merged variables.
 
-  list_var_non_fusionnées <- names(totcode[!(names(totcode) %in% c(v1, v2, v3, v4))])
+  list_non_fused_vars <- names(totcode[!(names(totcode) %in% c(v1, v2, v3, v4))])
 
-  mod_var_non_fusionnées <- lapply(list_var_non_fusionnées,
+  non_fused_vars_mod <- lapply(list_non_fused_vars,
                                    function(x)  length(unique(dfs[[x]])))
 
-  prod_numbers <- prod(unlist(mod_var_non_fusionnées))
+  prod_numbers <- prod(unlist(non_fused_vars_mod))
 
   nb_rows_tot <- lapply(unlist(nb_rows), function(x) x * prod_numbers)
 
@@ -694,12 +694,12 @@ length_tabs_5_3_var <- function(dfs, v1, v2, v3, totcode, hrcfiles = NULL) {
 
   # Calculate the total number of rows by multiplying with the unique modalities of non-merged variables.
 
-  list_var_non_fusionnées <- names(totcode[!(names(totcode) %in% c(v1, v2, v3))])
+  list_non_fused_vars <- names(totcode[!(names(totcode) %in% c(v1, v2, v3))])
 
-  mod_var_non_fusionnées <- lapply(list_var_non_fusionnées,
+  non_fused_vars_mod <- lapply(list_non_fused_vars,
                                    function(x)  length(unique(dfs[[x]])))
 
-  prod_numbers <- prod(unlist(mod_var_non_fusionnées))
+  prod_numbers <- prod(unlist(non_fused_vars_mod))
 
   nb_rows_tot <- lapply(unlist(nb_rows), function(x) x * prod_numbers)
 

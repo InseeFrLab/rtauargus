@@ -1,7 +1,7 @@
 #' Transition from 4 to 3 variables by merging two non-hierarchical variables
 #'
 #' @param dfs data.frame with 4 categorical variables (n >= 2 in the general case)
-#' @param nom_dfs name of the data.frame in the list provided by the user
+#' @param dfs_name name of the data.frame in the list provided by the user
 #' @param v1 non-hierarchical categorical variable
 #' @param v2 non-hierarchical categorical variable
 #' @param totcode named vector of totals for categorical variables
@@ -52,14 +52,14 @@
 #'   write.table(file = hrc_sex, row.names = F, col.names = F, quote = F)
 #'
 #' res1 <- from_4_to_3_case_0_hr(dfs = data,
-#'                                 nom_dfs = "nom_dfs",
+#'                                 dfs_name = "dfs_name",
 #'                                 v1 = "ECO",v2 = "AGE",
 #'                                 totcode = c(ACT = "Total",SEX = "Total",
 #'                                             AGE = "Total",ECO = "PIB"),
 #'                                 dir_name = "output")
 from_4_to_3_case_0_hr <- function(
     dfs,
-    nom_dfs,
+    dfs_name,
     v1,
     v2,
     totcode,
@@ -95,7 +95,7 @@ from_4_to_3_case_0_hr <- function(
   var2_mods_n <- length(var2_mods_except_total)
 
   # generalization creation of the tables with merged variables
-  creation_table_3_var <- function(var_i_total,
+  table_and_hierarchy_creator <- function(var_i_total,
                                    var_j_total,
                                    var_i_mods_except_total,
                                    var_j_mods_except_total,
@@ -153,7 +153,7 @@ from_4_to_3_case_0_hr <- function(
   }
 
   # We apply the function for "i=1, j=2" then for "i=2,j=1"
-  res1 <-  creation_table_3_var(var1_total,
+  res1 <-  table_and_hierarchy_creator(var1_total,
                                 var2_total,
                                 var1_mods_except_total,
                                 var2_mods_except_total,
@@ -162,7 +162,7 @@ from_4_to_3_case_0_hr <- function(
   tab1 <- res1[[1]]
   tab1_corresp <- res1[[2]]
 
-  res2 <- creation_table_3_var(var2_total,
+  res2 <- table_and_hierarchy_creator(var2_total,
                                var1_total,
                                var2_mods_except_total,
                                var1_mods_except_total,
@@ -178,7 +178,7 @@ from_4_to_3_case_0_hr <- function(
 
   hrc_tab1 <- rtauargus::write_hrc2(tab1_corresp,
                                     file_name = paste(dir_name,"/",
-                                                      paste("hrc",nom_dfs,
+                                                      paste("hrc",dfs_name,
                                                             v1,sep = "_"),
                                                       ".hrc",
                                                       sep=""),
@@ -187,7 +187,7 @@ from_4_to_3_case_0_hr <- function(
 
   hrc_tab2 <- rtauargus::write_hrc2(tab2_corresp,
                                     file_name = paste(dir_name,"/",
-                                                      paste("hrc",nom_dfs,
+                                                      paste("hrc",dfs_name,
                                                             v2,sep = "_"),
                                                       ".hrc",
                                                       sep=""),
@@ -196,8 +196,8 @@ from_4_to_3_case_0_hr <- function(
 
   tabs <- list(tab1, tab2)
 
-  names(tabs) <- c(paste(nom_dfs,v1, sep="_"),
-                   paste(nom_dfs,v2, sep="_"))
+  names(tabs) <- c(paste(dfs_name,v1, sep="_"),
+                   paste(dfs_name,v2, sep="_"))
 
   hrcs <- list(hrc_tab1,
                hrc_tab2)
@@ -206,7 +206,7 @@ from_4_to_3_case_0_hr <- function(
 
   total_total = paste(totcode[v1],
                       totcode[v2],
-                      sep=sep)
+                      sep = sep)
 
   alt_tot=list(total_total,
                total_total)

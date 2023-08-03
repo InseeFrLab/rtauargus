@@ -2,7 +2,7 @@
 #' and a non-hierarchical variable
 #'
 #' @param dfs data.frame with 4 categorical variables (n >= 2 in the general case)
-#' @param nom_dfs name of the data.frame in the list provided by the user
+#' @param dfs_name name of the data.frame in the list provided by the user
 #' @param v1 non-hierarchical categorical variable
 #' @param v2 hierarchical categorical variable
 #' @param totcode named vector of totals for categorical variables
@@ -55,7 +55,7 @@
 #'   write.table(file = hrc_sex, row.names = F, col.names = F, quote = F)
 #'
 #' res1 <- from_4_to_3_case_1_hr(dfs = data,
-#'                                 nom_dfs = "nom_dfs",
+#'                                 dfs_name = "dfs_name",
 #'                                 v1 = "ECO",v2 = "SEX",
 #'                                 totcode = c(ACT = "Total",SEX = "Total",
 #'                                             AGE = "Total",ECO = "PIB"),
@@ -63,7 +63,7 @@
 #'                                 dir_name = "output")
 from_4_to_3_case_1_hr <- function(
   dfs,
-  nom_dfs,
+  dfs_name,
   v1,
   v2,
   totcode,
@@ -91,25 +91,25 @@ from_4_to_3_case_1_hr <- function(
   # Reduction of hierarchy #
   ###########################
 
-  liste_df_4_var_2_non_hr <- lapply(
+  liste_df_4_var_0_hr <- lapply(
     codes_split,
     function(codes){
       res <- dfs %>%
         filter(dfs[[v2]] %in% codes)
     }
   )
-  # We now have data.frames with 2 non-hierarchical variables
+  # We now have data.frames with 0 hierarchical variables
   # therefore we can apply the dedicated method
 
-  # Updating the arguments then call the function cas_2_non_hrc
-  appel_4_3_non_hier <- function(dfs, i){
+  # Updating the arguments then call the function from_4_to_3_case_0_hr
+  call_4_to_3_0_hr <- function(dfs, i){
 
     if (i <= length(codes_split)) {
       totcode[v2] <- codes_split[[i]][1]
-      nom_dfs <- paste(nom_dfs, totcode[v2], sep = "_")
+      dfs_name <- paste(dfs_name, totcode[v2], sep = "_")
 
       from_4_to_3_case_0_hr(dfs = dfs,
-                               nom_dfs = nom_dfs,
+                               dfs_name = dfs_name,
                                v1 = v1,
                                v2 = v2,
                                totcode = totcode,
@@ -123,8 +123,8 @@ from_4_to_3_case_1_hr <- function(
   }
 
   # We transform all our 4 var tables into 3 var
-  res <- lapply(seq_along(liste_df_4_var_2_non_hr), function(i) {
-    appel_4_3_non_hier(liste_df_4_var_2_non_hr[[i]], i)
+  res <- lapply(seq_along(liste_df_4_var_0_hr), function(i) {
+    call_4_to_3_0_hr(liste_df_4_var_0_hr[[i]], i)
   })
 
 

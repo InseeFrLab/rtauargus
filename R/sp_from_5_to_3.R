@@ -26,7 +26,7 @@ nb_nodes <- function(hrcfiles, v = NULL, hrc_name = TRUE) {
 #' Function reducing from 5 to 3 categorical variables
 #'
 #' @param dfs data.frame with 5 categorical variables (n >= 3 in the general case)
-#' @param nom_dfs name of the data.frame in the list provided by the user
+#' @param dfs_name name of the data.frame in the list provided by the user
 #' @param totcode named vector of totals for categorical variables
 #' @param hrcfiles named vector indicating the hrc files of hierarchical variables
 #' among the categorical variables of dfs
@@ -111,7 +111,7 @@ nb_nodes <- function(hrcfiles, v = NULL, hrc_name = TRUE) {
 #' # Results of the function
 #' res1 <- from_5_to_3(
 #'   dfs = data,
-#'   nom_dfs = "tab",
+#'   dfs_name = "tab",
 #'   totcode = c(SEX="Total",AGE="Total", GEO="Total", ACT="Total", ECO = "PIB"),
 #'   hrcfiles = c(ACT = hrc_act, GEO = hrc_geo, SEX = hrc_sex),
 #'   sep_dir = TRUE,
@@ -124,7 +124,7 @@ nb_nodes <- function(hrcfiles, v = NULL, hrc_name = TRUE) {
 #'
 #' res2 <- from_5_to_3(
 #'   dfs = data,
-#'   nom_dfs = "tab",
+#'   dfs_name = "tab",
 #'   totcode = c(SEX="Total",AGE="Total", GEO="Total", ACT="Total", ECO = "PIB"),
 #'   hrcfiles = c(ACT = hrc_act, GEO = hrc_geo, SEX = hrc_sex),
 #'   sep_dir = TRUE,
@@ -133,7 +133,7 @@ nb_nodes <- function(hrcfiles, v = NULL, hrc_name = TRUE) {
 #' )
 from_5_to_3 <- function(
     dfs,
-    nom_dfs,
+    dfs_name,
     totcode,
     hrcfiles = NULL,
     sep_dir = FALSE,
@@ -155,7 +155,7 @@ from_5_to_3 <- function(
 
   # We remove a dimension from our starting dataframe
   res_5_4 <- from_4_to_3(dfs = dfs,
-                                 nom_dfs = nom_dfs,
+                                 dfs_name = dfs_name,
                                  totcode = totcode,
                                  hrcfiles = hrcfiles,
                                  sep_dir = TRUE,
@@ -165,7 +165,7 @@ from_5_to_3 <- function(
                                  sep = sep,
                                  maximize_nb_tabs = maximize_nb_tabs)
   if (verbose){
-    cat(paste(nom_dfs,"has generated",length(res_5_4$tabs),"tables in total\n"))
+    cat(paste(dfs_name,"has generated",length(res_5_4$tabs),"tables in total\n"))
     cat("Reducing from 4 to 3...\n")
   }
 
@@ -184,11 +184,11 @@ from_5_to_3 <- function(
   hrcfiles2 <- hrcfiles2[!(names(hrcfiles2) %in% c(v1f, v2f))]
 
   # Categorical variables without hierarchy in our 4D tables
-  var_cat <- c(names(totcode2),new_var)
+  cat_vars <- c(names(totcode2),new_var)
 
-  var_sans_hier <- intersect(
+  non_hier_vars <- intersect(
     setdiff(names(dfs), names(hrcfiles2)),
-    var_cat
+    cat_vars
   )
 
   # Choice of variables for the 4 -> 3 transition and verification of those provided in argument
@@ -197,19 +197,17 @@ from_5_to_3 <- function(
 
   # First variable for the 4 to 3 transition
   if (!is.null(v3)){
-    if (!(v3 %in% var_cat)){
+    if (!(v3 %in% cat_vars)){
       stop(paste("v3 is not a categorical variable, v3 = ", v3,
-                 "The categorical variables are: ",paste(var_cat, collapse = ", ")), sep = "")
+                 "The categorical variables are: ",paste(cat_vars, collapse = ", ")), sep = "")
     }
   } else {
     # we choose a variable avoiding v4
-    v3 <- choisir_var(dfs = dfs[setdiff(names(dfs),v4)],
+    v3 <- chose_var_to_merge(dfs = dfs[setdiff(names(dfs),v4)],
                       totcode = totcode2[setdiff(names(totcode2),v4)],
                       hrcfiles = hrcfiles2[setdiff(names(hrcfiles2),v4)],
                       maximize_nb_tabs = maximize_nb_tabs)
 
-    # We check if the merged variable has fewer nodes than the selected variable
-    nb_noeuds_v3 <- nb_nodes(hrcfiles2, v=v3)
     if (!is.null(v4)){
       # We need to do two different if statements otherwise NULL != new_var crashes!
       if (v4 != new_var & maximize_nb_tabs == TRUE){
@@ -223,9 +221,9 @@ from_5_to_3 <- function(
 
   # Second variable for the 4 to 3 transition
   if (!is.null(v4)){
-    if (!(v4 %in% var_cat)){
+    if (!(v4 %in% cat_vars)){
       stop(paste("v4 is not a categorical variable, v4 = ", v4,
-                 "The categorical variables are: ",paste(var_cat, collapse = ", ")), sep = "")
+                 "The categorical variables are: ",paste(cat_vars, collapse = ", ")), sep = "")
     }
     if (v3 == v4){
       stop("Error. You are trying to merge a variable with itself")
@@ -233,13 +231,11 @@ from_5_to_3 <- function(
 
   } else {
     # we choose a variable avoiding v3
-    v4 <- choisir_var(dfs = dfs[setdiff(names(dfs),v3)],
+    v4 <- chose_var_to_merge(dfs = dfs[setdiff(names(dfs),v3)],
                       totcode = totcode2[setdiff(names(totcode2),v3)],
                       hrcfiles = hrcfiles2[setdiff(names(hrcfiles2),v3)],
                       maximize_nb_tabs = maximize_nb_tabs)
 
-    # We check if the merged variable has fewer nodes than the selected variable
-    nb_noeuds_v4 <- nb_nodes(hrcfiles2, v=v4)
     # Rq : v3 can not be NULL
     if (v3 != new_var & maximize_nb_tabs == TRUE){
       v4 <- new_var
@@ -256,7 +252,7 @@ from_5_to_3 <- function(
     totcode2[[new_var]] <- res_5_4$alt_tot[[nom_dfsb]]
 
     from_4_to_3(dfs = dfsb,
-                        nom_dfs = nom_dfsb,
+                        dfs_name = nom_dfsb,
                         totcode = totcode2,
                         hrcfiles = hrcfiles2b,
                         sep_dir = TRUE,
@@ -306,13 +302,13 @@ from_5_to_3 <- function(
     # Calculate the value of nb_nodes once for each res_5_4$hrcs[[x]]
     # to avoid calculating the same quantity twice
     results <- lapply(1:length(res_5_4$hrcs), function(x) {
-      nb_noeuds_val <- 2 * nb_nodes(res_5_4$hrcs[[x]], hrc_name = FALSE) *
+      nb_node_value <- 2 * nb_nodes(res_5_4$hrcs[[x]], hrc_name = FALSE) *
                            nb_nodes(hrcfiles2, non_fused_var)
 
       # Use the calculated value for hrcs5_4 and alt_tot5_4
       list(
-        hrcs = rep(res_5_4$hrcs[[x]], nb_noeuds_val),
-        alt_tot = rep(res_5_4$alt_tot[[x]], nb_noeuds_val)
+        hrcs = rep(res_5_4$hrcs[[x]], nb_node_value),
+        alt_tot = rep(res_5_4$alt_tot[[x]], nb_node_value)
       )
     })
 

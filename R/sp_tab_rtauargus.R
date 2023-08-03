@@ -146,7 +146,7 @@ Reducing dims...\n",files_name,"\n\n")
 
     list_tables <- reduce_dims(
       dfs = tabular,
-      nom_dfs = files_name,
+      dfs_name = files_name,
       totcode = totcode,
       hrcfiles = hrc,
       hrc_dir = dir_name,
