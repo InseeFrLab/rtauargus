@@ -23,8 +23,6 @@
 #' }
 #'
 #' @examples
-#' library(dplyr)
-#'
 #' data <- expand.grid(
 #'   ACT = c("Total", "A", "B", "A1", "A2", "B1", "B2"),
 #'   SEX = c("Total", "F", "M","F1","F2","M1","M2"),

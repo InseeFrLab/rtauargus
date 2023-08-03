@@ -47,7 +47,6 @@
 #' @examples
 #'\dontrun{
 #' library(dplyr)
-#' library(stringr)
 #' data(turnover_act_size)
 #'
 #' # Prepare data with primary secret ----
@@ -133,7 +132,6 @@ tab_rtauargus <- function(
     nb_tab = "smart",
     ...
 ){
-  require(stringr)
 
   .dots <- list(...)
 

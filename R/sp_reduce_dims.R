@@ -42,16 +42,15 @@
 #' }
 #'
 #' @export
-#'
+#' @importFrom sdcHierarchies hier_import hier_convert
+#' @importFrom stringr str_detect
+#' @importFrom dplyr select slice mutate filter intersect setdiff n
 #'
 #' @examples
-#' library(dplyr)
-#' library(stringr)
-#'
 #' # Examples for dimension 4
 #'
 #' data <- expand.grid(
-#'   ACT = c("Total", "A", "B", "A1", "A2","A3", "B1", "B2","B3","B4","C","name_non_changed_vars","E","F","G","B5"),
+#'   ACT = c("Total", "A", "B", "A1", "A2","A3", "B1", "B2","B3","B4","C","D","E","F","G","B5"),
 #'   GEO = c("Total", "G1", "G2"),
 #'   SEX = c("Total", "F", "M"),
 #'   AGE = c("Total", "AGE1", "AGE2"),
@@ -207,9 +206,6 @@ reduce_dims <- function(
   # to save time: parallelize the lapply for variable selection
   #                                     lapply for reducing from 4 to 3 dimensions
   #                                    in the case of dimension 5
-
-  require(sdcHierarchies)
-  require(stringr)
 
   dfs <- as.data.frame(dfs)
 
@@ -643,10 +639,6 @@ split_tab <- function(res, var_fus, LIMIT) {
 #' @export
 #'
 #' @examples
-#' library(dplyr)
-#' library(stringr)
-#'
-#'
 #' data <- expand.grid(
 #'   AGE = c("+", "How are you?", "No, Not possible!!!"),
 #'   ECO = c("It costs 5€"),
@@ -666,7 +658,6 @@ chose_sep <- function(
                   "\\_?_", "___", "_z_z_z_z")
                   )
 {
-  require(stringr)
 
   liste_var <- names(data)
   liste_mod <- unique(unlist(lapply(data, unique)))
@@ -723,8 +714,6 @@ chose_sep <- function(
 #' }
 #'
 #' @examples
-#' library(dplyr)
-#'
 #' data <- expand.grid(
 #'   ACT = c("Total", "A", "B", "A1", "A2", "B1", "B2"),
 #'   GEO = c("Total", "G1", "G2"),
