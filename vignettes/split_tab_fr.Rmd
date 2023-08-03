@@ -21,7 +21,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 Le package rtauargus offre désormais la possibilité de protéger des tableaux à 5 dimensions. De plus, il permet une protection plus rapide pour certains tableaux à 4 dimensions et même la protection de tableaux à 4 dimensions plus grands, qui auparavant dépassaient les capacités de traitement de tauargus.
 
-L'option s'appelle `split_tab` est a FALSE de base pour ne pas changer les programmes existants avec rtaurgus. Pour l'utiliser dans le package il faudra écrire `split_tab = TRUE`.
+L'option s'appelle `split_tab`. Elle est à FALSE de base pour ne pas changer les programmes existants avec rtaurgus. Pour l'utiliser dans le package il faudra écrire `split_tab = TRUE`.
 Cette option change comment le secret est posé mais il ne change pas le type de la sortie donné par rtauargus.** Par contre, Il faut obligatoirement donner une table à rtaurgus ayant le secret primaire déja posé **.
 Cette option fonctionne avec un algorithme plutôt simple dans l'idée. L'idée est de diviser un tableaux à 4 ou 5 dimensions en une liste de tableaux à 3 dimensions sans perdre de valeurs, de lancer tab_multimanager sur cette liste de tables (cf protect_multi_tables_fr) et de faire le secret . Cette fonctionalité est très utile pour des tableaux plus grands que tauargus n'arrivait pas à traiter notamment ou même des tableaux à 4 dimensions avec au moins une hiérarchie. 
 
@@ -54,14 +54,14 @@ Par exemple :
 <img src="tab_SEX_AGE.png" alt="base_tab" width="600" height="500">
 </div>
 
-Avec ces deux tables ont crées alors deux hiérarchies emboitées différentes sur la variable SEX_AGE comme on peut le voir avec les tabulations dans les tableaux. On peut noter que pour ne pas avoir de hiérarchies non emboitées nous sommes obliger de faire au moins 2 tables car on ne peut pas expliquer facilement à l'aide de hiérarchies que :
+Avec ces deux tables on crée alors deux hiérarchies emboitées différentes sur la variable SEX_AGE comme on peut le voir avec les tabulations dans les tableaux. On peut noter que pour ne pas avoir de hiérarchies non emboitées nous sommes obligé de faire au moins 2 tables car on ne peut pas expliquer facilement à l'aide de hiérarchies que :
 
 <div style="text-align: center; font-size: 20px;">
     Total_Ensemble = Total_Adulte + Total_Enfant
 </div>
 
 <div style="text-align: center; font-size: 20px;">
-    Total_Ensemble = Total_Femme + Total_Homme
+    Total_Ensemble = Femme_Ensemble + Homme_Ensemble
 </div>
 
 
@@ -74,37 +74,25 @@ On peut donner l'exemple de la variable hiérarchique GEO qui est composé de de
   <img src="GEO.png" alt="hierarchie" width="500" height="200">
 </div>
 
-On peut dès lors se poser la question sur le nombre de tableaux qui seront créer par cette méthode.
-Cette méthode crée des tableaux en dépendant du nombre de noeuds dans le tableaux.
+On peut dès lors se poser la question sur le nombre de tableaux qui seront créés par cette méthode et la longueur de chacun. Les explications relatives à ce sujet se trouve dans `split_tab_theorie_fr.Rmd`.
 
-Dès lors, a 4 dimension :
+Cette méthode crée des tableaux en dépendant du nombre de noeuds  de chaques variables présentes dans le tableaux.
 
-n = 2 x nb_noueuds_v1 x nb_noueuds_v1
-
-Où v1 et v2 sont les variables fusionnées lors du passage de 4 à 3
-et nb_noeuds le nombre de noeuds associées à la variable.
-
-et a 5 dimensions :
-
-n = 4 x nb_noeuds_v1 x nb_noeuds_v2 x nb_noeuds_v3’ x nb_noeuds_v4’
-
-Où v1 et v2 sont les variables fusionnées lors du passage de 5 à 4 dimensions et v3’ et v4’ les variables lors du passage de 4 à 3 dimensions.
-
-Dès lors après avoir créer notre liste de tables à l'aide de `reduce_dims` , on pose le secret avec `tab_multimanager` et on reforme à partir de cette liste secrétisé le tableaux de base secrétisé avec `restore_format`.
+Dès lors après avoir créé notre liste de tables à l'aide de `reduce_dims`, on pose le secret avec `tab_multimanager` et on reforme à partir de cette liste secrétisé le tableaux de base secrétisé avec `restore_format`.
 
 ## Utilisation de différents paramètres liées à split_tab
 
-Comme dis dans l'introduction `nb_tabs` permet de demander le nombre de tableaux que l'on veut faire entre min max et le smart.
+Comme dit dans l'introduction `nb_tabs` permet de demander le nombre de tableaux que l'on veut faire entre min max et le smart.
 
 Le `min` choisi construit le minimum de table a 3 dimensions lors de la fusion donc il met en priorité la fusion de variables non hiérarchiques .
 Le `max` au contraire construit le maximum de table a 3 dimensions possible lors de la fusion et prends en priorité les variables hiérarchiques .
 Le `smart` lui contruit le minimum de table a 3 dimensions lors de la fusion des variables sachant qu'elles ont toutes un nombre de ligne en dessous de la limite.
 
-Après se premier traitement. On utilise la fonction `sp_split_tab` dans `reduce_dims` qui elle prend les tables toujours au-dessus de la limite de taille posé et les replite par rapport aux modalités des hiérarchies créées par les variables fusionnées. Bien évidemment il est possible que la limite de taille soit toujours atteintes et dans ce cas nous affichons un Warning et prevenons l'utilisateur que la table puisse être trop grande.
+Après ce premier traitement. On utilise la fonction `sp_split_tab` dans `reduce_dims` qui elle prend les tables toujours au-dessus de la limite de taille posé et les replite par rapport aux modalités des hiérarchies créées par les variables fusionnées. Bien évidemment il est possible que la limite de taille soit toujours atteintes et dans ce cas nous affichons un Warning et prevenons l'utilisateur que la table puisse être trop grande.
 
-## EXEMPLE D'UTILISATION
+# EXEMPLE D'UTILISATION
 
-# Spécifions l'emplacement du fichier TauArgus.exe sur notre ordinateur :
+## Spécifions l'emplacement du fichier TauArgus.exe sur notre ordinateur :
 
 
 ```{r}
@@ -114,17 +102,19 @@ options(
 )
 ```
 
-# Préparons des données
+## Préparons des données
 
 ```{r}
+devtools::load_all() #rtauargus
+library(tictoc)
 load("../data/test_4_var_1hrc.rda")
 #data("test_4_var_1hrc")
 str(test_4_var_1hrc)
 ```
-# Préparation des arguments pour tab_rtauargus
+## Préparation des arguments pour tab_rtauargus
 ```{r}
 totcode <- c(treff ="Total",cj ="Total", ACTIVITY = "Total",nuts1 ="Total") 
-explanotory_vars<- names(totcode)
+explanatory_vars<- names(totcode)
 
 #data("activity_corr_table")
 
@@ -134,12 +124,12 @@ hrc_file_activity <- write_hrc2(
 )
 hrc_files<-c(ACTIVITY=hrc_file_activity)
 ```
-```{r}
+```{r, eval = FALSE}
 tic()
 res <- tab_rtauargus(
     test_4_var_1hrc,
     dir_name = "tauargus_files/split_tab",
-    explanatory_vars,
+    explanatory_vars = explanatory_vars,
     hrc = hrc_files,
     totcode = totcode,
     value = "pizzas_tot",
@@ -153,9 +143,9 @@ res <- tab_rtauargus(
 toc()
 ```
 
-# On verifie le secret posé
+## On verifie le secret posé
 
-```{r}
+```{r, eval = FALSE}
 
 list_with_status <- 
   res %>%
@@ -174,8 +164,7 @@ str(list_with_status)
 
 ```
 
-
-#### Détail de la vignette
+# Détail de la vignette
 
 - Authors: **<a href="mailto:julien.jamme@insee.fr">Julien Jamme</a>** & **<a href="mailto:nathanael.rastout@insee.fr">Nathanael Rastout</a> ** & **<a> Andre-Raymond Socard </a>**
 & **<a> Wistan Pomel </a>**
@@ -187,3 +176,4 @@ str(list_with_status)
   <p style="text-align: right">
   <a href="#TOC" title="Back to summary">summary &uarr;</a>
   </p>
+
