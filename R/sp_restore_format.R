@@ -7,9 +7,6 @@
 #' @export
 #'
 #' @examples
-#' library(dplyr)
-#' library(stringr)
-#'
 #' # Examples with dimension 4
 #'
 #' data <- expand.grid(
@@ -100,7 +97,6 @@
 #' res2 <- restore_format(masq = res_red_dim$tabs, res = res_red_dim)
 restore_format <- function(masq, res) {
 
-  require(stringr)
   sep <- res$sep
   sep_regex <- gsub("([+])", "\\\\\\1", sep)
 

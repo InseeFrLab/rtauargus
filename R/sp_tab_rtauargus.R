@@ -21,8 +21,12 @@
 #'   \item \code{'smart'}: minimize the number of tables under the constraint
 #'   of their row count.
 #' }
+#' @param dfs_name name used to write hrc files when reducing dims
+#' @param hrc_dir folder used to write hrc files when reducing dims
+#' @param sep_dir whether to write hrcfiles in hrc_dir or in existing hrcfiles location
 #' @param ... any parameter of the tab_rda, tab_arb or run_arb functions, relevant
 #' for the treatment of tabular.
+#'
 #'
 #' @return
 #' If output_type equals to 4, then the original tabular is returned with a new
@@ -46,9 +50,6 @@
 #'
 #' @examples
 #'\dontrun{
-#' library(dplyr)
-#' library(stringr)
-#'
 #' # Compute the secondary secret ----
 #' options(
 #'   rtauargus.tauargus_exe =
@@ -97,8 +98,7 @@
 #'
 #' res_dim5 <- tab_rtauargus4(
 #'   tabular = test_5_var,
-#'   files_name = "test_5_var",
-#'   dir_name = "test_5_var",
+#'   dir_name = "output",
 #'   explanatory_vars = c("A10", "treff","type_distrib","cj","nuts1"),
 #'   totcode = c(A10 = "Total", treff = "Total",type_distrib = "Total",cj = "Total",nuts1 = "Total"),
 #'   secret_var = "is_secret_prim",
@@ -134,20 +134,30 @@ tab_rtauargus4 <- function(
     unif_labels = TRUE,
     LIMIT = 14700,
     nb_tab = "smart",
+    dfs_name = 'tab',
+    hrc_dir = 'alt_hrc',
+    sep_dir = FALSE,
     ...
 ){
 
   .dots = list(...)
 
+  if (is.null(dir_name)){
+    dir_name <- hrc_dir
+  }
+
+  # TODO:
+  # deleting created hrc files at the end of the function ?
+
   # Reduce dims for 4 or 5 dimensions table
   if (length(explanatory_vars) %in% c(4, 5)) {
 
     cat("
-Reducing dims...\n",files_name,"\n\n")
+Reducing dims...\n",dfs_name,"\n\n")
 
     list_tables <- reduce_dims(
       dfs = tabular,
-      dfs_name = files_name,
+      dfs_name = dfs_name,
       totcode = totcode,
       hrcfiles = hrc,
       hrc_dir = dir_name,
@@ -155,7 +165,8 @@ Reducing dims...\n",files_name,"\n\n")
       LIMIT = LIMIT,
       split = TRUE,
       vec_sep = c("___"),
-      verbose = TRUE
+      verbose = TRUE,
+      sep_dir = sep_dir
     )
 
     # TODO : Update the arguments by using the ... argument

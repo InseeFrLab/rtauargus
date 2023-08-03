@@ -19,8 +19,6 @@
 #' @export
 #'
 #' @examples
-#' library(dplyr)
-#'
 #' data <- expand.grid(
 #'   ACT = c("Total", "A", "B", "A1", "A2", "B1", "B2"),
 #'   GEO = c("Total", "GA", "GB", "GA1", "GA2"),
@@ -331,9 +329,6 @@ generate_a_triplet <- function(totcode) {
 #'
 #'
 #' @examples
-#' library(dplyr)
-#'
-#'
 #' # Dimension 4
 #' data <- expand.grid(
 #'   ACT = c("Total", "A", "B", "A1", "A2","A3", "B1", "B2","B3","B4","C","name_non_changed_vars","E","F","G","B5"),
@@ -734,12 +729,7 @@ import_hierarchy <- function(hrcfile) {
 #' @return an integer representing the number of tables generated
 #' @export
 #'
-#' TODO: Generalize the case of 3 variables into one?
-#'
 #' @examples
-#' library(dplyr)
-#'
-#'
 #' # Dimension 4
 #' data <- expand.grid(
 #'   ACT = c("Total", "A", "B", "A1", "A2", "B1", "B2"),
@@ -827,6 +817,9 @@ nb_tab_generated <- function(
   hrcfiles = NULL,
   data = NULL)
 {
+
+  # TODO: Generalize the case of 3 variables into one?
+
   # Case dimension 5: 2 couples created
   if (!is.null(v4)) {
     return(4 * nb_nodes(hrcfiles = hrcfiles, v = v1) *

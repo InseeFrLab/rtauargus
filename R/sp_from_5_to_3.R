@@ -65,8 +65,6 @@ nb_nodes <- function(hrcfiles, v = NULL, hrc_name = TRUE) {
 #' }
 #'
 #' @examples
-#' library(dplyr)
-#'
 #' data <- expand.grid(
 #'   ACT = c("Total", "A", "B", "A1", "A2", "B1", "B2"),
 #'   GEO = c("Total", "GA", "GB", "GA1", "GA2", "GB1", "GB2"),

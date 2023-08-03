@@ -130,8 +130,6 @@ chose_var_to_merge <- function(dfs, totcode, hrcfiles, maximize_nb_tabs = FALSE)
 #' }
 #'
 #' @examples
-#' library(dplyr)
-#'
 #' data <- expand.grid(
 #'   ACT = c("Total", "A", "B", "A1", "A2", "B1", "B2"),
 #'   GEO = c("Total", "G1", "G2"),

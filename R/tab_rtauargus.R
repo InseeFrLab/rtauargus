@@ -47,7 +47,6 @@
 #' @examples
 #'\dontrun{
 #' library(dplyr)
-#' library(stringr)
 #' data(turnover_act_size)
 #'
 #' # Prepare data with primary secret ----
@@ -96,7 +95,6 @@
 #'
 #' res_dim4 <- tab_rtauargus(
 #'   tabular = res_all_dtp,
-#'   files_name = "ca_test_0_hrc",
 #'   dir_name = "ca_test_0_hrc",
 #'   explanatory_vars = c("A10", "treff","type_distrib","cj"),
 #'   totcode = c(A10 = "Total", treff = "Total",type_distrib = "Total",cj = "Total"),
