@@ -14,12 +14,13 @@
 #' @param LIMIT numeric, used to choose which variable to merge (if nb_tab = 'smart')
 #' and split table with a number of row above this limit in order to avoid
 #' tauargus failures
-#' @param nb_tab strategy to choose the variable to merge :
-#' 'min' : minimize the number of tables generated (tables are bigger)
-#' 'max' : maximize the number of the tables générated
-#' (tables are smaller tauargus process may take a long time)
-#' 'smart' : minimize the number of tables generated taking into account
-#' a maximum number of row below LIMIT
+#' @param nb_tab strategy to follow for choosing variables automatically:
+#' \itemize{
+#'   \item \code{'min'}: minimize the number of tables;
+#'   \item \code{'max'}: maximize the number of tables;
+#'   \item \code{'smart'}: minimize the number of tables under the constraint
+#'   of their row count.
+#' }
 #' @param ... any parameter of the tab_rda, tab_arb or run_arb functions, relevant
 #' for the treatment of tabular.
 #'

@@ -1,11 +1,9 @@
-
-
 #' Function to reverse the process of dimension reduction
 #' @param masq a list of data.frames on which the secret has been applied
 #' @param res the result of the dimension reduction function (to retrieve
 #' the merged variables) and the separator (sep).
 #'
-#' @return
+#' @return the original dataframe with 4 or 5 dimensions
 #' @export
 #'
 #' @examples

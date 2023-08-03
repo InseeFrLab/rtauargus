@@ -50,20 +50,21 @@ nb_nodes <- function(hrcfiles, v = NULL, hrc_name = TRUE) {
 #' @param verbose prints the different steps of the function to notify
 #' the user of the progress, mainly for the general function gen_tabs_5_4_to_3()
 #'
-#' @return a list(tabs, hrcs5_4, hrcs4_3, alt_tot5_4, alt_tot4_3, vars)
-#' tabs: named list of dataframes with 3 dimensions (n-2 dimensions in the general case)
-#'       endowed with nested hierarchies
-#' hrcs5_4: named list of hrc specific to the variable created via the merge
-#'          when reducing from 5 to 4 dimensions
-#' hrcs4_3: named list of hrc specific to the variable created via the merge
-#'          when reducing from 4 to 3 dimensions
-#' alt_tot5_4: named list of totals when reducing from 5 to 4 dimensions
-#' alt_tot4_3: named list of totals when reducing from 4 to 3 dimensions
-#' vars: named list of vectors representing the merged variables
-#'       during the two steps of dimension reduction
+#' @return a list containing the following components:
+#' \itemize{
+#'   \item \code{tabs}: named list of dataframes with 3 dimensions
+#'   (n-2 dimensions in the general case) endowed with nested hierarchies
+#'   \item \code{hrcs5_4}: named list of hrc specific to the variable created
+#'   via the merge when reducing from 5 to 4 dimensions
+#'   \item \code{hrcs4_3}: named list of hrc specific to the variable created
+#'   via the merge when reducing from 4 to 3 dimensions
+#'   \item \code{alt_tot5_4}: named list of totals when reducing from 5 to 4 dimensions
+#'   \item \code{alt_tot4_3}: named list of totals when reducing from 4 to 3 dimensions
+#'   \item \code{vars}: named list of vectors representing the merged variables
+#'   during the two steps of dimension reduction
+#' }
 #'
 #' @examples
-#'
 #' library(dplyr)
 #'
 #' data <- expand.grid(

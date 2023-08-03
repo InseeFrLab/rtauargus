@@ -7,9 +7,11 @@
 #' @param hrcfiles named vector of hrc files for categorical variables
 #' @param nb_var number of variables to merge
 #' @param nb_tab strategy to follow for choosing variables automatically:
-#'   - 'min': minimize the number of tables;
-#'   - 'max': maximize the number of tables;
-#'   - 'smart': minimize the number of tables under the constraint of their row count.
+#' \itemize{
+#'   \item \code{'min'}: minimize the number of tables;
+#'   \item \code{'max'}: maximize the number of tables;
+#'   \item \code{'smart'}: minimize the number of tables under the constraint of their row count.
+#' }
 #' @param LIMIT maximum allowed row count in the 'smart' case
 #'
 #' @return A list of vectors representing the chosen variables to merge
@@ -327,9 +329,6 @@ generate_a_triplet <- function(totcode) {
 #' @return a list of the lengths of the tables created during the dimension reduction
 #' @export
 #'
-#' TODO: review the case of a merged trio
-#' Verify if the case of 3 variables, with at least one hierarchical variable, is correct
-#' It seems correct, but the output is not well "sorted"
 #'
 #' @examples
 #' library(dplyr)
@@ -424,6 +423,11 @@ length_tabs <- function(
   totcode,
   hrcfiles = NULL)
 {
+
+  # TODO: review the case of a merged trio
+  # Verify if the case of 3 variables, with at least one hierarchical variable, is correct
+  # It seems correct, but the output is not well "sorted"
+
   # To generalize the function to handle NA for an external function
   v3 <- if (!is.null(v3) && is.na(v3)) NULL else v3
   v4 <- if (!is.null(v4) && is.na(v4)) NULL else v4
@@ -721,7 +725,8 @@ import_hierarchy <- function(hrcfile) {
 #'
 #' @param v1 first variable to be merged
 #' @param v2 second variable to be merged
-#' @param v3 third variable to be merged (variable that will be merged with v1 and v2 if v4 is not specified)
+#' @param v3 third variable to be merged (
+#' variable that will be merged with v1 and v2 if v4 is not specified)
 #' @param v4 fourth variable to be merged (with v3)
 #' @param hrcfiles named list of hrc files
 #' @param data data.frame (used only in the case where a trio is formed)

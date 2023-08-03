@@ -11,31 +11,38 @@
 #' or if no folder is specified in hrcfiles
 #' @param vars_to_merge NULL or vector of variables to be merged:
 #' 2 in dimension 4; 3 or 4 in dimension 5
-#' @param nb_tab strategy to automatically choose variables:
-#' min: minimize the number of tables;
-#' max: maximize the number of tables;
-#' smart: minimize the number of tables under the constraint of their number of rows
+#' @param nb_tab strategy to follow for choosing variables automatically:
+#' \itemize{
+#'   \item \code{'min'}: minimize the number of tables;
+#'   \item \code{'max'}: maximize the number of tables;
+#'   \item \code{'smart'}: minimize the number of tables under the constraint
+#'   of their row count.
+#' }
 #' @param LIMIT maximum allowed number of rows in the smart or split case
 #' @param split indicate if we split in several tables the table bigger than LIMIT at the end
 #' it decreases the number of hierarchy of these tables
 #' @param vec_sep vector of candidate separators to use
 #' @param verbose print the different steps of the function to inform the user of progress
 #'
-#' @return list(tabs, alt_hrc, alt_totcode, vars, sep, totcode, hrc, fus_vars)
-#' tabs: named list of 3-dimensional dataframes with nested hierarchies
-#' alt_hrc: named list of hrc specific to the variables created during merging to go to dimension 3
-#' alt_totcode: named list of totals specific to the variables created during merging to go to dimension 3
-#' vars: categorical variables of the output dataframes
-#' sep: separator used to link the variables
-#' totcode: named vector of totals for all categorical variables
-#' hrcfiles: named vector of hrc for categorical variables (except the merged one)
-#' fus_vars: named vector of vectors representing the merged variables during dimension reduction
+#' @return A list containing:
+#' \itemize{
+#'   \item \code{tabs}: named list of 3-dimensional dataframes
+#'   with nested hierarchies
+#'   \item \code{alt_hrc}: named list of hrc specific to the variables created
+#'   during merging to go to dimension 3
+#'   \item \code{alt_totcode}: named list of totals specific to the variables
+#'   created during merging to go to dimension 3
+#'   \item \code{vars}: categorical variables of the output dataframes
+#'   \item \code{sep}: separator used to link the variables
+#'   \item \code{totcode}: named vector of totals for all categorical variables
+#'   \item \code{hrcfiles}: named vector of hrc for categorical variables
+#'   (except the merged one)
+#'   \item \code{fus_vars}: named vector of vectors representing the merged
+#'   variables during dimension reduction
+#' }
+#'
 #' @export
 #'
-#' TODO:
-#' to save time: parallelize the lapply for variable selection
-#'                                     lapply for reducing from 4 to 3 dimensions
-#'                                     in the case of dimension 5
 #'
 #' @examples
 #' library(dplyr)
@@ -195,6 +202,12 @@ reduce_dims <- function(
     vec_sep = c("\\_+_", "\\_!_", "\\_?_","___","_z_z_z_z"),
     verbose = FALSE
 ){
+
+  # TODO:
+  # to save time: parallelize the lapply for variable selection
+  #                                     lapply for reducing from 4 to 3 dimensions
+  #                                    in the case of dimension 5
+
   require(sdcHierarchies)
   require(stringr)
 
@@ -624,7 +637,7 @@ split_tab <- function(res, var_fus, LIMIT) {
 #' The separators must be preceded by "\\" and must be compatible
 #' with the use of str_detect
 #' @return a separator from liste_sep that is not present in any of the modalities if it exists,
-#' otherwise returns NULL
+#' otherwise returns "_+_+_+_+"
 #'
 #' @export
 #'
@@ -682,22 +695,33 @@ chose_sep <- function(
   }
 }
 
-#' Change le résultat de la réduction de dimension pour être utilisable directement
-#' dans rtauargus
+#' Change the result of dimension reduction to be directly usable
+#' in rtauargus
 #'
-#' @param res resultat de la fusion de variable composéee name_non_changed_vars'une liste de liste de tableaux,
-#' une liste de fichiers hiérarchique, une liste de sous_totaux associées à ses fichiers,
-#' et une liste de vectuer de variables ou un vectuer de variables selon la taille de base
-#' du dataframes
-#' @param dfs_name le nom du dataframes entré
+#' @param res result of variable merging composed of name_non_changed_vars, a list of lists of tables,
+#' a list of hierarchical files, a list of subtotals associated with these files,
+#' and a list of vectors of variables or a vector of variables depending on the base size
+#' of the dataframes
+#' @param dfs_name the name of the entered dataframes
 #'
-#' @return Une liste de liste de tableaux nommé,une liste de hrcs de mêmes new_names
-#' que le tableaux associées,une liste de sous_toutaux nommé de même façon que les hrcs
-#' avec eb outre le nom de la variable associées aux sous_totaux , et la liste
-#' des variables fusionnées ou vecteur selon la taille du tableau name_non_changed_vars'entrée
-
+#' @return A list containing:
+#' \itemize{
+#'   \item \code{tabs}: named list of 3-dimensional dataframes
+#'   with nested hierarchies
+#'   \item \code{alt_hrc}: named list of hrc specific to the variables
+#'   created during merging to go to dimension 3
+#'   \item \code{alt_totcode}: named list of totals specific to the variables
+#'   created during merging to go to dimension 3
+#'   \item \code{vars}: categorical variables of the output dataframes
+#'   \item \code{sep}: separator used to link the variables
+#'   \item \code{totcode}: named vector of totals for all categorical variables
+#'   \item \code{hrcfiles}: named vector of hrc for categorical variables
+#'   (except the merged one)
+#'   \item \code{fus_vars}: named vector of vectors representing the merged
+#'   variables during dimension reduction
+#' }
+#'
 #' @examples
-#'
 #' library(dplyr)
 #'
 #' data <- expand.grid(
@@ -732,7 +756,7 @@ chose_sep <- function(
 #'   hrc_dir = "output"
 #' )
 #'
-#' sp_format(res1,
+#' res <- sp_format(res1,
 #'         dfs_name = "tab",
 #'         sep = "_",
 #'         totcode = c(SEX="Total",AGE="Total",
@@ -740,11 +764,11 @@ chose_sep <- function(
 #'        hrcfiles = c(ACT = hrc_act)
 #'        )
 sp_format <- function(
-  res,
-  dfs_name,
-  sep,
-  totcode,
-  hrcfiles)
+    res,
+    dfs_name,
+    sep,
+    totcode,
+    hrcfiles)
 {
   if (class(res$vars[1]) == "character") {
     return(format4(res, dfs_name, sep, totcode, hrcfiles))
@@ -754,9 +778,9 @@ sp_format <- function(
   }
 }
 
-#Format pour les tableaux à 4 variables
+# Format for tables with 4 variables
 format4 <- function(res, dfs_name, sep, totcode, hrcfiles) {
-  #Données
+  # Data
 
   v1 <- res$vars[1]
   v2 <- res$vars[2]
@@ -787,7 +811,7 @@ format4 <- function(res, dfs_name, sep, totcode, hrcfiles) {
   names(tabs) <- c(paste0(dfs_name, 1:n, sep = ""))
 
 
-  #new_names des alt_hrc
+  # new_names of alt_hrc
   res2 <- setNames(
     lapply(
       seq_along(res$tabs),
@@ -796,7 +820,7 @@ format4 <- function(res, dfs_name, sep, totcode, hrcfiles) {
     paste(dfs_name, seq_along(res$tabs), sep = "")
   )
 
-  #new_names des sous_totaux
+  # new_names of subtotals
   res3 <- setNames(
     lapply(
       seq_along(res$tabs),
@@ -804,8 +828,8 @@ format4 <- function(res, dfs_name, sep, totcode, hrcfiles) {
     ),
     paste(dfs_name, seq_along(res$tabs), sep = "")
   )
-  hrcfiles<-hrcfiles[(names(hrcfiles) %in% names(totcode_2))]
-  if (length(hrcfiles)==0){hrcfiles<-NULL}
+  hrcfiles <- hrcfiles[(names(hrcfiles) %in% names(totcode_2))]
+  if (length(hrcfiles) == 0) {hrcfiles <- NULL}
 
   return (
     list(
@@ -819,13 +843,12 @@ format4 <- function(res, dfs_name, sep, totcode, hrcfiles) {
       fus_vars = res$vars
     )
   )
-
 }
 
-#Format pour les tableaux à 5 variables
+# Format for tables with 5 variables
 format5 <- function(res, dfs_name, sep, totcode, hrcfiles) {
   if (class(res$vars) == "list") {
-    #On récupère les différentes variables
+    # Retrieve the different variables
     v1 <- res$vars[[2]][1]
     v2 <- res$vars[[2]][2]
     v3 <- res$vars[[1]][1]
@@ -833,9 +856,9 @@ format5 <- function(res, dfs_name, sep, totcode, hrcfiles) {
     var_cross <- paste(v1, v2, sep = sep)
     var_cross2 <- paste(v3, v4, sep = sep)
 
-    # On fusionne 3 variables en une
-    # Donc les infos relatifs à deux variables fusionnées lors de 5->4
-    # ne nous sont plus utiles puisque la variable n'existe plus en dimension 3
+    # Merging 3 variables into one
+    # So the information related to two merged variables during 5->4
+    # is no longer useful to us since the variable no longer exists in dimension 3
     if (var_cross2 %in% c(v1, v2)) {
       res2 <- list(
         tabs = res$tabs,
@@ -847,11 +870,10 @@ format5 <- function(res, dfs_name, sep, totcode, hrcfiles) {
       )
       res2 <- sp_format(res2, dfs_name, sep, totcode, hrcfiles)
 
-      # On garde l'information des variables fusionnés à chaque étape
-      res2$fus_vars<-res$vars
+      # Keep the information of the merged variables at each step
+      res2$fus_vars <- res$vars
       return(res2)
     }
-
 
     tot_cross <- paste(totcode[[v1]], totcode[[v2]], sep = sep)
     tot_cross2 <- paste(totcode[[v3]], totcode[[v4]], sep = sep)
@@ -869,7 +891,7 @@ format5 <- function(res, dfs_name, sep, totcode, hrcfiles) {
     names(list_vars) <- c(paste0(dfs_name, 1:n, sep = ""))
     names(tabs) <- c(paste0(dfs_name, 1:n, sep = ""))
 
-    #new_names des alt_hrc
+    # new_names of alt_hrc
 
     res2 <- setNames(lapply(seq_along(res$tabs), function(i) {
       list1 <- setNames(list(res$hrcs4_3[[i]]), var_cross)
@@ -878,7 +900,7 @@ format5 <- function(res, dfs_name, sep, totcode, hrcfiles) {
     }),
     paste(dfs_name, seq_along(res$tabs), sep = ""))
 
-    #new_names des sous_totaux
+    # new_names of subtotals
 
     res3 <- setNames(lapply(seq_along(res$tabs), function(i) {
       list1 <- setNames(list(res$alt_tot4_3[[i]]), var_cross)
@@ -888,8 +910,8 @@ format5 <- function(res, dfs_name, sep, totcode, hrcfiles) {
     paste(dfs_name, seq_along(res$tabs), sep = ""))
 
   }
-  hrcfiles<-hrcfiles[(names(hrcfiles) %in% names(totcode_2))]
-  if (length(hrcfiles)==0){hrcfiles<-NULL}
+  hrcfiles <- hrcfiles[(names(hrcfiles) %in% names(totcode_2))]
+  if (length(hrcfiles) == 0) {hrcfiles <- NULL}
   return (
     list(
       tabs = tabs,
