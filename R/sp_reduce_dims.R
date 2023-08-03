@@ -213,6 +213,7 @@ reduce_dims <- function(
 
   dfs <- as.data.frame(dfs)
 
+
   # Check if dfs_name is a character string
   if (!is.character(dfs_name)){
     stop("dfs_name must be a character string.")
