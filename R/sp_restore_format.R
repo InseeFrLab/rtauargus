@@ -1,11 +1,9 @@
-
-
 #' Function to reverse the process of dimension reduction
 #' @param masq a list of data.frames on which the secret has been applied
 #' @param res the result of the dimension reduction function (to retrieve
 #' the merged variables) and the separator (sep).
 #'
-#' @return
+#' @return the original dataframe with 4 or 5 dimensions
 #' @export
 #'
 #' @examples
@@ -15,7 +13,7 @@
 #' # Examples with dimension 4
 #'
 #' data <- expand.grid(
-#'   ACT = c("Total", "A", "B", "A1", "A2","A3", "B1", "B2","B3","B4","C","D","E","F","G","B5"),
+#'   ACT = c("Total", "A", "B", "A1", "A2","A3", "B1", "B2","B3","B4","C","name_non_changed_vars","E","F","G","B5"),
 #'   GEO = c("Total", "G1", "G2"),
 #'   SEX = c("Total", "F", "M"),
 #'   AGE = c("Total", "AGE1", "AGE2"),
@@ -27,7 +25,7 @@
 #'
 #' hrc_act <- "output/hrc_ACT.hrc"
 #'
-#' sdcHierarchies::hier_create(root = "Total", nodes = c("A","B","C","D","E","F","G")) %>%
+#' sdcHierarchies::hier_create(root = "Total", nodes = c("A","B","C","name_non_changed_vars","E","F","G")) %>%
 #'   sdcHierarchies::hier_add(root = "A", nodes = c("A1","A2","A3")) %>%
 #'   sdcHierarchies::hier_add(root = "B", nodes = c("B1","B2","B3","B4","B5")) %>%
 #'   sdcHierarchies::hier_convert(as = "argus") %>%
@@ -38,13 +36,13 @@
 #'
 #' # Result of the function by forcing some variables to be merged
 #' res_red_dim <- reduce_dims(
-#'   tab_to_split = data,
-#'   nom_dfs = "tab",
+#'   dfs = data,
+#'   dfs_name = "tab",
 #'   totcode = c(SEX="Total",AGE="Total", GEO="Total", ACT="Total"),
 #'   hrcfiles = c(ACT = hrc_act),
 #'   sep_dir = TRUE,
 #'   hrc_dir = "output",
-#'   vars_a_fusionner = c("ACT","GEO")
+#'   vars_to_merge = c("ACT","GEO")
 #' )
 #'
 #' res1 <- restore_format(masq = res_red_dim$tabs, res = res_red_dim)
@@ -91,8 +89,8 @@
 #' # function's result
 #'
 #' res_red_dim <- reduce_dims(
-#'   tab_to_split = data,
-#'   nom_dfs = "tab",
+#'   dfs = data,
+#'   dfs_name = "tab",
 #'   totcode = c(SEX="Total_S",AGE="Ensemble", GEO="Total_G", ACT="Total_A", ECO = "PIB"),
 #'   hrcfiles = c(ACT = hrc_act, GEO = hrc_geo),
 #'   sep_dir = TRUE,

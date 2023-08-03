@@ -228,7 +228,8 @@ It is highly recommended to use split_tab = TRUE when using rtauargus with 4 or 
 It allows to split the table in several tables with 3 dimensions.
 
 With split_tab = FALSE, tauargus treats the table in 4 or 5 dimensions.
-In this case, the secondary secret may not being optimal according to tauargus itself.")
+In this case, the secondary secret may not being optimal according to tauargus itself
+and the process may take longer.")
     }
   }
 
