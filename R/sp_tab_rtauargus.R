@@ -21,8 +21,10 @@
 #'   \item \code{'smart'}: minimize the number of tables under the constraint
 #'   of their row count.
 #' }
+#' @param dfs_name name used to write hrc files when reducing dims
 #' @param ... any parameter of the tab_rda, tab_arb or run_arb functions, relevant
 #' for the treatment of tabular.
+#'
 #'
 #' @return
 #' If output_type equals to 4, then the original tabular is returned with a new
@@ -134,6 +136,7 @@ tab_rtauargus4 <- function(
     unif_labels = TRUE,
     LIMIT = 14700,
     nb_tab = "smart",
+    dfs_name = 'tab',
     ...
 ){
 
@@ -147,7 +150,7 @@ Reducing dims...\n",files_name,"\n\n")
 
     list_tables <- reduce_dims(
       dfs = tabular,
-      dfs_name = files_name,
+      dfs_name = dfs_name,
       totcode = totcode,
       hrcfiles = hrc,
       hrc_dir = dir_name,
