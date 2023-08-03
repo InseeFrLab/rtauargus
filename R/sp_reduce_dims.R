@@ -1,10 +1,10 @@
 #' General function that selects the appropriate separator and applies dimension reduction.
 #'
-#' @param tab_to_split data.frame with 4 or 5 categorical variables
+#' @param dfs data.frame with 4 or 5 categorical variables
 #' @param nom_dfs name of the data.frame in the list provided by the user
 #' @param totcode named vector of totals for categorical variables
 #' @param hrcfiles named vector indicating the hrc files of hierarchical variables
-#' among the categorical variables of tab_to_split
+#' among the categorical variables of dfs
 #' @param sep_dir allows forcing the writing of hrc into a separate folder,
 #' default is FALSE
 #' @param hrc_dir folder to write hrc files if writing to a new folder is forced
@@ -68,7 +68,7 @@
 #'
 #' # Reduce dim by forcing variables to be merged
 #' res1 <- reduce_dims(
-#'   tab_to_split = data,
+#'   dfs = data,
 #'   nom_dfs = "tab",
 #'   totcode = c(SEX = "Total", AGE = "Total", GEO = "Total", ACT = "Total"),
 #'   hrcfiles = c(ACT = hrc_act),
@@ -79,19 +79,21 @@
 #'
 #' # Split the output in order to be under the limit & forcing variables to be merged
 #' res1b <- reduce_dims(
-#'   tab_to_split = data,
+#'   dfs = data,
 #'   nom_dfs = "tab",
 #'   totcode = c(SEX = "Total", AGE = "Total", GEO = "Total", ACT = "Total"),
 #'   hrcfiles = c(ACT = hrc_act),
 #'   sep_dir = TRUE,
 #'   hrc_dir = "output",
-#'   nb_tab = 'max',
-#'   verbose = TRUE
+#'   nb_tab = 'smart',
+#'   split = TRUE,
+#'   verbose = TRUE,
+#'   LIMIT = 300
 #' )
 #'
 #' # Result of the function (minimizes the number of created tables by default)
 #' res2 <- reduce_dims(
-#'   tab_to_split = data,
+#'   dfs = data,
 #'   nom_dfs = "tab",
 #'   totcode = c(SEX = "Total", AGE = "Total", GEO = "Total", ACT = "Total"),
 #'   hrcfiles = c(ACT = hrc_act),
@@ -101,14 +103,13 @@
 #'
 #' # Result of the function (maximize the number of created tables)
 #' res3 <- reduce_dims(
-#'   tab_to_split = data,
+#'   dfs = data,
 #'   nom_dfs = "tab",
 #'   totcode = c(SEX = "Total", AGE = "Total", GEO = "Total", ACT = "Total"),
 #'   hrcfiles = c(ACT = hrc_act),
 #'   sep_dir = TRUE,
 #'   hrc_dir = "output",
-#'   nb_tab = "smart",
-#'   LIMIT = 1
+#'   nb_tab = "max"
 #' )
 #'
 #' # Example for dimension 5
@@ -148,7 +149,7 @@
 #'
 #' # Results of the function
 #' res4 <- reduce_dims(
-#'   tab_to_split = data,
+#'   dfs = data,
 #'   nom_dfs = "tab",
 #'   totcode = c(SEX = "Total_S", AGE = "Ensemble", GEO = "Total_G", ACT = "Total_A", ECO = "PIB"),
 #'   hrcfiles = c(ACT = hrc_act, GEO = hrc_geo),
@@ -157,7 +158,7 @@
 #' )
 #'
 #' res5 <- reduce_dims(
-#'   tab_to_split = data,
+#'   dfs = data,
 #'   nom_dfs = "tab",
 #'   totcode = c(SEX = "Total_S", AGE = "Ensemble", GEO = "Total_G", ACT = "Total_A", ECO = "PIB"),
 #'   hrcfiles = c(ACT = hrc_act, GEO = hrc_geo),
@@ -166,10 +167,11 @@
 #'   nb_tab = 'smart',
 #'   LIMIT = 1300,
 #'   verbose = TRUE,
+#'   split = TRUE
 #' )
 #'
 #' res6 <- reduce_dims(
-#'   tab_to_split = data,
+#'   dfs = data,
 #'   nom_dfs = "tab",
 #'   totcode = c(SEX = "Total_S", AGE = "Ensemble", GEO = "Total_G", ACT = "Total_A", ECO = "PIB"),
 #'   hrcfiles = c(ACT = hrc_act, GEO = hrc_geo),
@@ -181,7 +183,7 @@
 #'   split = TRUE
 #' )
 reduce_dims <- function(
-    tab_to_split,
+    dfs,
     nom_dfs,
     totcode,
     hrcfiles = NULL,
@@ -197,16 +199,16 @@ reduce_dims <- function(
   require(sdcHierarchies)
   require(stringr)
 
-  tab_to_split <- as.data.frame(tab_to_split)
+  dfs <- as.data.frame(dfs)
 
   # Check if nom_dfs is a character string
   if (!is.character(nom_dfs)){
     stop("nom_dfs must be a character string.")
   }
 
-  # Check if all modalities of totcode are present in tab_to_split
-  if (any(!names(totcode) %in% names(tab_to_split))){
-    stop("At least one modality in totcode is not present in tab_to_split!")
+  # Check if all modalities of totcode are present in dfs
+  if (any(!names(totcode) %in% names(dfs))){
+    stop("At least one modality in totcode is not present in dfs!")
   }
 
   # Check if the number of dimensions in totcode is either 4 or 5
@@ -224,9 +226,9 @@ reduce_dims <- function(
     stop("For 5-dimensional data, please specify 2 or 3 variables or leave vars_a_fusionner as NULL!")
   }
 
-  # Check if all modalities of hrcfiles are present in tab_to_split
-  if (any(!names(hrcfiles) %in% names(tab_to_split))){
-    stop("At least one modality in hrcfiles is not present in tab_to_split!")
+  # Check if all modalities of hrcfiles are present in dfs
+  if (any(!names(hrcfiles) %in% names(dfs))){
+    stop("At least one modality in hrcfiles is not present in dfs!")
   }
 
   # Check if sep_dir is a logical value
@@ -280,7 +282,7 @@ reduce_dims <- function(
 
 
   # Choose the separator
-  data_var_cat <- tab_to_split[names(tab_to_split) %in% names(totcode)]
+  data_var_cat <- dfs[names(dfs) %in% names(totcode)]
   sep <- choisir_sep(data_var_cat, vec_sep)
 
   if (length(totcode) == 5) {
@@ -307,14 +309,14 @@ reduce_dims <- function(
         }
 
         # Propose combinations of variables to merge
-        choix_3_var <- var_to_merge(tab_to_split = tab_to_split,
+        choix_3_var <- var_to_merge(dfs = dfs,
 								   totcode = totcode,
 								   hrcfiles = hrcfiles,
 								   nb_var = 3,
 								   LIMIT = LIMIT,
 								   nb_tab = nb_tab)
 
-        choix_4_var <- var_to_merge(tab_to_split = tab_to_split,
+        choix_4_var <- var_to_merge(dfs = dfs,
 								   totcode = totcode,
 								   hrcfiles = hrcfiles,
 								   nb_var = 4,
@@ -374,7 +376,7 @@ The largest table has ",choix_3_var$max_row," rows.\n"))
 Reducing from 5 to 4...\n")
     }
 
-    res <- from_5_to_3(tab_to_split = tab_to_split,
+    res <- from_5_to_3(dfs = dfs,
 					   nom_dfs = nom_dfs,
 					   totcode = totcode,
 					   hrcfiles = hrcfiles,
@@ -403,7 +405,7 @@ Reducing from 5 to 4...\n")
         }
 
 
-        choix_2_var <- var_to_merge(tab_to_split = tab_to_split,
+        choix_2_var <- var_to_merge(dfs = dfs,
 								   totcode = totcode,
 								   hrcfiles = hrcfiles,
 								   nb_var = 2,
@@ -433,7 +435,7 @@ The largest table has ",choix_2_var$max_row," rows.\n"))
 Reducing from 4 to 3...\n")
     }
 
-    res <- from_4_to_3(tab_to_split = tab_to_split,
+    res <- from_4_to_3(dfs = dfs,
 					   nom_dfs = nom_dfs,
 					   totcode = totcode,
 					   hrcfiles = hrcfiles,
@@ -493,7 +495,7 @@ Reducing from 4 to 3...\n")
         cat(paste("",var_fus,"\n"))
       }
 
-      res <- split_tab(res = res,
+      res <- sp_split_tab(res = res,
                        LIMIT = LIMIT,
                        var_fus = var_fus)
     }
@@ -501,41 +503,25 @@ Reducing from 4 to 3...\n")
     if (verbose) {
       cat(paste(nom_dfs,"has generated",length(res$tabs),"tables in total\n\n"))
     }
-  }
 
-  # The user specified a LIMIT (smart or split case)
-  if (!is.null(LIMIT)){
-    max_row <- max(sapply(res$tabs, nrow))
+    # The user specified a LIMIT (smart or split case)
+    if (!is.null(LIMIT)){
+      max_row <- max(sapply(res$tabs, nrow))
 
-    if (max_row > LIMIT){
-      cat(c("Warning after splitting :
+      if (max_row > LIMIT){
+        cat(c("Warning after splitting :
 The limit of ",LIMIT," cannot be achieved.
 The largest table has ",max_row," rows.\n\n"))
+      }
     }
   }
 
   return(res)
 }
 
-#' Title
-#'
-#' @param res result of splitting by reduce_dims with split = FALSE
-#' @param var_fus the fused variables during reduce_dims
-#' @param LIMIT the LIMIT of rows of the tables (use a LIMIT for rtauargus )
-#'
-#' @return list(tabs, alt_hrc, alt_totcode, vars, sep, totcode, hrcfiles, fus_vars)
-#' tabs: named list of 3-dimensional dataframes with nested hierarchies
-#' alt_hrc: named list of hrc specific to the variables created during merging to go to dimension 3
-#' alt_totcode: named list of totals specific to the variables created during merging to go to dimension 3
-#' vars: categorical variables of the output dataframes
-#' sep: separator used to link the variables
-#' totcode: named vector of totals for all categorical variables
-#' hrcfiles: named vector of hrc for categorical variables (except the merged one)
-#' fus_vars: named vector of vectors representing the merged variables during dimension reduction
-#' @export
-#'
-#' @examples
-split_tab <- function(res, var_fus, LIMIT) {
+# split tab bigger than LIMIT according to var_fuse
+# to create smaller tabs with a hier variable less
+sp_split_tab <- function(res, var_fus, LIMIT) {
   # table to split because they are too big
 
   res$to_split <- sapply(res$tabs, function(x) nrow(x) > LIMIT)
@@ -697,22 +683,21 @@ choisir_sep <- function(
   }
 }
 
-#' Change le résultat de la réduction de dimension pour être utilisable directement
-#' dans rtauargus
+#' Change the result of the dimension reduction to be directly usable
+#' in rtauargus
 #'
-#' @param res resultat de la fusion de variable composéee d'une liste de liste de tableaux,
-#' une liste de fichiers hiérarchique, une liste de sous_totaux associées à ses fichiers,
-#' et une liste de vectuer de variables ou un vectuer de variables selon la taille de base
-#' du dataframes
-#' @param nom_dfs le nom du dataframes entré
+#' @param res result of variable merging, composed of a list of tables list,
+#' a hierarchical file list, a list of subtotals associated with these files,
+#' and a list of variable vectors or a variable vector depending on the base size
+#' of the dataframes
+#' @param nom_dfs the name of the entered dataframes
 #'
-#' @return Une liste de liste de tableaux nommé,une liste de hrcs de mêmes noms
-#' que le tableaux associées,une liste de sous_toutaux nommé de même façon que les hrcs
-#' avec eb outre le nom de la variable associées aux sous_totaux , et la liste
-#' des variables fusionnées ou vecteur selon la taille du tableau d'entrée
-
+#' @return A list of named tables lists, a list of hrcs with the same names
+#' as the associated tables, a list of named subtotals in the same way as the hrcs,
+#' with in addition the name of the variable associated with the subtotals, and the list
+#' of merged variables or a vector depending on the size of the input table
+#'
 #' @examples
-#'
 #' library(dplyr)
 #'
 #' data <- expand.grid(
@@ -739,7 +724,7 @@ choisir_sep <- function(
 #'
 #' # Results of the function
 #' res1 <- from_4_to_3(
-#'   tab_to_split = data,
+#'   dfs = data,
 #'   nom_dfs = "tab",
 #'   totcode = c(SEX = "Total", AGE = "Total", GEO = "Total", ACT = "Total"),
 #'   hrcfiles = c(ACT = hrc_act),
@@ -747,7 +732,7 @@ choisir_sep <- function(
 #'   hrc_dir = "output"
 #' )
 #'
-#' sp_format(res1,
+#' res <- sp_format(res1,
 #'         nom_dfs = "tab",
 #'         sep = "_",
 #'         totcode = c(SEX="Total",AGE="Total",
@@ -769,10 +754,10 @@ sp_format <- function(
   }
 }
 
-#Format pour les tableaux à 4 variables
+# Format for tables with 4 variables
 format4 <- function(res, nom_dfs, sep, totcode, hrcfiles) {
-  #Données
 
+  # Data
   v1 <- res$vars[1]
   v2 <- res$vars[2]
   tabs <- res$tabs
@@ -802,7 +787,7 @@ format4 <- function(res, nom_dfs, sep, totcode, hrcfiles) {
   names(tabs) <- c(paste0(nom_dfs, 1:n, sep = ""))
 
 
-  #Noms des alt_hrc
+  # Names of alt_hrc
   res2 <- setNames(
     lapply(
       seq_along(res$tabs),
@@ -811,7 +796,7 @@ format4 <- function(res, nom_dfs, sep, totcode, hrcfiles) {
     paste(nom_dfs, seq_along(res$tabs), sep = "")
   )
 
-  #Noms des sous_totaux
+  # Names of subtotals
   res3 <- setNames(
     lapply(
       seq_along(res$tabs),
@@ -837,10 +822,10 @@ format4 <- function(res, nom_dfs, sep, totcode, hrcfiles) {
 
 }
 
-#Format pour les tableaux à 5 variables
+# Format for tables with 5 variables
 format5 <- function(res, nom_dfs, sep, totcode, hrcfiles) {
   if (class(res$vars) == "list") {
-    #On récupère les différentes variables
+    # We retrieve the different variables
     v1 <- res$vars[[2]][1]
     v2 <- res$vars[[2]][2]
     v3 <- res$vars[[1]][1]
@@ -848,9 +833,9 @@ format5 <- function(res, nom_dfs, sep, totcode, hrcfiles) {
     var_cross <- paste(v1, v2, sep = sep)
     var_cross2 <- paste(v3, v4, sep = sep)
 
-    # On fusionne 3 variables en une
-    # Donc les infos relatifs à deux variables fusionnées lors de 5->4
-    # ne nous sont plus utiles puisque la variable n'existe plus en dimension 3
+    # We merge 3 variables into one
+    # So the information related to two variables merged during 5->4
+    # is no longer useful to us since the variable no longer exists in dimension 3
     if (var_cross2 %in% c(v1, v2)) {
       res2 <- list(
         tabs = res$tabs,
@@ -862,7 +847,7 @@ format5 <- function(res, nom_dfs, sep, totcode, hrcfiles) {
       )
       res2 <- sp_format(res2, nom_dfs, sep, totcode, hrcfiles)
 
-      # On garde l'information des variables fusionnés à chaque étape
+      # Keep the information of the merged variables at each step
       res2$fus_vars<-res$vars
       return(res2)
     }
@@ -884,7 +869,7 @@ format5 <- function(res, nom_dfs, sep, totcode, hrcfiles) {
     names(list_vars) <- c(paste0(nom_dfs, 1:n, sep = ""))
     names(tabs) <- c(paste0(nom_dfs, 1:n, sep = ""))
 
-    #Noms des alt_hrc
+    # Names of alt_hrc
 
     res2 <- setNames(lapply(seq_along(res$tabs), function(i) {
       list1 <- setNames(list(res$hrcs4_3[[i]]), var_cross)
@@ -893,7 +878,7 @@ format5 <- function(res, nom_dfs, sep, totcode, hrcfiles) {
     }),
     paste(nom_dfs, seq_along(res$tabs), sep = ""))
 
-    #Noms des sous_totaux
+    # Names of subtotals
 
     res3 <- setNames(lapply(seq_along(res$tabs), function(i) {
       list1 <- setNames(list(res$alt_tot4_3[[i]]), var_cross)

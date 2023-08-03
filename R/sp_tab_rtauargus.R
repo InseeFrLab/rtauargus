@@ -145,7 +145,7 @@ tab_rtauargus4 <- function(
 Reducing dims...\n",files_name,"\n\n")
 
     list_tables <- reduce_dims(
-      tab_to_split = tabular,
+      dfs = tabular,
       nom_dfs = files_name,
       totcode = totcode,
       hrcfiles = hrc,

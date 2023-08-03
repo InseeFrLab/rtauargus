@@ -1,12 +1,12 @@
 #' Transition from 4 to 3 variables via the merging of two hierarchical variables
 #'
-#' @param tab_to_split data.frame with 4 categorical variables (n >= 2 in the general case)
+#' @param dfs data.frame with 4 categorical variables (n >= 2 in the general case)
 #' @param nom_dfs name of the data.frame in the list provided by the user
 #' @param v1 hierarchical categorical variable
 #' @param v2 hierarchical categorical variable
 #' @param totcode named vector of totals for categorical variables
 #' @param hrcfiles named vector indicating the hrc files of hierarchical variables
-#' among the categorical variables of tab_to_split
+#' among the categorical variables of dfs
 #' @param dir_name folder where to write the hrc files
 #' if no folder is specified in hrcfiles
 #' @param sep separator used during the concatenation of variables
@@ -53,7 +53,7 @@
 #'   select(levels) %>%
 #'   write.table(file = hrc_sex, row.names = F, col.names = F, quote = F)
 #'
-#' res <- from_4_to_3_case_2_hr(tab_to_split = data,
+#' res <- from_4_to_3_case_2_hr(dfs = data,
 #'                                 nom_dfs = "nom_dfs",
 #'                                 v1 = "ACT",v2 = "SEX",
 #'                                 totcode = c(ACT = "Total",SEX = "Total",
@@ -61,7 +61,7 @@
 #'                                 hrcfiles = c(ACT = hrc_act, SEX = hrc_sex),
 #'                                 dir_name = "output")
 from_4_to_3_case_2_hr <- function(
-  tab_to_split,
+  dfs,
   nom_dfs,
   v1,
   v2,
@@ -89,28 +89,28 @@ from_4_to_3_case_2_hr <- function(
   # Hierarchy Reduction #
   ###########################
 
-  fonc_liste_df_4_var_1_non_hr <- function(codes_split,tab_to_split){
+  fonc_liste_df_4_var_1_non_hr <- function(codes_split,dfs){
     lapply(
       codes_split_1,
       function(codes){
-        res <- tab_to_split %>%
-          filter(tab_to_split[[v1]] %in% codes)
+        res <- dfs %>%
+          filter(dfs[[v1]] %in% codes)
       }
     )
   }
 
-  liste_df_4_var_1_non_hr <- fonc_liste_df_4_var_1_non_hr(codes_split_1,tab_to_split)
+  liste_df_4_var_1_non_hr <- fonc_liste_df_4_var_1_non_hr(codes_split_1,dfs)
   # We now have data.frames with 1 non-hierarchical variables (v1)
   # therefore we can apply the dedicated method
 
   # Update arguments then call the function cas_2_non_hrc
-  appel_4_3_non_hier <- function(tab_to_split, i){
+  appel_4_3_non_hier <- function(dfs, i){
 
     if (i <= length(codes_split_1)) {
       totcode[v1] <- codes_split_1[[i]][1]
       nom_dfs <- paste(nom_dfs, totcode[v1], sep = "_")
 
-      from_4_to_3_case_1_hr(tab_to_split = tab_to_split,
+      from_4_to_3_case_1_hr(dfs = dfs,
                                nom_dfs = nom_dfs,
                                v1 = v1,
                                v2 = v2,

@@ -38,7 +38,7 @@
 #'
 #' # Result of the function by forcing some variables to be merged
 #' res_red_dim <- reduce_dims(
-#'   tab_to_split = data,
+#'   dfs = data,
 #'   nom_dfs = "tab",
 #'   totcode = c(SEX="Total",AGE="Total", GEO="Total", ACT="Total"),
 #'   hrcfiles = c(ACT = hrc_act),
@@ -91,7 +91,7 @@
 #' # function's result
 #'
 #' res_red_dim <- reduce_dims(
-#'   tab_to_split = data,
+#'   dfs = data,
 #'   nom_dfs = "tab",
 #'   totcode = c(SEX="Total_S",AGE="Ensemble", GEO="Total_G", ACT="Total_A", ECO = "PIB"),
 #'   hrcfiles = c(ACT = hrc_act, GEO = hrc_geo),
