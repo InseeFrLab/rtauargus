@@ -6,7 +6,7 @@
 #' @param totcode named vector of totals for categorical variables
 #' @param hrcfiles named vector of hrc files for categorical variables
 #' @param nb_var number of variables to merge
-#' @param nb_tab strategy to follow for choosing variables automatically:
+#' @param nb_tab_option strategy to follow for choosing variables automatically:
 #' \itemize{
 #'   \item \code{'min'}: minimize the number of tables;
 #'   \item \code{'max'}: maximize the number of tables;
@@ -59,7 +59,7 @@
 #'                                         totcode = totcode,
 #'                                         hrcfiles = hrcfiles,
 #'                                         nb_var = 2,
-#'                                         nb_tab = 'max')
+#'                                         nb_tab_option = 'max')
 #' res1
 #' max(unlist(length_tabs(dfs = data,
 #'                        hrcfiles = hrcfiles,
@@ -71,7 +71,7 @@
 #'                                 totcode = totcode,
 #'                                 hrcfiles = hrcfiles,
 #'                                 nb_var = 2,
-#'                                 nb_tab = 'min')
+#'                                 nb_tab_option = 'min')
 #' res2
 #' max(unlist(length_tabs(dfs = data,
 #'                        hrcfiles = hrcfiles,
@@ -83,7 +83,7 @@
 #'                                 hrcfiles = hrcfiles,
 #'                                 LIMIT = 200,
 #'                                 nb_var = 2,
-#'                                 nb_tab = 'smart')
+#'                                 nb_tab_option = 'smart')
 #' res3
 #' max(unlist(length_tabs(dfs = data,
 #'                        hrcfiles = hrcfiles,
@@ -97,7 +97,7 @@
 #'                                 hrcfiles = hrcfiles,
 #'                                 LIMIT = 5,
 #'                                 nb_var = 2,
-#'                                 nb_tab = 'smart')
+#'                                 nb_tab_option = 'smart')
 #' res4
 #' max(unlist(length_tabs(dfs = data,
 #'                        hrcfiles = hrcfiles,
@@ -113,7 +113,7 @@ var_to_merge <- function(
     totcode,
     hrcfiles = NULL,
     nb_var = 4,
-    nb_tab = "min",
+    nb_tab_option = "min",
     LIMIT = 150)
 {
   # Case of 2 pairs in dimension 5
@@ -134,7 +134,7 @@ var_to_merge <- function(
                                  totcode = totcode,
                                  hrcfiles = hrcfiles,
                                  LIMIT = LIMIT,
-                                 nb_tab = nb_tab))
+                                 nb_tab_option = nb_tab_option))
 }
 
 var_to_merge_fragment <- function(
@@ -143,7 +143,7 @@ var_to_merge_fragment <- function(
     totcode,
     hrcfiles = NULL,
     LIMIT = 150,
-    nb_tab = "smart")
+    nb_tab_option = "smart")
 {
   # Calculate the number of tables and maximum rows for each combination of variables
   res_func <- lapply(result_comb, function(x) length_tabs(
@@ -166,7 +166,7 @@ var_to_merge_fragment <- function(
   df$original_index <- seq(nrow(df))
 
   # Case: minimize the number of tables
-  if (nb_tab == "min"){
+  if (nb_tab_option == "min"){
     min_nb_tab <-  min(df$res_len)
     filtered_df <- df[df$res_len == min_nb_tab, ]
 
@@ -181,7 +181,7 @@ var_to_merge_fragment <- function(
            )
 
     # Case: maximize the number of tables
-  } else if (nb_tab == "max"){
+  } else if (nb_tab_option == "max"){
     max_nb_tab <-  max(df$res_len)
     filtered_df <- df[df$res_len == max_nb_tab, ]
 

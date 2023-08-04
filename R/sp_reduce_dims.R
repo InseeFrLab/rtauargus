@@ -11,18 +11,20 @@
 #' or if no folder is specified in hrcfiles
 #' @param vars_to_merge NULL or vector of variables to be merged:
 #' 2 in dimension 4; 3 or 4 in dimension 5
-#' @param nb_tab strategy to follow for choosing variables automatically:
+#' @param nb_tab_option strategy to follow for choosing variables automatically:
 #' \itemize{
 #'   \item \code{'min'}: minimize the number of tables;
 #'   \item \code{'max'}: maximize the number of tables;
 #'   \item \code{'smart'}: minimize the number of tables under the constraint
 #'   of their row count.
 #' }
-#' @param LIMIT maximum allowed number of rows in the smart or split case
-#' @param split indicate if we split in several tables the table bigger than LIMIT at the end
-#' it decreases the number of hierarchy of these tables
+#' @param LIMIT maximum allowed number of rows in the smart or over_split = TRUE case
+#' @param over_split indicate if we split in several tables the tables bigger than
+#' LIMIT at the end of the reduction process ; it decreases the number
+#' of hierarchy of these tables
 #' @param vec_sep vector of candidate separators to use
-#' @param verbose print the different steps of the function to inform the user of progress
+#' @param verbose print the different steps of the function to inform the user
+#' of progress
 #'
 #' @return A list containing:
 #' \itemize{
@@ -44,9 +46,10 @@
 #' @export
 #' @importFrom sdcHierarchies hier_import hier_convert
 #' @importFrom stringr str_detect
-#' @importFrom dplyr select slice mutate filter intersect setdiff n
+#' @importFrom dplyr select mutate filter
 #'
 #' @examples
+#' library(dplyr)
 #' # Examples for dimension 4
 #'
 #' data <- expand.grid(
@@ -63,7 +66,7 @@
 #'
 #' hrc_act <- "hrc/hrc_ACT4.hrc"
 #'
-#' sdcHierarchies::hier_create(root = "Total", nodes = c("A","B","C","name_non_changed_vars","E","F","G")) %>%
+#' sdcHierarchies::hier_create(root = "Total", nodes = c("A","B","C","D","E","F","G")) %>%
 #'   sdcHierarchies::hier_add(root = "A", nodes = c("A1","A2","A3")) %>%
 #'   sdcHierarchies::hier_add(root = "B", nodes = c("B1","B2","B3","B4","B5")) %>%
 #'   sdcHierarchies::hier_convert(as = "argus") %>%
@@ -91,8 +94,8 @@
 #'   hrcfiles = c(ACT = hrc_act),
 #'   sep_dir = TRUE,
 #'   hrc_dir = "output",
-#'   nb_tab = 'smart',
-#'   split = TRUE,
+#'   nb_tab_option = 'smart',
+#'   over_split = TRUE,
 #'   verbose = TRUE,
 #'   LIMIT = 300
 #' )
@@ -115,7 +118,7 @@
 #'   hrcfiles = c(ACT = hrc_act),
 #'   sep_dir = TRUE,
 #'   hrc_dir = "output",
-#'   nb_tab = "max"
+#'   nb_tab_option = "max"
 #' )
 #'
 #' # Example for dimension 5
@@ -170,7 +173,7 @@
 #'   hrcfiles = c(ACT = hrc_act, GEO = hrc_geo),
 #'   sep_dir = TRUE,
 #'   hrc_dir = "output",
-#'   nb_tab = 'smart',
+#'   nb_tab_option = 'smart',
 #'   LIMIT = 1300,
 #'   verbose = TRUE,
 #' )
@@ -182,10 +185,10 @@
 #'   hrcfiles = c(ACT = hrc_act, GEO = hrc_geo),
 #'   sep_dir = TRUE,
 #'   hrc_dir = "output",
-#'   nb_tab = 'min',
+#'   nb_tab_option = 'min',
 #'   verbose = TRUE,
 #'   LIMIT = 4470,
-#'   split = TRUE
+#'   over_split = TRUE
 #' )
 reduce_dims <- function(
     dfs,
@@ -195,10 +198,10 @@ reduce_dims <- function(
     sep_dir = FALSE,
     hrc_dir = "hrc_alt",
     vars_to_merge = NULL,
-    nb_tab = "min",
+    nb_tab_option = "min",
     LIMIT = NULL,
-    split = FALSE,
-    vec_sep = c("\\_+_", "\\_!_", "\\_?_","___","_z_z_z_z"),
+    over_split = FALSE,
+    vec_sep = c("___","_XXX_","_YYY_", "_TTT_", "_UVW_"),
     verbose = FALSE
 ){
 
@@ -250,9 +253,9 @@ reduce_dims <- function(
     stop("hrc_dir must be a character string.")
   }
 
-  # Check if nb_tab is one of the valid options
-  if (!nb_tab %in% c('min', 'max', 'smart')){
-    stop("nb_tab must be 'min', 'max', or 'smart'!")
+  # Check if nb_tab_option is one of the valid options
+  if (!nb_tab_option %in% c('min', 'max', 'smart')){
+    stop("nb_tab_option must be 'min', 'max', or 'smart'!")
   }
 
   # If vars_to_merge is specified, check if all variables are present in totcode
@@ -268,15 +271,15 @@ reduce_dims <- function(
   }
 
   # Check if verbose is a logical value
-  if (!is.logical(split)){
-    stop("split must be a logical value.")
+  if (!is.logical(over_split)){
+    stop("over_split must be a logical value.")
   }
 
-  # LIMIT is not used if the user does not use split or nb_tab
+  # LIMIT is not used if the user does not use over_split or nb_tab_option
   # we consider it to be an error if the users specifies it
-  if (split | nb_tab == "smart"){
+  if (over_split | nb_tab_option == "smart"){
     if (is.null(LIMIT)){
-      stop("You must specify a LIMIT (number) if you use split = TRUE or nb_tab = \"smart\"")
+      stop("You must specify a LIMIT (number) if you use over_split = TRUE or nb_tab_option = \"smart\"")
     }
 
     # Convert LIMIT to numeric
@@ -284,7 +287,7 @@ reduce_dims <- function(
 
   } else {
     if (!is.null(LIMIT)){
-      stop("You must not specify a LIMIT (number) if you do not use split = TRUE or nb_tab = \"smart\"")
+      stop("You must not specify a LIMIT (number) if you do not use over_split = TRUE or nb_tab_option = \"smart\"")
     }
   }
 
@@ -311,7 +314,7 @@ reduce_dims <- function(
     } else {
       # If the user did not specify the variables to merge, we need to calculate them
 
-      if (nb_tab == 'smart') {
+      if (nb_tab_option == 'smart') {
 
         if (verbose) {
           cat("Choosing variables...\n")
@@ -319,30 +322,30 @@ reduce_dims <- function(
 
         # Propose combinations of variables to merge
         choice_3_var <- var_to_merge(dfs = dfs,
-								   totcode = totcode,
-								   hrcfiles = hrcfiles,
-								   nb_var = 3,
-								   LIMIT = LIMIT,
-								   nb_tab = nb_tab)
+                                     totcode = totcode,
+                                     hrcfiles = hrcfiles,
+                                     nb_var = 3,
+                                     LIMIT = LIMIT,
+                                     nb_tab_option = nb_tab_option)
 
         choice_4_var <- var_to_merge(dfs = dfs,
-								   totcode = totcode,
-								   hrcfiles = hrcfiles,
-								   nb_var = 4,
-								   LIMIT = LIMIT,
-								   nb_tab = nb_tab)
+                                     totcode = totcode,
+                                     hrcfiles = hrcfiles,
+                                     nb_var = 4,
+                                     LIMIT = LIMIT,
+                                     nb_tab_option = nb_tab_option)
 
         # Choose the best combination
         # The less nb of tab is the row limit is respected
         # or the less nb or row if the limit cannot be respected
         if (
-            (choice_3_var$nb_tab < choice_4_var$nb_tab &
-              max(choice_4_var$max_row,choice_3_var$max_row) < LIMIT) |
+          (choice_3_var$nb_tab < choice_4_var$nb_tab &
+           max(choice_4_var$max_row,choice_3_var$max_row) < LIMIT) |
 
-            (choice_3_var$max_row < choice_4_var$max_row &
-              choice_4_var$max_row > LIMIT)
-            )
-          {
+          (choice_3_var$max_row < choice_4_var$max_row &
+           choice_4_var$max_row > LIMIT)
+        )
+        {
 
           v1 <- choice_3_var$vars[[1]]
           v2 <- choice_3_var$vars[[2]]
@@ -350,7 +353,7 @@ reduce_dims <- function(
           v4 <- paste(v1, v2, sep = sep)
 
           if (choice_3_var$max_row > LIMIT){
-          cat(c("Warning when choosing variables:
+            cat(c("Warning when choosing variables:
 The limit of ",LIMIT," cannot be achieved.
 The largest table has ",choice_3_var$max_row," rows.\n"))
           }
@@ -376,7 +379,7 @@ The largest table has ",choice_3_var$max_row," rows.\n"))
         v2 <- NULL
         v3 <- NULL
         v4 <- NULL
-        maximize_nb_tabs <- if (nb_tab == 'max') TRUE else FALSE
+        maximize_nb_tabs <- if (nb_tab_option == 'max') TRUE else FALSE
       }
     }
 
@@ -386,16 +389,16 @@ Reducing from 5 to 4...\n")
     }
 
     res <- from_5_to_3(dfs = dfs,
-					   dfs_name = dfs_name,
-					   totcode = totcode,
-					   hrcfiles = hrcfiles,
-					   sep_dir = sep_dir,
-					   hrc_dir = hrc_dir,
-					   v1 = v1, v2 = v2,
-					   v3 = v3, v4 = v4,
-					   sep = sep,
-					   maximize_nb_tabs = maximize_nb_tabs,
-					   verbose = verbose)
+                       dfs_name = dfs_name,
+                       totcode = totcode,
+                       hrcfiles = hrcfiles,
+                       sep_dir = sep_dir,
+                       hrc_dir = hrc_dir,
+                       v1 = v1, v2 = v2,
+                       v3 = v3, v4 = v4,
+                       sep = sep,
+                       maximize_nb_tabs = maximize_nb_tabs,
+                       verbose = verbose)
 
   } else if (length(totcode) == 4) {
 
@@ -407,7 +410,7 @@ Reducing from 5 to 4...\n")
     } else {
       # If the user did not specify the variables to merge, we need to calculate them
 
-      if (nb_tab == 'smart') {
+      if (nb_tab_option == 'smart') {
 
         if (verbose) {
           cat("Choosing variables...\n")
@@ -415,11 +418,11 @@ Reducing from 5 to 4...\n")
 
 
         choice_2_var <- var_to_merge(dfs = dfs,
-								   totcode = totcode,
-								   hrcfiles = hrcfiles,
-								   nb_var = 2,
-								   LIMIT = LIMIT,
-								   nb_tab = nb_tab)
+                                     totcode = totcode,
+                                     hrcfiles = hrcfiles,
+                                     nb_var = 2,
+                                     LIMIT = LIMIT,
+                                     nb_tab_option = nb_tab_option)
         v1 <- choice_2_var$vars[[1]]
         v2 <- choice_2_var$vars[[2]]
 
@@ -435,7 +438,7 @@ The largest table has ",choice_2_var$max_row," rows.\n"))
       } else {
         v1 <- NULL
         v2 <- NULL
-        maximize_nb_tabs <- if (nb_tab == 'max') TRUE else FALSE
+        maximize_nb_tabs <- if (nb_tab_option == 'max') TRUE else FALSE
       }
     }
 
@@ -445,14 +448,14 @@ Reducing from 4 to 3...\n")
     }
 
     res <- from_4_to_3(dfs = dfs,
-					   dfs_name = dfs_name,
-					   totcode = totcode,
-					   hrcfiles = hrcfiles,
-					   sep_dir = sep_dir,
-					   hrc_dir = hrc_dir,
-					   v1 = v1, v2 = v2,
-					   sep = sep,
-					   maximize_nb_tabs = maximize_nb_tabs)
+                       dfs_name = dfs_name,
+                       totcode = totcode,
+                       hrcfiles = hrcfiles,
+                       sep_dir = sep_dir,
+                       hrc_dir = hrc_dir,
+                       v1 = v1, v2 = v2,
+                       sep = sep,
+                       maximize_nb_tabs = maximize_nb_tabs)
   }
 
   if (verbose) {
@@ -461,13 +464,13 @@ Reducing from 4 to 3...\n")
 
   # Put a format usable by rtauargus
   res <- sp_format(res = res,
-                dfs_name = dfs_name,
-                sep = sep,
-                totcode = totcode,
-                hrcfiles = hrcfiles)
+                   dfs_name = dfs_name,
+                   sep = sep,
+                   totcode = totcode,
+                   hrcfiles = hrcfiles)
 
   # Split too big table
-  if (split) {
+  if (over_split) {
 
     if (verbose) {
       cat("Spliting...\n")
@@ -491,7 +494,7 @@ Reducing from 4 to 3...\n")
       if (v1_v2 %in% c(v3,v4)){
         liste_var_fus <- list(paste(v3,v4, sep = res$sep))
 
-      # 2 couples created
+        # 2 couples created
       } else {
         liste_var_fus <- list(v1_v2,
                               paste(v3,v4, sep = res$sep))
@@ -513,7 +516,7 @@ Reducing from 4 to 3...\n")
       cat(paste(dfs_name,"has generated",length(res$tabs),"tables in total\n\n"))
     }
 
-    # The user specified a LIMIT (smart or split case)
+    # The user specified a LIMIT (smart or over_split case)
     if (!is.null(LIMIT)){
       max_row <- max(sapply(res$tabs, nrow))
 
@@ -602,7 +605,7 @@ split_tab <- function(res, var_fus, LIMIT) {
 
       list_alt_hrcs <- append(list_alt_hrcs, alt_hrcs)
     }
-    }
+  }
 
   # adding the names tables we created to the already existing tables
 
@@ -654,9 +657,7 @@ split_tab <- function(res, var_fus, LIMIT) {
 #' chose_sep(data)
 chose_sep <- function(
     data,
-    liste_sep = c("\\_+_", "\\_!_",
-                  "\\_?_", "___", "_z_z_z_z")
-                  )
+    liste_sep)
 {
 
   liste_var <- names(data)
@@ -675,14 +676,15 @@ chose_sep <- function(
   # We have a working separator!
   if (i <= n_sep) {
     # Remove the "\" in front of the separator
-    sep <- stringr::str_sub(liste_sep[i], start = 2)
+    #sep <- stringr::str_sub(liste_sep[i], start = 2)
+    sep <- liste_sep[i]
 
     # Return the concatenated separator thrice
     return(paste0(sep,
                   collapse = ""))
   } else {
     # Return a default separator (four underscores)
-    return(paste(rep("_+", 4),
+    return(paste(rep("_AZERTY_", 2),
                  collapse = ""))
   }
 }
