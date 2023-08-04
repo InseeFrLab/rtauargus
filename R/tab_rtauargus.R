@@ -175,7 +175,7 @@ tab_rtauargus <- function(
   if (split_tab){
     # detect secret_var = NULL
     # We want to split the table but the primary secret have not been posed
-    if (!str_detect(safety_rules,"MAN")){
+    if (!str_detect(safety_rules,"MAN") | is.null(secret_var)){
       stop("When using split_tab = TRUE, you can't use tauargus to pose primary secret")
     }
 

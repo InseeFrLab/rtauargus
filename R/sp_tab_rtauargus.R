@@ -115,7 +115,7 @@
 tab_rtauargus4 <- function(
     tabular,
     files_name = NULL,
-    dir_name = NULL,
+    dir_name,
     explanatory_vars,
     totcode = getOption("rtauargus.totcode"),
     hrc = NULL,
@@ -135,15 +135,14 @@ tab_rtauargus4 <- function(
     LIMIT = 14700,
     nb_tab = "smart",
     dfs_name = 'tab',
-    hrc_dir = 'alt_hrc',
-    sep_dir = FALSE,
     ...
 ){
 
   .dots = list(...)
 
-  if (is.null(dir_name)){
-    dir_name <- hrc_dir
+  hrc_path <- file.path(dir_name, "hrc")
+  if (!dir.exists(hrc_path)){
+    dir.create(hrc_path)
   }
 
   # TODO:
@@ -160,13 +159,12 @@ Reducing dims...\n",dfs_name,"\n\n")
       dfs_name = dfs_name,
       totcode = totcode,
       hrcfiles = hrc,
-      hrc_dir = dir_name,
+      hrc_dir = hrc_path,
       nb_tab = nb_tab,
       LIMIT = LIMIT,
       split = TRUE,
-      vec_sep = c("___"),
-      verbose = TRUE,
-      sep_dir = sep_dir
+      verbose = TRUE, # to generalize later
+      sep_dir = TRUE
     )
 
     # TODO : Update the arguments by using the ... argument
