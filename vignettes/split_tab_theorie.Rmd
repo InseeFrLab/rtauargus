@@ -1,0 +1,153 @@
+# Theory behind split_tab
+
+## Number of Tables Created
+
+The function `nb_tab_generated` allows calculating the number of tables that will be generated after dimension reduction for a given table and variables. Below is the detail of the calculations used in this function.
+
+### Merging two variables into one
+
+#### 4-Dimension
+
+During the transition from 4 dimensions to 3 dimensions and the transition from 5 dimensions to 3 dimensions by creating two pairs of variables (ie: variables AGE, SEX, GEO, ECO => AGE_SEX and GEO_ECO), the formula is very simple.
+
+To make a hierarchical variable non-hierarchical, we create a number of tables equal to the number of nodes in it. Once we have made a hierarchical variable, on each of its sub-tables, we apply the same process to the second variable.
+
+Finally, for each combination of table created, two hierarchies are created to account for the margins relative to the first or second variable.
+
+Thus, in the case of starting with 4 dimensions, we get:
+
+$$\textit{number of tables} = 2 \times \textit{number_nodes_v1} \times \textit{number_nodes_v2}$$
+
+where v1 and v2 correspond to the merged variables, and number_nodes_v1 and number_nodes_v2 the number of nodes in their respective hierarchy.
+
+For example, in the case of merging GEO and SEX with GEO = {Country, Region 1, Region 2, Municipality 11, Municipality 12, Municipality 13, Municipality 21, Municipality 22, Municipality 23, Municipality 24} and SEX = {Total, Female, Male} with the usual implicit hierarchies (ie Country = Region 1 + Region 2, Region 1 = Municipality 11 + Municipality 21 + Municipality 22, etc), we obtain: $6 = 2 \times 3 \times 1$ tables.
+
+Indeed, GEO has three nodes (France, Region 1, Region 2) and SEX being non-hierarchical, only one (Total).
+
+#### 5-Dimension
+
+And in the case of starting with 5 dimensions, we iterate the process to the intermediate tables with 4 dimensions, thus we obtain:
+
+$$\textit{number of tables} = 4 \times \textit{number_nodes_v1} \times \textit{number_nodes_v2} 
+\times \textit{number_nodes_v3} \times \textit{number_nodes_v4}$$
+
+where v1…v4 correspond to the merged variables, and number_nodes_v1…number_nodes_v4 the number of nodes in their respective hierarchy.
+
+### Merging three variables into one
+
+When transitioning from 5 dimensions to 3 dimensions, it is possible to merge three variables into one. For example, from the variables SEX, GEO, and AGE, create the variable SEX_GEO_AGE.
+
+Suppose that in the transition from 5 to 4 dimensions, we create the variable SEX_GEO, and then, when moving from 4 to 3, we create the variable SEX_GEO_AGE.
+
+The problem here is that the variable SEX_GEO is hierarchical but does not contain the same number of nodes in each of the 4-dimensional tables. Therefore, it is not possible for us to perform a simple product as in the previous formulas.
+
+Let's first count the number of nodes related to the variable SEX_GEO.
+
+There is a different table for each crossing of the SEX and GEO modality. Then, two hierarchies are created: one on the SEX margins, the other on GEO.
+
+The hierarchy on the AGE margins has as many nodes as AGE has modalities, and similarly for SEX.
+
+We then obtain:
+
+$$\textit{number of tables related to v1_v2} = 
+\sum_{i\in\textit{{node + branch v1}}} \sum_{j\in\textit{{node + branch v2}}} \textit{nb_mod_i + nb_mod_j}$$
+
+where nb_mod_i and nb_mod_j correspond to the respective number of modes of grouping i and j. For example, if i = {France, Region 1, Region 2} then nb_mod_i = 3.
+
+Then, to move to 3 dimensions, we obtain:
+
+$$
+\textit{number of tables} = 2 \times \textit{number of tables related to v1_v2} \times \textit{number_nodes_v3}
+$$
+
+$$
+=2 \times \textit{number_nodes_v3} \times \sum_{i\in\textit{{node + branch v1}}}
+\sum_{j\in\textit{{node + branch v2}}}
+\textit{nb_mod_i + nb_mod_j}
+$$
+
+In the example of SEX_GEO_AGE, we obtain:
+
+$$\textit{number of tables related to SEX_GEO} =  (3+3)+(3+4)+(3+5) = 21$$
+
+$$\textit{total number of tables} = 2 \times 1 \times 42 = 42$$
+
+Since SEX is not hierarchical so we only consider {Total, Male, Female} (which has three modes), GEO has three nodes: {France, Region 1, Region 2}, {Region 1, Municipality 11, Municipality 12, Municipality 13}, {Region 2, Municipality 21, Municipality 22, Municipality 23, Municipality 24} having respectively 3, 4, and 5 modes.
+
+Finally, AGE being non-hierarchical, it has only one node.
+
+We thus obtain 42 tables when creating SEX_GEO_AGE. By construction, the variable SEX_GEO generates hierarchies with many nodes, so the merging of three variables into one is rare if we choose to minimize the number of tables created.
+
+## Length of Tables Created
+
+The function `length_tabs` allows calculating the length of the tables that will be generated after dimension reduction for a given table and variables. Below is the detail of the calculations used in this function.
+
+### 4-Dimension
+
+When dividing a table in two to create hierarchical variables, we first split the variables to make them non-hierarchical, then for each of the possible node crossings, we make a table with margins for the first variable, a table with margins for the second variable.
+
+We thus obtain for the margins relative to the first variable:
+
+$$ \{mod(level\_v1\_i) * (mod(level\_v2\_j) - 1) + 1 \}$$
+
+And for the second variable:
+
+$$  \{ (mod(level\_v1\_i) - 1) * mod(level\_v2\_j) + 1 \}$$
+where mod(x) represents the number of modes of node x,
+and where level_v1_i, level_v2_j represents respectively a possible node of v1, a possible node of v2. (ie a subtotal and its direct terms)
+
+Then we just multiply the result by the product of the modes of the unfused variables.
+
+### Dimension 5
+
+#### 2 Couples Created
+
+Analogously to before, we obtain all possible crossings (4: there are 2 crossings for the first couple, 2 for the second)
+
+\[
+\{ [\text{mod}(level\_v1\_i) \cdot (\text{mod}(level\_v2\_j) - 1) + 1] \cdot [\text{mod}(level\_v3\_k) \cdot (\text{mod}(level\_v4\_l) - 1) + 1] \}
+\]
+
+\[
+\{ [\text{mod}(level\_v1\_i) \cdot (\text{mod}(level\_v2\_j) - 1) + 1] \cdot [(\text{mod}(level\_v3\_k) - 1) \cdot \text{mod}(level\_v4\_l) + 1] \}
+\]
+
+\[
+\{ [(\text{mod}(level\_v1\_i) - 1) \cdot \text{mod}(level\_v2\_j) + 1] \cdot [\text{mod}(level\_v3\_k) \cdot (\text{mod}(level\_v4\_l) - 1) + 1] \}
+\]
+
+\[
+\{ [(\text{mod}(level\_v1\_i) - 1) \cdot \text{mod}(level\_v2\_j) + 1] \cdot [(\text{mod}(level\_v3\_k) - 1) \cdot \text{mod}(level\_v4\_l) + 1] \}
+\]
+With the same implicit notations as before.
+
+#### A Merged Trio
+
+This case is based on empirical results. There is no explanation for the moment. The `length_tabs` function seems to return the correct result, but the returned list is not ordered.
+
+Crossing between v1 and v3:
+
+\[
+\{\text{mod}(level\_v1\_i) \cdot (\text{mod}(level\_v3\_k) - 1) + 1 \}
+\]
+
+\[
+\{ (\text{mod}(level\_v1\_i) - 1) \cdot \text{mod}(level\_v3\_k) + 1 \}
+\]
+Crossing between v1 and v2:
+\[
+\{\text{mod}(level\_v1\_i) \cdot (\text{mod}(level\_v2\_j) - 1) + 1 \}
+\]
+
+\[
+\{ (\text{mod}(level\_v1\_i) - 1) \cdot \text{mod}(level\_v2\_j) + 1 \}
+\]
+Crossing between v2 and v3:
+\[
+\{\text{mod}(level\_v2\_j) \cdot (\text{mod}(level\_v3\_k) - 1) + 1 \}
+\]
+
+\[
+\{ (\text{mod}(level\_v2\_j) - 1) \cdot \text{mod}(level\_v3\_k) + 1 \}
+\]
+
