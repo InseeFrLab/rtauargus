@@ -11,10 +11,10 @@
 #' @param unif_labels boolean, if explanatory variables have to be standardized
 #' @param split_tab boolean, wether to reduce dimension to 3 when treating a table
 #' of dimension 4 or 5
-#' @param LIMIT numeric, used to choose which variable to merge (if nb_tab = 'smart')
+#' @param LIMIT numeric, used to choose which variable to merge (if nb_tab_option = 'smart')
 #' and split table with a number of row above this limit in order to avoid
 #' tauargus failures
-#' @param nb_tab strategy to follow for choosing variables automatically:
+#' @param nb_tab_option strategy to follow for choosing variables automatically:
 #' \itemize{
 #'   \item \code{'min'}: minimize the number of tables;
 #'   \item \code{'max'}: maximize the number of tables;
@@ -78,7 +78,7 @@
 #'   value = "pizzas_tot",
 #'   freq = "nb_obs",
 #'   verbose = TRUE,
-#'   nb_tab = "min",
+#'   nb_tab_option = "min",
 #'   verbose = TRUE
 #' )
 #'
@@ -105,7 +105,7 @@
 #'   value = "pizzas_tot",
 #'   freq = "nb_obs",
 #'   verbose = TRUE,
-#'   nb_tab = "min",
+#'   nb_tab_option = "min",
 #'   split_tab = TRUE,
 #'   verbose = TRUE,
 #'   suppress = "GH(1,100)"
@@ -133,7 +133,7 @@ tab_rtauargus4 <- function(
     output_options = "",
     unif_labels = TRUE,
     LIMIT = 14700,
-    nb_tab = "smart",
+    nb_tab_option = "smart",
     dfs_name = 'tab',
     ...
 ){
@@ -160,9 +160,9 @@ Reducing dims...\n",dfs_name,"\n\n")
       totcode = totcode,
       hrcfiles = hrc,
       hrc_dir = hrc_path,
-      nb_tab = nb_tab,
+      nb_tab_option = nb_tab_option,
       LIMIT = LIMIT,
-      split = TRUE,
+      over_split = TRUE,
       verbose = TRUE, # to generalize later
       sep_dir = TRUE
     )

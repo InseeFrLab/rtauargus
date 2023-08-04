@@ -11,10 +11,10 @@
 #' @param unif_labels boolean, if explanatory variables have to be standardized
 #' @param split_tab boolean, wether to reduce dimension to 3 when treating a table
 #' of dimension 4 or 5
-#' @param LIMIT numeric, used to choose which variable to merge (if nb_tab = 'smart')
+#' @param LIMIT numeric, used to choose which variable to merge (if nb_tab_option = 'smart')
 #' and split table with a number of row above this limit in order to avoid
 #' tauargus failures
-#' @param nb_tab strategy to follow for choosing variables automatically:
+#' @param nb_tab_option strategy to follow for choosing variables automatically:
 #' \itemize{
 #'   \item \code{'min'}: minimize the number of tables;
 #'   \item \code{'max'}: maximize the number of tables;
@@ -101,7 +101,7 @@
 #'   secret_var = "is_secret_prim",
 #'   value = "pizzas_tot",
 #'   freq = "nb_obs",
-#'   nb_tab = "smart",
+#'   nb_tab_option = "smart",
 #'   split_tab = TRUE,
 #'   LIMIT = 400
 #' )
@@ -128,8 +128,8 @@ tab_rtauargus <- function(
     output_options = "",
     unif_labels = TRUE,
     split_tab = FALSE,
+    nb_tab_option = "smart",
     LIMIT = 14700,
-    nb_tab = "smart",
     ...
 ){
 
@@ -209,7 +209,7 @@ tab_rtauargus <- function(
                             output_options = output_options,
                             unif_labels = unif_labels,
                             LIMIT = LIMIT,
-                            nb_tab = nb_tab,
+                            nb_tab_option = nb_tab_option,
                             ...)) # to complete later
     } else {
       message("Warning :
