@@ -11,10 +11,10 @@
 #' @param unif_labels boolean, if explanatory variables have to be standardized
 #' @param split_tab boolean, wether to reduce dimension to 3 when treating a table
 #' of dimension 4 or 5
-#' @param LIMIT numeric, used to choose which variable to merge (if nb_tab = 'smart')
+#' @param LIMIT numeric, used to choose which variable to merge (if nb_tab_option = 'smart')
 #' and split table with a number of row above this limit in order to avoid
 #' tauargus failures
-#' @param nb_tab strategy to follow for choosing variables automatically:
+#' @param nb_tab_option strategy to follow for choosing variables automatically:
 #' \itemize{
 #'   \item \code{'min'}: minimize the number of tables;
 #'   \item \code{'max'}: maximize the number of tables;
@@ -101,7 +101,7 @@
 #'   secret_var = "is_secret_prim",
 #'   value = "pizzas_tot",
 #'   freq = "nb_obs",
-#'   nb_tab = "smart",
+#'   nb_tab_option = "smart",
 #'   split_tab = TRUE,
 #'   LIMIT = 400
 #' )
@@ -128,8 +128,8 @@ tab_rtauargus <- function(
     output_options = "",
     unif_labels = TRUE,
     split_tab = FALSE,
+    nb_tab_option = "smart",
     LIMIT = 14700,
-    nb_tab = "smart",
     ...
 ){
 
@@ -173,25 +173,15 @@ tab_rtauargus <- function(
   if(is.null(dir_name)) dir_name <- getwd()
 
   if (split_tab){
+    # detect secret_var = NULL
     # We want to split the table but the primary secret have not been posed
-    if (!str_detect(safety_rules,"MAN")){
-      stop("We using split_tab = TRUE, you can't use tauargus to pose primary secret")
+    if (!str_detect(safety_rules,"MAN") | is.null(secret_var)){
+      stop("When using split_tab = TRUE, you can't use tauargus to pose primary secret")
     }
-
-    # Avertize the user of default arguments being used
-    cat("
-When using split_tab = TRUE, according to your use,
-you may want to change the following default parameters.
-
-Current values are :
-LIMIT :", LIMIT,"
-nb_tab :", nb_tab,"
-
-    ")
 
     # split_tab strategy only work with dimension 4 or 5 tables
     if (!length(explanatory_vars) %in% c(4,5)){
-      warning("
+      message("
             You use split_tab = TRUE. However it only works with table of dimension 4 or 5.
             split_tab argument is being ignored")
     }
@@ -219,10 +209,10 @@ nb_tab :", nb_tab,"
                             output_options = output_options,
                             unif_labels = unif_labels,
                             LIMIT = LIMIT,
-                            nb_tab = nb_tab,
+                            nb_tab_option = nb_tab_option,
                             ...)) # to complete later
     } else {
-      cat("Warning :
+      message("Warning :
 It is highly recommended to use split_tab = TRUE when using rtauargus with 4 or 5 dimensions tables.
 It allows to split the table in several tables with 3 dimensions.
 

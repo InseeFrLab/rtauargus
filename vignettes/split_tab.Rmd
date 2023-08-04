@@ -45,7 +45,12 @@ To go from 5 to 3 categorical variables, the method used is to first reduce from
 
 For example:
 
-Base Table
+
+<div style="text-align: center;">
+
+<img src="tab_SEX_AGE_en.png" alt="base_tab" width="600" height="500">
+</div>
+
 
 With these two tables, two different nested hierarchies are created on the variable SEX_AGE, as seen in the tabulations in the tables. It should be noted that to avoid having non-nested hierarchies, we need to have at least 2 tables because we cannot easily explain using hierarchies that:
 
@@ -54,19 +59,26 @@ With these two tables, two different nested hierarchies are created on the varia
 </div>
 
 <div style="text-align: center; font-size: 20px;">
-    Total_Ensemble = Total_Femme + Total_Homme
+    Total_Ensemble = Femme_Ensemble + Homme_Ensemble
 </div>
 
 Here we have split by two non-hierarchical variables. One might think that the method changes if we use non-hierarchical variables. But in reality, not so much. Indeed, we will try to remove the hierarchies present in a variable by splitting this variable according to its subtotals.
 
 We can give the example of the hierarchical variable GEO, which consists of two regions and two departments. We will then create tables without hierarchies, combining the nodes of the different hierarchies present in the base table. This is what the functions `from_4_to_3_case_1_hr` and `from_4_to_3_case_2_hr` do.
 
-Hierarchical Table
 
-The question then arises about the number of tables that will be created by this method. This method creates tables depending on the number of nodes in the array.
+<div style="text-align: center;">
+  <img src="GEO.png" alt="hierarchie" width="375" height="150">
+</div>
 
-Therefore, after creating our list of tables using `reduce_dims`, we apply the secret using `tab_multimanager` and reform the secured base table from this secret list using `restore_format`.
-Using different parameters related to `split_tab`
+Therefore, this raises the question of the number of tables that will be created by this method, and the length of each one. Explanations on this subject can be found in `split_tab_theorie.Rmd`.
+
+This method creates arrays depending on the number of nodes for each variable in the array.
+
+So, after creating our table list with `reduce_dims`, we set the secret with `tab_multimanager` and reform the secreted base table from this secreted list with `restore_format`.
+
+
+## Using different parameters related to `split_tab`
 
 As mentioned in the introduction, nb_tabs allows you to specify the number of tables you want to create between `min`, `max`, and `smart.`
 
