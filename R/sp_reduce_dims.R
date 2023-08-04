@@ -44,9 +44,10 @@
 #' @export
 #' @importFrom sdcHierarchies hier_import hier_convert
 #' @importFrom stringr str_detect
-#' @importFrom dplyr select slice mutate filter intersect setdiff n
+#' @importFrom dplyr select mutate filter
 #'
 #' @examples
+#' library(dplyr)
 #' # Examples for dimension 4
 #'
 #' data <- expand.grid(
@@ -63,7 +64,7 @@
 #'
 #' hrc_act <- "hrc/hrc_ACT4.hrc"
 #'
-#' sdcHierarchies::hier_create(root = "Total", nodes = c("A","B","C","name_non_changed_vars","E","F","G")) %>%
+#' sdcHierarchies::hier_create(root = "Total", nodes = c("A","B","C","D","E","F","G")) %>%
 #'   sdcHierarchies::hier_add(root = "A", nodes = c("A1","A2","A3")) %>%
 #'   sdcHierarchies::hier_add(root = "B", nodes = c("B1","B2","B3","B4","B5")) %>%
 #'   sdcHierarchies::hier_convert(as = "argus") %>%

@@ -173,25 +173,15 @@ tab_rtauargus <- function(
   if(is.null(dir_name)) dir_name <- getwd()
 
   if (split_tab){
+    # detect secret_var = NULL
     # We want to split the table but the primary secret have not been posed
     if (!str_detect(safety_rules,"MAN")){
-      stop("We using split_tab = TRUE, you can't use tauargus to pose primary secret")
+      stop("When using split_tab = TRUE, you can't use tauargus to pose primary secret")
     }
-
-    # Avertize the user of default arguments being used
-    cat("
-When using split_tab = TRUE, according to your use,
-you may want to change the following default parameters.
-
-Current values are :
-LIMIT :", LIMIT,"
-nb_tab :", nb_tab,"
-
-    ")
 
     # split_tab strategy only work with dimension 4 or 5 tables
     if (!length(explanatory_vars) %in% c(4,5)){
-      warning("
+      message("
             You use split_tab = TRUE. However it only works with table of dimension 4 or 5.
             split_tab argument is being ignored")
     }
@@ -222,7 +212,7 @@ nb_tab :", nb_tab,"
                             nb_tab = nb_tab,
                             ...)) # to complete later
     } else {
-      cat("Warning :
+      message("Warning :
 It is highly recommended to use split_tab = TRUE when using rtauargus with 4 or 5 dimensions tables.
 It allows to split the table in several tables with 3 dimensions.
 
