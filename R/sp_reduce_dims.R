@@ -199,7 +199,7 @@ reduce_dims <- function(
     nb_tab = "min",
     LIMIT = NULL,
     split = FALSE,
-    vec_sep = c("\\_+_", "\\_!_", "\\_?_","___","_z_z_z_z"),
+    vec_sep = c("___","_XXX_","_YYY_", "_TTT_", "_UVW_"),
     verbose = FALSE
 ){
 
@@ -320,30 +320,30 @@ reduce_dims <- function(
 
         # Propose combinations of variables to merge
         choice_3_var <- var_to_merge(dfs = dfs,
-								   totcode = totcode,
-								   hrcfiles = hrcfiles,
-								   nb_var = 3,
-								   LIMIT = LIMIT,
-								   nb_tab = nb_tab)
+                                     totcode = totcode,
+                                     hrcfiles = hrcfiles,
+                                     nb_var = 3,
+                                     LIMIT = LIMIT,
+                                     nb_tab = nb_tab)
 
         choice_4_var <- var_to_merge(dfs = dfs,
-								   totcode = totcode,
-								   hrcfiles = hrcfiles,
-								   nb_var = 4,
-								   LIMIT = LIMIT,
-								   nb_tab = nb_tab)
+                                     totcode = totcode,
+                                     hrcfiles = hrcfiles,
+                                     nb_var = 4,
+                                     LIMIT = LIMIT,
+                                     nb_tab = nb_tab)
 
         # Choose the best combination
         # The less nb of tab is the row limit is respected
         # or the less nb or row if the limit cannot be respected
         if (
-            (choice_3_var$nb_tab < choice_4_var$nb_tab &
-              max(choice_4_var$max_row,choice_3_var$max_row) < LIMIT) |
+          (choice_3_var$nb_tab < choice_4_var$nb_tab &
+           max(choice_4_var$max_row,choice_3_var$max_row) < LIMIT) |
 
-            (choice_3_var$max_row < choice_4_var$max_row &
-              choice_4_var$max_row > LIMIT)
-            )
-          {
+          (choice_3_var$max_row < choice_4_var$max_row &
+           choice_4_var$max_row > LIMIT)
+        )
+        {
 
           v1 <- choice_3_var$vars[[1]]
           v2 <- choice_3_var$vars[[2]]
@@ -351,7 +351,7 @@ reduce_dims <- function(
           v4 <- paste(v1, v2, sep = sep)
 
           if (choice_3_var$max_row > LIMIT){
-          cat(c("Warning when choosing variables:
+            cat(c("Warning when choosing variables:
 The limit of ",LIMIT," cannot be achieved.
 The largest table has ",choice_3_var$max_row," rows.\n"))
           }
@@ -387,16 +387,16 @@ Reducing from 5 to 4...\n")
     }
 
     res <- from_5_to_3(dfs = dfs,
-					   dfs_name = dfs_name,
-					   totcode = totcode,
-					   hrcfiles = hrcfiles,
-					   sep_dir = sep_dir,
-					   hrc_dir = hrc_dir,
-					   v1 = v1, v2 = v2,
-					   v3 = v3, v4 = v4,
-					   sep = sep,
-					   maximize_nb_tabs = maximize_nb_tabs,
-					   verbose = verbose)
+                       dfs_name = dfs_name,
+                       totcode = totcode,
+                       hrcfiles = hrcfiles,
+                       sep_dir = sep_dir,
+                       hrc_dir = hrc_dir,
+                       v1 = v1, v2 = v2,
+                       v3 = v3, v4 = v4,
+                       sep = sep,
+                       maximize_nb_tabs = maximize_nb_tabs,
+                       verbose = verbose)
 
   } else if (length(totcode) == 4) {
 
@@ -416,11 +416,11 @@ Reducing from 5 to 4...\n")
 
 
         choice_2_var <- var_to_merge(dfs = dfs,
-								   totcode = totcode,
-								   hrcfiles = hrcfiles,
-								   nb_var = 2,
-								   LIMIT = LIMIT,
-								   nb_tab = nb_tab)
+                                     totcode = totcode,
+                                     hrcfiles = hrcfiles,
+                                     nb_var = 2,
+                                     LIMIT = LIMIT,
+                                     nb_tab = nb_tab)
         v1 <- choice_2_var$vars[[1]]
         v2 <- choice_2_var$vars[[2]]
 
@@ -446,14 +446,14 @@ Reducing from 4 to 3...\n")
     }
 
     res <- from_4_to_3(dfs = dfs,
-					   dfs_name = dfs_name,
-					   totcode = totcode,
-					   hrcfiles = hrcfiles,
-					   sep_dir = sep_dir,
-					   hrc_dir = hrc_dir,
-					   v1 = v1, v2 = v2,
-					   sep = sep,
-					   maximize_nb_tabs = maximize_nb_tabs)
+                       dfs_name = dfs_name,
+                       totcode = totcode,
+                       hrcfiles = hrcfiles,
+                       sep_dir = sep_dir,
+                       hrc_dir = hrc_dir,
+                       v1 = v1, v2 = v2,
+                       sep = sep,
+                       maximize_nb_tabs = maximize_nb_tabs)
   }
 
   if (verbose) {
@@ -462,10 +462,10 @@ Reducing from 4 to 3...\n")
 
   # Put a format usable by rtauargus
   res <- sp_format(res = res,
-                dfs_name = dfs_name,
-                sep = sep,
-                totcode = totcode,
-                hrcfiles = hrcfiles)
+                   dfs_name = dfs_name,
+                   sep = sep,
+                   totcode = totcode,
+                   hrcfiles = hrcfiles)
 
   # Split too big table
   if (split) {
@@ -492,7 +492,7 @@ Reducing from 4 to 3...\n")
       if (v1_v2 %in% c(v3,v4)){
         liste_var_fus <- list(paste(v3,v4, sep = res$sep))
 
-      # 2 couples created
+        # 2 couples created
       } else {
         liste_var_fus <- list(v1_v2,
                               paste(v3,v4, sep = res$sep))
@@ -603,7 +603,7 @@ split_tab <- function(res, var_fus, LIMIT) {
 
       list_alt_hrcs <- append(list_alt_hrcs, alt_hrcs)
     }
-    }
+  }
 
   # adding the names tables we created to the already existing tables
 
@@ -655,9 +655,7 @@ split_tab <- function(res, var_fus, LIMIT) {
 #' chose_sep(data)
 chose_sep <- function(
     data,
-    liste_sep = c("\\_+_", "\\_!_",
-                  "\\_?_", "___", "_z_z_z_z")
-                  )
+    liste_sep)
 {
 
   liste_var <- names(data)
@@ -676,14 +674,15 @@ chose_sep <- function(
   # We have a working separator!
   if (i <= n_sep) {
     # Remove the "\" in front of the separator
-    sep <- stringr::str_sub(liste_sep[i], start = 2)
+    #sep <- stringr::str_sub(liste_sep[i], start = 2)
+    sep <- liste_sep[i]
 
     # Return the concatenated separator thrice
     return(paste0(sep,
                   collapse = ""))
   } else {
     # Return a default separator (four underscores)
-    return(paste(rep("_+", 4),
+    return(paste(rep("_AZERTY_", 2),
                  collapse = ""))
   }
 }
