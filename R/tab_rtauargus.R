@@ -82,28 +82,17 @@
 #' )
 #'
 #' # Reduce dims feature
-#' load("donnees/ca_test_0_hrc.RData")
-#'
-#' res_all_dtp <- res_all_dtp %>%
-#'   mutate(
-#'     is_secret_freq = nb_obs > 0 & nb_obs < 3,
-#'     is_secret_dom = ifelse(pizzas_max == 0, FALSE, pizzas_max/pizzas_tot>0.85),
-#'     is_secret_prim = is_secret_freq | is_secret_dom,
-#'     nb_obs = ceiling(nb_obs),
-#'     pizzas_tot=abs(pizzas_tot)
-#'   )
 #'
 #' res_dim4 <- tab_rtauargus(
-#'   tabular = res_all_dtp,
-#'   dir_name = "ca_test_0_hrc",
+#'   tabular = datatest1,
+#'   dir_name = "tauargus_files",
 #'   explanatory_vars = c("A10", "treff","type_distrib","cj"),
 #'   totcode = c(A10 = "Total", treff = "Total",type_distrib = "Total",cj = "Total"),
 #'   secret_var = "is_secret_prim",
-#'   value = "pizzas_tot",
-#'   freq = "nb_obs",
+#'   value = "pizzas_tot_abs",
+#'   freq = "nb_obs_rnd",
 #'   nb_tab_option = "smart",
-#'   split_tab = TRUE,
-#'   LIMIT = 400
+#'   split_tab = TRUE
 #' )
 #' }
 #' @export
@@ -175,42 +164,50 @@ tab_rtauargus <- function(
   if (split_tab){
     # detect secret_var = NULL
     # We want to split the table but the primary secret have not been posed
-    if (!str_detect(safety_rules,"MAN") | is.null(secret_var)){
-      stop("When using split_tab = TRUE, you can't use tauargus to pose primary secret")
+    if ( !grepl("MAN", safety_rules) ){
+      stop("While using split_tab = TRUE, you can't use tauargus to put primary secret")
     }
-
+    if ( is.null(secret_var) ){
+      stop("While using split_tab = TRUE, a secret_var has to be provided")
+    }
     # split_tab strategy only work with dimension 4 or 5 tables
-    if (!length(explanatory_vars) %in% c(4,5)){
-      message("
-            You use split_tab = TRUE. However it only works with table of dimension 4 or 5.
-            split_tab argument is being ignored")
+    if ( ! length(explanatory_vars) %in% c(4,5) ){
+      stop(
+        "You use split_tab = TRUE. However it only works with 4 or 5 dimensions
+      tables."
+      )
     }
   }
 
   if (length(explanatory_vars) %in% c(4,5)){
     if (split_tab){
-      return(tab_rtauargus4(tabular,
-                            files_name = files_name,
-                            dir_name = dir_name,
-                            explanatory_vars = explanatory_vars,
-                            totcode = totcode,
-                            hrc = hrc,
-                            secret_var = secret_var,
-                            secret_no_pl = secret_no_pl,
-                            cost_var = cost_var,
-                            value = value,
-                            freq = freq,
-                            ip = ip,
-                            maxscore = maxscore,
-                            suppress = suppress,
-                            safety_rules = safety_rules,
-                            show_batch_console = show_batch_console,
-                            output_type = output_type,
-                            output_options = output_options,
-                            unif_labels = unif_labels,
-                            LIMIT = LIMIT,
-                            nb_tab_option = nb_tab_option,
-                            ...)) # to complete later
+      params_rt4 <- param_function(tab_rtauargus4, .dots)
+      params_rt4$tabular = tabular
+      params_rt4$files_name = files_name
+      params_rt4$dir_name = dir_name
+      params_rt4$cost_var = cost_var
+      params_rt4$value = value
+      params_rt4$freq = freq
+      params_rt4$suppress = suppress
+      params_rt4$explanatory_vars = explanatory_vars
+      params_rt4$totcode = totcode
+      params_rt4$hrc = hrc
+      params_rt4$secret_var = secret_var
+      params_rt4$secret_no_pl = secret_no_pl
+      params_rt4$cost_var = cost_var
+      params_rt4$value = value
+      params_rt4$freq = freq
+      params_rt4$ip = ip
+      params_rt4$maxscore = maxscore
+      params_rt4$suppress = suppress
+      params_rt4$safety_rules = safety_rules
+      params_rt4$LIMIT = LIMIT
+      params_rt4$nb_tab_option = nb_tab_option
+      # params_rt4 <- formals()
+      # params_rt4 <- params_rt4[intersect(names(formals(fun = "tab_rtauargus4")), names(params_rt4)) ]
+
+      return(do.call("tab_rtauargus4", params_rt4))
+
     } else {
       message("Warning :
 It is highly recommended to use split_tab = TRUE when using rtauargus with 4 or 5 dimensions tables.

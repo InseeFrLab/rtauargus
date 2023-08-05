@@ -123,8 +123,7 @@ tab_rtauargus4 <- function(
   # Reduce dims for 4 or 5 dimensions table
   if (length(explanatory_vars) %in% c(4, 5)) {
 
-    cat("
-Reducing dims...\n",dfs_name,"\n\n")
+    cat("\nReducing dims...\n",dfs_name,"\n\n")
 
     list_tables <- reduce_dims(
       dfs = tabular,
@@ -185,7 +184,6 @@ Reducing dims...\n",dfs_name,"\n\n")
       alt_hrc = list_tables$alt_hrc,
       alt_totcode = list_tables$alt_totcode,
       value = value,
-      maxscore = maxscore,
       freq = freq,
       secret_var = secret_var,
       suppress = suppress
@@ -195,6 +193,7 @@ Reducing dims...\n",dfs_name,"\n\n")
 
     return(result)
   } else {
-    stop("Do not use table with more than 5 dimensions. Split_tab = TRUE is not compatible with these large tables.")
+    stop("Do not use table with more than 5 dimensions.
+         Split_tab = TRUE is not compatible with these large tables.")
   }
 }
