@@ -169,7 +169,7 @@ tab_rtauargus <- function(
     names(totcode) <- explanatory_vars
   }
 
-  if(is.null(files_name)) files_name <- paste0("tau_argus_file_", format.Date(Sys.time(), format = '%Y_%m_%d_%H:%M:%S'))
+  if(is.null(files_name)) files_name <- "targus_file"
   if(is.null(dir_name)) dir_name <- getwd()
 
   if (split_tab){
