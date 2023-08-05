@@ -50,65 +50,45 @@
 #'
 #' @examples
 #'\dontrun{
-#' # Compute the secondary secret ----
+#' library(rtauargus)
+#' #Please don't forget to specify the localisation of Tau-Argus in your computer
 #' options(
 #'   rtauargus.tauargus_exe =
-#'     "Y:/Logiciels/TauArgus/TauArgus4.2.2b1/TauArgus.exe"
+#'     "Y:/Logiciels/TauArgus/TauArgus4.2.3/TauArgus.exe"
 #' )
 #'
-#' # Reduce dims feature
-#' load("donnees/ca_test_0_hrc.RData")
-#'
-#' res_all_dtp <- res_all_dtp %>%
-#'   mutate(
-#'     is_secret_freq = nb_obs > 0 & nb_obs < 3,
-#'     is_secret_dom = ifelse(pizzas_max == 0, FALSE, pizzas_max/pizzas_tot>0.85),
-#'     is_secret_prim = is_secret_freq | is_secret_dom,
-#'     nb_obs = ceiling(nb_obs),
-#'     pizzas_tot=abs(pizzas_tot)
-#'   )
-#'
 #' res_dim4 <- tab_rtauargus4(
-#'   tabular = res_all_dtp,
-#'   files_name = "ca_test_0_hrc",
-#'   dir_name = "ca_test_0_hrc",
+#'   tabular = datatest1,
+#'   files_name = "datatest1",
+#'   dir_name = "tauargus_files",
 #'   explanatory_vars = c("A10", "treff","type_distrib","cj"),
 #'   totcode = c(A10 = "Total", treff = "Total",type_distrib = "Total",cj = "Total"),
 #'   secret_var = "is_secret_prim",
-#'   value = "pizzas_tot",
-#'   freq = "nb_obs",
+#'   value = "pizzas_tot_abs",
+#'   freq = "nb_obs_rnd",
 #'   verbose = TRUE,
 #'   nb_tab_option = "min",
 #'   verbose = TRUE
 #' )
 #'
-#' # We use hyerpcube to save time !
-#' load("donnees/test_5_var.RData")
+#' # With a data of 5 variables
 #'
-#' test_5_var <- test_5_var %>%
-#'   mutate(
-#'     is_secret_freq = nb_obs > 0 & nb_obs < 3,
-#'     is_secret_dom = ifelse(pizzas_max == 0, FALSE, pizzas_max/pizzas_tot>0.85),
-#'     is_secret_prim = is_secret_freq | is_secret_dom,
-#'     nb_obs = ceiling(nb_obs),
-#'     pizzas_tot=abs(pizzas_tot)
-#'   )
-#'
-#' test_5_var$is_secret_prim %>% sum()
+#' expl_vars <- c("A10", "treff","type_distrib","cj","nuts1")
 #'
 #' res_dim5 <- tab_rtauargus4(
-#'   tabular = test_5_var,
-#'   dir_name = "output",
-#'   explanatory_vars = c("A10", "treff","type_distrib","cj","nuts1"),
-#'   totcode = c(A10 = "Total", treff = "Total",type_distrib = "Total",cj = "Total",nuts1 = "Total"),
+#'   tabular = datatest2,
+#'   files_name = "datatest2",
+#'   dir_name = "tauargus_files",
+#'   explanatory_vars = expl_vars,
+#'   totcode = setNames(rep("Total", 5), expl_vars),
 #'   secret_var = "is_secret_prim",
-#'   value = "pizzas_tot",
-#'   freq = "nb_obs",
+#'   value = "pizzas_tot_abs",
+#'   freq = "nb_obs_rnd",
 #'   verbose = TRUE,
-#'   nb_tab_option = "min",
 #'   split_tab = TRUE,
+#'   nb_tab_option = "min", # split into the minimum of tables.
 #'   verbose = TRUE,
-#'   suppress = "GH(1,100)"
+#'   suppress = "GH(1,100)" # We use hyerpcube to save time.
 #' )
 #' }
 #' @export
