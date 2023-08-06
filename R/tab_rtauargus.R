@@ -181,30 +181,15 @@ tab_rtauargus <- function(
 
   if (length(explanatory_vars) %in% c(4,5)){
     if (split_tab){
-      params_rt4 <- param_function(tab_rtauargus4, .dots)
-      params_rt4$tabular = tabular
-      params_rt4$files_name = files_name
-      params_rt4$dir_name = dir_name
-      params_rt4$cost_var = cost_var
-      params_rt4$value = value
-      params_rt4$freq = freq
-      params_rt4$suppress = suppress
-      params_rt4$explanatory_vars = explanatory_vars
-      params_rt4$totcode = totcode
-      params_rt4$hrc = hrc
-      params_rt4$secret_var = secret_var
-      params_rt4$secret_no_pl = secret_no_pl
-      params_rt4$cost_var = cost_var
-      params_rt4$value = value
-      params_rt4$freq = freq
-      params_rt4$ip = ip
-      params_rt4$maxscore = maxscore
-      params_rt4$suppress = suppress
-      params_rt4$safety_rules = safety_rules
-      params_rt4$LIMIT = LIMIT
-      params_rt4$nb_tab_option = nb_tab_option
-      # params_rt4 <- formals()
-      # params_rt4 <- params_rt4[intersect(names(formals(fun = "tab_rtauargus4")), names(params_rt4)) ]
+
+      params_rt4 <- formals(fun = "tab_rtauargus4")
+      params_rt4 <- params_rt4[1:(length(params_rt4)-1)]
+      call <- sys.call(); call[[1]] <- as.name('list')
+      new_params <- eval.parent(call)
+
+      for(param in intersect(names(params_rt4), names(new_params))){
+        params_rt4[[param]] <- new_params[[param]]
+      }
 
       return(do.call("tab_rtauargus4", params_rt4))
 
