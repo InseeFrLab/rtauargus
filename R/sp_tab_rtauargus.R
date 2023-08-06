@@ -175,19 +175,36 @@ tab_rtauargus4 <- function(
 
     # do.call("tab_multi_manager", params)
 
-    masq_list <- tab_multi_manager(
-      list_tables = list_tables$tabs,
-      list_explanatory_vars = list_tables$vars ,
-      dir_name = dir_name,
-      hrc = list_tables$hrc,
-      totcode = list_tables$totcode,
-      alt_hrc = list_tables$alt_hrc,
-      alt_totcode = list_tables$alt_totcode,
-      value = value,
-      freq = freq,
-      secret_var = secret_var,
-      suppress = suppress
-    )
+    params_multi <- formals(fun = "tab_multi_manager")
+    params_multi <- params_multi[1:(length(params_multi)-1)]
+    call <- sys.call(); call[[1]] <- as.name('list')
+    new_params <- eval.parent(call)
+
+    for(param in intersect(names(params_multi), names(new_params))){
+      params_multi[[param]] <- new_params[[param]]
+    }
+
+    params_multi$list_tables = list_tables$tabs
+    params_multi$list_explanatory_vars = list_tables$vars
+    params_multi$hrc = list_tables$hrc
+    params_multi$totcode = list_tables$totcode
+    params_multi$alt_hrc = list_tables$alt_hrc
+    params_multi$alt_totcode = list_tables$alt_totcode
+
+    masq_list <- do.call("tab_multi_manager", params_multi)
+    # (
+    #   list_tables = list_tables$tabs,
+    #   list_explanatory_vars = list_tables$vars ,
+    #   dir_name = dir_name,
+    #   hrc = list_tables$hrc,
+    #   totcode = list_tables$totcode,
+    #   alt_hrc = list_tables$alt_hrc,
+    #   alt_totcode = list_tables$alt_totcode,
+    #   value = value,
+    #   freq = freq,
+    #   secret_var = secret_var,
+    #   suppress = suppress
+    # )
 
     result <- restore_format(masq_list, list_tables)
 

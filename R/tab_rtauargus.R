@@ -91,7 +91,6 @@
 #'   secret_var = "is_secret_prim",
 #'   value = "pizzas_tot_abs",
 #'   freq = "nb_obs_rnd",
-#'   nb_tab_option = "smart",
 #'   split_tab = TRUE
 #' )
 #' }
