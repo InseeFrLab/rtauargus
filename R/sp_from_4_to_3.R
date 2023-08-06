@@ -130,6 +130,7 @@ chose_var_to_merge <- function(dfs, totcode, hrcfiles, maximize_nb_tabs = FALSE)
 #' }
 #'
 #' @examples
+#' library(dplyr)
 #' data <- expand.grid(
 #'   ACT = c("Total", "A", "B", "A1", "A2", "B1", "B2"),
 #'   GEO = c("Total", "G1", "G2"),
@@ -141,7 +142,7 @@ chose_var_to_merge <- function(dfs, totcode, hrcfiles, maximize_nb_tabs = FALSE)
 #'
 #' data <- data %>% mutate(VALUE = 1)
 #'
-#' hrc_act <- "output/hrc_ACT.hrc"
+#' hrc_act <- "hrc_ACT.hrc"
 #'
 #' sdcHierarchies::hier_create(root = "Total", nodes = c("A","B")) %>%
 #'   sdcHierarchies::hier_add(root = "A", nodes = c("A1","A2")) %>%
@@ -150,7 +151,7 @@ chose_var_to_merge <- function(dfs, totcode, hrcfiles, maximize_nb_tabs = FALSE)
 #'   slice(-1) %>%
 #'   mutate(levels = substring(paste0(level,name),3)) %>%
 #'   select(levels) %>%
-#'   write.table(file = hrc_act, row.names = F, col.names = F, quote = F)
+#'   write.table(file = hrc_act, row.names = FALSE, col.names = FALSE, quote = FALSE)
 #'
 #' # Results of the function
 #' res1 <- from_4_to_3(

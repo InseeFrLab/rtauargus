@@ -31,7 +31,7 @@
 #'
 #' data <- data %>% mutate(VALUE = 1:n())
 #'
-#' hrc_act <- "output/hrc_ACT.hrc"
+#' hrc_act <- "hrc_ACT.hrc"
 #' sdcHierarchies::hier_create(root = "Total", nodes = c("A","B")) %>%
 #'   sdcHierarchies::hier_add(root = "A", nodes = c("A1","A2")) %>%
 #'   sdcHierarchies::hier_add(root = "B", nodes = c("B1","B2")) %>%
@@ -39,16 +39,16 @@
 #'   slice(-1) %>%
 #'   mutate(levels = substring(paste0(level,name),3)) %>%
 #'   select(levels) %>%
-#'   write.table(file = hrc_act, row.names = F, col.names = F, quote = F)
+#'   write.table(file = hrc_act, row.names = FALSE, col.names = FALSE, quote = FALSE)
 #'
-#' hrc_geo <- "output/hrc_GEO.hrc"
+#' hrc_geo <- "hrc_GEO.hrc"
 #' sdcHierarchies::hier_create(root = "Total", nodes = c("GA","GB")) %>%
 #'   sdcHierarchies::hier_add(root = "GA", nodes = c("GA1","GA2")) %>%
 #'   sdcHierarchies::hier_convert(as = "argus") %>%
 #'   slice(-1) %>%
 #'   mutate(levels = substring(paste0(level,name),3)) %>%
 #'   select(levels) %>%
-#'   write.table(file = hrc_geo, row.names = F, col.names = F, quote = F)
+#'   write.table(file = hrc_geo, row.names = FALSE, col.names = FALSE, quote = FALSE)
 #'
 #' totcode <- c(SEX="Total",AGE="Total", GEO="Total", ACT="Total")
 #'
@@ -239,6 +239,7 @@ var_to_merge_fragment <- function(
   }
 }
 
+#' @importFrom utils combn
 generate_a_pair <- function(totcode) {
   # Retrieve the categorical variables from the dataframe
   cat_vars <- names(totcode)
@@ -252,6 +253,7 @@ generate_a_pair <- function(totcode) {
   return(result)
 }
 
+#' @importFrom utils combn
 generate_two_pairs <- function(totcode) {
   # Retrieve the categorical variables from the dataframe
   cat_vars <- names(totcode)
@@ -295,6 +297,7 @@ generate_two_pairs <- function(totcode) {
   return(result)
 }
 
+#' @importFrom utils combn
 generate_a_triplet <- function(totcode) {
   # Retrieve the categorical variables from the dataframe
   cat_vars <- names(totcode)
@@ -321,15 +324,14 @@ generate_a_triplet <- function(totcode) {
 #' do not specify v1_v2 if three variables are merged into one
 #' @param v3 the third original variable to be merged
 #' @param v4 the fourth original variable to be merged
-#'
+#' @param totcode character named vector
 #' @param hrcfiles named vector of hrc files related to the variables
 #'
 #' @return a list of the lengths of the tables created during the dimension reduction
-#' @export
-#'
 #'
 #' @examples
 #' # Dimension 4
+#' library(dplyr)
 #' data <- expand.grid(
 #'   ACT = c("Total", "A", "B", "A1", "A2","A3", "B1", "B2","B3","B4","C","name_non_changed_vars","E","F","G","B5"),
 #'   GEO = c("Total", "G1", "G2"),
@@ -342,7 +344,7 @@ generate_a_triplet <- function(totcode) {
 #' data <- data %>% mutate(VALUE = 1)
 #'
 #'
-#' hrc_act <- "output/hrc_ACT.hrc"
+#' hrc_act <- "hrc_ACT.hrc"
 #'
 #' sdcHierarchies::hier_create(root = "Total", nodes = c("A","B","C","name_non_changed_vars","E","F","G")) %>%
 #'   sdcHierarchies::hier_add(root = "A", nodes = c("A1","A2","A3")) %>%
@@ -351,7 +353,7 @@ generate_a_triplet <- function(totcode) {
 #'   slice(-1) %>%
 #'   mutate(levels = substring(paste0(level,name),3)) %>%
 #'   select(levels) %>%
-#'   write.table(file = hrc_act, row.names = F, col.names = F, quote = F)
+#'   write.table(file = hrc_act, row.names = FALSE, col.names = FALSE, quote = FALSE)
 #'
 #' # Function results
 #'
@@ -375,7 +377,7 @@ generate_a_triplet <- function(totcode) {
 #'
 #' data <- data %>% mutate(VALUE = 1:n())
 #'
-#' hrc_act <- "output/hrc_ACT.hrc"
+#' hrc_act <- "hrc_ACT.hrc"
 #' sdcHierarchies::hier_create(root = "Total_A", nodes = paste0("A", seq(1,5),"_")) %>%
 #'   sdcHierarchies::hier_add(root = "A1_", nodes = paste0("A1_", seq(1,7))) %>%
 #'   sdcHierarchies::hier_add(root = "A2_", nodes = paste0("A2_", seq(1,9))) %>%
@@ -383,9 +385,9 @@ generate_a_triplet <- function(totcode) {
 #'   slice(-1) %>%
 #'   mutate(levels = substring(paste0(level,name),3)) %>%
 #'   select(levels) %>%
-#'   write.table(file = hrc_act, row.names = F, col.names = F, quote = F)
+#'   write.table(file = hrc_act, row.names = FALSE, col.names = FALSE, quote = FALSE)
 #'
-#' hrc_geo <- "output/hrc_GEO.hrc"
+#' hrc_geo <- "hrc_GEO.hrc"
 #' sdcHierarchies::hier_create(root = "Total_G", nodes = c("GA","GB")) %>%
 #'   sdcHierarchies::hier_add(root = "GA", nodes = c("GA1","GA2","GA3")) %>%
 #'   sdcHierarchies::hier_add(root = "GB", nodes = c("GB1","GB2","GB3","GB4")) %>%
@@ -393,7 +395,7 @@ generate_a_triplet <- function(totcode) {
 #'   slice(-1) %>%
 #'   mutate(levels = substring(paste0(level,name),3)) %>%
 #'   select(levels) %>%
-#'   write.table(file = hrc_geo, row.names = F, col.names = F, quote = F)
+#'   write.table(file = hrc_geo, row.names = FALSE, col.names = FALSE, quote = FALSE)
 #'
 #' res2 <- length_tabs(dfs = data,
 #'                     hrcfiles = c(ACT = hrc_act, GEO = hrc_geo),
@@ -402,8 +404,6 @@ generate_a_triplet <- function(totcode) {
 #'                     v1 = "ACT",v2 = "AGE",
 #'                     v3 = "GEO",v4 = "SEX")
 #'
-#' # Warning : The ouput in case of hierarchical variables
-#' # is not in the right order
 #' res3 <- length_tabs(dfs = data,
 #'                     hrcfiles = c(ACT = hrc_act, GEO = hrc_geo),
 #'                     totcode = c(SEX="Total_S",AGE="Ensemble", GEO="Total_G",
@@ -418,10 +418,6 @@ length_tabs <- function(
   totcode,
   hrcfiles = NULL)
 {
-
-  # TODO: review the case of a merged trio
-  # Verify if the case of 3 variables, with at least one hierarchical variable, is correct
-  # It seems correct, but the output is not well "sorted"
 
   # To generalize the function to handle NA for an external function
   v3 <- if (!is.null(v3) && is.na(v3)) NULL else v3
@@ -731,6 +727,7 @@ import_hierarchy <- function(hrcfile) {
 #'
 #' @examples
 #' # Dimension 4
+#' library(dplyr)
 #' data <- expand.grid(
 #'   ACT = c("Total", "A", "B", "A1", "A2", "B1", "B2"),
 #'   GEO = c("Total", "G1", "G2"),
@@ -742,7 +739,7 @@ import_hierarchy <- function(hrcfile) {
 #'
 #' data <- data %>% mutate(VALUE = 1)
 #'
-#' hrc_act <- "output/hrc_ACT.hrc"
+#' hrc_act <- "hrc_ACT.hrc"
 #'
 #' sdcHierarchies::hier_create(root = "Total", nodes = c("A", "B")) %>%
 #'   sdcHierarchies::hier_add(root = "A", nodes = c("A1", "A2")) %>%
@@ -771,7 +768,7 @@ import_hierarchy <- function(hrcfile) {
 #'
 #' data <- data %>% mutate(VALUE = 1:n())
 #'
-#' hrc_act <- "output/hrc_ACT.hrc"
+#' hrc_act <- "hrc_ACT.hrc"
 #' sdcHierarchies::hier_create(root = "Total", nodes = c("A", "B")) %>%
 #'   sdcHierarchies::hier_add(root = "A", nodes = c("A1", "A2")) %>%
 #'   sdcHierarchies::hier_convert(as = "argus") %>%
@@ -780,7 +777,7 @@ import_hierarchy <- function(hrcfile) {
 #'   select(levels) %>%
 #'   write.table(file = hrc_act, row.names = FALSE, col.names = FALSE, quote = FALSE)
 #'
-#' hrc_geo <- "output/hrc_GEO.hrc"
+#' hrc_geo <- "hrc_GEO.hrc"
 #' sdcHierarchies::hier_create(root = "Total", nodes = c("GA", "GB")) %>%
 #'   sdcHierarchies::hier_add(root = "GA", nodes = c("GA1", "GA2")) %>%
 #'   sdcHierarchies::hier_add(root = "GB", nodes = c("GB1", "GB2")) %>%
@@ -790,7 +787,7 @@ import_hierarchy <- function(hrcfile) {
 #'   select(levels) %>%
 #'   write.table(file = hrc_geo, row.names = FALSE, col.names = FALSE, quote = FALSE)
 #'
-#' hrc_sex <- "output/hrc_SEX.hrc"
+#' hrc_sex <- "hrc_SEX.hrc"
 #' sdcHierarchies::hier_create(root = "Total", nodes = c("F", "M")) %>%
 #'   sdcHierarchies::hier_add(root = "F", nodes = c("F1", "F2")) %>%
 #'   sdcHierarchies::hier_add(root = "M", nodes = c("M1", "M2")) %>%
@@ -817,8 +814,6 @@ nb_tab_generated <- function(
   hrcfiles = NULL,
   data = NULL)
 {
-
-  # TODO: Generalize the case of 3 variables into one?
 
   # Case dimension 5: 2 couples created
   if (!is.null(v4)) {

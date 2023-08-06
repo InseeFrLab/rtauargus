@@ -20,6 +20,7 @@
 #' }
 #'
 #' @examples
+#' library(dplyr)
 #' data <- expand.grid(
 #'   ACT = c("Total", "A", "B", "A1", "A2", "B1", "B2"),
 #'   SEX = c("Total", "F", "M","F1","F2","M1","M2"),
@@ -32,16 +33,16 @@
 #'
 #' data <- data %>% mutate(VALUE = 1:n())
 #'
-#' hrc_act <- "output/hrc_ACT.hrc"
+#' hrc_act <- "hrc_ACT.hrc"
 #' sdcHierarchies::hier_create(root = "Total", nodes = c("A","B")) %>%
 #'   sdcHierarchies::hier_add(root = "A", nodes = c("A1","A2")) %>%
 #'   sdcHierarchies::hier_convert(as = "argus") %>%
 #'   slice(-1) %>%
 #'   mutate(levels = substring(paste0(level,name),3)) %>%
 #'   select(levels) %>%
-#'   write.table(file = hrc_act, row.names = F, col.names = F, quote = F)
+#'   write.table(file = hrc_act, row.names = FALSE, col.names = FALSE, quote = FALSE)
 #'
-#' hrc_sex <- "output/hrc_SEX.hrc"
+#' hrc_sex <- "hrc_SEX.hrc"
 #' sdcHierarchies::hier_create(root = "Total", nodes = c("F","M")) %>%
 #'   sdcHierarchies::hier_add(root = "F", nodes = c("F1","F2")) %>%
 #'   sdcHierarchies::hier_add(root = "M", nodes = c("M1","M2")) %>%
@@ -49,7 +50,7 @@
 #'   slice(-1) %>%
 #'   mutate(levels = substring(paste0(level,name),3)) %>%
 #'   select(levels) %>%
-#'   write.table(file = hrc_sex, row.names = F, col.names = F, quote = F)
+#'   write.table(file = hrc_sex, row.names = FALSE, col.names = FALSE, quote = FALSE)
 #'
 #' res1 <- from_4_to_3_case_0_hr(dfs = data,
 #'                                 dfs_name = "dfs_name",

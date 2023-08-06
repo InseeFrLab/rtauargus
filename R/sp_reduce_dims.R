@@ -73,7 +73,7 @@
 #'   slice(-1) %>%
 #'   mutate(levels = substring(paste0(level,name),3)) %>%
 #'   select(levels) %>%
-#'   write.table(file = hrc_act, row.names = F, col.names = F, quote = F)
+#'   write.table(file = hrc_act, row.names = FALSE, col.names = FALSE, quote = FALSE)
 #'
 #' # Reduce dim by forcing variables to be merged
 #' res1 <- reduce_dims(
@@ -144,7 +144,7 @@
 #'   slice(-1) %>%
 #'   mutate(levels = substring(paste0(level,name),3)) %>%
 #'   select(levels) %>%
-#'   write.table(file = hrc_act, row.names = F, col.names = F, quote = F)
+#'   write.table(file = hrc_act, row.names = FALSE, col.names = FALSE, quote = FALSE)
 #'
 #' hrc_geo <- "hrc/hrc_GEO5.hrc"
 #' sdcHierarchies::hier_create(root = "Total_G", nodes = c("GA","GB")) %>%
@@ -154,7 +154,7 @@
 #'   slice(-1) %>%
 #'   mutate(levels = substring(paste0(level,name),3)) %>%
 #'   select(levels) %>%
-#'   write.table(file = hrc_geo, row.names = F, col.names = F, quote = F)
+#'   write.table(file = hrc_geo, row.names = FALSE, col.names = FALSE, quote = FALSE)
 #'
 #' # Results of the function
 #' res4 <- reduce_dims(
@@ -533,6 +533,7 @@ The largest table has ",max_row," rows.\n\n"))
 
 # split tables according to var_fuse if the nb of row exceed LIMIT
 # it creates smaller tabs with a hier variable less
+#' @importFrom stats setNames
 split_tab <- function(res, var_fus, LIMIT) {
   # table to split because they are too big
 
@@ -630,31 +631,6 @@ split_tab <- function(res, var_fus, LIMIT) {
   return(res)
 }
 
-#' Separator Selection
-#'
-#' @param data a dataframe containing only categorical variables
-#' @param liste_sep a vector of separators to test
-#' The separators must be preceded by "\\" and must be compatible
-#' with the use of str_detect
-#' @return a separator from liste_sep that is not present in any of the modalities if it exists,
-#' otherwise returns "_+_+_+_+"
-#'
-#' @export
-#'
-#' @examples
-#' data <- expand.grid(
-#'   AGE = c("+", "How are you?", "No, Not possible!!!"),
-#'   ECO = c("It costs 5€"),
-#'   stringsAsFactors = FALSE
-#' ) %>%
-#'   as.data.frame()
-#'
-#' liste_sep = c("\\+", "\\!", "\\?")
-#'
-#' # All separators appear in the modalities
-#' chose_sep(data, liste_sep = liste_sep)
-#'
-#' chose_sep(data)
 chose_sep <- function(
     data,
     liste_sep)
@@ -697,6 +673,9 @@ chose_sep <- function(
 #' and a list of vectors of variables or a vector of variables depending on the base size
 #' of the dataframes
 #' @param dfs_name the name of the entered dataframes
+#' @param sep character 
+#' @param totcode character named vector
+#' @param hrcfiles character named vector
 #'
 #' @return A list containing:
 #' \itemize{
@@ -714,8 +693,9 @@ chose_sep <- function(
 #'   \item \code{fus_vars}: named vector of vectors representing the merged
 #'   variables during dimension reduction
 #' }
-#'
+#' @importFrom stats setNames
 #' @examples
+#' library(dplyr)
 #' data <- expand.grid(
 #'   ACT = c("Total", "A", "B", "A1", "A2", "B1", "B2"),
 #'   GEO = c("Total", "G1", "G2"),
@@ -727,7 +707,7 @@ chose_sep <- function(
 #'
 #' data <- data %>% mutate(VALUE = 1)
 #'
-#' hrc_act <- "output/hrc_ACT.hrc"
+#' hrc_act <- "hrc_ACT.hrc"
 #'
 #' sdcHierarchies::hier_create(root = "Total", nodes = c("A","B")) %>%
 #'   sdcHierarchies::hier_add(root = "A", nodes = c("A1","A2")) %>%
@@ -736,7 +716,7 @@ chose_sep <- function(
 #'   slice(-1) %>%
 #'   mutate(levels = substring(paste0(level,name),3)) %>%
 #'   select(levels) %>%
-#'   write.table(file = hrc_act, row.names = F, col.names = F, quote = F)
+#'   write.table(file = hrc_act, row.names = FALSE, col.names = FALSE, quote = FALSE)
 #'
 #' # Results of the function
 #' res1 <- from_4_to_3(
@@ -838,6 +818,7 @@ format4 <- function(res, dfs_name, sep, totcode, hrcfiles) {
 }
 
 # Format for tables with 5 variables
+#' @importFrom stats setNames
 format5 <- function(res, dfs_name, sep, totcode, hrcfiles) {
   if (class(res$vars) == "list") {
     # Retrieve the different variables

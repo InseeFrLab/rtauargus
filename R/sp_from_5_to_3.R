@@ -65,6 +65,7 @@ nb_nodes <- function(hrcfiles, v = NULL, hrc_name = TRUE) {
 #' }
 #'
 #' @examples
+#' library(dplyr)
 #' data <- expand.grid(
 #'   ACT = c("Total", "A", "B", "A1", "A2", "B1", "B2"),
 #'   GEO = c("Total", "GA", "GB", "GA1", "GA2", "GB1", "GB2"),
@@ -78,16 +79,16 @@ nb_nodes <- function(hrcfiles, v = NULL, hrc_name = TRUE) {
 #'
 #' data <- data %>% mutate(VALUE = 1:n())
 #'
-#' hrc_act <- "output/hrc_ACT.hrc"
+#' hrc_act <- "hrc_ACT.hrc"
 #' sdcHierarchies::hier_create(root = "Total", nodes = c("A","B")) %>%
 #'   sdcHierarchies::hier_add(root = "A", nodes = c("A1","A2")) %>%
 #'   sdcHierarchies::hier_convert(as = "argus") %>%
 #'   slice(-1) %>%
 #'   mutate(levels = substring(paste0(level,name),3)) %>%
 #'   select(levels) %>%
-#'   write.table(file = hrc_act, row.names = F, col.names = F, quote = F)
+#'   write.table(file = hrc_act, row.names = FALSE, col.names = FALSE, quote = FALSE)
 #'
-#' hrc_geo <- "output/hrc_GEO.hrc"
+#' hrc_geo <- "hrc_GEO.hrc"
 #' sdcHierarchies::hier_create(root = "Total", nodes = c("GA","GB")) %>%
 #'   sdcHierarchies::hier_add(root = "GA", nodes = c("GA1","GA2")) %>%
 #'   sdcHierarchies::hier_add(root = "GB", nodes = c("GB1","GB2")) %>%
@@ -95,9 +96,9 @@ nb_nodes <- function(hrcfiles, v = NULL, hrc_name = TRUE) {
 #'   slice(-1) %>%
 #'   mutate(levels = substring(paste0(level,name),3)) %>%
 #'   select(levels) %>%
-#'   write.table(file = hrc_geo, row.names = F, col.names = F, quote = F)
+#'   write.table(file = hrc_geo, row.names = FALSE, col.names = FALSE, quote = FALSE)
 #'
-#' hrc_sex <- "output/hrc_SEX.hrc"
+#' hrc_sex <- "hrc_SEX.hrc"
 #' sdcHierarchies::hier_create(root = "Total", nodes = c("F","M")) %>%
 #'   sdcHierarchies::hier_add(root = "F", nodes = c("F1","F2")) %>%
 #'   sdcHierarchies::hier_add(root = "M", nodes = c("M1","M2")) %>%
@@ -105,7 +106,7 @@ nb_nodes <- function(hrcfiles, v = NULL, hrc_name = TRUE) {
 #'   slice(-1) %>%
 #'   mutate(levels = substring(paste0(level,name),3)) %>%
 #'   select(levels) %>%
-#'   write.table(file = hrc_sex, row.names = F, col.names = F, quote = F)
+#'   write.table(file = hrc_sex, row.names = FALSE, col.names = FALSE, quote = FALSE)
 #'
 #' # Results of the function
 #' res1 <- from_5_to_3(

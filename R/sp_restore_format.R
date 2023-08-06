@@ -8,7 +8,7 @@
 #'
 #' @examples
 #' # Examples with dimension 4
-#'
+#' library(dplyr)
 #' data <- expand.grid(
 #'   ACT = c("Total", "A", "B", "A1", "A2","A3", "B1", "B2","B3","B4","C","name_non_changed_vars","E","F","G","B5"),
 #'   GEO = c("Total", "G1", "G2"),
@@ -20,7 +20,7 @@
 #'
 #' data <- data %>% mutate(VALUE = 1)
 #'
-#' hrc_act <- "output/hrc_ACT.hrc"
+#' hrc_act <- "hrc_ACT.hrc"
 #'
 #' sdcHierarchies::hier_create(root = "Total", nodes = c("A","B","C","name_non_changed_vars","E","F","G")) %>%
 #'   sdcHierarchies::hier_add(root = "A", nodes = c("A1","A2","A3")) %>%
@@ -29,7 +29,7 @@
 #'   slice(-1) %>%
 #'   mutate(levels = substring(paste0(level,name),3)) %>%
 #'   select(levels) %>%
-#'   write.table(file = hrc_act, row.names = F, col.names = F, quote = F)
+#'   write.table(file = hrc_act, row.names = FALSE, col.names = FALSE, quote = FALSE)
 #'
 #' # Result of the function by forcing some variables to be merged
 #' res_red_dim <- reduce_dims(
@@ -63,7 +63,7 @@
 #'
 #' data <- data %>% mutate(VALUE = 1:n())
 #'
-#' hrc_act <- "output/hrc_ACT.hrc"
+#' hrc_act <- "hrc_ACT.hrc"
 #' sdcHierarchies::hier_create(root = "Total_A", nodes = paste0("A", seq(1,5),"_")) %>%
 #'   sdcHierarchies::hier_add(root = "A1_", nodes = paste0("A1_", seq(1,7))) %>%
 #'   sdcHierarchies::hier_add(root = "A2_", nodes = paste0("A2_", seq(1,9))) %>%
@@ -71,9 +71,9 @@
 #'   slice(-1) %>%
 #'   mutate(levels = substring(paste0(level,name),3)) %>%
 #'   select(levels) %>%
-#'   write.table(file = hrc_act, row.names = F, col.names = F, quote = F)
+#'   write.table(file = hrc_act, row.names = FALSE, col.names = FALSE, quote = FALSE)
 #'
-#' hrc_geo <- "output/hrc_GEO.hrc"
+#' hrc_geo <- "hrc_GEO.hrc"
 #' sdcHierarchies::hier_create(root = "Total_G", nodes = c("GA","GB")) %>%
 #'   sdcHierarchies::hier_add(root = "GA", nodes = c("GA1","GA2","GA3")) %>%
 #'   sdcHierarchies::hier_add(root = "GB", nodes = c("GB1","GB2","GB3","GB4")) %>%
@@ -81,7 +81,7 @@
 #'   slice(-1) %>%
 #'   mutate(levels = substring(paste0(level,name),3)) %>%
 #'   select(levels) %>%
-#'   write.table(file = hrc_geo, row.names = F, col.names = F, quote = F)
+#'   write.table(file = hrc_geo, row.names = FALSE, col.names = FALSE, quote = FALSE)
 #'
 #' # function's result
 #'

@@ -10,7 +10,8 @@ Imports:
     gdata,
     stringr,
     rlang,
-    zoo
+    zoo,
+    sdcHierarchies
 Suggests:
     testthat,
     knitr,
