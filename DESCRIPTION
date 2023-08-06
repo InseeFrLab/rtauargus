@@ -39,6 +39,14 @@ Authors@R: c(
 	  "Félix", "Beroud",
 	  role = c("aut")
 	),
+	person(
+	  "André-Raymond", "Socard",
+	  role = c("aut")
+	),
+	person(
+	  "Wistan", "Pomel",
+	  role = c("aut")
+	),
     person(
       family = "Institut National de la Statistique et des Études Économiques",
       role = "cph"
