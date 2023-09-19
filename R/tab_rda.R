@@ -30,8 +30,12 @@ creer_hst <- function(tabular,
     tabular$label_apriori <-paste0("c",separator,tabular[[cost_var]])
 
   if(!is.null(secret_var)){
+
+    is_cost_value_identical <- tabular[[cost_var]] == tabular[[value]]
+    is_secret_val <- tabular[[secret_var]]
+
     tab_hst_cost = tabular[
-      !tabular[[secret_var]],
+      !(is_secret_val | is_cost_value_identical),
       c(explanatory_vars[(explanatory_vars %in% colnames(tabular))],"label_apriori")
     ]
       } else {
