@@ -43,7 +43,7 @@ creer_hst <- function(tabular,
   } else {tab_hst_cost <- data.frame()}
 
   if ((!is.null(ip)) & (is.numeric(ip)) & !is.null(secret_var)) {
-    tabular$val_ip <- ifelse(tabular[[secret_no_pl]] & (tabular[[value]] != 0),
+    tabular$val_ip <- ifelse(tabular[[secret_no_pl]] | (tabular[[value]] == 0),
                              format(0.00001,scientific = F),
                              round((ip/100)*tabular[[value]],1))
 

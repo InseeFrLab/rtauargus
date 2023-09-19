@@ -15,6 +15,7 @@ journal_add_line <- function(journal,...){
 #' @param alt_hrc named list for alternative hierarchies (useful for non nested-hierarchies)
 #' @param alt_totcode named list for alternative codes
 #' @param ip_start integer: Interval protection level to apply at first treatment of each table
+#' @param ip_end integer: Interval protection level to apply at other treatments
 #' @param num_iter_max integer: Maximum of treatments to do on each table (default to 10)
 #' @param ... other arguments of \code{tab_rtauargus2()}
 #'
@@ -92,6 +93,7 @@ tab_multi_manager <- function(
     cost_var = NULL,
     suppress = "MOD(1,5,1,0,0)",
     ip_start = 10,
+    ip_end = 0,
     num_iter_max = 10,
     ...
 ){
@@ -314,6 +316,7 @@ tab_multi_manager <- function(
   journal_add_break_line(journal)
   journal_add_line(journal, "Function called to protect the tables:", func_to_call)
   journal_add_line(journal, "Interval Protection Level for primary secret cells:", ip_start)
+  journal_add_line(journal, "Interval Protection Level for other iterations:", ip_end)
   journal_add_line(journal, "Nb of tables to treat: ", n_tbx)
   journal_add_break_line(journal)
   journal_add_line(journal, "Tables to treat:", noms_tbx)
@@ -368,7 +371,8 @@ tab_multi_manager <- function(
     }else{
       suppress
     }
-    params$ip = ip_start
+    params$ip = if(num_iter_par_tab[num_tableau] == 1) ip_start else ip_end
+    # params$safety_rules <- "MAN(0)"
 
     res <- do.call(func_to_call, params)
     res$is_secret <- res$Status != "V"

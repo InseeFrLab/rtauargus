@@ -326,7 +326,7 @@ tab_rtauargus2 <- function(
       stop("Either ip or safety_rules has to be set.")
     }
   }else{
-    params$safety_rules = paste0("MAN(",ip,")")
+    params$safety_rules = "MAN(0)" #paste0("MAN(",ip,")")
   }
   params$ip = ip
   params$suppress = suppress
