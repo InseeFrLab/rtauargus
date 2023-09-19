@@ -10,7 +10,8 @@ Imports:
     gdata,
     stringr,
     rlang,
-    zoo
+    zoo,
+    sdcHierarchies
 Suggests:
     testthat,
     knitr,
@@ -37,6 +38,14 @@ Authors@R: c(
 	),
 	person(
 	  "Félix", "Beroud",
+	  role = c("aut")
+	),
+	person(
+	  "André-Raymond", "Socard",
+	  role = c("aut")
+	),
+	person(
+	  "Wistan", "Pomel",
 	  role = c("aut")
 	),
     person(

@@ -24,6 +24,9 @@ tab_rtauargus(
   output_type = 4,
   output_options = "",
   unif_labels = TRUE,
+  split_tab = FALSE,
+  nb_tab_option = "smart",
+  LIMIT = 14700,
   ...
 )
 }
@@ -134,6 +137,21 @@ by default : code{"AS+"} (print Status). To specify no options : \code{""}.\cr
 
 \item{unif_labels}{boolean, if explanatory variables have to be standardized}
 
+\item{split_tab}{boolean, wether to reduce dimension to 3 when treating a table
+of dimension 4 or 5}
+
+\item{nb_tab_option}{strategy to follow for choosing variables automatically:
+\itemize{
+  \item \code{'min'}: minimize the number of tables;
+  \item \code{'max'}: maximize the number of tables;
+  \item \code{'smart'}: minimize the number of tables under the constraint
+  of their row count.
+}}
+
+\item{LIMIT}{numeric, used to choose which variable to merge (if nb_tab_option = 'smart')
+and split table with a number of row above this limit in order to avoid
+tauargus failures}
+
 \item{...}{any parameter of the tab_rda, tab_arb or run_arb functions, relevant
 for the treatment of tabular.}
 }
@@ -197,6 +215,19 @@ res <- tab_rtauargus(
   value = "TOT",
   freq = "N_OBS",
   verbose = FALSE
+)
+
+# Reduce dims feature
+
+res_dim4 <- tab_rtauargus(
+  tabular = datatest1,
+  dir_name = "tauargus_files",
+  explanatory_vars = c("A10", "treff","type_distrib","cj"),
+  totcode = c(A10 = "Total", treff = "Total",type_distrib = "Total",cj = "Total"),
+  secret_var = "is_secret_prim",
+  value = "pizzas_tot_abs",
+  freq = "nb_obs_rnd",
+  split_tab = TRUE
 )
 }
 }

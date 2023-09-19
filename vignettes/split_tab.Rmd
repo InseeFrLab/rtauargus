@@ -1,0 +1,203 @@
+---
+title: "Option split_tab "
+subtitle: <h2>![logo R](R_logo_small.png)![logo &tau;-Argus](TauBall2_small.png)<br/>Package {rtauargus}</h2>
+output:
+  rmarkdown::html_vignette:
+    toc: true
+    toc_depth: 2
+    number_section: true
+    fig_caption: true
+vignette: >
+  %\VignetteIndexEntry{Protéger des tableaux liés}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Introduction
+
+The rtauargus package now offers the ability to protect arrays with 5 dimensions. Additionally, it allows faster protection for certain 4-dimensional arrays and even the protection of larger 4-dimensional arrays that previously exceeded the processing capabilities of tauargus.
+
+The option is called `split_tab` and is set to FALSE by default to avoid changing existing programs with rtauargus. To use it in the package, you need to set `split_tab = TRUE`. This option changes how the secret is set, but it does not alter the type of the output given by rtauargus. However, it is mandatory to use this option to provide a table to rtauargus with the primary secret already set.
+
+This option works with a rather simple algorithm in principle. The idea is to split a 4 or 5-dimensional array into a list of 3-dimensional arrays without losing values, then run tab_multimanager on this list of tables (see protect_multi_tables), and finally apply the secret. This functionality is very useful for larger arrays that tauargus was not able to process previously, especially 4-dimensional arrays with at least one hierarchy.
+
+To use this functionality, the user will have access to various other features such as the `nb_tab` option, which allows the user to choose whether `split_tab` should create the minimum number of tables (`nb_tab = "min"`), the maximum number (`nb_tab = "max"`), or an in-between number based on a certain table limit (`nb_tab = "smart"`).
+
+Moreover, there is the `LIMIT` functionality, which limits the size of the split tables. It is set to 14500 by default because tauargus has difficulty with arrays larger than 15000 rows.
+
+It is not recommended to change these two options unless you are an expert in the package, as having too many tables could result in over-secreting the data and taking more time to secure the array.
+
+It is strongly recommended for non-experts not to modify this option. The options have been initialized so that when the user sets `split_tab = TRUE`, tauargus can be run and provide the best possible results in terms of secrets and processing time.
+
+Furthermore, to see the difference in secrets and understand why it is recommended to use `split_table` in all cases except for a 4-variable 0-hierarchy's table, you can look at the HTML files: TEST_SECRET.
+Generally, we expect that using the split option would be faster and result in a heavier secret. However, due to the difficulty of handling 4-dimensional arrays in modular, we sometimes observe that splitting the tables leads to a less heavy secret than not splitting them.
+
+First, the vignette presents how `split_tab` works, then the parameters related to split_tab are quickly described. In the third part, examples are developed to show how to use it in various situations.
+How does split_tab() handle the protection of a 4 or 5-dimensional array?
+
+First, the algorithm takes the 4 or 5-dimensional array and transforms it into a list of 3-dimensional arrays using `reduce_dims` in the file `sp_reduce_dims.R.`
+
+To go from 5 to 3 categorical variables, the method used is to first reduce from 5 to 4 categorical variables and then reduce from 4 to 3 categorical variables. Therefore, we will mainly focus on how to reduce from 4 to 3 categorical variables. To reduce the number of categorical variables, we had the rather intuitive idea of merging categorical variables together.
+
+For example:
+
+
+<div style="text-align: center;">
+
+<img src="tab_SEX_AGE_en.png" alt="base_tab" width="600" height="500">
+</div>
+
+
+With these two tables, two different nested hierarchies are created on the variable SEX_AGE, as seen in the tabulations in the tables. It should be noted that to avoid having non-nested hierarchies, we need to have at least 2 tables because we cannot easily explain using hierarchies that:
+
+<div style="text-align: center; font-size: 20px;">
+    Total_Ensemble = Total_Adulte + Total_Enfant
+</div>
+
+<div style="text-align: center; font-size: 20px;">
+    Total_Ensemble = Femme_Ensemble + Homme_Ensemble
+</div>
+
+Here we have split by two non-hierarchical variables. One might think that the method changes if we use non-hierarchical variables. But in reality, not so much. Indeed, we will try to remove the hierarchies present in a variable by splitting this variable according to its subtotals.
+
+We can give the example of the hierarchical variable GEO, which consists of two regions and two departments. We will then create tables without hierarchies, combining the nodes of the different hierarchies present in the base table. This is what the functions `from_4_to_3_case_1_hr` and `from_4_to_3_case_2_hr` do.
+
+
+<div style="text-align: center;">
+  <img src="GEO.png" alt="hierarchie" width="375" height="150">
+</div>
+
+Therefore, this raises the question of the number of tables that will be created by this method, and the length of each one. Explanations on this subject can be found in `split_tab_theorie.Rmd`.
+
+This method creates arrays depending on the number of nodes for each variable in the array.
+
+So, after creating our table list with `reduce_dims`, we set the secret with `tab_multimanager` and reform the secreted base table from this secreted list with `restore_format`.
+
+
+## Using different parameters related to `split_tab`
+
+As mentioned in the introduction, nb_tabs allows you to specify the number of tables you want to create between `min`, `max`, and `smart.`
+
+Choosing `min` constructs the minimum number of 3-dimensional tables during the merge, prioritizing the merge of non-hierarchical variables.
+On the contrary, choosing `max` constructs the maximum number of 3-dimensional tables possible during the merge and prioritizes hierarchical variables. 
+The `smart` option constructs the minimum number of 3-dimensional tables during the merge of variables, knowing that they all have a number of rows below the limit.
+
+After this initial processing, we use the `sp_split_tab` function in `reduce_dims`, which still takes tables above the set size limit and replicates them according to the modalities of the hierarchies created by the merged variables. 
+Of course, it is possible that the size limit is still reached, and in this case, we display a warning and inform the user that the table may be too large.
+
+## EXAMPLE
+
+## Place of tauargus in your computer :
+
+
+```{r}
+options(
+  rtauargus.tauargus_exe =
+    "Y:/Logiciels/TauArgus/TauArgus4.2.3/TauArgus.exe"
+)
+```
+
+## DATA
+
+```{r}
+devtools::load_all() #rtauargus
+library(tictoc)
+library(stringr)
+library(sdcHierarchies)
+library(dplyr)
+load("../data/test_4_var_1hrc.rda")
+str(test_4_var_1hrc)
+```
+
+## Arguments for tab_rtauargus
+
+```{r}
+
+totcode <- c(treff ="Total",cj ="Total", ACTIVITY = "Total",nuts1 ="Total") 
+explanatory_vars<- names(totcode)
+
+#data("activity_corr_table")
+
+hrc_files<-c(ACTIVITY="Z:/stage1A_2023/hrc/activity_2_niv.hrc")
+
+```
+
+## Primary secret 
+
+```{r}
+test_4_var_1hrc_sec <- test_4_var_1hrc %>% 
+    mutate(
+      is_secret_freq=(nb_obs > 0 & nb_obs < 3),
+      is_secret_dom = (pizzas_tot != 0) & (pizzas_max > 0.85*pizzas_tot),
+      pizzas_tot= round(abs(pizzas_tot),2)
+    ) %>% 
+    mutate(
+      is_secret_prim =  is_secret_freq ,
+      nb_obs = ceiling(nb_obs)
+    )
+```
+
+## Secondary secret with `tab_rtaurgus`
+
+```{r}
+setwd("Z:/rtauargus")
+
+tic()
+res <- tab_rtauargus(
+    test_4_var_1hrc_sec,
+    files_name = "var",
+    dirname = "dir",
+    explanatory_vars = explanatory_vars,
+    hrc = hrc_files,
+    totcode = totcode,
+    value = "pizzas_tot",
+    freq = "nb_obs",
+    secret_var = "is_secret_prim",
+    verbose=TRUE,
+    split_tab = TRUE # On utilise la fonction split_tab
+    # LIMIT=14500,
+    # nb_tab= "smart" PAs besoin de l'écrire car s'est l'initialisation
+)
+t<-toc()
+print(str(res))
+print(t)
+```
+
+## 
+
+```{r}
+
+list_with_status <- 
+  res %>%
+    rename_with(~"final_suppress", last_col()) %>%
+        mutate(
+          status = case_when(
+            is_secret_freq ~ "A",
+            is_secret_dom ~ "B",
+            final_suppress ~ "D",
+            TRUE ~"V"
+          )
+        ) %>%
+        select(1:2, pizzas_tot, nb_obs, status)
+
+str(list_with_status)
+
+```
+
+# ABOUTS 
+
+- Authors: **<a href="mailto:julien.jamme@insee.fr">Julien Jamme</a>** & **<a href="mailto:nathanael.rastout@insee.fr">Nathanael Rastout</a> ** & **<a> Andre-Raymond Socard </a>**
+& **<a> Wistan Pomel </a>**
+  - Last update: **03/08/2023**
+  - Version of rtauargus used: **1.1.2**
+  - Version of &tau;-Argus used : **TauArgus 4.2.3**
+  - R version used :  **4.3.1**
+
+  <p style="text-align: right">
+  <a href="#TOC" title="Back to summary">summary &uarr;</a>
+  </p>
+
