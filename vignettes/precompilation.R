@@ -50,3 +50,15 @@ knitr::knit(
   "vignettes/options_safety_rules_fr.Rmd",
   encoding = "UTF-8"
 )
+
+knitr::knit(
+  "vignettes/split_tab_fr.Rmd.orig",
+  "vignettes/split_tab_fr.Rmd",
+  encoding = "UTF-8"
+)
+
+knitr::knit(
+  "vignettes/split_tab.Rmd.orig",
+  "vignettes/split_tab.Rmd",
+  encoding = "UTF-8"
+)

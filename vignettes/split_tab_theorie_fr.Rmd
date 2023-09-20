@@ -1,14 +1,80 @@
-# Théorie derrière split_tab
+---
+title: "Nombre de sous-tableaux générés en réduisant la dimension de 4 ou 5 à 3"
+subtitle: <h2>![logo rtauargus](../man/figures/rtauargus_logo_small.png)</h2>
+output:
+  rmarkdown::html_vignette:
+    toc: true
+    toc_depth: 2
+    number_section: true
+    fig_caption: true
+vignette: >
+  %\VignetteIndexEntry{Le nombre de tableaux générés}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
 
-## Nombre de tableaux créés
+<!--
+  NE JAMAIS MODIFIER DIRECTEMENT `rtauargus.Rmd`
+  MODIFIER `rtauargus.Rmd.orig` ET EXECUTER `precompilation.R`
+  Voir : https://ropensci.org/technotes/2019/12/08/precompute-vignettes
+-->
 
-La fonction `nb_tab_generated` permet de calculer la nombre de table qui sera généré après réduction de dimension pour un tableau et des variables donnés. Ci-dessous se trouve le détail des calculs utilisés dans cette fonction.
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = TRUE,
+  collapse = TRUE,
+  comment = "#>",
+  warning = FALSE
+)
+knitr::opts_knit$set(root.dir = getwd())
+```
 
-### Fusion de deux variables en une
 
-#### Dimension 4
+<!-- ## Nombre de tableaux créés -->
 
-Lors du passage de 4 dimensions à 3 dimensions et du passage de 5 dimensions à 3 dimensions via la création de deux couples de variables (ie : les variables AGE,SEXE,GEO,ECO => AGE_SEX et GEO_ECO), la formule est très simple.
+<!-- La fonction `nb_tab_generated` permet de calculer la nombre de table qui sera généré après réduction de dimension pour un tableau et des variables donnés. Ci-dessous se trouve le détail des calculs utilisés dans cette fonction. -->
+
+Lorsqu'on réduit la dimension d'un tableau en fusionnant plusieurs de ces 
+variables, l'ensemble des modalités de la nouvelle variable ne peuvent être 
+intégrées à une même hiérarchie parfaitement emboîtée. Ainsi, pour la pose du 
+secret, nous sommes contraints de construire un ensemble de tableaux liés de 
+trois dimensions chacun ayant exactement les mêmes variables. Mais, à la variable 
+de fusion une hiérarchie différente sera appliquée.  
+
+La vignette [Gestion des tableaux à 4 ou 5 dimensions](https://inseefrlab.github.io/rtauargus/articles/split_tab_fr.html)
+présente la méthode employée dans le package, illustrée par une mise en application.
+
+Mais, pouvons-nous théoriquement connaître le nombre de tableaux qu'il faudra 
+construire ainsi que leur longueur ?
+
+Nous proposons ici une réponse à cette double question.
+
+## Nombre de tableaux générés
+
+Nous distinguons le traitement des tableaux de 4 dimensions de ceux de 5 dimensions.
+En effet, pour ces derniers, deux stratégies de fusion sont possibles.
+
+### Les tableaux de dimension 4
+
+Il s'agit ici de prédire le nombre de tableaux générés lorsqu'on passe d'un tableau 
+de 4 dimensions (par ex. `AGE x SEX x GEO x DIPL`) à un tableau de 3 dimensions 
+(par ex. `AGE__SEX x GEO x DIPL`, en fusionnant les variables `AGE` et `SEX`).
+
+<!-- Lors du passage de 4 dimensions à 3 dimensions et du passage de 5 dimensions à 3 dimensions via la création de deux couples de variables (ie : les variables AGE,SEXE,GEO,ECO => AGE_SEX et GEO_ECO), la formule est très simple. -->
+
+L'objectif est de créer autant de tableaux que nécessaires afin que la variable 
+résultante (ici `AGE__SEX`) soit strictement hiérarchique dans chacun d'eux 
+(emboîtement parfait). 
+
+La première étape consiste à construire tous les sous-tableaux 
+possibles à partir des deux variables à fusionner de telle sorte qu'il n'y ait 
+plus d'emboîtements de modalités pour chacune des variables. La seconde consiste 
+à dédoubler les tableaux obtenus après fusion des modalités des deux variables, 
+comme on le présente dans l'exemple simple de la fiche
+[Gestion des tableaux à 4 ou 5 dimensions](https://inseefrlab.github.io/rtauargus/articles/split_tab_fr.html).
+
+TODO FAIRE DES SCHEMAS
+
 
 Afin de rendre une variables hiérarchiques non hierarchiques, nous créons un nombre de tableau égal au nombre de noeud de celle-ci. Une fois que nous avons rendu une variable hiérarchique, sur chacun de ses sous tableaux, nous appliquons le même procédés à la deuxième variable.
 
@@ -23,6 +89,12 @@ où v1 et v2 correpondent aux variables fusionnées et nombre_noeuds_v1 et nombr
 Par exemple dans le cas de la fusion de GEO et SEX avec GEO = {Pays, Région 1, Région 2, Commune 11, Commune 12, Commune 13, Commune 21, Commune 22,Commune 23,Commune 24} et SEX = {Ensemble, Femme, Homme} avec les hierarchies implicites habituelles (ie Pays = Région 1 + Région 2, Région 1 = Commune 11 + Commune 21 + Commune 22, etc), nous obtenons : $6 = 2 \times 3 \times 1$ tableaux.
 
 En effet GEO a trois noeuds (France, Région 1, Région 2) et SEX étant non hierarchique, qu’un seul (Ensemble).
+
+
+
+### Fusion de deux variables en une
+
+
 
 #### Dimension 5
 

@@ -127,7 +127,7 @@ masq_liste <- tab_rtauargus(
   freq = "nb_obs",
   nb_tab = "min",
   value = "pizzas_tot",
-  LIMIT = 12000,
+  limit = 12000,
   split_tab = TRUE,
 )
 toc()
@@ -151,7 +151,7 @@ masq_liste2 <- tab_rtauargus(
   freq = "nb_obs",
   nb_tab = "max",
   value = "pizzas_tot",
-  LIMIT = 12000,
+  limit = 12000,
   split_tab = TRUE,
 )
 toc()
@@ -176,7 +176,7 @@ masq_liste3 <- tab_rtauargus(
   freq = "nb_obs",
   nb_tab = "min",
   value = "pizzas_tot",
-  LIMIT = 1,
+  limit = 1,
   split_tab = TRUE,
 )
 toc()
