@@ -60,6 +60,7 @@ articles:
     - protect_multi_tables_fr
     - options_safety_rules
     - options_safety_rules_fr
+    - split_tab_fr
   - title: Work with microdata data (old version)
     navbar: micro-wise
     contents:
