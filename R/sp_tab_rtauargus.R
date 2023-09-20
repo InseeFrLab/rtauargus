@@ -1,9 +1,9 @@
-#' Call Tau-Argus to protect a 4 or 5 dimensions table by splitting it 
+#' Call Tau-Argus to protect a 4 or 5 dimensions table by splitting it
 #' in several 3 dimensions table.
 #'
 #' @inheritParams tab_rtauargus
 #'
-#' @param LIMIT numeric, used to choose which variable to merge (if nb_tab_option = 'smart')
+#' @param limit numeric, used to choose which variable to merge (if nb_tab_option = 'smart')
 #' and split table with a number of row above this limit in order to avoid
 #' tauargus failures
 #' @param nb_tab_option strategy to follow for choosing variables automatically:
@@ -79,7 +79,7 @@ tab_rtauargus4 <- function(
     suppress = "MOD(1,5,1,0,0)",
     safety_rules = paste0("MAN(",ip,")"),
     nb_tab_option = "smart",
-    LIMIT = 14700,
+    limit = 14700L,
     dfs_name = 'tab',
     ...
 ){
@@ -88,7 +88,7 @@ tab_rtauargus4 <- function(
 
   hrc_path <- file.path(dir_name, "hrc")
   if (!dir.exists(hrc_path)){
-    dir.create(hrc_path)
+    dir.create(hrc_path, recursive = TRUE)
   }
 
   # TODO:
@@ -106,7 +106,7 @@ tab_rtauargus4 <- function(
       hrcfiles = hrc,
       hrc_dir = hrc_path,
       nb_tab_option = nb_tab_option,
-      LIMIT = LIMIT,
+      limit = limit,
       over_split = TRUE,
       verbose = TRUE, # to generalize later
       sep_dir = TRUE
@@ -129,19 +129,7 @@ tab_rtauargus4 <- function(
     params_multi$alt_totcode = list_tables$alt_totcode
 
     masq_list <- do.call("tab_multi_manager", params_multi)
-    # (
-    #   list_tables = list_tables$tabs,
-    #   list_explanatory_vars = list_tables$vars ,
-    #   dir_name = dir_name,
-    #   hrc = list_tables$hrc,
-    #   totcode = list_tables$totcode,
-    #   alt_hrc = list_tables$alt_hrc,
-    #   alt_totcode = list_tables$alt_totcode,
-    #   value = value,
-    #   freq = freq,
-    #   secret_var = secret_var,
-    #   suppress = suppress
-    # )
+
 
     result <- restore_format(masq_list, list_tables)
 

@@ -11,7 +11,7 @@
 #' @param unif_labels boolean, if explanatory variables have to be standardized
 #' @param split_tab boolean, wether to reduce dimension to 3 when treating a table
 #' of dimension 4 or 5
-#' @param LIMIT numeric, used to choose which variable to merge (if nb_tab_option = 'smart')
+#' @param limit numeric, used to choose which variable to merge (if nb_tab_option = 'smart')
 #' and split table with a number of row above this limit in order to avoid
 #' tauargus failures
 #' @param nb_tab_option strategy to follow for choosing variables automatically:
@@ -117,7 +117,7 @@ tab_rtauargus <- function(
     unif_labels = TRUE,
     split_tab = FALSE,
     nb_tab_option = "smart",
-    LIMIT = 14700,
+    limit = 14700,
     ...
 ){
 

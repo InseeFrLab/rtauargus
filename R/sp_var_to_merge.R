@@ -12,7 +12,7 @@
 #'   \item \code{'max'}: maximize the number of tables;
 #'   \item \code{'smart'}: minimize the number of tables under the constraint of their row count.
 #' }
-#' @param LIMIT maximum allowed row count in the 'smart' case
+#' @param limit maximum allowed row count in the 'smart' case
 #'
 #' @return A list of vectors representing the chosen variables to merge
 #'
@@ -81,7 +81,7 @@
 #' res3 <- var_to_merge(dfs = data,
 #'                                 totcode = totcode,
 #'                                 hrcfiles = hrcfiles,
-#'                                 LIMIT = 200,
+#'                                 limit = 200,
 #'                                 nb_var = 2,
 #'                                 nb_tab_option = 'smart')
 #' res3
@@ -95,7 +95,7 @@
 #' res4 <- var_to_merge(dfs = data,
 #'                                 totcode = totcode,
 #'                                 hrcfiles = hrcfiles,
-#'                                 LIMIT = 5,
+#'                                 limit = 5,
 #'                                 nb_var = 2,
 #'                                 nb_tab_option = 'smart')
 #' res4
@@ -114,7 +114,7 @@ var_to_merge <- function(
     hrcfiles = NULL,
     nb_var = 4,
     nb_tab_option = "min",
-    LIMIT = 150)
+    limit = 150)
 {
   # Case of 2 pairs in dimension 5
   if (nb_var == 4){
@@ -133,7 +133,7 @@ var_to_merge <- function(
                                  result_comb = result_comb,
                                  totcode = totcode,
                                  hrcfiles = hrcfiles,
-                                 LIMIT = LIMIT,
+                                 limit = limit,
                                  nb_tab_option = nb_tab_option))
 }
 
@@ -142,7 +142,7 @@ var_to_merge_fragment <- function(
     result_comb,
     totcode,
     hrcfiles = NULL,
-    LIMIT = 150,
+    limit = 150,
     nb_tab_option = "smart")
 {
   # Calculate the number of tables and maximum rows for each combination of variables
@@ -198,7 +198,7 @@ var_to_merge_fragment <- function(
     # Case: 'smart' - maximize under the constraint of the size limit
   } else {
     # Filter based on the maximum rows condition
-    filtered_df <- df[df$res_max < LIMIT, ]
+    filtered_df <- df[df$res_max < limit, ]
 
     # If at least one case satisfies this condition
     if (nrow(filtered_df) > 0){
@@ -220,7 +220,7 @@ var_to_merge_fragment <- function(
 
       # Silence warning since it is only display at the end...
       # warning(c("
-      # The limit of ",LIMIT," cannot be achieved.
+      # The limit of ",limit," cannot be achieved.
       # The largest table has ",min_res_max," rows."))
 
       filtered_df <- df[df$res_max == min_res_max, ]

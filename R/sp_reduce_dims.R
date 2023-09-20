@@ -18,9 +18,9 @@
 #'   \item \code{'smart'}: minimize the number of tables under the constraint
 #'   of their row count.
 #' }
-#' @param LIMIT maximum allowed number of rows in the smart or over_split = TRUE case
+#' @param limit maximum allowed number of rows in the smart or over_split = TRUE case
 #' @param over_split indicate if we split in several tables the tables bigger than
-#' LIMIT at the end of the reduction process ; it decreases the number
+#' limit at the end of the reduction process ; it decreases the number
 #' of hierarchy of these tables
 #' @param vec_sep vector of candidate separators to use
 #' @param verbose print the different steps of the function to inform the user
@@ -97,7 +97,7 @@
 #'   nb_tab_option = 'smart',
 #'   over_split = TRUE,
 #'   verbose = TRUE,
-#'   LIMIT = 300
+#'   limit = 300
 #' )
 #'
 #' # Result of the function (minimizes the number of created tables by default)
@@ -174,7 +174,7 @@
 #'   sep_dir = TRUE,
 #'   hrc_dir = "output",
 #'   nb_tab_option = 'smart',
-#'   LIMIT = 1300,
+#'   limit = 1300,
 #'   verbose = TRUE,
 #' )
 #'
@@ -187,7 +187,7 @@
 #'   hrc_dir = "output",
 #'   nb_tab_option = 'min',
 #'   verbose = TRUE,
-#'   LIMIT = 4470,
+#'   limit = 4470,
 #'   over_split = TRUE
 #' )
 reduce_dims <- function(
@@ -199,7 +199,7 @@ reduce_dims <- function(
     hrc_dir = "hrc_alt",
     vars_to_merge = NULL,
     nb_tab_option = "min",
-    LIMIT = NULL,
+    limit = NULL,
     over_split = FALSE,
     vec_sep = c("___","_XXX_","_YYY_", "_TTT_", "_UVW_"),
     verbose = FALSE
@@ -275,19 +275,19 @@ reduce_dims <- function(
     stop("over_split must be a logical value.")
   }
 
-  # LIMIT is not used if the user does not use over_split or nb_tab_option
+  # limit is not used if the user does not use over_split or nb_tab_option
   # we consider it to be an error if the users specifies it
   if (over_split | nb_tab_option == "smart"){
-    if (is.null(LIMIT)){
-      stop("You must specify a LIMIT (number) if you use over_split = TRUE or nb_tab_option = \"smart\"")
+    if (is.null(limit)){
+      stop("You must specify a limit (number) if you use over_split = TRUE or nb_tab_option = \"smart\"")
     }
 
-    # Convert LIMIT to numeric
-    LIMIT <- as.numeric(LIMIT)
+    # Convert limit to numeric
+    limit <- as.numeric(limit)
 
   } else {
-    if (!is.null(LIMIT)){
-      stop("You must not specify a LIMIT (number) if you do not use over_split = TRUE or nb_tab_option = \"smart\"")
+    if (!is.null(limit)){
+      stop("You must not specify a limit (number) if you do not use over_split = TRUE or nb_tab_option = \"smart\"")
     }
   }
 
@@ -325,14 +325,14 @@ reduce_dims <- function(
                                      totcode = totcode,
                                      hrcfiles = hrcfiles,
                                      nb_var = 3,
-                                     LIMIT = LIMIT,
+                                     limit = limit,
                                      nb_tab_option = nb_tab_option)
 
         choice_4_var <- var_to_merge(dfs = dfs,
                                      totcode = totcode,
                                      hrcfiles = hrcfiles,
                                      nb_var = 4,
-                                     LIMIT = LIMIT,
+                                     limit = limit,
                                      nb_tab_option = nb_tab_option)
 
         # Choose the best combination
@@ -340,10 +340,10 @@ reduce_dims <- function(
         # or the less nb or row if the limit cannot be respected
         if (
           (choice_3_var$nb_tab < choice_4_var$nb_tab &
-           max(choice_4_var$max_row,choice_3_var$max_row) < LIMIT) |
+           max(choice_4_var$max_row,choice_3_var$max_row) < limit) |
 
           (choice_3_var$max_row < choice_4_var$max_row &
-           choice_4_var$max_row > LIMIT)
+           choice_4_var$max_row > limit)
         )
         {
 
@@ -352,9 +352,9 @@ reduce_dims <- function(
           v3 <- choice_3_var$vars[[3]]
           v4 <- paste(v1, v2, sep = sep)
 
-          if (choice_3_var$max_row > LIMIT){
+          if (choice_3_var$max_row > limit){
             cat(c("Warning when choosing variables:
-The limit of ",LIMIT," cannot be achieved.
+The limit of ",limit," cannot be achieved.
 The largest table has ",choice_3_var$max_row," rows.\n"))
           }
 
@@ -364,9 +364,9 @@ The largest table has ",choice_3_var$max_row," rows.\n"))
           v3 <- choice_4_var$vars[[3]]
           v4 <- choice_4_var$vars[[4]]
 
-          if (choice_3_var$max_row > LIMIT){
+          if (choice_3_var$max_row > limit){
             cat(c("Warning when choosing variables:
-The limit of ",LIMIT," cannot be achieved.
+The limit of ",limit," cannot be achieved.
 The largest table has ",choice_3_var$max_row," rows.\n"))
           }
         }
@@ -421,14 +421,14 @@ Reducing from 5 to 4...\n")
                                      totcode = totcode,
                                      hrcfiles = hrcfiles,
                                      nb_var = 2,
-                                     LIMIT = LIMIT,
+                                     limit = limit,
                                      nb_tab_option = nb_tab_option)
         v1 <- choice_2_var$vars[[1]]
         v2 <- choice_2_var$vars[[2]]
 
-        if (choice_2_var$max_row > LIMIT){
+        if (choice_2_var$max_row > limit){
           cat(c("Warning when choosing variables:
-The limit of ",LIMIT," cannot be achieved.
+The limit of ",limit," cannot be achieved.
 The largest table has ",choice_2_var$max_row," rows.\n"))
         }
 
@@ -508,7 +508,7 @@ Reducing from 4 to 3...\n")
       }
 
       res <- split_tab(res = res,
-                       LIMIT = LIMIT,
+                       limit = limit,
                        var_fus = var_fus)
     }
 
@@ -516,13 +516,13 @@ Reducing from 4 to 3...\n")
       cat(paste(dfs_name,"has generated",length(res$tabs),"tables in total\n\n"))
     }
 
-    # The user specified a LIMIT (smart or over_split case)
-    if (!is.null(LIMIT)){
+    # The user specified a limit (smart or over_split case)
+    if (!is.null(limit)){
       max_row <- max(sapply(res$tabs, nrow))
 
-      if (max_row > LIMIT){
+      if (max_row > limit){
         cat(c("Warning after splitting :
-The limit of ",LIMIT," cannot be achieved.
+The limit of ",limit," cannot be achieved.
 The largest table has ",max_row," rows.\n\n"))
       }
     }
@@ -531,13 +531,13 @@ The largest table has ",max_row," rows.\n\n"))
   return(res)
 }
 
-# split tables according to var_fuse if the nb of row exceed LIMIT
+# split tables according to var_fuse if the nb of row exceed limit
 # it creates smaller tabs with a hier variable less
 #' @importFrom stats setNames
-split_tab <- function(res, var_fus, LIMIT) {
+split_tab <- function(res, var_fus, limit) {
   # table to split because they are too big
 
-  res$to_split <- sapply(res$tabs, function(x) nrow(x) > LIMIT)
+  res$to_split <- sapply(res$tabs, function(x) nrow(x) > limit)
   table_to_split <-names(res$to_split[res$to_split == TRUE])
 
   # data to stock
