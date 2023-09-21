@@ -97,9 +97,9 @@
 #' @export
 tab_rtauargus <- function(
     tabular,
+    explanatory_vars,
     files_name = NULL,
     dir_name = NULL,
-    explanatory_vars,
     totcode = getOption("rtauargus.totcode"),
     hrc = NULL,
     secret_var = NULL,
