@@ -11,7 +11,8 @@ Imports:
     stringr,
     rlang,
     zoo,
-    sdcHierarchies
+    sdcHierarchies,
+    lifecycle
 Suggests:
     testthat,
     knitr,
