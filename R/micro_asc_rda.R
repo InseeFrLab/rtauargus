@@ -57,6 +57,17 @@ write_rda <- function(info_vars) {
 
 #' Creates asc and rda files from microdata
 #'
+#' @description
+#' `r lifecycle::badge("superseded")`
+#'
+#' Development on `micro_asc_rda()` is complete, and for new code we recommend
+#' switching to the tabular-wise protection provided by `tab_rtauargus()`
+#' or `tab_multi_manager()`, which offer a lot more features for your
+#' protection problems.
+#'
+#' See more details in `vignette("rtauargus")` or in
+#' `vignette("protect_multi_tables)`.
+#'
 #' Creates a fixed length text file (asc) and a metadata file
 #' (rda) from microdata and additional information. \cr
 #' (Crée un fichier texte de longueur fixe (asc) et un fichier de métadonnées

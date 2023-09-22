@@ -1,5 +1,16 @@
 #' Protects tables from microdata
 #'
+#' @description
+#' `r lifecycle::badge("superseded")`
+#'
+#' Development on `rtauargus()` is complete, and for new code we recommend
+#' switching to the tabular-wise protection provided by `tab_rtauargus()`
+#' or `tab_multi_manager()`, which offer a lot more features for your
+#' protection problems.
+#'
+#' See more details in `vignette("rtauargus")` or in
+#' `vignette("protect_multi_tables)`.
+#'
 #' Protects tables built from microdata and specifications of the crossings.
 #' The function allows to perform the complete process, namely the creation of
 #' the asc and rda files, the construction of the arb file, the effective

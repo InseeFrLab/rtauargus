@@ -133,12 +133,21 @@ A list of two elements: arb filename and names of output files
 fichiers en sortie (utile pour récupérer les noms générés aléatoirement).)
 }
 \description{
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#superseded}{\figure{lifecycle-superseded.svg}{options: alt='[Superseded]'}}}{\strong{[Superseded]}}
+
+Development on \code{micro_arb()} is complete, and for new code we recommend
+switching to the tabular-wise protection provided by \code{tab_rtauargus()}
+or \code{tab_multi_manager()}, which offer a lot more features for your
+protection problems.
+
+See more details in \code{vignette("rtauargus")} or in
+\verb{vignette("protect_multi_tables)}.
+
 Creates a batch file for microdata, executable by Tau-Argus in
 command line. \cr
 (Crée un fichier batch pour microdonnées, exécutable par Tau-Argus en ligne
 de commande.)
-}
-\details{
+
 The function does not check if asc and rda files exist. \cr
 (La fonction ne vérifie pas si les fichiers asc et rda existent.)
 }

@@ -141,6 +141,17 @@ apriori_batch <- function(ntab, hst_names, sep = ',', ignore_err = 0 , exp_triv 
 
 #' Creates a batch file (.arb) for microdata
 #'
+#' @description
+#' `r lifecycle::badge("superseded")`
+#'
+#' Development on `micro_arb()` is complete, and for new code we recommend
+#' switching to the tabular-wise protection provided by `tab_rtauargus()`
+#' or `tab_multi_manager()`, which offer a lot more features for your
+#' protection problems.
+#'
+#' See more details in `vignette("rtauargus")` or in
+#' `vignette("protect_multi_tables)`.
+#'
 #' Creates a batch file for microdata, executable by Tau-Argus in
 #' command line. \cr
 #' (Crée un fichier batch pour microdonnées, exécutable par Tau-Argus en ligne

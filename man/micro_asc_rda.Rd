@@ -86,6 +86,16 @@ de caractères vides) ne seront pas exportées dans le fichier asc. Un
 message d'avertissement listera les colonnes concernées.)
 }
 \description{
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#superseded}{\figure{lifecycle-superseded.svg}{options: alt='[Superseded]'}}}{\strong{[Superseded]}}
+
+Development on \code{micro_asc_rda()} is complete, and for new code we recommend
+switching to the tabular-wise protection provided by \code{tab_rtauargus()}
+or \code{tab_multi_manager()}, which offer a lot more features for your
+protection problems.
+
+See more details in \code{vignette("rtauargus")} or in
+\verb{vignette("protect_multi_tables)}.
+
 Creates a fixed length text file (asc) and a metadata file
 (rda) from microdata and additional information. \cr
 (Crée un fichier texte de longueur fixe (asc) et un fichier de métadonnées

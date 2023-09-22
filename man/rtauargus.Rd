@@ -62,6 +62,16 @@ If \code{import = TRUE}, a list of data.frames (protected tables),
 secrétisés), \code{NULL} sinon.)
 }
 \description{
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#superseded}{\figure{lifecycle-superseded.svg}{options: alt='[Superseded]'}}}{\strong{[Superseded]}}
+
+Development on \code{rtauargus()} is complete, and for new code we recommend
+switching to the tabular-wise protection provided by \code{tab_rtauargus()}
+or \code{tab_multi_manager()}, which offer a lot more features for your
+protection problems.
+
+See more details in \code{vignette("rtauargus")} or in
+\verb{vignette("protect_multi_tables)}.
+
 Protects tables built from microdata and specifications of the crossings.
 The function allows to perform the complete process, namely the creation of
 the asc and rda files, the construction of the arb file, the effective
@@ -71,8 +81,7 @@ spécifications des croisements. La fonction permet d'effectuer le processus
 complet, à savoir la création des fichiers asc et rda, la construction
 du fichier arb, le lancement effectif de Tau-Argus et la récupération
 éventuelle des résultats dans R.)
-}
-\details{
+
 The function executes sequentially the functions: \itemize{
 \item{
 \code{\link[=micro_asc_rda]{micro_asc_rda()}} \verb{->}
