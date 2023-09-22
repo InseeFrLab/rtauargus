@@ -20,6 +20,9 @@ tab_multi_manager(
   ip_start = 10,
   ip_end = 0,
   num_iter_max = 10,
+  split_tab = TRUE,
+  nb_tab_option = "smart",
+  limit = 14700,
   ...
 )
 }
@@ -86,6 +89,23 @@ parameters for it.\cr
 
 \item{num_iter_max}{integer: Maximum of treatments to do on each table (default to 10)}
 
+\item{split_tab}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}} boolean,
+wether to reduce dimension to 3 when treating a table of dimension 4 or 5}
+
+\item{nb_tab_option}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}} strategy to follow
+to choose variables automatically:
+\itemize{
+\item \code{'min'}: minimize the number of tables;
+\item \code{'max'}: maximize the number of tables;
+\item \code{'smart'}: minimize the number of tables under the constraint
+of their row count.
+}}
+
+\item{limit}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}} numeric, used to choose
+which variable to merge (if nb_tab_option = 'smart')
+and split table with a number of row above this limit in order to avoid
+tauargus failures}
+
 \item{...}{other arguments of \code{tab_rtauargus2()}}
 }
 \value{
@@ -144,6 +164,33 @@ res_1 <- tab_multi_manager(
   secret_var = "is_secret_prim",
   totcode =  "Total"
 )
+
+
+# With the reduction dimensions feature
+
+data("datatest1")
+data("datatest2")
+
+datatest2b <- datatest2 \%>\%
+  filter(cj == "Total", treff == "Total", type_distrib == "Total") \%>\%
+  select(-cj, -treff, -type_distrib)
+
+str(datatest2b)
+
+res <- tab_multi_manager(
+  list_tables = list(d1 = datatest1, d2 = datatest2b),
+    list_explanatory_vars = list(
+        d1 = names(datatest1)[1:4],
+        d2 = names(datatest2b)[1:2]
+    ),
+ dir_name = "tauargus_files",
+ value = "pizzas_tot_abs",
+ freq = "nb_obs_rnd",
+ secret_var = "is_secret_prim",
+ totcode =  "Total",
+ split_tab = TRUE
+)
+
 }
 
 }

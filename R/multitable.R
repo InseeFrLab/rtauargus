@@ -73,6 +73,33 @@ journal_add_line <- function(journal,...){
 #'   secret_var = "is_secret_prim",
 #'   totcode =  "Total"
 #' )
+#'
+#'
+#' # With the reduction dimensions feature
+#'
+#' data("datatest1")
+#' data("datatest2")
+#'
+#' datatest2b <- datatest2 %>%
+#'   filter(cj == "Total", treff == "Total", type_distrib == "Total") %>%
+#'   select(-cj, -treff, -type_distrib)
+#'
+#' str(datatest2b)
+#'
+#' res <- tab_multi_manager(
+#'   list_tables = list(d1 = datatest1, d2 = datatest2b),
+#'     list_explanatory_vars = list(
+#'         d1 = names(datatest1)[1:4],
+#'         d2 = names(datatest2b)[1:2]
+#'     ),
+#'  dir_name = "tauargus_files",
+#'  value = "pizzas_tot_abs",
+#'  freq = "nb_obs_rnd",
+#'  secret_var = "is_secret_prim",
+#'  totcode =  "Total",
+#'  split_tab = TRUE
+#' )
+#'
 #' }
 #'
 #' @importFrom rlang .data
@@ -95,6 +122,9 @@ tab_multi_manager <- function(
     ip_start = 10,
     ip_end = 0,
     num_iter_max = 10,
+    split_tab = TRUE,
+    nb_tab_option = "smart",
+    limit = 14700,
     ...
 ){
   start_time <- Sys.time()

@@ -18,6 +18,9 @@ tab_rtauargus2(
   freq = "freq",
   ip = 10,
   suppress = "MOD(1,5,1,0,0)",
+  split_tab = TRUE,
+  nb_tab_option = "smart",
+  limit = 14700,
   ...
 )
 }
@@ -92,6 +95,23 @@ parameters for it.\cr
 ( Algorithme de gestion du secret secondaire
 (syntaxe batch de Tau-Argus), ainsi que les potentiels paramètres associés)}
 
+\item{split_tab}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}} boolean,
+wether to reduce dimension to 3 when treating a table of dimension 4 or 5}
+
+\item{nb_tab_option}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}} strategy to follow
+to choose variables automatically:
+\itemize{
+\item \code{'min'}: minimize the number of tables;
+\item \code{'max'}: maximize the number of tables;
+\item \code{'smart'}: minimize the number of tables under the constraint
+of their row count.
+}}
+
+\item{limit}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}} numeric, used to choose
+which variable to merge (if nb_tab_option = 'smart')
+and split table with a number of row above this limit in order to avoid
+tauargus failures}
+
 \item{...}{Other arguments of \code{tab_rtauargus} function}
 }
 \value{
@@ -137,6 +157,19 @@ res <- tab_rtauargus2(
   secret_var = "is_secret_prim",
   value = "TOT",
   freq = "N_OBS"
+)
+
+# reduce dimensions feature
+data(datatest1)
+res_dim4 <- tab_rtauargus2(
+  tabular = datatest1,
+  dir_name = "tauargus_files",
+  explanatory_vars = c("A10", "treff","type_distrib","cj"),
+  totcode = rep("Total", 4),
+  secret_var = "is_secret_prim",
+  value = "pizzas_tot_abs",
+  freq = "nb_obs_rnd",
+  split_tab = TRUE
 )
 }
 }
