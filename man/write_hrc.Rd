@@ -18,9 +18,9 @@ write_hrc(
 \item{microdata}{data.frame containing the microdata. \cr
 ( data.frame contenant les microdonnées.)}
 
-\item{vars_hrc}{\strong{\link{mandatory}} vector of variable names
+\item{vars_hrc}{vector of variable names
 constituting the hierarchy, from the finest to the most aggregated level.\cr
-(\strong{\link{obligatoire}} vecteur des noms des variables
+(vecteur des noms des variables
 constituant la hiérarchie, du niveau le plus fin au niveau le plus agrégé.)}
 
 \item{hierleadstring}{character which, repeated n times, indicates that the value is

@@ -95,10 +95,10 @@ wether to reduce dimension to 3 when treating a table of dimension 4 or 5}
 \item{nb_tab_option}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}} strategy to follow
 to choose variables automatically:
 \itemize{
-\item \code{'min'}: minimize the number of tables;
-\item \code{'max'}: maximize the number of tables;
-\item \code{'smart'}: minimize the number of tables under the constraint
-of their row count.
+\item{\code{"min"}: minimize the number of tables;}
+\item{\code{"max"}: maximize the number of tables;}
+\item{\code{"smart"}: minimize the number of tables under the constraint
+of their row count.}
 }}
 
 \item{limit}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}} numeric, used to choose

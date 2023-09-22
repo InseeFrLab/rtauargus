@@ -18,10 +18,10 @@
 #' @param nb_tab_option `r lifecycle::badge("experimental")` strategy to follow
 #' to choose variables automatically:
 #' \itemize{
-#'   \item `'min'`: minimize the number of tables;
-#'   \item `'max'`: maximize the number of tables;
-#'   \item `'smart'`: minimize the number of tables under the constraint
-#'   of their row count.
+#'   \item{`"min"`: minimize the number of tables;}
+#'   \item{`"max"`: maximize the number of tables;}
+#'   \item{`"smart"`: minimize the number of tables under the constraint
+#'   of their row count.}
 #' }
 #' @param ... any parameter of the tab_rda, tab_arb or run_arb functions, relevant
 #' for the treatment of tabular.

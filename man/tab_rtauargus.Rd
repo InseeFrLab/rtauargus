@@ -94,8 +94,8 @@ peut contenir des NA pour les coûts que l'on ne souhaite pas modifier.)
 \item{freq}{Name of the column containing the cell frequency. \cr
 (Nom de la colonne contenant les effectifs pour une cellule)}
 
-\item{ip}{Value of the safety margin in \\% (must be an integer).
-(Valeur pour les intervalles de protection en \\%, doit être entier )}
+\item{ip}{Value of the safety margin in \% (must be an integer).
+(Valeur pour les intervalles de protection en \%, doit être entier )}
 
 \item{maxscore}{Name of the column containing, the value of the largest
 contributor of a cell. \cr
@@ -140,10 +140,10 @@ wether to reduce dimension to 3 when treating a table of dimension 4 or 5}
 \item{nb_tab_option}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}} strategy to follow
 to choose variables automatically:
 \itemize{
-\item \code{'min'}: minimize the number of tables;
-\item \code{'max'}: maximize the number of tables;
-\item \code{'smart'}: minimize the number of tables under the constraint
-of their row count.
+\item{\code{"min"}: minimize the number of tables;}
+\item{\code{"max"}: maximize the number of tables;}
+\item{\code{"smart"}: minimize the number of tables under the constraint
+of their row count.}
 }}
 
 \item{limit}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}} numeric, used to choose

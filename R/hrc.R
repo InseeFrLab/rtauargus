@@ -54,9 +54,9 @@
 #' répétée jusqu'à la profondeur maximale (voir exemples).
 #'
 #' @inheritParams micro_asc_rda
-#' @param vars_hrc **[mandatory]** vector of variable names
+#' @param vars_hrc vector of variable names
 #' constituting the hierarchy, from the finest to the most aggregated level.\cr
-#' (**[obligatoire]** vecteur des noms des variables
+#' (vecteur des noms des variables
 #'   constituant la hiérarchie, du niveau le plus fin au niveau le plus agrégé.)
 #' @param hrc_filename name and location of the produced hrc file. If not
 #' filled, a temporary file.\cr

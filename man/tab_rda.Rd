@@ -94,8 +94,8 @@ contributor of a cell. \cr
 (Nom de la colonne contenant la valeur du plus gros contributeur
 d'une cellule)}
 
-\item{ip}{Value of the safety margin in \\% (must be an integer).
-(Valeur pour les intervalles de protection en \\%, doit être entier )}
+\item{ip}{Value of the safety margin in \% (must be an integer).
+(Valeur pour les intervalles de protection en \%, doit être entier )}
 
 \item{maxscore_2}{Name of the column containing, the value of the second largest
 contributor to a cell. \cr
