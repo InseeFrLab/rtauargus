@@ -1,6 +1,9 @@
 #' Call Tau-Argus to protect a 4 or 5 dimensions table by splitting it
 #' in several 3 dimensions table.
 #'
+#' @description
+#' `r lifecycle::badge("experimental")`
+#'
 #' @inheritParams tab_rtauargus
 #'
 #' @param limit numeric, used to choose which variable to merge (if nb_tab_option = 'smart')

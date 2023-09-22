@@ -126,8 +126,7 @@ The original tabular is returned with additional variables indicating
 whether or not the cell has to be masked according to Tau-Argus
 }
 \description{
-Call Tau-Argus to protect a 4 or 5 dimensions table by splitting it
-in several 3 dimensions table.
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
 }
 \examples{
 \dontrun{
