@@ -16,9 +16,8 @@
 #'
 #' @return A list of vectors representing the chosen variables to merge
 #'
-#' @export
-#'
 #' @examples
+#' library(dplyr)
 #' data <- expand.grid(
 #'   ACT = c("Total", "A", "B", "A1", "A2", "B1", "B2"),
 #'   GEO = c("Total", "GA", "GB", "GA1", "GA2"),
@@ -108,6 +107,8 @@
 #' # There are 63 rows (equivalent to the max
 #' # -> this is what reduces the table size)
 #' # And the warning announces 63 rows, which is consistent with the output
+#'
+#' @export
 var_to_merge <- function(
     dfs,
     totcode,
@@ -333,7 +334,8 @@ generate_a_triplet <- function(totcode) {
 #' # Dimension 4
 #' library(dplyr)
 #' data <- expand.grid(
-#'   ACT = c("Total", "A", "B", "A1", "A2","A3", "B1", "B2","B3","B4","C","name_non_changed_vars","E","F","G","B5"),
+#'   ACT = c("Total", "A", "B", "A1", "A2","A3", "B1", "B2","B3","B4","C",
+#'           "name_non_changed_vars","E","F","G","B5"),
 #'   GEO = c("Total", "G1", "G2"),
 #'   SEX = c("Total", "F", "M"),
 #'   AGE = c("Total", "AGE1", "AGE2"),
@@ -346,7 +348,10 @@ generate_a_triplet <- function(totcode) {
 #'
 #' hrc_act <- "hrc_ACT.hrc"
 #'
-#' sdcHierarchies::hier_create(root = "Total", nodes = c("A","B","C","name_non_changed_vars","E","F","G")) %>%
+#' sdcHierarchies::hier_create(
+#'   root = "Total",
+#'   nodes = c("A","B","C","name_non_changed_vars","E","F","G")
+#' ) %>%
 #'   sdcHierarchies::hier_add(root = "A", nodes = c("A1","A2","A3")) %>%
 #'   sdcHierarchies::hier_add(root = "B", nodes = c("B1","B2","B3","B4","B5")) %>%
 #'   sdcHierarchies::hier_convert(as = "argus") %>%
@@ -365,7 +370,8 @@ generate_a_triplet <- function(totcode) {
 #'
 #' # Dimension 5
 #' data <- expand.grid(
-#'   ACT = c("Total_A", paste0("A", seq(1,5),"_"),paste0("A1_", seq(1,7)),paste0("A2_", seq(1,9))),
+#'   ACT = c("Total_A", paste0("A", seq(1,5),"_"),
+#'           paste0("A1_", seq(1,7)),paste0("A2_", seq(1,9))),
 #'   GEO = c("Total_G", "GA", "GB", "GA1", "GA2", "GB1", "GB2","GA3","GB3","GB4"),
 #'   SEX = c("Total_S", "F", "M","F1","F2","M1","M2"),
 #'   AGE = c("Ensemble", "AGE1", "AGE2", "AGE11", "AGE12", "AGE21", "AGE22"),
@@ -409,6 +415,7 @@ generate_a_triplet <- function(totcode) {
 #'                     totcode = c(SEX="Total_S",AGE="Ensemble", GEO="Total_G",
 #'                                 ACT="Total_A", ECO = "PIB"),
 #'                     v1 = "ACT",v2 = "AGE",v3 = "GEO")
+#' @export
 length_tabs <- function(
   dfs,
   v1,
@@ -723,7 +730,6 @@ import_hierarchy <- function(hrcfile) {
 #' @param data data.frame (used only in the case where a trio is formed)
 #'
 #' @return an integer representing the number of tables generated
-#' @export
 #'
 #' @examples
 #' # Dimension 4
@@ -806,6 +812,7 @@ import_hierarchy <- function(hrcfile) {
 #' nb_tab_generated(v1 = "ACT", v2 = "GEO",
 #'                 v3 = "SEX", v4 = "EXO",
 #'                 hrcfiles = c(ACT = hrc_act, GEO = hrc_geo, SEX = hrc_sex))
+#' @export
 nb_tab_generated <- function(
   v1,
   v2,

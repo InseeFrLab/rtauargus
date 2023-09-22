@@ -21,19 +21,21 @@
 #'
 #' @examples
 #'\dontrun{
-#' library(rtauargus)
 #' #Please don't forget to specify the localisation of Tau-Argus in your computer
 #' options(
 #'   rtauargus.tauargus_exe =
 #'     "Y:/Logiciels/TauArgus/TauArgus4.2.3/TauArgus.exe"
 #' )
 #'
+#' data(datatest1)
+#' expl_vars <- c("A10", "treff","type_distrib","cj")
+#'
 #' res_dim4 <- tab_rtauargus4(
 #'   tabular = datatest1,
 #'   files_name = "datatest1",
 #'   dir_name = "tauargus_files",
-#'   explanatory_vars = c("A10", "treff","type_distrib","cj"),
-#'   totcode = c(A10 = "Total", treff = "Total",type_distrib = "Total",cj = "Total"),
+#'   explanatory_vars = expl_vars,
+#'   totcode = setNames(rep("Total", 4), expl_vars),
 #'   secret_var = "is_secret_prim",
 #'   value = "pizzas_tot_abs",
 #'   freq = "nb_obs_rnd",
@@ -44,6 +46,7 @@
 #'
 #' # With a data of 5 variables
 #'
+#' data(datatest2)
 #' expl_vars <- c("A10", "treff","type_distrib","cj","nuts1")
 #'
 #' res_dim5 <- tab_rtauargus4(
@@ -58,19 +61,19 @@
 #'   verbose = TRUE,
 #'   nb_tab_option = "min", # split into the minimum of tables.
 #'   verbose = TRUE,
-#'   suppress = "GH(1,100)" # We use hyerpcube to save time.
+#'   suppress = "GH(1,100)" # We use hypercube to save time.
 #' )
 #' }
 #' @importFrom stats setNames
 #' @export
 tab_rtauargus4 <- function(
     tabular,
-    files_name = NULL,
-    dir_name,
     explanatory_vars,
-    totcode = getOption("rtauargus.totcode"),
-    hrc = NULL,
+    dir_name,
     secret_var,
+    totcode,
+    files_name = NULL,
+    hrc = NULL,
     secret_no_pl = NULL,
     cost_var = NULL,
     value = "value",

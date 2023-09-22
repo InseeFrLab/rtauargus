@@ -62,6 +62,7 @@
 #'                                             AGE = "Total",ECO = "PIB"),
 #'                                 hrcfiles = c(ACT = hrc_act, SEX = hrc_sex),
 #'                                 dir_name = "output")
+#' @export
 from_4_to_3_case_2_hr <- function(
   dfs,
   dfs_name,

@@ -58,7 +58,7 @@ journal_add_line <- function(journal,...){
 #' \dontrun{
 #' options(
 #'   rtauargus.tauargus_exe =
-#'     "Y:/Logiciels/TauArgus/TauArgus4.2.2b1/TauArgus.exe"
+#'     "Y:/Logiciels/TauArgus/TauArgus4.2.3/TauArgus.exe"
 #' )
 #' res_1 <- tab_multi_manager(
 #'   list_tables = list_data_2_tabs,

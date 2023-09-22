@@ -19,7 +19,7 @@
 #'   of their row count.
 #' }
 #' @param limit maximum allowed number of rows in the smart or over_split = TRUE case
-#' @param over_split indicate if we split in several tables the tables bigger than
+#' @param over_split indicates if we split in several tables the tables bigger than
 #' limit at the end of the reduction process ; it decreases the number
 #' of hierarchy of these tables
 #' @param vec_sep vector of candidate separators to use
@@ -43,7 +43,6 @@
 #'   variables during dimension reduction
 #' }
 #'
-#' @export
 #' @importFrom sdcHierarchies hier_import hier_convert
 #' @importFrom stringr str_detect
 #' @importFrom dplyr select mutate filter
@@ -53,27 +52,32 @@
 #' # Examples for dimension 4
 #'
 #' data <- expand.grid(
-#'   ACT = c("Total", "A", "B", "A1", "A2","A3", "B1", "B2","B3","B4","C","D","E","F","G","B5"),
+#'   ACT = c("Total", "A", "B", "A1", "A2","A3", "B1",
+#'   "B2","B3","B4","C","D","E","F","G","B5"),
 #'   GEO = c("Total", "G1", "G2"),
 #'   SEX = c("Total", "F", "M"),
 #'   AGE = c("Total", "AGE1", "AGE2"),
 #'   stringsAsFactors = FALSE
 #' ) %>%
-#'   as.data.frame()
+#'   as.data.frame() %>%
+#'   mutate(VALUE = 1)
 #'
-#' data <- data %>% mutate(VALUE = 1)
-#'
-#'
+#' if(!dir.exists("hrc")) dir.create("hrc")
 #' hrc_act <- "hrc/hrc_ACT4.hrc"
 #'
-#' sdcHierarchies::hier_create(root = "Total", nodes = c("A","B","C","D","E","F","G")) %>%
+#' sdcHierarchies::hier_create(
+#'   root = "Total",
+#'   nodes = c("A","B","C","D","E","F","G")
+#' ) %>%
 #'   sdcHierarchies::hier_add(root = "A", nodes = c("A1","A2","A3")) %>%
 #'   sdcHierarchies::hier_add(root = "B", nodes = c("B1","B2","B3","B4","B5")) %>%
 #'   sdcHierarchies::hier_convert(as = "argus") %>%
 #'   slice(-1) %>%
 #'   mutate(levels = substring(paste0(level,name),3)) %>%
 #'   select(levels) %>%
-#'   write.table(file = hrc_act, row.names = FALSE, col.names = FALSE, quote = FALSE)
+#'   write.table(
+#'     file = hrc_act, row.names = FALSE, col.names = FALSE, quote = FALSE
+#'   )
 #'
 #' # Reduce dim by forcing variables to be merged
 #' res1 <- reduce_dims(
@@ -83,7 +87,8 @@
 #'   hrcfiles = c(ACT = hrc_act),
 #'   sep_dir = TRUE,
 #'   vars_to_merge = c("ACT", "GEO"),
-#'   hrc_dir = "output"
+#'   hrc_dir = "output",
+#'   verbose = TRUE
 #' )
 #'
 #' # Split the output in order to be under the limit & forcing variables to be merged
@@ -97,7 +102,7 @@
 #'   nb_tab_option = 'smart',
 #'   over_split = TRUE,
 #'   verbose = TRUE,
-#'   limit = 300
+#'   limit = 100
 #' )
 #'
 #' # Result of the function (minimizes the number of created tables by default)
@@ -107,7 +112,8 @@
 #'   totcode = c(SEX = "Total", AGE = "Total", GEO = "Total", ACT = "Total"),
 #'   hrcfiles = c(ACT = hrc_act),
 #'   sep_dir = TRUE,
-#'   hrc_dir = "output"
+#'   hrc_dir = "output",
+#'   verbose = TRUE
 #' )
 #'
 #' # Result of the function (maximize the number of created tables)
@@ -118,7 +124,8 @@
 #'   hrcfiles = c(ACT = hrc_act),
 #'   sep_dir = TRUE,
 #'   hrc_dir = "output",
-#'   nb_tab_option = "max"
+#'   nb_tab_option = "max",
+#'   verbose = TRUE
 #' )
 #'
 #' # Example for dimension 5
@@ -132,9 +139,8 @@
 #'   stringsAsFactors = FALSE,
 #'   KEEP.OUT.ATTRS = FALSE
 #' ) %>%
-#'   as.data.frame()
-#'
-#' data <- data %>% mutate(VALUE = 1:n())
+#'   as.data.frame() %>%
+#'   mutate(VALUE = 1:n())
 #'
 #' hrc_act <- "hrc/hrc_ACT5.hrc"
 #' sdcHierarchies::hier_create(root = "Total_A", nodes = paste0("A", seq(1,5),"_")) %>%
@@ -145,6 +151,16 @@
 #'   mutate(levels = substring(paste0(level,name),3)) %>%
 #'   select(levels) %>%
 #'   write.table(file = hrc_act, row.names = FALSE, col.names = FALSE, quote = FALSE)
+#'
+#' hrc_age <- "hrc/hrc_AGE5.hrc"
+#' sdcHierarchies::hier_create(root = "Ensemble", nodes = c("AGE1", "AGE2")) %>%
+#'   sdcHierarchies::hier_add(root = "AGE1", nodes = c("AGE11", "AGE12")) %>%
+#'   sdcHierarchies::hier_add(root = "AGE2", nodes = c("AGE21", "AGE22")) %>%
+#'   sdcHierarchies::hier_convert(as = "argus") %>%
+#'   slice(-1) %>%
+#'   mutate(levels = substring(paste0(level,name),3)) %>%
+#'   select(levels) %>%
+#'   write.table(file = hrc_age, row.names = FALSE, col.names = FALSE, quote = FALSE)
 #'
 #' hrc_geo <- "hrc/hrc_GEO5.hrc"
 #' sdcHierarchies::hier_create(root = "Total_G", nodes = c("GA","GB")) %>%
@@ -161,9 +177,10 @@
 #'   dfs = data,
 #'   dfs_name = "tab",
 #'   totcode = c(SEX = "Total_S", AGE = "Ensemble", GEO = "Total_G", ACT = "Total_A", ECO = "PIB"),
-#'   hrcfiles = c(ACT = hrc_act, GEO = hrc_geo),
+#'   hrcfiles = c(ACT = hrc_act, GEO = hrc_geo, AGE = hrc_age),
 #'   sep_dir = TRUE,
-#'   hrc_dir = "output"
+#'   hrc_dir = "output",
+#'   verbose = TRUE
 #' )
 #'
 #' res5 <- reduce_dims(
@@ -175,7 +192,7 @@
 #'   hrc_dir = "output",
 #'   nb_tab_option = 'smart',
 #'   limit = 1300,
-#'   verbose = TRUE,
+#'   verbose = TRUE
 #' )
 #'
 #' res6 <- reduce_dims(
@@ -190,6 +207,7 @@
 #'   limit = 4470,
 #'   over_split = TRUE
 #' )
+#' @export
 reduce_dims <- function(
     dfs,
     dfs_name,
@@ -205,7 +223,7 @@ reduce_dims <- function(
     verbose = FALSE
 ){
 
-  # TODO:
+  # TODO OR NOT:
   # to save time: parallelize the lapply for variable selection
   #                                     lapply for reducing from 4 to 3 dimensions
   #                                    in the case of dimension 5
@@ -673,7 +691,7 @@ chose_sep <- function(
 #' and a list of vectors of variables or a vector of variables depending on the base size
 #' of the dataframes
 #' @param dfs_name the name of the entered dataframes
-#' @param sep character 
+#' @param sep character
 #' @param totcode character named vector
 #' @param hrcfiles character named vector
 #'
@@ -735,6 +753,7 @@ chose_sep <- function(
 #'                    GEO="Total", ACT="Total"),
 #'        hrcfiles = c(ACT = hrc_act)
 #'        )
+#' @export
 sp_format <- function(
     res,
     dfs_name,
@@ -742,10 +761,10 @@ sp_format <- function(
     totcode,
     hrcfiles)
 {
-  if (class(res$vars[1]) == "character") {
+  if (is.character(res$vars[1])) {
     return(format4(res, dfs_name, sep, totcode, hrcfiles))
   }
-  if (class(res$vars) == "list") {
+  if (is.list(res$vars)) {
     return(format5(res, dfs_name, sep, totcode, hrcfiles))
   }
 }
@@ -820,7 +839,7 @@ format4 <- function(res, dfs_name, sep, totcode, hrcfiles) {
 # Format for tables with 5 variables
 #' @importFrom stats setNames
 format5 <- function(res, dfs_name, sep, totcode, hrcfiles) {
-  if (class(res$vars) == "list") {
+  if (is.list(res$vars)) {
     # Retrieve the different variables
     v1 <- res$vars[[2]][1]
     v2 <- res$vars[[2]][2]

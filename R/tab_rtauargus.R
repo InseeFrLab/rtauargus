@@ -25,12 +25,21 @@
 #' for the treatment of tabular.
 #'
 #' @return
-#' If output_type equals to 4, then the original tabular is returned with a new
+#' If output_type equals to 4 and split_tab = FALSE,
+#' then the original tabular is returned with a new
 #' column called Status, indicating the status of the cell coming from Tau-Argus :
 #' "A" for a primary secret due to frequency rule, "B" for a primary secret due
 #' to dominance rule, "D" for secondary secret and "V" for no secret cell.
 #'
-#' If output_type doesn't equal to 4, then the raw result from tau-argus is returned.
+#' If split_tab = TRUE,
+#' then the original tabular is returned with some new columns which are boolean
+#' variables indicating the status of a cell at each iteration of the protection
+#' process as we get with \code{tab_multi_manager()} function. \code{TRUE}
+#' denotes a cell that have to be suppressed. The last column is then the
+#' final status of the suppression process of the original table.
+#'
+#' If \code{split_tab = FALSE} and  \code{output_type} doesn't equal to \code{4},
+#' then the raw result from tau-argus is returned.
 #'
 #' @section Standardization of explanatory variables and hierarchies:
 #'
@@ -65,7 +74,7 @@
 #' # Compute the secondary secret ----
 #' options(
 #'   rtauargus.tauargus_exe =
-#'     "Y:/Logiciels/TauArgus/TauArgus4.2.2b1/TauArgus.exe"
+#'     "Y:/Logiciels/TauArgus/TauArgus4.2.3/TauArgus.exe"
 #' )
 #'
 #' res <- tab_rtauargus(
@@ -83,11 +92,12 @@
 #'
 #' # Reduce dims feature
 #'
+#' data(datatest1)
 #' res_dim4 <- tab_rtauargus(
 #'   tabular = datatest1,
 #'   dir_name = "tauargus_files",
 #'   explanatory_vars = c("A10", "treff","type_distrib","cj"),
-#'   totcode = c(A10 = "Total", treff = "Total",type_distrib = "Total",cj = "Total"),
+#'   totcode = rep("Total", 4),
 #'   secret_var = "is_secret_prim",
 #'   value = "pizzas_tot_abs",
 #'   freq = "nb_obs_rnd",
@@ -189,6 +199,10 @@ tab_rtauargus <- function(
       for(param in intersect(names(params_rt4), names(new_params))){
         params_rt4[[param]] <- new_params[[param]]
       }
+
+      params_rt4$totcode <- totcode
+      params_rt4$dir_name <- dir_name
+      params_rt4$files_name <- files_name
 
       return(do.call("tab_rtauargus4", params_rt4))
 
@@ -346,7 +360,7 @@ and the process may take longer.")
 #' # Compute the secondary secret ----
 #' options(
 #'   rtauargus.tauargus_exe =
-#'     "Y:/Logiciels/TauArgus/TauArgus4.2.2b1/TauArgus.exe"
+#'     "Y:/Logiciels/TauArgus/TauArgus4.2.3/TauArgus.exe"
 #' )
 #'
 #' res <- tab_rtauargus2(

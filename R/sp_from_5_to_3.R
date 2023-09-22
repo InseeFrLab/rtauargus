@@ -131,6 +131,7 @@ nb_nodes <- function(hrcfiles, v = NULL, hrc_name = TRUE) {
 #'   hrc_dir = "output",
 #'   verbose = TRUE
 #' )
+#' @export
 from_5_to_3 <- function(
     dfs,
     dfs_name,
