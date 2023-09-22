@@ -22,7 +22,8 @@ Function to reverse the process of dimension reduction
 # Examples with dimension 4
 library(dplyr)
 data <- expand.grid(
-  ACT = c("Total", "A", "B", "A1", "A2","A3", "B1", "B2","B3","B4","C","name_non_changed_vars","E","F","G","B5"),
+  ACT = c("Total", "A", "B", "A1", "A2","A3", "B1", "B2","B3","B4","C",
+          "name_non_changed_vars","E","F","G","B5"),
   GEO = c("Total", "G1", "G2"),
   SEX = c("Total", "F", "M"),
   AGE = c("Total", "AGE1", "AGE2"),
@@ -34,7 +35,10 @@ data <- data \%>\% mutate(VALUE = 1)
 
 hrc_act <- "hrc_ACT.hrc"
 
-sdcHierarchies::hier_create(root = "Total", nodes = c("A","B","C","name_non_changed_vars","E","F","G")) \%>\%
+sdcHierarchies::hier_create(
+  root = "Total",
+  nodes = c("A","B","C","name_non_changed_vars","E","F","G")
+) \%>\%
   sdcHierarchies::hier_add(root = "A", nodes = c("A1","A2","A3")) \%>\%
   sdcHierarchies::hier_add(root = "B", nodes = c("B1","B2","B3","B4","B5")) \%>\%
   sdcHierarchies::hier_convert(as = "argus") \%>\%
@@ -63,7 +67,8 @@ dim(setdiff(res1,data))[1] == 0
 # Exemple dimension 5
 
 data <- expand.grid(
-  ACT = c("Total_A", paste0("A", seq(1,5),"_"),paste0("A1_", seq(1,7)),paste0("A2_", seq(1,9))),
+  ACT = c("Total_A", paste0("A", seq(1,5),"_"),paste0("A1_", seq(1,7)),
+          paste0("A2_", seq(1,9))),
   GEO = c("Total_G", "GA", "GB", "GA1", "GA2", "GB1", "GB2","GA3","GB3","GB4"),
   SEX = c("Total_S", "F", "M","F1","F2","M1","M2"),
   AGE = c("Ensemble", "AGE1", "AGE2", "AGE11", "AGE12", "AGE21", "AGE22"),

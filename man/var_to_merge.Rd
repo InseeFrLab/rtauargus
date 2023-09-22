@@ -12,7 +12,7 @@ var_to_merge(
   hrcfiles = NULL,
   nb_var = 4,
   nb_tab_option = "min",
-  LIMIT = 150
+  limit = 150
 )
 }
 \arguments{
@@ -31,7 +31,7 @@ var_to_merge(
   \item \code{'smart'}: minimize the number of tables under the constraint of their row count.
 }}
 
-\item{LIMIT}{maximum allowed row count in the 'smart' case}
+\item{limit}{maximum allowed row count in the 'smart' case}
 }
 \value{
 A list of vectors representing the chosen variables to merge
@@ -42,6 +42,7 @@ limiting the number of generated tables while ensuring not to generate
 tables that are too large.
 }
 \examples{
+library(dplyr)
 data <- expand.grid(
   ACT = c("Total", "A", "B", "A1", "A2", "B1", "B2"),
   GEO = c("Total", "GA", "GB", "GA1", "GA2"),
@@ -104,7 +105,7 @@ max(unlist(length_tabs(dfs = data,
 res3 <- var_to_merge(dfs = data,
                                 totcode = totcode,
                                 hrcfiles = hrcfiles,
-                                LIMIT = 200,
+                                limit = 200,
                                 nb_var = 2,
                                 nb_tab_option = 'smart')
 res3
@@ -118,7 +119,7 @@ max(unlist(length_tabs(dfs = data,
 res4 <- var_to_merge(dfs = data,
                                 totcode = totcode,
                                 hrcfiles = hrcfiles,
-                                LIMIT = 5,
+                                limit = 5,
                                 nb_var = 2,
                                 nb_tab_option = 'smart')
 res4
@@ -131,4 +132,5 @@ max(unlist(length_tabs(dfs = data,
 # There are 63 rows (equivalent to the max
 # -> this is what reduces the table size)
 # And the warning announces 63 rows, which is consistent with the output
+
 }

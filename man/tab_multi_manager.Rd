@@ -18,6 +18,7 @@ tab_multi_manager(
   cost_var = NULL,
   suppress = "MOD(1,5,1,0,0)",
   ip_start = 10,
+  ip_end = 0,
   num_iter_max = 10,
   ...
 )
@@ -82,6 +83,8 @@ parameters for it.\cr
 
 \item{ip_start}{integer: Interval protection level to apply at first treatment of each table}
 
+\item{ip_end}{integer: Interval protection level to apply at other treatments}
+
 \item{num_iter_max}{integer: Maximum of treatments to do on each table (default to 10)}
 
 \item{...}{other arguments of \code{tab_rtauargus2()}}
@@ -127,7 +130,7 @@ purrr::map(
 \dontrun{
 options(
   rtauargus.tauargus_exe =
-    "Y:/Logiciels/TauArgus/TauArgus4.2.2b1/TauArgus.exe"
+    "Y:/Logiciels/TauArgus/TauArgus4.2.3/TauArgus.exe"
 )
 res_1 <- tab_multi_manager(
   list_tables = list_data_2_tabs,

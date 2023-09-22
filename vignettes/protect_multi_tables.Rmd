@@ -520,17 +520,7 @@ sdcHierarchies::hier_create(
   nodes = activity_corr_table_D_TO_M$A21
 ) %>%
   sdcHierarchies::hier_display()
-#> D_TO_M
-#> +-D
-#> +-E
-#> +-F
-#> +-G
-#> +-H
-#> +-I
-#> +-J
-#> +-K
-#> +-L
-#> \-M
+#> Error in sdcHierarchies::hier_create(root = "D_TO_M", nodes = activity_corr_table_D_TO_M$A21): object 'activity_corr_table_D_TO_M' not found
 ```
 
 To handle this case, the preferred approach is to create a third table crossing
@@ -638,7 +628,7 @@ res <- tab_multi_manager(
 #### About this vignette
 
 - Authors: **<a href="mailto:julien.jamme@insee.fr">Julien Jamme</a>** & **<a href="mailto:nathanael.rastout@insee.fr">Nathanael Rastout</a>**
-- Last update: **28/07/2023**
+- Last update: **21/09/2023**
 - Version of rtauargus used: **1.2.0**
 - Version of &tau;-Argus used : **TauArgus 4.2.3**
 - R version used :  **4.2.3**

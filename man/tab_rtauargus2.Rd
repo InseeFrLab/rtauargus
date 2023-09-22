@@ -126,7 +126,7 @@ hrc_file_activity <- activity_corr_table \%>\%
 # Compute the secondary secret ----
 options(
   rtauargus.tauargus_exe =
-    "Y:/Logiciels/TauArgus/TauArgus4.2.2b1/TauArgus.exe"
+    "Y:/Logiciels/TauArgus/TauArgus4.2.3/TauArgus.exe"
 )
 
 res <- tab_rtauargus2(

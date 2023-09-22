@@ -85,7 +85,8 @@ _rtauargus_ nécessite quelques autres packages R. Voici les dépendances à ins
 • gdata,
 • stringr,
 • rlang,
-• zoo
+• zoo,
+• sdcHierarchies
 ```
 Le package _rtauargus_ peut être installé maintenant.
 
@@ -497,7 +498,7 @@ de la fonction `tab_multi_manager()`.
 #### Détail de la vignette
 
 - Authors: **<a href="mailto:julien.jamme@insee.fr">Julien Jamme</a>** & **<a href="mailto:nathanael.rastout@insee.fr">Nathanael Rastout</a>**
-- Last update: **28/07/2023**
+- Last update: **21/09/2023**
 - Version of rtauargus used: **1.2.0**
 - Version of &tau;-Argus used : **TauArgus 4.2.3**
 - R version used :  **4.2.3**

@@ -1,153 +1,352 @@
-# Theory behind split_tab
+---
+title: "Nombre de sous-tableaux générés en réduisant la dimension de 4 ou 5 à 3"
+subtitle: <h2>![logo rtauargus](../man/figures/rtauargus_logo_small.png)</h2>
+output:
+  rmarkdown::html_vignette:
+    toc: true
+    toc_depth: 2
+    number_section: true
+    fig_caption: true
+# vignette: >
+#   %\VignetteIndexEntry{Le nombre de tableaux générés}
+#   %\VignetteEngine{knitr::rmarkdown}
+#   %\VignetteEncoding{UTF-8}
+---
 
-## Number of Tables Created
+<!--
+  NE JAMAIS MODIFIER DIRECTEMENT `rtauargus.Rmd`
+  MODIFIER `rtauargus.Rmd.orig` ET EXECUTER `precompilation.R`
+  Voir : https://ropensci.org/technotes/2019/12/08/precompute-vignettes
+-->
 
-The function `nb_tab_generated` allows calculating the number of tables that will be generated after dimension reduction for a given table and variables. Below is the detail of the calculations used in this function.
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = TRUE,
+  collapse = TRUE,
+  comment = "#>",
+  warning = FALSE
+)
+knitr::opts_knit$set(root.dir = getwd())
+```
 
-### Merging two variables into one
 
-#### 4-Dimension
+<!-- ## Nombre de tableaux créés -->
 
-During the transition from 4 dimensions to 3 dimensions and the transition from 5 dimensions to 3 dimensions by creating two pairs of variables (ie: variables AGE, SEX, GEO, ECO => AGE_SEX and GEO_ECO), the formula is very simple.
+<!-- La fonction `nb_tab_generated` permet de calculer la nombre de table qui sera généré après réduction de dimension pour un tableau et des variables donnés. Ci-dessous se trouve le détail des calculs utilisés dans cette fonction. -->
 
-To make a hierarchical variable non-hierarchical, we create a number of tables equal to the number of nodes in it. Once we have made a hierarchical variable, on each of its sub-tables, we apply the same process to the second variable.
+Lorsqu'on réduit la dimension d'un tableau en fusionnant plusieurs de ces 
+variables, l'ensemble des modalités de la nouvelle variable ne peuvent être 
+intégrées à une même hiérarchie parfaitement emboîtée. Ainsi, pour la pose du 
+secret, nous sommes contraints de construire un ensemble de tableaux liés de 
+trois dimensions chacun ayant exactement les mêmes variables. Mais, à la variable 
+de fusion une hiérarchie différente sera appliquée.  
 
-Finally, for each combination of table created, two hierarchies are created to account for the margins relative to the first or second variable.
+La vignette [Gestion des tableaux à 4 ou 5 dimensions](https://inseefrlab.github.io/rtauargus/articles/split_tab_fr.html)
+présente la méthode employée dans le package, illustrée par une mise en application.
 
-Thus, in the case of starting with 4 dimensions, we get:
+Mais, pouvons-nous théoriquement connaître le nombre de tableaux qu'il faudra 
+construire ainsi que leur longueur ?
 
-$$\textit{number of tables} = 2 \times \textit{number_nodes_v1} \times \textit{number_nodes_v2}$$
+Nous proposons ici une réponse à cette double question.
 
-where v1 and v2 correspond to the merged variables, and number_nodes_v1 and number_nodes_v2 the number of nodes in their respective hierarchy.
+## Nombre de tableaux générés
 
-For example, in the case of merging GEO and SEX with GEO = {Country, Region 1, Region 2, Municipality 11, Municipality 12, Municipality 13, Municipality 21, Municipality 22, Municipality 23, Municipality 24} and SEX = {Total, Female, Male} with the usual implicit hierarchies (ie Country = Region 1 + Region 2, Region 1 = Municipality 11 + Municipality 21 + Municipality 22, etc), we obtain: $6 = 2 \times 3 \times 1$ tables.
+Nous distinguons le traitement des tableaux de 4 dimensions de ceux de 5 dimensions.
+En effet, pour ces derniers, deux stratégies de fusion sont possibles.
 
-Indeed, GEO has three nodes (France, Region 1, Region 2) and SEX being non-hierarchical, only one (Total).
+### Réduire d'une dimension
 
-#### 5-Dimension
+Il s'agit ici de prédire le nombre de tableaux générés lorsqu'on passe d'un tableau 
+de $d$ dimensions à un tableau à $d-1$ dimensions.
+On traitera ici, sans perte de généralité, le passage d'un tableau de 4 dimensions 
+(par ex. `AGE x SEX x GEO x DIPL`) à un tableau de 3 dimensions 
+(par ex. `AGE x GEO__SEX x DIPL`, en fusionnant les variables `GEO` et `SEX`).
 
-And in the case of starting with 5 dimensions, we iterate the process to the intermediate tables with 4 dimensions, thus we obtain:
 
-$$\textit{number of tables} = 4 \times \textit{number_nodes_v1} \times \textit{number_nodes_v2} 
-\times \textit{number_nodes_v3} \times \textit{number_nodes_v4}$$
+<!-- Lors du passage de 4 dimensions à 3 dimensions et du passage de 5 dimensions à 3 dimensions via la création de deux couples de variables (ie : les variables AGE,SEXE,GEO,ECO => AGE_SEX et GEO_ECO), la formule est très simple. -->
 
-where v1…v4 correspond to the merged variables, and number_nodes_v1…number_nodes_v4 the number of nodes in their respective hierarchy.
+L'objectif est de créer autant de tableaux que nécessaires afin que la variable 
+résultante (ici `GEO__SEX`) soit strictement hiérarchique dans chacun d'eux 
+(emboîtement parfait). 
 
-### Merging three variables into one
+On supposera dans notre exemple que la variable `SEX` prend trois modalités (`F`, 
+`M` et `TOT` pour le total) et que la variable `GEO` est hiérarchique avec les 
+emboîtements suivants:
 
-When transitioning from 5 dimensions to 3 dimensions, it is possible to merge three variables into one. For example, from the variables SEX, GEO, and AGE, create the variable SEX_GEO_AGE.
+```{r echo=FALSE}
+library(sdcHierarchies)
+h <- hier_create(root = "Total", nodes = c("R1","R2"))
+h <- hier_add(h, root = "R1", nodes = c("D11", "D12"))
+h <- hier_add(h, root = "R2", nodes = c("D21", "D22"))
+hier_display(h)
+```
 
-Suppose that in the transition from 5 to 4 dimensions, we create the variable SEX_GEO, and then, when moving from 4 to 3, we create the variable SEX_GEO_AGE.
 
-The problem here is that the variable SEX_GEO is hierarchical but does not contain the same number of nodes in each of the 4-dimensional tables. Therefore, it is not possible for us to perform a simple product as in the previous formulas.
+La première étape consiste à construire tous les sous-tableaux 
+possibles à partir d'une des deux variables à fusionner. Chaque tableau obtenu 
+ne doit plus contenir de hiérarchie sur cette variable (seulement des modalités 
+et un total). 
 
-Let's first count the number of nodes related to the variable SEX_GEO.
+`A partir de notre exemple, cela donne les tableaux suivants si on commence par
+travailler avec la variable `GEO`:
 
-There is a different table for each crossing of the SEX and GEO modality. Then, two hierarchies are created: one on the SEX margins, the other on GEO.
+- TAB1: `AGE x DIPL x GEO{Total, R1, R2} x SEX`
+- TAB2: `AGE x DIPL x GEO{R1, D11, D12} x SEX`
+- TAB3: `AGE x DIPL x GEO{R2, D21, D22} x SEX`
 
-The hierarchy on the AGE margins has as many nodes as AGE has modalities, and similarly for SEX.
+où TAB1 croise les variables AGE, DIPL et SEX avec toutes leurs modalités et GEO
+restreinte aux modalités `Total, R1, R2`. Ainsi, TAB1 ne contient plus 
+d'emboîtements sur la variable `GEO`.
 
-We then obtain:
+La seconde étape consiste à réaliser sur ces tableaux la même opération à partir 
+de la seconde variable à fusionner. 
 
-$$\textit{number of tables related to v1_v2} = 
-\sum_{i\in\textit{{node + branch v1}}} \sum_{j\in\textit{{node + branch v2}}} \textit{nb_mod_i + nb_mod_j}$$
+Dans notre exemple, la seconde variable à fusionner est `SEX` qui ne contient
+pas d'emboîtements. On peut donc se contenter des tableaux constitués lors de la
+première étape.
 
-where nb_mod_i and nb_mod_j correspond to the respective number of modes of grouping i and j. For example, if i = {France, Region 1, Region 2} then nb_mod_i = 3.
+La troisième étape consiste à fusionner les variables sélectionnées au sein de 
+chaque tableau.
 
-Then, to move to 3 dimensions, we obtain:
+Dans notre exemple, nos trois tableaux deviennent:
 
+- TAB1: `AGE x DIPL x GEO__SEX{Total__F, R1__F, R2__F, Total__M, R1__M, R2__M, Total__TOT, R1__TOT, R2__TOT}`
+- TAB2: `AGE x DIPL x GEO__SEX{R1__F, D11__F, D12__F, R1__M, D11__M, D12__M, R1__TOT, D11__TOT, D12__TOT}`
+- TAB3: `AGE x DIPL x GEO__SEX{R2__F, D21__F, D22__F, R2__M, D21__M, D22__M, R2__TOT, D21__TOT, D22__TOT}`
+
+où la modalité `R1__F` désigne les individus pour lesquels `SEX=F` et `GEO=R1`.
+
+Puisque cette fusion génère, au sein de chacun des tableaux, des modalités qui 
+ne sont pas toutes parfaitement emboîtées les unes dans les autres, il faut 
+à nouveau diviser les tableaux en deux afin que la variable hiérarchique soit 
+parfaitement hiérarchique dans chaque tableau résultant.
+
+Dans le tableau `TAB1` de notre exemple, les modalités de `GEO__SEX` répondent 
+à deux hiérarchies non-emboîtées. La première étant celle qui ventile le total 
+`Total__TOT` selon la région d'appartenance puis selon le sexe de l'individu, 
+l'autre ventilant le total selon le sexe puis la région d'appartenance.
+
+```{r echo=FALSE}
+library(sdcHierarchies)
+h1 <- hier_create(root = "Total__TOT", nodes = c("R1__TOT","R2__TOT"))
+h1 <- hier_add(h1, root = "R1__TOT", nodes = c("R1__F","R1__M"))
+h1 <- hier_add(h1, root = "R2__TOT", nodes = c("R2__F","R2__M"))
+h2 <- hier_create(root = "Total__TOT", nodes = c("Total__F","Total__M"))
+h2 <- hier_add(h2, root = "Total__F", nodes = c("R1__F","R2__F"))
+h2 <- hier_add(h2, root = "Total__M", nodes = c("R1__M","R2__M"))
+hier_display(h1)
+hier_display(h2)
+```
+
+L'opération de réduction de dimensions conduit donc à créer les 6 tableaux 
+suivants:
+
+- TAB1_1: `AGE x DIPL x GEO__SEX{R1__F, R2__F, R1__M, R2__M, Total__TOT, R1__TOT, R2__TOT}`
+- TAB1_2: `AGE x DIPL x GEO__SEX{Total__F, R1__F, R2__F, Total__M, R1__M, R2__M, Total__TOT}`
+- TAB2_1: `AGE x DIPL x GEO__SEX{D11__F, D12__F, D11__M, D12__M, R1__TOT, D11__TOT, D12__TOT}`
+- TAB2_2: `AGE x DIPL x GEO__SEX{R1__F, D11__F, D12__F, R1__M, D11__M, D12__M, R1__TOT}`
+- TAB3_1: `AGE x DIPL x GEO__SEX{D21__F, D22__F, D21__M, D22__M, R2__TOT, D21__TOT, D22__TOT}`
+- TAB3_2: `AGE x DIPL x GEO__SEX{R2__F, D21__F, D22__F, R2__M, D21__M, D22__M, R2__TOT}`
+
+
+Si on généralise le processus de réduction de la dimension, on peut en 
+déduire le nombre de tableaux finalement créés.
+
+Pour une variable hiérarchique donnée, on appelle **feuille** de la hiérarchie 
+les éléments du plus bas niveau hiérarchique et on appelle **noeuds** tous les 
+autres éléments, y compris la modalité totalisante. Ainsi, dans la hiérarchie
+suivante:
+
+```{r}
+hier_display(h)
+```
+les feuilles sont les modalités `D11, D12, D21 et D22` et les noeuds sont les 
+modalités `Total, R1 et R2`.
+
+Soit les deux variables à fusionner $X$ et $Y$. Ces deux variables ont chacune 
+des modalités possiblement emboîtées selon des hiérarchies contenant
+respectivement $n$ et $m$ noeuds.
+
+`A la première étape, le nombre de tableaux créés est égal à $n$ puisqu'on 
+crée autant de tableaux qu'il y a de noeuds dans les modalités de $X$.
+
+`A la seconde étape, chacun des tableaux créé est divisé en autant de tableaux 
+qu'il y a de noeuds dans les modalités de $Y$. On obtient ainsi $n \times m$ 
+tableaux.
+
+`A la troisième étape, on fusionne les variables et puisque cela engendre une 
+double hiérarchie non-emboîtée, on divise chacun des tableaux en deux. On 
+obtient donc finalement $2 \ times n \times m$ 
+
+
+Conclusion: Le nombre de tableaux créés lors de la réduction de la dimension 
+d'un tableau à 4 dimensions à un tableau à 3 dimensions par fusion des 
+variables $X$ et $Y$ est: 
+
+$$\textit{N} = 2 \times \textit{nombre de noeuds de X} \times 
+\textit{nombre de noeuds de Y}$$
+
+En reprenant notre exemple, les variables `GEO` et `SEX` ayant repspectivement 
+$3$ noeuds et $1$ noeud, nous obtenons $N=6$ tableaux créés. 
+
+
+### Réduire de deux dimensions
+
+La réduction des tableaux de dimension 5 consiste en la succession de deux 
+étapes de réduction d'une dimension. On passe de 5 à 4 dimensions puis de 4 à 3 
+dimensions.
+
+Deux cas se présentent pour opérer cette double réduction:
+
+- la fusion concerne quatre varaibles du tableau de départ
+- la fusion concerne trois variables du tableau de départ
+
+Dans le premier cas, deux variables sont fusionnées en première étape et
+deux autres sont fusionnées en seconde étape.
+Dans le second cas, deux variables sont fusionnées en première étape et une 
+troisième est fusionnée avec la variable résultante en seconde étape.
+
+On note:
+
+- $X, Y, Z, T$ quatre variables du tableau original;
+- $n_X, n_Y, n_Z, n_T$ leurs nombres respectifs de noeuds;
+- $XY$ est la variable résultant de la fusion des variables $X$ et $Y$.
+
+### Cas 1: Fusion de deux fois deux variables
+
+En opérant la réduction de dimensions par fusion de deux variables ($X$ et $Y$ 
+en $XY$) suivie de la fusion de deux autres ($Z$ et $T$ en $ZT$), le nombre 
+de tableaux obtenus est égal à:
+
+$$\textit{N} = (2 \times n_X \times n_Y)(2 \times n_Z \times n_T) \\
+= 4 \times n_X \times n_Y \times n_Z \times n_T
 $$
-\textit{number of tables} = 2 \times \textit{number of tables related to v1_v2} \times \textit{number_nodes_v3}
-$$
 
-$$
-=2 \times \textit{number_nodes_v3} \times \sum_{i\in\textit{{node + branch v1}}}
-\sum_{j\in\textit{{node + branch v2}}}
-\textit{nb_mod_i + nb_mod_j}
-$$
 
-In the example of SEX_GEO_AGE, we obtain:
+### Cas 2: Fusion de trois variables
 
-$$\textit{number of tables related to SEX_GEO} =  (3+3)+(3+4)+(3+5) = 21$$
 
-$$\textit{total number of tables} = 2 \times 1 \times 42 = 42$$
 
-Since SEX is not hierarchical so we only consider {Total, Male, Female} (which has three modes), GEO has three nodes: {France, Region 1, Region 2}, {Region 1, Municipality 11, Municipality 12, Municipality 13}, {Region 2, Municipality 21, Municipality 22, Municipality 23, Municipality 24} having respectively 3, 4, and 5 modes.
+Après la première étape de réduction (fusion de $X$ et $Y$), nous obtenons 
+$2 \times n_X \times n_Y$ tableaux, d'après le résultat démontré plus haut.
 
-Finally, AGE being non-hierarchical, it has only one node.
+La seconde étape consiste à fusionner la variable $XY$ avec la variable $Z$.
+Ainsi chaque tableau constitué à la première étape sera divisé en 
+$2 \times n_{XY} \times n_Z$ tableaux. Or, dans chaque tableau issue 
+de la première étape, la variable $XY$ n'a pas nécessairement le même nombre de
+noeuds. 
 
-We thus obtain 42 tables when creating SEX_GEO_AGE. By construction, the variable SEX_GEO generates hierarchies with many nodes, so the merging of three variables into one is rare if we choose to minimize the number of tables created.
+Il faut donc pouvoir déterminer le nombre de noeuds présents dans une table 
+issue de la première étape. 
 
-## Length of Tables Created
+Pour simplifier les notations, nous allons supposer que les variables $X$ et 
+$Y$ sont des variables hiérarchiques ventilées sur trois niveaux au plus (le 
+total comptant pour un niveau).
 
-The function `length_tabs` allows calculating the length of the tables that will be generated after dimension reduction for a given table and variables. Below is the detail of the calculations used in this function.
+On utilise les notations suivantes:
 
-### 4-Dimension
 
-When dividing a table in two to create hierarchical variables, we first split the variables to make them non-hierarchical, then for each of the possible node crossings, we make a table with margins for the first variable, a table with margins for the second variable.
+TODO à terminer
 
-We thus obtain for the margins relative to the first variable:
 
-$$ \{mod(level\_v1\_i) * (mod(level\_v2\_j) - 1) + 1 \}$$
 
-And for the second variable:
 
-$$  \{ (mod(level\_v1\_i) - 1) * mod(level\_v2\_j) + 1 \}$$
-where mod(x) represents the number of modes of node x,
-and where level_v1_i, level_v2_j represents respectively a possible node of v1, a possible node of v2. (ie a subtotal and its direct terms)
 
-Then we just multiply the result by the product of the modes of the unfused variables.
+<!-- ### Fusion de trois variables en une -->
 
-### Dimension 5
+<!-- Lors du passage de 5 dimensions en 3 dimensions, il est possible de fusionner trois variables en une. Par exemple à partir des variables SEX, GEO et AGE, créer la variable SEX_GEO_AGE. -->
 
-#### 2 Couples Created
+<!-- Supposons que dans le passage de 5 à 4 dimensions, nous créons la variable SEX_GEO, puis que lors du passage 4 à 3 nous créons la variable SEX_GEO_AGE. -->
 
-Analogously to before, we obtain all possible crossings (4: there are 2 crossings for the first couple, 2 for the second)
+<!-- Le problème ici est que la variable SEX_GEO est hiérarchique mais ne contient pas le même nombre de noeuds dans chacun des tableaux à 4 dimensions. Il nous est donc pas possible d’effectuer un simple produit comme dans les formules précédentes. -->
 
-\[
-\{ [\text{mod}(level\_v1\_i) \cdot (\text{mod}(level\_v2\_j) - 1) + 1] \cdot [\text{mod}(level\_v3\_k) \cdot (\text{mod}(level\_v4\_l) - 1) + 1] \}
-\]
+<!-- Comptons tout d’abord le nombre de noeuds lié à la variable SEX_GEO. -->
 
-\[
-\{ [\text{mod}(level\_v1\_i) \cdot (\text{mod}(level\_v2\_j) - 1) + 1] \cdot [(\text{mod}(level\_v3\_k) - 1) \cdot \text{mod}(level\_v4\_l) + 1] \}
-\]
+<!-- Il y a un tableau différent par croisement des modalité SEX et GEO. Ensuite, il y a deux hierarchiques créés : une sur les marges de SEX, l’autre sur GEO. -->
 
-\[
-\{ [(\text{mod}(level\_v1\_i) - 1) \cdot \text{mod}(level\_v2\_j) + 1] \cdot [\text{mod}(level\_v3\_k) \cdot (\text{mod}(level\_v4\_l) - 1) + 1] \}
-\]
+<!-- La hierarchie sur les marges de AGE a autant de noeuds qu’AGE a de modalités, et de façon analogue pour SEX. -->
 
-\[
-\{ [(\text{mod}(level\_v1\_i) - 1) \cdot \text{mod}(level\_v2\_j) + 1] \cdot [(\text{mod}(level\_v3\_k) - 1) \cdot \text{mod}(level\_v4\_l) + 1] \}
-\]
-With the same implicit notations as before.
+<!-- Nous obtenons alors : -->
 
-#### A Merged Trio
+<!-- $$\textit{nombre de tableau lié à v1_v2} =  -->
+<!-- \sum_{i\in\textit{{noeud + branche v1}}} \sum_{j\in\textit{{noeud + branche v2}}} \textit{nb_mod_i + nb_mod_j}$$ -->
 
-This case is based on empirical results. There is no explanation for the moment. The `length_tabs` function seems to return the correct result, but the returned list is not ordered.
+<!-- où nb_mod_i et nb_mod_j correpondent au nombre de modalité respectif du regroupement i et j. Par exemple si i = {France, Région 1, Région 2} alors nb_mod_i = 3. -->
 
-Crossing between v1 and v3:
+<!-- Ensuite, pour passer à 3 dimensions, nous obtenons : -->
 
-\[
-\{\text{mod}(level\_v1\_i) \cdot (\text{mod}(level\_v3\_k) - 1) + 1 \}
-\]
+<!-- $$ -->
+<!-- \textit{nombre de tableau} = 2 \times \textit{nombre de tableau lié à v1_v2} \times \textit{nombre_noeuds_v3} -->
+<!-- $$ -->
 
-\[
-\{ (\text{mod}(level\_v1\_i) - 1) \cdot \text{mod}(level\_v3\_k) + 1 \}
-\]
-Crossing between v1 and v2:
-\[
-\{\text{mod}(level\_v1\_i) \cdot (\text{mod}(level\_v2\_j) - 1) + 1 \}
-\]
+<!-- $$ -->
+<!-- =2 \times \textit{nombre_noeuds_v3} \times \sum_{i\in\textit{{noeud + branche v1}}} -->
+<!-- \sum_{j\in\textit{{noeud + branche v2}}} -->
+<!-- \textit{nb_mod_i + nb_mod_j} -->
+<!-- $$ -->
 
-\[
-\{ (\text{mod}(level\_v1\_i) - 1) \cdot \text{mod}(level\_v2\_j) + 1 \}
-\]
-Crossing between v2 and v3:
-\[
-\{\text{mod}(level\_v2\_j) \cdot (\text{mod}(level\_v3\_k) - 1) + 1 \}
-\]
+<!-- Dans l’exemple de SEX_GEO_AGE, nous obtenons : -->
 
-\[
-\{ (\text{mod}(level\_v2\_j) - 1) \cdot \text{mod}(level\_v3\_k) + 1 \}
-\]
+<!-- $$\textit{nombre de tableau lié à SEXE_GEO} =  (3+3)+(3+4)+(3+5) = 21$$ -->
 
+<!-- $$\textit{nombre de tableau total} = 2 \times 1 \times 42 = 42$$ -->
+
+<!-- Puisque SEX n’est pas hierarchique donc on ne considère que {Ensemble,Homme,Femme} (qui a donc trois modalités), GEO a trois noeuds : {France, Région 1, Région 2}, {Région 1, Commune 11, Commune 12, Commune 13}, {Région 2, Commune 21, Commune 22,Commune 23,Commune 24} ayant respectivement 3, 4 et 5 modalités. -->
+
+<!-- Pour finir AGE étant non hiérarchique, elle n’a qu’un seul noeud. -->
+
+<!-- Nous obtenons donc 42 tableaux lors de la création de SEX_GEO_AGE. Par construction la variable SEX_GEO engendre des hiérarchies avec beaucoup de noeuds donc la fusion de trois variables en une est rare si l’on choisit de minimiser le nombre de table créée. -->
+
+<!-- ## Longueur des tableaux créés -->
+
+<!-- La fonction `length_tabs` permet de calculer la longueur des tables qui seront générés après réduction de dimension pour un tableau et des variables donnés. Ci-dessous se trouve le détail des calculs utilisés dans cette fonction. -->
+
+<!-- ### Dimension 4 -->
+
+<!-- Lors de la division d'une table en deux pour créer des variables hiérarchiques, nous splittons tout d'abord les variables afin de les rendre non hiérarchiques, puis pour chacun des croisements de noeuds possibles, nous faisons un tableau ayant pour marge la première variable, un tableau ayant pour marge la seconde variable. -->
+
+<!-- Nous obtenons donc pour les marges par rapport à la première variable : -->
+
+<!-- $$ \{mod(niveau\_v1\_i) * (mod(niveau\_v2\_j) - 1) + 1 \}$$ -->
+
+<!-- Et pour la second variable : -->
+
+<!-- $$  \{ (mod(niveau\_v1\_i) - 1) * mod(niveau\_v2\_j) + 1 \}$$ -->
+<!-- où mod(x) représente le nombre de modalité du noeud x, -->
+<!-- et où niveau_v1_i, niveau_v2_j représente respectivement un noeud possible de v1, un noeud possible de v2. (ie un sous total et ses termes directs) -->
+
+<!-- Il suffit ensuite de multiplier le résultat par le produit des modalités des variables non fusionnées. -->
+
+<!-- ### Dimension 5 -->
+
+<!-- #### 2 couples créés -->
+
+<!-- De manière analogue à précédement, nous obtenons tous les croisements possibles (4 : il y a 2 croisements pour le premier couple, 2 pour le second) -->
+
+<!-- $$  \{ [mod(niveau\_v1\_i) * (mod(niveau\_v2\_j) - 1) + 1] * [mod(niveau\_v3\_k) * (mod(niveau\_v4\_l) - 1) + 1] \}$$ -->
+
+<!-- $$  \{ [mod(niveau\_v1\_i) * (mod(niveau\_v2\_j) - 1) + 1] * [(mod(niveau\_v3\_k) - 1) * mod(niveau\_v4\_l) + 1] \}$$ -->
+
+
+<!-- $$  \{ [(mod(niveau\_v1\_i) - 1) * mod(niveau\_v2\_j) + 1] * [mod(niveau\_v3\_k) * (mod(niveau\_v4\_l) - 1) + 1] \}$$ -->
+
+<!-- $$  \{ [(mod(niveau\_v1\_i) - 1) * mod(niveau\_v2\_j) + 1] * [(mod(niveau\_v3\_k) - 1) * mod(niveau\_v4\_l) + 1] \}$$ -->
+<!-- Avec les mêmes notations implicites que précédemment. -->
+
+<!-- #### Un trio fusionné -->
+
+<!-- Ce cas-ci se base sur des résultats empiriques. il n'y a pas pour le moment d'explication. La fonction `length_tabs` semble renvoyer le bon résultat mais la liste renvoyée n'est pas ordonnées. -->
+
+<!-- Croisement entre v1 et v3 :  -->
+
+<!-- $$ \{mod(niveau\_v1\_i) * (mod(niveau\_v3\_k) - 1) + 1 \}$$ -->
+
+<!-- $$  \{ (mod(niveau\_v1\_i) - 1) * mod(niveau\_v3\_k) + 1 \}$$ -->
+<!-- Croisement entre v1 et v2 : -->
+<!-- $$ \{mod(niveau\_v1\_i) * (mod(niveau\_v2\_j) - 1) + 1 \}$$ -->
+
+<!-- $$  \{ (mod(niveau\_v1\_i) - 1) * mod(niveau\_v2\_j) + 1 \}$$ -->
+<!-- Croisement entre v2 et v3 : -->
+<!-- $$ \{mod(niveau\_v2\_j) * (mod(niveau\_v3\_k) - 1) + 1 \}$$ -->
+
+<!-- $$  \{ (mod(niveau\_v2\_j) - 1) * mod(niveau\_v3\_k) + 1 \}$$ -->
