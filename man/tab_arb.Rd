@@ -25,8 +25,8 @@ tab_arb(
 file \cr
 (nom du fichier arb généré (avec extension). Si non renseigné, un fichier temporaire.)}
 
-\item{tab_filename}{[\strong{mandatory}] path of the tab_filename.\cr
-([\strong{obligatoire}]nom du fichier .tab (avec extension).)}
+\item{tab_filename}{path of the tab_filename.\cr
+(nom du fichier .tab (avec extension).)}
 
 \item{rda_filename}{rda file name (with .rda extension) \cr
 nom du fichier rda (avec extension)}
@@ -36,10 +36,9 @@ Example : hst_filename = "path_to_file/apriori.hst"\cr
 (fichier(s) d'informations \emph{a priori}. Voir ci-dessous
 pour la syntaxe. Exemple : hst_filename = "path_to_file/apriori.hst")}
 
-\item{explanatory_vars}{[\strong{mandatory}]
-Explanatory vars in a vector
+\item{explanatory_vars}{Explanatory vars in a vector
 Example : \code{c("CJ", "A21")} for the tabular \code{CJ} x \code{A21} \cr
-([\strong{obligatoire}] variables catégorielles, sous forme de vecteur.
+( variables catégorielles, sous forme de vecteur.
 Exemple : \code{c("CJ", "A21")} pour le premier
 Pour un tableau croisant \code{CJ} x \code{A21})}
 
@@ -48,18 +47,16 @@ Pour un tableau croisant \code{CJ} x \code{A21})}
 (Nom de la variable de réponse dans le tableau
 \code{"<freq>"}. Permet de tariter les tableaux de fréquence)}
 
-\item{safety_rules}{[\strong{mandatory}]
-Rules for primary suppression with Argus syntax, if the primary suppression
+\item{safety_rules}{Rules for primary suppression with Argus syntax, if the primary suppression
 has been dealt with an apriori file specify manual safety range :"MAN(10)"
 for example.\cr
-([\strong{obligatoire}] Règle(s) de secret primaire.
+( Règle(s) de secret primaire.
 Chaîne de caractères en syntaxe batch Tau-Argus. Si le secret primaire
 a été traité dans un fichier d'apriori : utiliser "MAN(10)")}
 
-\item{suppress}{[\strong{mandatory}]
-Algortihm for secondary suppression (Tau-Argus batch syntax), and the
+\item{suppress}{Algortihm for secondary suppression (Tau-Argus batch syntax), and the
 parameters for it.\cr
-([\strong{obligatoire}] Algorithme de gestion du secret secondaire
+( Algorithme de gestion du secret secondaire
 (syntaxe batch de Tau-Argus), ainsi que les potentiels paramètres associés)}
 
 \item{separator}{Character used as separator in the .tab file. \cr
@@ -78,19 +75,19 @@ Pour le format SBS utiliser \code{"4"})}
 \item{output_options}{Additionnal parameter for the output,
 by default : code{"AS+"} (print Status). To specify no options : \code{""}.\cr
 (Options supplémentaires des fichiers en sortie. Valeur
-  par défaut du package : \code{"AS+"} (affichage du statut). Pour ne
-  spécifier aucune option, \code{""}.)}
+par défaut du package : \code{"AS+"} (affichage du statut). Pour ne
+spécifier aucune option, \code{""}.)}
 
 \item{gointeractive}{Boolean, if TRUE will open a Tau-Argus window and launch
 the batch in it (\code{FALSE} by default). \cr
 (Possibilité de lancer le batch depuis le menu de Tau-Argus
- (\code{FALSE} par défaut).)}
+(\code{FALSE} par défaut).)}
 }
 \value{
 A list containing two elements :
- the arb file name and the output name (usefull if the name is generated randomly) \cr
- (Une liste de deux éléments : le nom du fichier arb, le nom
-  fichiers en sortie (utile pour récupérer les noms générés aléatoirement).)
+the arb file name and the output name (usefull if the name is generated randomly) \cr
+(Une liste de deux éléments : le nom du fichier arb, le nom
+fichiers en sortie (utile pour récupérer les noms générés aléatoirement).)
 }
 \description{
 Function doesn't check if the asc and rda files exists\cr

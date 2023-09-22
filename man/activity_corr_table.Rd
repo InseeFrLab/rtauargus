@@ -7,9 +7,9 @@
 \format{
 A data frame with 92 rows and 3 variables:
 \describe{
-  \item{A10}{business sectors in 10 categories}
-  \item{A21}{business sectors in 21 categories}
-  \item{A88}{business sectors in 88 categories}
+\item{A10}{business sectors in 10 categories}
+\item{A21}{business sectors in 21 categories}
+\item{A88}{business sectors in 88 categories}
 }
 }
 \usage{

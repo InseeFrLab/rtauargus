@@ -12,13 +12,13 @@
 #'
 #' The function executes sequentially the functions: \itemize{
 #' \item{
-#' \code{\link{micro_asc_rda}} \code{->}
-#' \code{\link{micro_arb}} \code{->}
-#' \code{\link{run_arb}}
+#' [micro_asc_rda()] `->`
+#' [micro_arb()] `->`
+#' [run_arb()]
 #' }
 #' }
 #'
-#' Intermediate files without a name entered (\code{asc_filename}...)
+#' Intermediate files without a name entered (`asc_filename`...)
 #' will be created in a temporary folder, with randomly generated names.
 #' This mechanism allows the user to abstract from the preparation of
 #' preparation of the data and to maintain the entire chain of
@@ -26,29 +26,29 @@
 #'
 #' (La fonction exécute séquentiellement les fonctions : \itemize{
 #'   \item{
-#'     \code{\link{micro_asc_rda}} \code{->}
-#'     \code{\link{micro_arb}} \code{->}
-#'     \code{\link{run_arb}}
+#'     [micro_asc_rda()] `->`
+#'     [micro_arb()] `->`
+#'     [run_arb()]
 #'   }
 #' }
 #'
-#' Les fichiers intermédiaires sans nom renseigné (\code{asc_filename}...)
+#' Les fichiers intermédiaires sans nom renseigné (`asc_filename`...)
 #' seront créés dans un dossier temporaire, avec des noms générés aléatoirement.
 #' Ce mécanisme permet à l'utilisateur de s'abstraire de la préparation des
 #' données propre à Tau-Argus et de maintenir l'intégralité de la chaîne de
 #' traitements dans R.)
 #'
 #' @inheritParams micro_arb
-#' @param microdata [\strong{required}] data.frame containing the microdata
+#' @param microdata  data.frame containing the microdata
 #' (or path to text files already present: see section
-#' \emph{Microdata already as text files}). \cr
-#' ([\strong{obligatoire}] data.frame contenant les microdonnées
+#' *Microdata already as text files*). \cr
+#' ( data.frame contenant les microdonnées
 #'   (ou chemin vers des fichiers texte déjà présents : voir section
-#'   \emph{Microdata already as text files}).)
-#' @param ... optional parameters for \code{micro_asc_rda}, \code{micro_arb}
-#' and \code{run_arb}. See the help for these functions. \cr
-#' (paramètres optionnels pour \code{micro_asc_rda}, \code{micro_arb}
-#'    et \code{run_arb}. Voir l'aide de ces fonctions.)
+#'   *Microdata already as text files*).)
+#' @param ... optional parameters for `micro_asc_rda`, `micro_arb`
+#' and `run_arb`. See the help for these functions. \cr
+#' (paramètres optionnels pour `micro_asc_rda`, `micro_arb`
+#'    et `run_arb`. Voir l'aide de ces fonctions.)
 #'
 #' @inheritSection micro_arb Syntax
 #'
@@ -59,8 +59,8 @@
 #' the second element the rda file. The rda file can be omitted if it has the
 #' same name as the asc file (except for the extension).
 #' Use this option to start the whole process without the generation
-#' of the text data. Do not specify \code{asc_filename} or
-#' \code{rda_filename} (used to name the text files to be created, which is
+#' of the text data. Do not specify `asc_filename` or
+#' `rda_filename` (used to name the text files to be created, which is
 #' irrelevant here). \cr
 #'
 #' Pour utiliser des fichiers asc et rda existant déjà, il est possible de
@@ -70,21 +70,21 @@
 #' porte le même nom que le fichier asc (à l'extension près).
 #'
 #' Utiliser cette option pour lancer le processus complet sans la génération
-#'  des données en texte. Ne pas spécifier \code{asc_filename} ou
-#'  \code{rda_filename} (sert à nommer les fichiers texte à créer, ce qui est
+#'  des données en texte. Ne pas spécifier `asc_filename` ou
+#'  `rda_filename` (sert à nommer les fichiers texte à créer, ce qui est
 #'  sans objet ici).
 #'
 #' @return
-#' If \code{import = TRUE}, a list of data.frames (protected tables),
-#' \code{NULL} otherwise. \cr
+#' If `import = TRUE`, a list of data.frames (protected tables),
+#' `NULL` otherwise. \cr
 #'
-#'(Si \code{import = TRUE}, une liste de data.frames (tableaux
-#'   secrétisés), \code{NULL} sinon.)
+#'(Si `import = TRUE`, une liste de data.frames (tableaux
+#'   secrétisés), `NULL` sinon.)
 #'
 #' @seealso
 #' \code{link{rtauargus_plus}}, a version optimized for a large
 #' number of tables (at the cost of some usage restrictions). \cr
-#' (\code{\link{rtauargus_plus}}, une version optimisée pour un grand
+#' ([rtauargus_plus()], une version optimisée pour un grand
 #'   nombre de tableaux (au prix de quelques restrictions d'usage).)
 #'
 #' @examples

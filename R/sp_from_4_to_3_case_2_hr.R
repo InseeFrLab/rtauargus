@@ -13,12 +13,12 @@
 #'
 #' @return A list containing the following components:
 #' \itemize{
-#'   \item \code{tabs}: named list of 3-dimensional dataframes
+#'   \item `tabs`: named list of 3-dimensional dataframes
 #'   (n-1 dimensions in the general case) with nested hierarchies
-#'   \item \code{hrcs}: named list of hrc specific to the variable
+#'   \item `hrcs`: named list of hrc specific to the variable
 #'   created via the merge
-#'   \item \code{alt_tot}: named list of totals
-#'   \item \code{vars}: named list of vectors representing the merged variables
+#'   \item `alt_tot`: named list of totals
+#'   \item `vars`: named list of vectors representing the merged variables
 #'   during the two stages of dimension reduction
 #' }
 #'

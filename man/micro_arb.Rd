@@ -29,16 +29,16 @@ extension). If not specified, a temporary file. \cr
 (nom du fichier arb généré (avec extension). Si non renseigné, un fichier
 temporaire.)}
 
-\item{asc_filename}{[\strong{required}] name of the asc file
+\item{asc_filename}{name of the asc file
 (with extension). \cr
-([\strong{obligatoire}] nom du fichier asc (avec extension).)}
+( nom du fichier asc (avec extension).)}
 
 \item{rda_filename}{name of the rda file (with extension). If not filled in,
 \code{asc_filename} with the extension "rda" instead of "asc". \cr
 (nom du fichier rda (avec extension). Si non renseigné,
 \code{asc_filename} avec l'extension "rda" à la place de "asc".)}
 
-\item{explanatory_vars}{[\strong{required}] categorical variables, in
+\item{explanatory_vars}{categorical variables, in
 form of a list of vectors. Each element of the list is a vector of
 variable names forming a tab.
 Example: \code{list(c("CJ", "A21"), c("SEX", "REGION"))} for the first
@@ -46,7 +46,7 @@ table crossing \code{CJ} x \code{A21} and the second table crossing
 \code{SEXE} x \code{REGION}.
 If a single tabulation, a simple vector of the variables to be crossed is
 accepted (no need for \code{list(...)}). \cr
-([\strong{obligatoire}] variables catégorielles, sous
+( variables catégorielles, sous
 forme de liste de vecteurs. Chaque élément de la liste est un vecteur des
 noms des variables formant une tabulation.
 Exemple: \code{list(c("CJ", "A21"), c("SEX", "REGION"))} pour la première
@@ -68,11 +68,11 @@ renseigné, \code{response_var} sera utilisé par Tau-Argus.)}
 \item{cost_var}{cost variable(s) for the secondary secret. \cr
 (variable(s) de coût pour le secret secondaire.)}
 
-\item{safety_rules}{[\strong{required}] primary secret rule(s).
+\item{safety_rules}{primary secret rule(s).
 String in Tau-Argus batch syntax. The weighting is treated
 in a separate parameter (do not specify WGT here, use the
 \code{weighted}). \cr
-([\strong{obligatoire}] règle(s) de secret primaire.
+( règle(s) de secret primaire.
 Chaîne de caractères en syntaxe batch Tau-Argus. La pondération est traitée
 dans un paramètre à part (ne pas spécifier WGT ici, utiliser le paramètre
 \code{weighted}).)}
@@ -80,11 +80,11 @@ dans un paramètre à part (ne pas spécifier WGT ici, utiliser le paramètre
 \item{weighted}{indicator(s) (boolean). \cr
 (indicatrice(s) de pondération (booléen).)}
 
-\item{suppress}{[\strong{required}] secret management method(s)
+\item{suppress}{secret management method(s)
 secondary (Tau-Argus batch syntax). If the method is the same for
 each tabulation, the first parameter (table number) will be ignored and
 renumbered automatically (see section 'Syntax'). \cr
-([\strong{obligatoire}] méthode(s) de gestion du secret
+( méthode(s) de gestion du secret
 secondaire (syntaxe batch de Tau-Argus). Si la méthode est la même pour
 chaque tabulation, le premier paramètre (numéro du tableau) sera ignoré et
 renuméroté automatiquement (voir la section 'Syntax').)}
@@ -181,13 +181,13 @@ tabulation, en 2 pour la deuxième tabulation, etc.)
 
 If the list \code{explanatory_vars} has names, these will be
 used in the batch to give an identifier to the table, in the form of
-of a comment line (\code{// <TABLE_ID> "..."}). They will be
+of a comment line (\verb{// <TABLE_ID> "..."}). They will be
 reused by the \code{import} function to name the R format arrays
 tables in output.
 
 (Si la liste \code{explanatory_vars} comporte des noms, ceux-ci seront
 utilisés dans le batch pour donner un identifiant au tableau, sous la forme
-d'une ligne de commentaire (\code{// <TABLE_ID> "..."}). Ils seront
+d'une ligne de commentaire (\verb{// <TABLE_ID> "..."}). Ils seront
 réutilisés par la fonction \code{import} pour nommer les tableaux formats R
 en sortie.)
 }
@@ -225,9 +225,9 @@ autant de valeurs que de tabulations.)
 \section{See also}{
 
 
-The function \code{\link{rtauargus}}, which uses this
+The function \code{\link[=rtauargus]{rtauargus()}}, which uses this
 function and inherits its parameters. \cr
-(La fonction \code{\link{rtauargus}}, qui utilise cette
+(La fonction \code{\link[=rtauargus]{rtauargus()}}, qui utilise cette
 fonction et hérite de ses paramètres.)
 }
 

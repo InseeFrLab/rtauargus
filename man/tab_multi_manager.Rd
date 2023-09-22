@@ -24,7 +24,7 @@ tab_multi_manager(
 )
 }
 \arguments{
-\item{list_tables}{named list of `data.frame` or `data.table` representing the tables to protect}
+\item{list_tables}{named list of \code{data.frame} or \code{data.table} representing the tables to protect}
 
 \item{list_explanatory_vars}{named list of character vectors of explanatory
 variables of each table mentionned in list_tables. Names of the list are the same as of the list of tables.}
@@ -59,7 +59,7 @@ attribuer la valeur de \code{rtauargus.totcode}.)}
 (Nom de la colonne contenant les effectifs pour une cellule)}
 
 \item{secret_var}{Nae of the boolean variable which specifies the secret, primary or not :
- equal to "TRUE" if a cell is concerned by the secret,"FALSE" otherwise.
+equal to "TRUE" if a cell is concerned by the secret,"FALSE" otherwise.
 will  be exported in the apriori file. \cr
 (Variable indiquant le secret  de type booléen:
 prend la valeur "TRUE" quand les cellules du tableau doivent être masquées
@@ -75,10 +75,9 @@ correspond à la valeur de la cellule.  peut être spécifié pour chacune des c
 peut contenir des NA pour les coûts que l'on ne souhaite pas modifier.)
 (nombre minimal de décimales à afficher (voir section 'Number of decimals').)}
 
-\item{suppress}{[\strong{mandatory}]
-Algortihm for secondary suppression (Tau-Argus batch syntax), and the
+\item{suppress}{Algortihm for secondary suppression (Tau-Argus batch syntax), and the
 parameters for it.\cr
-([\strong{obligatoire}] Algorithme de gestion du secret secondaire
+( Algorithme de gestion du secret secondaire
 (syntaxe batch de Tau-Argus), ainsi que les potentiels paramètres associés)}
 
 \item{ip_start}{integer: Interval protection level to apply at first treatment of each table}

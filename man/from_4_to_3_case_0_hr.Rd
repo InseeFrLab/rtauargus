@@ -25,12 +25,12 @@ if no folder is specified in hrcfiles}
 \value{
 A list containing:
 \itemize{
-  \item \code{tabs}: named list of 3-dimensional dataframes
-  (n-1 dimensions in the general case) with nested hierarchies
-  \item \code{hrc}: named list of hrc specific to the variable created via merging
-  \item \code{alt_tot}: named list of totals
-  \item \code{vars}: named list of vectors representing the merged variables
-  during the two steps of dimension reduction
+\item \code{tabs}: named list of 3-dimensional dataframes
+(n-1 dimensions in the general case) with nested hierarchies
+\item \code{hrc}: named list of hrc specific to the variable created via merging
+\item \code{alt_tot}: named list of totals
+\item \code{vars}: named list of vectors representing the merged variables
+during the two steps of dimension reduction
 }
 }
 \description{

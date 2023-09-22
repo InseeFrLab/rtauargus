@@ -13,9 +13,9 @@
 #' 2 in dimension 4; 3 or 4 in dimension 5
 #' @param nb_tab_option strategy to follow for choosing variables automatically:
 #' \itemize{
-#'   \item \code{'min'}: minimize the number of tables;
-#'   \item \code{'max'}: maximize the number of tables;
-#'   \item \code{'smart'}: minimize the number of tables under the constraint
+#'   \item `'min'`: minimize the number of tables;
+#'   \item `'max'`: maximize the number of tables;
+#'   \item `'smart'`: minimize the number of tables under the constraint
 #'   of their row count.
 #' }
 #' @param limit maximum allowed number of rows in the smart or over_split = TRUE case
@@ -28,18 +28,18 @@
 #'
 #' @return A list containing:
 #' \itemize{
-#'   \item \code{tabs}: named list of 3-dimensional dataframes
+#'   \item `tabs`: named list of 3-dimensional dataframes
 #'   with nested hierarchies
-#'   \item \code{alt_hrc}: named list of hrc specific to the variables created
+#'   \item `alt_hrc`: named list of hrc specific to the variables created
 #'   during merging to go to dimension 3
-#'   \item \code{alt_totcode}: named list of totals specific to the variables
+#'   \item `alt_totcode`: named list of totals specific to the variables
 #'   created during merging to go to dimension 3
-#'   \item \code{vars}: categorical variables of the output dataframes
-#'   \item \code{sep}: separator used to link the variables
-#'   \item \code{totcode}: named vector of totals for all categorical variables
-#'   \item \code{hrcfiles}: named vector of hrc for categorical variables
+#'   \item `vars`: categorical variables of the output dataframes
+#'   \item `sep`: separator used to link the variables
+#'   \item `totcode`: named vector of totals for all categorical variables
+#'   \item `hrcfiles`: named vector of hrc for categorical variables
 #'   (except the merged one)
-#'   \item \code{fus_vars}: named vector of vectors representing the merged
+#'   \item `fus_vars`: named vector of vectors representing the merged
 #'   variables during dimension reduction
 #' }
 #'
@@ -697,18 +697,18 @@ chose_sep <- function(
 #'
 #' @return A list containing:
 #' \itemize{
-#'   \item \code{tabs}: named list of 3-dimensional dataframes
+#'   \item `tabs`: named list of 3-dimensional dataframes
 #'   with nested hierarchies
-#'   \item \code{alt_hrc}: named list of hrc specific to the variables
+#'   \item `alt_hrc`: named list of hrc specific to the variables
 #'   created during merging to go to dimension 3
-#'   \item \code{alt_totcode}: named list of totals specific to the variables
+#'   \item `alt_totcode`: named list of totals specific to the variables
 #'   created during merging to go to dimension 3
-#'   \item \code{vars}: categorical variables of the output dataframes
-#'   \item \code{sep}: separator used to link the variables
-#'   \item \code{totcode}: named vector of totals for all categorical variables
-#'   \item \code{hrcfiles}: named vector of hrc for categorical variables
+#'   \item `vars`: categorical variables of the output dataframes
+#'   \item `sep`: separator used to link the variables
+#'   \item `totcode`: named vector of totals for all categorical variables
+#'   \item `hrcfiles`: named vector of hrc for categorical variables
 #'   (except the merged one)
-#'   \item \code{fus_vars}: named vector of vectors representing the merged
+#'   \item `fus_vars`: named vector of vectors representing the merged
 #'   variables during dimension reduction
 #' }
 #' @importFrom stats setNames

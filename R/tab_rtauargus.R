@@ -16,9 +16,9 @@
 #' tauargus failures
 #' @param nb_tab_option strategy to follow for choosing variables automatically:
 #' \itemize{
-#'   \item \code{'min'}: minimize the number of tables;
-#'   \item \code{'max'}: maximize the number of tables;
-#'   \item \code{'smart'}: minimize the number of tables under the constraint
+#'   \item `'min'`: minimize the number of tables;
+#'   \item `'max'`: maximize the number of tables;
+#'   \item `'smart'`: minimize the number of tables under the constraint
 #'   of their row count.
 #' }
 #' @param ... any parameter of the tab_rda, tab_arb or run_arb functions, relevant
@@ -34,19 +34,19 @@
 #' If split_tab = TRUE,
 #' then the original tabular is returned with some new columns which are boolean
 #' variables indicating the status of a cell at each iteration of the protection
-#' process as we get with \code{tab_multi_manager()} function. \code{TRUE}
+#' process as we get with `tab_multi_manager()` function. `TRUE`
 #' denotes a cell that have to be suppressed. The last column is then the
 #' final status of the suppression process of the original table.
 #'
-#' If \code{split_tab = FALSE} and  \code{output_type} doesn't equal to \code{4},
+#' If `split_tab = FALSE` and  `output_type` doesn't equal to `4`,
 #' then the raw result from tau-argus is returned.
 #'
 #' @section Standardization of explanatory variables and hierarchies:
 #'
-#' The boolean argument \code{unif_labels} is useful to
+#' The boolean argument `unif_labels` is useful to
 #' prevent some common errors in using Tau-Argus. Indeed, Tau-Argus needs that,
 #' within a same level of a hierarchy, the labels have the same number of
-#' characters. When the argument is set to TRUE, \code{tab_rtauargus}
+#' characters. When the argument is set to TRUE, `tab_rtauargus`
 #' standardizes the explanatory variables to prevent this issue.
 #' Hierarchical explanatory variables (explanatory variables associated to
 #' a hrc file) are then modified in the tabular data and an another hrc file is
@@ -323,11 +323,11 @@ and the process may take longer.")
 
 }
 
-#' Wrapper of tab_rtauargus adapted for \code{tab_multi_manager} function.
+#' Wrapper of tab_rtauargus adapted for `tab_multi_manager` function.
 #'
 #' @inheritParams tab_rtauargus
 #' @param ip Interval Protection Level (10 by default)
-#' @param ... Other arguments of \code{tab_rtauargus} function
+#' @param ... Other arguments of `tab_rtauargus` function
 #'
 #' @return
 #' The original tabular is returned with a new
@@ -335,7 +335,7 @@ and the process may take longer.")
 #' "A" for a primary secret due to frequency rule, "B" for a primary secret due
 #' to dominance rule, "D" for secondary secret and "V" for no secret cell.
 #'
-#' @seealso \code{tab_rtauargus}
+#' @seealso `tab_rtauargus`
 #'
 #' @export
 #'

@@ -16,8 +16,8 @@ reset_rtauargus_options(...)
 specified, all the options will be reset. The prefix \code{"rtauargus."}
 is not required. \cr
 noms des options à réinitialiser, séparés par des virgules. Si
-  aucun nom n'est spécifié, toutes les options du package seront
-  réinitialisées. Le préfixe \code{"rtauargus."} est facultatif.}
+aucun nom n'est spécifié, toutes les options du package seront
+réinitialisées. Le préfixe \code{"rtauargus."} est facultatif.}
 }
 \description{
 Manages (displays, modifies, resets) the options of rtauargus package. \cr
@@ -40,7 +40,7 @@ been set by the user, are set with their default values (see table below).
 The already defined options keep the values set by the user.
 
 The options can be set during a session with the following instruction
-\code{options(rtauargus.}...\code{ = }...\code{)}, or with a configuration
+\verb{options(rtauargus.}...\code{=}...\verb{)}, or with a configuration
 file where the user have written its own options with such instructions,
 but this latter is not a proper way if reproducibility is sought.
 Les options du package définissent les comportements par défaut des
@@ -63,7 +63,7 @@ de rtauargus qui ne sont pas encore déclarées (cf. tableau ci-dessous). Les
 options déjà définies par l'utilisateur gardent leurs valeurs.
 
 Elles peuvent être redéfinies pour une session par une instruction
-\code{options(rtauargus.}...\code{ = }...\code{)}, ou de manière globale si
+\verb{options(rtauargus.}...\code{=}...\verb{)}, ou de manière globale si
 de telles instructions sont placées dans un fichier de configuration propre à
 l'utilisateur (fortement déconseillé si le programme a vocation à être
 reproductible).
@@ -74,23 +74,23 @@ utiliseront les valeurs par défaut du package.)
 \section{List of options}{
 
 \tabular{lll}{
- \strong{Option}                  \tab  \strong{Default Value}                                    \tab \strong{Function}   \cr
- \code{------------------------}  \tab  \code{---------------------------------}                      \tab \code{-------------}\cr
- rtauargus.decimals               \tab  \Sexpr{rtauargus:::op.rtauargus$rtauargus.decimals}           \tab \link{micro_asc_rda}\cr
- rtauargus.totcode                \tab "\Sexpr{rtauargus:::op.rtauargus$rtauargus.totcode}"           \tab                     \cr
- rtauargus.missing                \tab "\Sexpr{rtauargus:::op.rtauargus$rtauargus.missing}"           \tab                     \cr
- rtauargus.hierleadstring         \tab "\Sexpr{rtauargus:::op.rtauargus$rtauargus.hierleadstring}"    \tab                     \cr
- \code{------------------------}  \tab  \code{---------------------------------}                      \tab \code{-------------}\cr
- rtauargus.response_var           \tab "\Sexpr{rtauargus:::op.rtauargus$rtauargus.response_var}"      \tab \link{micro_arb}    \cr
- rtauargus.weighted               \tab  \Sexpr{rtauargus:::op.rtauargus$rtauargus.weighted}           \tab                     \cr
- rtauargus.linked                 \tab  \Sexpr{rtauargus:::op.rtauargus$rtauargus.linked}             \tab                     \cr
- rtauargus.output_type            \tab "\Sexpr{rtauargus:::op.rtauargus$rtauargus.output_type}"       \tab                     \cr
- rtauargus.output_options         \tab "\Sexpr{rtauargus:::op.rtauargus$rtauargus.output_options}"    \tab                     \cr
- \code{------------------------}  \tab  \code{---------------------------------}                      \tab \code{-------------}\cr
- rtauargus.missing_dir            \tab "\Sexpr{rtauargus:::op.rtauargus$rtauargus.missing_dir}"       \tab \link{run_arb}      \cr
- rtauargus.tauargus_exe           \tab "\Sexpr{rtauargus:::op.rtauargus$rtauargus.tauargus_exe}"      \tab                     \cr
- rtauargus.show_batch_console     \tab  \Sexpr{rtauargus:::op.rtauargus$rtauargus.show_batch_console} \tab                     \cr
- rtauargus.import                 \tab  \Sexpr{rtauargus:::op.rtauargus$rtauargus.import}             \tab
+\strong{Option}                  \tab  \strong{Default Value}                                    \tab \strong{Function}   \cr
+\verb{------------------------}  \tab  \verb{---------------------------------}                      \tab \verb{-------------}\cr
+rtauargus.decimals               \tab  \Sexpr{rtauargus:::op.rtauargus$rtauargus.decimals}           \tab \link{micro_asc_rda}\cr
+rtauargus.totcode                \tab "\Sexpr{rtauargus:::op.rtauargus$rtauargus.totcode}"           \tab                     \cr
+rtauargus.missing                \tab "\Sexpr{rtauargus:::op.rtauargus$rtauargus.missing}"           \tab                     \cr
+rtauargus.hierleadstring         \tab "\Sexpr{rtauargus:::op.rtauargus$rtauargus.hierleadstring}"    \tab                     \cr
+\verb{------------------------}  \tab  \verb{---------------------------------}                      \tab \verb{-------------}\cr
+rtauargus.response_var           \tab "\Sexpr{rtauargus:::op.rtauargus$rtauargus.response_var}"      \tab \link{micro_arb}    \cr
+rtauargus.weighted               \tab  \Sexpr{rtauargus:::op.rtauargus$rtauargus.weighted}           \tab                     \cr
+rtauargus.linked                 \tab  \Sexpr{rtauargus:::op.rtauargus$rtauargus.linked}             \tab                     \cr
+rtauargus.output_type            \tab "\Sexpr{rtauargus:::op.rtauargus$rtauargus.output_type}"       \tab                     \cr
+rtauargus.output_options         \tab "\Sexpr{rtauargus:::op.rtauargus$rtauargus.output_options}"    \tab                     \cr
+\verb{------------------------}  \tab  \verb{---------------------------------}                      \tab \verb{-------------}\cr
+rtauargus.missing_dir            \tab "\Sexpr{rtauargus:::op.rtauargus$rtauargus.missing_dir}"       \tab \link{run_arb}      \cr
+rtauargus.tauargus_exe           \tab "\Sexpr{rtauargus:::op.rtauargus$rtauargus.tauargus_exe}"      \tab                     \cr
+rtauargus.show_batch_console     \tab  \Sexpr{rtauargus:::op.rtauargus$rtauargus.show_batch_console} \tab                     \cr
+rtauargus.import                 \tab  \Sexpr{rtauargus:::op.rtauargus$rtauargus.import}             \tab
 }
 }
 

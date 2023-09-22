@@ -20,8 +20,8 @@ micro_asc_rda(
 )
 }
 \arguments{
-\item{microdata}{[\strong{required}] data.frame containing the microdata. \cr
-([\strong{obligatoire}] data.frame contenant les microdonnées.)}
+\item{microdata}{data.frame containing the microdata. \cr
+( data.frame contenant les microdonnées.)}
 
 \item{asc_filename}{name of the asc file (with extension). If not filled in,
 a temporary file. \cr
@@ -66,12 +66,12 @@ attribuer la valeur de \code{rtauargus.totcode}.)}
 \item{missing}{code(s) for a missing value (see section
 'Specific parameters' for the syntax of this parameter). \cr
 (code(s) pour une valeur manquante (voir section
-  'Specific parameters' pour la syntaxe de ce paramètre).)}
+'Specific parameters' pour la syntaxe de ce paramètre).)}
 
 \item{codelist}{file(s) containing labels for categorical variables
 (see section 'Specific parameters' for the syntax of this parameter). \cr
 (fichier(s) contenant les libellés des variables catégorielles
-  (voir section 'Specific parameters' pour la syntaxe de ce paramètre).)}
+(voir section 'Specific parameters' pour la syntaxe de ce paramètre).)}
 
 \item{request}{(not yet implemented - pas encore implémenté)}
 }
@@ -81,9 +81,9 @@ invisibly). Empty columns (filled with \code{NA} or empty strings) are not
 strings) will not be exported to the asc file. A
 warning message will list the affected columns. \cr
 (Renvoie les noms des fichiers asc et rda sous forme de liste (de
-  manière invisible). Les colonnes vides (remplies de \code{NA} ou de chaînes
-  de caractères vides) ne seront pas exportées dans le fichier asc. Un
-  message d'avertissement listera les colonnes concernées.)
+manière invisible). Les colonnes vides (remplies de \code{NA} ou de chaînes
+de caractères vides) ne seront pas exportées dans le fichier asc. Un
+message d'avertissement listera les colonnes concernées.)
 }
 \description{
 Creates a fixed length text file (asc) and a metadata file
@@ -105,10 +105,10 @@ variables that can take this parameter.
 
 For example :
 \itemize{
-  \item{\code{totcode = "All"} : écrit \code{<TOTCODE> "All"} for all
-  categorical variables}
-  \item{\code{totcode = c("All", GEO = "France")} : idem, except for the
-    \code{GEO} variable }
+\item{\code{totcode = "All"} : écrit \verb{<TOTCODE> "All"} for all
+categorical variables}
+\item{\code{totcode = c("All", GEO = "France")} : idem, except for the
+\code{GEO} variable }
 }
 
 (Les paramètres \code{totcode}, \code{missing} et \code{codelist}
@@ -122,10 +122,10 @@ variables pouvant prendre ce paramètre.
 
 Par exemple :
 \itemize{
-  \item{\code{totcode = "Ensemble"} : écrit \code{<TOTCODE> "Ensemble"} pour
-    toutes les variables catégorielles}
-  \item{\code{totcode = c("Ensemble", GEO = "France")} : idem, sauf pour la
-    variable \code{GEO}}
+\item{\code{totcode = "Ensemble"} : écrit \verb{<TOTCODE> "Ensemble"} pour
+toutes les variables catégorielles}
+\item{\code{totcode = c("Ensemble", GEO = "France")} : idem, sauf pour la
+variable \code{GEO}}
 })
 }
 
@@ -149,7 +149,7 @@ If the hierarchy is defined in a separate hrc file
 a possible \code{hiercodelist} if it differs from the default option of the
 package). In this case, you can write explicitly the path to an existing file
 file (\code{c(A38 = "a38.hrc")}), but also make a call to
-\code{\link{write_hrc}} which will generate an hrc file from microdata.
+\code{\link[=write_hrc]{write_hrc()}} which will generate an hrc file from microdata.
 
 \emph{Example :} \code{c(A38 = write_hrc(microdata, c("A38", "A21", "A10")))}
 
@@ -184,7 +184,7 @@ Si la hiérarchie est définie dans un fichier hrc à part
 un éventuel \code{hierleadstring} s'il diffère de l'option par défaut du
 package). Dans ce cas, on peut écrire explicitement le chemin vers un fichier
 existant (\code{c(A38 = "a38.hrc")}), mais aussi passer un appel à
-\code{\link{write_hrc}} qui génèrera un fichier hrc à partir de microdonnées.
+\code{\link[=write_hrc]{write_hrc()}} qui génèrera un fichier hrc à partir de microdonnées.
 
 Un raccourci pour cet appel est d'écrire les variables constituant la
 hiérarchie séparées par des ">". Dans ce cas, les microdonnées et
@@ -215,7 +215,7 @@ beforehand.
 
 The digits after the decimal point may be incorrect in the asc file if
 the total number of digits (before or after the decimal separator) is
-greater than 15. See \code{\link[gdata]{write.fwf}} (function used to
+greater than 15. See \code{\link[gdata:write.fwf]{gdata::write.fwf()}} (function used to
 writing the asc file) for more details. \cr
 
 (Le paramètre \code{decimals} indique le nombre minimal de décimales à faire
@@ -227,16 +227,16 @@ au préalable.
 
 Les chiffres après la virgule peuvent être incorrects dans le fichier asc si
 le nombre total de chiffres (avant ou après le séparateur décimal) est
-supérieur à 15. Voir \code{\link[gdata]{write.fwf}} (fonction utilisée pour
+supérieur à 15. Voir \code{\link[gdata:write.fwf]{gdata::write.fwf()}} (fonction utilisée pour
 écrire le fichier asc) pour plus de détails.)
 }
 
 \section{See also}{
 
 
-The function \code{\link{rtauargus}}, which uses this
+The function \code{\link[=rtauargus]{rtauargus()}}, which uses this
 function and inherits its parameters. \cr
-(La fonction \code{\link{rtauargus}}, qui utilise cette
+(La fonction \code{\link[=rtauargus]{rtauargus()}}, qui utilise cette
 fonction et hérite de ses paramètres.)
 }
 

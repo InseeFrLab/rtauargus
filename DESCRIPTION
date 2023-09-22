@@ -63,3 +63,4 @@ URL: https://inseefrlab.github.io/rtauargus,
     https://github.com/inseefrlab/rtauargus,
     https://inseefrlab.github.io/rtauargus/
 BugReports: https://github.com/inseefrlab/rtauargus/issues
+Roxygen: list(markdown = TRUE)

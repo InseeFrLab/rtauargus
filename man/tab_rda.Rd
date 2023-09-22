@@ -28,10 +28,9 @@ tab_rda(
 )
 }
 \arguments{
-\item{tabular}{[\strong{mandatory}]
-data.frame which contains the tabulated data and
+\item{tabular}{data.frame which contains the tabulated data and
 an additional boolean variable that indicates the primary secret of type boolean \cr
-([\strong{obligatoire}] data.frame contenant les données tabulées et
+( data.frame contenant les données tabulées et
 une variable supplémentaire indiquant le secret primaire de type booléen.)}
 
 \item{tab_filename}{tab file name (with .tab extension) \cr
@@ -43,8 +42,8 @@ nom du fichier rda (avec extension)}
 \item{hst_filename}{hst file name (with .hst extension) \cr
 nom du fichier hst (avec extension)}
 
-\item{explanatory_vars}{[\strong{mandatory}] Vector of explanatory variables \cr
-[\strong{obligatoire}] Variables catégorielles, sous forme  de vecteurs \cr
+\item{explanatory_vars}{Vector of explanatory variables \cr
+Variables catégorielles, sous forme  de vecteurs \cr
 Example : \code{c("A21", "TREFF", "REG")} for a table crossing
 \code{A21} x \code{TREFF} x \code{REG}
 (Variable indiquant le secret primaire de type booléen:
@@ -52,7 +51,7 @@ prend la valeur "TRUE" quand les cellules du tableau doivent être masquées
 par le secret primaire, "FALSE" sinon. Permet de créer un fichier d'apriori)}
 
 \item{secret_var}{Nae of the boolean variable which specifies the secret, primary or not :
- equal to "TRUE" if a cell is concerned by the secret,"FALSE" otherwise.
+equal to "TRUE" if a cell is concerned by the secret,"FALSE" otherwise.
 will  be exported in the apriori file. \cr
 (Variable indiquant le secret  de type booléen:
 prend la valeur "TRUE" quand les cellules du tableau doivent être masquées
@@ -95,8 +94,8 @@ contributor of a cell. \cr
 (Nom de la colonne contenant la valeur du plus gros contributeur
 d'une cellule)}
 
-\item{ip}{Value of the safety margin in \% (must be an integer).
-(Valeur pour les intervalles de protection en \%, doit être entier )}
+\item{ip}{Value of the safety margin in \\% (must be an integer).
+(Valeur pour les intervalles de protection en \\%, doit être entier )}
 
 \item{maxscore_2}{Name of the column containing, the value of the second largest
 contributor to a cell. \cr
@@ -123,9 +122,9 @@ code in the hierarchy. \cr}
 (Caractère utilisé en tant que separateur dans le fichier .tab)}
 
 \item{secret_no_pl}{name of a boolean variable which indicates the cells
-on which the protection levels won't be applied. If `secret_no_pl = NULL`
-(default), the protection levels are applied on each cell which gets a `TRUE`
-status for the `secret_var`.\cr}
+on which the protection levels won't be applied. If \code{secret_no_pl = NULL}
+(default), the protection levels are applied on each cell which gets a \code{TRUE}
+status for the \code{secret_var}.\cr}
 }
 \value{
 Return the rda file name as a list (invisible).\cr
@@ -152,7 +151,6 @@ The parameter \code{secret_var} indicates the name of the primary secret variabl
 If there is the additional boolean variable which indicates the primary secret
 in the table (of tabulated data), the function tab_rda will create
 an apriori file in a format conforming to tauargus. \cr
-
 
 Le fichier d'apriori (.hst) récapitule pour chaque valeurs
 du tableau si elles sont concernées par le secret primaire ou non.
@@ -184,19 +182,19 @@ variables pouvant prendre ce paramètre.)
 
 For example :
 \itemize{
-  \item{\code{totcode = "global"} : writes \code{<TOTCODE> "global"} for each
-  explanatory vars}
-  \item{\code{totcode = c("global", size="total", income="total")} :
-  \code{<TOTCODE> "global"} for each variable except for \code{size} and
-  \code{income}} assigned with \code{<TOTCODE> "total"}
-  by default : {<TOTCODE> "Total"}
-  \item{\code{totcode = "global"} : écrit \code{<TOTCODE> "global"} pour
-    toutes les variables catégorielles}
-  \item{\code{totcode = c("global", size="total", income="total")} :
-  \code{<TOTCODE> "global"} pour toutes les variables catégorielles
-  sauf  \code{size} and \code{income}} qui se verront affecter
-  le total : \code{<TOTCODE> "total"}
-  Par defaut : {<TOTCODE> "Total"}
+\item{\code{totcode = "global"} : writes \verb{<TOTCODE> "global"} for each
+explanatory vars}
+\item{\code{totcode = c("global", size="total", income="total")} :
+\verb{<TOTCODE> "global"} for each variable except for \code{size} and
+\code{income}} assigned with \verb{<TOTCODE> "total"}
+by default : {\if{html}{\out{<TOTCODE>}} "Total"}
+\item{\code{totcode = "global"} : écrit \verb{<TOTCODE> "global"} pour
+toutes les variables catégorielles}
+\item{\code{totcode = c("global", size="total", income="total")} :
+\verb{<TOTCODE> "global"} pour toutes les variables catégorielles
+sauf  \code{size} and \code{income}} qui se verront affecter
+le total : \verb{<TOTCODE> "total"}
+Par defaut : {\if{html}{\out{<TOTCODE>}} "Total"}
 }
 }
 
@@ -216,11 +214,11 @@ even if there is only one element.
 emph{Example :}\code{c(category="category.hrc")} \cr
 
 (Le paramètre \code{hrc} obéit aux mêmes règles de syntaxe que \code{totcode}
- et \code{codelist} (vecteur nommé contenant autant d'éléments
+et \code{codelist} (vecteur nommé contenant autant d'éléments
 que de variables à décrire).
 
 La hiérarchie est définie dans un fichier hrc à part (\strong{hiercodelist})
-qui peut être écrit à l'aide de la fonction \code{\link{write_hrc2}}.
+qui peut être écrit à l'aide de la fonction \code{\link[=write_hrc2]{write_hrc2()}}.
 
 La fonction attend l'emplacement de ce fichier (et un éventuel \code{hierleadstring}
 s'il diffère de l'option par défaut du package).

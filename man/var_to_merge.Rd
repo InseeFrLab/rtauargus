@@ -26,9 +26,9 @@ var_to_merge(
 
 \item{nb_tab_option}{strategy to follow for choosing variables automatically:
 \itemize{
-  \item \code{'min'}: minimize the number of tables;
-  \item \code{'max'}: maximize the number of tables;
-  \item \code{'smart'}: minimize the number of tables under the constraint of their row count.
+\item \code{'min'}: minimize the number of tables;
+\item \code{'max'}: maximize the number of tables;
+\item \code{'smart'}: minimize the number of tables under the constraint of their row count.
 }}
 
 \item{limit}{maximum allowed row count in the 'smart' case}

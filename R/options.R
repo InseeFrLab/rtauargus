@@ -85,18 +85,18 @@ df_op.rtauargus <- function(html = FALSE) {
 #' These options are used if a mandatory argument of a function is not set
 #' by the user. They let not to systematically repeat the same parameter
 #' for each call of a function. The name of the option is the same as the
-#' name of the function prefixed by \code{rtauargus.} :
+#' name of the function prefixed by `rtauargus.` :
 #'
-#' \emph{For example, \code{rtauargus.decimals} will be used if the argument
-#' \code{decimals} in the \code{micro_asc_rda} function is not set by the
-#' user.}
+#' *For example, `rtauargus.decimals` will be used if the argument
+#' `decimals` in the `micro_asc_rda` function is not set by the
+#' user.*
 #'
 #' On loading the package, all the rtauargus options, that are not already
 #' been set by the user, are set with their default values (see table below).
 #' The already defined options keep the values set by the user.
 #'
 #' The options can be set during a session with the following instruction
-#' \code{options(rtauargus.}...\code{ = }...\code{)}, or with a configuration
+#' `options(rtauargus.`...` = `...`)`, or with a configuration
 #' file where the user have written its own options with such instructions,
 #' but this latter is not a proper way if reproducibility is sought.
 #' Les options du package définissent les comportements par défaut des
@@ -108,18 +108,18 @@ df_op.rtauargus <- function(html = FALSE) {
 #' (Ces options sont utilisées si un argument obligatoire d’une fonction n’est
 #' pas renseigné. Elles permettent de ne pas répéter systématiquement le même
 #' paramètre à chaque appel d'une fonction. Le nom de l’option est le nom de
-#' l’argument d’une fonction précédé de \code{rtauargus.} :
+#' l’argument d’une fonction précédé de `rtauargus.` :
 #'
-#' \emph{Par exemple, \code{rtauargus.decimals} sera la valeur utilisée si l’argument
-#' \code{decimals} de la fonction \code{micro_asc_rda} n’est pas renseigné par
-#' l’utilisateur.}
+#' *Par exemple, `rtauargus.decimals` sera la valeur utilisée si l’argument
+#' `decimals` de la fonction `micro_asc_rda` n’est pas renseigné par
+#' l’utilisateur.*
 #'
 #' Au chargement, le package attribue une valeur par défaut à toutes les options
 #' de rtauargus qui ne sont pas encore déclarées (cf. tableau ci-dessous). Les
 #' options déjà définies par l'utilisateur gardent leurs valeurs.
 #'
 #' Elles peuvent être redéfinies pour une session par une instruction
-#' \code{options(rtauargus.}...\code{ = }...\code{)}, ou de manière globale si
+#' `options(rtauargus.`...` = `...`)`, ou de manière globale si
 #' de telles instructions sont placées dans un fichier de configuration propre à
 #' l'utilisateur (fortement déconseillé si le programme a vocation à être
 #' reproductible).
@@ -128,28 +128,28 @@ df_op.rtauargus <- function(html = FALSE) {
 #' utiliseront les valeurs par défaut du package.)
 #'
 #' @param ... names of the options to reset, separated by commas. If no name is
-#' specified, all the options will be reset. The prefix \code{"rtauargus."}
+#' specified, all the options will be reset. The prefix `"rtauargus."`
 #' is not required. \cr
 #' noms des options à réinitialiser, séparés par des virgules. Si
 #'   aucun nom n'est spécifié, toutes les options du package seront
-#'   réinitialisées. Le préfixe \code{"rtauargus."} est facultatif.
+#'   réinitialisées. Le préfixe `"rtauargus."` est facultatif.
 #'
 #' @section List of options:
 #' \tabular{lll}{
-#'  \strong{Option}                  \tab  \strong{Default Value}                                    \tab \strong{Function}   \cr
-#'  \code{------------------------}  \tab  \code{---------------------------------}                      \tab \code{-------------}\cr
-#'  rtauargus.decimals               \tab  \Sexpr{rtauargus:::op.rtauargus$rtauargus.decimals}           \tab \link{micro_asc_rda}\cr
+#'  **Option**                  \tab  **Default Value**                                    \tab **Function**   \cr
+#'  `------------------------`  \tab  `---------------------------------`                      \tab `-------------`\cr
+#'  rtauargus.decimals               \tab  \Sexpr{rtauargus:::op.rtauargus$rtauargus.decimals}           \tab [micro_asc_rda]\cr
 #'  rtauargus.totcode                \tab "\Sexpr{rtauargus:::op.rtauargus$rtauargus.totcode}"           \tab                     \cr
 #'  rtauargus.missing                \tab "\Sexpr{rtauargus:::op.rtauargus$rtauargus.missing}"           \tab                     \cr
 #'  rtauargus.hierleadstring         \tab "\Sexpr{rtauargus:::op.rtauargus$rtauargus.hierleadstring}"    \tab                     \cr
-#'  \code{------------------------}  \tab  \code{---------------------------------}                      \tab \code{-------------}\cr
-#'  rtauargus.response_var           \tab "\Sexpr{rtauargus:::op.rtauargus$rtauargus.response_var}"      \tab \link{micro_arb}    \cr
+#'  `------------------------`  \tab  `---------------------------------`                      \tab `-------------`\cr
+#'  rtauargus.response_var           \tab "\Sexpr{rtauargus:::op.rtauargus$rtauargus.response_var}"      \tab [micro_arb]    \cr
 #'  rtauargus.weighted               \tab  \Sexpr{rtauargus:::op.rtauargus$rtauargus.weighted}           \tab                     \cr
 #'  rtauargus.linked                 \tab  \Sexpr{rtauargus:::op.rtauargus$rtauargus.linked}             \tab                     \cr
 #'  rtauargus.output_type            \tab "\Sexpr{rtauargus:::op.rtauargus$rtauargus.output_type}"       \tab                     \cr
 #'  rtauargus.output_options         \tab "\Sexpr{rtauargus:::op.rtauargus$rtauargus.output_options}"    \tab                     \cr
-#'  \code{------------------------}  \tab  \code{---------------------------------}                      \tab \code{-------------}\cr
-#'  rtauargus.missing_dir            \tab "\Sexpr{rtauargus:::op.rtauargus$rtauargus.missing_dir}"       \tab \link{run_arb}      \cr
+#'  `------------------------`  \tab  `---------------------------------`                      \tab `-------------`\cr
+#'  rtauargus.missing_dir            \tab "\Sexpr{rtauargus:::op.rtauargus$rtauargus.missing_dir}"       \tab [run_arb]      \cr
 #'  rtauargus.tauargus_exe           \tab "\Sexpr{rtauargus:::op.rtauargus$rtauargus.tauargus_exe}"      \tab                     \cr
 #'  rtauargus.show_batch_console     \tab  \Sexpr{rtauargus:::op.rtauargus$rtauargus.show_batch_console} \tab                     \cr
 #'  rtauargus.import                 \tab  \Sexpr{rtauargus:::op.rtauargus$rtauargus.import}             \tab
@@ -173,7 +173,7 @@ df_op.rtauargus <- function(html = FALSE) {
 #' # resets everything
 #' reset_rtauargus_options()
 #' str(rtauargus_options())
-#' @seealso \link{options}, R options system \cr
+#' @seealso [options], R options system \cr
 #' le système d'options de R dans lequel s'insèrent les options de ce package.
 #' @export
 #' @rdname rtauargus_options

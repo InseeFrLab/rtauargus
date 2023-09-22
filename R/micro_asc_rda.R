@@ -62,16 +62,16 @@ write_rda <- function(info_vars) {
 #' (Crée un fichier texte de longueur fixe (asc) et un fichier de métadonnées
 #' (rda) à partir de microdonnées et d'informations additionnelles.)
 #'
-#' @param microdata [\strong{required}] data.frame containing the microdata. \cr
-#' ([\strong{obligatoire}] data.frame contenant les microdonnées.)
+#' @param microdata  data.frame containing the microdata. \cr
+#' ( data.frame contenant les microdonnées.)
 #' @param asc_filename name of the asc file (with extension). If not filled in,
 #' a temporary file. \cr
 #' (nom du fichier asc (avec extension). Si non renseigné,
 #' un fichier temporaire.)
 #' @param rda_filename name of the rda file (with extension). If not filled in,
-#' \code{asc_filename} with the extension "rda" instead of "asc". \cr
+#' `asc_filename` with the extension "rda" instead of "asc". \cr
 #' (nom du fichier rda (avec extension). Si non renseigné,
-#' \code{asc_filename} avec l'extension "rda" à la place de "asc".)
+#' `asc_filename` avec l'extension "rda" à la place de "asc".)
 #' @param weight_var name of the weight variable. \cr
 #' (nom de la variable de poids.)
 #' @param holding_var nom de la variable de holding.
@@ -91,11 +91,11 @@ write_rda <- function(info_vars) {
 #' @param totcode code(s) for the total of a categorical variable (see
 #' section 'Specific parameters' for the syntax of this parameter). The
 #' variables not specified (neither by default nor explicitly) will be
-#' assigned the value of \code{rtauargus.totcode}. \cr
+#' assigned the value of `rtauargus.totcode`. \cr
 #' (code(s) pour le total d'une variable catégorielle (voir
 #' section 'Specific parameters' pour la syntaxe de ce paramètre). Les
 #' variables non spécifiées (ni par défaut, ni explicitement) se verront
-#' attribuer la valeur de \code{rtauargus.totcode}.)
+#' attribuer la valeur de `rtauargus.totcode`.)
 #' @param missing code(s) for a missing value (see section
 #' 'Specific parameters' for the syntax of this parameter). \cr
 #' (code(s) pour une valeur manquante (voir section
@@ -108,17 +108,17 @@ write_rda <- function(info_vars) {
 #'
 #' @return
 #' Returns the names of the asc and rda files as a list (invisibly).
-#' invisibly). Empty columns (filled with \code{NA} or empty strings) are not
+#' invisibly). Empty columns (filled with `NA` or empty strings) are not
 #' strings) will not be exported to the asc file. A
 #' warning message will list the affected columns. \cr
 #' (Renvoie les noms des fichiers asc et rda sous forme de liste (de
-#'   manière invisible). Les colonnes vides (remplies de \code{NA} ou de chaînes
+#'   manière invisible). Les colonnes vides (remplies de `NA` ou de chaînes
 #'   de caractères vides) ne seront pas exportées dans le fichier asc. Un
 #'   message d'avertissement listera les colonnes concernées.)
 #'
 #' @section Specific parameters:
 #'
-#' The parameters \code{totcode}, \code{missing} and \code{codelist}
+#' The parameters `totcode`, `missing` and `codelist`
 #' are to be filled in as a vector indicating the value to take
 #' for each variable.
 #'
@@ -129,13 +129,13 @@ write_rda <- function(info_vars) {
 #'
 #' For example :
 #' \itemize{
-#'   \item{\code{totcode = "All"} : écrit \code{<TOTCODE> "All"} for all
+#'   \item{`totcode = "All"` : écrit `<TOTCODE> "All"` for all
 #'   categorical variables}
-#'   \item{\code{totcode = c("All", GEO = "France")} : idem, except for the
-#'     \code{GEO} variable }
+#'   \item{`totcode = c("All", GEO = "France")` : idem, except for the
+#'     `GEO` variable }
 #' }
 #'
-#' (Les paramètres \code{totcode}, \code{missing} et \code{codelist}
+#' (Les paramètres `totcode`, `missing` et `codelist`
 #' sont à renseigner sous la forme d'un vecteur indiquant la valeur à prendre
 #' pour chaque variable.
 #'
@@ -146,79 +146,79 @@ write_rda <- function(info_vars) {
 #'
 #' Par exemple :
 #' \itemize{
-#'   \item{\code{totcode = "Ensemble"} : écrit \code{<TOTCODE> "Ensemble"} pour
+#'   \item{`totcode = "Ensemble"` : écrit `<TOTCODE> "Ensemble"` pour
 #'     toutes les variables catégorielles}
-#'   \item{\code{totcode = c("Ensemble", GEO = "France")} : idem, sauf pour la
-#'     variable \code{GEO}}
+#'   \item{`totcode = c("Ensemble", GEO = "France")` : idem, sauf pour la
+#'     variable `GEO`}
 #' })
 #'
 #' @section Hierarchical variables:
 #'
-#' The parameter \code{hrc} follows the same syntax rules as \code{totcode},
-#' \code{missing} and \code{codelist} (named vector containing as many elements
+#' The parameter `hrc` follows the same syntax rules as `totcode`,
+#' `missing` and `codelist` (named vector containing as many elements
 #' as there are variables to describe). It also has the particularity
 #' to accept several ways of specifying the values associated with the
 #' hierarchical variables.
 #'
 #' To define a hierarchy based on the positions of characters
-#' (\strong{hierierlevels}), pass a sequence of integers separated by
+#' (**hierierlevels**), pass a sequence of integers separated by
 #' spaces.
 #'
-#' \emph{Example :} \code{c(CODECOM = "2 3 0 0 0")}
+#' *Example :* `c(CODECOM = "2 3 0 0 0")`
 #'
 #' If the hierarchy is defined in a separate hrc file
-#' (\strong{hiercodelist}), the function expects the location of this file (and
-#' a possible \code{hiercodelist} if it differs from the default option of the
+#' (**hiercodelist**), the function expects the location of this file (and
+#' a possible `hiercodelist` if it differs from the default option of the
 #' package). In this case, you can write explicitly the path to an existing file
-#' file (\code{c(A38 = "a38.hrc")}), but also make a call to
-#' \code{\link{write_hrc}} which will generate an hrc file from microdata.
+#' file (`c(A38 = "a38.hrc")`), but also make a call to
+#' [write_hrc()] which will generate an hrc file from microdata.
 #'
-#' \emph{Example :} \code{c(A38 = write_hrc(microdata, c("A38", "A21", "A10")))}
+#' *Example :* `c(A38 = write_hrc(microdata, c("A38", "A21", "A10")))`
 #'
 #' A shortcut for this call is to write the variables constituting the
 #' hierarchy separated by ">". In this case, the microdata and
-#' hierleadstring that \code{write_hrc} uses are those declared in
-#' \code{micro_asc_rda}.
+#' hierleadstring that `write_hrc` uses are those declared in
+#' `micro_asc_rda`.
 #'
-#' \emph{Example :} \code{c(A38 = "A38 > A21 > A10")} \emph{(number of spaces
-#' any before and after the ">")}
+#' *Example :* `c(A38 = "A38 > A21 > A10")` *(number of spaces
+#' any before and after the ">")*
 #'
 #' The last two methods require the creation of a temporary file.
 #' For a reusable hrc file, it is necessary to create it beforehand
-#' using \code{write_hrc}.
+#' using `write_hrc`.
 #'
 #' The three methods require that the elements of the vector in parameter
 #' be named (with the name of the variable), even if there is only one
 #' element.
 #'
-#' (Le paramètre \code{hrc} obéit aux mêmes règles de syntaxe que \code{totcode},
-#' \code{missing} et \code{codelist} (vecteur nommé contenant autant d'éléments
+#' (Le paramètre `hrc` obéit aux mêmes règles de syntaxe que `totcode`,
+#' `missing` et `codelist` (vecteur nommé contenant autant d'éléments
 #' que de variables à décrire). Il présente de plus la particularité
 #' d'accepter plusieurs façons de spécifier les valeurs associées aux variables
 #' hiérarchiques.
 #'
 #' Pour définir une hiérarchie basée sur les positions des caractères
-#' (\strong{hierlevels}), passer une suite de nombre entiers séparés par des
+#' (**hierlevels**), passer une suite de nombre entiers séparés par des
 #' espaces.
 #'
 #' Si la hiérarchie est définie dans un fichier hrc à part
-#' (\strong{hiercodelist}), la fonction attend l'emplacement de ce fichier (et
-#' un éventuel \code{hierleadstring} s'il diffère de l'option par défaut du
+#' (**hiercodelist**), la fonction attend l'emplacement de ce fichier (et
+#' un éventuel `hierleadstring` s'il diffère de l'option par défaut du
 #' package). Dans ce cas, on peut écrire explicitement le chemin vers un fichier
-#' existant (\code{c(A38 = "a38.hrc")}), mais aussi passer un appel à
-#' \code{\link{write_hrc}} qui génèrera un fichier hrc à partir de microdonnées.
+#' existant (`c(A38 = "a38.hrc")`), mais aussi passer un appel à
+#' [write_hrc()] qui génèrera un fichier hrc à partir de microdonnées.
 #'
 #' Un raccourci pour cet appel est d'écrire les variables constituant la
 #' hiérarchie séparées par des ">". Dans ce cas, les microdonnées et
-#' hierleadstring qu'utilise \code{write_hrc} sont ceux déclarés dans
-#' \code{micro_asc_rda}.
+#' hierleadstring qu'utilise `write_hrc` sont ceux déclarés dans
+#' `micro_asc_rda`.
 #'
-#' \emph{Exemple :} \code{c(A38 = "A38 > A21 > A10")} \emph{(nombre d'espaces
-#' quelconque avant et après les ">")}
+#' *Exemple :* `c(A38 = "A38 > A21 > A10")` *(nombre d'espaces
+#' quelconque avant et après les ">")*
 #'
 #' Les deux dernières méthodes passent par la création d'un fichier temporaire.
 #' Pour un fichier hrc réutilisable, il est nécessaire de le créer au préalable
-#' à l'aide de \code{write_hrc}.
+#' à l'aide de `write_hrc`.
 #'
 #' Les trois méthodes nécessitent que les éléments du vecteur en paramètre
 #' soient nommés (avec le nom de la variable), même s'il n'y a qu'un seul
@@ -226,35 +226,35 @@ write_rda <- function(info_vars) {
 #'
 #' @section Number of decimals:
 #'
-#' The parameter \code{decimals} indicates the minimum number of decimals to be
+#' The parameter `decimals` indicates the minimum number of decimals to be
 #' appear in the output file (whatever the number of decimals
-#' actually present in \code{microdata}). It applies to all
+#' actually present in `microdata`). It applies to all
 #' real variables (double) but not to integer variables (integer). For
-#' add zeros to an integer variable, convert it with \code{as.double}
+#' add zeros to an integer variable, convert it with `as.double`
 #' beforehand.
 #'
 #' The digits after the decimal point may be incorrect in the asc file if
 #' the total number of digits (before or after the decimal separator) is
-#' greater than 15. See \code{\link[gdata]{write.fwf}} (function used to
+#' greater than 15. See [gdata::write.fwf()] (function used to
 #' writing the asc file) for more details. \cr
 #'
-#' (Le paramètre \code{decimals} indique le nombre minimal de décimales à faire
+#' (Le paramètre `decimals` indique le nombre minimal de décimales à faire
 #' figurer dans le fichier en sortie (quel que soit le nombre de décimales
-#' effectivement présent dans \code{microdata}). Il s'applique à toutes les
+#' effectivement présent dans `microdata`). Il s'applique à toutes les
 #' variables réelles (double) mais pas aux variables entières (integer). Pour
-#' ajouter des zéros à une variable entière, la convertir avec \code{as.double}
+#' ajouter des zéros à une variable entière, la convertir avec `as.double`
 #' au préalable.
 #'
 #' Les chiffres après la virgule peuvent être incorrects dans le fichier asc si
 #' le nombre total de chiffres (avant ou après le séparateur décimal) est
-#' supérieur à 15. Voir \code{\link[gdata]{write.fwf}} (fonction utilisée pour
+#' supérieur à 15. Voir [gdata::write.fwf()] (fonction utilisée pour
 #' écrire le fichier asc) pour plus de détails.)
 #'
 #' @section See also:
 #'
-#' The function \code{\link{rtauargus}}, which uses this
+#' The function [rtauargus()], which uses this
 #' function and inherits its parameters. \cr
-#' (La fonction \code{\link{rtauargus}}, qui utilise cette
+#' (La fonction [rtauargus()], qui utilise cette
 #' fonction et hérite de ses paramètres.)
 #'
 #' @examples

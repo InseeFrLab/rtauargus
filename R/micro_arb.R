@@ -159,11 +159,11 @@ apriori_batch <- function(ntab, hst_names, sep = ',', ignore_err = 0 , exp_triv 
 #' Unless otherwise stated, use the syntax mentioned in the documentation
 #' of Tau-Argus.
 #'
-#' Special syntax for \code{suppress} : the first parameter in the
+#' Special syntax for `suppress` : the first parameter in the
 #' Tau-Argus syntax is the tab number. If the method is identical
 #' for all tabs, this first parameter will be ignored and the numbers
 #' are automatically recalculated for the batch. In the writing
-#' \code{suppress = "GH(n,100)"}, n will thus be transformed into 1 for the
+#' `suppress = "GH(n,100)"`, n will thus be transformed into 1 for the
 #' first tab, into 2 for the second tab, etc.
 #'
 #' (Tau-Argus peut traiter plusieurs tabulations pour un même jeu de
@@ -175,24 +175,24 @@ apriori_batch <- function(ntab, hst_names, sep = ',', ignore_err = 0 , exp_triv 
 #' Sauf mention contraire, utiliser la syntaxe mentionnée dans la documentation
 #' de Tau-Argus.
 #'
-#' Syntaxe spéciale pour \code{suppress} : le premier paramètre dans la
+#' Syntaxe spéciale pour `suppress` : le premier paramètre dans la
 #' syntaxe Tau-Argus est le numéro de la tabulation. Si la méthode est identique
 #' pour toutes les tabulations, ce premier paramètre sera ignoré et les numéros
 #' recalculés automatiquement pour le batch. Dans l'écriture
-#' \code{suppress = "GH(n,100)"}, n sera ainsi transformé en 1 pour la première
+#' `suppress = "GH(n,100)"`, n sera ainsi transformé en 1 pour la première
 #' tabulation, en 2 pour la deuxième tabulation, etc.)
 #'
 #' @section Table identifiers:
-#' If the list \code{explanatory_vars} has names, these will be
+#' If the list `explanatory_vars` has names, these will be
 #' used in the batch to give an identifier to the table, in the form of
-#' of a comment line (\code{// <TABLE_ID> "..."}). They will be
-#' reused by the \code{import} function to name the R format arrays
+#' of a comment line (`// <TABLE_ID> "..."`). They will be
+#' reused by the `import` function to name the R format arrays
 #' tables in output.
 #'
-#' (Si la liste \code{explanatory_vars} comporte des noms, ceux-ci seront
+#' (Si la liste `explanatory_vars` comporte des noms, ceux-ci seront
 #' utilisés dans le batch pour donner un identifiant au tableau, sous la forme
-#' d'une ligne de commentaire (\code{// <TABLE_ID> "..."}). Ils seront
-#' réutilisés par la fonction \code{import} pour nommer les tableaux formats R
+#' d'une ligne de commentaire (`// <TABLE_ID> "..."`). Ils seront
+#' réutilisés par la fonction `import` pour nommer les tableaux formats R
 #' en sortie.)
 #'
 #' @section Use an apriori file:
@@ -205,8 +205,8 @@ apriori_batch <- function(ntab, hst_names, sep = ',', ignore_err = 0 , exp_triv 
 #'
 #' The additional options are optional. To change the default values,
 #' pass a list with the hst file(s) as the first item and
-#' complete with the elements having the names \code{sep} for the separator,
-#' \code{ignore_err} for IgnoreError and \code{exp_triv} for ExpandTrivial.
+#' complete with the elements having the names `sep` for the separator,
+#' `ignore_err` for IgnoreError and `exp_triv` for ExpandTrivial.
 #' As for filenames, specify only one value per parameter or
 #' as many values as there are tabs.
 
@@ -219,8 +219,8 @@ apriori_batch <- function(ntab, hst_names, sep = ',', ignore_err = 0 , exp_triv 
 #'
 #' Les options supplémentaires sont facultatives. Pour modifier les valeurs par
 #' défaut, passer une liste ayant comme premier élément le(s) fichier(s) hst et
-#' compléter avec les éléments portant les noms \code{sep} pour le séparateur,
-#' \code{ignore_err} pour IgnoreError et \code{exp_triv} pour ExpandTrivial.
+#' compléter avec les éléments portant les noms `sep` pour le séparateur,
+#' `ignore_err` pour IgnoreError et `exp_triv` pour ExpandTrivial.
 #' Comme pour les noms de fichiers, spécifier une seule valeur par paramètre ou
 #' autant de valeurs que de tabulations.)
 #'
@@ -228,51 +228,51 @@ apriori_batch <- function(ntab, hst_names, sep = ',', ignore_err = 0 , exp_triv 
 #' extension). If not specified, a temporary file. \cr
 #' (nom du fichier arb généré (avec extension). Si non renseigné, un fichier
 #' temporaire.)
-#' @param asc_filename [\strong{required}] name of the asc file
+#' @param asc_filename  name of the asc file
 #' (with extension). \cr
-#' ([\strong{obligatoire}] nom du fichier asc (avec extension).)
+#' ( nom du fichier asc (avec extension).)
 #' @inheritParams micro_asc_rda
-#' @param explanatory_vars [\strong{required}] categorical variables, in
+#' @param explanatory_vars  categorical variables, in
 #' form of a list of vectors. Each element of the list is a vector of
 #' variable names forming a tab.
-#' Example: \code{list(c("CJ", "A21"), c("SEX", "REGION"))} for the first
-#' table crossing \code{CJ} x \code{A21} and the second table crossing
-#' \code{SEXE} x \code{REGION}.
+#' Example: `list(c("CJ", "A21"), c("SEX", "REGION"))` for the first
+#' table crossing `CJ` x `A21` and the second table crossing
+#' `SEXE` x `REGION`.
 #' If a single tabulation, a simple vector of the variables to be crossed is
-#' accepted (no need for \code{list(...)}). \cr
-#' ([\strong{obligatoire}] variables catégorielles, sous
+#' accepted (no need for `list(...)`). \cr
+#' ( variables catégorielles, sous
 #' forme de liste de vecteurs. Chaque élément de la liste est un vecteur des
 #' noms des variables formant une tabulation.
-#' Exemple: \code{list(c("CJ", "A21"), c("SEX", "REGION"))} pour la première
-#' table croisant \code{CJ} x \code{A21} et la seconde croisant
-#' \code{SEXE} x \code{REGION}
+#' Exemple: `list(c("CJ", "A21"), c("SEX", "REGION"))` pour la première
+#' table croisant `CJ` x `A21` et la seconde croisant
+#' `SEXE` x `REGION`
 #' Si une seule tabulation, un simple vecteur des variables à croiser est
-#' accepté (pas besoin de \code{list(...)}).)
+#' accepté (pas besoin de `list(...)`).)
 #' @param response_var response variable to be summed, or counted if
-#' \code{"<freq>"}. A single value or as many values as there are tabs. \cr
-#' (variable de réponse à sommer, ou comptage si \code{"<freq>"}.
+#' `"<freq>"`. A single value or as many values as there are tabs. \cr
+#' (variable de réponse à sommer, ou comptage si `"<freq>"`.
 #' Une seule valeur ou autant de valeurs que de tabulations.)
 #' @param shadow_var variable(s) for applying the primary secret. If not
-#' filled in, \code{response_var} will be used by Tau-Argus. \cr
+#' filled in, `response_var` will be used by Tau-Argus. \cr
 #' (variable(s) pour l'application du secret primaire. Si non
-#' renseigné, \code{response_var} sera utilisé par Tau-Argus.)
+#' renseigné, `response_var` sera utilisé par Tau-Argus.)
 #' @param cost_var cost variable(s) for the secondary secret. \cr
 #' (variable(s) de coût pour le secret secondaire.)
-#' @param safety_rules [\strong{required}] primary secret rule(s).
+#' @param safety_rules  primary secret rule(s).
 #' String in Tau-Argus batch syntax. The weighting is treated
 #' in a separate parameter (do not specify WGT here, use the
-#' \code{weighted}). \cr
-#' ([\strong{obligatoire}] règle(s) de secret primaire.
+#' `weighted`). \cr
+#' ( règle(s) de secret primaire.
 #' Chaîne de caractères en syntaxe batch Tau-Argus. La pondération est traitée
 #' dans un paramètre à part (ne pas spécifier WGT ici, utiliser le paramètre
-#' \code{weighted}).)
+#' `weighted`).)
 #' @param weighted indicator(s) (boolean). \cr
 #' (indicatrice(s) de pondération (booléen).)
-#' @param suppress [\strong{required}] secret management method(s)
+#' @param suppress  secret management method(s)
 #' secondary (Tau-Argus batch syntax). If the method is the same for
 #' each tabulation, the first parameter (table number) will be ignored and
 #' renumbered automatically (see section 'Syntax'). \cr
-#' ([\strong{obligatoire}] méthode(s) de gestion du secret
+#' ( méthode(s) de gestion du secret
 #' secondaire (syntaxe batch de Tau-Argus). Si la méthode est la même pour
 #' chaque tabulation, le premier paramètre (numéro du tableau) sera ignoré et
 #' renuméroté automatiquement (voir la section 'Syntax').)
@@ -291,22 +291,22 @@ apriori_batch <- function(ntab, hst_names, sep = ',', ignore_err = 0 , exp_triv 
 #' vide, autant de noms de fichiers temporaires que de tabulations seront
 #' générés.)
 #' @param output_type format of output files (Tau-Argus codification).
-#' Default value of the package: \code{"2"} (csv for pivot-table). \cr
+#' Default value of the package: `"2"` (csv for pivot-table). \cr
 #' (format des fichiers en sortie (codification Tau-Argus).
-#' Valeur par défaut du package : \code{"2"} (csv for pivot-table).)
+#' Valeur par défaut du package : `"2"` (csv for pivot-table).)
 #' @param output_options additional options for output files. default value of
-#' the package: \code{"AS+"} (status display). To specify no option, \code{""}. \cr
+#' the package: `"AS+"` (status display). To specify no option, `""`. \cr
 #' (options supplémentaires des fichiers en sortie. Valeur
-#' par défaut du package : \code{"AS+"} (affichage du statut). Pour ne
-#' spécifier aucune option, \code{""}.)
-#' @param apriori information file(s) \emph{a priori}. See below
+#' par défaut du package : `"AS+"` (affichage du statut). Pour ne
+#' spécifier aucune option, `""`.)
+#' @param apriori information file(s) *a priori*. See below
 #' for the syntax. \cr
-#' (fichier(s) d'informations \emph{a priori}. Voir ci-dessous
+#' (fichier(s) d'informations *a priori*. Voir ci-dessous
 #' pour la syntaxe.)
 #' @param gointeractive to have the possibility to launch the batch from the
 #' menu of Tau-Argus. \cr
 #' (pour avoir la possibilité de lancer le batch depuis le
-#' menu de Tau-Argus (\code{FALSE} par défaut).)
+#' menu de Tau-Argus (`FALSE` par défaut).)
 #'
 #' @return A list of two elements: arb filename and names of output files
 #' (useful to get back the randomly generated names) \cr

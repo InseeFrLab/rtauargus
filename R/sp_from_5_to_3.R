@@ -52,15 +52,15 @@ nb_nodes <- function(hrcfiles, v = NULL, hrc_name = TRUE) {
 #'
 #' @return a list containing the following components:
 #' \itemize{
-#'   \item \code{tabs}: named list of dataframes with 3 dimensions
+#'   \item `tabs`: named list of dataframes with 3 dimensions
 #'   (n-2 dimensions in the general case) endowed with nested hierarchies
-#'   \item \code{hrcs5_4}: named list of hrc specific to the variable created
+#'   \item `hrcs5_4`: named list of hrc specific to the variable created
 #'   via the merge when reducing from 5 to 4 dimensions
-#'   \item \code{hrcs4_3}: named list of hrc specific to the variable created
+#'   \item `hrcs4_3`: named list of hrc specific to the variable created
 #'   via the merge when reducing from 4 to 3 dimensions
-#'   \item \code{alt_tot5_4}: named list of totals when reducing from 5 to 4 dimensions
-#'   \item \code{alt_tot4_3}: named list of totals when reducing from 4 to 3 dimensions
-#'   \item \code{vars}: named list of vectors representing the merged variables
+#'   \item `alt_tot5_4`: named list of totals when reducing from 5 to 4 dimensions
+#'   \item `alt_tot4_3`: named list of totals when reducing from 4 to 3 dimensions
+#'   \item `vars`: named list of vectors representing the merged variables
 #'   during the two steps of dimension reduction
 #' }
 #'

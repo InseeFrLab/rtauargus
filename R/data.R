@@ -81,7 +81,7 @@
 #'   \item{A21}{business sectors in 21 categories}
 #'   \item{A88}{business sectors in 88 categories}
 #' }
-#' @details Use the \code{write_hrc2} function to create a .hrc file from this
+#' @details Use the `write_hrc2` function to create a .hrc file from this
 #' correspondence table.
 "activity_corr_table"
 
@@ -95,7 +95,7 @@
 #'   \item{NUTS2}{NUTS2 levels in France - equivalent of French "Régions"}
 #'   \item{NUTS3}{NUTS3 levels in France - equivalent of French "Départements"}
 #' }
-#' @details Use the \code{write_hrc2} function to create a .hrc file from this
+#' @details Use the `write_hrc2` function to create a .hrc file from this
 #' correspondence table.
 "nuts23_fr_corr_table"
 

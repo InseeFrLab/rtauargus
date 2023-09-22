@@ -7,19 +7,19 @@
 \format{
 A tibble/data frame with 5 612 rows and 15 variables:
 \describe{
- \item{A10}{business sector, no hierarchy}
- \item{cj}{legal category, no hierarchy}
- \item{type_distrib}{type of distribution, no hierarchy}
- \item{treff}{Number of employees (categorical), no hierarchy}
- \item{nuts1}{NUTS region, no hierarchical}
- \item{nb_obs}{Frequency, number of companies}
- \item{nb_obs_rnd}{Frequency rounded, number of companies}
- \item{pizzas_tot}{turnover value in euros}
- \item{pizzas_tot_abs}{turnover absolute value in euros}
- \item{pizzas_max}{turnover max value in euros}
- \item{is_secret_freq}{Boolean, TRUE if primary secret for frequency rule}
- \item{is_secret_dom}{Boolean, TRUE if primary secret for dominance rule}
- \item{is_secret_prim}{Boolean, TRUE if primary secret for any rule}
+\item{A10}{business sector, no hierarchy}
+\item{cj}{legal category, no hierarchy}
+\item{type_distrib}{type of distribution, no hierarchy}
+\item{treff}{Number of employees (categorical), no hierarchy}
+\item{nuts1}{NUTS region, no hierarchical}
+\item{nb_obs}{Frequency, number of companies}
+\item{nb_obs_rnd}{Frequency rounded, number of companies}
+\item{pizzas_tot}{turnover value in euros}
+\item{pizzas_tot_abs}{turnover absolute value in euros}
+\item{pizzas_max}{turnover max value in euros}
+\item{is_secret_freq}{Boolean, TRUE if primary secret for frequency rule}
+\item{is_secret_dom}{Boolean, TRUE if primary secret for dominance rule}
+\item{is_secret_prim}{Boolean, TRUE if primary secret for any rule}
 
 }
 }

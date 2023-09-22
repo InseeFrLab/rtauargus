@@ -8,9 +8,9 @@
 #' @param nb_var number of variables to merge
 #' @param nb_tab_option strategy to follow for choosing variables automatically:
 #' \itemize{
-#'   \item \code{'min'}: minimize the number of tables;
-#'   \item \code{'max'}: maximize the number of tables;
-#'   \item \code{'smart'}: minimize the number of tables under the constraint of their row count.
+#'   \item `'min'`: minimize the number of tables;
+#'   \item `'max'`: maximize the number of tables;
+#'   \item `'smart'`: minimize the number of tables under the constraint of their row count.
 #' }
 #' @param limit maximum allowed row count in the 'smart' case
 #'

@@ -15,13 +15,13 @@ write_hrc(
 )
 }
 \arguments{
-\item{microdata}{[\strong{required}] data.frame containing the microdata. \cr
-([\strong{obligatoire}] data.frame contenant les microdonnées.)}
+\item{microdata}{data.frame containing the microdata. \cr
+( data.frame contenant les microdonnées.)}
 
-\item{vars_hrc}{\strong{[mandatory]} vector of variable names
+\item{vars_hrc}{\strong{\link{mandatory}} vector of variable names
 constituting the hierarchy, from the finest to the most aggregated level.\cr
-(\strong{[obligatoire]} vecteur des noms des variables
-  constituant la hiérarchie, du niveau le plus fin au niveau le plus agrégé.)}
+(\strong{\link{obligatoire}} vecteur des noms des variables
+constituant la hiérarchie, du niveau le plus fin au niveau le plus agrégé.)}
 
 \item{hierleadstring}{character which, repeated n times, indicates that the value is
 at n levels deep in the hierarchy. \cr
@@ -40,32 +40,32 @@ immediately above}
 lower}
 }\cr
 (remplissage d'éventuelles valeurs manquantes, à l'aide d'une
-  autre variable :\itemize{
-    \item{\code{"up"} (défaut) : variable hiérarchique de niveau
-       immédiatement supérieur}
-    \item{\code{"down"} : variable hiérarchique de niveau immédiatement
-       inférieur}
-   })}
+autre variable :\itemize{
+\item{\code{"up"} (défaut) : variable hiérarchique de niveau
+immédiatement supérieur}
+\item{\code{"down"} : variable hiérarchique de niveau immédiatement
+inférieur}
+})}
 
 \item{compact}{to prune branches repeating a single value to the
 lowest level of depth (\code{TRUE} by default).\cr
 (pour élaguer les branches répétant une unique valeur jusqu'au
-  plus bas niveau de profondeur (\code{TRUE} par défaut).)}
+plus bas niveau de profondeur (\code{TRUE} par défaut).)}
 
 \item{hierlevels}{if only one variable is specified in \code{vars_hrc},
 allows to generate the hierarchy according to the position of the characters in the
 string. For example, \code{hierlevels = "2 3"} to build a
 hierarchy from a common code.\cr
 (si une seule variable est spécifiée dans \code{vars_hrc},
-  permet de générer la hiérarchie selon la position des caractères dans la
-  chaîne. Par exemple, \code{hierlevels = "2 3"} pour construire une
-  hiérarchie département-commune à partir d'un code commune.)}
+permet de générer la hiérarchie selon la position des caractères dans la
+chaîne. Par exemple, \code{hierlevels = "2 3"} pour construire une
+hiérarchie département-commune à partir d'un code commune.)}
 }
 \value{
 The name of the hrc file (useful in the case of a temporary file with
 random name).\cr
 (Le nom du fichier hrc (utile dans le cas d'un fichier temporaire au
-  nom aléatoire).)
+nom aléatoire).)
 }
 \description{
 Creates an hrc file (hierarchy) from several variables in a set of

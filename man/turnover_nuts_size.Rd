@@ -7,14 +7,16 @@
 \format{
 A tibble/data frame with 460 rows and 5 variables:
 \describe{
- \item{NUTS}{nuts - european denomination of administrative levels.
- Hierarchical variables with two levels (nuts2 and nuts3) described
-  in the nuts23_fr_corr_table dataset. The root is noted "Total"}
-  \item{SIZE}{size of the companies (Number of employees in three categories
-  + overall category "Total")}
-  \item{N_OBS}{Frequency, number of companies}
-  \item{TOT}{turnover value in euros}
-  \item{MAX}{turnover of the company which contributes the most to the cell.}
+\item{NUTS}{nuts - european denomination of administrative levels.
+Hierarchical variables with two levels (nuts2 and nuts3) described
+in the nuts23_fr_corr_table dataset. The root is noted "Total"}
+\item{SIZE}{size of the companies (Number of employees in three categories
+\itemize{
+\item overall category "Total")}
+\item{N_OBS}{Frequency, number of companies}
+\item{TOT}{turnover value in euros}
+\item{MAX}{turnover of the company which contributes the most to the cell.}
+}
 }
 }
 \usage{

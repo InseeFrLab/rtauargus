@@ -125,7 +125,7 @@ meta_import <- function(data,
 #' Requires that the batch has been executed and finished without error. In order
 #' to import immediately after the batch has been executed, this function will be
 #' most often called via \code{link{run_arb}} (by setting
-#' \code{import = TRUE}).
+#' `import = TRUE`).
 #'
 #' It is only possible (for the moment) to import results of type "2"
 #' (csv for pivot-table) and "4" (sbs). If it is not possible to import for
@@ -134,8 +134,8 @@ meta_import <- function(data,
 #'
 #' (Nécessite que le batch ait été exécuté et se soit terminé sans erreur. Afin
 #' d'importer immédiatement après exécution du batch, cette fonction sera ainsi
-#' le plus souvent appelée via \code{\link{run_arb}} (en paramétrant
-#' \code{import = TRUE}).
+#' le plus souvent appelée via [run_arb()] (en paramétrant
+#' `import = TRUE`).
 #'
 #' Il n'est possible (pour l'instant) que d'importer les résultats de type "2"
 #' (csv for pivot-table) et "4" (sbs). En cas d'impossibilité de l'import pour
@@ -149,10 +149,10 @@ meta_import <- function(data,
 #'
 #' @return A list of one or more data.frames. Each data.frame corresponds to
 #' to the result of a tabulation. The names of the tables filled in the
-#' lines of the batch of the form \code{// <TABLE_ID> "..."} are recovered. \cr
+#' lines of the batch of the form `// <TABLE_ID> "..."` are recovered. \cr
 #' (Une liste d'un ou plusieurs data.frames. Chaque data.frame correspond
 #'   au résultat d'une tabulation. Les noms des tableaux renseignés dans les
-#'   lignes du batch de la forme \code{// <TABLE_ID> "..."} sont récupérés.)
+#'   lignes du batch de la forme `// <TABLE_ID> "..."` sont récupérés.)
 #'
 #' @section Attributes:
 #'
@@ -160,21 +160,21 @@ meta_import <- function(data,
 #' allowing to keep a trace of the specifications passed to Tau-Argus.
 #'
 #' Attributes systematically present :
-#' \code{explanatory_vars}, \code{response_var}, \code{safetyrule},
-#' \code{suppress}, \code{linked}, \code{output_type}.
+#' `explanatory_vars`, `response_var`, `safetyrule`,
+#' `suppress`, `linked`, `output_type`.
 #'
 #' Attributes present only if the corresponding option has been filled in by
-#' the user: \code{shadow_var}, \code{cost_var}, \code{output_options}. \cr
+#' the user: `shadow_var`, `cost_var`, `output_options`. \cr
 #'
 #' (À chaque data.frame est associé un ensemble d'attributs (métadonnées)
 #' permettant de conserver une trace des spécifications passées à Tau-Argus.
 #'
 #' Attributs systématiquement présents :
-#' \code{explanatory_vars}, \code{response_var}, \code{safetyrule},
-#' \code{suppress}, \code{linked}, \code{output_type}.
+#' `explanatory_vars`, `response_var`, `safetyrule`,
+#' `suppress`, `linked`, `output_type`.
 #'
 #' Attributs présents uniquement si l'option correspondante a été renseignée par
-#' l'utilisateur : \code{shadow_var}, \code{cost_var}, \code{output_options}.)
+#' l'utilisateur : `shadow_var`, `cost_var`, `output_options`.)
 #'
 #' @inheritSection micro_asc_rda See also
 #'

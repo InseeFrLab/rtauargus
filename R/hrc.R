@@ -8,8 +8,8 @@
 #' microdonnées.
 #'
 #' The function reconstructs the variable hierarchy from the levels
-#' present in the data. The variables in \code{vars_hrc} must be
-#' \strong{classified from the finest to the most aggregated}.
+#' present in the data. The variables in `vars_hrc` must be
+#' **classified from the finest to the most aggregated**.
 #'
 #' The relationship between each hierarchical level must be an application (in the
 #' mathematical sense of the term), i.e. each fine level must have a
@@ -22,17 +22,17 @@
 #'
 #' Missing values in the hierarchical variables will be
 #' imputed beforehand using another hierarchical variable (parameter
-#' \code{fill_na}). In ascending strategy (\code{"up"}), the variables are
+#' `fill_na`). In ascending strategy (`"up"`), the variables are
 #' from the most aggregated to the most refined, and vice versa in the
-#' downward strategy (\code{"down"}).
+#' downward strategy (`"down"`).
 #'
-#' The parameter \code{compact} allows to create hierarchies with variable
+#' The parameter `compact` allows to create hierarchies with variable
 #' depths. The idea is to cut the branches consisting of a single value
 #' repeated up to the maximum depth (see examples).\cr
 #'
 #' La fonction reconstitue la hiérarchie des variables à partir des niveaux
-#' présents dans les données. Les variables dans \code{vars_hrc} doivent être
-#' \strong{classées de la plus fine à la plus agrégée}.
+#' présents dans les données. Les variables dans `vars_hrc` doivent être
+#' **classées de la plus fine à la plus agrégée**.
 #'
 #' La relation entre chaque niveau hiérarchique doit être une application (au
 #' sens mathématique du terme), c'est-à-dire que chaque niveau fin doit avoir un
@@ -45,47 +45,47 @@
 #'
 #' Les valeurs manquantes présentes dans les variables hiérarchiques seront
 #' préalablement imputées à l'aide d'une autre variable hiérarchique (paramètre
-#' \code{fill_na}). En stratégie ascendante (\code{"up"}), les variables sont
+#' `fill_na`). En stratégie ascendante (`"up"`), les variables sont
 #' parcourues de la plus agrégée à la plus fine, et inversement en stratégie
-#' descendante (\code{"down"}).
+#' descendante (`"down"`).
 #'
-#' Le paramètre \code{compact} permet de créer des hiérarchies à profondeurs
+#' Le paramètre `compact` permet de créer des hiérarchies à profondeurs
 #' variables. L'idée est de couper les branches constituées d'une seule valeur
 #' répétée jusqu'à la profondeur maximale (voir exemples).
 #'
 #' @inheritParams micro_asc_rda
-#' @param vars_hrc \strong{[mandatory]} vector of variable names
+#' @param vars_hrc **[mandatory]** vector of variable names
 #' constituting the hierarchy, from the finest to the most aggregated level.\cr
-#' (\strong{[obligatoire]} vecteur des noms des variables
+#' (**[obligatoire]** vecteur des noms des variables
 #'   constituant la hiérarchie, du niveau le plus fin au niveau le plus agrégé.)
 #' @param hrc_filename name and location of the produced hrc file. If not
 #' filled, a temporary file.\cr
 #' (nom et emplacement du fichier hrc produit. Si non renseigné, un fichier temporaire.)
 #' @param fill_na fill in any missing values, using an other variable :
 #' \itemize{
-#' \item{\code{"up"} (default) : hierarchical variable of the level level
+#' \item{`"up"` (default) : hierarchical variable of the level level
 #' immediately above}
-#' \item{\code{"down"} : hierarchical variable of the level immediately
+#' \item{`"down"` : hierarchical variable of the level immediately
 #' lower}
 #' }\cr
 #' (remplissage d'éventuelles valeurs manquantes, à l'aide d'une
 #'   autre variable :\itemize{
-#'     \item{\code{"up"} (défaut) : variable hiérarchique de niveau
+#'     \item{`"up"` (défaut) : variable hiérarchique de niveau
 #'        immédiatement supérieur}
-#'     \item{\code{"down"} : variable hiérarchique de niveau immédiatement
+#'     \item{`"down"` : variable hiérarchique de niveau immédiatement
 #'        inférieur}
 #'    })
 #' @param compact to prune branches repeating a single value to the
-#' lowest level of depth (\code{TRUE} by default).\cr
+#' lowest level of depth (`TRUE` by default).\cr
 #' (pour élaguer les branches répétant une unique valeur jusqu'au
-#'   plus bas niveau de profondeur (\code{TRUE} par défaut).)
-#' @param hierlevels if only one variable is specified in \code{vars_hrc},
+#'   plus bas niveau de profondeur (`TRUE` par défaut).)
+#' @param hierlevels if only one variable is specified in `vars_hrc`,
 #' allows to generate the hierarchy according to the position of the characters in the
-#' string. For example, \code{hierlevels = "2 3"} to build a
+#' string. For example, `hierlevels = "2 3"` to build a
 #' hierarchy from a common code.\cr
-#' (si une seule variable est spécifiée dans \code{vars_hrc},
+#' (si une seule variable est spécifiée dans `vars_hrc`,
 #'   permet de générer la hiérarchie selon la position des caractères dans la
-#'   chaîne. Par exemple, \code{hierlevels = "2 3"} pour construire une
+#'   chaîne. Par exemple, `hierlevels = "2 3"` pour construire une
 #'   hiérarchie département-commune à partir d'un code commune.)
 #'
 #' @return The name of the hrc file (useful in the case of a temporary file with

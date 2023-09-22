@@ -24,19 +24,19 @@ of the dataframes}
 \value{
 A list containing:
 \itemize{
-  \item \code{tabs}: named list of 3-dimensional dataframes
-  with nested hierarchies
-  \item \code{alt_hrc}: named list of hrc specific to the variables
-  created during merging to go to dimension 3
-  \item \code{alt_totcode}: named list of totals specific to the variables
-  created during merging to go to dimension 3
-  \item \code{vars}: categorical variables of the output dataframes
-  \item \code{sep}: separator used to link the variables
-  \item \code{totcode}: named vector of totals for all categorical variables
-  \item \code{hrcfiles}: named vector of hrc for categorical variables
-  (except the merged one)
-  \item \code{fus_vars}: named vector of vectors representing the merged
-  variables during dimension reduction
+\item \code{tabs}: named list of 3-dimensional dataframes
+with nested hierarchies
+\item \code{alt_hrc}: named list of hrc specific to the variables
+created during merging to go to dimension 3
+\item \code{alt_totcode}: named list of totals specific to the variables
+created during merging to go to dimension 3
+\item \code{vars}: categorical variables of the output dataframes
+\item \code{sep}: separator used to link the variables
+\item \code{totcode}: named vector of totals for all categorical variables
+\item \code{hrcfiles}: named vector of hrc for categorical variables
+(except the merged one)
+\item \code{fus_vars}: named vector of vectors representing the merged
+variables during dimension reduction
 }
 }
 \description{

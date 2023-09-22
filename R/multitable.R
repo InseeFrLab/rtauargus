@@ -17,13 +17,13 @@ journal_add_line <- function(journal,...){
 #' @param ip_start integer: Interval protection level to apply at first treatment of each table
 #' @param ip_end integer: Interval protection level to apply at other treatments
 #' @param num_iter_max integer: Maximum of treatments to do on each table (default to 10)
-#' @param ... other arguments of \code{tab_rtauargus2()}
+#' @param ... other arguments of `tab_rtauargus2()`
 #'
 #' @return original list of tables. Secret Results of each iteration is added to each table.
 #' For example, the result of first iteration is called 'is_secret_1' in each table.
 #' It's a boolean variable, whether the cell has to be masked or not.
 #'
-#' @seealso \code{tab_rtauargus2}
+#' @seealso `tab_rtauargus2`
 #'
 #' @examples
 #' library(rtauargus)

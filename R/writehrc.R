@@ -98,13 +98,13 @@ vect_aro <- Vectorize(arobase, vectorize.args = c("string", "number"))
 #' This function mimicks some of its rigidities.
 #' \cr
 #'
-#' 1 \strong{Ideal case}
+#' 1 **Ideal case**
 #'
 #' Here is how a correspondence table is assumed to look like:
 #'
 #' \tabular{lll}{
-#' \strong{type} \tab \strong{details} \cr
-#'  \code{-------}  \tab  \code{------} \cr
+#' **type** \tab **details** \cr
+#'  `-------`  \tab  `------` \cr
 #' planet \tab telluric   \cr
 #' planet \tab gasgiant   \cr
 #' star   \tab bluestar   \cr
@@ -124,10 +124,10 @@ vect_aro <- Vectorize(arobase, vectorize.args = c("string", "number"))
 #' are correctly protected (seek further documentation or help if needed).
 #' \cr
 #'
-#' 2 \strong{Dealing with NAs}
+#' 2 **Dealing with NAs**
 #'
 #' The write_hrc2 function has to be preferably used without any NAs in your
-#' correspondence table. In presence of NAs, the \strong{sort} argument
+#' correspondence table. In presence of NAs, the **sort** argument
 #' has to be to FALSE. Indeed, NAs would be sorted together and, thus,
 #' be separated from their expected place in the hierarchy.
 #'
@@ -137,13 +137,13 @@ vect_aro <- Vectorize(arobase, vectorize.args = c("string", "number"))
 #' Please be careful when dealing with NAs and check thoroughly the
 #' resulting .hrc file, or consider filling in NAs beforehand.
 #'
-#' 2.1 \emph{Sparse hierarchies} \cr
+#' 2.1 *Sparse hierarchies* \cr
 #' Hierarchy is sparse when NAs are inserted instead of repeating under a given
 #' level.
 #'
 #' \tabular{lll}{
-#' \strong{type} \tab \strong{details} \cr
-#'  \code{-------}  \tab  \code{------} \cr
+#' **type** \tab **details** \cr
+#'  `-------`  \tab  `------` \cr
 #' planet \tab telluric   \cr
 #'        \tab gasgiant   \cr
 #' star   \tab bluestar   \cr
@@ -154,15 +154,15 @@ vect_aro <- Vectorize(arobase, vectorize.args = c("string", "number"))
 #' }
 #'
 #' Such cases still issue a warning for the presence of NAs, but do not pose
-#' any problem, if \strong{sort=FALSE} is set.
+#' any problem, if **sort=FALSE** is set.
 #'
-#' 2.2 \emph{Non-uniform hierarchies}\cr
+#' 2.2 *Non-uniform hierarchies*\cr
 #' Hierarchies with non-uniform depth happen when some levels are not detailed
 #' to the  lowest detail, creating NAs.
 #'
 #' \tabular{lll}{
-#' \strong{type} \tab \strong{details} \cr
-#'  \code{-------}  \tab  \code{------} \cr
+#' **type** \tab **details** \cr
+#'  `-------`  \tab  `------` \cr
 #' planet \tab telluric   \cr
 #' planet \tab gasgiant   \cr
 #' star   \tab            \cr
@@ -171,21 +171,21 @@ vect_aro <- Vectorize(arobase, vectorize.args = c("string", "number"))
 #' }
 #'
 #' Processing such a file will generate an error with the following messages:
-#' \emph{Missing values on the last column of the correspondence table is not allowed.
-#' If relevant, you could fill in with the value of the previous column}
+#' *Missing values on the last column of the correspondence table is not allowed.
+#' If relevant, you could fill in with the value of the previous column*
 #'
 #' @section Détails sur les tables de correspondance et le .hrc:
 #' Tau-Argus attend des fichiers écrits avec précision. Certaines de ses
 #' rigidités sont reproduites par cette fonction.
 #' \cr
 #'
-#' 1 \strong{Cas idéal}
+#' 1 **Cas idéal**
 #'
 #' Voici l'aspect général que devrait avoir une table de correspondance :
 #'
 #' \tabular{lll}{
-#' \strong{type} \tab \strong{details} \cr
-#'  \code{-------}  \tab  \code{------} \cr
+#' **type** \tab **details** \cr
+#'  `-------`  \tab  `------` \cr
 #' planet \tab telluric   \cr
 #' planet \tab gasgiant   \cr
 #' star   \tab bluestar   \cr
@@ -208,10 +208,10 @@ vect_aro <- Vectorize(arobase, vectorize.args = c("string", "number"))
 #' ou chercher de l'aide).
 #' \cr
 #'
-#' 2 \strong{Valeurs manquantes}
+#' 2 **Valeurs manquantes**
 #'
 #' La fonction write_hrc2 doit être utilisée de préférence sans aucun NA dans votre
-#' table de correspondance. En présence de NAs, l'argument \strong{sort}
+#' table de correspondance. En présence de NAs, l'argument **sort**
 #' doit être à FALSE. En effet, les NAs seraient triés ensemble et, donc,
 #' être séparées de leur place attendue dans la hiérarchie.
 #'
@@ -222,13 +222,13 @@ vect_aro <- Vectorize(arobase, vectorize.args = c("string", "number"))
 #' Soyez prudent lorsque vous manipulez des NA et vérifiez soigneusement
 #' le fichier .hrc résultant ou envisagez de remplir les NAs à l'avance.
 #'
-#' 2.1 \emph{Hiérarchies creuses} \cr
+#' 2.1 *Hiérarchies creuses* \cr
 #' Une hiérarchie est creuse si des NAs sont insérées au lieu de répéter un
 #' niveau donné verticalement.
 #'
 #' \tabular{lll}{
-#' \strong{type} \tab \strong{details} \cr
-#'  \code{-------}  \tab  \code{------} \cr
+#' **type** \tab **details** \cr
+#'  `-------`  \tab  `------` \cr
 #' planet \tab telluric   \cr
 #'        \tab gasgiant   \cr
 #' star   \tab bluestar   \cr
@@ -239,16 +239,16 @@ vect_aro <- Vectorize(arobase, vectorize.args = c("string", "number"))
 #' }
 #'
 #' De tels cas émettent toujours un avertissement du fait de la présence de NA,
-#' mais ne posent aucun problème, si on utilise \strong{sort=FALSE}.
+#' mais ne posent aucun problème, si on utilise **sort=FALSE**.
 #'
-#' 2.2 \emph{Hiérarchies non-uniformes}\cr
+#' 2.2 *Hiérarchies non-uniformes*\cr
 #' Les hiérarchies à profondeur non-uniforme correspondent aux cas où certains
 #' niveaux ne sont pas détaillés jusqu'au bout, la fin de certaines lignes étant
 #' manquante.
 #'
 #' \tabular{lll}{
-#' \strong{type} \tab \strong{details} \cr
-#'  \code{-------}  \tab  \code{------} \cr
+#' **type** \tab **details** \cr
+#'  `-------`  \tab  `------` \cr
 #' planet \tab telluric   \cr
 #' planet \tab gasgiant   \cr
 #' star   \tab            \cr
@@ -257,8 +257,8 @@ vect_aro <- Vectorize(arobase, vectorize.args = c("string", "number"))
 #' }
 #'
 #' Le traitement d'un tel fichier générera une erreur avec les messages suivants :
-#' \emph{Missing values on the last column of the correspondence table is not allowed.
-#' If relevant, you could fill in with the value of the previous column}
+#' *Missing values on the last column of the correspondence table is not allowed.
+#' If relevant, you could fill in with the value of the previous column*
 #'
 #' @return Invisible. Path to the written .hrc file.
 #' \cr
