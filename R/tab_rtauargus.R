@@ -1,4 +1,7 @@
-#' All in once for tabular
+#' Protect one table by suppressing cells with Tau-Argus
+#'
+#' The function prepares all the files needed by Tau-Argus and launches the
+#' software with the good settings and gets back the result.
 #'
 #' @inheritParams tab_rda
 #' @inheritParams tab_arb

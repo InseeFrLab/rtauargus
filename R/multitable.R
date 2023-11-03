@@ -247,7 +247,7 @@ tab_multi_manager <- function(
       }
       secret_var_tab <- if(!is.null(params$secret_no_pl)) c(secret_var,params$secret_no_pl) else secret_var
 
-      tableau <- tableau[, c(list_explanatory_vars[[nom_tab]], value, freq, cost_var_tab, secret_var_tab)]
+      tableau <- as.data.frame(tableau)[, c(list_explanatory_vars[[nom_tab]], value, freq, cost_var_tab, secret_var_tab)]
 
       if(!is.null(params$secret_no_pl)){
         names(tableau)[names(tableau) == params$secret_no_pl] = "secret_no_pl"
@@ -305,6 +305,8 @@ tab_multi_manager <- function(
       purrr::discard(hrc[nom_vars], is.na) %>%  unlist()
     }
   )
+
+  list_hrc <- purrr::map(list_hrc, function(l) if(length(l) == 0) NULL else l)
 
   purrr::walk(
     names(alt_hrc),
