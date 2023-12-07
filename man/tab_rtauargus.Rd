@@ -2,7 +2,7 @@
 % Please edit documentation in R/tab_rtauargus.R
 \name{tab_rtauargus}
 \alias{tab_rtauargus}
-\title{All in once for tabular}
+\title{Protect one table by suppressing cells with Tau-Argus}
 \usage{
 tab_rtauargus(
   tabular,
@@ -172,7 +172,8 @@ If \code{split_tab = FALSE} and  \code{output_type} doesn't equal to \code{4},
 then the raw result from tau-argus is returned.
 }
 \description{
-All in once for tabular
+The function prepares all the files needed by Tau-Argus and launches the
+software with the good settings and gets back the result.
 }
 \section{Standardization of explanatory variables and hierarchies}{
 

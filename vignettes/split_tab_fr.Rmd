@@ -21,13 +21,11 @@ vignette: >
 
 
 
-## Introduction
-
 Les algorithmes de pose du secret secondaire tels qu'Optimal ou Modular implémentés
 dans `Tau-Argus` reposent sur un programme d'optimisation sous contraintes. Le
 nombre de ces constraintes devient très difficile à gérer - du moins dans un temps
-raisonnable - pour `Tau-Argus`. Ainsi, il est quasi-impossible de poser du secret
-sur un tableau à 5 dimensions directement avec `Tau-Argus` et les résultats
+raisonnable - pour `Tau-Argus`. La pose du secret
+sur un tableau à 5 dimensions directement avec `Tau-Argus` est impossible et les résultats
 fournis par le logiciel lors du traitement d'un tableau de 4 dimensions sont
 accompagnés d'un avertissement. Par ailleurs, un tableau à 4 dimensions dont l'une
 est hiérarchique est un problème, en général, très difficile pour `Tau-Argus`.
@@ -35,7 +33,7 @@ est hiérarchique est un problème, en général, très difficile pour `Tau-Argu
 Le package `rtauargus` offre désormais la possibilité de protéger des tableaux
 de 4 à 5 dimensions. Pour les tableaux de 4 dimensions, la protection est
 même plus rapide et permet de traiter des tableaux plus grands encore (en nombre
-de lignes).
+de lignes). Certains tableaux demeurent néanmoins trop complexes pour `Tau-Argus`.
 
 Cette nouvelle fonctionnalité est mise à disposition dans les fonctions
 `tab_rtauargus` et `tab_multi_manager` avec l'argument `split_tab`.
@@ -48,28 +46,26 @@ appelée pour organiser la pose du secret sur l'ensemble de ces tableaux.
 originales - augmentée des informations sur le secret secondaire.
 
 Ainsi, point important à retenir, la pose du secret secondaire est toujours
-réalisé par les algorithmes de Tau-Argus, le package `rtauargus` de réduire les
-dimensions et d'assurer la cohérence du secret entre les différents sous-tableaux
-liés entre eux.
+réalisé par les algorithmes de `Tau-Argus`, le package `rtauargus` ne fait que
+découper le tableau en sous-tableaux à trois dimensions et assurer la cohérence
+du secret entre ces différents sous-tableaux liés entre eux.
 
 Cette méthode est susceptible de générer plus de secret qu'une attaque directe
-du problème.
+du problème. Mais celle-ci étant impossible, c'est un moindre mal.
 
 Pour utiliser cette fonctionnalité, il est nécessaire que l'utilisateur
 pose de lui-même le secret primaire en amont.
 
 
-
-### Comment la réduction d'un tableaux à 4 ou 5 dimensions est-elle réalisée ?
+### Comment la réduction d'un tableau à 4 ou 5 dimensions est-elle réalisée ?
 
 Pour passer de 5 à 3 dimensions, on utilise deux fois de suite la méthode
-utilisée pour passer de 4 à 3 dimensions.
+utilisée pour réduire un tableau en sous-tableaux ayant une dimension de moins.
 
 Le passage de 4 à 3 dimensions consiste d'abord à fusionner deux des quatre
 dimensions du tableau original, c'est-à-dire qu'on remplace deux des variables
 de départ par une seule dont les modalités sont la fusion des modalités des
 deux variables choisies.
-
 
 Dans l'exemple ci-dessous, on fusionne par exemple les deux variables `SEX` et
 `AGE` pour n'en faire qu'une seule appelée `SEX_AGE`.
@@ -77,7 +73,6 @@ Dans l'exemple ci-dessous, on fusionne par exemple les deux variables `SEX` et
 <div style="text-align: center;">
 <img src="tab_SEX_AGE.png" alt="base_tab" width="600" height="500">
 </div>
-
 
 Mais, la nouvelle variable contient des modalités non-emboîtées entre elles,
 comme, par exemple, les modalités `Femme_Total` et `Ensemble_Adulte`.
@@ -90,43 +85,84 @@ comme, par exemple, les modalités `Femme_Total` et `Ensemble_Adulte`.
     Total_Ensemble = Femme_Ensemble + Homme_Ensemble
 </div>
 
-Or la gestion des hiérarchies non-emboîtées est possible en appelant la fonction
-`tab_multi_manager` sur une liste composée des différents sous-tableaux liés.
+Or, nous savons gérer la présence de hiérarchies non-emboîtées dans un tableau.
+Il suffit, en effet, de construire les sous-tableaux de même structure de telle
+sorte que dans chacun de ces sous-tableaux la variable incriminée soit
+restreinte à une partie parfaitement emboîtée de ses modalités.
+Pour poser le secret sur les sous-tableaux liés engendrés, il est fait appel
+à la fonction `tab_multi_manager`, spécialement conçue pour assurer la cohérence
+du secret entre tableaux liés.
 
 Ici, la fusion nécessite la construction de deux sous-tableaux, chacun ayant une
-varaible SEX__AGE parfaitement hiérarchique.
+variable `SEX__AGE` parfaitement hiérarchique. Le premier rassemble les modalités
+`Total_Ensemble`, `Total_Adulte` et `Total_Enfant`, le second
+`Total_Ensemble`, `Femme_Ensemble` et `Homme_Ensemble`.
 
 Cet exemple est le plus simple qu'il soit: en fusionnant deux variables
-non hiérarchiques, on est amené à générer deux sous-tableaux. Lorsque l'une des
-variables fusionnées est elle-même hiérarchique, la construction des sous-tableaux
-s'appuie sur les différents sous-totaux présents dans la hiérarchie, comme
-indiqué dans la figure ci-dessous:
+non hiérarchiques, on est amené à générer deux sous-tableaux.
+
+Lorsque l'une des variables fusionnées est elle-même hiérarchique,
+la construction des sous-tableaux s'appuie sur les différents sous-totaux
+présents dans la hiérarchie, comme indiqué dans la figure ci-dessous:
 
 <div style="text-align: center;">
   <img src="GEO.png" alt="hierarchie" width="375" height="150">
 </div>
 
-
-## Pour aller plus loin
+### Pour aller plus loin
 
 - [Une fiche plus théorique](https://inseefrlab.github.io/rtauargus/articles/split_tab_theorie_fr.html)
 - [Une fiche présentant les résultats de quelques tests](https://inseefrlab.github.io/rtauargus/articles/split_tab_tests.html)
 
 
-### Utilisation de différents paramètres liées à split_tab
+### Les principaux arguments ajoutés à `tab_rtauargus()` et `tab_multi_manager()`
 
-Comme dit dans l'introduction `nb_tabs` permet de demander le nombre de tableaux que l'on veut faire entre min max et le smart.
+Pour activer le découpage des tableaux de dimension 4 ou 5 en sous-tableaux
+de 3 dimensions, l'utilisateur doit activer l'argument `split_tab` en le passant
+à `TRUE`. Cette valeur est sa valeur par défaut. Ainsi, l'utilisateur veillera
+à passer cet argument à `FALSE` s'il souhaite qu'un tableau à 4 dimensions soit
+traité directement par `Tau-Argus`.
 
-Le `min` choisi construit le minimum de table a 3 dimensions lors de la fusion donc il met en priorité la fusion de variables non hiérarchiques .
-Le `max` au contraire construit le maximum de table a 3 dimensions possible lors de la fusion et prends en priorité les variables hiérarchiques .
-Le `smart` lui contruit le minimum de table a 3 dimensions lors de la fusion des variables sachant qu'elles ont toutes un nombre de ligne en dessous de la limite.
+L'argument `nb_tab_option` permet de préciser la façon dont le tableau est découpé:
 
-Après ce premier traitement. On utilise la fonction `sp_split_tab` dans `reduce_dims` qui elle prend les tables toujours au-dessus de la limite de taille posé et les replite par rapport aux modalités des hiérarchies créées par les variables fusionnées. Bien évidemment il est possible que la limite de taille soit toujours atteintes et dans ce cas nous affichons un Warning et prevenons l'utilisateur que la table puisse être trop grande.
+- L'option `"min"` consiste à construire le minimum de tables à 3 dimensions
+lors de la fusion. Ce sont donc des variables non hiérarchiques qui seront
+fusionnées en priorité.
+- L'option `"max"` au contraire construit le maximum de tables à 3 dimensions possible
+lors de la fusion. Ce sont donc des variables hiérarchiques qui seront
+fusionnées en priorité. Cette option est intéressante pour réduire la taille
+des sous-tableaux produits et donc augmenter les chances que `Tau-Argus` puisse
+les traiter. L'inconvénient de cette option est qu'elle peut générer un très
+grand nombre de tableaux, nombre dépendant du nombre de noeuds dans les hiérarchies.
+- L'option `"smart"` va chercher à construire le minimum de tables à 3 dimensions
+tout en cherchant à respecter une limite de taille (nombre de lignes) pour les
+sous-tableaux construits. Cette limite est fixée par l'argument `limit`. Par
+défaut, la valeur est fixée à `14 700` - choisie de par notre expérience. Si
+la limite n'est pas atteignable, un avertissement est affiché mais cela ne bloque
+pas la construction des tables et la pose du masque.
 
-## En pratique
+Par défaut, l'argument `nb_tab_option` est fixé à `"smart"`. Il est déconseillé
+de changer cette valeur dans un premier temps.
 
+- L'argument `nb_tab = "min"` est intéressant en termes de secret car c'est
+l'option qui génèrera le moins de sur-secret puisqu'elle construira le moins
+possible de sous-tableaux liés. Il peut être intéressant à utiliser si la table
+de départ contient un nombre de lignes raisonnables,
+c'est-à-dire si chaque dimension n'est pas trop ventilée.
+- L'argument `nb_tab = "max"` créant le plus de tableaux possibles engendrera
+nécessairement le plus de secret, mais elle pourra aussi convenir quand les
+tableaux d'origine sont très longs et nécessitent d'être beaucoup découpés pour
+que la pose du secret soit possible avec `Tau-Argus`.
 
-### Préparation des données
+### Exemple
+
+Comme tout est géré par la fonction `tab_rtauargus`, la pose du secret sur un tableau
+à 4 ou 5 dimensions n'ajoute pas de difficultés particulières pour l'utilisateur
+en réalité.
+
+Nous présentons ici un exemple de pose de secret sur un tableau à 4 dimensions.
+
+#### Préparation des données
 
 
 ```r
@@ -165,7 +201,7 @@ str(datatest1)
 ```
 
 
-### Préparation des arguments pour `tab_rtauargus`
+#### Préparation des arguments pour `tab_rtauargus`
 
 
 ```r
@@ -174,7 +210,7 @@ totcode <- c(treff ="Total",cj ="Total", A10 = "Total", type_distrib ="Total")
 explanatory_vars<- names(totcode)
 ```
 
-### Pose du secret primaire
+#### Pose du secret primaire
 
 
 ```r
@@ -190,13 +226,13 @@ datatest1_with_prim <- datatest1 %>%
     )
 ```
 
-### Pose du secret primaire avec rtauargus
+#### Pose du secret secondaire avec `rtauargus`
 
 Pour poser le secret secondaire, on utilise la fonction `tab_rtauargus` avec
-l'argument `split_tab = TRUE`. Ainsi, Tau-Argus n'aura pas à traiter directement
-le secret sur la table à 4 dimensions. En effet, la fonction `tab_rtauargus` va
+l'argument `split_tab = TRUE`. Ainsi, `Tau-Argus` n'aura pas à traiter directement
+le secret sur la table à 4 dimensions. La fonction `tab_rtauargus` va
 découper la table originale en un certain nombre de tables qui seront protégées
-comme des tables liées avec un appel à `tab_multi_manager`.
+comme des tables liées avec un appel sous-jacent à `tab_multi_manager`.
 
 
 
@@ -233,7 +269,7 @@ res_wi_split <- tab_rtauargus(
 #> --- Current table to treat:  tab2 ---
 #> --- Current table to treat:  tab1 ---
 tictoc::toc()
-#> 37.53 sec elapsed
+#> 42.43 sec elapsed
 ```
 
 La réduction de dimensions a conduit à construire deux sous-tableaux de 3
@@ -282,132 +318,7 @@ res_wi_split %>%
 #> 4    V 297
 ```
 
-## Comparaison avec une pose du secret sans réduire la dimension de la table
-
-`Tau-Argus` est en capacité de poser le secret secondaire sur un tableau à 4
-dimensions avec Modular, mais, en plus d'émettre un avertissement sur le
-fait qu'avec ce nombre de dimensions, la qualité du résultat n'est pas garantie,
-il est aussi beaucoup plus long à poser le secret secondaire que lorsqu'il
-traite deux tables liées issues du tableau original.
 
 
-```r
-tictoc::tic()
-res_wo_split <- tab_rtauargus(
-    tabular = datatest1_with_prim,
-    files_name = "datatest1",
-    dir_name = "example_1/wo_split",
-    explanatory_vars = explanatory_vars,
-    totcode = totcode,
-    value = "pizzas_tot",
-    freq = "nb_obs",
-    secret_var = "is_secret_prim",
-    verbose = TRUE,
-    split_tab = FALSE
-)
-#> Warning :
-#> It is highly recommended to use split_tab = TRUE when using rtauargus with 4 or 5 dimensions tables.
-#> It allows to split the table in several tables with 3 dimensions.
-#> 
-#> With split_tab = FALSE, tauargus treats the table in 4 or 5 dimensions.
-#> In this case, the secondary secret may not being optimal according to tauargus itself
-#> and the process may take longer.
-#> Start of batch procedure; file: Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\example_1\wo_split\datatest1.arb
-#> <OPENTABLEDATA> "Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\example_1\wo_split\datatest1.tab"
-#> <OPENMETADATA> "Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\example_1\wo_split\datatest1.rda"
-#> <SPECIFYTABLE> "treff""cj""A10""type_distrib"|"pizzas_tot"||
-#> <SAFETYRULE> MAN(10)
-#> <READTABLE> 1
-#> Tables have been read
-#> <APRIORI> "Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\example_1\wo_split\datatest1.hst",1,",",0,0
-#> Apriory file: Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\example_1\wo_split\datatest1.hst has been applied
-#>                    to table: treff x cj x A10 x type_distrib | pizzas_tot
-#> Apriori file Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\example_1\wo_split\datatest1.hst has been read
-#> <SUPPRESS> MOD(1,5,1,0,0)
-#> Start of the modular protection for table treff x cj x A10 x type_distrib | pizzas_tot
-#> WARNING: The table has 4 dimensions.
-#>                    Running Modular can take a lot of time and maybe it is difficult to obtain a correct result.
-#>                    Please check the results carefully.
-#>                    
-#> End of modular protection. Time used 307 seconds
-#>                    Number of suppressions: 278
-#> <WRITETABLE> (1,4,,"Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\example_1\wo_split\datatest1.csv")
-#> Table: treff x cj x A10 x type_distrib | pizzas_tot has been written
-#>                    Output file name: Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\example_1\wo_split\datatest1.csv
-#> End of TauArgus run
-tictoc::toc()
-#> 310.03 sec elapsed
-```
 
-Avec seulement 689 lignes at aucune variable hiérarchique, la pose directe du
-secret prend environ 5 minutes à `Tau-Argus`.
-
-
-```r
-res_wo_split %>%
-    mutate(
-      flag = case_when(
-        is_secret_freq ~ "A",
-        is_secret_dom ~ "B",
-        TRUE ~ Status
-      )
-    ) %>%
-    count(flag)
-#>   flag   n
-#> 1    A  79
-#> 2    B  35
-#> 3    D 260
-#> 4    V 315
-```
-
-On peut observer que le traitement de la table à 4 dimensions directement
-génère un masque un peu moins chargé en secret: 255 cellules en secret secondaire,
-contre 280 avec une réduction de dimensions.
-
-Il est difficile d'anticiper cette différence puisqu'elle est très dépendante
-de la structuration des données, de la présence du secret primaire au sein du
-tableau original et de la façon dont les sous-tableuax vont être construits.
-
-## Options complémentaires
-
-La réduction de dimensions bénéficie de deux options complémentaires, qui doivent
-être manipulées par des mains expertes.
-
-- l'argument `nb_tab` permet d'orienter la réduction de dimensions selon les options
-suivantes:
-  - `nb_tab = "min"`: la réduction produira le minimum de sous-tableaux possibles,
-  - `nb_tab = "max"`: la réduction produira le maximum de sous-tableaux possibles,
-  - `nb_tab = "smart"` (défaut): la réduction s'adaptera en fonction d'une taille
-  limite des tableaux fixée par avance, quand cela sera possible.
-- l'argument `limit` permet de fixer un nombre maximum de lignes souhaitées
-par sous-tableau. Il est fixé par défaut à `14500L`, suite à différents tests
-réalisés. Cette limite est utilisée lorsque `nb_tab = "smart"`. Elle peut être
-dépassée dans les faits.
-
-Il est déconseillé de changer ces deux options dans un premier temps.
-
-- L'argument `nb_tab = "min"` est intéressant en termes de secret car c'est
-l'option qui fournira le moins de sur-secret dû à la mise en cohérence du secret
-entre les sous-tableaux. Il peut-être intéressant à utiliser si la table de départ
-contient un nombre de lignes raisonnables,c'est-à-dire si chaque dimension n'est
-pas trop ventilée.
-- L'argument `nb_tab = "max"` créant le plus de tableuax possibles engendrera
-nécessairement plus de secret, mais elle pourra convenir dans certains cas de
-tableaux d'origine très longs qui nécessitent d'être beaucoup découpés pour
-que la pose du secret soit possible sur `Tau-Argus`.
-
-
-## Détail de la vignette
-
-- Authors: **<a href="mailto:julien.jamme@insee.fr">Julien Jamme</a>** &
-**<a>Nathanael Rastout</a> ** & **<a> Andre-Raymond Socard </a>** &
-**<a> Wistan Pomel </a>**
-- Last update: **21/09/2023**
-- Version of rtauargus used: **1.2.0**
-- Version of &tau;-Argus used : **TauArgus 4.2.3**
-- R version used :  **4.2.3**
-
-  <p style="text-align: right">
-  <a href="#TOC" title="Back to summary">summary &uarr;</a>
-  </p>
 

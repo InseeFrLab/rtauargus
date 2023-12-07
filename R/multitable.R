@@ -140,7 +140,10 @@ tab_multi_manager <- function(
   params$value = value
   params$freq = freq
   params$suppress = suppress
-
+  params$suppress = suppress
+  params$split_tab = split_tab
+  params$nb_tab_option = nb_tab_option
+  params$limit = limit
 
   n_tbx = length(list_tables) # nombre de tableaux
 

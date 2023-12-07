@@ -15,12 +15,10 @@ in the nuts23_fr_corr_table dataset. Only "FR41", "FR42" and "FR43" NUTS2
 areas and their corresponding NUTS3 areas are in the data.
 The root is noted "Total_EAST"}
 \item{SIZE}{size of the companies (Number of employees in three categories
-\itemize{
-\item overall category "Total")}
+and overall category "Total")}
 \item{N_OBS}{Frequency, number of companies}
 \item{TOT}{turnover value in euros}
 \item{MAX}{turnover of the company which contributes the most to the cell.}
-}
 }
 }
 \usage{
