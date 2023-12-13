@@ -205,6 +205,7 @@ tab_rtauargus <- function(
         params_rt4[[param]] <- new_params[[param]]
       }
 
+      params_rt4$tabular <- tabular
       params_rt4$totcode <- totcode
       params_rt4$dir_name <- dir_name
       params_rt4$files_name <- files_name

@@ -7,10 +7,10 @@
 \format{
 A tibble/data frame with 5 612 rows and 15 variables:
 \describe{
-\item{A10}{business sector, no hierarchy}
-\item{cj}{legal category, no hierarchy}
-\item{type_distrib}{type of distribution, no hierarchy}
-\item{treff}{Number of employees (categorical), no hierarchy}
+\item{A10}{business sector, not hierarchical}
+\item{cj}{legal category, not hierarchical}
+\item{type_distrib}{type of distribution, not hierarchical}
+\item{treff}{Number of employees (categorical), not hierarchical}
 \item{nuts1}{NUTS region, no hierarchical}
 \item{nb_obs}{Frequency, number of companies}
 \item{nb_obs_rnd}{Frequency rounded, number of companies}

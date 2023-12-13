@@ -7,6 +7,7 @@ Depends: R (>= 3.5.0)
 Imports:
     purrr (>= 0.2),
     dplyr (>= 0.7),
+    data.table,
     gdata,
     stringr,
     rlang,

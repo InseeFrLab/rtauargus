@@ -92,15 +92,15 @@ from_4_to_3_case_2_hr <- function(
   # Hierarchy Reduction #
   ###########################
 
-  fonc_liste_df_4_var_1_non_hr <- function(codes_split,dfs){
-    lapply(
-      codes_split_1,
-      function(codes){
-        res <- dfs %>%
-          filter(dfs[[v1]] %in% codes)
-      }
-    )
-  }
+  # fonc_liste_df_4_var_1_non_hr <- function(codes_split,dfs){
+  #   lapply(
+  #     codes_split_1,
+  #     function(codes){
+  #       res <- dfs %>%
+  #         filter(dfs[[v1]] %in% codes)
+  #     }
+  #   )
+  # }
 
   liste_df_4_var_1_hr <- lapply(
     codes_split_1,

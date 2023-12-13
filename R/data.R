@@ -131,10 +131,10 @@
 #'
 #' @format A tibble/data frame with 689 rows and 12 variables:
 #' \describe{
-#'  \item{A10}{business sector, no hierarchy}
-#'   \item{cj}{legal category, no hierarchy}
-#'   \item{type_distrib}{type of distribution, no hierarchy}
-#'   \item{treff}{Number of employees (categorical), no hierarchy}
+#'  \item{A10}{business sector, not hierarchical}
+#'   \item{cj}{legal category, not hierarchical}
+#'   \item{type_distrib}{type of distribution, not hierarchical}
+#'   \item{treff}{Number of employees (categorical), not hierarchical}
 #'   \item{nb_obs}{Frequency, number of companies}
 #'  \item{nb_obs_rnd}{Frequency rounded, number of companies}
 #'   \item{pizzas_tot}{turnover value in euros}
@@ -151,10 +151,10 @@
 #'
 #' @format A tibble/data frame with 5 612 rows and 15 variables:
 #' \describe{
-#'  \item{A10}{business sector, no hierarchy}
-#'  \item{cj}{legal category, no hierarchy}
-#'  \item{type_distrib}{type of distribution, no hierarchy}
-#'  \item{treff}{Number of employees (categorical), no hierarchy}
+#'  \item{A10}{business sector, not hierarchical}
+#'  \item{cj}{legal category, not hierarchical}
+#'  \item{type_distrib}{type of distribution, not hierarchical}
+#'  \item{treff}{Number of employees (categorical), not hierarchical}
 #'  \item{nuts1}{NUTS region, no hierarchical}
 #'  \item{nb_obs}{Frequency, number of companies}
 #'  \item{nb_obs_rnd}{Frequency rounded, number of companies}
@@ -167,3 +167,22 @@
 #'
 #' }
 "datatest2"
+
+#' Companies data at individual level.
+#'
+#' @format A data.table with 9 786 rows and 12 variables:
+#' \describe{
+#'  \item{A10}{business sector, not hierarchical}
+#'  \item{A21}{business sector, not hierarchical but nested in A10}
+#'  \item{A88}{business sector, not hierarchical but nested in A21}
+#'  \item{CJ}{legal category, not hierarchical}
+#'  \item{TYPE}{type of distribution, not hierarchical}
+#'  \item{SIZE}{Number of employees (categorical), not hierarchical}
+#'  \item{NUTS1}{NUTS 1 level of European administrative regions, not hierarchical}
+#'  \item{NUTS2}{NUTS 2 level of European administrative regions, not hierarchical}
+#'  \item{NUTS3}{NUTS 3 level of European administrative regions, not hierarchical}
+#'  \item{WEIGHT}{Weight of the companies, numeric}
+#'  \item{TURNOVER}{Turnover, numeric}
+#'  \item{PRODUCTION}{Production, numeric}
+#' }
+"indiv_dt"
