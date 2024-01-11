@@ -69,7 +69,7 @@ A list of data.frames (secret arrays). \cr
 \description{
 Optimization of the function \code{link{rtauargus}} for a large number of
 crossovers (all having the same parameters). \cr
-(Optimisation de la fonction \code{\link[=rtauargus]{rtauargus()}} pour un grand nombre de
+(Optimisation de la fonction \code{\link[=micro_rtauargus]{micro_rtauargus()}} pour un grand nombre de
 croisements (ayant tous les mêmes paramètres).)
 }
 \details{
@@ -81,7 +81,7 @@ to read large text files of microdata.
 
 \code{rtauargus_plus} helps to improve the speed of execution. The function
 splits the list of tabs into groups of size \code{grp_size} and
-makes a call to \code{rtauargus} for each group. It writes an
+makes a call to \code{micro_rtauargus} for each group. It writes an
 asc file restricted to the only variables actually used within a
 of a group.
 
@@ -101,7 +101,7 @@ pour lire des fichiers texte volumineux de microdonnées.
 
 \code{rtauargus_plus} permet d'améliorer la vitesse d'exécution. La fonction
 découpe la liste des tabulations en groupes de taille \code{grp_size} et
-effectue un appel à \code{rtauargus} pour chaque groupe. Elle écrit un
+effectue un appel à \code{micro_rtauargus} pour chaque groupe. Elle écrit un
 fichier asc restreint aux seules variables effectivement utilisées au sein
 d'un groupe.
 
@@ -114,7 +114,7 @@ entre une lecture de fichiers asc trop volumineux et un nombre d'appels à
 Tau-Argus trop important. Elle peut être ajustée en fonction du nombre de
 variables communes à l'intérieur de chaque groupe de tabulations.)
 }
-\section{Limits in relation to the function \code{rtauargus}}{
+\section{Limits in relation to the function \code{micro_rtauargus}}{
 
 
 In return for the speed of execution, the crossings must have the
@@ -165,7 +165,7 @@ rtauargus_plus(
 )}
 }
 \seealso{
-\code{\link[=rtauargus]{rtauargus()}}, a function called repeatedly by
+\code{\link[=micro_rtauargus]{micro_rtauargus()}}, a function called repeatedly by
 \code{rtauargus_plus}. \cr
 fonction appelée de manière répétée par
 \code{rtauargus_plus}.

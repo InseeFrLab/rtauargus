@@ -158,7 +158,7 @@ After this small adjustment, the package is ready to be used.
 
 ### Function `rtauargus`.
 
-The eponymous function `rtauargus` performs a processing and retrieves the
+The function `micro_rtauargus` performs a processing and retrieves the
 results immediately in R.
 
 Completely abstaining from the internal workings of &tau;-Argus, it allows to
@@ -179,7 +179,7 @@ The last two arguments use the batch syntax &tau;-Argus.
 #### Minimalist example
 
 ```{r rtauargus_ex1}
-rtauargus(
+micro_rtauargus(
   microdata = microdata,
   explanatory_vars = "V1",
   safety_rules = "FREQ(3,10)",
@@ -206,7 +206,7 @@ data.frame), which we can continue to manipulate.
 
 ```{r rtauargus_ex2}
 secret1 <-
-  rtauargus(
+  micro_rtauargus(
     microdata = microdata,
     explanatory_vars = list("V1", c("V1", "V2")), # 2 tabs (V1, V1xV2)
     safety_rules = "FREQ(3,10)",
@@ -242,7 +242,7 @@ The following section provides details on the operation of the system.
 ## Process decomposition
 
 
-Using the `rtauargus` function is convenient in terms of lines of code to
+Using the `micro_rtauargus` function is convenient in terms of lines of code to
 enter. However, this approach can be quite cumbersome
 if the tables to be secreted have in common a certain number of
 characteristics.
@@ -253,7 +253,7 @@ examples seen so far, where all intermediate files were
 systematically regenerated, even if their content was identical.
 
 To do this, we can use the functions called successively by the
-function `rtauargus`, namely :
+function `micro_rtauargus`, namely :
 
 > **[micro_asc_rda()](#function-micro_asc_rda) &nbsp;&nbsp;&rarr;&nbsp;
     [micro_arb()](#function-micro_arb) &nbsp;&nbsp;&rarr;&nbsp;
@@ -654,7 +654,7 @@ getting started:
 - creation of hierarchical variables from microdata (function
   `write_hrc`).
 - taking into account of apriori file (argument `apriori` in `micro_arb`)
-- use of the `rtauargus` function from microdata already under
+- use of the `micro_rtauargus` function from microdata already under
   as a text file (not data.frame)
 - optimized launch of a large number of crosses with the same parameters
   (primary secrecy rules, secondary secrecy method, ...) : function

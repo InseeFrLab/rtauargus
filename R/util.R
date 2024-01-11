@@ -107,7 +107,7 @@ param_function <- function(f, list_param) {
   list_param[f_param_names]
 }
 
-# vecteur des variables nécessaires pour rtauargus()
+# vecteur des variables nécessaires pour micro_rtauargus()
 
 used_var <- function(explanatory_vars,
                      weight_var   = NULL,

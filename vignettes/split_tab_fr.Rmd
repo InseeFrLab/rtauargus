@@ -46,12 +46,12 @@ appelée pour organiser la pose du secret sur l'ensemble de ces tableaux.
 originales - augmentée des informations sur le secret secondaire.
 
 Ainsi, point important à retenir, la pose du secret secondaire est toujours
-réalisé par les algorithmes de `Tau-Argus`, le package `rtauargus` ne fait que
+réalisée par les algorithmes de `Tau-Argus`, le package `rtauargus` ne fait que
 découper le tableau en sous-tableaux à trois dimensions et assurer la cohérence
 du secret entre ces différents sous-tableaux liés entre eux.
 
 Cette méthode est susceptible de générer plus de secret qu'une attaque directe
-du problème. Mais celle-ci étant impossible, c'est un moindre mal.
+du problème. Mais celle-ci étant impossible dans les cas visés, c'est un moindre mal.
 
 Pour utiliser cette fonctionnalité, il est nécessaire que l'utilisateur
 pose de lui-même le secret primaire en amont.
@@ -111,8 +111,7 @@ présents dans la hiérarchie, comme indiqué dans la figure ci-dessous:
 
 ### Pour aller plus loin
 
-- [Une fiche plus théorique](https://inseefrlab.github.io/rtauargus/articles/split_tab_theorie_fr.html)
-- [Une fiche présentant les résultats de quelques tests](https://inseefrlab.github.io/rtauargus/articles/split_tab_tests.html)
+- [Article présentant la méthode et des résultats de simulation](https://github.com/InseeFrLab/dims_reduction_tables_workshop_20231215)
 
 
 ### Les principaux arguments ajoutés à `tab_rtauargus()` et `tab_multi_manager()`
@@ -269,7 +268,7 @@ res_wi_split <- tab_rtauargus(
 #> --- Current table to treat:  tab2 ---
 #> --- Current table to treat:  tab1 ---
 tictoc::toc()
-#> 42.43 sec elapsed
+#> 45.31 sec elapsed
 ```
 
 La réduction de dimensions a conduit à construire deux sous-tableaux de 3
@@ -300,7 +299,7 @@ str(res_wi_split)
 
 
 ```r
-res_wi_split %>%
+stats_wi_split <- res_wi_split %>%
     rename_with( ~"final_suppress", last_col()) %>%
     mutate(
       flag = case_when(
@@ -311,6 +310,7 @@ res_wi_split %>%
       )
     ) %>%
     count(flag)
+stats_wi_split
 #>   flag   n
 #> 1    A  79
 #> 2    B  35
@@ -318,7 +318,113 @@ res_wi_split %>%
 #> 4    V 297
 ```
 
+Avec l'option de découpage du tableau de départ, la pose du secret sur
+le tableau à 4 dimensions génère
+278 suppressions secondaires.
+
+#### Comparaison avec une pose du secret sans réduire la dimension de la table
+
+`Tau-Argus` est en capacité de poser le secret secondaire sur un tableau à 4
+dimensions avec `Modular`, mais, en plus d'émettre un avertissement sur le
+fait qu'avec ce nombre de dimensions, la qualité du résultat n'est pas garantie,
+il est aussi beaucoup plus long à poser le secret secondaire que lorsqu'il
+traite deux tables liées issues du tableau original.
 
 
+```r
+tictoc::tic()
+res_wo_split <- tab_rtauargus(
+    tabular = datatest1_with_prim,
+    files_name = "datatest1",
+    dir_name = "example_1/wo_split",
+    explanatory_vars = explanatory_vars,
+    totcode = totcode,
+    value = "pizzas_tot",
+    freq = "nb_obs",
+    secret_var = "is_secret_prim",
+    verbose = TRUE,
+    split_tab = FALSE
+)
+#> Warning :
+#> It is highly recommended to use split_tab = TRUE when using rtauargus with 4 or 5 dimensions tables.
+#> It allows to split the table in several tables with 3 dimensions.
+#> 
+#> With split_tab = FALSE, tauargus treats the table in 4 or 5 dimensions.
+#> In this case, the secondary secret may not being optimal according to tauargus itself
+#> and the process may take longer.
+#> Start of batch procedure; file: Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\example_1\wo_split\datatest1.arb
+#> <OPENTABLEDATA> "Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\example_1\wo_split\datatest1.tab"
+#> <OPENMETADATA> "Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\example_1\wo_split\datatest1.rda"
+#> <SPECIFYTABLE> "treff""cj""A10""type_distrib"|"pizzas_tot"||
+#> <SAFETYRULE> MAN(10)
+#> <READTABLE> 1
+#> Tables have been read
+#> <APRIORI> "Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\example_1\wo_split\datatest1.hst",1,",",0,0
+#> Apriory file: Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\example_1\wo_split\datatest1.hst has been applied
+#>                    to table: treff x cj x A10 x type_distrib | pizzas_tot
+#> Apriori file Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\example_1\wo_split\datatest1.hst has been read
+#> <SUPPRESS> MOD(1,5,1,0,0)
+#> Start of the modular protection for table treff x cj x A10 x type_distrib | pizzas_tot
+#> WARNING: The table has 4 dimensions.
+#>                    Running Modular can take a lot of time and maybe it is difficult to obtain a correct result.
+#>                    Please check the results carefully.
+#>                    
+#> End of modular protection. Time used 301 seconds
+#>                    Number of suppressions: 291
+#> <WRITETABLE> (1,4,,"Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\example_1\wo_split\datatest1.csv")
+#> Table: treff x cj x A10 x type_distrib | pizzas_tot has been written
+#>                    Output file name: Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\example_1\wo_split\datatest1.csv
+#> End of TauArgus run
+tictoc::toc()
+#> 306.34 sec elapsed
+```
 
+Avec seulement 689 lignes et aucune variable hiérarchique, la pose directe du
+secret prend environ 5 minutes à `Tau-Argus`.
+
+
+```r
+stats_wo_split <- res_wo_split %>%
+    mutate(
+      flag = case_when(
+        is_secret_freq ~ "A",
+        is_secret_dom ~ "B",
+        TRUE ~ Status
+      )
+    ) %>%
+    count(flag)
+stats_wo_split
+#>   flag   n
+#> 1    A  79
+#> 2    B  35
+#> 3    D 265
+#> 4    V 310
+```
+
+La pose directe du secret sur le tableau à 4 dimensions génère
+265 suppressions secondaires.
+
+
+On peut observer que le traitement de la table à 4 dimensions directement
+génère un masque un peu moins chargé en secret: 266 cellules en secret secondaire,
+contre 278 avec une réduction de dimensions.
+
+Il est difficile d'anticiper cette différence puisqu'elle est très dépendante
+de la structuration des données, de la présence du secret primaire au sein du
+tableau original et de la façon dont les sous-tableaux vont être construits.
+
+
+## Détail de la vignette
+
+- Authors: **<a> Wistan Pomel </a>** & **<a> Andre-Raymond Socard </a>** &
+**<a href="mailto:julien.jamme@insee.fr">Julien Jamme</a>** &
+**<a>Nathanael Rastout</a>**
+- Last update: **11/01/2024**
+- Version of rtauargus used: **1.2.0**
+- Version of &tau;-Argus used : **TauArgus 4.2.3**
+- R version used :  **4.2.3**
+
+  <p style="text-align: right">
+  <a href="#TOC" title="Back to summary">summary &uarr;</a>
+  </p>
 

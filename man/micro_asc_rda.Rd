@@ -244,9 +244,9 @@ supérieur à 15. Voir \code{\link[gdata:write.fwf]{gdata::write.fwf()}} (foncti
 \section{See also}{
 
 
-The function \code{\link[=rtauargus]{rtauargus()}}, which uses this
+The function \code{\link[=micro_rtauargus]{micro_rtauargus()}}, which uses this
 function and inherits its parameters. \cr
-(La fonction \code{\link[=rtauargus]{rtauargus()}}, qui utilise cette
+(La fonction \code{\link[=micro_rtauargus]{micro_rtauargus()}}, qui utilise cette
 fonction et hérite de ses paramètres.)
 }
 

@@ -2,7 +2,7 @@
 #'
 #' Optimization of the function \code{link{rtauargus}} for a large number of
 #' crossovers (all having the same parameters). \cr
-#' (Optimisation de la fonction [rtauargus()] pour un grand nombre de
+#' (Optimisation de la fonction [micro_rtauargus()] pour un grand nombre de
 #' croisements (ayant tous les mêmes paramètres).)
 #'
 #' In interactive mode, Tau-Argus can process up to 10 tabs
@@ -13,7 +13,7 @@
 #'
 #' `rtauargus_plus` helps to improve the speed of execution. The function
 #' splits the list of tabs into groups of size `grp_size` and
-#' makes a call to `rtauargus` for each group. It writes an
+#' makes a call to `micro_rtauargus` for each group. It writes an
 #' asc file restricted to the only variables actually used within a
 #' of a group.
 #'
@@ -34,7 +34,7 @@
 #'
 #' `rtauargus_plus` permet d'améliorer la vitesse d'exécution. La fonction
 #' découpe la liste des tabulations en groupes de taille `grp_size` et
-#' effectue un appel à `rtauargus` pour chaque groupe. Elle écrit un
+#' effectue un appel à `micro_rtauargus` pour chaque groupe. Elle écrit un
 #' fichier asc restreint aux seules variables effectivement utilisées au sein
 #' d'un groupe.
 #'
@@ -48,7 +48,7 @@
 #' variables communes à l'intérieur de chaque groupe de tabulations.)
 #'
 #'
-#' @section Limits in relation to the function `rtauargus`:
+#' @section Limits in relation to the function `micro_rtauargus`:
 #'
 #' In return for the speed of execution, the crossings must have the
 #' same characteristics (same primary secret rules, same secondary secret method,
@@ -91,7 +91,7 @@
 #'   entre 1 et 10).)
 #' @inheritParams micro_asc_rda
 #' @inheritParams micro_arb
-#' @inheritParams rtauargus
+#' @inheritParams micro_rtauargus
 #' @param suppress  secondary secret management method
 #' (Tau-Argus batch syntax). Only one method allowed for
 #' all tables. Example : `"GH(.,100)"` (the dot playing the role of the
@@ -104,7 +104,7 @@
 #' @return A list of data.frames (secret arrays). \cr
 #' (Une liste de data.frames (tableaux secrétisés).)
 #'
-#' @seealso [rtauargus()], a function called repeatedly by
+#' @seealso [micro_rtauargus()], a function called repeatedly by
 #' `rtauargus_plus`. \cr
 #' fonction appelée de manière répétée par
 #'   `rtauargus_plus`.
@@ -183,7 +183,7 @@ rtauargus_plus <- function(grp_size = 5,
           ),
           .dots
         )
-        do.call(rtauargus, params_rtauargus)
+        do.call(micro_rtauargus, params_rtauargus)
       }
     )
 

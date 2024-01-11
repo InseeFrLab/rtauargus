@@ -25,6 +25,12 @@ knitr::knit(
   encoding = "UTF-8"
 )
 
+knitr::knit(
+  "vignettes/split_tab.Rmd.orig",
+  "vignettes/split_tab.Rmd",
+  encoding = "UTF-8"
+)
+
 ### Versions françaises
 
 knitr::knit(
@@ -56,9 +62,3 @@ knitr::knit(
   "vignettes/split_tab_fr.Rmd",
   encoding = "UTF-8"
 )
-
-# knitr::knit(
-#   "vignettes/split_tab.Rmd.orig",
-#   "vignettes/split_tab.Rmd",
-#   encoding = "UTF-8"
-# )

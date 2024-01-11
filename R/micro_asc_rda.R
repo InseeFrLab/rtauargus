@@ -263,9 +263,9 @@ write_rda <- function(info_vars) {
 #'
 #' @section See also:
 #'
-#' The function [rtauargus()], which uses this
+#' The function [micro_rtauargus()], which uses this
 #' function and inherits its parameters. \cr
-#' (La fonction [rtauargus()], qui utilise cette
+#' (La fonction [micro_rtauargus()], qui utilise cette
 #' fonction et hérite de ses paramètres.)
 #'
 #' @examples

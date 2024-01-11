@@ -3,7 +3,7 @@
 #' @description
 #' `r lifecycle::badge("superseded")`
 #'
-#' Development on `rtauargus()` is complete, and for new code we recommend
+#' Development on `micro_rtauargus()` is complete, and for new code we recommend
 #' switching to the tabular-wise protection provided by `tab_rtauargus()`
 #' or `tab_multi_manager()`, which offer a lot more features for your
 #' protection problems.
@@ -109,7 +109,7 @@
 #' )}
 #' @export
 
-rtauargus <- function(microdata,
+micro_rtauargus <- function(microdata,
                       explanatory_vars,
                       safety_rules,
                       suppress,

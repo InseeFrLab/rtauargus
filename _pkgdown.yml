@@ -52,7 +52,7 @@ reference:
       Functions for protecting magnitude and frequency tables, i.e. from
       a microdataset. Original way to proceed but no longer the favored one.
     contents:
-    - rtauargus
+    - micro_rtauargus
     - rtauargus_plus
   - title: Step by step functions
     desc: "Mostly internal functions"
@@ -78,6 +78,7 @@ articles:
     - protect_multi_tables_fr
     - options_safety_rules
     - options_safety_rules_fr
+    - split_tab
     - split_tab_fr
   - title: Work with microdata data (old version)
     navbar: micro-wise
