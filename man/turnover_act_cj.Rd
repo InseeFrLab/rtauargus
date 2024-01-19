@@ -7,12 +7,12 @@
 \format{
 A tibble/data frame with 406 rows and 5 variables:
 \describe{
-  \item{ACTIVITY}{business sector, hierarchical variables with three levels described
-  in the activity_corr_table dataset. The root is noted "Total"}
-  \item{CJ}{Type of companies (3 categories + overall category "Total")}
-  \item{N_OBS}{Frequency, number of companies}
-  \item{TOT}{turnover}
-  \item{MAX}{turnover of the company which contributes the most to the cell.}
+\item{ACTIVITY}{business sector, hierarchical variables with three levels described
+in the activity_corr_table dataset. The root is noted "Total"}
+\item{CJ}{Type of companies (3 categories + overall category "Total")}
+\item{N_OBS}{Frequency, number of companies}
+\item{TOT}{turnover}
+\item{MAX}{turnover of the company which contributes the most to the cell.}
 }
 }
 \usage{

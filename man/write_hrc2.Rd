@@ -10,7 +10,7 @@ write_hrc2(
   sort_table = FALSE,
   rev = FALSE,
   hier_lead_string = getOption("rtauargus.hierleadstring"),
-  adjust_unique_roots = FALSE,
+  adjust_unique_roots = TRUE,
   add_char = "ZZZ"
 )
 }
@@ -38,7 +38,7 @@ value mentionned in the package options (i.e. "@" at the package startup).
 \cr
 Caractère unique repérant le niveau de profondeur dans le .hrc}
 
-\item{adjust_unique_roots}{boolean. If TRUE will add fictional roots to the
+\item{adjust_unique_roots}{boolean. If TRUE (default) will add fictional roots to the
 correspondence table, by doing so there will be no unique roots in the hrc file.
 With tabular function, unique roots are not handled by Tau-Argus. \cr
 Si TRUE la fonction va ajouter des feuilles fictives au fichier .hrc afin
@@ -48,7 +48,7 @@ des problèmes dans l'exécution de Tau-Argus}
 \item{add_char}{character If adjust_unique_roots is TRUE add_char is the string that will
 be used to create fictional roots, be sure that this string does not create
 duplicates.The string will be paste at the beginning of a unique root
- default = "ZZZ" \cr
+default = "ZZZ" \cr
 character Si adjust_unique_roots est TRUE add_char est l'élément qui sera
 utilisé afin de créer des feuilles fictives, il faut être sur que cela
 ne crée pas de doublons dans la hiérarchie.La chaine de caractère sera
@@ -85,7 +85,7 @@ Here is how a correspondence table is assumed to look like:
 
 \tabular{lll}{
 \strong{type} \tab \strong{details} \cr
- \code{-------}  \tab  \code{------} \cr
+\verb{-------}  \tab  \verb{------} \cr
 planet \tab telluric   \cr
 planet \tab gasgiant   \cr
 star   \tab bluestar   \cr
@@ -124,14 +124,14 @@ level.
 
 \tabular{lll}{
 \strong{type} \tab \strong{details} \cr
- \code{-------}  \tab  \code{------} \cr
+\verb{-------}  \tab  \verb{------} \cr
 planet \tab telluric   \cr
-       \tab gasgiant   \cr
+\tab gasgiant   \cr
 star   \tab bluestar   \cr
-       \tab whitedwarf \cr
-       \tab reddwarf   \cr
+\tab whitedwarf \cr
+\tab reddwarf   \cr
 other  \tab blackhole  \cr
-       \tab pulsar     \cr
+\tab pulsar     \cr
 }
 
 Such cases still issue a warning for the presence of NAs, but do not pose
@@ -143,7 +143,7 @@ to the  lowest detail, creating NAs.
 
 \tabular{lll}{
 \strong{type} \tab \strong{details} \cr
- \code{-------}  \tab  \code{------} \cr
+\verb{-------}  \tab  \verb{------} \cr
 planet \tab telluric   \cr
 planet \tab gasgiant   \cr
 star   \tab            \cr
@@ -168,7 +168,7 @@ Voici l'aspect général que devrait avoir une table de correspondance :
 
 \tabular{lll}{
 \strong{type} \tab \strong{details} \cr
- \code{-------}  \tab  \code{------} \cr
+\verb{-------}  \tab  \verb{------} \cr
 planet \tab telluric   \cr
 planet \tab gasgiant   \cr
 star   \tab bluestar   \cr
@@ -211,14 +211,14 @@ niveau donné verticalement.
 
 \tabular{lll}{
 \strong{type} \tab \strong{details} \cr
- \code{-------}  \tab  \code{------} \cr
+\verb{-------}  \tab  \verb{------} \cr
 planet \tab telluric   \cr
-       \tab gasgiant   \cr
+\tab gasgiant   \cr
 star   \tab bluestar   \cr
-       \tab whitedwarf \cr
-       \tab reddwarf   \cr
+\tab whitedwarf \cr
+\tab reddwarf   \cr
 other  \tab blackhole  \cr
-       \tab pulsar     \cr
+\tab pulsar     \cr
 }
 
 De tels cas émettent toujours un avertissement du fait de la présence de NA,
@@ -231,7 +231,7 @@ manquante.
 
 \tabular{lll}{
 \strong{type} \tab \strong{details} \cr
- \code{-------}  \tab  \code{------} \cr
+\verb{-------}  \tab  \verb{------} \cr
 planet \tab telluric   \cr
 planet \tab gasgiant   \cr
 star   \tab            \cr

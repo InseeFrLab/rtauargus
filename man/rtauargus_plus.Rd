@@ -17,12 +17,12 @@ rtauargus_plus(
 \item{grp_size}{number of tables per Tau-Argus call (an integer between
 between 1 and 10). \cr
 (nombre de tableaux par appel de Tau-Argus (un entier compris
-  entre 1 et 10).)}
+entre 1 et 10).)}
 
-\item{microdata}{[\strong{required}] data.frame containing the microdata. \cr
-([\strong{obligatoire}] data.frame contenant les microdonnées.)}
+\item{microdata}{data.frame containing the microdata. \cr
+( data.frame contenant les microdonnées.)}
 
-\item{explanatory_vars}{[\strong{required}] categorical variables, in
+\item{explanatory_vars}{categorical variables, in
 form of a list of vectors. Each element of the list is a vector of
 variable names forming a tab.
 Example: \code{list(c("CJ", "A21"), c("SEX", "REGION"))} for the first
@@ -30,7 +30,7 @@ table crossing \code{CJ} x \code{A21} and the second table crossing
 \code{SEXE} x \code{REGION}.
 If a single tabulation, a simple vector of the variables to be crossed is
 accepted (no need for \code{list(...)}). \cr
-([\strong{obligatoire}] variables catégorielles, sous
+( variables catégorielles, sous
 forme de liste de vecteurs. Chaque élément de la liste est un vecteur des
 noms des variables formant une tabulation.
 Exemple: \code{list(c("CJ", "A21"), c("SEX", "REGION"))} pour la première
@@ -39,28 +39,28 @@ table croisant \code{CJ} x \code{A21} et la seconde croisant
 Si une seule tabulation, un simple vecteur des variables à croiser est
 accepté (pas besoin de \code{list(...)}).)}
 
-\item{safety_rules}{[\strong{required}] primary secret rule(s).
+\item{safety_rules}{primary secret rule(s).
 String in Tau-Argus batch syntax. The weighting is treated
 in a separate parameter (do not specify WGT here, use the
 \code{weighted}). \cr
-([\strong{obligatoire}] règle(s) de secret primaire.
+( règle(s) de secret primaire.
 Chaîne de caractères en syntaxe batch Tau-Argus. La pondération est traitée
 dans un paramètre à part (ne pas spécifier WGT ici, utiliser le paramètre
 \code{weighted}).)}
 
-\item{suppress}{[\strong{required}] secondary secret management method
+\item{suppress}{secondary secret management method
 (Tau-Argus batch syntax). Only one method allowed for
 all tables. Example : \code{"GH(.,100)"} (the dot playing the role of the
 tabulation number). \cr
-[\strong{obligatoire}] méthode de gestion du secret
-  secondaire (syntaxe batch de Tau-Argus). Une seule méthode autorisée pour
-  tous les tableaux. Exemple \code{"GH(.,100)"} (le point jouant le rôle du
-  numéro de tabulation).}
+méthode de gestion du secret
+secondaire (syntaxe batch de Tau-Argus). Une seule méthode autorisée pour
+tous les tableaux. Exemple \code{"GH(.,100)"} (le point jouant le rôle du
+numéro de tabulation).}
 
 \item{...}{optional parameters for \code{micro_asc_rda}, \code{micro_arb}
 and \code{run_arb}. See the help for these functions. \cr
 (paramètres optionnels pour \code{micro_asc_rda}, \code{micro_arb}
-   et \code{run_arb}. Voir l'aide de ces fonctions.)}
+et \code{run_arb}. Voir l'aide de ces fonctions.)}
 }
 \value{
 A list of data.frames (secret arrays). \cr
@@ -69,7 +69,7 @@ A list of data.frames (secret arrays). \cr
 \description{
 Optimization of the function \code{link{rtauargus}} for a large number of
 crossovers (all having the same parameters). \cr
-(Optimisation de la fonction \code{\link{rtauargus}} pour un grand nombre de
+(Optimisation de la fonction \code{\link[=micro_rtauargus]{micro_rtauargus()}} pour un grand nombre de
 croisements (ayant tous les mêmes paramètres).)
 }
 \details{
@@ -81,7 +81,7 @@ to read large text files of microdata.
 
 \code{rtauargus_plus} helps to improve the speed of execution. The function
 splits the list of tabs into groups of size \code{grp_size} and
-makes a call to \code{rtauargus} for each group. It writes an
+makes a call to \code{micro_rtauargus} for each group. It writes an
 asc file restricted to the only variables actually used within a
 of a group.
 
@@ -101,7 +101,7 @@ pour lire des fichiers texte volumineux de microdonnées.
 
 \code{rtauargus_plus} permet d'améliorer la vitesse d'exécution. La fonction
 découpe la liste des tabulations en groupes de taille \code{grp_size} et
-effectue un appel à \code{rtauargus} pour chaque groupe. Elle écrit un
+effectue un appel à \code{micro_rtauargus} pour chaque groupe. Elle écrit un
 fichier asc restreint aux seules variables effectivement utilisées au sein
 d'un groupe.
 
@@ -114,7 +114,7 @@ entre une lecture de fichiers asc trop volumineux et un nombre d'appels à
 Tau-Argus trop important. Elle peut être ajustée en fonction du nombre de
 variables communes à l'intérieur de chaque groupe de tabulations.)
 }
-\section{Limits in relation to the function \code{rtauargus}}{
+\section{Limits in relation to the function \code{micro_rtauargus}}{
 
 
 In return for the speed of execution, the crossings must have the
@@ -165,8 +165,8 @@ rtauargus_plus(
 )}
 }
 \seealso{
-\code{\link{rtauargus}}, a function called repeatedly by
+\code{\link[=micro_rtauargus]{micro_rtauargus()}}, a function called repeatedly by
 \code{rtauargus_plus}. \cr
 fonction appelée de manière répétée par
-  \code{rtauargus_plus}.
+\code{rtauargus_plus}.
 }

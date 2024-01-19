@@ -8,14 +8,14 @@
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
-  fig.path = "man/figures/"
+  fig.path = "man/figures/README-"
 )
 ```
 
 # rtauargus <a href='https://inseefrlab.github.io/rtauargus/'><img src='man/figures/rtauargus_logo_small.png' align="right" width="120" /></a>  
 
 <!-- badges: start -->
-[![pipeline status](https://gitlab.insee.fr/outilsconfidentialite/rtauargus/badges/master/pipeline.svg)](https://gitlab.insee.fr/outilsconfidentialite/rtauargus/-/pipelines)
+<!-- [![pipeline status](https://gitlab.insee.fr/outilsconfidentialite/rtauargus/badges/master/pipeline.svg)](https://gitlab.insee.fr/outilsconfidentialite/rtauargus/-/pipelines) -->
 <!-- badges: end -->
 
 <!--![](vignettes/R_logo_small.png) ![](vignettes/TauBall2_small.png)-->
@@ -163,5 +163,5 @@ same directory, too. To go further, you can consult the latest version of the
 The functions of *rtauargus* calling τ-Argus require that this software be accessible from the workstation. The download of τ-Argus is done on the [dedicated page](https://github.com/sdcTools/tauargus/releases) of the *sdcTools* git repository.
 
 _The package was developed on the basis of open source versions of &tau;-Argus 
-(versions 4.2 and above), in particular the latest version available at the 
-time of development (4.2.2b1). It is not compatible with version 3.5.**_
+(versions 4.2 and above), in particular the version used for this version is
+τ-Argus 4.2.3. It is not compatible with version 3.5.**_

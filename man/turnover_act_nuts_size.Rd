@@ -7,18 +7,18 @@
 \format{
 A tibble/data frame with 3 168 rows and 6 variables:
 \describe{
- \item{ACTIVITY}{business sector, hierarchical variables with three levels described
-  in the activity_corr_table dataset. The root is noted "Total"}
-  \item{NUTS}{nuts - european denomination of administrative levels.
- Hierarchical variables with two levels (nuts2 and nuts3) described
-  in the nuts23_fr_corr_table dataset. Only "FR41", "FR42" and "FR43" NUTS2
-  areas and their corresponding NUTS3 areas are in the data.
-  The root is noted "Total_EAST"}
-  \item{SIZE}{size of the companies (Number of employees in three categories
-  + overall category "Total")}
-  \item{N_OBS}{Frequency, number of companies}
-  \item{TOT}{turnover value in euros}
-  \item{MAX}{turnover of the company which contributes the most to the cell.}
+\item{ACTIVITY}{business sector, hierarchical variables with three levels described
+in the activity_corr_table dataset. The root is noted "Total"}
+\item{NUTS}{nuts - european denomination of administrative levels.
+Hierarchical variables with two levels (nuts2 and nuts3) described
+in the nuts23_fr_corr_table dataset. Only "FR41", "FR42" and "FR43" NUTS2
+areas and their corresponding NUTS3 areas are in the data.
+The root is noted "Total_EAST"}
+\item{SIZE}{size of the companies (Number of employees in three categories
+and overall category "Total")}
+\item{N_OBS}{Frequency, number of companies}
+\item{TOT}{turnover value in euros}
+\item{MAX}{turnover of the company which contributes the most to the cell.}
 }
 }
 \usage{

@@ -2,15 +2,18 @@ Package: rtauargus
 Type: Package
 Title: Using Tau-Argus from R
 Language: fr
-Version: 1.1.2
+Version: 1.2.0
 Depends: R (>= 3.5.0)
 Imports:
     purrr (>= 0.2),
     dplyr (>= 0.7),
+    data.table,
     gdata,
     stringr,
     rlang,
-    zoo
+    zoo,
+    sdcHierarchies,
+    lifecycle
 Suggests:
     testthat,
     knitr,
@@ -39,6 +42,14 @@ Authors@R: c(
 	  "Félix", "Beroud",
 	  role = c("aut")
 	),
+	person(
+	  "André-Raymond", "Socard",
+	  role = c("aut")
+	),
+	person(
+	  "Wistan", "Pomel",
+	  role = c("aut")
+	),
     person(
       family = "Institut National de la Statistique et des Études Économiques",
       role = "cph"
@@ -48,9 +59,12 @@ Description: Protects tables by calling the Tau-Argus software from R.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.1.2
+RoxygenNote: 7.2.3
 VignetteBuilder: knitr
 URL: https://inseefrlab.github.io/rtauargus,
     https://github.com/inseefrlab/rtauargus,
     https://inseefrlab.github.io/rtauargus/
 BugReports: https://github.com/inseefrlab/rtauargus/issues
+Roxygen: list(markdown = TRUE)
+StagedInstall: no
+

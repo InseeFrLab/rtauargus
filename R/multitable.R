@@ -9,7 +9,7 @@ journal_add_line <- function(journal,...){
 
 #' Manages the secondary secret of a list of tables
 #' @inheritParams tab_rtauargus
-#' @param list_tables named list of dataframes representing the tables to protect
+#' @param list_tables named list of `data.frame` or `data.table` representing the tables to protect
 #' @param list_explanatory_vars named list of character vectors of explanatory
 #' variables of each table mentionned in list_tables. Names of the list are the same as of the list of tables.
 #' @param alt_hrc named list for alternative hierarchies (useful for non nested-hierarchies)
@@ -17,13 +17,13 @@ journal_add_line <- function(journal,...){
 #' @param ip_start integer: Interval protection level to apply at first treatment of each table
 #' @param ip_end integer: Interval protection level to apply at other treatments
 #' @param num_iter_max integer: Maximum of treatments to do on each table (default to 10)
-#' @param ... other arguments of \code{tab_rtauargus2()}
+#' @param ... other arguments of `tab_rtauargus2()`
 #'
 #' @return original list of tables. Secret Results of each iteration is added to each table.
 #' For example, the result of first iteration is called 'is_secret_1' in each table.
 #' It's a boolean variable, whether the cell has to be masked or not.
 #'
-#' @seealso \code{tab_rtauargus2}
+#' @seealso `tab_rtauargus2`
 #'
 #' @examples
 #' library(rtauargus)
@@ -58,7 +58,7 @@ journal_add_line <- function(journal,...){
 #' \dontrun{
 #' options(
 #'   rtauargus.tauargus_exe =
-#'     "Y:/Logiciels/TauArgus/TauArgus4.2.2b1/TauArgus.exe"
+#'     "Y:/Logiciels/TauArgus/TauArgus4.2.3/TauArgus.exe"
 #' )
 #' res_1 <- tab_multi_manager(
 #'   list_tables = list_data_2_tabs,
@@ -73,11 +73,39 @@ journal_add_line <- function(journal,...){
 #'   secret_var = "is_secret_prim",
 #'   totcode =  "Total"
 #' )
+#'
+#'
+#' # With the reduction dimensions feature
+#'
+#' data("datatest1")
+#' data("datatest2")
+#'
+#' datatest2b <- datatest2 %>%
+#'   filter(cj == "Total", treff == "Total", type_distrib == "Total") %>%
+#'   select(-cj, -treff, -type_distrib)
+#'
+#' str(datatest2b)
+#'
+#' res <- tab_multi_manager(
+#'   list_tables = list(d1 = datatest1, d2 = datatest2b),
+#'     list_explanatory_vars = list(
+#'         d1 = names(datatest1)[1:4],
+#'         d2 = names(datatest2b)[1:2]
+#'     ),
+#'  dir_name = "tauargus_files",
+#'  value = "pizzas_tot_abs",
+#'  freq = "nb_obs_rnd",
+#'  secret_var = "is_secret_prim",
+#'  totcode =  "Total",
+#'  split_tab = TRUE
+#' )
+#'
 #' }
 #'
 #' @importFrom rlang .data
 #'
 #' @export
+
 tab_multi_manager <- function(
     list_tables,
     list_explanatory_vars,
@@ -94,6 +122,9 @@ tab_multi_manager <- function(
     ip_start = 10,
     ip_end = 0,
     num_iter_max = 10,
+    split_tab = FALSE,
+    nb_tab_option = "smart",
+    limit = 14700,
     ...
 ){
   start_time <- Sys.time()
@@ -109,7 +140,10 @@ tab_multi_manager <- function(
   params$value = value
   params$freq = freq
   params$suppress = suppress
-
+  params$suppress = suppress
+  params$split_tab = split_tab
+  params$nb_tab_option = nb_tab_option
+  params$limit = limit
 
   n_tbx = length(list_tables) # nombre de tableaux
 
@@ -214,7 +248,15 @@ tab_multi_manager <- function(
       }else{
         cost_var_tab <- NULL
       }
-      tableau <- tableau[, c(list_explanatory_vars[[nom_tab]], value, freq, cost_var_tab, secret_var)]
+      secret_var_tab <- if(!is.null(params$secret_no_pl)) c(secret_var,params$secret_no_pl) else secret_var
+
+      tableau <- as.data.frame(tableau)[, c(list_explanatory_vars[[nom_tab]], value, freq, cost_var_tab, secret_var_tab)]
+
+      if(!is.null(params$secret_no_pl)){
+        names(tableau)[names(tableau) == params$secret_no_pl] = "secret_no_pl"
+      } else {
+        tableau$secret_no_pl <- FALSE
+      }
 
       var_a_ajouter <- setdiff(all_expl_vars, names(tableau))
       for (nom_col in var_a_ajouter){
@@ -227,7 +269,7 @@ tab_multi_manager <- function(
 
       tableau[[noms_col_T[[nom_tab]]]] <- TRUE
 
-      return(tableau)
+      return(as.data.frame(tableau))
     }
   )
 
@@ -239,6 +281,9 @@ tab_multi_manager <- function(
     by = by_vars,
     all = TRUE
   )
+
+  table_majeure$secret_no_pl_iter <- table_majeure$secret_no_pl
+  secret_no_pl_iter <- "secret_no_pl_iter"
 
   purrr::walk(
     noms_col_T,
@@ -258,11 +303,13 @@ tab_multi_manager <- function(
   # hrc_unif <- res_unif$hrc_unif
 
   list_hrc <- purrr::map(
-      list_explanatory_vars,
-      function(nom_vars){
-        purrr::discard(hrc[nom_vars], is.na) %>%  unlist()
-      }
-    )
+    list_explanatory_vars,
+    function(nom_vars){
+      purrr::discard(hrc[nom_vars], is.na) %>%  unlist()
+    }
+  )
+
+  list_hrc <- purrr::map(list_hrc, function(l) if(length(l) == 0) NULL else l)
 
   purrr::walk(
     names(alt_hrc),
@@ -293,15 +340,17 @@ tab_multi_manager <- function(
   num_iter_par_tab[!has_primary_secret] <- 1
   num_iter_all = 0
 
-  common_cells_modified <- as.data.frame(matrix(ncol = length(all_expl_vars)+1))
-  names(common_cells_modified) <- c(all_expl_vars, "iteration")
+  # common_cells_modified <- as.data.frame(matrix(ncol = length(all_expl_vars)+1))
+  # names(common_cells_modified) <- c(all_expl_vars, "iteration")
+
+  n_common_cells_modified <- 0
 
   journal <- file.path(dir_name,"journal.txt")
   if(file.exists(journal)) invisible(file.remove(journal))
   journal_add_line(journal, "Start time:", format(start_time, "%Y-%m-%d  %H:%M:%S"))
   journal_add_break_line(journal)
   journal_add_line(journal, "Function called to protect the tables:", func_to_call)
-  journal_add_line(journal, "Interval Protection Level for first iteration:", ip_start)
+  journal_add_line(journal, "Interval Protection Level for primary secret cells:", ip_start)
   journal_add_line(journal, "Interval Protection Level for other iterations:", ip_end)
   journal_add_line(journal, "Nb of tables to treat: ", n_tbx)
   journal_add_break_line(journal)
@@ -323,19 +372,17 @@ tab_multi_manager <- function(
     nom_col_identifiante <- paste0("T_", num_tableau)
     tableau_a_traiter <- which(table_majeure[[nom_col_identifiante]])
 
-    var_secret_prim <- secret_var
-
-    var_secret_apriori <- paste0("is_secret_", num_iter_all-1, collapse = "")
+    if (num_iter_all == 1){
+      var_secret_apriori <- secret_var
+    } else {
+      var_secret_apriori <- paste0("is_secret_", num_iter_all-1, collapse = "")
+    }
 
     vrai_tableau <- table_majeure[tableau_a_traiter,]
 
-    if (num_iter_all == 1){
-      vrai_tableau[,var_secret_apriori] <- vrai_tableau[,var_secret_prim]
-    }
-
     ex_var <- list_explanatory_vars[[num_tableau]]
 
-    vrai_tableau <- vrai_tableau[,c(ex_var, value, freq, var_secret_prim, var_secret_apriori, cost_var)]
+    vrai_tableau <- vrai_tableau[,c(ex_var, value, freq,var_secret_apriori,secret_no_pl_iter, cost_var)]
 
 
     # Other settings of the function to make secret ----
@@ -344,8 +391,8 @@ tab_multi_manager <- function(
     params$explanatory_vars = ex_var
     params$totcode = list_totcode[[num_tableau]]
     params$hrc = list_hrc[[num_tableau]]
-    params$secret_prim = var_secret_prim
     params$secret_var = var_secret_apriori
+    params$secret_no_pl = secret_no_pl_iter
     params$suppress = if(
       substr(suppress,1,3) == "MOD" & num_iter_par_tab[num_tableau] != 1
     ){
@@ -360,33 +407,39 @@ tab_multi_manager <- function(
       suppress
     }
     params$ip = if(num_iter_par_tab[num_tableau] == 1) ip_start else ip_end
+    # params$safety_rules <- "MAN(0)"
 
     res <- do.call(func_to_call, params)
     res$is_secret <- res$Status != "V"
-    prim_stat <- table(res$Status)["B"]
-    prim_stat <- ifelse(is.na(prim_stat), 0, prim_stat)
-    sec_stat <- table(res$Status)["D"]
-    sec_stat <- ifelse(is.na(sec_stat), 0, sec_stat)
-    valid_stat <- table(res$Status)["V"]
-    valid_stat <- ifelse(is.na(valid_stat), 0, valid_stat)
+
+    # Statistiques
+    prim_stat <- sum(res$Status == "B", na.rm = TRUE)
+    sec_stat <- sum(res$Status == "D", na.rm = TRUE)
+    valid_stat <- sum(res$Status == "V", na.rm = TRUE)
     denom_stat <- nrow(res)
 
-    res <- subset(res, select = -Status)
+    res <- subset(res, select = setdiff(names(res), "Status"))
 
     var_secret <- paste0("is_secret_", num_iter_all)
     table_majeure <- merge(table_majeure, res, all = TRUE)
     table_majeure[[var_secret]] <- table_majeure$is_secret
-    table_majeure <- subset(table_majeure, select = -is_secret)
+    table_majeure <- subset(
+      table_majeure,
+      select = setdiff(names(table_majeure), "is_secret")
+    )
 
-    if(num_iter_all == 1) {
-      var_secret_apriori <- var_secret_prim
-    }
 
     table_majeure[[var_secret]] <- ifelse(
       is.na(table_majeure[[var_secret]]),
       table_majeure[[var_secret_apriori]],
       table_majeure[[var_secret]]
     )
+
+    table_majeure$secret_no_pl_iter <- ifelse(
+      table_majeure[[secret_var]],
+      table_majeure$secret_no_pl,
+      table_majeure[[var_secret]]
+    ) #TODO A REVOIR PR CORRIGER LES PL
 
     lignes_modifs <- which(table_majeure[[var_secret_apriori]] != table_majeure[[var_secret]])
 
@@ -400,16 +453,13 @@ tab_multi_manager <- function(
       )
     )
 
+    # update of common cells that have been modified
     modified <- common_cells[common_cells[[var_secret_apriori]] != common_cells[[var_secret]],all_expl_vars]
-    modified <- if(sum(is.na(modified))>0) modified[1,][-1,] else modified
-    if(nrow(modified)>0){
-      common_cells_modified <- rbind(
-        common_cells_modified,
-        cbind(
-          modified,
-          iteration = num_iter_all
-        )
-      )
+    # modified <- if(sum(is.na(modified))>0) modified[1,][-1,] else modified
+    if(nrow(modified) > 0){
+      modified <- cbind(modified, iteration = num_iter_all)
+      common_cells_modified <- if(n_common_cells_modified == 0) modified else rbind(common_cells_modified, modified)
+      n_common_cells_modified <- n_common_cells_modified + nrow(modified)
     }
 
     for(tab in noms_tbx){
@@ -505,7 +555,9 @@ tab_multi_manager <- function(
   )
   journal_add_break_line(journal)
   journal_add_line(journal, "Common cells hit by the secret:")
-  suppressWarnings(gdata::write.fwf(common_cells_modified[-1,], file = journal, append = TRUE))
+  if(n_common_cells_modified > 0){
+    suppressWarnings(gdata::write.fwf(common_cells_modified, file = journal, append = TRUE))
+  }
   journal_add_break_line(journal)
   journal_add_line(journal, "End time: ", format(Sys.time(), "%Y-%m-%d  %H:%M:%S"))
   journal_add_break_line(journal)

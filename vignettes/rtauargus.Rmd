@@ -45,7 +45,7 @@ more easily to possible modifications of the software (new
 methods available, additional options...).
 The syntax rules for writing batch are given in the &tau;-Argus reference manual and will be specified in a dedicated help section.
 
-> The package was developed on the basis of open source versions of &tau;-Argus (versions 4.2 and above), in particular the latest version available at the time of development (4.2.2b1).
+> The package was developed on the basis of open source versions of &tau;-Argus (versions 4.2 and above), in particular the latest version available at the time of development (4.2.3).
 >
 > It is not compatible with version 3.5.**_
 
@@ -82,10 +82,13 @@ The latest releases can be downloaded here: [https://github.com/sdcTools/tauargu
 ```
 • purrr (>= 0.2),
 • dplyr (>= 0.7),
+• data.table,
 • gdata,
 • stringr,
 • rlang,
-• zoo
+• zoo,
+• sdcHierarchies,
+• lifecycle
 ```
 The package _rtauargus_ can be installed now.
 
@@ -115,7 +118,7 @@ predefined. This can be changed for the duration of the R session, as follows:
 
 
 ```r
-loc_tauargus <- "Y:/Logiciels/TauArgus/TauArgus4.2.2b1/TauArgus.exe"
+loc_tauargus <- "Y:/Logiciels/TauArgus/TauArgus4.2.3/TauArgus.exe"
 
 options(rtauargus.tauargus_exe = loc_tauargus)
 ```
@@ -497,10 +500,10 @@ of `tab_multi_manager()` function.
 #### About this vignette
 
 - Authors: **<a href="mailto:julien.jamme@insee.fr">Julien Jamme</a>** & **<a href="mailto:nathanael.rastout@insee.fr">Nathanael Rastout</a>**
-- Last update: **06/01/2023**
-- Version of rtauargus used: **1.1.1**
-- Version of &tau;-Argus used : **TauArgus 4.2.2b1**
-- R version used :  **4.1.3**
+- Last update: **11/01/2024**
+- Version of rtauargus used: **1.2.0**
+- Version of &tau;-Argus used : **TauArgus 4.2.3**
+- R version used :  **4.2.3**
 
 <p style="text-align: right">
   <a href="#TOC" title="Back to summary">summary &uarr;</a>

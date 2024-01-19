@@ -8,7 +8,7 @@
 #'  \item{ACTIVITY}{business sector, hierarchical variables with three levels described
 #'   in the activity_corr_table dataset. The root is noted "Total"}
 #'   \item{SIZE}{size of the companies (Number of employees in three categories
-#'   + overall category "Total")}
+#'   and overall category "Total")}
 #'   \item{N_OBS}{Frequency, number of companies}
 #'   \item{TOT}{turnover value in euros}
 #'   \item{MAX}{turnover of the company which contributes the most to the cell.}
@@ -44,7 +44,7 @@
 #'  Hierarchical variables with two levels (nuts2 and nuts3) described
 #'   in the nuts23_fr_corr_table dataset. The root is noted "Total"}
 #'   \item{SIZE}{size of the companies (Number of employees in three categories
-#'   + overall category "Total")}
+#'   and overall category "Total")}
 #'   \item{N_OBS}{Frequency, number of companies}
 #'   \item{TOT}{turnover value in euros}
 #'   \item{MAX}{turnover of the company which contributes the most to the cell.}
@@ -81,7 +81,7 @@
 #'   \item{A21}{business sectors in 21 categories}
 #'   \item{A88}{business sectors in 88 categories}
 #' }
-#' @details Use the \code{write_hrc2} function to create a .hrc file from this
+#' @details Use the `write_hrc2` function to create a .hrc file from this
 #' correspondence table.
 "activity_corr_table"
 
@@ -95,7 +95,7 @@
 #'   \item{NUTS2}{NUTS2 levels in France - equivalent of French "Régions"}
 #'   \item{NUTS3}{NUTS3 levels in France - equivalent of French "Départements"}
 #' }
-#' @details Use the \code{write_hrc2} function to create a .hrc file from this
+#' @details Use the `write_hrc2` function to create a .hrc file from this
 #' correspondence table.
 "nuts23_fr_corr_table"
 
@@ -116,7 +116,7 @@
 #'   areas and their corresponding NUTS3 areas are in the data.
 #'   The root is noted "Total_EAST"}
 #'   \item{SIZE}{size of the companies (Number of employees in three categories
-#'   + overall category "Total")}
+#'   and overall category "Total")}
 #'   \item{N_OBS}{Frequency, number of companies}
 #'   \item{TOT}{turnover value in euros}
 #'   \item{MAX}{turnover of the company which contributes the most to the cell.}
@@ -125,3 +125,64 @@
 #' activity_corr_table
 #' nuts23_fr_corr_table
 "turnover_act_nuts_size"
+
+
+#' data crossing 4 categorical variables, none are hierarchical.
+#'
+#' @format A tibble/data frame with 689 rows and 12 variables:
+#' \describe{
+#'  \item{A10}{business sector, not hierarchical}
+#'   \item{cj}{legal category, not hierarchical}
+#'   \item{type_distrib}{type of distribution, not hierarchical}
+#'   \item{treff}{Number of employees (categorical), not hierarchical}
+#'   \item{nb_obs}{Frequency, number of companies}
+#'  \item{nb_obs_rnd}{Frequency rounded, number of companies}
+#'   \item{pizzas_tot}{turnover value in euros}
+#'   \item{pizzas_tot_abs}{turnover absolute value in euros}
+#'    \item{pizzas_max}{turnover max value in euros}
+#'    \item{is_secret_freq}{Boolean, TRUE if primary secret for frequency rule}
+#'    \item{is_secret_dom}{Boolean, TRUE if primary secret for dominance rule}
+#'   \item{is_secret_prim}{Boolean, TRUE if primary secret for any rule}
+#'
+#' }
+"datatest1"
+
+#' data crossing 5 categorical variables, none are hierarchical.
+#'
+#' @format A tibble/data frame with 5 612 rows and 15 variables:
+#' \describe{
+#'  \item{A10}{business sector, not hierarchical}
+#'  \item{cj}{legal category, not hierarchical}
+#'  \item{type_distrib}{type of distribution, not hierarchical}
+#'  \item{treff}{Number of employees (categorical), not hierarchical}
+#'  \item{nuts1}{NUTS region, no hierarchical}
+#'  \item{nb_obs}{Frequency, number of companies}
+#'  \item{nb_obs_rnd}{Frequency rounded, number of companies}
+#'  \item{pizzas_tot}{turnover value in euros}
+#'  \item{pizzas_tot_abs}{turnover absolute value in euros}
+#'  \item{pizzas_max}{turnover max value in euros}
+#'  \item{is_secret_freq}{Boolean, TRUE if primary secret for frequency rule}
+#'  \item{is_secret_dom}{Boolean, TRUE if primary secret for dominance rule}
+#'  \item{is_secret_prim}{Boolean, TRUE if primary secret for any rule}
+#'
+#' }
+"datatest2"
+
+#' Companies data at individual level.
+#'
+#' @format A data.table with 9 786 rows and 12 variables:
+#' \describe{
+#'  \item{A10}{business sector, not hierarchical}
+#'  \item{A21}{business sector, not hierarchical but nested in A10}
+#'  \item{A88}{business sector, not hierarchical but nested in A21}
+#'  \item{CJ}{legal category, not hierarchical}
+#'  \item{TYPE}{type of distribution, not hierarchical}
+#'  \item{SIZE}{Number of employees (categorical), not hierarchical}
+#'  \item{NUTS1}{NUTS 1 level of European administrative regions, not hierarchical}
+#'  \item{NUTS2}{NUTS 2 level of European administrative regions, not hierarchical}
+#'  \item{NUTS3}{NUTS 3 level of European administrative regions, not hierarchical}
+#'  \item{WEIGHT}{Weight of the companies, numeric}
+#'  \item{TURNOVER}{Turnover, numeric}
+#'  \item{PRODUCTION}{Production, numeric}
+#' }
+"indiv_dt"

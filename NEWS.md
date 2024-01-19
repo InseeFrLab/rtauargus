@@ -4,6 +4,29 @@ subtitle: History of changes / Historique des modifications
 output: rmarkdown::html_vignette
 ---
 
+
+## rtauargus 1.2.0
+
+[01/2024]
+
+* Implementation of a method to tackle some tables of 4/5 dimensions. 
+
+> The method is quickly explained and its use is shown in a specific vignette (french).
+> A paper explaining more deeply the idea and the modus operandi is available 
+here: "https://github.com/InseeFrLab/dims_reduction_tables_workshop_20231215".
+
+* Implementation of the function `tabulate_micro_data()` to compute tabular data from 
+a microdata file.
+
+> The function can create frequency and magnitude tabular data with hierarchical variables. 
+The tabular data computed contains the information to compute primary secret 
+according to frequency rule and (1,k)-dominance rule.
+
+* Resolution of a malfunction while dealing with costs.
+
+* **rtauargus()** function has been renamed more properly as **micro_rtauargus()**.
+Its arguments and its behaviour remain the same.
+
 ## rtauargus 1.1.2
 
 [01/02/2023]

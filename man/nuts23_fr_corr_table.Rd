@@ -7,8 +7,8 @@
 \format{
 A data frame with 92 rows and 3 variables:
 \describe{
-  \item{NUTS2}{NUTS2 levels in France - equivalent of French "Régions"}
-  \item{NUTS3}{NUTS3 levels in France - equivalent of French "Départements"}
+\item{NUTS2}{NUTS2 levels in France - equivalent of French "Régions"}
+\item{NUTS3}{NUTS3 levels in France - equivalent of French "Départements"}
 }
 }
 \usage{

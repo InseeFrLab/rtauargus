@@ -70,7 +70,7 @@ vect_aro <- Vectorize(arobase, vectorize.args = c("string", "number"))
 #' value mentionned in the package options (i.e. "@" at the package startup).
 #' \cr
 #' Caractère unique repérant le niveau de profondeur dans le .hrc
-#' @param adjust_unique_roots boolean. If TRUE will add fictional roots to the
+#' @param adjust_unique_roots boolean. If TRUE (default) will add fictional roots to the
 #' correspondence table, by doing so there will be no unique roots in the hrc file.
 #' With tabular function, unique roots are not handled by Tau-Argus. \cr
 #' Si TRUE la fonction va ajouter des feuilles fictives au fichier .hrc afin
@@ -98,13 +98,13 @@ vect_aro <- Vectorize(arobase, vectorize.args = c("string", "number"))
 #' This function mimicks some of its rigidities.
 #' \cr
 #'
-#' 1 \strong{Ideal case}
+#' 1 **Ideal case**
 #'
 #' Here is how a correspondence table is assumed to look like:
 #'
 #' \tabular{lll}{
-#' \strong{type} \tab \strong{details} \cr
-#'  \code{-------}  \tab  \code{------} \cr
+#' **type** \tab **details** \cr
+#'  `-------`  \tab  `------` \cr
 #' planet \tab telluric   \cr
 #' planet \tab gasgiant   \cr
 #' star   \tab bluestar   \cr
@@ -124,10 +124,10 @@ vect_aro <- Vectorize(arobase, vectorize.args = c("string", "number"))
 #' are correctly protected (seek further documentation or help if needed).
 #' \cr
 #'
-#' 2 \strong{Dealing with NAs}
+#' 2 **Dealing with NAs**
 #'
 #' The write_hrc2 function has to be preferably used without any NAs in your
-#' correspondence table. In presence of NAs, the \strong{sort} argument
+#' correspondence table. In presence of NAs, the **sort** argument
 #' has to be to FALSE. Indeed, NAs would be sorted together and, thus,
 #' be separated from their expected place in the hierarchy.
 #'
@@ -137,13 +137,13 @@ vect_aro <- Vectorize(arobase, vectorize.args = c("string", "number"))
 #' Please be careful when dealing with NAs and check thoroughly the
 #' resulting .hrc file, or consider filling in NAs beforehand.
 #'
-#' 2.1 \emph{Sparse hierarchies} \cr
+#' 2.1 *Sparse hierarchies* \cr
 #' Hierarchy is sparse when NAs are inserted instead of repeating under a given
 #' level.
 #'
 #' \tabular{lll}{
-#' \strong{type} \tab \strong{details} \cr
-#'  \code{-------}  \tab  \code{------} \cr
+#' **type** \tab **details** \cr
+#'  `-------`  \tab  `------` \cr
 #' planet \tab telluric   \cr
 #'        \tab gasgiant   \cr
 #' star   \tab bluestar   \cr
@@ -154,15 +154,15 @@ vect_aro <- Vectorize(arobase, vectorize.args = c("string", "number"))
 #' }
 #'
 #' Such cases still issue a warning for the presence of NAs, but do not pose
-#' any problem, if \strong{sort=FALSE} is set.
+#' any problem, if **sort=FALSE** is set.
 #'
-#' 2.2 \emph{Non-uniform hierarchies}\cr
+#' 2.2 *Non-uniform hierarchies*\cr
 #' Hierarchies with non-uniform depth happen when some levels are not detailed
 #' to the  lowest detail, creating NAs.
 #'
 #' \tabular{lll}{
-#' \strong{type} \tab \strong{details} \cr
-#'  \code{-------}  \tab  \code{------} \cr
+#' **type** \tab **details** \cr
+#'  `-------`  \tab  `------` \cr
 #' planet \tab telluric   \cr
 #' planet \tab gasgiant   \cr
 #' star   \tab            \cr
@@ -171,21 +171,21 @@ vect_aro <- Vectorize(arobase, vectorize.args = c("string", "number"))
 #' }
 #'
 #' Processing such a file will generate an error with the following messages:
-#' \emph{Missing values on the last column of the correspondence table is not allowed.
-#' If relevant, you could fill in with the value of the previous column}
+#' *Missing values on the last column of the correspondence table is not allowed.
+#' If relevant, you could fill in with the value of the previous column*
 #'
 #' @section Détails sur les tables de correspondance et le .hrc:
 #' Tau-Argus attend des fichiers écrits avec précision. Certaines de ses
 #' rigidités sont reproduites par cette fonction.
 #' \cr
 #'
-#' 1 \strong{Cas idéal}
+#' 1 **Cas idéal**
 #'
 #' Voici l'aspect général que devrait avoir une table de correspondance :
 #'
 #' \tabular{lll}{
-#' \strong{type} \tab \strong{details} \cr
-#'  \code{-------}  \tab  \code{------} \cr
+#' **type** \tab **details** \cr
+#'  `-------`  \tab  `------` \cr
 #' planet \tab telluric   \cr
 #' planet \tab gasgiant   \cr
 #' star   \tab bluestar   \cr
@@ -208,10 +208,10 @@ vect_aro <- Vectorize(arobase, vectorize.args = c("string", "number"))
 #' ou chercher de l'aide).
 #' \cr
 #'
-#' 2 \strong{Valeurs manquantes}
+#' 2 **Valeurs manquantes**
 #'
 #' La fonction write_hrc2 doit être utilisée de préférence sans aucun NA dans votre
-#' table de correspondance. En présence de NAs, l'argument \strong{sort}
+#' table de correspondance. En présence de NAs, l'argument **sort**
 #' doit être à FALSE. En effet, les NAs seraient triés ensemble et, donc,
 #' être séparées de leur place attendue dans la hiérarchie.
 #'
@@ -222,13 +222,13 @@ vect_aro <- Vectorize(arobase, vectorize.args = c("string", "number"))
 #' Soyez prudent lorsque vous manipulez des NA et vérifiez soigneusement
 #' le fichier .hrc résultant ou envisagez de remplir les NAs à l'avance.
 #'
-#' 2.1 \emph{Hiérarchies creuses} \cr
+#' 2.1 *Hiérarchies creuses* \cr
 #' Une hiérarchie est creuse si des NAs sont insérées au lieu de répéter un
 #' niveau donné verticalement.
 #'
 #' \tabular{lll}{
-#' \strong{type} \tab \strong{details} \cr
-#'  \code{-------}  \tab  \code{------} \cr
+#' **type** \tab **details** \cr
+#'  `-------`  \tab  `------` \cr
 #' planet \tab telluric   \cr
 #'        \tab gasgiant   \cr
 #' star   \tab bluestar   \cr
@@ -239,16 +239,16 @@ vect_aro <- Vectorize(arobase, vectorize.args = c("string", "number"))
 #' }
 #'
 #' De tels cas émettent toujours un avertissement du fait de la présence de NA,
-#' mais ne posent aucun problème, si on utilise \strong{sort=FALSE}.
+#' mais ne posent aucun problème, si on utilise **sort=FALSE**.
 #'
-#' 2.2 \emph{Hiérarchies non-uniformes}\cr
+#' 2.2 *Hiérarchies non-uniformes*\cr
 #' Les hiérarchies à profondeur non-uniforme correspondent aux cas où certains
 #' niveaux ne sont pas détaillés jusqu'au bout, la fin de certaines lignes étant
 #' manquante.
 #'
 #' \tabular{lll}{
-#' \strong{type} \tab \strong{details} \cr
-#'  \code{-------}  \tab  \code{------} \cr
+#' **type** \tab **details** \cr
+#'  `-------`  \tab  `------` \cr
 #' planet \tab telluric   \cr
 #' planet \tab gasgiant   \cr
 #' star   \tab            \cr
@@ -257,8 +257,8 @@ vect_aro <- Vectorize(arobase, vectorize.args = c("string", "number"))
 #' }
 #'
 #' Le traitement d'un tel fichier générera une erreur avec les messages suivants :
-#' \emph{Missing values on the last column of the correspondence table is not allowed.
-#' If relevant, you could fill in with the value of the previous column}
+#' *Missing values on the last column of the correspondence table is not allowed.
+#' If relevant, you could fill in with the value of the previous column*
 #'
 #' @return Invisible. Path to the written .hrc file.
 #' \cr
@@ -343,7 +343,7 @@ write_hrc2 <- function(
     sort_table = FALSE,
     rev = FALSE,
     hier_lead_string = getOption("rtauargus.hierleadstring"),
-    adjust_unique_roots = FALSE,
+    adjust_unique_roots = TRUE,
     add_char = "ZZZ"
 ){
 
@@ -357,7 +357,7 @@ write_hrc2 <- function(
     file_name <- givenfilename
   }else{
     dir <- dirname(path = file_name)
-    if(!dir.exists(dir)) dir.create(dir, recursive = FALSE)
+    if(!dir.exists(dir)) dir.create(dir, recursive = TRUE)
   }
 
   # if(is.null(dir_name)){
@@ -407,7 +407,7 @@ write_hrc2 <- function(
     corr_table <- na.locf(corr_table)
   }
 
-  if(adjust_unique_roots==TRUE){
+  if(adjust_unique_roots==TRUE & ncol(corr_table) > 1){
     #     warning(paste0("If there is unique roots in the table, the function will create
     # fictional roots to adjust the hrc file for Tau-Argus, they will be created
     # by copying the unique roots and adding ",add_char," at the beginning
@@ -433,91 +433,110 @@ write_hrc2 <- function(
   if(length(suspects) > 0)  message("Note : the following columns are not of character type : ", colnames(corr_table)[suspects], ". There may be an issue reading the table.")
 
   #### Creating the hrc file
-
-  # 0. Sort the correspondence table
-  if (sort_table){
-    for (j in 1:d[2]){
-      corr_table <- corr_table[
-        order(corr_table[,d[2]-j+1])
-        ,]
-      # CORR JJ à vérifier
-      # sort the table is not efficient if there are NA values !
-      # corr_table <- corr_table[
-      #   order(corr_table[,1])
-      #   ,]
-    }
-  }
-
-  # 0.b Remove total if needed
-  if(length(unique(as.character(corr_table[,1]))) == 1){
-    corr_table <- corr_table[,-1]
-  }
-
-  # 1. Compare cell values in order to erase duplicates (vertically / horizontally)
-
-  corr_table_decale <- rbind(
-    rep("line1"),
-    corr_table[1:(d[1]-1),]
-  )
-  corr_table_dec_left <- cbind(
-    w = rep("col1"),
-    corr_table[,1:d[2]-1]
-  )
-
-  compare <- corr_table == corr_table_decale #<-- cells identical to their upper
-  # neighbour
-  compare_left <- corr_table == corr_table_dec_left
-  missing <- is.na(corr_table)
-
-  # 2. Add a fitting number of hier_lead_string to all
-
-  depth_table <- as.data.frame(
-    matrix(0:(d[2]-1),nrow = d[1], ncol = d[2], byrow = TRUE)
-  )
-
-  # the numeric values (from 0 to d2 -1) correspond to the depth in the
-  # hierarchy, which will govern how many hier_lead_string are added when
-  # writing the hrc.
-  # One adjustment has to be done for cases when a same level is repeated
-  # in a line :
-
-  compare_col <- t(apply(
-    compare_left,
-    MARGIN = 1,
-    cumsum
-  ))
-  depth_table <- depth_table - compare_col
-
-  for(col in 1:d[2]){
-    corr_table[,col] <- vect_aro(
-      string = corr_table[,col],
-      number = depth_table[,col],
-      hier_lead_string
-    )
-  }
-
-  corr_table[compare] <- ""
-  corr_table[compare_left] <- ""
-  corr_table[missing] <- ""
-
-  # 3. Write corresponding table
-  # Note that columns & cells are not separated by anything, but cells that have
-  # not been erased still hold a line break ("\n") so that there will be line
-  # breaks only after non-void characters.
-
   loc_file <- ifelse(length(grep(".hrc$", file_name)) == 0, paste0(file_name,".hrc"), file_name)
 
-  utils::write.table(
-    x = corr_table,
-    file = loc_file,
-    quote = FALSE,
-    row.names = FALSE,
-    col.names = FALSE,
-    sep = "",
-    eol = ""
-  )
+  # 00. Case of a one column table
+  if(ncol(corr_table) == 1){
 
-  invisible(loc_file)
+    utils::write.table(
+      x = if(sort_table) corr_table[order(corr_table[,1]),, drop=FALSE] else corr_table,
+      file = loc_file,
+      quote = FALSE,
+      row.names = FALSE,
+      col.names = FALSE,
+      sep = "",
+      eol = "\n"
+    )
+    invisible(loc_file)
+  }else{
+
+    # 0. Sort the correspondence table
+    if (sort_table){
+      for (j in 1:d[2]){
+        corr_table <- corr_table[
+          order(corr_table[,d[2]-j+1])
+          ,]
+        # CORR JJ à vérifier
+        # sort the table is not efficient if there are NA values !
+        # corr_table <- corr_table[
+        #   order(corr_table[,1])
+        #   ,]
+      }
+    }
+
+    # 0.b Remove total if needed
+    if(length(unique(as.character(corr_table[,1]))) == 1){
+      corr_table <- corr_table[,-1]
+    }
+
+    # 1. Compare cell values in order to erase duplicates (vertically / horizontally)
+
+    corr_table_decale <- rbind(
+      rep("line1"),
+      corr_table[1:(d[1]-1),]
+    )
+    corr_table_dec_left <- cbind(
+      w = rep("col1"),
+      corr_table[,1:d[2]-1]
+    )
+
+    compare <- corr_table == corr_table_decale #<-- cells identical to their upper
+    # neighbour
+    compare_left <- corr_table == corr_table_dec_left
+    missing <- is.na(corr_table)
+
+    # 2. Add a fitting number of hier_lead_string to all
+
+    depth_table <- as.data.frame(
+      matrix(0:(d[2]-1),nrow = d[1], ncol = d[2], byrow = TRUE)
+    )
+
+    # the numeric values (from 0 to d2 -1) correspond to the depth in the
+    # hierarchy, which will govern how many hier_lead_string are added when
+    # writing the hrc.
+    # One adjustment has to be done for cases when a same level is repeated
+    # in a line :
+
+    compare_col <- t(apply(
+      compare_left,
+      MARGIN = 1,
+      cumsum
+    ))
+    depth_table <- depth_table - compare_col
+
+    for(col in 1:d[2]){
+      corr_table[,col] <- vect_aro(
+        string = corr_table[,col],
+        number = depth_table[,col],
+        hier_lead_string
+      )
+    }
+
+    corr_table[compare] <- ""
+    corr_table[compare_left] <- ""
+    corr_table[missing] <- ""
+
+    # 3. Write corresponding table
+    # Note that columns & cells are not separated by anything, but cells that have
+    # not been erased still hold a line break ("\n") so that there will be line
+    # breaks only after non-void characters.
+
+
+
+    utils::write.table(
+      x = corr_table,
+      file = loc_file,
+      quote = FALSE,
+      row.names = FALSE,
+      col.names = FALSE,
+      sep = "",
+      eol = ""
+    )
+
+    invisible(loc_file)
+  }
+
+
 }
 
 

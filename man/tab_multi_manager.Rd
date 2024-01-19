@@ -20,11 +20,14 @@ tab_multi_manager(
   ip_start = 10,
   ip_end = 0,
   num_iter_max = 10,
+  split_tab = FALSE,
+  nb_tab_option = "smart",
+  limit = 14700,
   ...
 )
 }
 \arguments{
-\item{list_tables}{named list of dataframes representing the tables to protect}
+\item{list_tables}{named list of \code{data.frame} or \code{data.table} representing the tables to protect}
 
 \item{list_explanatory_vars}{named list of character vectors of explanatory
 variables of each table mentionned in list_tables. Names of the list are the same as of the list of tables.}
@@ -58,8 +61,8 @@ attribuer la valeur de \code{rtauargus.totcode}.)}
 \item{freq}{Name of the column containing the cell frequency. \cr
 (Nom de la colonne contenant les effectifs pour une cellule)}
 
-\item{secret_var}{Boolean variable which specifies the secret, primary or not :
- equal to "TRUE" if a cell is concerned by the secret,"FALSE" otherwise.
+\item{secret_var}{Nae of the boolean variable which specifies the secret, primary or not :
+equal to "TRUE" if a cell is concerned by the secret,"FALSE" otherwise.
 will  be exported in the apriori file. \cr
 (Variable indiquant le secret  de type booléen:
 prend la valeur "TRUE" quand les cellules du tableau doivent être masquées
@@ -75,10 +78,9 @@ correspond à la valeur de la cellule.  peut être spécifié pour chacune des c
 peut contenir des NA pour les coûts que l'on ne souhaite pas modifier.)
 (nombre minimal de décimales à afficher (voir section 'Number of decimals').)}
 
-\item{suppress}{[\strong{mandatory}]
-Algortihm for secondary suppression (Tau-Argus batch syntax), and the
+\item{suppress}{Algortihm for secondary suppression (Tau-Argus batch syntax), and the
 parameters for it.\cr
-([\strong{obligatoire}] Algorithme de gestion du secret secondaire
+( Algorithme de gestion du secret secondaire
 (syntaxe batch de Tau-Argus), ainsi que les potentiels paramètres associés)}
 
 \item{ip_start}{integer: Interval protection level to apply at first treatment of each table}
@@ -86,6 +88,24 @@ parameters for it.\cr
 \item{ip_end}{integer: Interval protection level to apply at other treatments}
 
 \item{num_iter_max}{integer: Maximum of treatments to do on each table (default to 10)}
+
+\item{split_tab}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}} boolean,
+whether to reduce dimension to 3 while treating a table of dimension 4 or 5
+(default to \code{FALSE})}
+
+\item{nb_tab_option}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}} strategy to follow
+to choose variables automatically while splitting:
+\itemize{
+\item{\code{"min"}: minimize the number of tables;}
+\item{\code{"max"}: maximize the number of tables;}
+\item{\code{"smart"}: minimize the number of tables under the constraint
+of their row count.}
+}}
+
+\item{limit}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}} numeric, used to choose
+which variable to merge (if nb_tab_option = 'smart')
+and split table with a number of row above this limit in order to avoid
+tauargus failures}
 
 \item{...}{other arguments of \code{tab_rtauargus2()}}
 }
@@ -130,7 +150,7 @@ purrr::map(
 \dontrun{
 options(
   rtauargus.tauargus_exe =
-    "Y:/Logiciels/TauArgus/TauArgus4.2.2b1/TauArgus.exe"
+    "Y:/Logiciels/TauArgus/TauArgus4.2.3/TauArgus.exe"
 )
 res_1 <- tab_multi_manager(
   list_tables = list_data_2_tabs,
@@ -145,6 +165,33 @@ res_1 <- tab_multi_manager(
   secret_var = "is_secret_prim",
   totcode =  "Total"
 )
+
+
+# With the reduction dimensions feature
+
+data("datatest1")
+data("datatest2")
+
+datatest2b <- datatest2 \%>\%
+  filter(cj == "Total", treff == "Total", type_distrib == "Total") \%>\%
+  select(-cj, -treff, -type_distrib)
+
+str(datatest2b)
+
+res <- tab_multi_manager(
+  list_tables = list(d1 = datatest1, d2 = datatest2b),
+    list_explanatory_vars = list(
+        d1 = names(datatest1)[1:4],
+        d2 = names(datatest2b)[1:2]
+    ),
+ dir_name = "tauargus_files",
+ value = "pizzas_tot_abs",
+ freq = "nb_obs_rnd",
+ secret_var = "is_secret_prim",
+ totcode =  "Total",
+ split_tab = TRUE
+)
+
 }
 
 }

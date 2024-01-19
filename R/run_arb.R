@@ -176,14 +176,14 @@ unquote <- function(s) sub("^[\"'](.+)[\"']$", "\\1", s)
 #' Executes the instructions contained in an .arb file for Tau-Argus. \cr
 #' (Exécute les instructions contenues dans un fichier .arb pour Tau-Argus.)
 #'
-#' Only the argument \code{arb_filename} is required, because all
+#' Only the argument `arb_filename` is required, because all
 #' necessary information is present in this file.
 #'
 #' This is the only function in the package that runs Tau-Argus. It
 #' therefore requires the software to be accessible from the workstation.
 #'
 #' The location of the TauArgus.exe program is defined globally when the
-#' loading the package. In fact, the argument \code{tauargus_exe} will not
+#' loading the package. In fact, the argument `tauargus_exe` will not
 #' normally not have to be specified (except to override the global option the
 #' time of the execution of the function).
 #'
@@ -192,13 +192,13 @@ unquote <- function(s) sub("^[\"'](.+)[\"']$", "\\1", s)
 #' write the results, the variables to be used (crossings, response variable) in the
 #' response variable) in the metadata (rda file). \cr
 #'
-#' (Seul l’argument \code{arb_filename} est obligatoire, car toutes les
+#' (Seul l’argument `arb_filename` est obligatoire, car toutes les
 #' informations nécessaires sont présentes dans ce fichier.
 #' Il s'agit de la seule fonction du package qui exécute Tau-Argus. Elle
 #' nécessite donc que le logiciel soit accessible depuis le poste de travail.
 #'
 #' L'emplacement du programme TauArgus.exe est défini de manière globale au
-#' chargement du package. De fait, l'argument \code{tauargus_exe} n'aura
+#' chargement du package. De fait, l'argument `tauargus_exe` n'aura
 #' normalement pas à être spécifié (sauf pour surcharger l'option globale le
 #' temps de l'exécution de la fonction).
 #'
@@ -231,17 +231,17 @@ unquote <- function(s) sub("^[\"'](.+)[\"']$", "\\1", s)
 #' only error messages if any (if FALSE) \cr
 #' (booléen, pour afficher l'exécution du batch (si TRUE) ou
 #' uniquement les messages d'erreurs, s'il y en a (si FALSE))
-#' @param import to import in R the files produced, \code{TRUE} by
+#' @param import to import in R the files produced, `TRUE` by
 #' default. \cr
-#' (pour importer dans R les fichiers produits, \code{TRUE} par
+#' (pour importer dans R les fichiers produits, `TRUE` par
 #'   défaut.)
-#' @param ... additional parameters for \code{system()}. \cr
-#' (paramètres supplémentaires pour \code{system()}.)
+#' @param ... additional parameters for `system()`. \cr
+#' (paramètres supplémentaires pour `system()`.)
 #'
 #' @return \itemize{
 #' \item{a list of data.frame containing the results if
-#' \code{import = TRUE} (via the \code{link{import}} function)} ;
-#' \item{\code{NULL} otherwise}.
+#' `import = TRUE` (via the \code{link{import}} function)} ;
+#' \item{`NULL` otherwise}.
 #' }
 #'
 #' @inheritSection micro_asc_rda See also

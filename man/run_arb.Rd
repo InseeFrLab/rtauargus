@@ -28,8 +28,8 @@ run_arb(
 results do not exist ("stop" to trigger an error, "create" to
 create the missing folders). \cr
 (action si les dossiers où seront écrits les
-  résultats n'existent pas ("stop" pour déclencher une erreur, "create" pour
-  créer les dossiers manquants).)}
+résultats n'existent pas ("stop" pour déclencher une erreur, "create" pour
+créer les dossiers manquants).)}
 
 \item{tauargus_exe}{directory and name of the Tau-Argus software. \cr
 (répertoire et nom du logiciel Tau-Argus.)}
@@ -42,7 +42,7 @@ Si NULL, le fichier "logbook.txt" sera suavegardé sur le répertoire de travail
 \item{show_batch_console}{to display the batch progress in the
 console. \cr
 (pour afficher le déroulement du batch dans la
-  console.)}
+console.)}
 
 \item{verbose}{boolean, to display the batch execution (if TRUE) or
 only error messages if any (if FALSE) \cr
@@ -52,7 +52,7 @@ uniquement les messages d'erreurs, s'il y en a (si FALSE))}
 \item{import}{to import in R the files produced, \code{TRUE} by
 default. \cr
 (pour importer dans R les fichiers produits, \code{TRUE} par
-  défaut.)}
+défaut.)}
 
 \item{...}{additional parameters for \code{system()}. \cr
 (paramètres supplémentaires pour \code{system()}.)}
@@ -103,9 +103,9 @@ réponse) dans les métadonnées (fichier rda).)
 \section{See also}{
 
 
-The function \code{\link{rtauargus}}, which uses this
+The function \code{\link[=micro_rtauargus]{micro_rtauargus()}}, which uses this
 function and inherits its parameters. \cr
-(La fonction \code{\link{rtauargus}}, qui utilise cette
+(La fonction \code{\link[=micro_rtauargus]{micro_rtauargus()}}, qui utilise cette
 fonction et hérite de ses paramètres.)
 }
 

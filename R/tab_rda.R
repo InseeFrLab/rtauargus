@@ -2,22 +2,19 @@ creer_hst <- function(tabular,
                       explanatory_vars,
                       value,
                       secret_var,
-                      secret_prim,
+                      secret_no_pl,
                       cost_var,
                       ip,
                       separator) {
 
-  if(any(!is.null(c(secret_var,secret_prim)))){
-    if(is.null(secret_prim)){
-      secret_prim <- secret_var
-    }
-
-    if(is.null(secret_var)){
-      secret_var <- secret_prim
+  if(!is.null(secret_var)){
+    if(is.null(secret_no_pl)){
+      tabular$secret_no_pl <- FALSE
+      secret_no_pl <- "secret_no_pl"
     }
   }
 
-  if((!is.null(secret_var))) {
+  if(!is.null(secret_var)) {
 
     tabular$label_apriori <-ifelse(tabular[[secret_var]],"u","s")
     tab_hst_secret = tabular[
@@ -28,13 +25,17 @@ creer_hst <- function(tabular,
 
   #Genere le fichier hst lié au coût
 
-  if ((!is.null(cost_var)) ){
+  if (!is.null(cost_var)){
 
     tabular$label_apriori <-paste0("c",separator,tabular[[cost_var]])
 
-  if(any(!is.null(c(secret_var,secret_prim)))){
+  if(!is.null(secret_var)){
+
+    is_cost_value_identical <- tabular[[cost_var]] == tabular[[value]]
+    is_secret_val <- tabular[[secret_var]]
+
     tab_hst_cost = tabular[
-      tabular[[secret_var]],
+      !(is_secret_val | is_cost_value_identical),
       c(explanatory_vars[(explanatory_vars %in% colnames(tabular))],"label_apriori")
     ]
       } else {
@@ -45,10 +46,10 @@ creer_hst <- function(tabular,
 
   } else {tab_hst_cost <- data.frame()}
 
-  if ((!is.null(ip)) & (is.numeric(ip)) & any(!is.null(c(secret_var,secret_prim)))) {
-    tabular$val_ip <- ifelse(tabular[[secret_prim]] & (tabular[[value]] != 0),
-                             round((ip/100)*tabular[[value]],1),
-                             format(0.00001,scientific = F))
+  if ((!is.null(ip)) & (is.numeric(ip)) & !is.null(secret_var)) {
+    tabular$val_ip <- ifelse(tabular[[secret_no_pl]] | (tabular[[value]] == 0),
+                             format(0.00001,scientific = F),
+                             round((ip/100)*tabular[[value]],1))
 
     tabular$label_apriori <- paste0("pl",separator,tabular[["val_ip"]],separator,tabular[["val_ip"]])
 
@@ -98,7 +99,7 @@ write_rda_1var_tab <- function(info_var) {
 
 }
 
-#' @importFrom dplyr %>%
+
 write_rda_tab <- function(info_vars) {
 
 
@@ -111,9 +112,9 @@ write_rda_tab <- function(info_vars) {
   }
   info_vars <- lapply(info_vars, chemin_complet)
 
-  vapply(info_vars, write_rda_1var_tab, character(1)) %>%
-    gsub("(\n)+", "\n", .) %>% # plusieurs sauts de lignes par un seul
-    sub("\n$", "", .) # supprime dernier saut de ligne
+  res <- vapply(info_vars, write_rda_1var_tab, character(1))
+  res <- gsub("(\n)+", "\n", res) # plusieurs sauts de lignes par un seul
+  res <- sub("\n$", "", res) # supprime dernier saut de ligne
 
 }
 
@@ -127,10 +128,10 @@ write_rda_tab <- function(info_vars) {
 #' un fichier tabular (tab) et un fichier de métadonnées
 #' (rda) à partir de données tabulées et d'informations additionnelles.
 #'
-#' @param tabular [\strong{mandatory}]
+#' @param tabular
 #' data.frame which contains the tabulated data and
 #' an additional boolean variable that indicates the primary secret of type boolean \cr
-#' ([\strong{obligatoire}] data.frame contenant les données tabulées et
+#' ( data.frame contenant les données tabulées et
 #' une variable supplémentaire indiquant le secret primaire de type booléen.)
 #' @param tab_filename tab file name (with .tab extension) \cr
 #' nom du fichier tab (avec extension .tab)
@@ -138,14 +139,14 @@ write_rda_tab <- function(info_vars) {
 #' nom du fichier rda (avec extension)
 #' @param hst_filename hst file name (with .hst extension) \cr
 #' nom du fichier hst (avec extension)
-#' @param explanatory_vars [\strong{mandatory}] Vector of explanatory variables \cr
-#' [\strong{obligatoire}] Variables catégorielles, sous forme  de vecteurs \cr
-#' Example : \code{c("A21", "TREFF", "REG")} for a table crossing
-#' \code{A21} x \code{TREFF} x \code{REG}
+#' @param explanatory_vars  Vector of explanatory variables \cr
+#'  Variables catégorielles, sous forme  de vecteurs \cr
+#' Example : `c("A21", "TREFF", "REG")` for a table crossing
+#' `A21` x `TREFF` x `REG`
 #' (Variable indiquant le secret primaire de type booléen:
 #' prend la valeur "TRUE" quand les cellules du tableau doivent être masquées
 #' par le secret primaire, "FALSE" sinon. Permet de créer un fichier d'apriori)
-#' @param secret_var Boolean variable which specifies the secret, primary or not :
+#' @param secret_var Nae of the boolean variable which specifies the secret, primary or not :
 #'  equal to "TRUE" if a cell is concerned by the secret,"FALSE" otherwise.
 #' will  be exported in the apriori file. \cr
 #' (Variable indiquant le secret  de type booléen:
@@ -169,17 +170,17 @@ write_rda_tab <- function(info_vars) {
 #' @param totcode Code(s) which represent the total of a categorical variable
 #' (see section 'Specific parameters' for this parameter's syntax).
 #' If unspecified for a variable(neither by default nor explicitly)
-#' it will be set to  \code{rtauargus.totcode}. \cr
+#' it will be set to  `rtauargus.totcode`. \cr
 #' (Code(s) pour le total d'une variable catégorielle (voir
 #' section 'Specific parameters' pour la syntaxe de ce paramètre). Les
 #' variables non spécifiées (ni par défaut, ni explicitement) se verront
-#' attribuer la valeur de \code{rtauargus.totcode}.)
+#' attribuer la valeur de `rtauargus.totcode`.)
 #' @param value Name of the column containing the value of the cells. \cr
 #' (Nom de la colonne contenant la valeur des cellules)
 #' @param freq Name of the column containing the cell frequency. \cr
 #' (Nom de la colonne contenant les effectifs pour une cellule)
-#' @param ip Value of the safety margin in \% (must be an integer).
-#' (Valeur pour les intervalles de protection en \%, doit être entier )
+#' @param ip Value of the safety margin in % (must be an integer).
+#' (Valeur pour les intervalles de protection en %, doit être entier )
 #' @param maxscore Name of the column containing, the value of the largest
 #' contributor of a cell. \cr
 #' (Nom de la colonne contenant la valeur du plus gros contributeur
@@ -202,9 +203,10 @@ write_rda_tab <- function(info_vars) {
 #' (see section 'Specific parameters' for the syntax of this parameter). \cr
 #' (Fichier(s) contenant les libellés des variables catégorielles
 #' (voir section 'Specific parameters' pour la syntaxe de ce paramètre).)
-#' @param secret_prim Boolean variable which gives the primary secret : equal to
-#' "TRUE" if a cell is concerned by the primary secret,"FALSE" otherwise.
-#' will  be exported in the apriori file \cr
+#' @param secret_no_pl name of a boolean variable which indicates the cells
+#' on which the protection levels won't be applied. If `secret_no_pl = NULL`
+#' (default), the protection levels are applied on each cell which gets a `TRUE`
+#' status for the `secret_var`.\cr
 #'
 #' @return Return the rda file name as a list (invisible).\cr
 #' (Renvoie le nom du fichier rda sous forme de liste (de
@@ -216,7 +218,7 @@ write_rda_tab <- function(info_vars) {
 #' The apriori file (.hst) summarizes for each value of the table
 #' if they are concerned by the primary secret or not.
 #' With this file tau-argus will not need to set the primary secret itself.
-#' The parameter \code{secret_var} indicates the name of the primary secret variable.
+#' The parameter `secret_var` indicates the name of the primary secret variable.
 #' If there is the additional boolean variable which indicates the primary secret
 #' in the table (of tabulated data), the function tab_rda will create
 #' an apriori file in a format conforming to tauargus. \cr
@@ -226,7 +228,7 @@ write_rda_tab <- function(info_vars) {
 #' du tableau si elles sont concernées par le secret primaire ou non.
 #' Avec ce fichier tau-argus n'aura plus besoin de poser le secret primaire lui même,
 #' il se basera sur le fichier d'apriori pour le faire.
-#' Le paramètre \code{secret_var} indique le nom de la variable du secret primaire.
+#' Le paramètre `secret_var` indique le nom de la variable du secret primaire.
 #' Si l'on rajoute cette variable supplémentaire indiquant
 #' le secret primaire (de type booléen) au tableau de données tabulées, la fonction
 #' tab_rda permet de créer un fichier d'apriori au format conforme pour tauargus.
@@ -234,13 +236,13 @@ write_rda_tab <- function(info_vars) {
 #'
 #' @section Specific parameters:
 #'
-#' The parameters \code{totcode}, and \code{codelist}
+#' The parameters `totcode`, and `codelist`
 #' must be given in the form of a vector indicating the value to take for each variable.
 #' The names of the elements of the vector give the variable concerned and
 #' the elements of the vector give the value of the parameter for Tau-Argus.
 #' An unnamed element will set the default value for each variable. \cr
 #'
-#' (Les paramètres \code{totcode},  et \code{codelist}
+#' (Les paramètres `totcode`,  et `codelist`
 #' sont à renseigner sous la forme d'un vecteur indiquant la valeur à prendre
 #' pour chaque variable.
 #'
@@ -251,18 +253,18 @@ write_rda_tab <- function(info_vars) {
 #'
 #' For example :
 #' \itemize{
-#'   \item{\code{totcode = "global"} : writes \code{<TOTCODE> "global"} for each
+#'   \item{`totcode = "global"` : writes `<TOTCODE> "global"` for each
 #'   explanatory vars}
-#'   \item{\code{totcode = c("global", size="total", income="total")} :
-#'   \code{<TOTCODE> "global"} for each variable except for \code{size} and
-#'   \code{income}} assigned with \code{<TOTCODE> "total"}
+#'   \item{`totcode = c("global", size="total", income="total")` :
+#'   `<TOTCODE> "global"` for each variable except for `size` and
+#'   `income`} assigned with `<TOTCODE> "total"`
 #'   by default : {<TOTCODE> "Total"}
-#'   \item{\code{totcode = "global"} : écrit \code{<TOTCODE> "global"} pour
+#'   \item{`totcode = "global"` : écrit `<TOTCODE> "global"` pour
 #'     toutes les variables catégorielles}
-#'   \item{\code{totcode = c("global", size="total", income="total")} :
-#'   \code{<TOTCODE> "global"} pour toutes les variables catégorielles
-#'   sauf  \code{size} and \code{income}} qui se verront affecter
-#'   le total : \code{<TOTCODE> "total"}
+#'   \item{`totcode = c("global", size="total", income="total")` :
+#'   `<TOTCODE> "global"` pour toutes les variables catégorielles
+#'   sauf  `size` and `income`} qui se verront affecter
+#'   le total : `<TOTCODE> "total"`
 #'   Par defaut : {<TOTCODE> "Total"}
 #' }
 #'
@@ -270,46 +272,46 @@ write_rda_tab <- function(info_vars) {
 #'
 #' @section Hierarchical variables:
 #'
-#' Parameter \code{hrc} has the same syntax as \code{totcode} and
-#' \code{codelist} (named vector containing as many elements as variables to describe).
-#' Hierarchy is defined in an separate hrc file (\strong{hiercodelist}).
+#' Parameter `hrc` has the same syntax as `totcode` and
+#' `codelist` (named vector containing as many elements as variables to describe).
+#' Hierarchy is defined in an separate hrc file (**hiercodelist**).
 #' which can be written with the function \code{link{write_hrc2}}.
-#' The function expects the location of this file (and a possible \code{hierleadstring}
+#' The function expects the location of this file (and a possible `hierleadstring`
 #' if it differs from the default option of the package : @.
 #' The path to the existing file is explicitly given.
 #' The elements of the vector in parameter must be named (with the name of the variable),
 #' even if there is only one element.
 #'
-#' emph{Example :}\code{c(category="category.hrc")} \cr
+#' emph{Example :}`c(category="category.hrc")` \cr
 #'
-#' (Le paramètre \code{hrc} obéit aux mêmes règles de syntaxe que \code{totcode}
-#'  et \code{codelist} (vecteur nommé contenant autant d'éléments
+#' (Le paramètre `hrc` obéit aux mêmes règles de syntaxe que `totcode`
+#'  et `codelist` (vecteur nommé contenant autant d'éléments
 #' que de variables à décrire).
 #'
-#' La hiérarchie est définie dans un fichier hrc à part (\strong{hiercodelist})
-#' qui peut être écrit à l'aide de la fonction \code{\link{write_hrc2}}.
+#' La hiérarchie est définie dans un fichier hrc à part (**hiercodelist**)
+#' qui peut être écrit à l'aide de la fonction [write_hrc2()].
 #'
-#' La fonction attend l'emplacement de ce fichier (et un éventuel \code{hierleadstring}
+#' La fonction attend l'emplacement de ce fichier (et un éventuel `hierleadstring`
 #' s'il diffère de l'option par défaut du package).
 #' Le chemin vers le fichier existant est explicitement donné.
 #' Les éléments du vecteur en paramètre doivent nommés (avec le nom de la variable),
 #' même s'il n'y a qu'un seul élément.
 #'
-#'\emph{Exemple :}\code{c(category="category.hrc")})
+#'*Exemple :*`c(category="category.hrc")`)
 #'
 #'
 #' @section Number of decimals:
-#' Parameter \code{decimals} indicates the minimum number of decimal places to
+#' Parameter `decimals` indicates the minimum number of decimal places to
 #' include in the output file
-#' (whatever the number of decimals actually present in \code{tabular}).
+#' (whatever the number of decimals actually present in `tabular`).
 #' It applies to all real variables (double) but not to integer variables.
-#' To add zeros to an integer variable, convert it with \code{as.double} beforehand.\cr
+#' To add zeros to an integer variable, convert it with `as.double` beforehand.\cr
 #'
-#' (Le paramètre \code{decimals} indique le nombre minimal de décimales à faire
+#' (Le paramètre `decimals` indique le nombre minimal de décimales à faire
 #' figurer dans le fichier en sortie (quel que soit le nombre de décimales
-#' effectivement présent dans \code{tabular}). Il s'applique à toutes les
+#' effectivement présent dans `tabular`). Il s'applique à toutes les
 #' variables réelles (double) mais pas aux variables entières (integer). Pour
-#' ajouter des zéros à une variable entière, la convertir avec \code{as.double}
+#' ajouter des zéros à une variable entière, la convertir avec `as.double`
 #' au préalable.)
 #'
 #' @examples
@@ -383,7 +385,7 @@ tab_rda <- function(
     hierleadstring = getOption("rtauargus.hierleadstring"),
     codelist       = NULL,
     separator      = getOption("rtauargus.separator"),
-    secret_prim    = NULL
+    secret_no_pl    = NULL
 ){
 
 
@@ -442,7 +444,7 @@ tab_rda <- function(
   col_tabular <- c(
     explanatory_vars,
     secret_var,
-    secret_prim,
+    secret_no_pl,
     cost_var,
     value,
     freq,
@@ -476,17 +478,21 @@ tab_rda <- function(
   if((!is.null(secret_var)) && any(is.na(tabular[[secret_var]]))){
     stop("NAs in secret_var are not allowed")
   }
-  #Controles sur secret_prim, identiques à secret_var
-  if ((!is.null(secret_prim)) && (!secret_prim %in% colnames(tabular))){
-    stop("secret_prim does not exist in tabular")
+  if(is.null(secret_var) && !is.null(secret_no_pl)){
+    stop("protection levels needs to be applied to primary secret, specify
+         secret_var")
+  }
+  #Controles sur secret_no_pl, identiques à secret_var
+  if ((!is.null(secret_no_pl)) && (!secret_no_pl %in% colnames(tabular))){
+    stop("secret_no_pl does not exist in tabular")
   }
 
-  if((!is.null(secret_prim)) && (any(!is.na(tabular[[secret_prim]]))) && (!is.logical(tabular[[secret_prim]]))){
-    stop("unexpected type : secret_prim must be a  boolean variable")
+  if((!is.null(secret_no_pl)) && (!is.logical(tabular[[secret_no_pl]]))){
+    stop("unexpected type : secret_no_pl must be a  boolean variable")
   }
 
-  if((!is.null(secret_prim)) && any(is.na(tabular[[secret_prim]]))){
-    stop("NAs in secret_prim are not allowed")
+  if((!is.null(secret_no_pl)) && any(is.na(tabular[[secret_no_pl]]))){
+    stop("NAs in secret_no_pl are not allowed")
   }
 
   # Controles sur cost_var
@@ -516,18 +522,18 @@ tab_rda <- function(
 
 
   #Genere le fichier hst lié au secret primaire
-  if(any(!is.null(c(ip,secret_var,secret_prim,cost_var)))){
+  if(any(!is.null(c(ip,secret_var,cost_var)))){
     hst <- creer_hst (tabular,
                       explanatory_vars,
                       value,
                       secret_var,
-                      secret_prim,
+                      secret_no_pl,
                       cost_var,
                       ip,
                       separator)
 
 
-    if( !is.null(secret_var) | !is.null(cost_var)| !is.null(secret_prim)) {
+    if( !is.null(secret_var) | !is.null(cost_var)| !is.null(secret_no_pl)) {
       if (nrow(hst)==0) message("no cells are unsafe : hst file is empty")
 
       utils::write.table(
@@ -544,7 +550,7 @@ tab_rda <- function(
   # genere fichier longueur fixe (le fichier .tab) dans le dossier indiqué et infos associees  .....................
 
   if (!is.null(secret_var)) tabular<-tabular[,!names(tabular)==secret_var]
-  if (!is.null(secret_prim)) tabular<-tabular[,!names(tabular)==secret_prim]
+  if (!is.null(secret_no_pl)) tabular<-tabular[,!names(tabular)==secret_no_pl]
   if (!is.null(cost_var)) tabular<-tabular[,!names(tabular)==cost_var]
 
   tabular <- tabular[,c(explanatory_vars,value,freq,maxscore,maxscore_2,maxscore_3)]
