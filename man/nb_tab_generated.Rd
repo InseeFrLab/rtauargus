@@ -110,3 +110,4 @@ nb_tab_generated(v1 = "ACT", v2 = "GEO",
                 v3 = "SEX", v4 = "EXO",
                 hrcfiles = c(ACT = hrc_act, GEO = hrc_geo, SEX = hrc_sex))
 }
+\keyword{internal}

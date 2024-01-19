@@ -20,7 +20,7 @@ tab_multi_manager(
   ip_start = 10,
   ip_end = 0,
   num_iter_max = 10,
-  split_tab = TRUE,
+  split_tab = FALSE,
   nb_tab_option = "smart",
   limit = 14700,
   ...
@@ -90,10 +90,11 @@ parameters for it.\cr
 \item{num_iter_max}{integer: Maximum of treatments to do on each table (default to 10)}
 
 \item{split_tab}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}} boolean,
-wether to reduce dimension to 3 when treating a table of dimension 4 or 5}
+whether to reduce dimension to 3 while treating a table of dimension 4 or 5
+(default to \code{FALSE})}
 
 \item{nb_tab_option}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}} strategy to follow
-to choose variables automatically:
+to choose variables automatically while splitting:
 \itemize{
 \item{\code{"min"}: minimize the number of tables;}
 \item{\code{"max"}: maximize the number of tables;}

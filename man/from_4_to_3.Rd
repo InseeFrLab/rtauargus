@@ -105,3 +105,4 @@ res2 <- from_4_to_3(
   maximize_nb_tabs = TRUE
 )
 }
+\keyword{internal}

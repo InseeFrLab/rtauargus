@@ -10,7 +10,7 @@ tabulate_micro_data(
   hrc_vars = NULL,
   pond_var = NULL,
   resp_var = NULL,
-  marge_label = "Ensemble"
+  marge_label = "Total"
 )
 }
 \arguments{

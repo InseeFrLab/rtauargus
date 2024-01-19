@@ -62,6 +62,7 @@
 #'                                             AGE = "Total",ECO = "PIB"),
 #'                                 hrcfiles = c(ACT = hrc_act, SEX = hrc_sex),
 #'                                 dir_name = "output")
+#' @keywords internal
 #' @export
 from_4_to_3_case_2_hr <- function(
   dfs,
@@ -71,8 +72,7 @@ from_4_to_3_case_2_hr <- function(
   totcode,
   hrcfiles,
   dir_name,
-  sep = "_")
-{
+  sep = "_"){
   #############################
   ## Creating code_split ##
   #############################

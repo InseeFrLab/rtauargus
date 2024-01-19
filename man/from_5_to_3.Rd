@@ -144,3 +144,4 @@ res2 <- from_5_to_3(
   verbose = TRUE
 )
 }
+\keyword{internal}

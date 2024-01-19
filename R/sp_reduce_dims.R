@@ -207,6 +207,7 @@
 #'   limit = 4470,
 #'   over_split = TRUE
 #' )
+#' @keywords internal
 #' @export
 reduce_dims <- function(
     dfs,
@@ -753,6 +754,7 @@ chose_sep <- function(
 #'                    GEO="Total", ACT="Total"),
 #'        hrcfiles = c(ACT = hrc_act)
 #'        )
+#' @keywords internal
 #' @export
 sp_format <- function(
     res,

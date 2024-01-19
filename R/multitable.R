@@ -122,7 +122,7 @@ tab_multi_manager <- function(
     ip_start = 10,
     ip_end = 0,
     num_iter_max = 10,
-    split_tab = TRUE,
+    split_tab = FALSE,
     nb_tab_option = "smart",
     limit = 14700,
     ...

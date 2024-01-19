@@ -120,3 +120,4 @@ res3 <- length_tabs(dfs = data,
                                 ACT="Total_A", ECO = "PIB"),
                     v1 = "ACT",v2 = "AGE",v3 = "GEO")
 }
+\keyword{internal}

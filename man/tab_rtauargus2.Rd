@@ -96,10 +96,11 @@ parameters for it.\cr
 (syntaxe batch de Tau-Argus), ainsi que les potentiels paramètres associés)}
 
 \item{split_tab}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}} boolean,
-wether to reduce dimension to 3 when treating a table of dimension 4 or 5}
+whether to reduce dimension to 3 while treating a table of dimension 4 or 5
+(default to \code{FALSE})}
 
 \item{nb_tab_option}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}} strategy to follow
-to choose variables automatically:
+to choose variables automatically while splitting:
 \itemize{
 \item{\code{"min"}: minimize the number of tables;}
 \item{\code{"max"}: maximize the number of tables;}

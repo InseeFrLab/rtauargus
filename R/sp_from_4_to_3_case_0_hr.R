@@ -58,6 +58,7 @@
 #'                                 totcode = c(ACT = "Total",SEX = "Total",
 #'                                             AGE = "Total",ECO = "PIB"),
 #'                                 dir_name = "output")
+#' @keywords internal
 #' @export
 from_4_to_3_case_0_hr <- function(
     dfs,

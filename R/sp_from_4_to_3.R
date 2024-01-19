@@ -173,6 +173,7 @@ chose_var_to_merge <- function(dfs, totcode, hrcfiles, maximize_nb_tabs = FALSE)
 #'   hrc_dir = "output",
 #'   maximize_nb_tabs = TRUE
 #' )
+#' @keywords internal
 #' @export
 from_4_to_3 <- function(
   dfs,

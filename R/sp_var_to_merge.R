@@ -108,6 +108,7 @@
 #' # -> this is what reduces the table size)
 #' # And the warning announces 63 rows, which is consistent with the output
 #'
+#' @keywords internal
 #' @export
 var_to_merge <- function(
     dfs,
@@ -415,6 +416,7 @@ generate_a_triplet <- function(totcode) {
 #'                     totcode = c(SEX="Total_S",AGE="Ensemble", GEO="Total_G",
 #'                                 ACT="Total_A", ECO = "PIB"),
 #'                     v1 = "ACT",v2 = "AGE",v3 = "GEO")
+#' @keywords internal
 #' @export
 length_tabs <- function(
   dfs,
@@ -812,6 +814,7 @@ import_hierarchy <- function(hrcfile) {
 #' nb_tab_generated(v1 = "ACT", v2 = "GEO",
 #'                 v3 = "SEX", v4 = "EXO",
 #'                 hrcfiles = c(ACT = hrc_act, GEO = hrc_geo, SEX = hrc_sex))
+#' @keywords internal
 #' @export
 nb_tab_generated <- function(
   v1,

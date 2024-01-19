@@ -85,3 +85,4 @@ res <- sp_format(res1,
        hrcfiles = c(ACT = hrc_act)
        )
 }
+\keyword{internal}

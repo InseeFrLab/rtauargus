@@ -91,3 +91,4 @@ res1 <- from_4_to_3_case_1_hr(dfs = data,
                                 hrcfiles = c(ACT = hrc_act, SEX = hrc_sex),
                                 dir_name = "output")
 }
+\keyword{internal}

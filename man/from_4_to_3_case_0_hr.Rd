@@ -76,3 +76,4 @@ res1 <- from_4_to_3_case_0_hr(dfs = data,
                                             AGE = "Total",ECO = "PIB"),
                                 dir_name = "output")
 }
+\keyword{internal}
