@@ -36,7 +36,7 @@ write_rda_1var <- function(info_var) {
 
 }
 
-#' @importFrom dplyr %>%
+
 
 write_rda <- function(info_vars) {
 
@@ -49,10 +49,11 @@ write_rda <- function(info_vars) {
   }
   info_vars <- lapply(info_vars, chemin_complet)
 
-  vapply(info_vars, write_rda_1var, character(1)) %>%
-    gsub("(\n)+", "\n", .) %>% # plusieurs sauts de lignes par un seul
-    sub("\n$", "", .) # supprime dernier saut de ligne
+  res <- vapply(info_vars, write_rda_1var, character(1))
+  res <- gsub("(\n)+", "\n", res) # plusieurs sauts de lignes par un seul
+  res <- sub("\n$", "", res) # supprime dernier saut de ligne
 
+  return(res)
 }
 
 #' Creates asc and rda files from microdata

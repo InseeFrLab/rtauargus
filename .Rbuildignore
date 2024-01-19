@@ -13,3 +13,9 @@
 ^_pkgdown\.yml$
 ^docs$
 ^pkgdown$
+^\.github$
+^README\.Rmd$
+^tauargus_files/*$
+tauargus_files/*
+^_pkgdown_old\.yml$
+^README\.html$

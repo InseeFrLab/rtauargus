@@ -112,7 +112,7 @@ restore_format <- function(masq, res) {
 
   masq_liste_empilee <- unique(do.call("rbind",  unname(masq)))
 
-  if (class(res$fus_vars) == "character") {
+  if (is.character(res$fus_vars)) {
     # Case with 4 categorical variables
     # variable
 
@@ -122,7 +122,8 @@ restore_format <- function(masq, res) {
     v1_v2 <- paste(v1, v2, sep = sep)
 
     result <- separer4_3(masq_liste_empilee, v1, v2,v1_v2, sep_regex)
-    return(result)}
+    return(result)
+  }
 
   # Case with 5 dimensions
   # variable

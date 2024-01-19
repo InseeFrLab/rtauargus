@@ -11,7 +11,7 @@ output: rmarkdown::html_vignette
 
 * Implementation of a method to tackle some tables of 4/5 dimensions. 
 
-> The method is quickly explained and its use is shown in a specific vignette.
+> The method is quickly explained and its use is shown in a specific vignette (french).
 > A paper explaining more deeply the idea and the modus operandi is available 
 here: "https://github.com/InseeFrLab/dims_reduction_tables_workshop_20231215".
 
@@ -25,7 +25,7 @@ according to frequency rule and (1,k)-dominance rule.
 * Resolution of a malfunction while dealing with costs.
 
 * **rtauargus()** function has been renamed more properly as **micro_rtauargus()**.
-Its arguments remain the same.
+Its arguments and its behaviour remain the same.
 
 ## rtauargus 1.1.2
 

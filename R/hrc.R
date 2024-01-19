@@ -446,7 +446,8 @@ df_hierlevels <- function(var_hrc, hierlevels) {
   }
 
   lev <- strsplit(hierlevels, " +")[[1]]
-  lev <- as.integer(lev) %>% `[`(. != 0)
+  lev <- as.integer(lev)
+  lev <- lev[lev != 0]
   if (sum(lev) != n1) {
     stop("la somme de hierlevels doit etre egale au nombre de caracteres")
   }

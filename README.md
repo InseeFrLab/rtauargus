@@ -4,11 +4,8 @@
 # rtauargus <a href='https://inseefrlab.github.io/rtauargus/'><img src='man/figures/rtauargus_logo_small.png' align="right" width="120" /></a>
 
 <!-- badges: start -->
-
-[![pipeline
-status](https://gitlab.insee.fr/outilsconfidentialite/rtauargus/badges/master/pipeline.svg)](https://gitlab.insee.fr/outilsconfidentialite/rtauargus/-/pipelines)
+<!-- [![pipeline status](https://gitlab.insee.fr/outilsconfidentialite/rtauargus/badges/master/pipeline.svg)](https://gitlab.insee.fr/outilsconfidentialite/rtauargus/-/pipelines) -->
 <!-- badges: end -->
-
 <!--![](vignettes/R_logo_small.png) ![](vignettes/TauBall2_small.png)-->
 
 ## Run τ-Argus from R
@@ -17,11 +14,11 @@ The *rtauargus* package provides an **R** interface for **τ-Argus**.
 
 It allows to:
 
--   create inputs (rda, arb, hst and tab files) from data in R format ;
--   generate the sequence of instructions to be executed in batch mode
-    (arb file);
--   launch a τ-Argus batch in command line;
--   retrieve the results in R.
+- create inputs (rda, arb, hst and tab files) from data in R format ;
+- generate the sequence of instructions to be executed in batch mode
+  (arb file);
+- launch a τ-Argus batch in command line;
+- retrieve the results in R.
 
 These different operations can be executed in one go, but also in a
 modular way. They allow to integrate the tasks performed by τ-Argus in a
@@ -29,38 +26,38 @@ processing chain written in R.
 
 The package presents other **additional functionalities**, such as:
 
--   managing the protection of several tables at once;
--   creating a hierarchical variable from correspondence table.
+- managing the protection of several tables at once;
+- creating a hierarchical variable from correspondence table.
 
 It’s possible to choose a tabular or microdata approach, but the tabular
 one is, from now on, encouraged.
 
 ## Installation
 
--   **most recent stable version** (recommended)
+- **most recent stable version** (recommended)
 
-    -   For Insee agents:
+  - For Insee agents:
 
-        ``` r
-        install.packages(
-          "rtauargus",
-          repos = "https://nexus.insee.fr/repository/r-public",
-          type = "source"
-        )
-        ```
+    ``` r
+    install.packages(
+      "rtauargus",
+      repos = "https://nexus.insee.fr/repository/r-public",
+      type = "source"
+    )
+    ```
 
-    -   Elsewhere:
+  - Elsewhere:
 
-        ``` r
-        install.packages("remotes")
-        remotes::install_github(
-          "InseeFrLab/rtauargus",
-          build_vignettes = FALSE,
-          upgrade = "never"
-        )
-        ```
+    ``` r
+    install.packages("remotes")
+    remotes::install_github(
+      "InseeFrLab/rtauargus",
+      build_vignettes = FALSE,
+      upgrade = "never"
+    )
+    ```
 
--   **version in development**
+- **version in development**
 
 To install a specific version, add to the directory a reference
 ([commit](https://github.com/inseefrlab/rtauargus/commits/master) or
@@ -73,18 +70,6 @@ When loading the package, the console displays some information:
 
 ``` r
 library(rtauargus)
-#> 
-#> Tau-Argus : "Y:/Logiciels/TauArgus/TauArgus.exe"
-#>   (note: unknown location)
-#> 
-#>   To change this directory :
-#>     options(rtauargus.tauargus_exe = "chemin/vers/TauArgus.exe")
-#> 
-#>   To return to the default location,
-#>     reset_rtauargus_options("tauargus_exe")
-#> 
-#>   To display all the options of the package :
-#>     rtauargus_options()
 ```
 
 In particular, a plausible location for the τ-Argus software is
@@ -113,8 +98,8 @@ act_size <-
 
 As primary rules, we use the two following ones:
 
--   The n-k dominance rule with n=1 and k = 85
--   The minimum frequency rule with n = 3 and a safety range of 10.
+- The n-k dominance rule with n=1 and k = 85
+- The minimum frequency rule with n = 3 and a safety range of 10.
 
 To get the results for the dominance rule, we need to specify the
 largest contributor to each cell, corresponding to the `MAX` variable in
@@ -199,6 +184,6 @@ the [dedicated page](https://github.com/sdcTools/tauargus/releases) of
 the *sdcTools* git repository.
 
 \_The package was developed on the basis of open source versions of
-τ-Argus (versions 4.2 and above), in particular the latest version
-available at the time of development (4.2.2b1). It is not compatible
-with version 3.5.\*\*\_
+τ-Argus (versions 4.2 and above), in particular the version used for
+this version is τ-Argus 4.2.3. It is not compatible with version
+3.5.\*\*\_
