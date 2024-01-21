@@ -16,3 +16,7 @@ vignettes/tauargus_exe.ini
 docs
 
 output/
+.Rdata
+.httr-oauth
+.DS_Store
+.quarto

@@ -22,22 +22,12 @@ reference:
     - write_hrc2
     - tab_rtauargus
     - tab_rtauargus2
-  - title: Functions ensuring the dimensions reduction in the background
-    desc: >
-      Functions called by tab_rtauargus or tab_multi_manager while setting
-      split_tab = TRUE, in order to protect 4/5 dimensions tables by
-      reducing the dimension first.
-    contents:
     - tab_rtauargus4
-    - reduce_dims
-    - var_to_merge
-    - nb_tab_generated
-    - length_tabs
-    - from_4_to_3
-    - from_5_to_3
+    - tabulate_micro_data
   - title: Data
     desc: >
       Data to run examples
+    contents:
     - activity_corr_table
     - nuts23_fr_corr_table
     - turnover_act_cj
@@ -47,6 +37,7 @@ reference:
     - turnover_act_nuts_size
     - datatest1
     - datatest2
+    - indiv_dt
   - title: Protect tables from microdata
     desc: >
       Functions for protecting magnitude and frequency tables, i.e. from
@@ -78,7 +69,6 @@ articles:
     - protect_multi_tables_fr
     - options_safety_rules
     - options_safety_rules_fr
-    - split_tab
     - split_tab_fr
   - title: Work with microdata data (old version)
     navbar: micro-wise
