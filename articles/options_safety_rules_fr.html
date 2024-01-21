@@ -8,8 +8,8 @@
 <meta name="description" content="rtauargus">
 <title>Les arguments Safety rules et Suppress • rtauargus</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.2.2/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.2.2/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
+<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Les arguments Safety rules et Suppress">
 <meta property="og:description" content="rtauargus">
@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">rtauargus</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.1.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.2.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -50,6 +50,7 @@
     <a class="dropdown-item" href="../articles/protect_multi_tables_fr.html">Protéger des tableaux liés</a>
     <a class="dropdown-item" href="../articles/options_safety_rules.html">Safety rules and Suppress Options</a>
     <a class="dropdown-item" href="../articles/options_safety_rules_fr.html">Les arguments Safety rules et Suppress</a>
+    <a class="dropdown-item" href="../articles/split_tab_fr.html">Comment poser du secret sur des tableaux à 4 ou 5 dimensions avec `rtauargus`?</a>
     <div class="dropdown-divider"></div>
     <h6 class="dropdown-header" data-toc-skip>micro-wise</h6>
     <a class="dropdown-item" href="../articles/rtauargus_micro.html">&amp;tau;-Argus from R - microdata version</a>
@@ -73,12 +74,11 @@
 
 
 
-<script src="options_safety_rules_fr_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+
+<div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="" class="logo" alt=""><h1>Les arguments Safety rules et Suppress</h1>
-            <h3 data-toc-skip class="subtitle"><h2>
-<img src="R_logo_small.png" alt="logo R"><img src="TauBall2_small.png" alt="logo τ-Argus"><br>Package {rtauargus}
-</h2></h3>
+            <h3 data-toc-skip class="subtitle"><h2> ¶ <img src="R_logo_small.png" alt="logo R"><img src="TauBall2_small.png" alt="logo τ-Argus"><br>Package {rtauargus} ¶ </h2></h3>
             
       
       <small class="dont-index">Source: <a href="https://github.com/inseefrlab/rtauargus/blob/HEAD/vignettes/options_safety_rules_fr.Rmd" class="external-link"><code>vignettes/options_safety_rules_fr.Rmd</code></a></small>
@@ -88,10 +88,18 @@
     
     
 <div class="section level2">
-<h2 id="application-du-secret-primaire-avec-le-paramètre-safety_rules">Application du secret primaire avec le paramètre <code>safety_rules</code> :<a class="anchor" aria-label="anchor" href="#application-du-secret-primaire-avec-le-param%C3%A8tre-safety_rules"></a>
+<h2 id="application-du-secret-primaire-avec-le-paramètre-safety_rules">Application du secret primaire avec le paramètre
+<code>safety_rules</code> :<a class="anchor" aria-label="anchor" href="#application-du-secret-primaire-avec-le-param%C3%A8tre-safety_rules"></a>
 </h2>
-<p>Dans la fonction <code><a href="../reference/tab_rtauargus.html">tab_rtauargus()</a></code>, les options du secret primaire doivent être définies dans l’argument <code>safety_rules</code>. Par défaut, ce paramètre est fixé à <strong>“MAN(10)”</strong>, afin d’appliquer un intervalle de protection à 10%. .</p>
-<p>Si vous voulez définir des règles pour la suppression primaire, la syntaxe est la suivante : - <em>“règle_numéro1|règle_numéro2|règle_numéro3|…”</em>. Au moins une règle de sécurité est requise.</p>
+<p>Dans la fonction <code><a href="../reference/tab_rtauargus.html">tab_rtauargus()</a></code>, les options du secret
+primaire doivent être définies dans l’argument
+<code>safety_rules</code>. Par défaut, ce paramètre est fixé à
+<strong>“MAN(10)”</strong>, afin d’appliquer un intervalle de protection
+à 10%. .</p>
+<p>Si vous voulez définir des règles pour la suppression primaire, la
+syntaxe est la suivante : -
+<em>“règle_numéro1|règle_numéro2|règle_numéro3|…”</em>. Au moins une
+règle de sécurité est requise.</p>
 <p>Voci toutes les règles possibles selon le manuel de τ-Argus.</p>
 <p>Les règles les plus courantes sont :</p>
 <ul>
@@ -113,7 +121,8 @@
 <li>n (facultatif, par défaut = 1), la taille de la coalition</li>
 </ul>
 </li>
-<li>Les intervalles de protection (ManualSafetyRange) <strong>MAN(p)</strong> avec :
+<li>Les intervalles de protection (ManualSafetyRange)
+<strong>MAN(p)</strong> avec :
 <ul>
 <li>p le seuil d’estimation acceptable en pourcent</li>
 </ul>
@@ -121,30 +130,40 @@
 </ul>
 <p>Les autres :</p>
 <ul>
-<li>La règle de requête (request rule) <strong>REQ(p1,p2,SafetyMargin)</strong>. (non utilisé en France)</li>
-<li>Les intervalles de protection pour les zéros (ZeroSafetyMargin)<strong>ZERO(p)</strong> (inutile)</li>
+<li>La règle de requête (request rule)
+<strong>REQ(p1,p2,SafetyMargin)</strong>. (non utilisé en France)</li>
+<li>Les intervalles de protection pour les zéros
+(ZeroSafetyMargin)<strong>ZERO(p)</strong> (inutile)</li>
 <li>Le statut des codes manquants <strong>MIS(b)</strong> avec :
 <ul>
-<li>b = 0 (par défaut) les cellules avec un code manquant sont considérés à risque</li>
+<li>b = 0 (par défaut) les cellules avec un code manquant sont
+considérés à risque</li>
 <li>b = 1 ces cellules sont toujours sûres</li>
 </ul>
 </li>
 </ul>
-<p>Certaines règles peuvent apparaître plusieurs fois <strong>P,NK</strong>.</p>
-<p>Vous pouvez obtenir plus de détails avec le manuel τ-Argus dans les sections : - <em>4.4.4 Specify Tables</em> - <em>5.7 The Batch command file</em></p>
+<p>Certaines règles peuvent apparaître plusieurs fois
+<strong>P,NK</strong>.</p>
+<p>Vous pouvez obtenir plus de détails avec le manuel τ-Argus dans les
+sections : - <em>4.4.4 Specify Tables</em> - <em>5.7 The Batch command
+file</em></p>
 </div>
 <div class="section level2">
 <h2 id="les-options-de-suppress">Les options de <code>suppress</code> :<a class="anchor" aria-label="anchor" href="#les-options-de-suppress"></a>
 </h2>
-<p>Les options par défaut sont <strong>“MOD(1,5,1,0,0)”</strong>. Cela convient pour les statistiques d’entreprises.</p>
-<p>Pour chacun des paramètres suivants, le numéro du tableau est nécessaire, dans notre cas il sera toujours <strong>1</strong>.</p>
+<p>Les options par défaut sont <strong>“MOD(1,5,1,0,0)”</strong>. Cela
+convient pour les statistiques d’entreprises.</p>
+<p>Pour chacun des paramètres suivants, le numéro du tableau est
+nécessaire, dans notre cas il sera toujours <strong>1</strong>.</p>
 <p>Les options possibles sont :</p>
 <ul>
 <li>
 <strong>MOD : Modular</strong> :
 <ul>
-<li>MOD(TabNo, MaxTimePerSubtable, SingleSingle,SingleMultiple, MinFreq)</li>
-<li>Les 3 derniers paramètres sont les options singleton. Chaque paramètre peut être 0 ou 1. Si 1, l’option est activée.</li>
+<li>MOD(TabNo, MaxTimePerSubtable, SingleSingle,SingleMultiple,
+MinFreq)</li>
+<li>Les 3 derniers paramètres sont les options singleton. Chaque
+paramètre peut être 0 ou 1. Si 1, l’option est activée.</li>
 </ul>
 </li>
 <li>
@@ -158,7 +177,8 @@
 <ul>
 <li>GH(TabNo, A priori Bounds Percentage, ModelSize,ApplySingleton)</li>
 <li>ModelSize 0 = normal, 1 indique le grand modèle.</li>
-<li>ApplySingleton : 1 = oui, 0 = non ; par défaut = oui si le tableau a des informations sur la fréquence, non sinon.</li>
+<li>ApplySingleton : 1 = oui, 0 = non ; par défaut = oui si le tableau a
+des informations sur la fréquence, non sinon.</li>
 </ul>
 </li>
 <li>
@@ -173,8 +193,10 @@
 <li>RND(TabNo, RoundingBase, Steps, MaxTime, Partitions, StopRule)</li>
 <li>Steps : nombre de pas autorisés, normalement 0 (par défaut)</li>
 <li>MaxTime : Temps de calcul maximum (10 = par défaut)</li>
-<li>Partitions : 0, 1 (0 = pas de partitionnement (par défaut), 1 = appliquer la procédure de partitionnement)</li>
-<li>StopRule : 1 = Rapide uniquement, 2 = Première solution réalisable, 3 = Solution optimale (3 = par défaut)</li>
+<li>Partitions : 0, 1 (0 = pas de partitionnement (par défaut), 1 =
+appliquer la procédure de partitionnement)</li>
+<li>StopRule : 1 = Rapide uniquement, 2 = Première solution réalisable,
+3 = Solution optimale (3 = par défaut)</li>
 </ul>
 </li>
 <li>
@@ -184,7 +206,8 @@
 </ul>
 </li>
 </ul>
-<p>Plus de détails sont disponibles dans le manuel de τ-Argus, notamment dans la section <strong>4.2.3</strong>.</p>
+<p>Plus de détails sont disponibles dans le manuel de τ-Argus, notamment
+dans la section <strong>4.2.3</strong>.</p>
 <div class="section level4">
 <h4 id="détail-de-la-vignette">Détail de la vignette<a class="anchor" aria-label="anchor" href="#d%C3%A9tail-de-la-vignette"></a>
 </h4>
@@ -193,15 +216,17 @@
 <h4 id="about-this-vignette">About this vignette<a class="anchor" aria-label="anchor" href="#about-this-vignette"></a>
 </h4>
 <ul>
-<li>Authors: <strong><a href="mailto:nathanael.rastout@insee.fr">Nathanael Rastout</a></strong>
+<li>Authors:
+<strong><a href="mailto:nathanael.rastout@insee.fr">Nathanael
+Rastout</a></strong>
 </li>
-<li>Last update: <strong>06/01/2023</strong>
+<li>Last update: <strong>21/09/2023</strong>
 </li>
-<li>Version of rtauargus used: <strong>1.1.1</strong>
+<li>Version of rtauargus used: <strong>1.2.0</strong>
 </li>
-<li>Version of τ-Argus used : <strong>TauArgus 4.2.2b1</strong>
+<li>Version of τ-Argus used : <strong>TauArgus 4.2.3</strong>
 </li>
-<li>R version used : <strong>4.1.3</strong>
+<li>R version used : <strong>4.2.3</strong>
 </li>
 </ul>
 <p style="text-align: right">
@@ -217,7 +242,7 @@
 
     <footer><div class="pkgdown-footer-left">
   <p></p>
-<p>Developed by Pierre-Yves Berrard, Julien Jamme, Nathanaël Rastout, Jeanne Pointet, Félix Beroud.</p>
+<p>Developed by Pierre-Yves Berrard, Julien Jamme, Nathanaël Rastout, Jeanne Pointet, Félix Beroud, André-Raymond Socard, Wistan Pomel.</p>
 </div>
 
 <div class="pkgdown-footer-right">

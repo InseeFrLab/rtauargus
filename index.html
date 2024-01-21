@@ -8,8 +8,8 @@
 <meta name="description" content="Protects tables by calling the Tau-Argus software from R.">
 <title>Using Tau-Argus from R • rtauargus</title>
 <script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="deps/bootstrap-5.2.2/bootstrap.min.css" rel="stylesheet">
-<script src="deps/bootstrap-5.2.2/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
+<link href="deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
+<script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Using Tau-Argus from R">
 <meta property="og:description" content="Protects tables by calling the Tau-Argus software from R.">
@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="index.html">rtauargus</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.1.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.2.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -50,6 +50,7 @@
     <a class="dropdown-item" href="articles/protect_multi_tables_fr.html">Protéger des tableaux liés</a>
     <a class="dropdown-item" href="articles/options_safety_rules.html">Safety rules and Suppress Options</a>
     <a class="dropdown-item" href="articles/options_safety_rules_fr.html">Les arguments Safety rules et Suppress</a>
+    <a class="dropdown-item" href="articles/split_tab_fr.html">Comment poser du secret sur des tableaux à 4 ou 5 dimensions avec `rtauargus`?</a>
     <div class="dropdown-divider"></div>
     <h6 class="dropdown-header" data-toc-skip>micro-wise</h6>
     <a class="dropdown-item" href="articles/rtauargus_micro.html">&amp;tau;-Argus from R - microdata version</a>
@@ -76,7 +77,10 @@
 <a class="anchor" aria-label="anchor" href="#rtauargus-"></a>
 </h1></div>
 <!-- badges: start -->
-<!--![](vignettes/R_logo_small.png) ![](vignettes/TauBall2_small.png)--><div class="section level2">
+<!-- [![pipeline status](https://gitlab.insee.fr/outilsconfidentialite/rtauargus/badges/master/pipeline.svg)](https://gitlab.insee.fr/outilsconfidentialite/rtauargus/-/pipelines) -->
+<!-- badges: end -->
+<!--![](vignettes/R_logo_small.png) ![](vignettes/TauBall2_small.png)-->
+<div class="section level2">
 <h2 id="run-τ-argus-from-r">Run τ-Argus from R<a class="anchor" aria-label="anchor" href="#run-%CF%84-argus-from-r"></a>
 </h2>
 <p>The <em>rtauargus</em> package provides an <strong>R</strong> interface for <strong>τ-Argus</strong>.</p>
@@ -132,19 +136,7 @@
 </h2>
 <p>When loading the package, the console displays some information:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://inseefrlab.github.io/rtauargus">rtauargus</a></span><span class="op">)</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Tau-Argus : "Y:/Logiciels/TauArgus/TauArgus.exe"</span></span>
-<span><span class="co">#&gt;   (note: unknown location)</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   To change this directory :</span></span>
-<span><span class="co">#&gt;     options(rtauargus.tauargus_exe = "chemin/vers/TauArgus.exe")</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   To return to the default location,</span></span>
-<span><span class="co">#&gt;     reset_rtauargus_options("tauargus_exe")</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   To display all the options of the package :</span></span>
-<span><span class="co">#&gt;     rtauargus_options()</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://inseefrlab.github.io/rtauargus">rtauargus</a></span><span class="op">)</span></span></code></pre></div>
 <p>In particular, a plausible location for the τ-Argus software is predefined. This can be changed for the duration of the R session, as follows:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">loc_tauargus</span> <span class="op">&lt;-</span> <span class="st">"Y:/Logiciels/TauArgus/TauArgus4.2.2b1/TauArgus.exe"</span></span>
@@ -222,7 +214,7 @@
 <h2 id="important-notes">Important notes<a class="anchor" aria-label="anchor" href="#important-notes"></a>
 </h2>
 <p>The functions of <em>rtauargus</em> calling τ-Argus require that this software be accessible from the workstation. The download of τ-Argus is done on the <a href="https://github.com/sdcTools/tauargus/releases" class="external-link">dedicated page</a> of the <em>sdcTools</em> git repository.</p>
-<p>_The package was developed on the basis of open source versions of τ-Argus (versions 4.2 and above), in particular the latest version available at the time of development (4.2.2b1). It is not compatible with version 3.5.**_</p>
+<p>_The package was developed on the basis of open source versions of τ-Argus (versions 4.2 and above), in particular the version used for this version is τ-Argus 4.2.3. It is not compatible with version 3.5.**_</p>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="links">
@@ -258,6 +250,8 @@
 <li>Nathanaël Rastout <br><small class="roles"> Author </small>  </li>
 <li>Jeanne Pointet <br><small class="roles"> Author </small>  </li>
 <li>Félix Beroud <br><small class="roles"> Author </small>  </li>
+<li>André-Raymond Socard <br><small class="roles"> Author </small>  </li>
+<li>Wistan Pomel <br><small class="roles"> Author </small>  </li>
 <li><a href="authors.html">More about authors...</a></li>
 </ul>
 </div>
@@ -270,7 +264,7 @@
 
     <footer><div class="pkgdown-footer-left">
   <p></p>
-<p>Developed by Pierre-Yves Berrard, Julien Jamme, Nathanaël Rastout, Jeanne Pointet, Félix Beroud.</p>
+<p>Developed by Pierre-Yves Berrard, Julien Jamme, Nathanaël Rastout, Jeanne Pointet, Félix Beroud, André-Raymond Socard, Wistan Pomel.</p>
 </div>
 
 <div class="pkgdown-footer-right">

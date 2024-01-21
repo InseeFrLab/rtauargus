@@ -8,8 +8,8 @@
 <meta name="description" content="rtauargus">
 <title>τ-Argus from R - microdata version • rtauargus</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.2.2/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.2.2/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
+<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="τ-Argus from R - microdata version">
 <meta property="og:description" content="rtauargus">
@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">rtauargus</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.1.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.2.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -50,6 +50,7 @@
     <a class="dropdown-item" href="../articles/protect_multi_tables_fr.html">Protéger des tableaux liés</a>
     <a class="dropdown-item" href="../articles/options_safety_rules.html">Safety rules and Suppress Options</a>
     <a class="dropdown-item" href="../articles/options_safety_rules_fr.html">Les arguments Safety rules et Suppress</a>
+    <a class="dropdown-item" href="../articles/split_tab_fr.html">Comment poser du secret sur des tableaux à 4 ou 5 dimensions avec `rtauargus`?</a>
     <div class="dropdown-divider"></div>
     <h6 class="dropdown-header" data-toc-skip>micro-wise</h6>
     <a class="dropdown-item" href="../articles/rtauargus_micro.html">&amp;tau;-Argus from R - microdata version</a>
@@ -73,12 +74,11 @@
 
 
 
-<script src="rtauargus_micro_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+
+<div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="" class="logo" alt=""><h1>τ-Argus from R - microdata version</h1>
-            <h3 data-toc-skip class="subtitle"><h2>
-<img src="R_logo_small.png" alt="logo R"><img src="TauBall2_small.png" alt="logo τ-Argus"><br>Package {rtauargus}
-</h2></h3>
+            <h3 data-toc-skip class="subtitle"><h2> ¶ <img src="R_logo_small.png" alt="logo R"><img src="TauBall2_small.png" alt="logo τ-Argus"><br>Package {rtauargus} ¶ </h2></h3>
             
       
       <small class="dont-index">Source: <a href="https://github.com/inseefrlab/rtauargus/blob/HEAD/vignettes/rtauargus_micro.Rmd" class="external-link"><code>vignettes/rtauargus_micro.Rmd</code></a></small>
@@ -99,26 +99,42 @@
 <div class="section level3">
 <h3 id="presentation-of-the-package">Presentation of the package<a class="anchor" aria-label="anchor" href="#presentation-of-the-package"></a>
 </h3>
-<p>The <em>rtauargus</em> package provides an <strong>R</strong> interface for <strong>τ-Argus</strong>. It allows to:</p>
+<p>The <em>rtauargus</em> package provides an <strong>R</strong>
+interface for <strong>τ-Argus</strong>. It allows to:</p>
 <ul>
 <li>create inputs (asc and rda files) from data in R format;</li>
-<li>generate the sequence of instructions to be executed in batch mode (arb file) ;</li>
+<li>generate the sequence of instructions to be executed in batch mode
+(arb file) ;</li>
 <li>launch a batch τ-Argus in command line;</li>
 <li>retrieve the results in R.</li>
 </ul>
-<p>These different operations can be performed at once, but also in a modular way. They allow the integration of tasks performed by τ-Argus in a processing chain written in R.</p>
-<p>The syntax of some of the arguments closely matches the <em>batch</em> syntax of τ-Argus. This allows you to use a large number of features without multiply the arguments of the functions. The package can also be adapted to more easily to possible modifications of the software (new available methods, additional options…). Syntax rules for the batch writing are in the reference manual of τ-Argus.</p>
+<p>These different operations can be performed at once, but also in a
+modular way. They allow the integration of tasks performed by τ-Argus in
+a processing chain written in R.</p>
+<p>The syntax of some of the arguments closely matches the
+<em>batch</em> syntax of τ-Argus. This allows you to use a large number
+of features without multiply the arguments of the functions. The package
+can also be adapted to more easily to possible modifications of the
+software (new available methods, additional options…). Syntax rules for
+the batch writing are in the reference manual of τ-Argus.</p>
 <blockquote>
-<p>The package was developed on the basis of open source versions of τ Argus (versions 4.1 and higher), especially the latest version available during development (4.1.7)._</p>
+<p>The package was developed on the basis of open source versions of τ
+Argus (versions 4.1 and higher), especially the latest version available
+during development (4.2.3)._</p>
 <p>It is not compatible with version 3.5.**_</p>
-<p>For the moment, <strong>only microdata are accepted</strong> as input (not data already tabulated).</p>
+<p>For the moment, <strong>only microdata are accepted</strong> as input
+(not data already tabulated).</p>
 </blockquote>
 </div>
 <div class="section level3">
 <h3 id="purpose-of-this-document">Purpose of this document<a class="anchor" aria-label="anchor" href="#purpose-of-this-document"></a>
 </h3>
-<p>This document aims to show how the main features of the can be articulated, based on relatively simple examples. A detailed documentation of a function (exhaustive list of arguments, technical aspects…) is available via the dedicated help section.</p>
-<p>For the following demonstration, a fictitious microdata set will be used :</p>
+<p>This document aims to show how the main features of the can be
+articulated, based on relatively simple examples. A detailed
+documentation of a function (exhaustive list of arguments, technical
+aspects…) is available via the dedicated help section.</p>
+<p>For the following demonstration, a fictitious microdata set will be
+used :</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">microdata</span> <span class="op">&lt;-</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
@@ -147,23 +163,33 @@
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
-<p>The following installations must be carried out before the first use (and more later).</p>
+<p>The following installations must be carried out before the first use
+(and more later).</p>
 <div class="section level3">
 <h3 id="τ-argus">τ-Argus<a class="anchor" aria-label="anchor" href="#%CF%84-argus"></a>
 </h3>
-<p>The functions of <em>rtauargus</em> calling τ-Argus require that this software is accessible from the workstation. The download of τ-Argus can be found on the <a href="https://research.cbs.nl/casc/tau.htm" class="external-link">dedicated page</a> of the Dutch statistical office.</p>
-<p>However, not all functions execute τ-Argus (creation of microdata…). Not having it on your computer is not a problem.</p>
+<p>The functions of <em>rtauargus</em> calling τ-Argus require that this
+software is accessible from the workstation. The download of τ-Argus can
+be found on the <a href="https://research.cbs.nl/casc/tau.htm" class="external-link">dedicated
+page</a> of the Dutch statistical office.</p>
+<p>However, not all functions execute τ-Argus (creation of microdata…).
+Not having it on your computer is not a problem.</p>
 </div>
 <div class="section level3">
 <h3 id="dependencies">Dependencies<a class="anchor" aria-label="anchor" href="#dependencies"></a>
 </h3>
-<p>To work, <em>rtauargus</em> depends on other R packages. These have to be installed beforehand (in brackets the minimum versions required).</p>
+<p>To work, <em>rtauargus</em> depends on other R packages. These have
+to be installed beforehand (in brackets the minimum versions
+required).</p>
 <pre><code>- purrr (&gt;= 0.2),
 - dplyr (&gt;= 0.7),
+- data.table,
 - gdata,
 - stringr,
 - rlang,
-- zoo</code></pre>
+- zoo,
+- sdcHierarchies,
+- lifecycle</code></pre>
 </div>
 <div class="section level3">
 <h3 id="package">Package<a class="anchor" aria-label="anchor" href="#package"></a>
@@ -178,32 +204,44 @@
 <div class="section level2">
 <h2 id="quick-start">Quick start<a class="anchor" aria-label="anchor" href="#quick-start"></a>
 </h2>
-<p>This part explains how to perform a minimal configuration of the package and how to apply statistical confidentiality in a single instruction.</p>
+<p>This part explains how to perform a minimal configuration of the
+package and how to apply statistical confidentiality in a single
+instruction.</p>
 <div class="section level3">
 <h3 id="location-of-τ-argus">Location of τ-Argus<a class="anchor" aria-label="anchor" href="#location-of-%CF%84-argus"></a>
 </h3>
-<p>When the package is loaded, the console displays some information:</p>
+<p>When the package is loaded, the console displays some
+information:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://inseefrlab.github.io/rtauargus">rtauargus</a></span><span class="op">)</span></span></code></pre></div>
-<p>In particular, a plausible location for the τ-Argus software is predefined. It is possible to change it for the duration of the R session. A message indicates that this location is unknown, so we modify it:</p>
+<p>In particular, a plausible location for the τ-Argus software is
+predefined. It is possible to change it for the duration of the R
+session. A message indicates that this location is unknown, so we modify
+it:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">loc_tauargus</span> <span class="op">&lt;-</span> <span class="st">"Y:/Logiciels/TauArgus/TauArgus4.2.2b1/TauArgus.exe"</span></span>
+<code class="sourceCode R"><span><span class="va">loc_tauargus</span> <span class="op">&lt;-</span> <span class="st">"Y:/Logiciels/TauArgus/TauArgus4.2.3/TauArgus.exe"</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>rtauargus.tauargus_exe <span class="op">=</span> <span class="va">loc_tauargus</span><span class="op">)</span></span></code></pre></div>
 <p>After this small adjustment, the package is ready to be used.</p>
 <blockquote>
-<p>For a more customized configuration, see the section <a href="#package-options">package-options</a>._</p>
+<p>For a more customized configuration, see the section
+<a href="#package-options">package-options</a>._</p>
 </blockquote>
 </div>
 <div class="section level3">
 <h3 id="function-rtauargus-">Function <code>rtauargus</code>.<a class="anchor" aria-label="anchor" href="#function-rtauargus-"></a>
 </h3>
-<p>The eponymous function <code>rtauargus</code> performs a processing and retrieves the results immediately in R.</p>
-<p>Completely abstaining from the internal workings of τ-Argus, it allows to perform the entire process in a single instruction (specifically, all the intermediate files are created in a temporary directory which is deleted at the end of the R session).</p>
+<p>The function <code>micro_rtauargus</code> performs a processing and
+retrieves the results immediately in R.</p>
+<p>Completely abstaining from the internal workings of τ-Argus, it
+allows to perform the entire process in a single instruction
+(specifically, all the intermediate files are created in a temporary
+directory which is deleted at the end of the R session).</p>
 <p><code>rtauargus</code> takes as mandatory arguments :</p>
 <ul>
 <li>a data.frame containing the microdata ;</li>
-<li>a list of 1 to 10 tabs composed of data.frame variables (a alone in the example below);</li>
+<li>a list of 1 to 10 tabs composed of data.frame variables (a alone in
+the example below);</li>
 <li>the rule(s) to be applied for primary secrecy ;</li>
 <li>the method(s) for deleting the secondary secret boxes.</li>
 </ul>
@@ -212,19 +250,19 @@
 <h4 id="minimalist-example">Minimalist example<a class="anchor" aria-label="anchor" href="#minimalist-example"></a>
 </h4>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/rtauargus.html">rtauargus</a></span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/micro_rtauargus.html">micro_rtauargus</a></span><span class="op">(</span></span>
 <span>  microdata <span class="op">=</span> <span class="va">microdata</span>,</span>
 <span>  explanatory_vars <span class="op">=</span> <span class="st">"V1"</span>,</span>
 <span>  safety_rules <span class="op">=</span> <span class="st">"FREQ(3,10)"</span>,</span>
 <span>  suppress <span class="op">=</span> <span class="st">"GH(1,100)"</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt; Start of batch procedure; file: C:\Users\TMM7AN\AppData\Local\Temp\RtmpUjZH4W\RTA_812070d42323.arb</span></span>
-<span><span class="co">#&gt; &lt;OPENMICRODATA&gt; "C:\Users\TMM7AN\AppData\Local\Temp\RtmpUjZH4W\RTA_8120d497993.asc"</span></span>
-<span><span class="co">#&gt; &lt;OPENMETADATA&gt; "C:\Users\TMM7AN\AppData\Local\Temp\RtmpUjZH4W\RTA_8120d497993.rda"</span></span>
+<span><span class="co">#&gt; Start of batch procedure; file: C:\Users\TMM7AN.AD\AppData\Local\Temp\Rtmpu6McgM\RTA_8a488545f97.arb</span></span>
+<span><span class="co">#&gt; &lt;OPENMICRODATA&gt; "C:\Users\TMM7AN.AD\AppData\Local\Temp\Rtmpu6McgM\RTA_8a484e1611c.asc"</span></span>
+<span><span class="co">#&gt; &lt;OPENMETADATA&gt; "C:\Users\TMM7AN.AD\AppData\Local\Temp\Rtmpu6McgM\RTA_8a484e1611c.rda"</span></span>
 <span><span class="co">#&gt; &lt;SPECIFYTABLE&gt; "V1"|"&lt;freq&gt;"||</span></span>
 <span><span class="co">#&gt; &lt;SAFETYRULE&gt; FREQ(3,10)</span></span>
 <span><span class="co">#&gt; &lt;READMICRODATA&gt;</span></span>
-<span><span class="co">#&gt; Start explore file: C:\Users\TMM7AN\AppData\Local\Temp\RtmpUjZH4W\RTA_8120d497993.asc</span></span>
+<span><span class="co">#&gt; Start explore file: C:\Users\TMM7AN.AD\AppData\Local\Temp\Rtmpu6McgM\RTA_8a484e1611c.asc</span></span>
 <span><span class="co">#&gt; Start computing tables</span></span>
 <span><span class="co">#&gt; Table: V1 | &lt;freq&gt; has been specified</span></span>
 <span><span class="co">#&gt; Tables have been computed</span></span>
@@ -236,26 +274,32 @@
 <span><span class="co">#&gt;                    Number of suppressions: 1</span></span>
 <span><span class="co">#&gt; The hypercube procedure has been applied</span></span>
 <span><span class="co">#&gt;                    1 cells have been suppressed</span></span>
-<span><span class="co">#&gt; &lt;WRITETABLE&gt; (1,4,AS+SE+,"C:\Users\TMM7AN\AppData\Local\Temp\RtmpUjZH4W\RTA_81201c341372.sbs")</span></span>
+<span><span class="co">#&gt; &lt;WRITETABLE&gt; (1,4,,"C:\Users\TMM7AN.AD\AppData\Local\Temp\Rtmpu6McgM\RTA_8a4818452b3.sbs")</span></span>
 <span><span class="co">#&gt; Table: V1 | &lt;freq&gt; has been written</span></span>
-<span><span class="co">#&gt;                    Output file name: C:\Users\TMM7AN\AppData\Local\Temp\RtmpUjZH4W\RTA_81201c341372.sbs</span></span>
+<span><span class="co">#&gt;                    Output file name: C:\Users\TMM7AN.AD\AppData\Local\Temp\Rtmpu6McgM\RTA_8a4818452b3.sbs</span></span>
 <span><span class="co">#&gt; End of TauArgus run</span></span>
 <span><span class="co">#&gt; NULL</span></span></code></pre></div>
-<p>As no response variable is given, a count is made (“&lt;freq&gt;”).</p>
+<p>As no response variable is given, a count is made
+(“&lt;freq&gt;”).</p>
 </div>
 <div class="section level4">
 <h4 id="elaborate-example">Elaborate example<a class="anchor" aria-label="anchor" href="#elaborate-example"></a>
 </h4>
-<p>Other parameters are available. For example, you can add the previous instruction with :</p>
+<p>Other parameters are available. For example, you can add the previous
+instruction with :</p>
 <ul>
-<li>a second tabulation (the two tables will be treated independently) ;</li>
-<li>a parameter allowing to not display the status of the secret for the FIRST TABLE;</li>
+<li>a second tabulation (the two tables will be treated independently)
+;</li>
+<li>a parameter allowing to not display the status of the secret for the
+FIRST TABLE;</li>
 <li>a parameter to hide the log of τ-Argus in the console.</li>
 </ul>
-<p>In addition, the tables produced are no longer simply sent to the console. They are stored in a <code>secret1</code> object (a list consisting of two data.frame), which we can continue to manipulate.</p>
+<p>In addition, the tables produced are no longer simply sent to the
+console. They are stored in a <code>secret1</code> object (a list
+consisting of two data.frame), which we can continue to manipulate.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">secret1</span> <span class="op">&lt;-</span></span>
-<span>  <span class="fu"><a href="../reference/rtauargus.html">rtauargus</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="../reference/micro_rtauargus.html">micro_rtauargus</a></span><span class="op">(</span></span>
 <span>    microdata <span class="op">=</span> <span class="va">microdata</span>,</span>
 <span>    explanatory_vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"V1"</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"V1"</span>, <span class="st">"V2"</span><span class="op">)</span><span class="op">)</span>, <span class="co"># 2 tabs (V1, V1xV2)</span></span>
 <span>    safety_rules <span class="op">=</span> <span class="st">"FREQ(3,10)"</span>,</span>
@@ -263,15 +307,15 @@
 <span>    output_options <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">""</span>, <span class="st">"AS+"</span><span class="op">)</span>, <span class="co"># no status for the 1st array</span></span>
 <span>    show_batch_console <span class="op">=</span> <span class="cn">FALSE</span> <span class="co"># to hide the log</span></span>
 <span>  <span class="op">)</span></span>
-<span><span class="co">#&gt; Start of batch procedure; file: C:\Users\TMM7AN\AppData\Local\Temp\RtmpUjZH4W\RTA_812013c83d91.arb</span></span>
-<span><span class="co">#&gt; &lt;OPENMICRODATA&gt; "C:\Users\TMM7AN\AppData\Local\Temp\RtmpUjZH4W\RTA_812015647f11.asc"</span></span>
-<span><span class="co">#&gt; &lt;OPENMETADATA&gt; "C:\Users\TMM7AN\AppData\Local\Temp\RtmpUjZH4W\RTA_812015647f11.rda"</span></span>
+<span><span class="co">#&gt; Start of batch procedure; file: C:\Users\TMM7AN.AD\AppData\Local\Temp\Rtmpu6McgM\RTA_8a48bef7dcb.arb</span></span>
+<span><span class="co">#&gt; &lt;OPENMICRODATA&gt; "C:\Users\TMM7AN.AD\AppData\Local\Temp\Rtmpu6McgM\RTA_8a484664de8.asc"</span></span>
+<span><span class="co">#&gt; &lt;OPENMETADATA&gt; "C:\Users\TMM7AN.AD\AppData\Local\Temp\Rtmpu6McgM\RTA_8a484664de8.rda"</span></span>
 <span><span class="co">#&gt; &lt;SPECIFYTABLE&gt; "V1"|"&lt;freq&gt;"||</span></span>
 <span><span class="co">#&gt; &lt;SAFETYRULE&gt; FREQ(3,10)</span></span>
 <span><span class="co">#&gt; &lt;SPECIFYTABLE&gt; "V1""V2"|"&lt;freq&gt;"||</span></span>
 <span><span class="co">#&gt; &lt;SAFETYRULE&gt; FREQ(3,10)</span></span>
 <span><span class="co">#&gt; &lt;READMICRODATA&gt;</span></span>
-<span><span class="co">#&gt; Start explore file: C:\Users\TMM7AN\AppData\Local\Temp\RtmpUjZH4W\RTA_812015647f11.asc</span></span>
+<span><span class="co">#&gt; Start explore file: C:\Users\TMM7AN.AD\AppData\Local\Temp\Rtmpu6McgM\RTA_8a484664de8.asc</span></span>
 <span><span class="co">#&gt; Start computing tables</span></span>
 <span><span class="co">#&gt; Table: V1 | &lt;freq&gt; has been specified</span></span>
 <span><span class="co">#&gt; Table: V1 x V2 | &lt;freq&gt; has been specified</span></span>
@@ -284,27 +328,36 @@
 <span><span class="co">#&gt;                    Number of suppressions: 1</span></span>
 <span><span class="co">#&gt; The hypercube procedure has been applied</span></span>
 <span><span class="co">#&gt;                    1 cells have been suppressed</span></span>
-<span><span class="co">#&gt; &lt;WRITETABLE&gt; (1,4,,"C:\Users\TMM7AN\AppData\Local\Temp\RtmpUjZH4W\RTA_81207aa2345e.sbs")</span></span>
+<span><span class="co">#&gt; &lt;WRITETABLE&gt; (1,4,,"C:\Users\TMM7AN.AD\AppData\Local\Temp\Rtmpu6McgM\RTA_8a4862103fbe.sbs")</span></span>
 <span><span class="co">#&gt; Table: V1 | &lt;freq&gt; has been written</span></span>
-<span><span class="co">#&gt;                    Output file name: C:\Users\TMM7AN\AppData\Local\Temp\RtmpUjZH4W\RTA_81207aa2345e.sbs</span></span>
+<span><span class="co">#&gt;                    Output file name: C:\Users\TMM7AN.AD\AppData\Local\Temp\Rtmpu6McgM\RTA_8a4862103fbe.sbs</span></span>
 <span><span class="co">#&gt; &lt;SUPPRESS&gt; GH(2,100)</span></span>
 <span><span class="co">#&gt; Start of the hypercube protection for table V1 x V2 | &lt;freq&gt;</span></span>
 <span><span class="co">#&gt; End of hypercube protection. Time used 1 seconds</span></span>
 <span><span class="co">#&gt;                    Number of suppressions: 2</span></span>
 <span><span class="co">#&gt; The hypercube procedure has been applied</span></span>
 <span><span class="co">#&gt;                    2 cells have been suppressed</span></span>
-<span><span class="co">#&gt; &lt;WRITETABLE&gt; (2,4,AS+,"C:\Users\TMM7AN\AppData\Local\Temp\RtmpUjZH4W\RTA_812061143ab3.sbs")</span></span>
+<span><span class="co">#&gt; &lt;WRITETABLE&gt; (2,4,AS+,"C:\Users\TMM7AN.AD\AppData\Local\Temp\Rtmpu6McgM\RTA_8a48589d7890.sbs")</span></span>
 <span><span class="co">#&gt; Table: V1 x V2 | &lt;freq&gt; has been written</span></span>
-<span><span class="co">#&gt;                    Output file name: C:\Users\TMM7AN\AppData\Local\Temp\RtmpUjZH4W\RTA_812061143ab3.sbs</span></span>
+<span><span class="co">#&gt;                    Output file name: C:\Users\TMM7AN.AD\AppData\Local\Temp\Rtmpu6McgM\RTA_8a48589d7890.sbs</span></span>
 <span><span class="co">#&gt; End of TauArgus run</span></span>
 <span></span>
 <span><span class="va">secret1</span></span>
 <span><span class="co">#&gt; NULL</span></span></code></pre></div>
 <blockquote>
 <p>Note on the writing <code>suppress = "GH(.,100)"</code> :_</p>
-<p>The first parameter expected by τ-Argus is the tab number. Here, we want to apply the same method of deleting the secondary secret to each table. If there is only one method and several tabs, the characters between the parenthesis and the first comma are ignored and the automatically calculated tabulation numbers.</p>
+<p>The first parameter expected by τ-Argus is the tab number. Here, we
+want to apply the same method of deleting the secondary secret to each
+table. If there is only one method and several tabs, the characters
+between the parenthesis and the first comma are ignored and the
+automatically calculated tabulation numbers.</p>
 </blockquote>
-<p>The function help only describes the 4 mandatory arguments. The arguments available are documented in the basic functions the constituent (<code>micro_asc_rda</code>, <code>micro_arb</code>, <code>run_arb</code>, <code>import</code>). All argument of these functions can be used in <code>rtauargus</code>. Their The following section provides details on the operation of the system.</p>
+<p>The function help only describes the 4 mandatory arguments. The
+arguments available are documented in the basic functions the
+constituent (<code>micro_asc_rda</code>, <code>micro_arb</code>,
+<code>run_arb</code>, <code>import</code>). All argument of these
+functions can be used in <code>rtauargus</code>. Their The following
+section provides details on the operation of the system.</p>
 <p style="text-align: right">
 <a href="#TOC" title="Back to summary">summary ↑</a>
 </p>
@@ -315,9 +368,16 @@
 <div class="section level2">
 <h2 id="process-decomposition">Process decomposition<a class="anchor" aria-label="anchor" href="#process-decomposition"></a>
 </h2>
-<p>Using the <code>rtauargus</code> function is convenient in terms of lines of code to enter. However, this approach can be quite cumbersome if the tables to be secreted have in common a certain number of characteristics.</p>
-<p>For example, we would like to generate only the asc and rda files, then run several batches using these same files. This was not the case in the examples seen so far, where all intermediate files were systematically regenerated, even if their content was identical.</p>
-<p>To do this, we can use the functions called successively by the function <code>rtauargus</code>, namely :</p>
+<p>Using the <code>micro_rtauargus</code> function is convenient in
+terms of lines of code to enter. However, this approach can be quite
+cumbersome if the tables to be secreted have in common a certain number
+of characteristics.</p>
+<p>For example, we would like to generate only the asc and rda files,
+then run several batches using these same files. This was not the case
+in the examples seen so far, where all intermediate files were
+systematically regenerated, even if their content was identical.</p>
+<p>To do this, we can use the functions called successively by the
+function <code>micro_rtauargus</code>, namely :</p>
 <blockquote>
 <p><strong><a href="#function-micro_asc_rda">micro_asc_rda()</a>   →  <a href="#function-micro_arb">micro_arb()</a>   →  <a href="#function-run_arb">run_arb()</a>   →   <a href="#function-import">import()</a></strong></p>
 </blockquote>
@@ -326,14 +386,18 @@
 </h3>
 <p>Argus only accepts microdata as input in a well-defined form:</p>
 <ul>
-<li>a text file with fixed length columns, without column headers (.asc file) ;</li>
+<li>a text file with fixed length columns, without column headers (.asc
+file) ;</li>
 <li>a variable description file (.rda file).</li>
 </ul>
-<p>The function <code>micro_asc_rda</code> produces these two files from a data.frame.</p>
+<p>The function <code>micro_asc_rda</code> produces these two files from
+a data.frame.</p>
 <div class="section level4">
 <h4 id="minimalist-example-1">Minimalist example<a class="anchor" aria-label="anchor" href="#minimalist-example-1"></a>
 </h4>
-<p>Only the data and the name of the asc file are entered here. As the name of the metadata file is not specified, it takes the same name as the asc, but with the extension .rda.</p>
+<p>Only the data and the name of the asc file are entered here. As the
+name of the metadata file is not specified, it takes the same name as
+the asc, but with the extension .rda.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/micro_asc_rda.html">micro_asc_rda</a></span><span class="op">(</span><span class="va">microdata</span>, asc_filename <span class="op">=</span> <span class="st">"Z:/microdata.asc"</span><span class="op">)</span></span></code></pre></div>
 <p>Content of the files created :</p>
@@ -357,7 +421,10 @@
                      &lt;NUMERIC&gt;        
                      &lt;DECIMALS&gt; 2     </code></pre>
 <blockquote>
-<p>The package functions accept file locations in the form of relative path. For example, <code>asc_filename = "microdata.asc"</code> with a working directory on <code>Z:/</code> is equivalent to <code>asc_filename = "Z:/microdata.asc"</code>._</p>
+<p>The package functions accept file locations in the form of relative
+path. For example, <code>asc_filename = "microdata.asc"</code> with a
+working directory on <code>Z:/</code> is equivalent to
+<code>asc_filename = "Z:/microdata.asc"</code>._</p>
 </blockquote>
 </div>
 <div class="section level4">
@@ -368,7 +435,8 @@
 <li>a weight variable ;</li>
 <li>information on a hierarchical variable ;</li>
 <li>differentiated codes for totals;</li>
-<li>a minimum number of decimal places to be written for numerical variables.</li>
+<li>a minimum number of decimal places to be written for numerical
+variables.</li>
 </ul>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/micro_asc_rda.html">micro_asc_rda</a></span><span class="op">(</span></span>
@@ -405,15 +473,18 @@
 <div class="section level4">
 <h4 id="temporary-files">Temporary files<a class="anchor" aria-label="anchor" href="#temporary-files"></a>
 </h4>
-<p>For any parameter <code>*_filename</code> not filled, the generated files are placed in a temporary folder. It is possible to retrieve the location and name (random) of these files in the return value of the function.</p>
+<p>For any parameter <code>*_filename</code> not filled, the generated
+files are placed in a temporary folder. It is possible to retrieve the
+location and name (random) of these files in the return value of the
+function.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">names_asc_rda</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/micro_asc_rda.html">micro_asc_rda</a></span><span class="op">(</span><span class="va">microdata</span><span class="op">)</span></span>
 <span><span class="va">names_asc_rda</span></span>
 <span><span class="co">#&gt; $asc_filename</span></span>
-<span><span class="co">#&gt; [1] "C:\\Users\\TMM7AN\\AppData\\Local\\Temp\\RtmpUjZH4W\\RTA_812057c861f1.asc"</span></span>
+<span><span class="co">#&gt; [1] "C:\\Users\\TMM7AN.AD\\AppData\\Local\\Temp\\Rtmpu6McgM\\RTA_8a4868f0147e.asc"</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $rda_filename</span></span>
-<span><span class="co">#&gt; [1] "C:\\Users\\TMM7AN\\AppData\\Local\\Temp\\RtmpUjZH4W\\RTA_812057c861f1.rda"</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] "C:\\Users\\TMM7AN.AD\\AppData\\Local\\Temp\\Rtmpu6McgM\\RTA_8a4868f0147e.rda"</span></span></code></pre></div>
 <p style="text-align: right">
 <a href="#TOC" title="Back to summary">summary ↑</a>
 </p>
@@ -422,16 +493,21 @@
 <div class="section level3">
 <h3 id="function-micro_arb-">[2] Function <code>micro_arb</code>.<a class="anchor" aria-label="anchor" href="#function-micro_arb-"></a>
 </h3>
-<p>This function builds a batch file executable by τ-Argus. It takes as mandatory arguments:</p>
+<p>This function builds a batch file executable by τ-Argus. It takes as
+mandatory arguments:</p>
 <ul>
 <li>asc file name ;</li>
 <li>tab(s) (up to 10, as a list) ;</li>
 <li>primary secrecy rule(s);</li>
 <li>method(s) for managing secondary secrecy.</li>
 </ul>
-<p>The function also needs the name of the rda file. If it is not specified, the same name as the asc file with the .rda extension is used.</p>
+<p>The function also needs the name of the rda file. If it is not
+specified, the same name as the asc file with the .rda extension is
+used.</p>
 <blockquote>
-<p>The function does not check the existence of the specified directories or files. It only generates a file of instructions, without evaluating the validity._</p>
+<p>The function does not check the existence of the specified
+directories or files. It only generates a file of instructions, without
+evaluating the validity._</p>
 </blockquote>
 <div class="section level4">
 <h4 id="minimalist-example-2">Minimalist example<a class="anchor" aria-label="anchor" href="#minimalist-example-2"></a>
@@ -446,17 +522,17 @@
 <span>  output_names <span class="op">=</span> <span class="st">"Z:/results/secretV1.csv"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p>Content of the file created :</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a><span class="kw">file.show</span>(<span class="st">"Z:/microdata.arb"</span>, <span class="dt">pager =</span> <span class="st">"internal"</span>)</span>
-<span id="cb15-2"><a href="#cb15-2"></a><span class="st">````</span></span></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/file.show.html" class="external-link">file.show</a></span><span class="op">(</span><span class="st">"Z:/microdata.arb"</span>, pager <span class="op">=</span> <span class="st">"internal"</span><span class="op">)</span></span></code></pre></div>
 <pre><code>// Batch generated by package *rtauargus*
-// (2023-01-06 16:40:59 CET)
+// (2024-01-11 16:39:46 CET)
 &lt;OPENMICRODATA&gt; "Z:\microdata.asc"
 &lt;OPENMETADATA&gt; "Z:\microdata.rda"
 &lt;SPECIFYTABLE&gt; "V1"|"&lt;freq&gt;"||
 &lt;SAFETYRULE&gt; FREQ(3,10)
 &lt;READMICRODATA&gt;
 &lt;SUPPRESS&gt; GH(1,100)
-&lt;WRITETABLE&gt; (1,4,AS+SE+,"Z:\results\secretV1.csv")</code></pre>
+&lt;WRITETABLE&gt; (1,4,,"Z:\results\secretV1.csv")</code></pre>
 </div>
 <div class="section level4">
 <h4 id="elaborate-example-2">Elaborate example<a class="anchor" aria-label="anchor" href="#elaborate-example-2"></a>
@@ -469,27 +545,36 @@
 <li>a weighting in the first table (but not in the second);</li>
 <li>deletion of empty crossovers in both tables (SE+).</li>
 </ul>
-<p>Passing a single value for an option applies the same treatment to each tab. For differentiated options, it is necessary to pass a vector containing as many values as there are tabs.</p>
-<p>``{r arb2} micro_arb( arb_filename = “Z:/microdata.arb”, asc_filename = “Z:/microdata.asc”, explanatory_vars = list(“V1”, c(“V2”, “V3”)), response_var = “VAL”, safety_rules = c(“FREQ(3,10)”, “FREQ(3,10)|NK(1,85)”), weighted = c(TRUE, FALSE), suppress = “GH(.,100)”, output_options = “AS+SE+” )</p>
+<p>Passing a single value for an option applies the same treatment to
+each tab. For differentiated options, it is necessary to pass a vector
+containing as many values as there are tabs.</p>
+<p>``{r arb2} micro_arb( arb_filename = “Z:/microdata.arb”, asc_filename
+= “Z:/microdata.asc”, explanatory_vars = list(“V1”, c(“V2”, “V3”)),
+response_var = “VAL”, safety_rules = c(“FREQ(3,10)”,
+“FREQ(3,10)|NK(1,85)”), weighted = c(TRUE, FALSE), suppress =
+“GH(.,100)”, output_options = “AS+SE+” )</p>
 <pre><code>
 
-`````r
+```r
 file.show("Z:/microdata.arb", pager = "internal")</code></pre>
-<p>`````</p>
 <pre><code>// Batch generated by package *rtauargus*
-// (2023-01-06 16:40:59 CET)
+// (2024-01-11 16:39:46 CET)
 &lt;OPENMICRODATA&gt; "Z:\microdata.asc"
 &lt;OPENMETADATA&gt; "Z:\microdata.rda"
 &lt;SPECIFYTABLE&gt; "V1"|"&lt;freq&gt;"||
 &lt;SAFETYRULE&gt; FREQ(3,10)
 &lt;READMICRODATA&gt;
 &lt;SUPPRESS&gt; GH(1,100)
-&lt;WRITETABLE&gt; (1,4,AS+SE+,"Z:\results\secretV1.csv")</code></pre>
+&lt;WRITETABLE&gt; (1,4,,"Z:\results\secretV1.csv")</code></pre>
 </div>
 <div class="section level4">
 <h4 id="temporary-files-1">Temporary files<a class="anchor" aria-label="anchor" href="#temporary-files-1"></a>
 </h4>
-<p>In the previous example, the output file names (<code>output_names</code>) were not specified, which led to the generation of file names temporary. Specifying the name of the .arb file is not mandatory either. These information can be retrieved from the return value of the function.</p>
+<p>In the previous example, the output file names
+(<code>output_names</code>) were not specified, which led to the
+generation of file names temporary. Specifying the name of the .arb file
+is not mandatory either. These information can be retrieved from the
+return value of the function.</p>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">infos_arb</span> <span class="op">&lt;-</span></span>
 <span>  <span class="fu"><a href="../reference/micro_arb.html">micro_arb</a></span><span class="op">(</span></span>
@@ -501,11 +586,11 @@ file.show("Z:/microdata.arb", pager = "internal")</code></pre>
 <span>  <span class="op">)</span></span>
 <span><span class="va">infos_arb</span></span>
 <span><span class="co">#&gt; $arb_filename</span></span>
-<span><span class="co">#&gt; [1] "C:\\Users\\TMM7AN\\AppData\\Local\\Temp\\RtmpUjZH4W\\RTA_81205864399e.arb"</span></span>
+<span><span class="co">#&gt; [1] "C:\\Users\\TMM7AN.AD\\AppData\\Local\\Temp\\Rtmpu6McgM\\RTA_8a481d6c467c.arb"</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $output_names</span></span>
-<span><span class="co">#&gt; [1] "C:\\Users\\TMM7AN\\AppData\\Local\\Temp\\RtmpUjZH4W\\RTA_81201e3eade.sbs"</span></span>
-<span><span class="co">#&gt; [2] "C:\\Users\\TMM7AN\\AppData\\Local\\Temp\\RtmpUjZH4W\\RTA_8120f21e29.sbs"</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] "C:\\Users\\TMM7AN.AD\\AppData\\Local\\Temp\\Rtmpu6McgM\\RTA_8a483d7451b6.sbs"</span></span>
+<span><span class="co">#&gt; [2] "C:\\Users\\TMM7AN.AD\\AppData\\Local\\Temp\\Rtmpu6McgM\\RTA_8a48637e49a.sbs"</span></span></code></pre></div>
 <p style="text-align: right">
 <a href="#TOC" title="Back to summary">summary ↑</a>
 </p>
@@ -514,7 +599,9 @@ file.show("Z:/microdata.arb", pager = "internal")</code></pre>
 <div class="section level3">
 <h3 id="function-run_arb">[3] Function <code>run_arb</code><a class="anchor" aria-label="anchor" href="#function-run_arb"></a>
 </h3>
-<p>Now that the instructions have been generated in an .arb file, we can submit it to τ-Argus in batch mode. We get the list of tables secreted :</p>
+<p>Now that the instructions have been generated in an .arb file, we can
+submit it to τ-Argus in batch mode. We get the list of tables secreted
+:</p>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">secret2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/run_arb.html">run_arb</a></span><span class="op">(</span><span class="st">"Z:/microdata.arb"</span>, missing_dir <span class="op">=</span> <span class="st">"create"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Start of batch procedure; file: Z:\microdata.arb</span></span>
@@ -535,29 +622,44 @@ file.show("Z:/microdata.arb", pager = "internal")</code></pre>
 <span><span class="co">#&gt;                    Number of suppressions: 1</span></span>
 <span><span class="co">#&gt; The hypercube procedure has been applied</span></span>
 <span><span class="co">#&gt;                    1 cells have been suppressed</span></span>
-<span><span class="co">#&gt; &lt;WRITETABLE&gt; (1,4,AS+SE+,"Z:\results\secretV1.csv")</span></span>
+<span><span class="co">#&gt; &lt;WRITETABLE&gt; (1,4,,"Z:\results\secretV1.csv")</span></span>
 <span><span class="co">#&gt; Table: V1 | &lt;freq&gt; has been written</span></span>
 <span><span class="co">#&gt;                    Output file name: Z:\results\secretV1.csv</span></span>
 <span><span class="co">#&gt; End of TauArgus run</span></span>
 <span></span>
 <span><span class="va">secret2</span></span>
 <span><span class="co">#&gt; NULL</span></span></code></pre></div>
-<p><code>run_arb</code> is the only function in the package that runs τ-Argus. It requires that the software be accessible from the workstation.</p>
-<p>Only the <code>arb_filename</code> argument is mandatory, because all the information are present in the .arb file. Optional parameters are also available:</p>
+<p><code>run_arb</code> is the only function in the package that runs
+τ-Argus. It requires that the software be accessible from the
+workstation.</p>
+<p>Only the <code>arb_filename</code> argument is mandatory, because all
+the information are present in the .arb file. Optional parameters are
+also available:</p>
 <ul>
 <li>
-<code>missing_dir</code> : action to perform if a folder where the result will be written does not exist (trigger an error or create it)</li>
+<code>missing_dir</code> : action to perform if a folder where the
+result will be written does not exist (trigger an error or create
+it)</li>
 <li>
-<code>tauargus_exe</code> : to change the executable (override the <code>rtauargus.tauargus_exe</code> the time of the function) ;</li>
+<code>tauargus_exe</code> : to change the executable (override the
+<code>rtauargus.tauargus_exe</code> the time of the function) ;</li>
 <li>
-<code>logbook</code> : location and name of the file containing the error log;</li>
-<li>show_batch_on_console` : to display or not the batch progress in the console ;</li>
+<code>logbook</code> : location and name of the file containing the
+error log;</li>
+<li>show_batch_on_console` : to display or not the batch progress in the
+console ;</li>
 <li>
-<code>import</code> : if disabled, the function only generates text files without importing them into R (see next section for details).</li>
+<code>import</code> : if disabled, the function only generates text
+files without importing them into R (see next section for details).</li>
 </ul>
-<p>If the tabs have been given a name in <code>micro_arb</code>, these names are used for the list of data.frames output from <code>run_arb</code> (no names defined in the example above).</p>
+<p>If the tabs have been given a name in <code>micro_arb</code>, these
+names are used for the list of data.frames output from
+<code>run_arb</code> (no names defined in the example above).</p>
 <blockquote>
-<p>Checks are made before the actual launch of τ-Argus : existence of the software on the workstation, asc and rda files, folders where write the results, variables to be used (crosses, variable of response, …) in the metadata (rda file)._</p>
+<p>Checks are made before the actual launch of τ-Argus : existence of
+the software on the workstation, asc and rda files, folders where write
+the results, variables to be used (crosses, variable of response, …) in
+the metadata (rda file)._</p>
 </blockquote>
 <p style="text-align: right">
 <a href="#TOC" title="Back to summary">summary ↑</a>
@@ -566,8 +668,14 @@ file.show("Z:/microdata.arb", pager = "internal")</code></pre>
 <div class="section level3">
 <h3 id="import-function">[4] Import function<a class="anchor" aria-label="anchor" href="#import-function"></a>
 </h3>
-<p>This function imports the results produced by τ-Argus (text files) to from the information contained in an arb file. It therefore requires that that the batch has been completed without error and that the files are still present.</p>
-<p>For this last reason, the <code>import</code> function is typically called from <code>run_arb</code> by setting <code>import = TRUE</code>. It can also be used from independently (e.g. if you don’t want to restart a batch that has took a long time to execute).</p>
+<p>This function imports the results produced by τ-Argus (text files) to
+from the information contained in an arb file. It therefore requires
+that that the batch has been completed without error and that the files
+are still present.</p>
+<p>For this last reason, the <code>import</code> function is typically
+called from <code>run_arb</code> by setting <code>import = TRUE</code>.
+It can also be used from independently (e.g. if you don’t want to
+restart a batch that has took a long time to execute).</p>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">secret2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/import.html">import</a></span><span class="op">(</span><span class="st">"Z:/microdata.arb"</span><span class="op">)</span></span>
 <span><span class="co"># produces the same result as run_arb("Z:/microdata.arb", import = TRUE)</span></span></code></pre></div>
@@ -579,13 +687,17 @@ file.show("Z:/microdata.arb", pager = "internal")</code></pre>
 <li>2: csv for pivot-table</li>
 <li>4: sbs output format</li>
 </ul>
-<p>If the import is impossible for a given tab, an empty data.frame is returned (with a warning message).</p>
+<p>If the import is impossible for a given tab, an empty data.frame is
+returned (with a warning message).</p>
 </div>
 <div class="section level4">
 <h4 id="tab-attributes">Tab attributes<a class="anchor" aria-label="anchor" href="#tab-attributes"></a>
 </h4>
-<p>Each data.frame in the list is associated with a set of attributes, some metadata keeping track of the specifications passed to τ-Argus.</p>
-<p>For example, for <code>secret2[[2]]</code> (the second array of <code>secret2</code>), we have the parameters that were passed to the function (the other correspond to default values of the package).</p>
+<p>Each data.frame in the list is associated with a set of attributes,
+some metadata keeping track of the specifications passed to τ-Argus.</p>
+<p>For example, for <code>secret2[[2]]</code> (the second array of
+<code>secret2</code>), we have the parameters that were passed to the
+function (the other correspond to default values of the package).</p>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">secret2</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="co">#&gt;  NULL</span></span></code></pre></div>
@@ -600,11 +712,18 @@ file.show("Z:/microdata.arb", pager = "internal")</code></pre>
 <h2 id="package-options">Package options<a class="anchor" aria-label="anchor" href="#package-options"></a>
 </h2>
 <p>The package options define the default behavior of the functions.</p>
-<p>These options are used if a mandatory argument of a function is not filled in. They allow not to repeat systematically the same parameter at each call of a function. The option name is the name of the argument of a function preceded by <code>rtauargus.</code> :</p>
+<p>These options are used if a mandatory argument of a function is not
+filled in. They allow not to repeat systematically the same parameter at
+each call of a function. The option name is the name of the argument of
+a function preceded by <code>rtauargus.</code> :</p>
 <blockquote>
-<p>For example, <code>rtauargus.decimals</code> will be the value used if the argument The <code>decimals</code> of the <code>micro_asc_rda</code> function is not filled by the user.</p>
+<p>For example, <code>rtauargus.decimals</code> will be the value used
+if the argument The <code>decimals</code> of the
+<code>micro_asc_rda</code> function is not filled by the user.</p>
 </blockquote>
-<p>On loading, the package assigns a default value to all options of rtauargus that are not yet declared. The options already defined by the user keep their values.</p>
+<p>On loading, the package assigns a default value to all options of
+rtauargus that are not yet declared. The options already defined by the
+user keep their values.</p>
 <p>The available options and their default values are listed below:</p>
 <table class="table">
 <colgroup>
@@ -646,7 +765,7 @@ file.show("Z:/microdata.arb", pager = "internal")</code></pre>
 </tr>
 <tr class="odd">
 <td align="left">rtauargus.missing</td>
-<td align="left">""</td>
+<td align="left">“”</td>
 <td align="left">character</td>
 <td align="right">micro_asc_rda</td>
 </tr>
@@ -706,13 +825,13 @@ file.show("Z:/microdata.arb", pager = "internal")</code></pre>
 </tr>
 <tr class="odd">
 <td align="left">rtauargus.output_options</td>
-<td align="left">""</td>
+<td align="left">“”</td>
 <td align="left">character</td>
 <td align="right">micro_arb</td>
 </tr>
 <tr class="even">
 <td align="left">rtauargus.output_options</td>
-<td align="left">""</td>
+<td align="left">“”</td>
 <td align="left">character</td>
 <td align="right">tab_arb</td>
 </tr>
@@ -776,7 +895,7 @@ file.show("Z:/microdata.arb", pager = "internal")</code></pre>
 <span><span class="co">#&gt; [1] "stop"</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $rtauargus.output_options</span></span>
-<span><span class="co">#&gt; [1] "AS+SE+"</span></span>
+<span><span class="co">#&gt; [1] ""</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $rtauargus.output_type</span></span>
 <span><span class="co">#&gt; [1] "4"</span></span>
@@ -791,14 +910,16 @@ file.show("Z:/microdata.arb", pager = "internal")</code></pre>
 <span><span class="co">#&gt; [1] FALSE</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $rtauargus.tauargus_exe</span></span>
-<span><span class="co">#&gt; [1] "Y:/Logiciels/TauArgus/TauArgus4.2.2b1/TauArgus.exe"</span></span>
+<span><span class="co">#&gt; [1] "Y:/Logiciels/TauArgus/TauArgus4.2.3/TauArgus.exe"</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $rtauargus.totcode</span></span>
 <span><span class="co">#&gt; [1] "Total"</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $rtauargus.weighted</span></span>
 <span><span class="co">#&gt; [1] FALSE</span></span></code></pre></div>
-<p>The values are identical to the default values, except for the location of τ-Argus, which has been previously modified. They appear in the order alphabetical.</p>
+<p>The values are identical to the default values, except for the
+location of τ-Argus, which has been previously modified. They appear in
+the order alphabetical.</p>
 <p style="text-align: right">
 <a href="#TOC" title="Back to summary">summary ↑</a>
 </p>
@@ -806,7 +927,8 @@ file.show("Z:/microdata.arb", pager = "internal")</code></pre>
 <div class="section level3">
 <h3 id="modification-reset">Modification, reset<a class="anchor" aria-label="anchor" href="#modification-reset"></a>
 </h3>
-<p>To modify one or more options, use the following syntax (the same as above) than the one used to modify the location of τ-Argus) :</p>
+<p>To modify one or more options, use the following syntax (the same as
+above) than the one used to modify the location of τ-Argus) :</p>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span></span>
 <span>  rtauargus.show_batch_console <span class="op">=</span> <span class="cn">FALSE</span>,</span>
@@ -829,7 +951,7 @@ file.show("Z:/microdata.arb", pager = "internal")</code></pre>
 <span><span class="co">#&gt;  $ rtauargus.response_var      : chr "VAL"</span></span>
 <span><span class="co">#&gt;  $ rtauargus.separator         : chr ","</span></span>
 <span><span class="co">#&gt;  $ rtauargus.show_batch_console: logi FALSE</span></span>
-<span><span class="co">#&gt;  $ rtauargus.tauargus_exe      : chr "Y:/Logiciels/TauArgus/TauArgus4.2.2b1/TauArgus.exe"</span></span>
+<span><span class="co">#&gt;  $ rtauargus.tauargus_exe      : chr "Y:/Logiciels/TauArgus/TauArgus4.2.3/TauArgus.exe"</span></span>
 <span><span class="co">#&gt;  $ rtauargus.totcode           : chr "Total"</span></span>
 <span><span class="co">#&gt;  $ rtauargus.weighted          : logi FALSE</span></span></code></pre></div>
 <p>To reset certain options:</p>
@@ -854,10 +976,12 @@ file.show("Z:/microdata.arb", pager = "internal")</code></pre>
 <span><span class="co">#&gt;  $ rtauargus.response_var      : chr "&lt;freq&gt;"</span></span>
 <span><span class="co">#&gt;  $ rtauargus.separator         : chr ","</span></span>
 <span><span class="co">#&gt;  $ rtauargus.show_batch_console: logi FALSE</span></span>
-<span><span class="co">#&gt;  $ rtauargus.tauargus_exe      : chr "Y:/Logiciels/TauArgus/TauArgus4.2.2b1/TauArgus.exe"</span></span>
+<span><span class="co">#&gt;  $ rtauargus.tauargus_exe      : chr "Y:/Logiciels/TauArgus/TauArgus4.2.3/TauArgus.exe"</span></span>
 <span><span class="co">#&gt;  $ rtauargus.totcode           : chr "Total"</span></span>
 <span><span class="co">#&gt;  $ rtauargus.weighted          : logi FALSE</span></span></code></pre></div>
-<p>To reset all values to default (including the path to τ-Argus modified at the beginning of the demonstration), do not specify any argument:</p>
+<p>To reset all values to default (including the path to τ-Argus
+modified at the beginning of the demonstration), do not specify any
+argument:</p>
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/rtauargus_options.html">reset_rtauargus_options</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p style="text-align: right">
@@ -867,13 +991,21 @@ file.show("Z:/microdata.arb", pager = "internal")</code></pre>
 <div class="section level3">
 <h3 id="local-or-global-reach">Local or global reach<a class="anchor" aria-label="anchor" href="#local-or-global-reach"></a>
 </h3>
-<p>Like any R function, the parameterization is done by specifying each of the arguments when the function is called (local scope).</p>
-<p>The option system of the package allows by the instructions <code>options(rtauargus.&lt;option&gt; = &lt;value&gt;)</code> to define options in a more global. Depending on where these instructions are written, the configuration will last more or less long:</p>
+<p>Like any R function, the parameterization is done by specifying each
+of the arguments when the function is called (local scope).</p>
+<p>The option system of the package allows by the instructions
+<code>options(rtauargus.&lt;option&gt; = &lt;value&gt;)</code> to define
+options in a more global. Depending on where these instructions are
+written, the configuration will last more or less long:</p>
 <ul>
 <li>in the script, for an effect on the current session only;</li>
-<li>in a user configuration file (.Rprofile…), to allow a user to keep track of his presets from a session on the other.</li>
+<li>in a user configuration file (.Rprofile…), to allow a user to keep
+track of his presets from a session on the other.</li>
 </ul>
-<p>The second way is <strong>not recommended if the chain of treatment is intended to be reproducible</strong>. Indeed, an identical script executed on two different machines could produce two results different._</p>
+<p>The second way is <strong>not recommended if the chain of treatment
+is intended to be reproducible</strong>. Indeed, an identical script
+executed on two different machines could produce two results
+different._</p>
 <p style="text-align: right">
 <a href="#TOC" title="Back to summary">summary ↑</a>
 </p>
@@ -886,13 +1018,20 @@ file.show("Z:/microdata.arb", pager = "internal")</code></pre>
 <div class="section level4">
 <h4 id="other-features">Other features<a class="anchor" aria-label="anchor" href="#other-features"></a>
 </h4>
-<p>Some features of the package are not mentioned in this getting started:</p>
+<p>Some features of the package are not mentioned in this getting
+started:</p>
 <ul>
-<li>management of linked arrays (argument <code>linked</code> in <code>micro_arb</code>)</li>
-<li>creation of hierarchical variables from microdata (function <code>write_hrc</code>).</li>
-<li>taking into account of apriori file (argument <code>apriori</code> in <code>micro_arb</code>)</li>
-<li>use of the <code>rtauargus</code> function from microdata already under as a text file (not data.frame)</li>
-<li>optimized launch of a large number of crosses with the same parameters (primary secrecy rules, secondary secrecy method, …) : function <code>rtauargus_plus</code>
+<li>management of linked arrays (argument <code>linked</code> in
+<code>micro_arb</code>)</li>
+<li>creation of hierarchical variables from microdata (function
+<code>write_hrc</code>).</li>
+<li>taking into account of apriori file (argument <code>apriori</code>
+in <code>micro_arb</code>)</li>
+<li>use of the <code>micro_rtauargus</code> function from microdata
+already under as a text file (not data.frame)</li>
+<li>optimized launch of a large number of crosses with the same
+parameters (primary secrecy rules, secondary secrecy method, …) :
+function <code>rtauargus_plus</code>
 </li>
 </ul>
 <p>See the help for these functions for more information.</p>
@@ -909,24 +1048,31 @@ file.show("Z:/microdata.arb", pager = "internal")</code></pre>
 <div class="section level4">
 <h4 id="report-a-problem-suggest-an-improvement">Report a problem, suggest an improvement<a class="anchor" aria-label="anchor" href="#report-a-problem-suggest-an-improvement"></a>
 </h4>
-<p>The package is under construction. All the features of τ-Argus have not been integrated (the purpose is not to integrate them all, only the most frequently used).</p>
-<p>For any return or error report, please use <a href="https://gitlab.insee.fr/outilsconfidentialite/rtauargus/-/issues" class="external-link">this link</a> (click on <strong>“New issue”</strong>). Requires to be connected to gitlab-Insee.</p>
+<p>The package is under construction. All the features of τ-Argus have
+not been integrated (the purpose is not to integrate them all, only the
+most frequently used).</p>
+<p>For any return or error report, please use <a href="https://gitlab.insee.fr/outilsconfidentialite/rtauargus/-/issues" class="external-link">this
+link</a> (click on <strong>“New issue”</strong>). Requires to be
+connected to gitlab-Insee.</p>
 </div>
 <div class="section level4">
 <h4 id="about-this-vignette">About this vignette<a class="anchor" aria-label="anchor" href="#about-this-vignette"></a>
 </h4>
 <ul>
-<li>Author: <strong><a href="mailto:pierre-yves.berrard@insee.fr">Pierre-Yves Berrard</a></strong>
+<li>Author:
+<strong><a href="mailto:pierre-yves.berrard@insee.fr">Pierre-Yves
+Berrard</a></strong>
 </li>
-<li>Updated by: <strong><a href="mailto:julien.jamme@insee.fr">Julien Jamme</a></strong>
+<li>Updated by: <strong><a href="mailto:julien.jamme@insee.fr">Julien
+Jamme</a></strong>
 </li>
-<li>Last update: <strong>06/01/2023</strong>
+<li>Last update: <strong>11/01/2024</strong>
 </li>
-<li>Version of rtauargus used: <strong>1.1.1</strong>
+<li>Version of rtauargus used: <strong>1.2.0</strong>
 </li>
-<li>Version of τ-Argus used : <strong>TauArgus 4.2.2b1</strong>
+<li>Version of τ-Argus used : <strong>TauArgus 4.2.3</strong>
 </li>
-<li>R version used : <strong>4.1.3</strong>
+<li>R version used : <strong>4.2.3</strong>
 </li>
 </ul>
 <p style="text-align: right">
@@ -943,7 +1089,7 @@ file.show("Z:/microdata.arb", pager = "internal")</code></pre>
 
     <footer><div class="pkgdown-footer-left">
   <p></p>
-<p>Developed by Pierre-Yves Berrard, Julien Jamme, Nathanaël Rastout, Jeanne Pointet, Félix Beroud.</p>
+<p>Developed by Pierre-Yves Berrard, Julien Jamme, Nathanaël Rastout, Jeanne Pointet, Félix Beroud, André-Raymond Socard, Wistan Pomel.</p>
 </div>
 
 <div class="pkgdown-footer-right">

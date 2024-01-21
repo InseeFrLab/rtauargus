@@ -8,8 +8,8 @@
 <meta name="description" content="rtauargus">
 <title>Tau-Argus depuis R - données tabulées • rtauargus</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.2.2/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.2.2/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
+<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Tau-Argus depuis R - données tabulées">
 <meta property="og:description" content="rtauargus">
@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">rtauargus</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.1.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.2.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -50,6 +50,7 @@
     <a class="dropdown-item" href="../articles/protect_multi_tables_fr.html">Protéger des tableaux liés</a>
     <a class="dropdown-item" href="../articles/options_safety_rules.html">Safety rules and Suppress Options</a>
     <a class="dropdown-item" href="../articles/options_safety_rules_fr.html">Les arguments Safety rules et Suppress</a>
+    <a class="dropdown-item" href="../articles/split_tab_fr.html">Comment poser du secret sur des tableaux à 4 ou 5 dimensions avec `rtauargus`?</a>
     <div class="dropdown-divider"></div>
     <h6 class="dropdown-header" data-toc-skip>micro-wise</h6>
     <a class="dropdown-item" href="../articles/rtauargus_micro.html">&amp;tau;-Argus from R - microdata version</a>
@@ -73,12 +74,11 @@
 
 
 
-<script src="rtauargus_fr_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+
+<div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="" class="logo" alt=""><h1>Tau-Argus depuis R - données tabulées</h1>
-            <h3 data-toc-skip class="subtitle"><h2>
-<img src="R_logo_small.png" alt="logo R"><img src="TauBall2_small.png" alt="logo τ-Argus"><br>Package {rtauargus}
-</h2></h3>
+            <h3 data-toc-skip class="subtitle"><h2> ¶ <img src="R_logo_small.png" alt="logo R"><img src="TauBall2_small.png" alt="logo τ-Argus"><br>Package {rtauargus} ¶ </h2></h3>
             
       
       <small class="dont-index">Source: <a href="https://github.com/inseefrlab/rtauargus/blob/HEAD/vignettes/rtauargus_fr.Rmd" class="external-link"><code>vignettes/rtauargus_fr.Rmd</code></a></small>
@@ -101,23 +101,39 @@
 <div class="section level3">
 <h3 id="présentation-du-package">Présentation du package<a class="anchor" aria-label="anchor" href="#pr%C3%A9sentation-du-package"></a>
 </h3>
-<p>Le package <em>rtauargus</em> offre une interface <strong>R</strong> pour <strong>τ-Argus</strong>. Il permet de :</p>
+<p>Le package <em>rtauargus</em> offre une interface <strong>R</strong>
+pour <strong>τ-Argus</strong>. Il permet de :</p>
 <ul>
-<li>créer des input (fichiers asc, tab et rda) à partir de données R ;</li>
-<li>de générer la séquence d’instructions à exécuter en mode batch (fichier arb) ;</li>
+<li>créer des input (fichiers asc, tab et rda) à partir de données R
+;</li>
+<li>de générer la séquence d’instructions à exécuter en mode batch
+(fichier arb) ;</li>
 <li>lancer un batch τ-Argus ;</li>
 <li>récupérer les résultats dans R.</li>
 </ul>
-<p>La syntaxe de certains des arguments correspond étroitement à la syntaxe <em>batch</em> de τ-Argus. Cela permet d’utiliser un nombre important de fonctions sans multiplier les arguments des fonctions. Le package pourra également s’adapter plus facilement aux éventuelles modifications du logiciel (nouveaux algorithmes disponibles, options supplémentaires…). Les règles de syntaxes d’écriture du batch sont détaillés dans le manuel de référence de τ-Argus et sont égalements précisées dans la vignette <em>options_safety_rules</em>.</p>
+<p>La syntaxe de certains des arguments correspond étroitement à la
+syntaxe <em>batch</em> de τ-Argus. Cela permet d’utiliser un nombre
+important de fonctions sans multiplier les arguments des fonctions. Le
+package pourra également s’adapter plus facilement aux éventuelles
+modifications du logiciel (nouveaux algorithmes disponibles, options
+supplémentaires…). Les règles de syntaxes d’écriture du batch sont
+détaillés dans le manuel de référence de τ-Argus et sont égalements
+précisées dans la vignette <em>options_safety_rules</em>.</p>
 <blockquote>
-<p>Le package a été développé sur la base de versions open source de τ-Argus (versions 4.2 et supérieures), en particulier la dernière version disponible au moment du développement (4.2.2b1).</p>
+<p>Le package a été développé sur la base de versions open source de
+τ-Argus (versions 4.2 et supérieures), en particulier la dernière
+version disponible au moment du développement (4.2.3).</p>
 <p>Il n’est pas compatible avec la version 3.5.**_.</p>
 </blockquote>
 </div>
 <div class="section level3">
 <h3 id="but-de-ce-document">But de ce document<a class="anchor" aria-label="anchor" href="#but-de-ce-document"></a>
 </h3>
-<p>Ce document a pour but d’expliquer les principales fonctionnalités du package, en utilisant des exemples relativement simples. Une documentation détaillée de toute fonction (liste exhaustive des arguments, aspects techniques…) est disponible <em>via</em> la section d’aide dédiée.</p>
+<p>Ce document a pour but d’expliquer les principales fonctionnalités du
+package, en utilisant des exemples relativement simples. Une
+documentation détaillée de toute fonction (liste exhaustive des
+arguments, aspects techniques…) est disponible <em>via</em> la section
+d’aide dédiée.</p>
 <p style="text-align: right">
 <a href="#TOC" title="Return to summary">summary ↑</a>
 </p>
@@ -127,22 +143,28 @@
 <div class="section level2">
 <h2 id="configuration">Configuration<a class="anchor" aria-label="anchor" href="#configuration"></a>
 </h2>
-<p>Le paramétrage suivant doit être fait avant la première utilisation (et plus après).</p>
+<p>Le paramétrage suivant doit être fait avant la première utilisation
+(et plus après).</p>
 <div class="section level3">
 <h3 id="τ-argus">τ-Argus<a class="anchor" aria-label="anchor" href="#%CF%84-argus"></a>
 </h3>
-<p><em>rtauargus</em> fonctions utilisant τ-Argus nécessite que le logiciel puisse être utilisé depuis le poste de travail. Le dépôt github de τ-Argus est ici : <a href="https://github.com/sdcTools/tauargus" class="external-link">https://github.com/sdcTools/tauargus</a>. Les dernières versions peuvent être téléchargées ici : <a href="https://github.com/sdcTools/tauargus/releases" class="external-link">https://github.com/sdcTools/tauargus/releases</a>.</p>
+<p><em>rtauargus</em> fonctions utilisant τ-Argus nécessite que le
+logiciel puisse être utilisé depuis le poste de travail. Le dépôt github
+de τ-Argus est ici : <a href="https://github.com/sdcTools/tauargus" class="external-link">https://github.com/sdcTools/tauargus</a>.
+Les dernières versions peuvent être téléchargées ici : <a href="https://github.com/sdcTools/tauargus/releases" class="external-link">https://github.com/sdcTools/tauargus/releases</a>.</p>
 </div>
 <div class="section level3">
 <h3 id="dépendances">Dépendances<a class="anchor" aria-label="anchor" href="#d%C3%A9pendances"></a>
 </h3>
-<p><em>rtauargus</em> nécessite quelques autres packages R. Voici les dépendances à installer.</p>
+<p><em>rtauargus</em> nécessite quelques autres packages R. Voici les
+dépendances à installer.</p>
 <pre><code>• purrr (&gt;= 0.2),
 • dplyr (&gt;= 0.7),
 • gdata,
 • stringr,
 • rlang,
-• zoo</code></pre>
+• zoo,
+• sdcHierarchies</code></pre>
 <p>Le package <em>rtauargus</em> peut être installé maintenant.</p>
 <p style="text-align: right">
 <a href="#TOC" title="Return to summary">summary ↑</a>
@@ -153,28 +175,41 @@
 <div class="section level2">
 <h2 id="prise-en-main">Prise en main<a class="anchor" aria-label="anchor" href="#prise-en-main"></a>
 </h2>
-<p>Cette section explique comment effectuer une configuration minimale du package et comment appliquer des méthodes de suppression en une seule instruction.</p>
+<p>Cette section explique comment effectuer une configuration minimale
+du package et comment appliquer des méthodes de suppression en une seule
+instruction.</p>
 <div class="section level3">
 <h3 id="location-de-τ-argus">Location de τ-Argus<a class="anchor" aria-label="anchor" href="#location-de-%CF%84-argus"></a>
 </h3>
-<p>Lors du chargement du package, la console affiche quelques informations :</p>
+<p>Lors du chargement du package, la console affiche quelques
+informations :</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://inseefrlab.github.io/rtauargus">rtauargus</a></span><span class="op">)</span></span></code></pre></div>
-<p>En particulier, un emplacement plausible pour le logiciel τ-Argus est prédéfini. Celui-ci peut être modifié pour la durée de la session R, comme suit :</p>
+<p>En particulier, un emplacement plausible pour le logiciel τ-Argus est
+prédéfini. Celui-ci peut être modifié pour la durée de la session R,
+comme suit :</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">loc_tauargus</span> <span class="op">&lt;-</span> <span class="st">"Y:/Logiciels/TauArgus/TauArgus4.2.2b1/TauArgus.exe"</span></span>
+<code class="sourceCode R"><span><span class="va">loc_tauargus</span> <span class="op">&lt;-</span> <span class="st">"Y:/Logiciels/TauArgus/TauArgus4.2.3/TauArgus.exe"</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>rtauargus.tauargus_exe <span class="op">=</span> <span class="va">loc_tauargus</span><span class="op">)</span></span></code></pre></div>
-<p>Une fois ce petit ajustement effectué, le package est prêt à être utilisé.</p>
+<p>Une fois ce petit ajustement effectué, le package est prêt à être
+utilisé.</p>
 <blockquote>
-<p><em>Pour une configuration plus personnalisée, voir les vignettes spécifiques</em>.</p>
+<p><em>Pour une configuration plus personnalisée, voir les vignettes
+spécifiques</em>.</p>
 </blockquote>
 </div>
 <div class="section level3">
-<h3 id="protéger-un-seul-tableau-avec-la-fonction-tab_rtauargus-">Protéger un seul tableau avec la fonction <code>tab_rtauargus()</code>.<a class="anchor" aria-label="anchor" href="#prot%C3%A9ger-un-seul-tableau-avec-la-fonction-tab_rtauargus-"></a>
+<h3 id="protéger-un-seul-tableau-avec-la-fonction-tab_rtauargus-">Protéger un seul tableau avec la fonction
+<code>tab_rtauargus()</code>.<a class="anchor" aria-label="anchor" href="#prot%C3%A9ger-un-seul-tableau-avec-la-fonction-tab_rtauargus-"></a>
 </h3>
-<p>La fonction <code><a href="../reference/tab_rtauargus.html">tab_rtauargus()</a></code> effectue un traitement complet pour protéger le tableau et récupère immédiatement les résultats dans R.</p>
-<p>En s’abstrayant complètement du fonctionnement interne de τ-Argus, elle permet de réaliser l’ensemble des traitements en une seule instruction. Tous les fichiers intermédiaires sont créés dans un répertoire local.</p>
+<p>La fonction <code><a href="../reference/tab_rtauargus.html">tab_rtauargus()</a></code> effectue un traitement
+complet pour protéger le tableau et récupère immédiatement les résultats
+dans R.</p>
+<p>En s’abstrayant complètement du fonctionnement interne de τ-Argus,
+elle permet de réaliser l’ensemble des traitements en une seule
+instruction. Tous les fichiers intermédiaires sont créés dans un
+répertoire local.</p>
 <p><code><a href="../reference/tab_rtauargus.html">tab_rtauargus()</a></code> requiert les arguments suivants :</p>
 <ul>
 <li>
@@ -182,15 +217,20 @@
 <li>
 <code>dir_name</code> : le répertoire pour les sorties ;</li>
 <li>
-<code>files_name</code> : tous les fichiers τ-Argus seront nommés ainsi(différentes extensions) ;</li>
+<code>files_name</code> : tous les fichiers τ-Argus seront nommés
+ainsi(différentes extensions) ;</li>
 <li>
-<code>explanatory_vars</code> : le nom de toutes les variables explicatives dans <code>tabular</code> ;</li>
+<code>explanatory_vars</code> : le nom de toutes les variables
+explicatives dans <code>tabular</code> ;</li>
 <li>
-<code>secret_var</code> ou <code>safety_rules</code> : la manière d’appliquer la suppression primaire (expliqué plus tard)</li>
+<code>secret_var</code> ou <code>safety_rules</code> : la manière
+d’appliquer la suppression primaire (expliqué plus tard)</li>
 <li>
-<code>totcode</code> : le code pour le total de chaque variable explicative dans <code>tabular</code>.</li>
+<code>totcode</code> : le code pour le total de chaque variable
+explicative dans <code>tabular</code>.</li>
 </ul>
-<p>Tous les arguments et leurs options par défaut seront détaillés ( où ?).</p>
+<p>Tous les arguments et leurs options par défaut seront détaillés ( où
+?).</p>
 <div class="section level4">
 <h4 id="exemple-minimal">Exemple minimal<a class="anchor" aria-label="anchor" href="#exemple-minimal"></a>
 </h4>
@@ -221,9 +261,12 @@
 <p>Nous utiliserons ces deux règles de secret primaire :</p>
 <ul>
 <li>La règle de dominance n-k avec n=1 et k = 85.</li>
-<li>La règle de fréquence minimale avec n = 3 et un intervalle de protection à 10%.</li>
+<li>La règle de fréquence minimale avec n = 3 et un intervalle de
+protection à 10%.</li>
 </ul>
-<p>Pour obtenir les résultats de la règle de dominance, nous devons spécifier le plus grand contributeur de chaque cellule, correspondant à la variable <code>MAX</code> dans les données tabulées.</p>
+<p>Pour obtenir les résultats de la règle de dominance, nous devons
+spécifier le plus grand contributeur de chaque cellule, correspondant à
+la variable <code>MAX</code> dans les données tabulées.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ex1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/tab_rtauargus.html">tab_rtauargus</a></span><span class="op">(</span></span>
 <span>  <span class="va">act_size</span>,</span>
@@ -251,9 +294,20 @@
 <span><span class="co">#&gt; Table: ACTIVITY x SIZE | VAL has been written</span></span>
 <span><span class="co">#&gt;                    Output file name: Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex1\ex1.csv</span></span>
 <span><span class="co">#&gt; End of TauArgus run</span></span></code></pre></div>
-<p>Par défaut, la fonction affiche dans la console le contenu du journal de bord dans lequel l’utilisateur peut lire toutes les étapes exécutées par τ-Argus. Ceci peut être récupéré dans le fichier logbook.txt. Avec <code>verbose = FALSE</code>, les étapes seront seulement conservées dans le journal.</p>
-<p>Par défaut, la fonction renvoie le tableau fournit en entrée avec une variable de plus appelée <code>Status</code>, issue directement de τ-Argus et décrivant le statut de chaque cellule comme suit :</p>
-<p>-<code>A</code> : cellule en secret primaire en raison de la règle de fréquence ; -<code>B</code> : cellule en secret primaire en raison de la règle de dominance (1er contributeur) ; -<code>C</code> : cellule en secret primaire en raison de la règle de dominance(plus de contributeurs dans le cas où n&gt;1) ; -<code>D</code> : cellule en secret secondaire ; -<code>V</code> : cellules valides - pas besoin de masquer.</p>
+<p>Par défaut, la fonction affiche dans la console le contenu du journal
+de bord dans lequel l’utilisateur peut lire toutes les étapes exécutées
+par τ-Argus. Ceci peut être récupéré dans le fichier logbook.txt. Avec
+<code>verbose = FALSE</code>, les étapes seront seulement conservées
+dans le journal.</p>
+<p>Par défaut, la fonction renvoie le tableau fournit en entrée avec une
+variable de plus appelée <code>Status</code>, issue directement de
+τ-Argus et décrivant le statut de chaque cellule comme suit :</p>
+<p>-<code>A</code> : cellule en secret primaire en raison de la règle de
+fréquence ; -<code>B</code> : cellule en secret primaire en raison de la
+règle de dominance (1er contributeur) ; -<code>C</code> : cellule en
+secret primaire en raison de la règle de dominance(plus de contributeurs
+dans le cas où n&gt;1) ; -<code>D</code> : cellule en secret secondaire
+; -<code>V</code> : cellules valides - pas besoin de masquer.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ex1</span></span>
 <span><span class="co">#&gt;    ACTIVITY  SIZE VAL N_OBS MAX Status</span></span>
@@ -269,7 +323,12 @@
 <span><span class="co">#&gt; 10    Total Total 300    36  38      V</span></span>
 <span><span class="co">#&gt; 11    Total   tr1 190    20  20      V</span></span>
 <span><span class="co">#&gt; 12    Total   tr2 110    16  38      V</span></span></code></pre></div>
-<p>Tous les fichiers générés par la fonction sont écrits dans le répertoire spécifié (argument <code>dir_name</code>). Le format par défaut du tableau protégé est csv mais il peut être modifié. Tous les fichiers τ-Argus (.tab, .rda, .arb et .txt) sont écrits dans le même répertoire. Pour aller plus loin, vous pouvez consulter la dernière version du manuel de τ-Argus téléchargeable ici : <a href="https://research.cbs.nl/casc/Software/TauManualV4.1.pdf" class="external-link">https://research.cbs.nl/casc/Software/TauManualV4.1.pdf</a>.</p>
+<p>Tous les fichiers générés par la fonction sont écrits dans le
+répertoire spécifié (argument <code>dir_name</code>). Le format par
+défaut du tableau protégé est csv mais il peut être modifié. Tous les
+fichiers τ-Argus (.tab, .rda, .arb et .txt) sont écrits dans le même
+répertoire. Pour aller plus loin, vous pouvez consulter la dernière
+version du manuel de τ-Argus téléchargeable ici : <a href="https://research.cbs.nl/casc/Software/TauManualV4.1.pdf" class="external-link">https://research.cbs.nl/casc/Software/TauManualV4.1.pdf</a>.</p>
 </div>
 <div class="section level4">
 <h4 id="exemple-avec-une-hiérarchie-et-pose-du-secret-primaire-via-r">Exemple avec une hiérarchie et pose du secret primaire via R<a class="anchor" aria-label="anchor" href="#exemple-avec-une-hi%C3%A9rarchie-et-pose-du-secret-primaire-via-r"></a>
@@ -277,7 +336,9 @@
 <div class="section level5">
 <h5 id="données">Données<a class="anchor" aria-label="anchor" href="#donn%C3%A9es"></a>
 </h5>
-<p>Dans cet exemple, nous souhaitons protéger un tableau dans lequel le chiffre d’affaires des entreprises est ventilé par secteur d’activité et par taille. Pour charger les données :</p>
+<p>Dans cet exemple, nous souhaitons protéger un tableau dans lequel le
+chiffre d’affaires des entreprises est ventilé par secteur d’activité et
+par taille. Pour charger les données :</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"turnover_act_size"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">turnover_act_size</span><span class="op">)</span></span>
@@ -291,13 +352,25 @@
 <span><span class="co">#&gt; 5 JZ       Total  8135  8584917.  3957364.</span></span>
 <span><span class="co">#&gt; 6 KZ       Total  8140 62556596. 10018017.</span></span></code></pre></div>
 <p>La signification de chaque variable est la suivante :</p>
-<p>-<code>ACTIVITY</code> : secteur d’activité, variables hiérarchiques à trois niveaux décrites dans l’ensemble de données <code>activity_corr_table</code>. La racine est notée “Total” ; -<code>SIZE</code> : taille des entreprises (Nombre d’employés dans trois modalités + la marge “Total”) ; -<code>N_OBS</code> : Fréquence, nombre d’entreprises ; -<code>TOT</code> : valeur du chiffre d’affaires en euros ; -<code>MAX</code> : chiffre d’affaires de l’entreprise qui contribue le plus à la cellule.</p>
+<p>-<code>ACTIVITY</code> : secteur d’activité, variables hiérarchiques
+à trois niveaux décrites dans l’ensemble de données
+<code>activity_corr_table</code>. La racine est notée “Total” ;
+-<code>SIZE</code> : taille des entreprises (Nombre d’employés dans
+trois modalités + la marge “Total”) ; -<code>N_OBS</code> : Fréquence,
+nombre d’entreprises ; -<code>TOT</code> : valeur du chiffre d’affaires
+en euros ; -<code>MAX</code> : chiffre d’affaires de l’entreprise qui
+contribue le plus à la cellule.</p>
 </div>
 <div class="section level5">
 <h5 id="fichier-hiérarchique">Fichier hiérarchique<a class="anchor" aria-label="anchor" href="#fichier-hi%C3%A9rarchique"></a>
 </h5>
-<p>Avant d’exécuter la fonction <code><a href="../reference/tab_rtauargus.html">tab_rtauargus()</a></code>, nous devons renseigner les imbrications de la hiérarchie dans le format approprié pour τ-Argus, <em>.i.e.</em> un fichier <code>.hrc</code>. A partir d’un tableau de correspondance, la fonction <code><a href="../reference/write_hrc2.html">write_hrc2()</a></code> fait le travail pour vous.</p>
-<p>Ici, le tableau de correspondance décrit l’imbrication des trois niveaux de secteurs d’activité, du plus agrégé au moins agrégé :</p>
+<p>Avant d’exécuter la fonction <code><a href="../reference/tab_rtauargus.html">tab_rtauargus()</a></code>, nous
+devons renseigner les imbrications de la hiérarchie dans le format
+approprié pour τ-Argus, <em>.i.e.</em> un fichier <code>.hrc</code>. A
+partir d’un tableau de correspondance, la fonction
+<code><a href="../reference/write_hrc2.html">write_hrc2()</a></code> fait le travail pour vous.</p>
+<p>Ici, le tableau de correspondance décrit l’imbrication des trois
+niveaux de secteurs d’activité, du plus agrégé au moins agrégé :</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">activity_corr_table</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">activity_corr_table</span><span class="op">)</span></span>
@@ -317,7 +390,13 @@
 <div class="section level5">
 <h5 id="secret-primaire">Secret primaire<a class="anchor" aria-label="anchor" href="#secret-primaire"></a>
 </h5>
-<p>Dans cet exemple, nous appliquerons nous-mêmes le secret primaire, <em>c’est-à-dire</em> sans l’aide de τ-Argus. L’idée est d’utiliser τ-Argus avec un fichier apriori (.hst). Qui permet de spécifier directement au logiciel quelles cellules sont à placer en secret primaire. Pour cela, nous créons une variable booléenne pour spécifier quelles cellules ne respectent pas les règles du secret primaire. En utilisant les mêmes règles que précédemment, on obtient :</p>
+<p>Dans cet exemple, nous appliquerons nous-mêmes le secret primaire,
+<em>c’est-à-dire</em> sans l’aide de τ-Argus. L’idée est d’utiliser
+τ-Argus avec un fichier apriori (.hst). Qui permet de spécifier
+directement au logiciel quelles cellules sont à placer en secret
+primaire. Pour cela, nous créons une variable booléenne pour spécifier
+quelles cellules ne respectent pas les règles du secret primaire. En
+utilisant les mêmes règles que précédemment, on obtient :</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">turnover_act_size</span> <span class="op">&lt;-</span> <span class="va">turnover_act_size</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
@@ -329,10 +408,19 @@
 <div class="section level5">
 <h5 id="exécution-de-τ-argus">Exécution de τ-Argus<a class="anchor" aria-label="anchor" href="#ex%C3%A9cution-de-%CF%84-argus"></a>
 </h5>
-<p>Deux arguments doivent être ajoutés à la fonction <code><a href="../reference/tab_rtauargus.html">tab_rtauargus()</a></code> :</p>
-<p>-<code>secret_var</code>, indiquant le nom de la variable dans <code>tabular</code> qui renseigne le secret primaire ; -<code>hrc</code>, indiquant le nom du fichier hiérarchique à utiliser pour la variable <code>ACTIVITY</code>.</p>
-<p>Puisque le secret primaire a été spécifié, il n’est pas nécessaire d’utiliser les arguments, <code>safety_rules</code> et <code>maxscore</code>. Le premier est fixé par défaut à “MAN(10)”, afin d’appliquer un intervalle de protection à 10%.</p>
-<p>Par défaut, <code><a href="../reference/tab_rtauargus.html">tab_rtauargus()</a></code> exécute la méthode Modular pour effectuer le secret secondaire. Ici, nous choisissons d’utiliser la méthode Optimal en modifiant l’argument <code>suppress</code>.</p>
+<p>Deux arguments doivent être ajoutés à la fonction
+<code><a href="../reference/tab_rtauargus.html">tab_rtauargus()</a></code> :</p>
+<p>-<code>secret_var</code>, indiquant le nom de la variable dans
+<code>tabular</code> qui renseigne le secret primaire ;
+-<code>hrc</code>, indiquant le nom du fichier hiérarchique à utiliser
+pour la variable <code>ACTIVITY</code>.</p>
+<p>Puisque le secret primaire a été spécifié, il n’est pas nécessaire
+d’utiliser les arguments, <code>safety_rules</code> et
+<code>maxscore</code>. Le premier est fixé par défaut à “MAN(10)”, afin
+d’appliquer un intervalle de protection à 10%.</p>
+<p>Par défaut, <code><a href="../reference/tab_rtauargus.html">tab_rtauargus()</a></code> exécute la méthode Modular
+pour effectuer le secret secondaire. Ici, nous choisissons d’utiliser la
+méthode Optimal en modifiant l’argument <code>suppress</code>.</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ex2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/tab_rtauargus.html">tab_rtauargus</a></span><span class="op">(</span></span>
 <span>  <span class="va">turnover_act_size</span>,</span>
@@ -368,7 +456,9 @@
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;   B   D   V </span></span>
 <span><span class="co">#&gt;  77  64 273</span></span></code></pre></div>
-<p>Comme on peut le voir dans les résultats du <code><a href="https://rdrr.io/r/base/table.html" class="external-link">table()</a></code>,dans la sortie produite par τ-Argus tous les secrets primaires ont le statut “B”. Pour corriger cela, nous pouvons faire :</p>
+<p>Comme on peut le voir dans les résultats du <code><a href="https://rdrr.io/r/base/table.html" class="external-link">table()</a></code>,dans
+la sortie produite par τ-Argus tous les secrets primaires ont le statut
+“B”. Pour corriger cela, nous pouvons faire :</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ex2</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
@@ -387,9 +477,18 @@
 </div>
 </div>
 <div class="section level3">
-<h3 id="protéger-plusieurs-tableaux-en-même-temps-avec-la-fonction-tab_muli_manager-">Protéger plusieurs tableaux en même temps, avec la fonction <code>tab_muli_manager()</code>.<a class="anchor" aria-label="anchor" href="#prot%C3%A9ger-plusieurs-tableaux-en-m%C3%AAme-temps-avec-la-fonction-tab_muli_manager-"></a>
+<h3 id="protéger-plusieurs-tableaux-en-même-temps-avec-la-fonction-tab_muli_manager-">Protéger plusieurs tableaux en même temps, avec la fonction
+<code>tab_muli_manager()</code>.<a class="anchor" aria-label="anchor" href="#prot%C3%A9ger-plusieurs-tableaux-en-m%C3%AAme-temps-avec-la-fonction-tab_muli_manager-"></a>
 </h3>
-<p>La fonction <code><a href="../reference/tab_multi_manager.html">tab_multi_manager()</a></code> permet de traiter un ensemble de tableaux (liés ou non). C’est un processus itératif, qui effectue la pose de secret secondaire d’un tableau à la fois et qui s’assure que les cellules communes ont le même statut. Lorsqu’une cellule commune est concernée par le secret secondaire, elle répercute le secret sur chaque tableau qui partage cette cellule commune. Le processus se termine lorsque le secret secondaire est cohérent pour tous les tableaux. Voir plus de détails dans les vignettes <em>Gérer la protection des tableaux liés</em>.</p>
+<p>La fonction <code><a href="../reference/tab_multi_manager.html">tab_multi_manager()</a></code> permet de traiter un
+ensemble de tableaux (liés ou non). C’est un processus itératif, qui
+effectue la pose de secret secondaire d’un tableau à la fois et qui
+s’assure que les cellules communes ont le même statut. Lorsqu’une
+cellule commune est concernée par le secret secondaire, elle répercute
+le secret sur chaque tableau qui partage cette cellule commune. Le
+processus se termine lorsque le secret secondaire est cohérent pour tous
+les tableaux. Voir plus de détails dans les vignettes <em>Gérer la
+protection des tableaux liés</em>.</p>
 <div class="section level4">
 <h4 id="données-1">Données<a class="anchor" aria-label="anchor" href="#donn%C3%A9es-1"></a>
 </h4>
@@ -404,13 +503,19 @@
 <span><span class="co">#&gt;  $ N_OBS   : int [1:406] 405 12878 28043 62053 8135 8140 11961 41359 26686 25108 ...</span></span>
 <span><span class="co">#&gt;  $ TOT     : num [1:406] 44475 24827613 8907311 26962063 8584917 ...</span></span>
 <span><span class="co">#&gt;  $ MAX     : num [1:406] 6212 1442029 1065833 3084242 3957364 ...</span></span></code></pre></div>
-<p>Le deuxième tableau fournit le chiffre d’affaires des entreprises ventilé par secteurs d’activité (<code>ACTIVITY</code>) et par type d’entreprise (<code>CJ</code>).</p>
-<p>Les deux tableaux ayant une variable explicative commune (<code>ACTIVITY</code>), ils ne peuvent être traités séparément sans générer risque de rupture du secret secondaire.</p>
+<p>Le deuxième tableau fournit le chiffre d’affaires des entreprises
+ventilé par secteurs d’activité (<code>ACTIVITY</code>) et par type
+d’entreprise (<code>CJ</code>).</p>
+<p>Les deux tableaux ayant une variable explicative commune
+(<code>ACTIVITY</code>), ils ne peuvent être traités séparément sans
+générer risque de rupture du secret secondaire.</p>
 </div>
 <div class="section level4">
 <h4 id="secret-primaire-1">Secret primaire<a class="anchor" aria-label="anchor" href="#secret-primaire-1"></a>
 </h4>
-<p>La première étape consiste à indiquer si chaque cellule respecte les règles primaires, ou non. Une variable booléenne est créée, égale à TRUE si la cellule n’est pas conforme.</p>
+<p>La première étape consiste à indiquer si chaque cellule respecte les
+règles primaires, ou non. Une variable booléenne est créée, égale à TRUE
+si la cellule n’est pas conforme.</p>
 <p>Ici, on utilise les mêmes règles que précédemment.</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">list_data_2_tabs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
@@ -431,7 +536,8 @@
 <div class="section level4">
 <h4 id="exécution-de-τ-argus-1">Exécution de τ-Argus<a class="anchor" aria-label="anchor" href="#ex%C3%A9cution-de-%CF%84-argus-1"></a>
 </h4>
-<p>Maintenant que le secret primaire a été spécifié pour les deux tableaux, nous pouvons lancer le processus.</p>
+<p>Maintenant que le secret primaire a été spécifié pour les deux
+tableaux, nous pouvons lancer le processus.</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ex3</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/tab_multi_manager.html">tab_multi_manager</a></span><span class="op">(</span></span>
 <span>  list_tables <span class="op">=</span> <span class="va">list_data_2_tabs</span>,</span>
@@ -449,28 +555,37 @@
 <span><span class="co">#&gt; --- Current table to treat:  act_size ---</span></span>
 <span><span class="co">#&gt; --- Current table to treat:  act_cj ---</span></span>
 <span><span class="co">#&gt; --- Current table to treat:  act_size ---</span></span></code></pre></div>
-<p>Par défaut, la fonction utilise un wrapper de la fonction <code><a href="../reference/tab_rtauargus.html">tab_rtauargus()</a></code>, appelé <code><a href="../reference/tab_rtauargus2.html">tab_rtauargus2()</a></code>, pour appliquer le secret secondaire avec τ-Argus. De nombreux paramètres par défaut sont définis. En particulier :</p>
+<p>Par défaut, la fonction utilise un wrapper de la fonction
+<code><a href="../reference/tab_rtauargus.html">tab_rtauargus()</a></code>, appelé <code><a href="../reference/tab_rtauargus2.html">tab_rtauargus2()</a></code>, pour
+appliquer le secret secondaire avec τ-Argus. De nombreux paramètres par
+défaut sont définis. En particulier :</p>
 <ul>
 <li>Intervalle de protection fixé à 10 ;</li>
-<li>Méthode de suppression fixée à "MOD(1,5,1,0,0) ;</li>
+<li>Méthode de suppression fixée à “MOD(1,5,1,0,0) ;</li>
 <li>Output au format csv.</li>
 </ul>
-<p>Lors de son exécution, la fonction affiche à chaque itération quel tableau est traité.</p>
-<p>La vignette <em>Gérer la protection des tableaux liés</em> fournit une présentation complète de la fonction <code><a href="../reference/tab_multi_manager.html">tab_multi_manager()</a></code>.</p>
+<p>Lors de son exécution, la fonction affiche à chaque itération quel
+tableau est traité.</p>
+<p>La vignette <em>Gérer la protection des tableaux liés</em> fournit
+une présentation complète de la fonction
+<code><a href="../reference/tab_multi_manager.html">tab_multi_manager()</a></code>.</p>
 </div>
 <div class="section level4">
 <h4 id="détail-de-la-vignette">Détail de la vignette<a class="anchor" aria-label="anchor" href="#d%C3%A9tail-de-la-vignette"></a>
 </h4>
 <ul>
-<li>Authors: <strong><a href="mailto:julien.jamme@insee.fr">Julien Jamme</a></strong> &amp; <strong><a href="mailto:nathanael.rastout@insee.fr">Nathanael Rastout</a></strong>
+<li>Authors: <strong><a href="mailto:julien.jamme@insee.fr">Julien
+Jamme</a></strong> &amp;
+<strong><a href="mailto:nathanael.rastout@insee.fr">Nathanael
+Rastout</a></strong>
 </li>
-<li>Last update: <strong>06/01/2023</strong>
+<li>Last update: <strong>21/09/2023</strong>
 </li>
-<li>Version of rtauargus used: <strong>1.1.1</strong>
+<li>Version of rtauargus used: <strong>1.2.0</strong>
 </li>
-<li>Version of τ-Argus used : <strong>TauArgus 4.2.2b1</strong>
+<li>Version of τ-Argus used : <strong>TauArgus 4.2.3</strong>
 </li>
-<li>R version used : <strong>4.1.3</strong>
+<li>R version used : <strong>4.2.3</strong>
 </li>
 </ul>
 <p style="text-align: right">
@@ -487,7 +602,7 @@
 
     <footer><div class="pkgdown-footer-left">
   <p></p>
-<p>Developed by Pierre-Yves Berrard, Julien Jamme, Nathanaël Rastout, Jeanne Pointet, Félix Beroud.</p>
+<p>Developed by Pierre-Yves Berrard, Julien Jamme, Nathanaël Rastout, Jeanne Pointet, Félix Beroud, André-Raymond Socard, Wistan Pomel.</p>
 </div>
 
 <div class="pkgdown-footer-right">

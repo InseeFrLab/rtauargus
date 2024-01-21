@@ -8,8 +8,8 @@
 <meta name="description" content="rtauargus">
 <title>Protect several linked tables at once • rtauargus</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.2.2/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.2.2/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
+<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Protect several linked tables at once">
 <meta property="og:description" content="rtauargus">
@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">rtauargus</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.1.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.2.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -50,6 +50,7 @@
     <a class="dropdown-item" href="../articles/protect_multi_tables_fr.html">Protéger des tableaux liés</a>
     <a class="dropdown-item" href="../articles/options_safety_rules.html">Safety rules and Suppress Options</a>
     <a class="dropdown-item" href="../articles/options_safety_rules_fr.html">Les arguments Safety rules et Suppress</a>
+    <a class="dropdown-item" href="../articles/split_tab_fr.html">Comment poser du secret sur des tableaux à 4 ou 5 dimensions avec `rtauargus`?</a>
     <div class="dropdown-divider"></div>
     <h6 class="dropdown-header" data-toc-skip>micro-wise</h6>
     <a class="dropdown-item" href="../articles/rtauargus_micro.html">&amp;tau;-Argus from R - microdata version</a>
@@ -73,12 +74,11 @@
 
 
 
-<script src="protect_multi_tables_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+
+<div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="" class="logo" alt=""><h1>Protect several linked tables at once</h1>
-            <h3 data-toc-skip class="subtitle"><h2>
-<img src="R_logo_small.png" alt="logo R"><img src="TauBall2_small.png" alt="logo τ-Argus"><br>Package {rtauargus}
-</h2></h3>
+            <h3 data-toc-skip class="subtitle"><h2> ¶ <img src="R_logo_small.png" alt="logo R"><img src="TauBall2_small.png" alt="logo τ-Argus"><br>Package {rtauargus} ¶ </h2></h3>
             
       
       <small class="dont-index">Source: <a href="https://github.com/inseefrlab/rtauargus/blob/HEAD/vignettes/protect_multi_tables.Rmd" class="external-link"><code>vignettes/protect_multi_tables.Rmd</code></a></small>
@@ -95,32 +95,59 @@
 <div class="section level2">
 <h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
 </h2>
-<p>In <code>rtauargus</code> package, it is now possible to protect a set of linked tables at once. The function to do this is called <code><a href="../reference/tab_multi_manager.html">tab_multi_manager()</a></code>. The very simple algorithm implemented to handle the protection doesn’t depend on the number of tables. Hence, the function can theoretically deal with an indefinite number of tables. Of course, the practical use is limited by the power of the computer. However, we are confident on the ability of the function to treat the most cases. We are interested in cases that you would encounter and the function can’t handle.</p>
-<p>A link between two (or more) tables describes the common cells of the tables, that is the cells appearing in them. The function can handle all types of links between tables:</p>
+<p>In <code>rtauargus</code> package, it is now possible to protect a
+set of linked tables at once. The function to do this is called
+<code><a href="../reference/tab_multi_manager.html">tab_multi_manager()</a></code>. The very simple algorithm implemented
+to handle the protection doesn’t depend on the number of tables. Hence,
+the function can theoretically deal with an indefinite number of tables.
+Of course, the practical use is limited by the power of the computer.
+However, we are confident on the ability of the function to treat the
+most cases. We are interested in cases that you would encounter and the
+function can’t handle.</p>
+<p>A link between two (or more) tables describes the common cells of the
+tables, that is the cells appearing in them. The function can handle all
+types of links between tables:</p>
 <ul>
 <li>margin links: when two tables share one (or more) variables;</li>
-<li>links between the response variables, when exists some equations connecting the variables;</li>
-<li>non-nested hierarchies: when an explanatory variable is broken down into two (or more) non-nested hierarchies.</li>
+<li>links between the response variables, when exists some equations
+connecting the variables;</li>
+<li>non-nested hierarchies: when an explanatory variable is broken down
+into two (or more) non-nested hierarchies.</li>
 </ul>
-<p>Actually, the last two types can be handled as the first one. The challenge for the user is to properly define the set of the tables. Once the set is correctly defined, the function takes care of everything.</p>
-<p>Firstly, the vignette will present how the function works, secondly, the parameters are quickly described. In the third part, some examples are developped to show how to use it in diverse situations.</p>
+<p>Actually, the last two types can be handled as the first one. The
+challenge for the user is to properly define the set of the tables. Once
+the set is correctly defined, the function takes care of everything.</p>
+<p>Firstly, the vignette will present how the function works, secondly,
+the parameters are quickly described. In the third part, some examples
+are developped to show how to use it in diverse situations.</p>
 <div class="section level3">
-<h3 id="how-does-tab_multi_manager-handle-the-protection-of-a-set-of-linked-tables">How does <code>tab_multi_manager()</code> handle the protection of a set of linked tables ?<a class="anchor" aria-label="anchor" href="#how-does-tab_multi_manager-handle-the-protection-of-a-set-of-linked-tables"></a>
+<h3 id="how-does-tab_multi_manager-handle-the-protection-of-a-set-of-linked-tables">How does <code>tab_multi_manager()</code> handle the protection of a
+set of linked tables ?<a class="anchor" aria-label="anchor" href="#how-does-tab_multi_manager-handle-the-protection-of-a-set-of-linked-tables"></a>
 </h3>
-<p>Firstly, the function merges all the tables of the set. In the resulted table, boolean variables are added to mention whether a cell owns to a given table of the set. So, there are as many boolean variables as the number of tables in the set. The merged table is a very effective way to quickly detect the common cells. Thus, the report of the suppressions is automatic.</p>
-<p>The protection process is sequential: one table at a time. To handle the protection of all the tables and not to forget one table or some links, the implemented algorithm works with two lists:</p>
+<p>Firstly, the function merges all the tables of the set. In the
+resulted table, boolean variables are added to mention whether a cell
+owns to a given table of the set. So, there are as many boolean
+variables as the number of tables in the set. The merged table is a very
+effective way to quickly detect the common cells. Thus, the report of
+the suppressions is automatic.</p>
+<p>The protection process is sequential: one table at a time. To handle
+the protection of all the tables and not to forget one table or some
+links, the implemented algorithm works with two lists:</p>
 <ul>
 <li>
-<code>todolist</code>: list of tables which have to be protected;</li>
+<code>todolist</code>: list of tables which have to be
+protected;</li>
 <li>
-<code>remainlist</code>: list of original tables which haven’t yet been protected at all.</li>
+<code>remainlist</code>: list of original tables which haven’t yet
+been protected at all.</li>
 </ul>
 <p>Both lists are initialized as follows:</p>
 <ul>
 <li>
 <code>todolist</code> = first table in the original list;</li>
 <li>
-<code>remainlist</code> = all the original tables except the firs one.</li>
+<code>remainlist</code> = all the original tables except the firs
+one.</li>
 </ul>
 <p>Then, the algorithm proceeds as shown in the following figure:</p>
 <p><img src="multi_tab_schema.png" alt="How tab_multi_manager's algorithm works" width="600" height="500"></p>
@@ -128,51 +155,102 @@
 <div class="section level3">
 <h3 id="results">Results<a class="anchor" aria-label="anchor" href="#results"></a>
 </h3>
-<p>The function returns the original list of tables with some other variables which are boolean variables (TRUE if the cell has to be masked, otherwise FALSE), describing all steps of the suppression process. Each step takes the previous one into account and the last variable indicates the final step. Final status of cell is easily computable with this last variable and the primary suppression status previously computed by the user.</p>
-<p>In addition, the function writes all τ-Argus files created during the process. At the end, only the last process for each table is available in the chosen directory. A journal (<code>journal.txt</code>) is also provided. It describes each step of the suppression process: Which table is being protected, how many new common cells have been hit by secondary suppression. At the end of the process, it provides a description of all common cells that have been hit, mentionning the iteration of when each has been hit.</p>
+<p>The function returns the original list of tables with some other
+variables which are boolean variables (TRUE if the cell has to be
+masked, otherwise FALSE), describing all steps of the suppression
+process. Each step takes the previous one into account and the last
+variable indicates the final step. Final status of cell is easily
+computable with this last variable and the primary suppression status
+previously computed by the user.</p>
+<p>In addition, the function writes all τ-Argus files created during the
+process. At the end, only the last process for each table is available
+in the chosen directory. A journal (<code>journal.txt</code>) is also
+provided. It describes each step of the suppression process: Which table
+is being protected, how many new common cells have been hit by secondary
+suppression. At the end of the process, it provides a description of all
+common cells that have been hit, mentionning the iteration of when each
+has been hit.</p>
 </div>
 <div class="section level3">
-<h3 id="some-details-on-the-parameters-of-tab_multi_manager">Some details on the parameters of <code>tab_multi_manager()</code><a class="anchor" aria-label="anchor" href="#some-details-on-the-parameters-of-tab_multi_manager"></a>
+<h3 id="some-details-on-the-parameters-of-tab_multi_manager">Some details on the parameters of
+<code>tab_multi_manager()</code><a class="anchor" aria-label="anchor" href="#some-details-on-the-parameters-of-tab_multi_manager"></a>
 </h3>
 <ul>
-<li><p><strong>dir_name</strong> the directory that will contain all the created files, if non existing it will be created. example : dir_name = “my_directory”</p></li>
-<li><p><strong>hrc</strong> A named vector specifying the path to the hrc file for each hierarchical variables. example : c(ACTIVITY = “path_to_file/act.hrc”, NUTS = “path_to_file/nuts.hrc” )</p></li>
+<li><p><strong>dir_name</strong> the directory that will contain all the
+created files, if non existing it will be created. example : dir_name =
+“my_directory”</p></li>
+<li><p><strong>hrc</strong> A named vector specifying the path to the
+hrc file for each hierarchical variables. example : c(ACTIVITY =
+“path_to_file/act.hrc”, NUTS = “path_to_file/nuts.hrc” )</p></li>
 <li>
-<p><strong>alt_hrc</strong> A named list useful for dealing with non-nested hierachies. The names of the list are the names of the tables when alternative (non-nested in general) hierarchies. example : If T1 and T2 have one explanatory variable, called ACTIVITY, and the same response variable, but the <code>ACTIVITY</code> variable has not the same hierarchy in the two tables. Let’s assume that the hierarchies (act1.hrc and act2.hrc) are not nested. In that case, we write the two arguments as follows:</p>
+<p><strong>alt_hrc</strong> A named list useful for dealing with
+non-nested hierachies. The names of the list are the names of the tables
+when alternative (non-nested in general) hierarchies. example : If T1
+and T2 have one explanatory variable, called ACTIVITY, and the same
+response variable, but the <code>ACTIVITY</code> variable has not the
+same hierarchy in the two tables. Let’s assume that the hierarchies
+(act1.hrc and act2.hrc) are not nested. In that case, we write the two
+arguments as follows:</p>
 <ul>
-<li>hrc = c(ACTIVITY = “path_to_file/act_1.hrc”): By default, this hierarchy will be used.</li>
-<li>alt_hrc = list(T2 = c(ACTIVITY = “path_to_file/act_2.hrc”)): In the table T2, the alternative hierarchy will be used.</li>
+<li>hrc = c(ACTIVITY = “path_to_file/act_1.hrc”): By default, this
+hierarchy will be used.</li>
+<li>alt_hrc = list(T2 = c(ACTIVITY = “path_to_file/act_2.hrc”)): In the
+table T2, the alternative hierarchy will be used.</li>
 </ul>
 </li>
-<li><p><strong>totcode</strong> The code for total for each explanatory variables. It is recommanded to use the same totcode for each variables. If for example the code is “Total” for all variables. This syntax is allowed : totcode = “Total”</p></li>
+<li><p><strong>totcode</strong> The code for total for each explanatory
+variables. It is recommanded to use the same totcode for each variables.
+If for example the code is “Total” for all variables. This syntax is
+allowed : totcode = “Total”</p></li>
 </ul>
-<p>Otherwise the expected input is a list specifying the totcode for each explanatory vars. For example : totcode = list(ACTIVITY = “Total”, NUTS = “FR”, SIZE =“Ensemble”, CJ = “Total”) Default : “Total”</p>
-<p>Warning : If the totals are not in the table, they will be computed by Tau-Argus, but they won’t be eligible for primary suppression. We, then, advise users to provide totals in their tables.</p>
+<p>Otherwise the expected input is a list specifying the totcode for
+each explanatory vars. For example : totcode = list(ACTIVITY = “Total”,
+NUTS = “FR”, SIZE =“Ensemble”, CJ = “Total”) Default : “Total”</p>
+<p>Warning : If the totals are not in the table, they will be computed
+by Tau-Argus, but they won’t be eligible for primary suppression. We,
+then, advise users to provide totals in their tables.</p>
 <ul>
-<li><p><strong>alt_totcode</strong> A named list for alternative total codes. See <code>alt_hrc</code> for use.</p></li>
-<li><p><strong>value</strong> The colname of the response variable in the tables, it MUST be the same name for each tables. For example : value = “turnover” Default : “value”</p></li>
-<li><p><strong>freq</strong> The colname of the frequency variable in the tables, it MUST be the same name for each tables. For example : freq = “frequency” Default : “freq”</p></li>
-<li><p><strong>secret_var</strong> The name of the boolean variable specifying primary suppression in the tables, it MUST be the same name for each tables. For example : secret_var = “is_secret_prim” Default : “is_secret_prim”</p></li>
-<li><p><strong>suppress</strong> The algorithm required to perform secondary suppression, explained in the safety_rules vignette. If Modular approach is chosen, after the first iteration on a given table, the singleton, multi-singleton and minFreq options are deactivated. default : MOD(1,5,1,0,0)"</p></li>
-<li><p><strong>ip_start</strong> The manual safety range for the first iteration on a table (integer) default : 10</p></li>
-<li><p><strong>ip_end</strong> The manual safety range for the second iteration on a table (integer) default : 0</p></li>
-<li><p><strong>num_iter_max</strong> This parameter is here to ensure the fact that the function will stop. default : 10</p></li>
+<li><p><strong>alt_totcode</strong> A named list for alternative total
+codes. See <code>alt_hrc</code> for use.</p></li>
+<li><p><strong>value</strong> The colname of the response variable in
+the tables, it MUST be the same name for each tables. For example :
+value = “turnover” Default : “value”</p></li>
+<li><p><strong>freq</strong> The colname of the frequency variable in
+the tables, it MUST be the same name for each tables. For example : freq
+= “frequency” Default : “freq”</p></li>
+<li><p><strong>secret_var</strong> The name of the boolean variable
+specifying primary suppression in the tables, it MUST be the same name
+for each tables. For example : secret_var = “is_secret_prim” Default :
+“is_secret_prim”</p></li>
+<li><p><strong>suppress</strong> The algorithm required to perform
+secondary suppression, explained in the safety_rules vignette. If
+Modular approach is chosen, after the first iteration on a given table,
+the singleton, multi-singleton and minFreq options are deactivated.
+default : MOD(1,5,1,0,0)”</p></li>
+<li><p><strong>ip_start</strong> The manual safety range for the first
+iteration on a table (integer) default : 10</p></li>
+<li><p><strong>ip_end</strong> The manual safety range for the second
+iteration on a table (integer) default : 0</p></li>
+<li><p><strong>num_iter_max</strong> This parameter is here to ensure
+the fact that the function will stop. default : 10</p></li>
 </ul>
 </div>
 </div>
 <div class="section level2">
 <h2 id="some-examples">Some examples<a class="anchor" aria-label="anchor" href="#some-examples"></a>
 </h2>
-<p>Let’s specify the location of the TauArgus.exe file in our computer:</p>
+<p>Let’s specify the location of the TauArgus.exe file in our
+computer:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span></span>
 <span>  rtauargus.tauargus_exe <span class="op">=</span></span>
-<span>    <span class="st">"Y:/Logiciels/TauArgus/TauArgus4.2.2b1/TauArgus.exe"</span></span>
+<span>    <span class="st">"Y:/Logiciels/TauArgus/TauArgus4.2.3/TauArgus.exe"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <div class="section level3">
 <h3 id="about-protecting-4-linked-tables-at-once">About protecting 4 linked tables at once<a class="anchor" aria-label="anchor" href="#about-protecting-4-linked-tables-at-once"></a>
 </h3>
-<p>In the following example we are going to protect a set of 4 linked tables sharing the same response variable, that is turnover.</p>
+<p>In the following example we are going to protect a set of 4 linked
+tables sharing the same response variable, that is turnover.</p>
 <div class="section level4">
 <h4 id="preparing-the-data">Preparing the data<a class="anchor" aria-label="anchor" href="#preparing-the-data"></a>
 </h4>
@@ -181,7 +259,9 @@
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"turnover_act_cj"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span> <span class="op">(</span><span class="st">"turnover_nuts_size"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"turnover_nuts_cj"</span><span class="op">)</span></span></code></pre></div>
-<p>ACTIVITY X SIZE named turnover_act_size ACTIVITY X CJ named turnover_act_cj NUTS X SIZE named turnover_nuts_size NUTS X CJ named turnover_nuts_cj</p>
+<p>ACTIVITY X SIZE named turnover_act_size ACTIVITY X CJ named
+turnover_act_cj NUTS X SIZE named turnover_nuts_size NUTS X CJ named
+turnover_nuts_cj</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">turnover_act_size</span><span class="op">)</span></span>
 <span><span class="co">#&gt; tibble [414 x 5] (S3: tbl_df/tbl/data.frame)</span></span>
@@ -197,7 +277,9 @@
 <span><span class="co">#&gt;  $ N_OBS: int [1:452] 38462 6769 4561 5090 8611 7811 5643 10411 8179 5163 ...</span></span>
 <span><span class="co">#&gt;  $ TOT  : num [1:452] 33026385 2947560 1917663 3701935 5089279 ...</span></span>
 <span><span class="co">#&gt;  $ MAX  : num [1:452] 3084242 544763 651848 298134 1165019 ...</span></span></code></pre></div>
-<p>The first step is to create a list containing our four tables, it is advised to give a name to each tables. By doing so it will be easier to track secondary suppression.</p>
+<p>The first step is to create a list containing our four tables, it is
+advised to give a name to each tables. By doing so it will be easier to
+track secondary suppression.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">list_data_4_tabs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>  act_size <span class="op">=</span> <span class="va">turnover_act_size</span>,</span>
@@ -235,7 +317,9 @@
 <div class="section level4">
 <h4 id="applying-primary-suppression-rules">Applying primary suppression rules<a class="anchor" aria-label="anchor" href="#applying-primary-suppression-rules"></a>
 </h4>
-<p>Then we need to apply the primary suppression for each table. Here we apply 2 rules : The dominance rule NK(1,85) and the frequency rule with a threshold set to 3.</p>
+<p>Then we need to apply the primary suppression for each table. Here we
+apply 2 rules : The dominance rule NK(1,85) and the frequency rule with
+a threshold set to 3.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">list_data_4_tabs</span> <span class="op">&lt;-</span> <span class="va">list_data_4_tabs</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map</a></span><span class="op">(</span></span>
@@ -286,12 +370,16 @@
 <span><span class="co">#&gt;   ..$ is_secret_freq: logi [1:452] FALSE FALSE FALSE FALSE FALSE FALSE ...</span></span>
 <span><span class="co">#&gt;   ..$ is_secret_dom : logi [1:452] FALSE FALSE FALSE FALSE FALSE FALSE ...</span></span>
 <span><span class="co">#&gt;   ..$ is_secret_prim: logi [1:452] FALSE FALSE FALSE FALSE FALSE FALSE ...</span></span></code></pre></div>
-<p>Three variables have been added to each table. Only the last one will be used during the protection process. The two others will be useful to state the final status of the cells.</p>
+<p>Three variables have been added to each table. Only the last one will
+be used during the protection process. The two others will be useful to
+state the final status of the cells.</p>
 </div>
 <div class="section level4">
 <h4 id="preparing-the-list-of-explanatory-variables">Preparing the list of explanatory variables<a class="anchor" aria-label="anchor" href="#preparing-the-list-of-explanatory-variables"></a>
 </h4>
-<p>Then we are going to create the list of explanatory variables of the tables. In our case, the explanatory variables are the 2 first columns of each table.</p>
+<p>Then we are going to create the list of explanatory variables of the
+tables. In our case, the explanatory variables are the 2 first columns
+of each table.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">nom_var_list</span> <span class="op">&lt;-</span> <span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map</a></span><span class="op">(</span></span>
 <span>  <span class="va">list_data_4_tabs</span>,</span>
@@ -309,19 +397,25 @@
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $nuts_cj</span></span>
 <span><span class="co">#&gt; [1] "NUTS" "CJ"</span></span></code></pre></div>
-<p>The names of the list have to be the names of the corresponding tables in the <code>list_tables</code> argument.</p>
+<p>The names of the list have to be the names of the corresponding
+tables in the <code>list_tables</code> argument.</p>
 </div>
 <div class="section level4">
 <h4 id="preparing-the-list-of-total-codes">Preparing the list of total codes<a class="anchor" aria-label="anchor" href="#preparing-the-list-of-total-codes"></a>
 </h4>
-<p>The labels used to mention the total for each variable have to declared by the user, in a named list. However, when all of the variables have the same label to refer to the total, the information can be mentionned as follows:</p>
+<p>The labels used to mention the total for each variable have to
+declared by the user, in a named list. However, when all of the
+variables have the same label to refer to the total, the information can
+be mentionned as follows:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">total_codes</span> <span class="op">&lt;-</span> <span class="st">"Total"</span></span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="making-the-hierarchical-files">Making the hierarchical files<a class="anchor" aria-label="anchor" href="#making-the-hierarchical-files"></a>
 </h4>
-<p><code>ACTIVITY</code> and <code>NUTS</code> are two hierarchical variables. We use a correspondance table for each of them to create the <code>.hrc</code> files that tau-Argus need.</p>
+<p><code>ACTIVITY</code> and <code>NUTS</code> are two hierarchical
+variables. We use a correspondance table for each of them to create the
+<code>.hrc</code> files that tau-Argus need.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">activity_corr_table</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">nuts23_fr_corr_table</span><span class="op">)</span></span></code></pre></div>
@@ -334,13 +428,15 @@
 <span>  corr_table <span class="op">=</span> <span class="va">nuts23_fr_corr_table</span>,</span>
 <span>  file_name <span class="op">=</span> <span class="st">"hrc/nuts.hrc"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p>To mention the names of the hrc files, we create a named vector (or list) as follows:</p>
+<p>To mention the names of the hrc files, we create a named vector (or
+list) as follows:</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">hrc_files</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>  ACTIVITY <span class="op">=</span> <span class="va">hrc_file_activity</span>,</span>
 <span>  NUTS <span class="op">=</span> <span class="va">hrc_file_nuts</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p>The names of the vector have to be the names of the corresponding hierarchical variables.</p>
+<p>The names of the vector have to be the names of the corresponding
+hierarchical variables.</p>
 </div>
 <div class="section level4">
 <h4 id="running-the-protection-of-all-the-tables-at-once">Running the protection of all the tables at once<a class="anchor" aria-label="anchor" href="#running-the-protection-of-all-the-tables-at-once"></a>
@@ -426,15 +522,24 @@
 <div class="section level3">
 <h3 id="dealing-with-non-nested-hierarchies">Dealing with non-nested hierarchies<a class="anchor" aria-label="anchor" href="#dealing-with-non-nested-hierarchies"></a>
 </h3>
-<p>Let’s assume that we’d like to protect the two tables crossing <code>ACTIVITY</code> and <code>SIZE</code> in one hand and <code>ACTIVITY</code> and <code>CJ</code> in the other hand. The <code>ACTIVITY</code> variable is a hierarchical one. Moreover, in that case, we’d like to release a subtotal, called <code>D_TO_M</code>, in addition to those in the <code>activity_corr_table</code>. This subtotal is the sum of the <code>D</code> to <code>M</code> labels of the <code>A21</code> level. As this subtotal can’t be inserted in the main hierarchy, this leads us to a case of non-nested hierarchies.</p>
-<p>To confirm the non-nesting of the two hierachies, let’s display an extract of both.</p>
+<p>Let’s assume that we’d like to protect the two tables crossing
+<code>ACTIVITY</code> and <code>SIZE</code> in one hand and
+<code>ACTIVITY</code> and <code>CJ</code> in the other hand. The
+<code>ACTIVITY</code> variable is a hierarchical one. Moreover, in that
+case, we’d like to release a subtotal, called <code>D_TO_M</code>, in
+addition to those in the <code>activity_corr_table</code>. This subtotal
+is the sum of the <code>D</code> to <code>M</code> labels of the
+<code>A21</code> level. As this subtotal can’t be inserted in the main
+hierarchy, this leads us to a case of non-nested hierarchies.</p>
+<p>To confirm the non-nesting of the two hierachies, let’s display an
+extract of both.</p>
 <p>Extract of the main hierarchy:</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">sdcHierarchies</span><span class="fu">::</span><span class="fu">hier_create</span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="fu">sdcHierarchies</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/sdcHierarchies/man/hier_create.html" class="external-link">hier_create</a></span><span class="op">(</span></span>
 <span>  root<span class="op">=</span><span class="st">"Total"</span>,</span>
 <span>  nodes <span class="op">=</span> <span class="va">activity_corr_table</span><span class="op">$</span><span class="va">A10</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu">sdcHierarchies</span><span class="fu">::</span><span class="fu">hier_display</span><span class="op">(</span><span class="op">)</span></span>
+<span>  <span class="fu">sdcHierarchies</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/sdcHierarchies/man/hier_display.html" class="external-link">hier_display</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Total</span></span>
 <span><span class="co">#&gt; +-AZ</span></span>
 <span><span class="co">#&gt; +-BE</span></span>
@@ -448,23 +553,15 @@
 <span><span class="co">#&gt; \-RU</span></span></code></pre></div>
 <p>Extract of the alternative hierarchy:</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">sdcHierarchies</span><span class="fu">::</span><span class="fu">hier_create</span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="fu">sdcHierarchies</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/sdcHierarchies/man/hier_create.html" class="external-link">hier_create</a></span><span class="op">(</span></span>
 <span>  root<span class="op">=</span><span class="st">"D_TO_M"</span>,</span>
 <span>  nodes <span class="op">=</span> <span class="va">activity_corr_table_D_TO_M</span><span class="op">$</span><span class="va">A21</span></span>
 <span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu">sdcHierarchies</span><span class="fu">::</span><span class="fu">hier_display</span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; D_TO_M</span></span>
-<span><span class="co">#&gt; +-D</span></span>
-<span><span class="co">#&gt; +-E</span></span>
-<span><span class="co">#&gt; +-F</span></span>
-<span><span class="co">#&gt; +-G</span></span>
-<span><span class="co">#&gt; +-H</span></span>
-<span><span class="co">#&gt; +-I</span></span>
-<span><span class="co">#&gt; +-J</span></span>
-<span><span class="co">#&gt; +-K</span></span>
-<span><span class="co">#&gt; +-L</span></span>
-<span><span class="co">#&gt; \-M</span></span></code></pre></div>
-<p>To handle this case, the preferred approach is to create a third table crossing <code>ACTIVITY</code> and <code>SIZE</code> with D to M labels and the subtotal <code>D_TO_M</code>:</p>
+<span>  <span class="fu">sdcHierarchies</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/sdcHierarchies/man/hier_display.html" class="external-link">hier_display</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Error in sdcHierarchies::hier_create(root = "D_TO_M", nodes = activity_corr_table_D_TO_M$A21): object 'activity_corr_table_D_TO_M' not found</span></span></code></pre></div>
+<p>To handle this case, the preferred approach is to create a third
+table crossing <code>ACTIVITY</code> and <code>SIZE</code> with D to M
+labels and the subtotal <code>D_TO_M</code>:</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">turnover_act_size_D_TO_M</span> <span class="op">&lt;-</span> <span class="va">turnover_act_size</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span></span>
@@ -497,7 +594,8 @@
 <span><span class="va">hrc_file_activity_D_TO_M</span> <span class="op">&lt;-</span> <span class="va">activity_corr_table_D_TO_M</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/write_hrc2.html">write_hrc2</a></span><span class="op">(</span>file_name <span class="op">=</span> <span class="st">"hrc/activity_D_TO_M"</span><span class="op">)</span></span></code></pre></div>
-<p>Then, let’s build the list of tables and apply the primary suppression rules on them.</p>
+<p>Then, let’s build the list of tables and apply the primary
+suppression rules on them.</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">list_data_3_tabs_nn</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>  act_size <span class="op">=</span> <span class="va">turnover_act_size</span>,</span>
@@ -514,14 +612,21 @@
 <span>        <span class="op">)</span></span>
 <span>    <span class="op">}</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
-<p>The <code>hrc</code> and <code>alt_hrc</code> arguments are used to mention both hierarchies of the <code>ACTIVITY</code> variable:</p>
+<p>The <code>hrc</code> and <code>alt_hrc</code> arguments are used to
+mention both hierarchies of the <code>ACTIVITY</code> variable:</p>
 <ul>
 <li>
-<code>hrc</code> is used as int the previous example (a named vector where names are the different hierarchical variables appearingin the tables and values are the files names). Hence, the hierarchy file will be taken in this vector by default.</li>
+<code>hrc</code> is used as int the previous example (a named vector
+where names are the different hierarchical variables appearingin the
+tables and values are the files names). Hence, the hierarchy file will
+be taken in this vector by default.</li>
 <li>
-<code>alt_hrc</code> is only used to mention the alternative hierarchies. This argument is a named list where names are the tables where the alternative hierarchies have to be applied.</li>
+<code>alt_hrc</code> is only used to mention the alternative
+hierarchies. This argument is a named list where names are the tables
+where the alternative hierarchies have to be applied.</li>
 </ul>
-<p>The same rationale is used to fill the <code>alt_totcode</code> argument.</p>
+<p>The same rationale is used to fill the <code>alt_totcode</code>
+argument.</p>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/tab_multi_manager.html">tab_multi_manager</a></span><span class="op">(</span></span>
 <span>  list_tables <span class="op">=</span> <span class="va">list_data_3_tabs_nn</span>,</span>
@@ -554,15 +659,18 @@
 <h5 id="about-this-vignette">About this vignette<a class="anchor" aria-label="anchor" href="#about-this-vignette"></a>
 </h5>
 <ul>
-<li>Authors: <strong><a href="mailto:julien.jamme@insee.fr">Julien Jamme</a></strong> &amp; <strong><a href="mailto:nathanael.rastout@insee.fr">Nathanael Rastout</a></strong>
+<li>Authors: <strong><a href="mailto:julien.jamme@insee.fr">Julien
+Jamme</a></strong> &amp;
+<strong><a href="mailto:nathanael.rastout@insee.fr">Nathanael
+Rastout</a></strong>
 </li>
-<li>Last update: <strong>06/01/2023</strong>
+<li>Last update: <strong>21/09/2023</strong>
 </li>
-<li>Version of rtauargus used: <strong>1.1.1</strong>
+<li>Version of rtauargus used: <strong>1.2.0</strong>
 </li>
-<li>Version of τ-Argus used : <strong>TauArgus 4.2.2b1</strong>
+<li>Version of τ-Argus used : <strong>TauArgus 4.2.3</strong>
 </li>
-<li>R version used : <strong>4.1.3</strong>
+<li>R version used : <strong>4.2.3</strong>
 </li>
 </ul>
 <p style="text-align: right">
@@ -579,7 +687,7 @@
 
     <footer><div class="pkgdown-footer-left">
   <p></p>
-<p>Developed by Pierre-Yves Berrard, Julien Jamme, Nathanaël Rastout, Jeanne Pointet, Félix Beroud.</p>
+<p>Developed by Pierre-Yves Berrard, Julien Jamme, Nathanaël Rastout, Jeanne Pointet, Félix Beroud, André-Raymond Socard, Wistan Pomel.</p>
 </div>
 
 <div class="pkgdown-footer-right">

@@ -8,8 +8,8 @@
 <meta name="description" content="rtauargus">
 <title>Protéger des tableaux liés • rtauargus</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.2.2/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.2.2/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
+<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Protéger des tableaux liés">
 <meta property="og:description" content="rtauargus">
@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">rtauargus</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.1.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.2.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -50,6 +50,7 @@
     <a class="dropdown-item" href="../articles/protect_multi_tables_fr.html">Protéger des tableaux liés</a>
     <a class="dropdown-item" href="../articles/options_safety_rules.html">Safety rules and Suppress Options</a>
     <a class="dropdown-item" href="../articles/options_safety_rules_fr.html">Les arguments Safety rules et Suppress</a>
+    <a class="dropdown-item" href="../articles/split_tab_fr.html">Comment poser du secret sur des tableaux à 4 ou 5 dimensions avec `rtauargus`?</a>
     <div class="dropdown-divider"></div>
     <h6 class="dropdown-header" data-toc-skip>micro-wise</h6>
     <a class="dropdown-item" href="../articles/rtauargus_micro.html">&amp;tau;-Argus from R - microdata version</a>
@@ -73,12 +74,11 @@
 
 
 
-<script src="protect_multi_tables_fr_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+
+<div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="" class="logo" alt=""><h1>Protéger des tableaux liés</h1>
-            <h3 data-toc-skip class="subtitle"><h2>
-<img src="R_logo_small.png" alt="logo R"><img src="TauBall2_small.png" alt="logo τ-Argus"><br>Package {rtauargus}
-</h2></h3>
+            <h3 data-toc-skip class="subtitle"><h2> ¶ <img src="R_logo_small.png" alt="logo R"><img src="TauBall2_small.png" alt="logo τ-Argus"><br>Package {rtauargus} ¶ </h2></h3>
             
       
       <small class="dont-index">Source: <a href="https://github.com/inseefrlab/rtauargus/blob/HEAD/vignettes/protect_multi_tables_fr.Rmd" class="external-link"><code>vignettes/protect_multi_tables_fr.Rmd</code></a></small>
@@ -95,76 +95,172 @@ Voir : https://ropensci.org/technotes/2019/12/08/precompute-vignettes
 <div class="section level2">
 <h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
 </h2>
-<p>Dans le package <code>rtauargus</code>, il est maintenant possible de protéger un ensemble de tableaux liés en une seule fois. La fonction pour le faire s’appelle <code><a href="../reference/tab_multi_manager.html">tab_multi_manager()</a></code>. L’algorithme très simple implémenté pour gérer la protection ne dépend pas du nombre de tableaux. Par conséquent,la fonction peut théoriquement traiter un nombre indéfini de tableaux. Bien sûr, l’utilisation pratique est limitée par la puissance de l’ordinateur. Cependant, nous sommes confiants sur la capacité de la fonction à traiter la plupart des cas. Nous sommes intéressés par les cas que vous pourriez rencontrer et que la fonction ne peut pas traiter.</p>
-<p>Un lien entre deux (ou plusieurs) tableaux décrit les cellules communes des tableaux, c’est-à-dire les cellules qui sont présentent dans ces derniers. La fonction peut gérer tous les types de liens entre tableaux :</p>
+<p>Dans le package <code>rtauargus</code>, il est maintenant possible de
+protéger un ensemble de tableaux liés en une seule fois. La fonction
+pour le faire s’appelle <code><a href="../reference/tab_multi_manager.html">tab_multi_manager()</a></code>. L’algorithme
+très simple implémenté pour gérer la protection ne dépend pas du nombre
+de tableaux. Par conséquent,la fonction peut théoriquement traiter un
+nombre indéfini de tableaux. Bien sûr, l’utilisation pratique est
+limitée par la puissance de l’ordinateur. Cependant, nous sommes
+confiants sur la capacité de la fonction à traiter la plupart des cas.
+Nous sommes intéressés par les cas que vous pourriez rencontrer et que
+la fonction ne peut pas traiter.</p>
+<p>Un lien entre deux (ou plusieurs) tableaux décrit les cellules
+communes des tableaux, c’est-à-dire les cellules qui sont présentent
+dans ces derniers. La fonction peut gérer tous les types de liens entre
+tableaux :</p>
 <ul>
-<li>les marges communes : lorsque deux tableaux partagent une (ou plusieurs) variables de ventilation ;</li>
-<li>liens entre les variables de réponse, lorsqu’il existe des équations reliant les variables ;</li>
-<li>hiérarchies non emboitées : lorsqu’une variable explicative est décomposée en deux (ou plus) hiérarchies non emboitées.</li>
+<li>les marges communes : lorsque deux tableaux partagent une (ou
+plusieurs) variables de ventilation ;</li>
+<li>liens entre les variables de réponse, lorsqu’il existe des équations
+reliant les variables ;</li>
+<li>hiérarchies non emboitées : lorsqu’une variable explicative est
+décomposée en deux (ou plus) hiérarchies non emboitées.</li>
 </ul>
-<p>En fait, les deux derniers types peuvent être traités comme le premier. Le défi pour l’utilisateur est de définir correctement l’ensemble des tableaux. Une fois l’ensemble correctement défini, la fonction s’occupe de tout.</p>
-<p>Tout d’abord, la vignette présente le fonctionnement de la fonction, puis les paramètres sont rapidement décrits. Dans la troisième partie, des exemples sont développés pour montrer comment l’utiliser dans diverses situations.</p>
+<p>En fait, les deux derniers types peuvent être traités comme le
+premier. Le défi pour l’utilisateur est de définir correctement
+l’ensemble des tableaux. Une fois l’ensemble correctement défini, la
+fonction s’occupe de tout.</p>
+<p>Tout d’abord, la vignette présente le fonctionnement de la fonction,
+puis les paramètres sont rapidement décrits. Dans la troisième partie,
+des exemples sont développés pour montrer comment l’utiliser dans
+diverses situations.</p>
 <div class="section level3">
-<h3 id="comment-tab_multi_manager-gère-t-il-la-protection-dun-ensemble-de-tableaux-liées">Comment <code>tab_multi_manager()</code> gère-t-il la protection d’un ensemble de tableaux liées ?<a class="anchor" aria-label="anchor" href="#comment-tab_multi_manager-g%C3%A8re-t-il-la-protection-dun-ensemble-de-tableaux-li%C3%A9es"></a>
+<h3 id="comment-tab_multi_manager-gère-t-il-la-protection-dun-ensemble-de-tableaux-liées">Comment <code>tab_multi_manager()</code> gère-t-il la protection
+d’un ensemble de tableaux liées ?<a class="anchor" aria-label="anchor" href="#comment-tab_multi_manager-g%C3%A8re-t-il-la-protection-dun-ensemble-de-tableaux-li%C3%A9es"></a>
 </h3>
-<p>Tout d’abord, la fonction fusionne tous les tableaux de l’ensemble. Dans la table obtenue, des variables booléennes sont ajoutées pour indiquer si une cellule appartient à un tableau ou non. Il y a donc autant de variables booléennes que de tableaux dans l’ensemble.Le tableau fusionné est un moyen très efficace pour détecter rapidement les cellules communes. Ainsi ,le rapport des suppressions est automatisé.</p>
-<p>Le processus de protection est séquentiel : un tableau à la fois. Pour gérer la protection de toutes les tables et ne pas oublier une table ou des liens, l’algorithme implémenté fonctionne avec deux listes :</p>
+<p>Tout d’abord, la fonction fusionne tous les tableaux de l’ensemble.
+Dans la table obtenue, des variables booléennes sont ajoutées pour
+indiquer si une cellule appartient à un tableau ou non. Il y a donc
+autant de variables booléennes que de tableaux dans l’ensemble.Le
+tableau fusionné est un moyen très efficace pour détecter rapidement les
+cellules communes. Ainsi ,le rapport des suppressions est
+automatisé.</p>
+<p>Le processus de protection est séquentiel : un tableau à la fois.
+Pour gérer la protection de toutes les tables et ne pas oublier une
+table ou des liens, l’algorithme implémenté fonctionne avec deux listes
+:</p>
 <ul>
 <li>
-<code>todolist</code> : liste des tables qui doivent être protégées ;</li>
+<code>todolist</code> : liste des tables qui doivent être protégées
+;</li>
 <li>
-<code>remainlist</code> : liste des tables originales qui n’ont pas encore été protégées du tout.</li>
+<code>remainlist</code> : liste des tables originales qui n’ont pas
+encore été protégées du tout.</li>
 </ul>
 <p>Les deux listes sont initialisées comme suit :</p>
 <ul>
 <li>
 <code>todolist</code> = première table de la liste originale ;</li>
 <li>
-<code>remainlist</code> = toutes les tables originales sauf la première.</li>
+<code>remainlist</code> = toutes les tables originales sauf la
+première.</li>
 </ul>
-<p>Ensuite, l’algorithme se déroule comme indiqué dans la figure suivante :</p>
+<p>Ensuite, l’algorithme se déroule comme indiqué dans la figure
+suivante :</p>
 <p><img src="multi_tab_schema.png" alt="How tab_multi_manager's algorithm works" width="600" height="500"></p>
 </div>
 <div class="section level3">
 <h3 id="résultats">Résultats<a class="anchor" aria-label="anchor" href="#r%C3%A9sultats"></a>
 </h3>
-<p>La fonction renvoie la liste originale des tableaux avec d’autres variables qui sont des variables booléennes (TRUE si la cellule doit être masquée sinon FALSE). , décrivant toutes les étapes du processus de suppression. Chaque étape prend en compte les résultats précédents et la dernière variable indique le statut final d’une cellule. Le statut final de chaque cellule est facilement déductible à l’aide de cette dernière variable et de l’état de suppression primaire calculé précédemment par l’utilisateur.</p>
-<p>De plus, la fonction écrit tous les fichiers τ-Argus créés au cours du processus. A la fin, seul le dernier processus pour chaque table est disponible dans le répertoire choisi. Un journal (<code>journal.txt</code>) est également fourni. Il décrit chaque étape du processus de suppression : Quelle table est protégée, combien de nouvelles cellules communes ont été atteintes par la suppression secondaire. À la fin du processus, il décrit toutes les cellules communes qui ont été touchées, en mentionnant l’itération à laquelle chacune a été masquée.</p>
+<p>La fonction renvoie la liste originale des tableaux avec d’autres
+variables qui sont des variables booléennes (TRUE si la cellule doit
+être masquée sinon FALSE). , décrivant toutes les étapes du processus de
+suppression. Chaque étape prend en compte les résultats précédents et la
+dernière variable indique le statut final d’une cellule. Le statut final
+de chaque cellule est facilement déductible à l’aide de cette dernière
+variable et de l’état de suppression primaire calculé précédemment par
+l’utilisateur.</p>
+<p>De plus, la fonction écrit tous les fichiers τ-Argus créés au cours
+du processus. A la fin, seul le dernier processus pour chaque table est
+disponible dans le répertoire choisi. Un journal
+(<code>journal.txt</code>) est également fourni. Il décrit chaque étape
+du processus de suppression : Quelle table est protégée, combien de
+nouvelles cellules communes ont été atteintes par la suppression
+secondaire. À la fin du processus, il décrit toutes les cellules
+communes qui ont été touchées, en mentionnant l’itération à laquelle
+chacune a été masquée.</p>
 </div>
 <div class="section level3">
 <h3 id="quelques-détails-sur-les-paramètres-de-tab_multi_manager">Quelques détails sur les paramètres de `tab_multi_manager()``<a class="anchor" aria-label="anchor" href="#quelques-d%C3%A9tails-sur-les-param%C3%A8tres-de-tab_multi_manager"></a>
 </h3>
 <ul>
-<li><p><strong>dir_name</strong> le répertoire qui contiendra tous les fichiers créés, s’il n’existe pas, il sera créé. exemple : dir_name = “my_directory”.</p></li>
-<li><p><strong>hrc</strong> Un vecteur nommé spécifiant le chemin vers le fichier hrc pour chaque variable hiérarchique. exemple : c(ACTIVITY = “chemin_vers_fichier/act.hrc”, NUTS = “chemin_vers_fichier/nuts.hrc” )</p></li>
+<li><p><strong>dir_name</strong> le répertoire qui contiendra tous les
+fichiers créés, s’il n’existe pas, il sera créé. exemple : dir_name =
+“my_directory”.</p></li>
+<li><p><strong>hrc</strong> Un vecteur nommé spécifiant le chemin vers
+le fichier hrc pour chaque variable hiérarchique. exemple : c(ACTIVITY =
+“chemin_vers_fichier/act.hrc”, NUTS = “chemin_vers_fichier/nuts.hrc”
+)</p></li>
 <li>
-<p><strong>alt_hrc</strong> Une liste nommée utile pour traiter les hiérarchies non emboitées. Les noms de la liste sont les noms des tableaux pour lesquelles une autre hiérarchie(non emboitée en général) doit être utilisée. exemple : Si T1 et T2 ont une variable explicative, appelée ACTIVITY, et la même variable de réponse, mais la variable <code>ACTIVITY</code> n’a pas la même hiérarchie dans les les deux tables. Supposons que les hiérarchies (act1.hrc et act2.hrc) ne sont pas emboitées. Dans ce cas, nous écrivons les deux arguments comme suit :</p>
+<p><strong>alt_hrc</strong> Une liste nommée utile pour traiter les
+hiérarchies non emboitées. Les noms de la liste sont les noms des
+tableaux pour lesquelles une autre hiérarchie(non emboitée en général)
+doit être utilisée. exemple : Si T1 et T2 ont une variable explicative,
+appelée ACTIVITY, et la même variable de réponse, mais la variable
+<code>ACTIVITY</code> n’a pas la même hiérarchie dans les les deux
+tables. Supposons que les hiérarchies (act1.hrc et act2.hrc) ne sont pas
+emboitées. Dans ce cas, nous écrivons les deux arguments comme suit
+:</p>
 <ul>
-<li>hrc = c(ACTIVITY = “path_to_file/act_1.hrc”) : Par défaut, cette hiérarchie sera utilisée pour la variable ACTIVITY.</li>
-<li>alt_hrc = list(T2 = c(ACTIVITY = “chemin_vers_fichier/act_2.hrc”)) : Dans la table T2, la hiérarchie alternative sera utilisée.</li>
+<li>hrc = c(ACTIVITY = “path_to_file/act_1.hrc”) : Par défaut, cette
+hiérarchie sera utilisée pour la variable ACTIVITY.</li>
+<li>alt_hrc = list(T2 = c(ACTIVITY = “chemin_vers_fichier/act_2.hrc”)) :
+Dans la table T2, la hiérarchie alternative sera utilisée.</li>
 </ul>
 </li>
-<li><p><strong>totcode</strong> Le code du total pour chaque variable explicative. Il est recommandé d’utiliser le même même code de total pour chaque variable. Si par exemple le code est “Total” pour toutes les variables. La syntaxe qsuivante est autorisée : totcode = “Total”</p></li>
+<li><p><strong>totcode</strong> Le code du total pour chaque variable
+explicative. Il est recommandé d’utiliser le même même code de total
+pour chaque variable. Si par exemple le code est “Total” pour toutes les
+variables. La syntaxe qsuivante est autorisée : totcode =
+“Total”</p></li>
 </ul>
-<p>Sinon, l’input attendue est une liste spécifiant le code total pour chaque variable explicative. Par exemple : totcode = list(ACTIVITY = “Total”, NUTS = “FR”, SIZE = “Ensemble”, CJ = “Total”)</p>
-<p>Attention : Si les totaux ne sont pas dans la table, ils seront calculés par Tau-Argus, mais ils ne seront pas éligibles pour la suppression primaire. Il est donc nécessaire de les fournir dans la table de départ.</p>
+<p>Sinon, l’input attendue est une liste spécifiant le code total pour
+chaque variable explicative. Par exemple : totcode = list(ACTIVITY =
+“Total”, NUTS = “FR”, SIZE = “Ensemble”, CJ = “Total”)</p>
+<p>Attention : Si les totaux ne sont pas dans la table, ils seront
+calculés par Tau-Argus, mais ils ne seront pas éligibles pour la
+suppression primaire. Il est donc nécessaire de les fournir dans la
+table de départ.</p>
 <ul>
-<li><p><strong>alt_totcode</strong> Une liste nommée pour les codes de totaux alternatifs. Voir <code>alt_hrc</code> pour l’utilisation.</p></li>
-<li><p><strong>value</strong> Le nom de colonne de la variable de réponse dans les tableauxs, il DOIT identique pour chaque table. Par exemple : valeur = “turnover”. Valeur par défaut : “value”.</p></li>
-<li><p><strong>freq</strong> Le nom de colonne de la variable de fréquence dans les tableaux, il DOIT être le même nom pour chaque tableau. Par exemple : freq = “frequency” Valeur par défaut : “freq”.</p></li>
-<li><p><strong>secret_var</strong> Le nom de la variable booléenne spécifiant le secret primaire dans les tables, il DOIT être le même nom pour chaque table. Par exemple : secret_var = “is_secret_prim”. Valeur par défaut : “is_secret_prim”.</p></li>
-<li><p><strong>suppression</strong> L’algorithme requis pour effectuer la suppression secondaire, expliqué dans la vignette safety_rules. Si Modular est choisi, après la après la première itération sur une table donnée, les options singleton, multi-singleton et minFreq sont désactivées. défaut : MOD(1,5,1,0,0)"</p></li>
-<li><p><strong>ip_start</strong> Les intervalles de protection pour la première itération sur une table donnée (nombre entier) par défaut : 10</p></li>
-<li><p><strong>ip_end</strong> Les intervalles de protection pour la deuxième itération sur une table (nombre entier) par défaut : 0</p></li>
-<li><p><strong>num_iter_max</strong> Nombre d’itération maximum sur un tableau, ce paramètre est ici pour assurer le fait que la fonction va s’arrêter. En pratique on n’atteint jamais la limite de 10. par défaut : 10</p></li>
+<li><p><strong>alt_totcode</strong> Une liste nommée pour les codes de
+totaux alternatifs. Voir <code>alt_hrc</code> pour
+l’utilisation.</p></li>
+<li><p><strong>value</strong> Le nom de colonne de la variable de
+réponse dans les tableauxs, il DOIT identique pour chaque table. Par
+exemple : valeur = “turnover”. Valeur par défaut : “value”.</p></li>
+<li><p><strong>freq</strong> Le nom de colonne de la variable de
+fréquence dans les tableaux, il DOIT être le même nom pour chaque
+tableau. Par exemple : freq = “frequency” Valeur par défaut :
+“freq”.</p></li>
+<li><p><strong>secret_var</strong> Le nom de la variable booléenne
+spécifiant le secret primaire dans les tables, il DOIT être le même nom
+pour chaque table. Par exemple : secret_var = “is_secret_prim”. Valeur
+par défaut : “is_secret_prim”.</p></li>
+<li><p><strong>suppression</strong> L’algorithme requis pour effectuer
+la suppression secondaire, expliqué dans la vignette safety_rules. Si
+Modular est choisi, après la après la première itération sur une table
+donnée, les options singleton, multi-singleton et minFreq sont
+désactivées. défaut : MOD(1,5,1,0,0)”</p></li>
+<li><p><strong>ip_start</strong> Les intervalles de protection pour la
+première itération sur une table donnée (nombre entier) par défaut :
+10</p></li>
+<li><p><strong>ip_end</strong> Les intervalles de protection pour la
+deuxième itération sur une table (nombre entier) par défaut : 0</p></li>
+<li><p><strong>num_iter_max</strong> Nombre d’itération maximum sur un
+tableau, ce paramètre est ici pour assurer le fait que la fonction va
+s’arrêter. En pratique on n’atteint jamais la limite de 10. par défaut :
+10</p></li>
 </ul>
 </div>
 </div>
 <div class="section level2">
 <h2 id="quelques-exemples">Quelques exemples<a class="anchor" aria-label="anchor" href="#quelques-exemples"></a>
 </h2>
-<p>Spécifions l’emplacement du fichier TauArgus.exe sur notre ordinateur :</p>
-<p>``{r version} options( rtauargus.tauargus_exe = “Y:/Logiciels/TauArgus/TauArgus4.2.2b1/TauArgus.exe” )</p>
+<p>Spécifions l’emplacement du fichier TauArgus.exe sur notre ordinateur
+:</p>
+<p>``{r version} options( rtauargus.tauargus_exe =
+“Y:/Logiciels/TauArgus/TauArgus4.2.3/TauArgus.exe” )</p>
 <pre><code>
 ## Comment protéger 4 tableaux liés en même temps
 
@@ -179,7 +275,9 @@ data("turnover_act_size")
 data("turnover_act_cj")
 data ("turnover_nuts_size")
 data("turnover_nuts_cj")</code></pre>
-<p>ACTIVITY X SIZE nommé turnover_act_size ACTIVITY X CJ nommé turnover_act_cj NUTS X SIZE nommé turnover_nuts_size NUTS X CJ nommé turnover_nuts_cj</p>
+<p>ACTIVITY X SIZE nommé turnover_act_size ACTIVITY X CJ nommé
+turnover_act_cj NUTS X SIZE nommé turnover_nuts_size NUTS X CJ nommé
+turnover_nuts_cj</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">turnover_act_size</span><span class="op">)</span></span>
 <span><span class="co">#&gt; tibble [414 x 5] (S3: tbl_df/tbl/data.frame)</span></span>
@@ -195,7 +293,10 @@ data("turnover_nuts_cj")</code></pre>
 <span><span class="co">#&gt;  $ N_OBS: int [1:452] 38462 6769 4561 5090 8611 7811 5643 10411 8179 5163 ...</span></span>
 <span><span class="co">#&gt;  $ TOT  : num [1:452] 33026385 2947560 1917663 3701935 5089279 ...</span></span>
 <span><span class="co">#&gt;  $ MAX  : num [1:452] 3084242 544763 651848 298134 1165019 ...</span></span></code></pre></div>
-<p>La première étape consiste à créer une liste contenant nos quatre tableaux, il est conseillé de de donner un nom à chaque table. En faisant cela, il sera plus facile de suivre le déroulement de la pose du secret secondaire.</p>
+<p>La première étape consiste à créer une liste contenant nos quatre
+tableaux, il est conseillé de de donner un nom à chaque table. En
+faisant cela, il sera plus facile de suivre le déroulement de la pose du
+secret secondaire.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">list_data_4_tabs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>  act_size <span class="op">=</span> <span class="va">turnover_act_size</span>,</span>
@@ -232,7 +333,9 @@ data("turnover_nuts_cj")</code></pre>
 <div class="section level4">
 <h4 id="appliquer-les-règles-de-secret-primaire">Appliquer les règles de secret primaire<a class="anchor" aria-label="anchor" href="#appliquer-les-r%C3%A8gles-de-secret-primaire"></a>
 </h4>
-<p>Ensuite, nous devons appliquer les règles de secret primaire pour chaque table. Ici, nous appliquons 2 règles : La règle de dominance à 85% NK(1,85) et la règle de fréquence avec un seuil fixé à 3.</p>
+<p>Ensuite, nous devons appliquer les règles de secret primaire pour
+chaque table. Ici, nous appliquons 2 règles : La règle de dominance à
+85% NK(1,85) et la règle de fréquence avec un seuil fixé à 3.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">list_data_4_tabs</span> <span class="op">&lt;-</span> <span class="va">list_data_4_tabs</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map</a></span><span class="op">(</span></span>
@@ -283,12 +386,16 @@ data("turnover_nuts_cj")</code></pre>
 <span><span class="co">#&gt;   ..$ is_secret_freq: logi [1:452] FALSE FALSE FALSE FALSE FALSE FALSE ...</span></span>
 <span><span class="co">#&gt;   ..$ is_secret_dom : logi [1:452] FALSE FALSE FALSE FALSE FALSE FALSE ...</span></span>
 <span><span class="co">#&gt;   ..$ is_secret_prim: logi [1:452] FALSE FALSE FALSE FALSE FALSE FALSE ...</span></span></code></pre></div>
-<p>Trois variables ont été ajoutées à chaque tableau. Seule la dernière sera utilisée pendant le processus de suppression. Les deux autres seront utiles pour indiquer l’état final des cellules.</p>
+<p>Trois variables ont été ajoutées à chaque tableau. Seule la dernière
+sera utilisée pendant le processus de suppression. Les deux autres
+seront utiles pour indiquer l’état final des cellules.</p>
 </div>
 <div class="section level4">
 <h4 id="préparation-de-la-liste-des-variables-explicatives">Préparation de la liste des variables explicatives<a class="anchor" aria-label="anchor" href="#pr%C3%A9paration-de-la-liste-des-variables-explicatives"></a>
 </h4>
-<p>Nous allons ensuite créer la liste des variables explicatives des tableaux. Dans notre cas, les variables explicatives sont les 2 premières colonnes de chaque tableau.</p>
+<p>Nous allons ensuite créer la liste des variables explicatives des
+tableaux. Dans notre cas, les variables explicatives sont les 2
+premières colonnes de chaque tableau.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">nom_var_list</span> <span class="op">&lt;-</span> <span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map</a></span><span class="op">(</span></span>
 <span>  <span class="va">list_data_4_tabs</span>,</span>
@@ -306,19 +413,25 @@ data("turnover_nuts_cj")</code></pre>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $nuts_cj</span></span>
 <span><span class="co">#&gt; [1] "NUTS" "CJ"</span></span></code></pre></div>
-<p>Les noms de la liste doivent être identiques aux noms des tableaux présent dans le paramètre <code>list_tables</code>.</p>
+<p>Les noms de la liste doivent être identiques aux noms des tableaux
+présent dans le paramètre <code>list_tables</code>.</p>
 </div>
 <div class="section level4">
 <h4 id="préparation-de-la-liste-des-codes-pour-les-totaux">Préparation de la liste des codes pour les totaux<a class="anchor" aria-label="anchor" href="#pr%C3%A9paration-de-la-liste-des-codes-pour-les-totaux"></a>
 </h4>
-<p>Les modalités utilisées pour mentionner le total de chaque variable doivent être déclarées par l’utilisateur, dans une liste nominative. Toutefois, lorsque toutes les variables ont la même modalité pour pour le total, l’information peut être spécifiée de la manière suivante :</p>
+<p>Les modalités utilisées pour mentionner le total de chaque variable
+doivent être déclarées par l’utilisateur, dans une liste nominative.
+Toutefois, lorsque toutes les variables ont la même modalité pour pour
+le total, l’information peut être spécifiée de la manière suivante :</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">total_codes</span> <span class="op">&lt;-</span> <span class="st">"Total"</span></span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="préparation-des-fichiers-hiérarchiques">Préparation des fichiers hiérarchiques<a class="anchor" aria-label="anchor" href="#pr%C3%A9paration-des-fichiers-hi%C3%A9rarchiques"></a>
 </h4>
-<p><code>ACTIVITY</code> et <code>NUTS</code> sont duex variables hiérarchiques.On utilise une table de correspondance pour chacunes d’entre elles pour créer le fichier .hrc dont τ-Argus a besoin.</p>
+<p><code>ACTIVITY</code> et <code>NUTS</code> sont duex variables
+hiérarchiques.On utilise une table de correspondance pour chacunes
+d’entre elles pour créer le fichier .hrc dont τ-Argus a besoin.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">activity_corr_table</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">nuts23_fr_corr_table</span><span class="op">)</span></span></code></pre></div>
@@ -331,13 +444,15 @@ data("turnover_nuts_cj")</code></pre>
 <span>  corr_table <span class="op">=</span> <span class="va">nuts23_fr_corr_table</span>,</span>
 <span>  file_name <span class="op">=</span> <span class="st">"hrc/nuts.hrc"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p>Pour spécifier les nom des fichiers hrc, on crée un vecteur nommé (ou une liste) :</p>
+<p>Pour spécifier les nom des fichiers hrc, on crée un vecteur nommé (ou
+une liste) :</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">hrc_files</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>  ACTIVITY <span class="op">=</span> <span class="va">hrc_file_activity</span>,</span>
 <span>  NUTS <span class="op">=</span> <span class="va">hrc_file_nuts</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p>Les noms du vecteur doivent être identiques aux noms des variables hiérarchiques présentes dans la table</p>
+<p>Les noms du vecteur doivent être identiques aux noms des variables
+hiérarchiques présentes dans la table</p>
 </div>
 <div class="section level4">
 <h4 id="protéger-tous-les-tableaux-en-un-seul-appel">Protéger tous les tableaux en un seul appel<a class="anchor" aria-label="anchor" href="#prot%C3%A9ger-tous-les-tableaux-en-un-seul-appel"></a>
@@ -422,15 +537,25 @@ data("turnover_nuts_cj")</code></pre>
 <div class="section level3">
 <h3 id="traiter-les-hiérarchies-non-emboitées">Traiter les hiérarchies non emboitées<a class="anchor" aria-label="anchor" href="#traiter-les-hi%C3%A9rarchies-non-emboit%C3%A9es"></a>
 </h3>
-<p>Supposons que l’on veuille protéger les deux tableaux croisant <code>ACTIVITY</code> et <code>SIZE</code> d’une part et <code>ACTIVITY</code> et <code>CJ</code> d’autre part. La variable <code>ACTIVITY</code> est une variable hiérarchique. De plus, dans ce cas, nous aimerions publier un sous-total, appelé <code>D_TO_M</code>, en plus de ceux de la <code>activity_corr_table</code>. Ce sous-total est la somme des étiquettes <code>D</code> à <code>M</code> du niveau <code>A21</code>. Comme ce sous-total ne peut pas être inséré dans la hiérarchie principale, cela nous conduit à un cas de hiérarchies non emboitées.</p>
-<p>Pour confirmer le non-emboîtement des deux hiérarchies, affichons un extrait des deux.</p>
+<p>Supposons que l’on veuille protéger les deux tableaux croisant
+<code>ACTIVITY</code> et <code>SIZE</code> d’une part et
+<code>ACTIVITY</code> et <code>CJ</code> d’autre part. La variable
+<code>ACTIVITY</code> est une variable hiérarchique. De plus, dans ce
+cas, nous aimerions publier un sous-total, appelé <code>D_TO_M</code>,
+en plus de ceux de la <code>activity_corr_table</code>. Ce sous-total
+est la somme des étiquettes <code>D</code> à <code>M</code> du niveau
+<code>A21</code>. Comme ce sous-total ne peut pas être inséré dans la
+hiérarchie principale, cela nous conduit à un cas de hiérarchies non
+emboitées.</p>
+<p>Pour confirmer le non-emboîtement des deux hiérarchies, affichons un
+extrait des deux.</p>
 <p>Extrait de la hiérarchie principale :</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">sdcHierarchies</span><span class="fu">::</span><span class="fu">hier_create</span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="fu">sdcHierarchies</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/sdcHierarchies/man/hier_create.html" class="external-link">hier_create</a></span><span class="op">(</span></span>
 <span>  root<span class="op">=</span><span class="st">"Total"</span>,</span>
 <span>  nodes <span class="op">=</span> <span class="va">activity_corr_table</span><span class="op">$</span><span class="va">A10</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu">sdcHierarchies</span><span class="fu">::</span><span class="fu">hier_display</span><span class="op">(</span><span class="op">)</span></span>
+<span>  <span class="fu">sdcHierarchies</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/sdcHierarchies/man/hier_display.html" class="external-link">hier_display</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Total</span></span>
 <span><span class="co">#&gt; +-AZ</span></span>
 <span><span class="co">#&gt; +-BE</span></span>
@@ -444,11 +569,11 @@ data("turnover_nuts_cj")</code></pre>
 <span><span class="co">#&gt; \-RU</span></span></code></pre></div>
 <p>Extrait de la hiérarchie alternative:</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">sdcHierarchies</span><span class="fu">::</span><span class="fu">hier_create</span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="fu">sdcHierarchies</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/sdcHierarchies/man/hier_create.html" class="external-link">hier_create</a></span><span class="op">(</span></span>
 <span>  root<span class="op">=</span><span class="st">"D_TO_M"</span>,</span>
 <span>  nodes <span class="op">=</span> <span class="va">activity_corr_table_D_TO_M</span><span class="op">$</span><span class="va">A21</span></span>
 <span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu">sdcHierarchies</span><span class="fu">::</span><span class="fu">hier_display</span><span class="op">(</span><span class="op">)</span></span>
+<span>  <span class="fu">sdcHierarchies</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/sdcHierarchies/man/hier_display.html" class="external-link">hier_display</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; D_TO_M</span></span>
 <span><span class="co">#&gt; +-D</span></span>
 <span><span class="co">#&gt; +-E</span></span>
@@ -460,7 +585,9 @@ data("turnover_nuts_cj")</code></pre>
 <span><span class="co">#&gt; +-K</span></span>
 <span><span class="co">#&gt; +-L</span></span>
 <span><span class="co">#&gt; \-M</span></span></code></pre></div>
-<p>Pour traiter ce cas, l’approche préférée est de créer un troisième tableau croisant <code>ACTIVITY</code> et <code>SIZE</code> avec les modalités D à M et le sous-total <code>D_TO_M</code> :</p>
+<p>Pour traiter ce cas, l’approche préférée est de créer un troisième
+tableau croisant <code>ACTIVITY</code> et <code>SIZE</code> avec les
+modalités D à M et le sous-total <code>D_TO_M</code> :</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">turnover_act_size_D_TO_M</span> <span class="op">&lt;-</span> <span class="va">turnover_act_size</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span></span>
@@ -493,7 +620,8 @@ data("turnover_nuts_cj")</code></pre>
 <span><span class="va">hrc_file_activity_D_TO_M</span> <span class="op">&lt;-</span> <span class="va">activity_corr_table_D_TO_M</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/write_hrc2.html">write_hrc2</a></span><span class="op">(</span>file_name <span class="op">=</span> <span class="st">"hrc/activity_D_TO_M"</span><span class="op">)</span></span></code></pre></div>
-<p>Ensuite, construisons la liste des tableaux et appliquons les règles de secret primaire dessus.</p>
+<p>Ensuite, construisons la liste des tableaux et appliquons les règles
+de secret primaire dessus.</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">list_data_3_tabs_nn</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>  act_size <span class="op">=</span> <span class="va">turnover_act_size</span>,</span>
@@ -510,14 +638,24 @@ data("turnover_nuts_cj")</code></pre>
 <span>        <span class="op">)</span></span>
 <span>    <span class="op">}</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
-<p>Les arguments <code>hrc</code> et <code>alt_hrc</code> sont utilisés pour mentionner les deux hiérarchies de la variable <code>ACTIVITY</code> :</p>
+<p>Les arguments <code>hrc</code> et <code>alt_hrc</code> sont utilisés
+pour mentionner les deux hiérarchies de la variable
+<code>ACTIVITY</code> :</p>
 <ul>
 <li>
-<code>hrc</code> est utilisé comme dans l’exemple précédent (un vecteur nommé où les noms sont les différentes variables hiérarchiques apparaissant dans les tableaux et les valeurs sont les noms des fichiers). Ainsi, le fichier de hiérarchie par défaut sera pris dans ce vecteur.</li>
+<code>hrc</code> est utilisé comme dans l’exemple précédent (un
+vecteur nommé où les noms sont les différentes variables hiérarchiques
+apparaissant dans les tableaux et les valeurs sont les noms des
+fichiers). Ainsi, le fichier de hiérarchie par défaut sera pris dans ce
+vecteur.</li>
 <li>
-<code>alt_hrc</code> n’est utilisé que pour mentionner les hiérarchies alternatives. Cet argument est une liste nommée où les noms sont les tableaux où les hiérarchies alternatives doivent être appliquées.</li>
+<code>alt_hrc</code> n’est utilisé que pour mentionner les
+hiérarchies alternatives. Cet argument est une liste nommée où les noms
+sont les tableaux où les hiérarchies alternatives doivent être
+appliquées.</li>
 </ul>
-<p>Le même raisonnement est utilisé pour remplir l’argument <code>alt_totcode</code>.</p>
+<p>Le même raisonnement est utilisé pour remplir l’argument
+<code>alt_totcode</code>.</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/tab_multi_manager.html">tab_multi_manager</a></span><span class="op">(</span></span>
 <span>  list_tables <span class="op">=</span> <span class="va">list_data_3_tabs_nn</span>,</span>
@@ -550,15 +688,18 @@ data("turnover_nuts_cj")</code></pre>
 <h5 id="détail-de-la-vignette">Détail de la vignette<a class="anchor" aria-label="anchor" href="#d%C3%A9tail-de-la-vignette"></a>
 </h5>
 <ul>
-<li>Authors: <strong><a href="mailto:julien.jamme@insee.fr">Julien Jamme</a></strong> &amp; <strong><a href="mailto:nathanael.rastout@insee.fr">Nathanael Rastout</a></strong>
+<li>Authors: <strong><a href="mailto:julien.jamme@insee.fr">Julien
+Jamme</a></strong> &amp;
+<strong><a href="mailto:nathanael.rastout@insee.fr">Nathanael
+Rastout</a></strong>
 <ul>
-<li>Last update: <strong>06/01/2023</strong>
+<li>Last update: <strong>21/09/2023</strong>
 </li>
-<li>Version of rtauargus used: <strong>1.1.1</strong>
+<li>Version of rtauargus used: <strong>1.2.0</strong>
 </li>
-<li>Version of τ-Argus used : <strong>TauArgus 4.2.2b1</strong>
+<li>Version of τ-Argus used : <strong>TauArgus 4.2.3</strong>
 </li>
-<li>R version used : <strong>4.1.3</strong>
+<li>R version used : <strong>4.2.3</strong>
 </li>
 </ul>
 <p style="text-align: right">
@@ -577,7 +718,7 @@ data("turnover_nuts_cj")</code></pre>
 
     <footer><div class="pkgdown-footer-left">
   <p></p>
-<p>Developed by Pierre-Yves Berrard, Julien Jamme, Nathanaël Rastout, Jeanne Pointet, Félix Beroud.</p>
+<p>Developed by Pierre-Yves Berrard, Julien Jamme, Nathanaël Rastout, Jeanne Pointet, Félix Beroud, André-Raymond Socard, Wistan Pomel.</p>
 </div>
 
 <div class="pkgdown-footer-right">
