@@ -23,6 +23,7 @@ reference:
     - tab_rtauargus
     - tab_rtauargus2
     - tab_rtauargus4
+    - tabulate_micro_data
   - title: Data
     desc: >
       Data to run examples
@@ -36,6 +37,7 @@ reference:
     - turnover_act_nuts_size
     - datatest1
     - datatest2
+    - indiv_dt
   - title: Protect tables from microdata
     desc: >
       Functions for protecting magnitude and frequency tables, i.e. from
