@@ -26,6 +26,7 @@ reference:
   - title: Data
     desc: >
       Data to run examples
+    contents:
     - activity_corr_table
     - nuts23_fr_corr_table
     - turnover_act_cj
