@@ -29,6 +29,7 @@ Authors:
   \item Félix Beroud
   \item André-Raymond Socard
   \item Wistan Pomel
+  \item Clara Baudry \email{clara.baudry@insee.fr}
 }
 
 Other contributors:
