@@ -118,7 +118,6 @@ filter_on_marginal_of_spanning_var <- function(data, criteria, subset_keys) {
 #' @export
 #'
 #' @examples
-#' library(rtauargus)
 #' library(dplyr)
 #' data(enterprise_template)
 #'
