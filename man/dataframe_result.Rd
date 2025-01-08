@@ -28,8 +28,6 @@ into a single dataframe. It includes an additional column, \code{cluster}, to id
 the cluster each table belongs to.
 }
 \examples{
-library(dplyr)
-
 # Example data
 data(metadata_pizza_lettuce)
 
@@ -52,9 +50,12 @@ list_translation_tables <- grp_tab_names(list_desc_links)
 list_independent_tables <- grp_tab_in_cluster(list_split, list_translation_tables)
 
 # Flatten the nested data for downstream use
-dataframe_cluster_id <- dataframe_result(list_independent_tables)
+list_tab_to_treat <- tab_to_treat(list_independent_tables)
 
-# View structure of the results
-str(dataframe_cluster_id)
+# Create a dataframe with a cluster id
+dataframe_cluster_id <- dataframe_result(list_tab_to_treat)
+
+# View the result dataframe
+dataframe_cluster_id
 
 }

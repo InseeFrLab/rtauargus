@@ -55,7 +55,6 @@ analyse_metadata <- function(df_metadata,verbose = FALSE){
   list_hrc_identified <- identify_hrc(df_metadata_long)
   list_split <- split_in_clusters(list_hrc_identified)
   list_desc_links <- create_edges(list_split)
-  # graphs <- graph_links_tab(list_desc_links)
   list_translation_tables <- grp_tab_names(list_desc_links)
   list_independent_tables <- grp_tab_in_cluster(list_split = list_split,
                                                 list_translation_tables = list_translation_tables)
@@ -67,7 +66,6 @@ analyse_metadata <- function(df_metadata,verbose = FALSE){
       info_var = list_hrc_identified[[2]],
       split_in_clusters = list_split,
       create_edges = list_desc_links,
-      # graph_links_tab = graphs,
       grp_tab_names = list_translation_tables,
       grp_tab_in_clusters = list_independent_tables,
       tab_to_treat = list_cluster_treat,

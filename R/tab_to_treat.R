@@ -17,8 +17,6 @@
 #' @export
 #'
 #' @examples
-#' library(dplyr)
-#'
 #' # Example data
 #' data(metadata_pizza_lettuce)
 #'
@@ -97,8 +95,6 @@ tab_to_treat <- function(list_independent_tables) {
 #' @export
 #'
 #' @examples
-#' library(dplyr)
-#'
 #' # Example data
 #' data(metadata_pizza_lettuce)
 #'
@@ -121,17 +117,20 @@ tab_to_treat <- function(list_independent_tables) {
 #' list_independent_tables <- grp_tab_in_cluster(list_split, list_translation_tables)
 #'
 #' # Flatten the nested data for downstream use
-#' dataframe_cluster_id <- dataframe_result(list_independent_tables)
+#' list_tab_to_treat <- tab_to_treat(list_independent_tables)
 #'
-#' # View structure of the results
-#' str(dataframe_cluster_id)
+#' # Create a dataframe with a cluster id
+#' dataframe_cluster_id <- dataframe_result(list_tab_to_treat)
+#'
+#' # View the result dataframe
+#' dataframe_cluster_id
 #'
 #' @importFrom purrr imap_dfr
 dataframe_result <- function(list_independent_tables) {
   # TODO modifier car il y a une erreur (column field doesn't exist)
   # Combine the list of tibbles into a single dataframe with cluster identifiers
-  dataframe_metadata <- purrr::imap_dfr(list_independent_tables, function(tibble, nom_tibble) {
-    tibble %>% mutate(cluster = nom_tibble)
+  dataframe_metadata <- purrr::imap_dfr(list_independent_tables, function(tibble, tibble_name) {
+    tibble %>% mutate(cluster = tibble_name)
   }) %>%
     select(
       cluster,

@@ -33,7 +33,6 @@ frame or when \code{field} varies, in which case the data frame is split by \cod
 further split by \code{indicator} and \code{hrc_indicator}.
 }
 \examples{
-library(dplyr)
 data(metadata_pizza_lettuce)
 
 metadata_pizza_lettuce_long <- wide_to_long(metadata_pizza_lettuce)

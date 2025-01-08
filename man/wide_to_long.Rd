@@ -26,7 +26,6 @@ The goal is to consolidate spanning variables into a single column, making the t
 easier to handle regardless of the number of spanning variables described.
 }
 \examples{
-library(dplyr)
 data(metadata_pizza_lettuce)
 
 # View the structure of the original data

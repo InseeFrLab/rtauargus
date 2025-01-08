@@ -35,7 +35,6 @@ cells in \strong{T1} will also be protected. This function identifies such inclu
 relationships and outputs a data frame that describes these links.
 }
 \examples{
-library(dplyr)
 data(metadata_pizza_lettuce)
 
 # Convert wide metadata to long format

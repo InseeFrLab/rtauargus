@@ -33,7 +33,6 @@ and metadata for each independent table in the cluster. Additionally, it tracks
 which tables are included within each group.
 }
 \examples{
-library(dplyr)
 data(metadata_pizza_lettuce)
 
 # Convert wide metadata to long format

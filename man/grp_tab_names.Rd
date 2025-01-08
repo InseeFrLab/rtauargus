@@ -30,7 +30,6 @@ that need to be protected and provides a mapping of original table names
 to their respective groups.
 }
 \examples{
-
 # Example data
 data(metadata_pizza_lettuce)
 

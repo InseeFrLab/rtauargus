@@ -15,7 +15,6 @@
 #'   `spanning` values are NA, are filtered out.
 #'
 #' @examples
-#' library(dplyr)
 #' data(metadata_pizza_lettuce)
 #'
 #' # View the structure of the original data

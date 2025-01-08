@@ -26,8 +26,6 @@ and transforms them into a flat, easy-to-read format. Each column corresponds to
 simplifying downstream analysis and use.
 }
 \examples{
-library(dplyr)
-
 # Example data
 data(metadata_pizza_lettuce)
 

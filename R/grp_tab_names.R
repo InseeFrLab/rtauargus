@@ -21,7 +21,6 @@
 #' @export
 #'
 #' @examples
-#'
 #' # Example data
 #' data(metadata_pizza_lettuce)
 #'
@@ -47,6 +46,8 @@
 #' @importFrom dplyr rowwise
 #' @importFrom dplyr rename
 #' @importFrom dplyr left_join
+#' @importFrom igraph graph_from_data_frame
+#' @importFrom igraph which_mutual
 grp_tab_names <- function(list_split){
   list_split %>% map(function(ss_dem){
     if (!is.null(ss_dem)) {

@@ -23,7 +23,6 @@
 #' @export
 #'
 #' @examples
-#' library(dplyr)
 #' data(metadata_pizza_lettuce)
 #'
 #' metadata_pizza_lettuce_long <- wide_to_long(metadata_pizza_lettuce)

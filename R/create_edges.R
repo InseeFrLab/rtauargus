@@ -25,7 +25,6 @@
 #' @export
 #'
 #' @examples
-#' library(dplyr)
 #' data(metadata_pizza_lettuce)
 #'
 #' # Convert wide metadata to long format

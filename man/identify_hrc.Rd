@@ -34,7 +34,6 @@ equation (specified in the \code{hrc_indicator} column) are grouped together, an
 a new grouping variable is created.
 }
 \examples{
-library(dplyr)
 data(metadata_pizza_lettuce)
 
 metadata_pizza_lettuce_long <- wide_to_long(metadata_pizza_lettuce)
