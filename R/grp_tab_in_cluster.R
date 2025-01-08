@@ -52,7 +52,7 @@
 grp_tab_in_cluster <- function(list_split, list_translation_tables) {
   # Nest each cluster of tables by `table_name`
   nested_crois <- list_split %>%
-    purrr::map(function(tab) { tab %>% group_by(table_name) %>% tidyr::nest() })
+    purrr::map(function(tab) { tab %>% dplyr::group_by(table_name) %>% tidyr::nest() })
 
   # Process each cluster using inclusion relationships
   purrr::map2(list_translation_tables, nested_crois, function(tab_to_keep, big_tibble) {
@@ -67,9 +67,9 @@ grp_tab_in_cluster <- function(list_split, list_translation_tables) {
         mutate(
           spanning = map(data, function(small_tibble) { small_tibble$spanning })
         ) %>%
-        left_join(tab_to_keep[[2]], by = c("table_name" = "Original")) %>%
+        dplyr::left_join(tab_to_keep[[2]], by = c("table_name" = "Original")) %>%
         mutate(table_eg = ifelse(is.na(Group), table_name, Group)) %>%
-        group_by(table_eg) %>% filter(row_number() == 1) %>%
+        dplyr::group_by(table_eg) %>% filter(row_number() == 1) %>%
         select(table_eg, data, spanning) %>%
         # Filter to retain only tables in `vec_tab_to_keep`
         filter(table_eg %in% vec_tab_to_keep) %>%
@@ -82,7 +82,7 @@ grp_tab_in_cluster <- function(list_split, list_translation_tables) {
                 unique() %>% unlist()
             )
           })
-        ) %>% rename(table_name = table_eg)
+        ) %>% dplyr::rename(table_name = table_eg)
 
       return(big_tibble_eg)
     } else {
