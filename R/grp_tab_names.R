@@ -21,7 +21,6 @@
 #' @export
 #'
 #' @examples
-#' library(dplyr)
 #'
 #' # Example data
 #' data(metadata_pizza_lettuce)
@@ -44,6 +43,10 @@
 #' # View structure of the results
 #' str(list_translation_tables)
 #'
+#' @importFrom dplyr ungroup
+#' @importFrom dplyr rowwise
+#' @importFrom dplyr rename
+#' @importFrom dplyr left_join
 grp_tab_names <- function(list_split){
   list_split %>% map(function(ss_dem){
     if (!is.null(ss_dem)) {
@@ -57,15 +60,15 @@ grp_tab_names <- function(list_split){
       # Create a table of mutual edges
       tab_eg <- ss_dem_mutual %>%
         filter(mutual) %>%
-        rowwise() %>%
+        dplyr::rowwise() %>%
         mutate(mutual = paste(sort(c(from, to)), collapse = ".")) %>%
-        ungroup()
+        dplyr::ungroup()
 
       # Group mutual edges
       tab_eg_unique <- tab_eg %>%
         select(from, mutual) %>%
         mutate(mutual_full = sapply(strsplit(mutual, "\\."), function(x) paste(unique(sort(x)), collapse = "."))) %>%
-        group_by(from) %>%
+        dplyr::group_by(from) %>%
         summarise(mutual_full = paste(unique(mutual_full), collapse = "."))
 
       mutual <- as.list(setNames(strsplit(tab_eg_unique$mutual_full, "\\."),
@@ -100,10 +103,10 @@ grp_tab_names <- function(list_split){
 
       # Merge inclusion relationships with group mapping
       tab_from_to_eg <- ss_dem %>%
-        left_join(passage_nom_tab, by = c("from" = "Original")) %>%
-        rename(from.eg = Group) %>%
-        left_join(passage_nom_tab, by = c("to" = "Original")) %>%
-        rename(to.eg = Group) %>%
+        dplyr::left_join(passage_nom_tab, by = c("from" = "Original")) %>%
+        dplyr::rename(from.eg = Group) %>%
+        dplyr::left_join(passage_nom_tab, by = c("to" = "Original")) %>%
+        dplyr::rename(to.eg = Group) %>%
         mutate(from.eg = ifelse(is.na(from.eg), from, from.eg),
                to.eg = ifelse(is.na(to.eg), to, to.eg)) %>%
         select(from.eg, to.eg)

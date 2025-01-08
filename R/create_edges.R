@@ -45,10 +45,11 @@
 #'
 #' @importFrom tidyr nest
 #' @importFrom purrr discard
+#' @importFrom dplyr group_by
 #'
 create_edges <- function(list_split){
   nested_crois <- list_split %>%
-    map(function(tab){tab %>% group_by(table_name) %>% tidyr::nest()})
+    map(function(tab){tab %>% dplyr::group_by(table_name) %>% tidyr::nest()})
   nested_crois <- nested_crois %>% map(function(big_tibble){
     big_tibble %>%
       mutate(spanning = map(data, function(small_tibble){

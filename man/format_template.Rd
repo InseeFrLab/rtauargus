@@ -23,7 +23,6 @@ the modalities of each hierarchical variable (modalities)
 Determines the tables described in a template gathering all the published cells
 }
 \examples{
-library(rtauargus)
 library(dplyr)
 data(enterprise_template)
 

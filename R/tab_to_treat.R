@@ -1,7 +1,7 @@
 #' Unnest Data Frames to Create a Usable Flat Format
 #'
 #' This function processes nested data frames representing tables from hierarchical clusters,
-#' and transforms them into a flat, easy-to-read format. Each column corresponds to a distinct variable,
+#' and transforms them into a flat, easy-to-read format. Each column corresponds to a dplyr::distinct variable,
 #' simplifying downstream analysis and use.
 #'
 #' @param list_independent_tables A list of nested tibbles, typically the output of
@@ -48,12 +48,13 @@
 #'
 #' @importFrom tidyr unnest
 #' @importFrom tidyr unnest_wider
+#' @importFrom dplyr distinct
 tab_to_treat <- function(list_independent_tables) {
   # Process each tibble in the list
   list_independent_tables %>% purrr::map(function(big_tibble) {
     # Remove duplicate rows within each nested `data` field
     big_tibble <- big_tibble %>%
-      mutate(data = map(data, ~ distinct(.x)))
+      mutate(data = map(data, ~ dplyr::distinct(.x)))
 
     # Extract key fields and indicators, ensuring consistent values across rows
     big_tibble <- big_tibble %>%

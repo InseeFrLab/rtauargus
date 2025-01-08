@@ -53,7 +53,7 @@ identify_hrc <- function(df_metadata_long){
   } else {
     df_indicators <- df_spannings %>%
       filter(!is.na(hrc_indicator)) %>%
-      group_by(table_name) %>%
+      dplyr::group_by(table_name) %>%
       summarise(
         field = last(field),
         hrc_field = last(hrc_field),
