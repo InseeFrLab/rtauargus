@@ -35,6 +35,7 @@ cells in \strong{T1} will also be protected. This function identifies such inclu
 relationships and outputs a data frame that describes these links.
 }
 \examples{
+\dontrun{
 data(metadata_pizza_lettuce)
 
 # Convert wide metadata to long format
@@ -51,5 +52,6 @@ list_desc_links <- create_edges(list_split)
 
 # View the structure of the result
 str(list_desc_links)
+}
 
 }

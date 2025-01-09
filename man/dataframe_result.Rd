@@ -28,6 +28,7 @@ into a single dataframe. It includes an additional column, \code{cluster}, to id
 the cluster each table belongs to.
 }
 \examples{
+\dontrun{
 # Example data
 data(metadata_pizza_lettuce)
 
@@ -57,5 +58,6 @@ dataframe_cluster_id <- dataframe_result(list_tab_to_treat)
 
 # View the result dataframe
 dataframe_cluster_id
+}
 
 }

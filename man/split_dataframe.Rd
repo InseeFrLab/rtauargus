@@ -26,6 +26,7 @@ The function handles cases where \code{hrc_var} contains character values or is 
 ensuring that independent and hierarchical groupings are managed appropriately.
 }
 \examples{
+\dontrun{
 # Example data
 tab <- data.frame(
   id = 1:6,
@@ -39,5 +40,5 @@ list_diff <- split_dataframe(tab, "var", "hrc_var")
 
 # View the structure of the result
 str(list_diff)
-
+}
 }

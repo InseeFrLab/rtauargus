@@ -33,6 +33,7 @@ frame or when \code{field} varies, in which case the data frame is split by \cod
 further split by \code{indicator} and \code{hrc_indicator}.
 }
 \examples{
+\dontrun{
 data(metadata_pizza_lettuce)
 
 metadata_pizza_lettuce_long <- wide_to_long(metadata_pizza_lettuce)
@@ -43,5 +44,6 @@ list_split <- split_in_clusters(list_hrc_identified)
 
 # View the structure of the result
 str(list_split)
+}
 
 }

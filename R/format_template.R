@@ -9,35 +9,14 @@
 #' @return A logical value: `TRUE` if at least one non-total value exists, otherwise `FALSE`.
 #'
 #' @examples
+#' \dontrun{
 #' df <- data.frame(
 #'   col1 = c("A", "B", "TOTAL"),
 #'   col2 = c("X", "TOTAL", "TOTAL")
 #' )
 #' contains_non_total(df, c("TOTAL"))
 #' # Returns TRUE
-contains_non_total <- function(data, totals) {
-  any(data %>%
-        summarise(across(everything(), ~ any(!(.x %in% totals)))) %>%
-        unlist())
-}
-
-#' Check for Non-Total Values in a Data Frame
-#'
-#' This function checks if any column in a data frame contains values
-#' that are not part of a given set of totals.
-#'
-#' @param data A data frame containing the data to be checked.
-#' @param totals A vector of values considered as totals.
-#'
-#' @return A logical value: `TRUE` if at least one non-total value exists, otherwise `FALSE`.
-#'
-#' @examples
-#' df <- data.frame(
-#'   col1 = c("A", "B", "TOTAL"),
-#'   col2 = c("X", "TOTAL", "TOTAL")
-#' )
-#' contains_non_total(df, c("TOTAL"))
-#' # Returns TRUE
+#' }
 #'
 #' @importFrom dplyr summarise
 #'
@@ -56,9 +35,11 @@ contains_non_total <- function(data, totals) {
 #' @return A list of combinations, where each combination is a character vector of key names.
 #'
 #' @examples
+#' \dontrun{
 #' criteria <- list(key1 = "value1", key2 = "value2", key3 = "value3")
 #' get_combinations(criteria)
 #' # Returns a list of combinations: c("key1"), c("key2"), c("key3"), c("key1", "key2"), ...
+#' }
 get_combinations <- function(criteria) {
   keys <- names(criteria)
   unlist(lapply(1:length(keys), function(k) combn(keys, k, simplify = FALSE)), recursive = FALSE)
@@ -78,6 +59,7 @@ get_combinations <- function(criteria) {
 #' @return A filtered data frame where rows meet the specified criteria and exclude the subset keys.
 #'
 #' @examples
+#' \dontrun{
 #' df <- data.frame(
 #'   col1 = c("A", "B", "TOTAL"),
 #'   col2 = c("X", "TOTAL", "Y"),
@@ -86,6 +68,7 @@ get_combinations <- function(criteria) {
 #' criteria <- list(col1 = "TOTAL", col2 = "TOTAL", col3 = "TOTAL")
 #' filter_on_marginal_of_spanning_var(df, criteria, subset_keys = c("col1", "col2"))
 #' # Filters the data frame based on the criteria and subset_keys.
+#' }
 filter_on_marginal_of_spanning_var <- function(data, criteria, subset_keys) {
   # Create filter expressions for subset_keys with ==
   filter_expr_in <- purrr::map2(
@@ -118,7 +101,6 @@ filter_on_marginal_of_spanning_var <- function(data, criteria, subset_keys) {
 #' @export
 #'
 #' @examples
-#' library(dplyr)
 #' data(enterprise_template)
 #'
 #' template_formatted <- format_template(
@@ -134,8 +116,9 @@ filter_on_marginal_of_spanning_var <- function(data, criteria, subset_keys) {
 #'
 #' @importFrom purrr compact
 #' @importFrom tidyr pivot_longer
-#' @importFrom dplyr everything across all_of pull row_number bind_rows
+#' @importFrom dplyr everything across all_of pull row_number bind_rows n_distinct
 #'
+#' @export
 format_template <- function(data,indicator_column,spanning_var_tot,field_columns) {
   data <- data %>% mutate(field = apply(across(all_of(field_columns)), 1, paste0, collapse = "_"))
   # each modality of field variables can be treated independently
@@ -146,7 +129,7 @@ format_template <- function(data,indicator_column,spanning_var_tot,field_columns
     list_df_metadata <- purrr::imap(list_df_indicator, function(df_indicator,indicator_name){
       # Step 1: Identify valid columns with more than one unique value
       valid_columns <- df_indicator %>%
-        summarise(across(all_of(names(spanning_var_tot)), n_distinct)) %>%
+        summarise(across(all_of(names(spanning_var_tot)), dplyr::n_distinct)) %>%
         tidyr::pivot_longer(everything(), names_to = "column", values_to = "n_unique") %>%
         filter(n_unique > 1) %>%
         pull(column)

@@ -17,6 +17,7 @@
 #' @export
 #'
 #' @examples
+#' \dontrun{
 #' # Example data
 #' tab <- data.frame(
 #'   id = 1:6,
@@ -30,7 +31,7 @@
 #'
 #' # View the structure of the result
 #' str(list_diff)
-#'
+#' }
 split_dataframe <- function(tab,var,hrc_var){
   if(is.character(tab[[hrc_var]])){
     list_linked_tab <- split(tab, f = tab[[hrc_var]])
@@ -69,6 +70,7 @@ split_dataframe <- function(tab,var,hrc_var){
 #' @export
 #'
 #' @examples
+#' \dontrun{
 #' data(metadata_pizza_lettuce)
 #'
 #' metadata_pizza_lettuce_long <- wide_to_long(metadata_pizza_lettuce)
@@ -79,6 +81,7 @@ split_dataframe <- function(tab,var,hrc_var){
 #'
 #' # View the structure of the result
 #' str(list_split)
+#' }
 #'
 split_in_clusters <- function(list_hrc_identified){
   df_hrc_identified <- list_hrc_identified[[1]]

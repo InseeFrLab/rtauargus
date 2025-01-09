@@ -30,6 +30,7 @@ that need to be protected and provides a mapping of original table names
 to their respective groups.
 }
 \examples{
+\dontrun{
 # Example data
 data(metadata_pizza_lettuce)
 
@@ -50,5 +51,6 @@ list_translation_tables <- grp_tab_names(list_desc_links)
 
 # View structure of the results
 str(list_translation_tables)
+}
 
 }

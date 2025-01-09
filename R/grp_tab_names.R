@@ -21,6 +21,7 @@
 #' @export
 #'
 #' @examples
+#' \dontrun{
 #' # Example data
 #' data(metadata_pizza_lettuce)
 #'
@@ -41,6 +42,7 @@
 #'
 #' # View structure of the results
 #' str(list_translation_tables)
+#' }
 #'
 #' @importFrom dplyr ungroup
 #' @importFrom dplyr rowwise

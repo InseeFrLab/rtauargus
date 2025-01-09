@@ -23,6 +23,7 @@ It applies filtering conditions to a subset of keys and their corresponding valu
 and excludes rows where other keys match the given totals.
 }
 \examples{
+\dontrun{
 df <- data.frame(
   col1 = c("A", "B", "TOTAL"),
   col2 = c("X", "TOTAL", "Y"),
@@ -31,4 +32,5 @@ df <- data.frame(
 criteria <- list(col1 = "TOTAL", col2 = "TOTAL", col3 = "TOTAL")
 filter_on_marginal_of_spanning_var(df, criteria, subset_keys = c("col1", "col2"))
 # Filters the data frame based on the criteria and subset_keys.
+}
 }

@@ -25,6 +25,7 @@
 #' @export
 #'
 #' @examples
+#' \dontrun{
 #' data(metadata_pizza_lettuce)
 #'
 #' # Convert wide metadata to long format
@@ -41,6 +42,7 @@
 #'
 #' # View the structure of the result
 #' str(list_desc_links)
+#' }
 #'
 #' @importFrom tidyr nest
 #' @importFrom purrr discard

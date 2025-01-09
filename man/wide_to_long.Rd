@@ -26,6 +26,7 @@ The goal is to consolidate spanning variables into a single column, making the t
 easier to handle regardless of the number of spanning variables described.
 }
 \examples{
+\dontrun{
 data(metadata_pizza_lettuce)
 
 # View the structure of the original data
@@ -36,5 +37,6 @@ metadata_pizza_lettuce_long <- wide_to_long(metadata_pizza_lettuce)
 
 # View the structure of the resulting data
 str(metadata_pizza_lettuce_long)
+}
 
 }

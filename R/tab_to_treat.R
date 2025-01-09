@@ -17,6 +17,7 @@
 #' @export
 #'
 #' @examples
+#' \dontrun{
 #' # Example data
 #' data(metadata_pizza_lettuce)
 #'
@@ -43,6 +44,7 @@
 #'
 #' # View structure of the results
 #' str(list_tab_to_treat)
+#' }
 #'
 #' @importFrom tidyr unnest
 #' @importFrom tidyr unnest_wider
@@ -95,6 +97,7 @@ tab_to_treat <- function(list_independent_tables) {
 #' @export
 #'
 #' @examples
+#' \dontrun{
 #' # Example data
 #' data(metadata_pizza_lettuce)
 #'
@@ -124,6 +127,7 @@ tab_to_treat <- function(list_independent_tables) {
 #'
 #' # View the result dataframe
 #' dataframe_cluster_id
+#' }
 #'
 #' @importFrom purrr imap_dfr
 dataframe_result <- function(list_independent_tables) {

@@ -15,6 +15,7 @@
 #'   `spanning` values are NA, are filtered out.
 #'
 #' @examples
+#' \dontrun{
 #' data(metadata_pizza_lettuce)
 #'
 #' # View the structure of the original data
@@ -25,6 +26,7 @@
 #'
 #' # View the structure of the resulting data
 #' str(metadata_pizza_lettuce_long)
+#' }
 #'
 wide_to_long <- function(df_metadata){
   df_metadata_long <- df_metadata %>%

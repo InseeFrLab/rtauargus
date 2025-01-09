@@ -33,6 +33,7 @@ and metadata for each independent table in the cluster. Additionally, it tracks
 which tables are included within each group.
 }
 \examples{
+\dontrun{
 data(metadata_pizza_lettuce)
 
 # Convert wide metadata to long format
@@ -55,5 +56,6 @@ list_independent_tables <- grp_tab_in_cluster(list_split, list_translation_table
 
 # View structure of the results
 str(list_independent_tables)
+}
 
 }

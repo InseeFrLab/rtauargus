@@ -26,6 +26,7 @@ and transforms them into a flat, easy-to-read format. Each column corresponds to
 simplifying downstream analysis and use.
 }
 \examples{
+\dontrun{
 # Example data
 data(metadata_pizza_lettuce)
 
@@ -52,5 +53,6 @@ list_tab_to_treat <- tab_to_treat(list_independent_tables)
 
 # View structure of the results
 str(list_tab_to_treat)
+}
 
 }

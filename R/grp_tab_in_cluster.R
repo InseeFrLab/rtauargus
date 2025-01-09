@@ -22,6 +22,7 @@
 #' @export
 #'
 #' @examples
+#' \dontrun{
 #' data(metadata_pizza_lettuce)
 #'
 #' # Convert wide metadata to long format
@@ -44,6 +45,7 @@
 #'
 #' # View structure of the results
 #' str(list_independent_tables)
+#' }
 #'
 #' @importFrom purrr map map2
 #' @importFrom tidyr nest

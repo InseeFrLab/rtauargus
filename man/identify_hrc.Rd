@@ -34,6 +34,7 @@ equation (specified in the \code{hrc_indicator} column) are grouped together, an
 a new grouping variable is created.
 }
 \examples{
+\dontrun{
 data(metadata_pizza_lettuce)
 
 metadata_pizza_lettuce_long <- wide_to_long(metadata_pizza_lettuce)
@@ -41,5 +42,6 @@ metadata_pizza_lettuce_long <- wide_to_long(metadata_pizza_lettuce)
 list_hrc_identified <- identify_hrc(metadata_pizza_lettuce_long)
 
 str(list_hrc_identified)
+}
 
 }

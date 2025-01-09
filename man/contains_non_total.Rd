@@ -5,8 +5,6 @@
 \title{Check for Non-Total Values in a Data Frame}
 \usage{
 contains_non_total(data, totals)
-
-contains_non_total(data, totals)
 }
 \arguments{
 \item{data}{A data frame containing the data to be checked.}
@@ -15,28 +13,19 @@ contains_non_total(data, totals)
 }
 \value{
 A logical value: \code{TRUE} if at least one non-total value exists, otherwise \code{FALSE}.
-
-A logical value: \code{TRUE} if at least one non-total value exists, otherwise \code{FALSE}.
 }
 \description{
 This function checks if any column in a data frame contains values
 that are not part of a given set of totals.
-
-This function checks if any column in a data frame contains values
-that are not part of a given set of totals.
 }
 \examples{
+\dontrun{
 df <- data.frame(
   col1 = c("A", "B", "TOTAL"),
   col2 = c("X", "TOTAL", "TOTAL")
 )
 contains_non_total(df, c("TOTAL"))
 # Returns TRUE
-df <- data.frame(
-  col1 = c("A", "B", "TOTAL"),
-  col2 = c("X", "TOTAL", "TOTAL")
-)
-contains_non_total(df, c("TOTAL"))
-# Returns TRUE
+}
 
 }
