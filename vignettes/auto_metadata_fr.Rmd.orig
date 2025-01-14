@@ -1,0 +1,192 @@
+---
+title: "Analyse automatique des métadonnées"
+subtitle: <h2>![logo R](R_logo_small.png)![logo &tau;-Argus](TauBall2_small.png)<br/>Package {rtauargus}</h2>
+output:
+  rmarkdown::html_vignette:
+    toc: true
+    toc_depth: 3
+vignette: >
+  %\VignetteIndexEntry{Analyse automatique des métadonnées}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r message = FALSE}
+library(rtauargus)
+library(dplyr)
+```
+
+
+# Introduction
+
+Avant de faire appel aux fonctions permettant la pose du secret il est nécessaire d'analyser les tableaux que l'on souhaite protéger. En effet,les tableaux diffusés sont différents des tableaux à protéger. Cela est expliqué en détail au chapitre 3 du [Manuel de protection des tableaux](https://inseefrlab.github.io/manuel-protection-tableaux/03_analyser_une_demande.html). Cette phase d'analyse des marges communes entre les différents tableaux peut s'avérer complexe. Ainsi, des fonctions ont été développées dans `rtauargus` pour faciliter ce travail.
+
+# Comment fonctionne l'analyse automatique automatique des métadonnées ?
+## Création des métadonnées \label{sec:crea_meta}
+
+Les métadonnées doivent respecter un format spécifique. Une ligne représente un tableau et pour chaque tableau il faut préciser :
+
+- `table_name` : le nom du tableau ;
+- `field` : le champ (souvent, zone géographique, population étudiée, millésime) ;
+- `hrc_field` : s'il existe ou non un lien hiérarchique entre ce champ et un autre champ. S'il n'y a pas de lien hiérarchique cette case vaut `NA`. Si au contraire, un lien hiérarchique existe, il faut donner un nom à ce lien et réécrire ce même nom dans les autres tableaux ;
+- `indicator` : le nom de l'indicateur du tableau. Il s'agit du nom de la variable de ce qui est compté dans chaque cellule du tableau. Par exemple, si mon tableau présente le chiffre d'affaire des entreprises ma variable sera sans doute "CA". Le mieux est de bien utiliser le nom de la variable tel que décrit dans les données ;
+- `hrc_indicator` : s'il existe ou non un lien hiérarchique entre cet indicateur et un autre indicateur. S'il n'y a pas de lien hiérarchique cette case vaut `NA`. Si au contraire, un lien hiérarchique existe, il faut donner un nom à ce lien et réécrire ce même nom dans les autres tableaux ;
+- `spanning_1` : le nom de la première variable de croisement. On ajoute une colonne par variable de croisement en suivant le nommage : `spanning_1`, `spanning_2`, `spanning_3`, etc ;
+- `hrc_spanning_1` : s'il existe ou non un lien hiérarchique entre cette variable de croisement et une autre variable de croisement. S'il n'y a pas de lien hiérarchique cette case vaut `NA`. Si au contraire, un lien hiérarchique existe, il faut donner un nom à ce lien et réécrire ce même nom dans les autres tableaux. On ajoute une colonne par variable de croisement en suivant le nommage : `hrc_spanning_1`, `hrc_spanning_2`, `hrc_spanning_3`, etc. N.B. il faut autant de colonnes `spanning_X` que de colonnes `hrc_spanning_X` ;
+
+## Input formaté : templates Eurostat
+
+Lorsque les tableaux à traiter sont des tableaux Eurostat alors on peut créer automatiquement le fichier de métadonnées à partir du template des cellules publiées. En effet, pour les publications Eurostat les INS doivent livrer un template regroupant les cellules publiées. 
+
+Pour cela, il faut tout de même bien comprendre chaque colonne du template. Déterminer pour chacune d'entre elles s'il s'agit de la variable réponse / indicateur, d'une variable de croisement ou d'un champ, afin de pouvoir le préciser dans les arguments de la fonction \ref{sec:args_template}. Il faut notamment vérifier que le template respecte bien : une variable de croisement = une colonne du template, et donc un supertotal. En effet, si une colonne regroupe plusieurs variables de croisement, alors il faut créer autant de colonnes que de variables de croisement. 
+
+## Les arguments de `analyse_metadata`
+
+```{r}
+args(analyse_metadata)
+```
+
+Les arguments de la fonction sont les suivants :
+
+- `df_metadata` : un dataframe structuré comme précisé dans la section \ref{sec:crea_meta}.
+- `verbose` : une variable de type `logical`, si `TRUE` la fonction retourne une liste avec les différentes étapes de l'analyse, si `FALSE` elle retourne juste le dataframe final avec l'indicatrice de cluster.
+
+
+## Les arguments de `format_template` \label{sec:args_template}
+
+```{r}
+args(format_template)
+```
+
+Les arguments de la fonction sont les suivants :
+
+- `data` : dataframe du template Eurostat contenant toutes les cellules publiées.
+- `indicator_column` : nom de la colonne dans laquelle se trouvent les indicateurs.
+- `spanning_var_tot` : liste nommée des variables de croisements et de leurs totaux.
+- `field_columns` : vecteur de toutes les colonnes représentant des champs (ex : millésime).
+
+# Exemples
+
+## Cas où l'input sont les métadonnées
+
+Dans cet exemple on part d'un fichier de métadonnées présentant 12 tableaux à publier sur les chiffres d'affaires de ventes de pizzas et de salades.
+```{r}
+str(metadata_pizza_lettuce)
+```
+
+Exemple de code :
+```{r}
+library(rtauargus)
+
+data(metadata_pizza_lettuce)
+
+# Analyse complète, avec les étapes
+detailed_analysis <- analyse_metadata(metadata_pizza_lettuce, verbose = TRUE)
+
+# Output simplifié, uniquement le dataframe avec l'indicatrice de cluster
+cluster_id_dataframe <- analyse_metadata(metadata_pizza_lettuce, verbose = FALSE)
+```
+
+On obtient un dataframe nous présentant la façon de traiter les tableaux pour la pose du secret.
+
+```{r}
+cluster_id_dataframe
+```
+
+Pour les 12 tableaux à publier il suffit de protéger 5 tableaux. On remarque une nouvelle variable 
+
+Si l'on souhaite avoir plus d'informations sur l'analyse de la demande, on peut spécifier l'argument `verbose = TRUE`. Ainsi, l'objet renvoyé par la fonction sur une liste des différentes étapes de l'analyse.
+
+```{r}
+names(detailed_analysis)
+```
+
+On retrouve le dataframe avec l'indicatrice du cluster `df_tab_to_treat`. On a le même résultat mais en format liste : chaque élément de la liste est un cluster indépendant `tab_to_treat`. Mais aussi les 6 étapes de l'analyse.
+
+
+## Cas où l'input est un template Eurostat
+
+La fonction `format_template()` permet de créer les métadonnées à mettre en input de `analyse_metadata()` à partir du template Eurostat des cellules publiées.
+
+```{r}
+data(enterprise_template)
+
+str(enterprise_template)
+
+template_formatted <- format_template(
+  data = enterprise_template,
+  indicator_column = "INDICATOR",
+  spanning_var_tot = list(
+    ACTIVITY = "BTSXO_S94",
+    NUMBER_EMPL = "_T",
+    LEGAL_FORM = "_T"),
+  field_columns = c("TIME_PERIOD")
+)
+
+template_formatted$metadata
+```
+
+On voit qu'il y a 6 tableaux à publier.
+
+Remarque : `format_template()` ne construit pas la colonne `hrc_indicator` car les informations contenues dans le template ne permettent pas de la déterminer. Ainsi, il faut la créer soit-même en fonction des informations que l'ont a sur les indicateurs.
+
+Ici, il n'y a pas de lien hiérarchique entre `SAL` (effectifs salariés des entreprises actives) et `SAL_DTH` (effectifs salariés dans les décès).
+
+```{r}
+# cas où il n'y a aucune hiérarchie sur les indicateurs
+metadata_template <- template_formatted$metadata %>% 
+  mutate(hrc_indicator = NA) %>% 
+  select(table_name,field,indicator,hrc_indicator, everything())
+
+metadata_template
+```
+
+Ensuite, on utilise ce dataframe en input de la fonction d'analyse.
+
+```{r}
+# Analyse complète, avec les étapes
+detailed_analysis <- analyse_metadata(metadata_template, verbose = TRUE)
+
+# Output simplifié, uniquement le dataframe avec l'indicatrice de cluster
+cluster_id_dataframe <- analyse_metadata(metadata_template, verbose = FALSE)
+
+# visualisation du résultat de l'analyse
+cluster_id_dataframe
+```
+
+Finalement, il y a 6 tableaux à traiter dans 3 clusters différents. Autrement dit, il faudra faire trois fois appel à `tab_multi_manager()`.
+
+# Pour aller plus loin : visualiser les inclusions
+L'étape `create_edges` de l'analyse des métadonnées identifie les tableaux inclus dans d'autres tableaux. Par exemple, XXXXX est inclus dans XXXXX. Le code suivant permet de visualiser ces inclusions à l'aide de graphes afin de mieux comprendre la procédure d'analyse.
+
+```{r}
+library(rtauargus)
+library(igraph)
+library(visNetwork)
+
+graph_links_tab <- function(list_desc_links){
+  list_desc_links %>% purrr::imap(function(ss_dem,i){
+    if(!is.null(ss_dem)){
+      nodes <- data.frame(id = unique(unlist(ss_dem)))
+      visNetwork(nodes = nodes, edges = ss_dem, main = i) %>% 
+        visIgraphLayout() %>% 
+        visEdges(shadow = TRUE,
+                 arrows =list(to = list(enabled = TRUE, scaleFactor = 0.5)),
+                 color = list(color = "steelblue", highlight = "red")) %>% 
+        visOptions(highlightNearest = list(enabled = T, hover = T), 
+                   nodesIdSelection = T)
+    }
+  })
+}
+
+data(metadata_pizza_lettuce)
+detailed_analysis <- analyse_metadata(metadata_pizza_lettuce, verbose = TRUE)
+
+graph_links_tab(detailed_analysis$create_edges)
+```
+

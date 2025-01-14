@@ -62,3 +62,10 @@ knitr::knit(
   "vignettes/split_tab_fr.Rmd",
   encoding = "UTF-8"
 )
+
+knitr::knit(
+  "vignettes/auto_metadata_fr.Rmd.orig",
+  "vignettes/auto_metadata_fr.Rmd",
+  encoding = "UTF-8"
+)
+
