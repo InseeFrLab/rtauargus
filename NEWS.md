@@ -4,6 +4,25 @@ subtitle: History of changes / Historique des modifications
 output: rmarkdown::html_vignette
 ---
 
+## rtauargus 1.2.999-dev
+
+[02/2025]
+
+* Development of the function `analyse_metadata()` that automatically analyses metadata
+
+> The input is a dataframe describing all the tables that will be published. 
+The function returns an other dataframe that describes the tables to protect and
+indicates which tables should be treated together (i.e. using `tab_multi_manager()`).
+
+* Development of the function `template_formatted()` (Eurostat template)
+
+> The input is an extract of the Eurostat template (only the relevant columns).
+It goes through all the cells described by the template and returns the metadata of
+the underlying tables. This metadata is stored in a dataframe in the right format
+to be the input of the `analyse_metadata()` function.
+
+> A poster presenting those functions will be presented at the NTTS2025, it is 
+available here: "https://github.com/InseeFrLab/automatic_analysis_poster_NTTS2025".
 
 ## rtauargus 1.2.0
 
