@@ -196,7 +196,7 @@ la même variable de réponse, à savoir le chiffre d'affaires.
 ### Préparation des données
 
 
-```r
+``` r
 data("turnover_act_size")
 data("turnover_act_cj")
 data ("turnover_nuts_size")
@@ -210,7 +210,7 @@ NUTS X CJ nommé turnover_nuts_cj
 
 
 
-```r
+``` r
 str(turnover_act_size)
 #> tibble [414 x 5] (S3: tbl_df/tbl/data.frame)
 #>  $ ACTIVITY: chr [1:414] "AZ" "BE" "FZ" "GI" ...
@@ -218,6 +218,9 @@ str(turnover_act_size)
 #>  $ N_OBS   : int [1:414] 405 12878 28043 62053 8135 8140 11961 41359 26686 25108 ...
 #>  $ TOT     : num [1:414] 44475 24827613 8907311 26962063 8584917 ...
 #>  $ MAX     : num [1:414] 6212 1442029 1065833 3084242 3957364 ...
+```
+
+``` r
 str(turnover_nuts_cj)
 #> tibble [452 x 5] (S3: tbl_df/tbl/data.frame)
 #>  $ NUTS : chr [1:452] "FR10" "FR21" "FR22" "FR23" ...
@@ -232,7 +235,7 @@ conseillé de de donner un nom à chaque table. En faisant cela, il sera plus fa
 de suivre le déroulement de la pose du secret secondaire.
 
 
-```r
+``` r
 list_data_4_tabs <- list(
   act_size = turnover_act_size,
   act_cj = turnover_act_cj,
@@ -274,7 +277,7 @@ Ici, nous appliquons 2 règles :
 La règle de dominance à 85% NK(1,85) et la règle de fréquence avec un seuil fixé à 3.
 
 
-```r
+``` r
 list_data_4_tabs <- list_data_4_tabs %>%
   purrr::map(
     function(df){
@@ -336,7 +339,7 @@ Nous allons ensuite créer la liste des variables explicatives des tableaux.
 Dans notre cas, les variables explicatives sont les 2 premières colonnes de chaque tableau.
 
 
-```r
+``` r
 nom_var_list <- purrr::map(
   list_data_4_tabs,
   function(data) colnames(data)[1:2]
@@ -366,7 +369,7 @@ les variables ont la même modalité pour pour le total, l'information peut êtr
 spécifiée de la manière suivante :
 
 
-```r
+``` r
 total_codes <- "Total"
 ```
 
@@ -377,13 +380,13 @@ correspondance pour chacunes d'entre  elles pour créer le fichier .hrc dont &ta
 a besoin.
 
 
-```r
+``` r
 data(activity_corr_table)
 data(nuts23_fr_corr_table)
 ```
 
 
-```r
+``` r
 hrc_file_activity <- write_hrc2(
   corr_table = activity_corr_table,
   file_name = "hrc/activity.hrc"
@@ -397,7 +400,7 @@ hrc_file_nuts <- write_hrc2(
 Pour spécifier les nom des fichiers hrc, on crée un vecteur nommé (ou une liste) :
 
 
-```r
+``` r
 hrc_files <- list(
   ACTIVITY = hrc_file_activity,
   NUTS = hrc_file_nuts
@@ -410,7 +413,7 @@ présentes dans la table
 ### Protéger tous les tableaux en un seul appel
 
 
-```r
+``` r
 res <- tab_multi_manager(
     list_tables = list_data_4_tabs,
     list_explanatory_vars = nom_var_list,
@@ -432,7 +435,7 @@ res <- tab_multi_manager(
 ### Résultats
 
 
-```r
+``` r
 list_with_status <- res %>%
   purrr::map(
     function(df){
@@ -459,7 +462,7 @@ str(list_with_status$act_size)
 ```
 
 
-```r
+``` r
 list_with_status %>%
   purrr::iwalk(
     function(df,name){
@@ -503,7 +506,7 @@ Pour confirmer le non-emboîtement des deux hiérarchies, affichons un extrait d
 Extrait de la hiérarchie principale :
 
 
-```r
+``` r
 sdcHierarchies::hier_create(
   root="Total",
   nodes = activity_corr_table$A10 %>% unique()
@@ -525,7 +528,7 @@ sdcHierarchies::hier_create(
 Extrait de la hiérarchie alternative:
 
 
-```r
+``` r
 sdcHierarchies::hier_create(
   root="D_TO_M",
   nodes = activity_corr_table_D_TO_M$A21
@@ -548,7 +551,7 @@ Pour traiter ce cas, l'approche préférée est de créer un troisième tableau 
 `ACTIVITY` et `SIZE` avec les modalités D à M et le sous-total `D_TO_M` :
 
 
-```r
+``` r
 turnover_act_size_D_TO_M <- turnover_act_size %>%
   filter(
     ACTIVITY %in% LETTERS[4:13]
@@ -574,7 +577,7 @@ str(turnover_act_size_D_TO_M)
 Créons le fichier correspondant à cette hiérarchie :
 
 
-```r
+``` r
 activity_corr_table_D_TO_M <- activity_corr_table %>%
   filter(A21 %in% LETTERS[4:13]) %>%
   select(-A88) %>%
@@ -590,7 +593,7 @@ Ensuite, construisons la liste des tableaux et appliquons les règles de secret
 primaire dessus.
 
 
-```r
+``` r
 list_data_3_tabs_nn <- list(
   act_size = turnover_act_size,
   act_size_D_TO_M = turnover_act_size_D_TO_M,
@@ -622,7 +625,7 @@ alternatives doivent être appliquées.
 Le même raisonnement est utilisé pour remplir l'argument `alt_totcode`.
 
 
-```r
+``` r
 res <- tab_multi_manager(
   list_tables = list_data_3_tabs_nn,
   list_explanatory_vars = list(
@@ -655,10 +658,10 @@ res <- tab_multi_manager(
 #### Détail de la vignette
 
 - Authors: **<a href="mailto:julien.jamme@insee.fr">Julien Jamme</a>** & **<a href="mailto:nathanael.rastout@insee.fr">Nathanael Rastout</a>**
-  - Last update: **21/09/2023**
-  - Version of rtauargus used: **1.2.0**
+  - Last update: **17/02/2025**
+  - Version of rtauargus used: **1.2.999**
   - Version of &tau;-Argus used : **TauArgus 4.2.3**
-  - R version used :  **4.2.3**
+  - R version used :  **4.3.3**
 
   <p style="text-align: right">
   <a href="#TOC" title="Back to summary">summary &uarr;</a>

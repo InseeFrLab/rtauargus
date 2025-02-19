@@ -1,0 +1,114 @@
+17-févr.-2025 12:02:04 : Start of batch procedure; file: Z:\rtauargus\vignettes\tauargus_files\ex3\act_size.arb
+17-févr.-2025 12:02:04 : <OPENTABLEDATA> "Z:\rtauargus\vignettes\tauargus_files\ex3\act_size.tab"
+17-févr.-2025 12:02:04 : <OPENMETADATA> "Z:\rtauargus\vignettes\tauargus_files\ex3\act_size.rda"
+17-févr.-2025 12:02:04 : <SPECIFYTABLE> "ACTIVITY""SIZE"|"TOT"||
+17-févr.-2025 12:02:04 : <SAFETYRULE> MAN(0)
+17-févr.-2025 12:02:04 : <READTABLE> 1
+17-févr.-2025 12:02:05 : Tables have been read
+17-févr.-2025 12:02:05 : <APRIORI> "Z:\rtauargus\vignettes\tauargus_files\ex3\act_size.hst",1,",",0,0
+17-févr.-2025 12:02:05 : Apriory file: Z:\rtauargus\vignettes\tauargus_files\ex3\act_size.hst has been applied
+                       to table: ACTIVITY x SIZE | TOT
+17-févr.-2025 12:02:05 : Apriori file Z:\rtauargus\vignettes\tauargus_files\ex3\act_size.hst has been read
+17-févr.-2025 12:02:05 : <SUPPRESS> MOD(1,5,1,0,0)
+17-févr.-2025 12:02:05 : Start of the modular protection for table ACTIVITY x SIZE | TOT
+17-févr.-2025 12:02:06 : End of modular protection. Time used 1 seconds
+                       Number of suppressions: 78
+17-févr.-2025 12:02:06 : <WRITETABLE> (1,4,,"Z:\rtauargus\vignettes\tauargus_files\ex3\act_size.csv")
+17-févr.-2025 12:02:06 : Table: ACTIVITY x SIZE | TOT has been written
+                       Output file name: Z:\rtauargus\vignettes\tauargus_files\ex3\act_size.csv
+17-févr.-2025 12:02:06 : End of TauArgus run
+17-févr.-2025 12:02:13 : Start of batch procedure; file: Z:\rtauargus\vignettes\tauargus_files\ex3\act_size.arb
+17-févr.-2025 12:02:13 : <OPENTABLEDATA> "Z:\rtauargus\vignettes\tauargus_files\ex3\act_size.tab"
+17-févr.-2025 12:02:13 : <OPENMETADATA> "Z:\rtauargus\vignettes\tauargus_files\ex3\act_size.rda"
+17-févr.-2025 12:02:13 : <SPECIFYTABLE> "ACTIVITY""SIZE"|"TOT"||
+17-févr.-2025 12:02:13 : <SAFETYRULE> MAN(0)
+17-févr.-2025 12:02:13 : <READTABLE> 1
+17-févr.-2025 12:02:13 : Tables have been read
+17-févr.-2025 12:02:13 : <APRIORI> "Z:\rtauargus\vignettes\tauargus_files\ex3\act_size.hst",1,",",0,0
+17-févr.-2025 12:02:13 : Apriory file: Z:\rtauargus\vignettes\tauargus_files\ex3\act_size.hst has been applied
+                       to table: ACTIVITY x SIZE | TOT
+17-févr.-2025 12:02:13 : Apriori file Z:\rtauargus\vignettes\tauargus_files\ex3\act_size.hst has been read
+17-févr.-2025 12:02:13 : <SUPPRESS> MOD(1,5,0,0,0)
+17-févr.-2025 12:02:13 : Start of the modular protection for table ACTIVITY x SIZE | TOT
+17-févr.-2025 12:02:14 : End of modular protection. Time used 0 seconds
+                       Number of suppressions: 1
+17-févr.-2025 12:02:14 : <WRITETABLE> (1,4,,"Z:\rtauargus\vignettes\tauargus_files\ex3\act_size.csv")
+17-févr.-2025 12:02:14 : Table: ACTIVITY x SIZE | TOT has been written
+                       Output file name: Z:\rtauargus\vignettes\tauargus_files\ex3\act_size.csv
+17-févr.-2025 12:02:14 : End of TauArgus run
+17-févr.-2025 12:13:15 : Start of batch procedure; file: Z:\rtauargus\vignettes\tauargus_files\ex3\act_size.arb
+17-févr.-2025 12:13:15 : <OPENTABLEDATA> "Z:\rtauargus\vignettes\tauargus_files\ex3\act_size.tab"
+17-févr.-2025 12:13:15 : <OPENMETADATA> "Z:\rtauargus\vignettes\tauargus_files\ex3\act_size.rda"
+17-févr.-2025 12:13:15 : <SPECIFYTABLE> "ACTIVITY""SIZE"|"TOT"||
+17-févr.-2025 12:13:15 : <SAFETYRULE> MAN(0)
+17-févr.-2025 12:13:15 : <READTABLE> 1
+17-févr.-2025 12:13:15 : Tables have been read
+17-févr.-2025 12:13:15 : <APRIORI> "Z:\rtauargus\vignettes\tauargus_files\ex3\act_size.hst",1,",",0,0
+17-févr.-2025 12:13:16 : Apriory file: Z:\rtauargus\vignettes\tauargus_files\ex3\act_size.hst has been applied
+                       to table: ACTIVITY x SIZE | TOT
+17-févr.-2025 12:13:16 : Apriori file Z:\rtauargus\vignettes\tauargus_files\ex3\act_size.hst has been read
+17-févr.-2025 12:13:16 : <SUPPRESS> MOD(1,5,1,0,0)
+17-févr.-2025 12:13:16 : Start of the modular protection for table ACTIVITY x SIZE | TOT
+17-févr.-2025 12:13:16 : End of modular protection. Time used 0 seconds
+                       Number of suppressions: 78
+17-févr.-2025 12:13:16 : <WRITETABLE> (1,4,,"Z:\rtauargus\vignettes\tauargus_files\ex3\act_size.csv")
+17-févr.-2025 12:13:16 : Table: ACTIVITY x SIZE | TOT has been written
+                       Output file name: Z:\rtauargus\vignettes\tauargus_files\ex3\act_size.csv
+17-févr.-2025 12:13:17 : End of TauArgus run
+17-févr.-2025 12:13:24 : Start of batch procedure; file: Z:\rtauargus\vignettes\tauargus_files\ex3\act_size.arb
+17-févr.-2025 12:13:24 : <OPENTABLEDATA> "Z:\rtauargus\vignettes\tauargus_files\ex3\act_size.tab"
+17-févr.-2025 12:13:24 : <OPENMETADATA> "Z:\rtauargus\vignettes\tauargus_files\ex3\act_size.rda"
+17-févr.-2025 12:13:24 : <SPECIFYTABLE> "ACTIVITY""SIZE"|"TOT"||
+17-févr.-2025 12:13:24 : <SAFETYRULE> MAN(0)
+17-févr.-2025 12:13:24 : <READTABLE> 1
+17-févr.-2025 12:13:24 : Tables have been read
+17-févr.-2025 12:13:24 : <APRIORI> "Z:\rtauargus\vignettes\tauargus_files\ex3\act_size.hst",1,",",0,0
+17-févr.-2025 12:13:24 : Apriory file: Z:\rtauargus\vignettes\tauargus_files\ex3\act_size.hst has been applied
+                       to table: ACTIVITY x SIZE | TOT
+17-févr.-2025 12:13:24 : Apriori file Z:\rtauargus\vignettes\tauargus_files\ex3\act_size.hst has been read
+17-févr.-2025 12:13:24 : <SUPPRESS> MOD(1,5,0,0,0)
+17-févr.-2025 12:13:24 : Start of the modular protection for table ACTIVITY x SIZE | TOT
+17-févr.-2025 12:13:24 : End of modular protection. Time used 0 seconds
+                       Number of suppressions: 1
+17-févr.-2025 12:13:24 : <WRITETABLE> (1,4,,"Z:\rtauargus\vignettes\tauargus_files\ex3\act_size.csv")
+17-févr.-2025 12:13:25 : Table: ACTIVITY x SIZE | TOT has been written
+                       Output file name: Z:\rtauargus\vignettes\tauargus_files\ex3\act_size.csv
+17-févr.-2025 12:13:25 : End of TauArgus run
+17-févr.-2025 12:14:37 : Start of batch procedure; file: Z:\rtauargus\vignettes\tauargus_files\ex3\act_size.arb
+17-févr.-2025 12:14:37 : <OPENTABLEDATA> "Z:\rtauargus\vignettes\tauargus_files\ex3\act_size.tab"
+17-févr.-2025 12:14:37 : <OPENMETADATA> "Z:\rtauargus\vignettes\tauargus_files\ex3\act_size.rda"
+17-févr.-2025 12:14:37 : <SPECIFYTABLE> "ACTIVITY""SIZE"|"TOT"||
+17-févr.-2025 12:14:37 : <SAFETYRULE> MAN(0)
+17-févr.-2025 12:14:37 : <READTABLE> 1
+17-févr.-2025 12:14:37 : Tables have been read
+17-févr.-2025 12:14:37 : <APRIORI> "Z:\rtauargus\vignettes\tauargus_files\ex3\act_size.hst",1,",",0,0
+17-févr.-2025 12:14:37 : Apriory file: Z:\rtauargus\vignettes\tauargus_files\ex3\act_size.hst has been applied
+                       to table: ACTIVITY x SIZE | TOT
+17-févr.-2025 12:14:37 : Apriori file Z:\rtauargus\vignettes\tauargus_files\ex3\act_size.hst has been read
+17-févr.-2025 12:14:37 : <SUPPRESS> MOD(1,5,1,0,0)
+17-févr.-2025 12:14:37 : Start of the modular protection for table ACTIVITY x SIZE | TOT
+17-févr.-2025 12:14:38 : End of modular protection. Time used 1 seconds
+                       Number of suppressions: 78
+17-févr.-2025 12:14:38 : <WRITETABLE> (1,4,,"Z:\rtauargus\vignettes\tauargus_files\ex3\act_size.csv")
+17-févr.-2025 12:14:38 : Table: ACTIVITY x SIZE | TOT has been written
+                       Output file name: Z:\rtauargus\vignettes\tauargus_files\ex3\act_size.csv
+17-févr.-2025 12:14:38 : End of TauArgus run
+17-févr.-2025 12:14:45 : Start of batch procedure; file: Z:\rtauargus\vignettes\tauargus_files\ex3\act_size.arb
+17-févr.-2025 12:14:45 : <OPENTABLEDATA> "Z:\rtauargus\vignettes\tauargus_files\ex3\act_size.tab"
+17-févr.-2025 12:14:45 : <OPENMETADATA> "Z:\rtauargus\vignettes\tauargus_files\ex3\act_size.rda"
+17-févr.-2025 12:14:45 : <SPECIFYTABLE> "ACTIVITY""SIZE"|"TOT"||
+17-févr.-2025 12:14:45 : <SAFETYRULE> MAN(0)
+17-févr.-2025 12:14:45 : <READTABLE> 1
+17-févr.-2025 12:14:45 : Tables have been read
+17-févr.-2025 12:14:45 : <APRIORI> "Z:\rtauargus\vignettes\tauargus_files\ex3\act_size.hst",1,",",0,0
+17-févr.-2025 12:14:45 : Apriory file: Z:\rtauargus\vignettes\tauargus_files\ex3\act_size.hst has been applied
+                       to table: ACTIVITY x SIZE | TOT
+17-févr.-2025 12:14:45 : Apriori file Z:\rtauargus\vignettes\tauargus_files\ex3\act_size.hst has been read
+17-févr.-2025 12:14:45 : <SUPPRESS> MOD(1,5,0,0,0)
+17-févr.-2025 12:14:45 : Start of the modular protection for table ACTIVITY x SIZE | TOT
+17-févr.-2025 12:14:46 : End of modular protection. Time used 0 seconds
+                       Number of suppressions: 1
+17-févr.-2025 12:14:46 : <WRITETABLE> (1,4,,"Z:\rtauargus\vignettes\tauargus_files\ex3\act_size.csv")
+17-févr.-2025 12:14:46 : Table: ACTIVITY x SIZE | TOT has been written
+                       Output file name: Z:\rtauargus\vignettes\tauargus_files\ex3\act_size.csv
+17-févr.-2025 12:14:46 : End of TauArgus run

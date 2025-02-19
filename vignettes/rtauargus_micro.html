@@ -1,0 +1,1339 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+
+
+<title>τ-Argus from R - microdata version</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+
+<style type="text/css">
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">τ-Argus from R - microdata version</h1>
+<h3 class="subtitle"><h2><br />
+<img role="img" aria-label="logo R" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFAAAAA8CAYAAADxJz2MAAAACXBIWXMAAAsSAAALEgHS3X78AAAZqklEQVR4nOV8eZRU1bX3b+9za+iqnpkFZG5AQEB5yuAAGKMk6jKYZGX+4myGp76Y5CXre8mLL2ryHDIPS01iNM5J0Bij4hRlxoFB6GaQGRFo6LHme8/Z+/ujqppumoZqRJP3vb3WWavqdt17zvndPe99mnCCiYjAbFhVWEQcACUiqCqmTJmCwUNPLmtsbBw674ILhlx99XWjduzeNToSDp2kikFQDAZRTf5JGgdAhccqQKnCxxZV3aOKvb6fe3f4sKFb7r333q0Ln3vunb59++3euXNPpqFhDYpzAiBmNkQkIiKFayduvyfsQUTwPM+ICJxzDgDV1Nbobbf+oKK1LXF61s/OnH3OuZOHDhs+LPD9Ib7vD0ylUsbzPJS6qeLvVBQKhSpgrUUsFnOhcGifZ7x3tm/fvXPF8lfXhsLhZX371Lz53f/4TqK5pZkAKLMxRAwR604UkO8ZQGMMiwgBcKpKAwYM1LFjxw6aMGni9Kuuvm5ePBb/KCAnMRu0tbXB93MgYhCRGmOcqlKndXReT5e1aZ66fC5cUGudEedIVRAOh1BeXgknDkT0bjKR/Nv999/37IYN9Su2btmyt7GxkYhIARhmVuecvJf9HzeAREQF8ERE9F+mTeNPf/Zzc2pr+35x7tzzzm5PtA9Lp9IIbAAiAgBhZqH8l87jqFQAClBAVLpcK14/BKeqiKhzjqFgUYHnhRCNRlFeXr5j8aJXFjcdbLn/iQV//vvat1YJEREzc0G0j4slew2gMYZEhFVVQqGQTpkytc8VV1596cxZs66ORKNn5rJZtLe3w/M8x8wKwBzPPMARgSqI7tGuF0S9AKmoOHFC1loTLy9HJBxBNptdsfL15b957OGHn2xoqG8KgqADS+dcr4Ds1caMMayqJCJu6tTT4ldfc+3nz50952vW2TGZdFZFHBGRY+aSOexIdEjHdQKq2/UuQHVcz3Nq5+uAFm50zqkTMcys0UiUmM2WZUuX3vXoow/+ob5+XYqZDQAVkZLFuqQNMjOJCIdCITd58uTwFVdeO/+ss8/6r1AoNKa5uVkNs1AeND4ewIrUScd1G0BXALsDdRhHdgGw0+/yQ5xzKiJcWVlFgR+8/cabr3/3j48/vGBDQ4MfWGuKkn2sNZtSwCuIrXzx8ivG/PLXd/+ub79+385ms30ymbR4nqdEdNxi2hNgXXVfh5brPqBQUdLDgeu4XyFdrgGqefVHRJJOp2Gt7Tt48ODL5s+/bGpbW+vrDQ0NTQVpO+bae9x0wS3hIAhw+unT5Mc/+enVFVXVd2azmUooLDMz3iPHdQYv75Wo5I2AJVWQqjIUUAg8E+pwXVQlz2lQiHMIAns4p4mqKhEpEZGoMlSpi+h3VhGiYsUJFF40Gmk/eDD59TvvuPneDRvq2fM8OOd69B+PCGAn8GTChInx393/h5+GQ+ErM5mMGkMCEB8N/GOjhqLIaXGzzjpPRBAKh1FRXg4nrgisE9Hg4MFGFZWcKoL8/pWduGg0EqXKqmp21noAPFXJ30eMZKINuZxfnNURMTQPJKOLLhXkGVnEOeFoNEK5rP+b73znWzds2fJ22vM87gnEbiAUPHiuqqqUM/5l+qD//P4tf4jFYuflsllX4Lr36juKqmoQBGyMISIGoIjH4rlwJLJl545tOxYvXrwjGo1usk52MNHeXNbu+dnP7mjz/ZwSsQJ51ZJOp2nCxCn86U99rjqVbutDxLVE0pdAwzPZ7MgzzpgxdMiQwUNzfjDCBkFFJpOGiCAIAhCR5JkTRlWpky5Va51EIhGTTiVf+M1v7v7C+vXr9rW0tHD+911BPBIYJh6LudvvvHP4hfMuevLgwabJIs4WLNR70XOqqmKdNVCgpqYWLS0t+7O57Isu8F+8447b60Vla+P+fc316+s7h2K9puK9Y8eOx6BBA6tbW9uGTZp06uj58z8xMwj882tqasZnclkvmUiAiJWZREVN0ehAVUWcU8Dr26fvmoaGty793vf+c2cikTAAXJe5On8Jh8Pk+77ec8+9Qy78yMVPbd++bWo0GrUAvOPEDQDEOQdVJc/zqLyiojmXzby8ZNHih3/729+8sHbt6mQsFkM6nS5u3hhjGIAAKCKo1toewcq/2+J+8gwKgAoOsgMAz/NgrcWECRP44osvGVtRWf2JM86cPi+dSk/LZDKetYESSEDEnTjSptNpb8TIEasa6tddcuON1+8pYtQNQM/zyFqrEydOqv3ZL371l3g8fpaqWiJ6T+BZaxGPlTMgTe++u/een/z4rt8nk+1vr1y5QjtFUZ4xHlAQb5HeObM9ETNTMfIp+K9SFMPa2loMHzEiWjdm7Fkf+9hlXwlHohdn0hljbSBERNphdNSqqpdIJRf99Ed3XLp129aWgluXz1QUJoKI0JQpU/Tue3/7u0gkenkmk7HMfLzgqTgRJ87Ey+OptzdtvufPf3789scefXSfMQbOOVOwbicsqC+ViAAmIlWERNURsZRXVuqnPvmpWWdOn/FflZWVc1PJlBKzQsF5Sy82Egl72Wz2vttvv+WKzZvfLmCsoAJ4pq6uzj38yGPXEXu/zuWyUhCjXlEBDHXOKbPheDy2cOuWTTd9+tOfrs9mMlSIlwgoJmwAkAGZUBjQE5YZ6oGk01AiQshj+Nk0AGJVlbFjJ5ivfvXbX+jTJ3xnLufXqqpTwEAVBcPC6XT7Nd/73nfvbWxsNETkOoLpG//tm3Vf+tJ1rx5oOjAw5IUEvfTxDnn4lqKRqGRz2VuvvebqWzfUr/fZGFP0/ou/Jzak4jQ2bEb5oI/c8pjNtJxObFK9nbcXlIFqBkACRPvU0fbymFu3+6VfvOX72Y25Xa9ZgrCIyiWXzD/l81/44gMtzc2nM5NVwIOqBIHlioqKvU899edz//jHx98monzMWlNTqwtfeOXnqvaryFuZY0YoReocHhERe14omU4lrrnxhn99ZPXq1VyIYrqJahHA+IhZVYMuvvNVm26eTGx6Nfd7JVXAi1a0idrX0tuW/6pt9aN/yexdy4C6Sy+dX/uZz3z+j83NLXOJyUHVqKpThSHCz77xjRtvSCQSeSfs+htumhCLR64piFWvwUNebDkcCrf94uc//cS555z1yPr160OFfNux9Jzmg1wpBLvv65DCcFBxBLE23VylmfYPxUfNeGLAhT9bEK97bIhXHsWTTy5oefChBy6rqqpaIiKmEBEa5xzC4ci1H//4J04BoDxu3DicffbMK3LZXJiZ3dF22hk4ESkODYKAomXRYM+e3Vc99OADzwHwnHNBKcH4YXR4rvBEj2L4aQrDIzYCNs6l24VM26WDPtr/pf4X/HCiF47oU395ovWRRx78Qsjzdjtni3lDl05nIlOmnH5FXd0Y8IiRowYMHzHqgkwmg4LJPypwhw8REc8LIZNK3fqNr3/tT9Zaj5ltLzJC/2hi5IFkkOdsa2JU/OQpT/eZ/cuJhEF46qkntq9bt/7/xmJxOGeJAASBj8rKmguqq/v04/nz589sbWud4Hlej4bjEFhdOA+FN2I8Y5bdeP31t23atAnM7P4HgXcYqSHPszbZNCx60qy7IwNnxQHgmWefecj3/ZcBkOQzOZJItE+cMWPmLD5z5swZNh8bHlHcDk8NdfquIkKRSBQrX1t269q1qwMi8o5DbN/Tjo8xjueRHrTMmrJtM/vPu+xycARbNtdLQ8Nbv/CMB5F84sFai7q68dM5mUhNK0ju4UWcw7mty1ARcdYRe2bRI488+owToVJ16AkhVVVxRx8qDsCRY8CjEcGoT+CyPl8OzZoVUQBLly1bEovHNwSBZcknkJBJp6Z5zDyq47ZDazssAVnICHfKoTnrqLKqCs88/fRfly1ZDGMMH/KO32dSBXlhMpE4oUcLT0AuB9EcRFQLAlaqs04KB2Mqx9ZWz5m2Hy8vbWzcf2Dv3j1vRqPx8c7l34mCRnkE9C9+O0rVq1uNwoljAmw4HHoJAIjog1F8KkrhOGX2rLqn9Y0H7+dIeQX0MKVLDOQyoLPODdVUz5kTMtnrVMvKoaQoHUSBKiOTORvA0l07d2Djxg1rzjxz5ucSiRwXMj79PQDhDj9N0Q2oHqpeysSUSqfaV65YvgkAPijDoapg9uBSTRsze1YvIzZGpQfOf2ItJ/27nqmees/LtdMnP6nB/jDIKxFEFiDLirpxwEAA+wCYrSoKVWXKryXCIpI7sp4r6EDtpvsgIiAitLW1Nz777DMBAHxQxqOYrwJRCACIjdfjCIQBeG3rHnpWUo0/QiHjU9I8zFA/hfDJp1WHB54OABBFm4hoER8VybGq7i9a1c7ch0767/DRYY1FPzijUaCOt6R5faPibI9DnQUZVfsqDi7/0TMcrlSIMyjJQiucz6gcmOKKAYW2HAh3SnNBFQfYBXZzweLqESxtd44UgStwJqD9PC9kABzTCf9HUdE7Uxu0E6itZDFRAZfFkX57VSq95c38s1Rqiv6viMBZt4XLqiqWiZNiyr3n0mFni6wg3/dRU1Nb8+UvXz8cyOcU/9mI8oVDBoBwvzFDVGx1wdiV0lLCbMJIN7+zK5NKAACcyPiCBDoRQbQs/Brfe+/dSyORMKy1RkRU5YgRR0cc3okjVaGhsljk/MKcHwiCHTvP16JBbEI9DVWEIDYwEz+J6jOv/IrkEoWCYmlTERG8soq3AGDokOEYPWL01HQ6DRFVz/Pw4ksLV/KuLVsXxWKxpdZaQCHdI44j60FmlpaWFsyePXf+9Okz4JwTY8z7LsZaxFA1CwAqLug2VAIVZ8PVg4P+07/Ud+Tsm+6WdPM85Ct6JSFIxCR+Opvb89YSAOjTp8/oPv36neEHPkQkHA6X1e/f37jcW7z4VX/V6lVP1dWNm5VobydmPiS2oj21RgAAQ1V935998cUfn/faayufFREPx+P594KIGBpkEOk//sp+c745nbxwuFv5jghqcygfNp1N5aDJQWr/SOaeY/0jkAOREWf/1lL/1C4m4LTTp81NJBODVeGXRUPhbdveeHHDhg2NXjKZwnPPPH3fyBGjr1fVwQVdSEW9BxwOYEdkQkQkmUyGTjttyvdOmTDx5fXr3soZY6i3HU69IiJSFyBUMWBSuM+IST1GIkSQXBI21QTikABaKngKcczRCpt9p/4n4qd1+PCR8TGjx97g+1kQXNhJTWbNmqH35HKZfG5swYIFBxLtLd8vK4vBWitSzLzoEayxdrHILCKSC7Jn3HzzrbeOGT0GzjnzvosyEdQF4tIt1mVajzzSLRbiLLHpFXgqziEcI79p6x17/nL9kpMGDcSVV177tZyfO8U58QFCa2vzL197/dUGAMzMLLlcDl+/6Wv3tzQ3vULERkTs0fRfV1Emsn4gnjE3/eCH/33thAkT7AcEIh/ViWbjIV+SLQU8hapTZ5VDUS/ild+f2Pz8dwGHyVPOODscDn/TBoE658IVFVXbXnxpwU+D4BUwM1hE1BjDDRsasitXLvtybW3NXj+X87SbX6iHrHHX6IRARJlsRpjDv7zllh9cNaZujHXOcTgc/qf0DTuRAGRVnILIhKpO8jN71nzr3T9d86XWVY/Z2bPPGzv7nLn3tbe1lwMQ44Wwvn7dTRsa6t8ByKiKGCAf2wJkVq5c0Th27PhtI0eNuiyZTBpmFu3S1QQAh3MhoKpExPADn4l43tlz56bXv/XW0sbG/YUOeT6CnmeCKsI1J0cq6s6/XILMQOqFlTwRRMYQVNmL1WRdru3ZRP3frjzwyl2PZdt22zlzPzx83gUXPZFIto8johygITZ0+z33/OoX2Wy22DlxqIBEROqcM4sWvdIwbvz4xhEjR12UTCalUIWn7uJ7yLjk+++EAFLf9ykaCl8wderpY84+5+xFr7++MpXJZDzP8/KV6H88gAIgqaBskGrZEAqX/bZt1cPfblr667uSG599VyXAubPPmzbvwosWtLW1ngLAV3WRsrLqR1966YUbtm7d5IoNUV0ALIJoreOXXnzhjVMmTGwZMXzER5KpJJhZoFpoOOwOIA5FK0RECHxfQuHw5Lq68Z8a0H/Arr17mxtaWg5KoQXYGGOKTTzvBcCOInnHbo4eYSgAUiDNkCdyFP1WS8OT/3HgqZteyuxZs9dlWmjY8FH6peu+8uW60eMeyWQyA/OJFo1UVFQvWPj8U59ZtOhl29GSUKBuJUxmgnOOlyx+dcXYcafsGjFi5LxkMhUiIqf55vIeDEoHoKQAqYo0NzXVDB485NI5cz48fejQUe80NjbtbG5uBEBkPM9TcRI6XgBVSdUxVBiFBspCc1BPQBb/EAbo1BC5OZVDTj0v1Hcce9mmzReeM+XU2XM/el+8LHZ9LpczIs5GwtFweWX5Q88tfPqqRYv+nmVm1sN0UY8NlgCMMcbdctt/z5s4cdIDyUSiL4EciEhV+JA/2N3hlkNcqc6JqFpTHq8OfN9fsHr1yl8vXPjc8s1btvrWzyE+YlbloItuX9Srwno+I/0uR+J7oepBoSAaLH66nwQZpXy3VgnxroCj1YjZg9svHrSrOupaa7K+BKrOi8Xium/f3ttXr3nt28uXL2dm1iOl7HqcpKOxPBx2v//9/WNqa/rd1ZZov9gGgRg2qlrsp+spYulIxKqqijjLREzhcCQXCpmVy5Yvfy7RtOeBp1cfbK467+almmmdilIAVBEKxzmzZ/V3Wt948BaOlNcAUMkl+tSc9tmPxYbP/I5NH6wkPmritCj2ArEmoAgN9Fr0Q9UbJeQZU15RsWfjxvobH3rogT/5fo4KWBwxj3jUt0REKJ6fGDFylHfzzd+/qaK88t/bE4kaZ60QkYKIVYS6AYh8o0EhwC5yphMnJCJcXlEBA9e+vTH90h+3DzyzNeed5FHeHTg6fk5MWTUnNj779cYXb7urU0aaQZ6c9NE75kSHn/4XzbZXFGLfY3IiQTUnBtOq9mKsW/P4xu07/33h88/tzGWz5lhl2lLaOBQANx08qCtWLFuSSiWerqsb278sFp9greXA97XQc8dyuF6UbjqSQSAANpvJIOfnoiFjxm9qKato8z0YLmGzqkqhCAUt25/PbV203IvG2RijJhQBaxDJ7Fi8pWLIpCqUDz4L4itKylMSsTpq9Qa4zZs3fXXp337/lipCgB6z/a5kR7ewDgag5eXl+slPfOaiGTNn/Fttn77ntLW1ec5aEJHLv081RdE+3Gp3iLwCBNGMJX18a396Nx2hMOsxU8UEaKBMU6v2LZ1RvXtl1poqgrKoVgM8SG1ukCWvdmHrpIqDuQg8OvYzC+RUxFBZzYoDT9/0oeSOFaliA9TRbupVJxQzKxGx7/tYtfqNzatXv/lAe3v7a6NH1w0pK4sNc9ax7+eYCA6qKqqF4wrStRwgHWJNVkANLeWUCDyUEvxR3hXB6IrkyUPj/gzl0GmGeapnvPHMNIS9SHWZJ5EQBdierQWVXl9ngjomnMxlNYn0tleXqLPHTP/3CsBi7QTIm+i2tjaqr1+35cUXX3ggEok8279/v6B//4H9fD+oVVUWcWSdhYi6Qx3uCi00U5IqAlE0tFagFwBCwBgcTciAULv4DipwKk6QDz+dWIFUcVIP+DFqcTF4JFSSsBGR2ByVDZw43YtUP53asWQfsekeRnWi4+7FU1VlZhCR8X1f16xZtefttzc+s2zZksdjscqVNTU1Kc8zJ8Xj8bjneZTLZY1zQoWGc6cKgQqskDa0lVOqVwACQ6IJGhRJkhUqOPNQESERMaLKFbEoV0eFtiYrIGCUhiCIiJwEmaipGDA0u3ftIzZ5ACCmnhjxhAX7haOvrKo2HA7D932cf/75FWPGjDvX94Nzzjxj1mTj0RhVPTmTyZjABmAQsoHiTztPwr5MGUIspehAWCVMr3kXp1XuR9YxCPlERzgchmGzxzq3Ze3aVfWi5vmGfp+/NGPtF/P6uUSGUREOxdl3B774zu8+e7/aoNvxhs7rOWFU4MgikA6F18bMOOWUUykUMiel0+mRH/rQhcNGjhp9ip9NTchpZPRf9w4f05gJh0KlGRFYZUyr3J08tWzX7pzztou6DbFIZOOrS/++c+e2nVtD4dDOzVs2qTgntdOvmVBz5v951SWb+lDpWWlVdcQmtqvpjXunt7356F4iQ/mW6e7red+o0zEDLpwMFwDwvBCM55HLZrR8zDm1fS+87e823XJqSZGIOOGyKk5tXvjtA8/f+kMTiRb8QIJzttghQWw8o86yN2C4P/iSO39AWvktUOAAKlFtqWNhk+sb+u27T/zrVbJ5gwGzw2E+4fua+SicHhfnnGU2wnkyzlmTy/lsAfjWWUXpfTWFtgSIaOAABEFAQRBwEPhGVU1hDoizVtkEwf4d2L9hyY85TnshWmJRHQCIHTmNtNLlg8Ze9WEQu8L9XegDy72JuGJB2qmqI8pz43Gfyj50Wz4ky//PBleYIw9S3ofjzLL7G1Nba35MYQb0yLrsSM8nYnWS5cjQKbeWDZoYAdTlDcoh+uerhp9oYiikBe3rHrqPyGtQFQ8l9scAYFI4tf60gR+5/aZw7RhAhTvXlv//B1CgxMakd/74YHrnmz83ZZXI912WSESsLoApK/96+dg5kwC4wgFzAP8bAETepAJA66qHfw8XrCXuOMxYChFxyLlsU03VpKtv4eg3kDdaeQz/VwCIfCOXyexdn03vfv2H5IWLBZ5SH2CgRkGJSwZdMPFyE44CcAZE/3gA8xExMvmPSJU4HEBBryYiI4Cibf1fnyQTfQUqDKC95DmJkxokXGzU2BvKTp7ZB/kT8Pz/AN0aRLhosF2EAAAAAElFTkSuQmCC" alt="logo R" /><img role="img" aria-label="logo τ-Argus" src="data:image/png;base64,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" alt="logo τ-Argus" /><br />Package {rtauargus}<br />
+</h2></h3>
+
+
+<div id="TOC">
+<ul>
+<li><a href="#introduction" id="toc-introduction">Introduction</a>
+<ul>
+<li><a href="#presentation-of-the-package" id="toc-presentation-of-the-package">Presentation of the
+package</a></li>
+<li><a href="#purpose-of-this-document" id="toc-purpose-of-this-document">Purpose of this document</a></li>
+</ul></li>
+<li><a href="#installation" id="toc-installation">Installation</a>
+<ul>
+<li><a href="#τ-argus" id="toc-τ-argus">τ-Argus</a></li>
+<li><a href="#dependencies" id="toc-dependencies">Dependencies</a></li>
+<li><a href="#package" id="toc-package">Package</a></li>
+</ul></li>
+<li><a href="#quick-start" id="toc-quick-start">Quick start</a>
+<ul>
+<li><a href="#location-of-τ-argus" id="toc-location-of-τ-argus">Location
+of τ-Argus</a></li>
+<li><a href="#function-rtauargus." id="toc-function-rtauargus.">Function
+<code>rtauargus</code>.</a></li>
+</ul></li>
+<li><a href="#process-decomposition" id="toc-process-decomposition">Process decomposition</a>
+<ul>
+<li><a href="#function-micro_asc_rda." id="toc-function-micro_asc_rda.">[1] Function
+<code>micro_asc_rda</code>.</a></li>
+<li><a href="#function-micro_arb." id="toc-function-micro_arb.">[2]
+Function <code>micro_arb</code>.</a></li>
+<li><a href="#function-run_arb" id="toc-function-run_arb">[3] Function
+<code>run_arb</code></a></li>
+<li><a href="#import-function" id="toc-import-function">[4] Import
+function</a></li>
+</ul></li>
+<li><a href="#package-options" id="toc-package-options">Package
+options</a>
+<ul>
+<li><a href="#display" id="toc-display">Display</a></li>
+<li><a href="#modification-reset" id="toc-modification-reset">Modification, reset</a></li>
+<li><a href="#local-or-global-reach" id="toc-local-or-global-reach">Local or global reach</a></li>
+</ul></li>
+<li><a href="#other-information" id="toc-other-information">Other
+information</a></li>
+</ul>
+</div>
+
+<!--
+  NEVER DIRECTLY MODIFY `rtauargus.Rmd`
+  MODIFY `rtauargus.Rmd.orig` AND RUN `precompilation.R`
+  See : https://ropensci.org/technotes/2019/12/08/precompute-vignettes
+-->
+<!-- ####################################################################### -->
+<div id="introduction" class="section level2">
+<h2>Introduction</h2>
+<div id="presentation-of-the-package" class="section level3">
+<h3>Presentation of the package</h3>
+<p>The <em>rtauargus</em> package provides an <strong>R</strong>
+interface for <strong>τ-Argus</strong>. It allows to:</p>
+<ul>
+<li>create inputs (asc and rda files) from data in R format;</li>
+<li>generate the sequence of instructions to be executed in batch mode
+(arb file) ;</li>
+<li>launch a batch τ-Argus in command line;</li>
+<li>retrieve the results in R.</li>
+</ul>
+<p>These different operations can be performed at once, but also in a
+modular way. They allow the integration of tasks performed by τ-Argus in
+a processing chain written in R.</p>
+<p>The syntax of some of the arguments closely matches the
+<em>batch</em> syntax of τ-Argus. This allows you to use a large number
+of features without multiply the arguments of the functions. The package
+can also be adapted to more easily to possible modifications of the
+software (new available methods, additional options…). Syntax rules for
+the batch writing are in the reference manual of τ-Argus.</p>
+<blockquote>
+<p>The package was developed on the basis of open source versions of τ
+Argus (versions 4.1 and higher), especially the latest version available
+during development (4.2.3)._</p>
+<p>It is not compatible with version 3.5.**_</p>
+<p>For the moment, <strong>only microdata are accepted</strong> as input
+(not data already tabulated).</p>
+</blockquote>
+</div>
+<div id="purpose-of-this-document" class="section level3">
+<h3>Purpose of this document</h3>
+<p>This document aims to show how the main features of the can be
+articulated, based on relatively simple examples. A detailed
+documentation of a function (exhaustive list of arguments, technical
+aspects…) is available via the dedicated help section.</p>
+<p>For the following demonstration, a fictitious microdata set will be
+used :</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a>microdata <span class="ot">&lt;-</span></span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>  <span class="fu">data.frame</span>(</span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>    <span class="at">V1    =</span> <span class="fu">c</span>(<span class="st">&quot;A&quot;</span>, <span class="st">&quot;A&quot;</span>, <span class="st">&quot;A&quot;</span>, <span class="st">&quot;A&quot;</span>, <span class="st">&quot;B&quot;</span>, <span class="st">&quot;B&quot;</span>, <span class="st">&quot;B&quot;</span>, <span class="st">&quot;C&quot;</span>),</span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a>    <span class="at">V2    =</span> <span class="fu">c</span>(<span class="st">&quot;Y&quot;</span>, <span class="st">&quot;Z&quot;</span>),</span>
+<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a>    <span class="at">V3    =</span> <span class="fu">c</span>(<span class="st">&quot;T1&quot;</span>, <span class="st">&quot;T2&quot;</span>, <span class="st">&quot;T1&quot;</span>, <span class="st">&quot;S_&quot;</span>, <span class="st">&quot;T1&quot;</span>, <span class="st">&quot;T1&quot;</span>, <span class="st">&quot;T1&quot;</span>, <span class="st">&quot;S_&quot;</span>),</span>
+<span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a>    <span class="at">VAL   =</span> <span class="fu">c</span>(<span class="dv">100</span>, <span class="dv">0</span>, <span class="dv">7</span>, <span class="dv">25</span>, <span class="dv">0</span>, <span class="dv">4</span>, <span class="dv">0</span>, <span class="dv">5</span>),</span>
+<span id="cb1-7"><a href="#cb1-7" tabindex="-1"></a>    <span class="at">WEIGHT =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="fl">2.71</span>, <span class="fl">4.2</span>, <span class="dv">1</span>)</span>
+<span id="cb1-8"><a href="#cb1-8" tabindex="-1"></a>  )</span>
+<span id="cb1-9"><a href="#cb1-9" tabindex="-1"></a>microdata</span>
+<span id="cb1-10"><a href="#cb1-10" tabindex="-1"></a><span class="co">#&gt;   V1 V2 V3 VAL WEIGHT</span></span>
+<span id="cb1-11"><a href="#cb1-11" tabindex="-1"></a><span class="co">#&gt; 1  A  Y T1 100   1.00</span></span>
+<span id="cb1-12"><a href="#cb1-12" tabindex="-1"></a><span class="co">#&gt; 2  A  Z T2   0   2.71</span></span>
+<span id="cb1-13"><a href="#cb1-13" tabindex="-1"></a><span class="co">#&gt; 3  A  Y T1   7   4.20</span></span>
+<span id="cb1-14"><a href="#cb1-14" tabindex="-1"></a><span class="co">#&gt; 4  A  Z S_  25   1.00</span></span>
+<span id="cb1-15"><a href="#cb1-15" tabindex="-1"></a><span class="co">#&gt; 5  B  Y T1   0   1.00</span></span>
+<span id="cb1-16"><a href="#cb1-16" tabindex="-1"></a><span class="co">#&gt; 6  B  Z T1   4   2.71</span></span>
+<span id="cb1-17"><a href="#cb1-17" tabindex="-1"></a><span class="co">#&gt; 7  B  Y T1   0   4.20</span></span>
+<span id="cb1-18"><a href="#cb1-18" tabindex="-1"></a><span class="co">#&gt; 8  C  Z S_   5   1.00</span></span></code></pre></div>
+<p style="text-align: right">
+<a href="#TOC" title="Back to summary">summary ↑</a>
+</p>
+<!-- ####################################################################### -->
+</div>
+</div>
+<div id="installation" class="section level2">
+<h2>Installation</h2>
+<p>The following installations must be carried out before the first use
+(and more later).</p>
+<div id="τ-argus" class="section level3">
+<h3>τ-Argus</h3>
+<p>The functions of <em>rtauargus</em> calling τ-Argus require that this
+software is accessible from the workstation. The download of τ-Argus can
+be found on the <a href="https://research.cbs.nl/casc/tau.htm">dedicated
+page</a> of the Dutch statistical office.</p>
+<p>However, not all functions execute τ-Argus (creation of microdata…).
+Not having it on your computer is not a problem.</p>
+</div>
+<div id="dependencies" class="section level3">
+<h3>Dependencies</h3>
+<p>To work, <em>rtauargus</em> depends on other R packages. These have
+to be installed beforehand (in brackets the minimum versions
+required).</p>
+<pre><code>- purrr (&gt;= 0.2)
+- dplyr (&gt;= 0.7)
+- tidyr
+- data.table
+- gdata,
+- stringr
+- rlang
+- zoo
+- sdcHierarchies
+- igraph
+- lifecycle</code></pre>
+</div>
+<div id="package" class="section level3">
+<h3>Package</h3>
+<p>The <em>rtauargus</em> package is ready to be installed.</p>
+<p style="text-align: right">
+<a href="#TOC" title="Back to summary">summary ↑</a>
+</p>
+<!-- ####################################################################### -->
+</div>
+</div>
+<div id="quick-start" class="section level2">
+<h2>Quick start</h2>
+<p>This part explains how to perform a minimal configuration of the
+package and how to apply statistical confidentiality in a single
+instruction.</p>
+<div id="location-of-τ-argus" class="section level3">
+<h3>Location of τ-Argus</h3>
+<p>When the package is loaded, the console displays some
+information:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="fu">library</span>(rtauargus)</span></code></pre></div>
+<p>In particular, a plausible location for the τ-Argus software is
+predefined. It is possible to change it for the duration of the R
+session. A message indicates that this location is unknown, so we modify
+it:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>loc_tauargus <span class="ot">&lt;-</span> <span class="st">&quot;Y:/Logiciels/TauArgus/TauArgus4.2.3/TauArgus.exe&quot;</span></span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a><span class="fu">options</span>(<span class="at">rtauargus.tauargus_exe =</span> loc_tauargus)</span></code></pre></div>
+<p>After this small adjustment, the package is ready to be used.</p>
+<blockquote>
+<p>For a more customized configuration, see the section
+<a href="#package-options">package-options</a>._</p>
+</blockquote>
+</div>
+<div id="function-rtauargus." class="section level3">
+<h3>Function <code>rtauargus</code>.</h3>
+<p>The function <code>micro_rtauargus</code> performs a processing and
+retrieves the results immediately in R.</p>
+<p>Completely abstaining from the internal workings of τ-Argus, it
+allows to perform the entire process in a single instruction
+(specifically, all the intermediate files are created in a temporary
+directory which is deleted at the end of the R session).</p>
+<p><code>rtauargus</code> takes as mandatory arguments :</p>
+<ul>
+<li>a data.frame containing the microdata ;</li>
+<li>a list of 1 to 10 tabs composed of data.frame variables (a alone in
+the example below);</li>
+<li>the rule(s) to be applied for primary secrecy ;</li>
+<li>the method(s) for deleting the secondary secret boxes.</li>
+</ul>
+<p>The last two arguments use the batch syntax τ-Argus.</p>
+<div id="minimalist-example" class="section level4">
+<h4>Minimalist example</h4>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="fu">micro_rtauargus</span>(</span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>  <span class="at">microdata =</span> microdata,</span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a>  <span class="at">explanatory_vars =</span> <span class="st">&quot;V1&quot;</span>,</span>
+<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a>  <span class="at">safety_rules =</span> <span class="st">&quot;FREQ(3,10)&quot;</span>,</span>
+<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a>  <span class="at">suppress =</span> <span class="st">&quot;GH(1,100)&quot;</span></span>
+<span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a>)</span>
+<span id="cb5-7"><a href="#cb5-7" tabindex="-1"></a><span class="co">#&gt; Start of batch procedure; file: C:\Users\KQCFFL\AppData\Local\Temp\Rtmpm05wlj\RTA_13aa85f527816.arb</span></span>
+<span id="cb5-8"><a href="#cb5-8" tabindex="-1"></a><span class="co">#&gt; &lt;OPENMICRODATA&gt; &quot;C:\Users\KQCFFL\AppData\Local\Temp\Rtmpm05wlj\RTA_13aa866f06f26.asc&quot;</span></span>
+<span id="cb5-9"><a href="#cb5-9" tabindex="-1"></a><span class="co">#&gt; &lt;OPENMETADATA&gt; &quot;C:\Users\KQCFFL\AppData\Local\Temp\Rtmpm05wlj\RTA_13aa866f06f26.rda&quot;</span></span>
+<span id="cb5-10"><a href="#cb5-10" tabindex="-1"></a><span class="co">#&gt; &lt;SPECIFYTABLE&gt; &quot;V1&quot;|&quot;&lt;freq&gt;&quot;||</span></span>
+<span id="cb5-11"><a href="#cb5-11" tabindex="-1"></a><span class="co">#&gt; &lt;SAFETYRULE&gt; FREQ(3,10)</span></span>
+<span id="cb5-12"><a href="#cb5-12" tabindex="-1"></a><span class="co">#&gt; &lt;READMICRODATA&gt;</span></span>
+<span id="cb5-13"><a href="#cb5-13" tabindex="-1"></a><span class="co">#&gt; Start explore file: C:\Users\KQCFFL\AppData\Local\Temp\Rtmpm05wlj\RTA_13aa866f06f26.asc</span></span>
+<span id="cb5-14"><a href="#cb5-14" tabindex="-1"></a><span class="co">#&gt; Start computing tables</span></span>
+<span id="cb5-15"><a href="#cb5-15" tabindex="-1"></a><span class="co">#&gt; Table: V1 | &lt;freq&gt; has been specified</span></span>
+<span id="cb5-16"><a href="#cb5-16" tabindex="-1"></a><span class="co">#&gt; Tables have been computed</span></span>
+<span id="cb5-17"><a href="#cb5-17" tabindex="-1"></a><span class="co">#&gt; Micro data file read; processing time 0 seconds</span></span>
+<span id="cb5-18"><a href="#cb5-18" tabindex="-1"></a><span class="co">#&gt; Tables from microdata have been read</span></span>
+<span id="cb5-19"><a href="#cb5-19" tabindex="-1"></a><span class="co">#&gt; &lt;SUPPRESS&gt; GH(1,100)</span></span>
+<span id="cb5-20"><a href="#cb5-20" tabindex="-1"></a><span class="co">#&gt; Start of the hypercube protection for table V1 | &lt;freq&gt;</span></span>
+<span id="cb5-21"><a href="#cb5-21" tabindex="-1"></a><span class="co">#&gt; End of hypercube protection. Time used 1 seconds</span></span>
+<span id="cb5-22"><a href="#cb5-22" tabindex="-1"></a><span class="co">#&gt;                    Number of suppressions: 1</span></span>
+<span id="cb5-23"><a href="#cb5-23" tabindex="-1"></a><span class="co">#&gt; The hypercube procedure has been applied</span></span>
+<span id="cb5-24"><a href="#cb5-24" tabindex="-1"></a><span class="co">#&gt;                    1 cells have been suppressed</span></span>
+<span id="cb5-25"><a href="#cb5-25" tabindex="-1"></a><span class="co">#&gt; &lt;WRITETABLE&gt; (1,4,AS+SE+,&quot;C:\Users\KQCFFL\AppData\Local\Temp\Rtmpm05wlj\RTA_13aa826e25069.sbs&quot;)</span></span>
+<span id="cb5-26"><a href="#cb5-26" tabindex="-1"></a><span class="co">#&gt; Table: V1 | &lt;freq&gt; has been written</span></span>
+<span id="cb5-27"><a href="#cb5-27" tabindex="-1"></a><span class="co">#&gt;                    Output file name: C:\Users\KQCFFL\AppData\Local\Temp\Rtmpm05wlj\RTA_13aa826e25069.sbs</span></span>
+<span id="cb5-28"><a href="#cb5-28" tabindex="-1"></a><span class="co">#&gt; End of TauArgus run</span></span>
+<span id="cb5-29"><a href="#cb5-29" tabindex="-1"></a><span class="co">#&gt; NULL</span></span></code></pre></div>
+<p>As no response variable is given, a count is made
+(“&lt;freq&gt;”).</p>
+</div>
+<div id="elaborate-example" class="section level4">
+<h4>Elaborate example</h4>
+<p>Other parameters are available. For example, you can add the previous
+instruction with :</p>
+<ul>
+<li>a second tabulation (the two tables will be treated independently)
+;</li>
+<li>a parameter allowing to not display the status of the secret for the
+FIRST TABLE;</li>
+<li>a parameter to hide the log of τ-Argus in the console.</li>
+</ul>
+<p>In addition, the tables produced are no longer simply sent to the
+console. They are stored in a <code>secret1</code> object (a list
+consisting of two data.frame), which we can continue to manipulate.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a>secret1 <span class="ot">&lt;-</span></span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a>  <span class="fu">micro_rtauargus</span>(</span>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a>    <span class="at">microdata =</span> microdata,</span>
+<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a>    <span class="at">explanatory_vars =</span> <span class="fu">list</span>(<span class="st">&quot;V1&quot;</span>, <span class="fu">c</span>(<span class="st">&quot;V1&quot;</span>, <span class="st">&quot;V2&quot;</span>)), <span class="co"># 2 tabs (V1, V1xV2)</span></span>
+<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a>    <span class="at">safety_rules =</span> <span class="st">&quot;FREQ(3,10)&quot;</span>,</span>
+<span id="cb6-6"><a href="#cb6-6" tabindex="-1"></a>    <span class="at">suppress =</span> <span class="st">&quot;GH(.,100)&quot;</span>, <span class="co"># . replaces the tab number</span></span>
+<span id="cb6-7"><a href="#cb6-7" tabindex="-1"></a>    <span class="at">output_options =</span> <span class="fu">c</span>(<span class="st">&quot;&quot;</span>, <span class="st">&quot;AS+&quot;</span>), <span class="co"># no status for the 1st array</span></span>
+<span id="cb6-8"><a href="#cb6-8" tabindex="-1"></a>    <span class="at">show_batch_console =</span> <span class="cn">FALSE</span> <span class="co"># to hide the log</span></span>
+<span id="cb6-9"><a href="#cb6-9" tabindex="-1"></a>  )</span>
+<span id="cb6-10"><a href="#cb6-10" tabindex="-1"></a><span class="co">#&gt; Start of batch procedure; file: C:\Users\KQCFFL\AppData\Local\Temp\Rtmpm05wlj\RTA_13aa821eb5b19.arb</span></span>
+<span id="cb6-11"><a href="#cb6-11" tabindex="-1"></a><span class="co">#&gt; &lt;OPENMICRODATA&gt; &quot;C:\Users\KQCFFL\AppData\Local\Temp\Rtmpm05wlj\RTA_13aa85d87423f.asc&quot;</span></span>
+<span id="cb6-12"><a href="#cb6-12" tabindex="-1"></a><span class="co">#&gt; &lt;OPENMETADATA&gt; &quot;C:\Users\KQCFFL\AppData\Local\Temp\Rtmpm05wlj\RTA_13aa85d87423f.rda&quot;</span></span>
+<span id="cb6-13"><a href="#cb6-13" tabindex="-1"></a><span class="co">#&gt; &lt;SPECIFYTABLE&gt; &quot;V1&quot;|&quot;&lt;freq&gt;&quot;||</span></span>
+<span id="cb6-14"><a href="#cb6-14" tabindex="-1"></a><span class="co">#&gt; &lt;SAFETYRULE&gt; FREQ(3,10)</span></span>
+<span id="cb6-15"><a href="#cb6-15" tabindex="-1"></a><span class="co">#&gt; &lt;SPECIFYTABLE&gt; &quot;V1&quot;&quot;V2&quot;|&quot;&lt;freq&gt;&quot;||</span></span>
+<span id="cb6-16"><a href="#cb6-16" tabindex="-1"></a><span class="co">#&gt; &lt;SAFETYRULE&gt; FREQ(3,10)</span></span>
+<span id="cb6-17"><a href="#cb6-17" tabindex="-1"></a><span class="co">#&gt; &lt;READMICRODATA&gt;</span></span>
+<span id="cb6-18"><a href="#cb6-18" tabindex="-1"></a><span class="co">#&gt; Start explore file: C:\Users\KQCFFL\AppData\Local\Temp\Rtmpm05wlj\RTA_13aa85d87423f.asc</span></span>
+<span id="cb6-19"><a href="#cb6-19" tabindex="-1"></a><span class="co">#&gt; Start computing tables</span></span>
+<span id="cb6-20"><a href="#cb6-20" tabindex="-1"></a><span class="co">#&gt; Table: V1 | &lt;freq&gt; has been specified</span></span>
+<span id="cb6-21"><a href="#cb6-21" tabindex="-1"></a><span class="co">#&gt; Table: V1 x V2 | &lt;freq&gt; has been specified</span></span>
+<span id="cb6-22"><a href="#cb6-22" tabindex="-1"></a><span class="co">#&gt; Tables have been computed</span></span>
+<span id="cb6-23"><a href="#cb6-23" tabindex="-1"></a><span class="co">#&gt; Micro data file read; processing time 0 seconds</span></span>
+<span id="cb6-24"><a href="#cb6-24" tabindex="-1"></a><span class="co">#&gt; Tables from microdata have been read</span></span>
+<span id="cb6-25"><a href="#cb6-25" tabindex="-1"></a><span class="co">#&gt; &lt;SUPPRESS&gt; GH(1,100)</span></span>
+<span id="cb6-26"><a href="#cb6-26" tabindex="-1"></a><span class="co">#&gt; Start of the hypercube protection for table V1 | &lt;freq&gt;</span></span>
+<span id="cb6-27"><a href="#cb6-27" tabindex="-1"></a><span class="co">#&gt; End of hypercube protection. Time used 1 seconds</span></span>
+<span id="cb6-28"><a href="#cb6-28" tabindex="-1"></a><span class="co">#&gt;                    Number of suppressions: 1</span></span>
+<span id="cb6-29"><a href="#cb6-29" tabindex="-1"></a><span class="co">#&gt; The hypercube procedure has been applied</span></span>
+<span id="cb6-30"><a href="#cb6-30" tabindex="-1"></a><span class="co">#&gt;                    1 cells have been suppressed</span></span>
+<span id="cb6-31"><a href="#cb6-31" tabindex="-1"></a><span class="co">#&gt; &lt;WRITETABLE&gt; (1,4,,&quot;C:\Users\KQCFFL\AppData\Local\Temp\Rtmpm05wlj\RTA_13aa861ea459a.sbs&quot;)</span></span>
+<span id="cb6-32"><a href="#cb6-32" tabindex="-1"></a><span class="co">#&gt; Table: V1 | &lt;freq&gt; has been written</span></span>
+<span id="cb6-33"><a href="#cb6-33" tabindex="-1"></a><span class="co">#&gt;                    Output file name: C:\Users\KQCFFL\AppData\Local\Temp\Rtmpm05wlj\RTA_13aa861ea459a.sbs</span></span>
+<span id="cb6-34"><a href="#cb6-34" tabindex="-1"></a><span class="co">#&gt; &lt;SUPPRESS&gt; GH(2,100)</span></span>
+<span id="cb6-35"><a href="#cb6-35" tabindex="-1"></a><span class="co">#&gt; Start of the hypercube protection for table V1 x V2 | &lt;freq&gt;</span></span>
+<span id="cb6-36"><a href="#cb6-36" tabindex="-1"></a><span class="co">#&gt; End of hypercube protection. Time used 1 seconds</span></span>
+<span id="cb6-37"><a href="#cb6-37" tabindex="-1"></a><span class="co">#&gt;                    Number of suppressions: 2</span></span>
+<span id="cb6-38"><a href="#cb6-38" tabindex="-1"></a><span class="co">#&gt; The hypercube procedure has been applied</span></span>
+<span id="cb6-39"><a href="#cb6-39" tabindex="-1"></a><span class="co">#&gt;                    2 cells have been suppressed</span></span>
+<span id="cb6-40"><a href="#cb6-40" tabindex="-1"></a><span class="co">#&gt; &lt;WRITETABLE&gt; (2,4,AS+,&quot;C:\Users\KQCFFL\AppData\Local\Temp\Rtmpm05wlj\RTA_13aa844945238.sbs&quot;)</span></span>
+<span id="cb6-41"><a href="#cb6-41" tabindex="-1"></a><span class="co">#&gt; Table: V1 x V2 | &lt;freq&gt; has been written</span></span>
+<span id="cb6-42"><a href="#cb6-42" tabindex="-1"></a><span class="co">#&gt;                    Output file name: C:\Users\KQCFFL\AppData\Local\Temp\Rtmpm05wlj\RTA_13aa844945238.sbs</span></span>
+<span id="cb6-43"><a href="#cb6-43" tabindex="-1"></a><span class="co">#&gt; End of TauArgus run</span></span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a></span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a>secret1</span>
+<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a><span class="co">#&gt; NULL</span></span></code></pre></div>
+<blockquote>
+<p>Note on the writing <code>suppress = &quot;GH(.,100)&quot;</code> :_</p>
+<p>The first parameter expected by τ-Argus is the tab number. Here, we
+want to apply the same method of deleting the secondary secret to each
+table. If there is only one method and several tabs, the characters
+between the parenthesis and the first comma are ignored and the
+automatically calculated tabulation numbers.</p>
+</blockquote>
+<p>The function help only describes the 4 mandatory arguments. The
+arguments available are documented in the basic functions the
+constituent (<code>micro_asc_rda</code>, <code>micro_arb</code>,
+<code>run_arb</code>, <code>import</code>). All argument of these
+functions can be used in <code>rtauargus</code>. Their The following
+section provides details on the operation of the system.</p>
+<p style="text-align: right">
+<a href="#TOC" title="Back to summary">summary ↑</a>
+</p>
+<!-- ####################################################################### -->
+</div>
+</div>
+</div>
+<div id="process-decomposition" class="section level2">
+<h2>Process decomposition</h2>
+<p>Using the <code>micro_rtauargus</code> function is convenient in
+terms of lines of code to enter. However, this approach can be quite
+cumbersome if the tables to be secreted have in common a certain number
+of characteristics.</p>
+<p>For example, we would like to generate only the asc and rda files,
+then run several batches using these same files. This was not the case
+in the examples seen so far, where all intermediate files were
+systematically regenerated, even if their content was identical.</p>
+<p>To do this, we can use the functions called successively by the
+function <code>micro_rtauargus</code>, namely :</p>
+<blockquote>
+<p><strong><a href="#function-micro_asc_rda">micro_asc_rda()</a>   →  <a href="#function-micro_arb">micro_arb()</a>   →  <a href="#function-run_arb">run_arb()</a>   →   <a href="#function-import">import()</a></strong></p>
+</blockquote>
+<div id="function-micro_asc_rda." class="section level3">
+<h3>[1] Function <code>micro_asc_rda</code>.</h3>
+<p>Argus only accepts microdata as input in a well-defined form:</p>
+<ul>
+<li>a text file with fixed length columns, without column headers (.asc
+file) ;</li>
+<li>a variable description file (.rda file).</li>
+</ul>
+<p>The function <code>micro_asc_rda</code> produces these two files from
+a data.frame.</p>
+<div id="minimalist-example-1" class="section level4">
+<h4>Minimalist example</h4>
+<p>Only the data and the name of the asc file are entered here. As the
+name of the metadata file is not specified, it takes the same name as
+the asc, but with the extension .rda.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="fu">micro_asc_rda</span>(microdata, <span class="at">asc_filename =</span> <span class="st">&quot;Z:/microdata.asc&quot;</span>)</span></code></pre></div>
+<p>Content of the files created :</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a><span class="fu">file.show</span>(<span class="st">&quot;Z:/microdata.asc&quot;</span>, <span class="st">&quot;Z:/microdata.rda&quot;</span>, <span class="at">pager =</span> <span class="st">&quot;internal&quot;</span>)</span></code></pre></div>
+<pre><code> microdata.asc     microdata.rda      
+                                      
+ A Y T1 100 1.00   V1 1 1             
+ A Z T2   0 2.71     &lt;RECODEABLE&gt;     
+ A Y T1   7 4.20     &lt;TOTCODE&gt; &quot;Total&quot;
+ A Z S_  25 1.00   V2 3 1             
+ B Y T1   0 1.00     &lt;RECODEABLE&gt;     
+ B Z T1   4 2.71     &lt;TOTCODE&gt; &quot;Total&quot;
+ B Y T1   0 4.20   V3 5 2             
+ C Z S_   5 1.00     &lt;RECODEABLE&gt;     
+                     &lt;TOTCODE&gt; &quot;Total&quot;
+                   VAL 8 3            
+                     &lt;NUMERIC&gt;        
+                     &lt;DECIMALS&gt; 0     
+                   WEIGHT 12 4        
+                     &lt;NUMERIC&gt;        
+                     &lt;DECIMALS&gt; 2     </code></pre>
+<blockquote>
+<p>The package functions accept file locations in the form of relative
+path. For example, <code>asc_filename = &quot;microdata.asc&quot;</code> with a
+working directory on <code>Z:/</code> is equivalent to
+<code>asc_filename = &quot;Z:/microdata.asc&quot;</code>._</p>
+</blockquote>
+</div>
+<div id="elaborate-example-1" class="section level4">
+<h4>Elaborate example</h4>
+<p>We add to the previous example :</p>
+<ul>
+<li>a weight variable ;</li>
+<li>information on a hierarchical variable ;</li>
+<li>differentiated codes for totals;</li>
+<li>a minimum number of decimal places to be written for numerical
+variables.</li>
+</ul>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a><span class="fu">micro_asc_rda</span>(</span>
+<span id="cb11-2"><a href="#cb11-2" tabindex="-1"></a>  <span class="at">microdata =</span> microdata,</span>
+<span id="cb11-3"><a href="#cb11-3" tabindex="-1"></a>  <span class="at">asc_filename =</span> <span class="st">&quot;Z:/microdata.asc&quot;</span>,</span>
+<span id="cb11-4"><a href="#cb11-4" tabindex="-1"></a>  <span class="at">weight_var =</span> <span class="st">&quot;WEIGHT&quot;</span>,</span>
+<span id="cb11-5"><a href="#cb11-5" tabindex="-1"></a>  <span class="at">hrc =</span> <span class="fu">c</span>(<span class="at">V3 =</span> <span class="st">&quot;1 1&quot;</span>),</span>
+<span id="cb11-6"><a href="#cb11-6" tabindex="-1"></a>  <span class="at">totcode =</span> <span class="fu">c</span>(<span class="st">&quot;Ensemble&quot;</span>, <span class="at">V2 =</span> <span class="st">&quot;TOTAL&quot;</span>),</span>
+<span id="cb11-7"><a href="#cb11-7" tabindex="-1"></a>  <span class="at">decimals =</span> <span class="dv">1</span></span>
+<span id="cb11-8"><a href="#cb11-8" tabindex="-1"></a>)</span></code></pre></div>
+<p>Content of the files created :</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a><span class="fu">file.show</span>(<span class="st">&quot;Z:/microdata.asc&quot;</span>, <span class="st">&quot;Z:/microdata.rda&quot;</span>, <span class="at">pager =</span> <span class="st">&quot;internal&quot;</span>)</span></code></pre></div>
+<pre><code> microdata.asc       microdata.rda         
+                                           
+ A Y T1 100.0 1.00   V1 1 1                
+ A Z T2   0.0 2.71     &lt;RECODEABLE&gt;        
+ A Y T1   7.0 4.20     &lt;TOTCODE&gt; &quot;Ensemble&quot;
+ A Z S_  25.0 1.00   V2 3 1                
+ B Y T1   0.0 1.00     &lt;RECODEABLE&gt;        
+ B Z T1   4.0 2.71     &lt;TOTCODE&gt; &quot;TOTAL&quot;   
+ B Y T1   0.0 4.20   V3 5 2                
+ C Z S_   5.0 1.00     &lt;RECODEABLE&gt;        
+                       &lt;TOTCODE&gt; &quot;Ensemble&quot;
+                       &lt;HIERARCHICAL&gt;      
+                       &lt;HIERLEVELS&gt; 1 1    
+                     VAL 8 5               
+                       &lt;NUMERIC&gt;           
+                       &lt;DECIMALS&gt; 1        
+                     WEIGHT 14 4           
+                       &lt;WEIGHT&gt;            
+                       &lt;DECIMALS&gt; 2        </code></pre>
+</div>
+<div id="temporary-files" class="section level4">
+<h4>Temporary files</h4>
+<p>For any parameter <code>*_filename</code> not filled, the generated
+files are placed in a temporary folder. It is possible to retrieve the
+location and name (random) of these files in the return value of the
+function.</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a>names_asc_rda <span class="ot">&lt;-</span> <span class="fu">micro_asc_rda</span>(microdata)</span>
+<span id="cb14-2"><a href="#cb14-2" tabindex="-1"></a>names_asc_rda</span>
+<span id="cb14-3"><a href="#cb14-3" tabindex="-1"></a><span class="co">#&gt; $asc_filename</span></span>
+<span id="cb14-4"><a href="#cb14-4" tabindex="-1"></a><span class="co">#&gt; [1] &quot;C:\\Users\\KQCFFL\\AppData\\Local\\Temp\\Rtmpm05wlj\\RTA_13aa875d56ea.asc&quot;</span></span>
+<span id="cb14-5"><a href="#cb14-5" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb14-6"><a href="#cb14-6" tabindex="-1"></a><span class="co">#&gt; $rda_filename</span></span>
+<span id="cb14-7"><a href="#cb14-7" tabindex="-1"></a><span class="co">#&gt; [1] &quot;C:\\Users\\KQCFFL\\AppData\\Local\\Temp\\Rtmpm05wlj\\RTA_13aa875d56ea.rda&quot;</span></span></code></pre></div>
+<p style="text-align: right">
+<a href="#TOC" title="Back to summary">summary ↑</a>
+</p>
+</div>
+</div>
+<div id="function-micro_arb." class="section level3">
+<h3>[2] Function <code>micro_arb</code>.</h3>
+<p>This function builds a batch file executable by τ-Argus. It takes as
+mandatory arguments:</p>
+<ul>
+<li>asc file name ;</li>
+<li>tab(s) (up to 10, as a list) ;</li>
+<li>primary secrecy rule(s);</li>
+<li>method(s) for managing secondary secrecy.</li>
+</ul>
+<p>The function also needs the name of the rda file. If it is not
+specified, the same name as the asc file with the .rda extension is
+used.</p>
+<blockquote>
+<p>The function does not check the existence of the specified
+directories or files. It only generates a file of instructions, without
+evaluating the validity._</p>
+</blockquote>
+<div id="minimalist-example-2" class="section level4">
+<h4>Minimalist example</h4>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" tabindex="-1"></a><span class="fu">micro_arb</span>(</span>
+<span id="cb15-2"><a href="#cb15-2" tabindex="-1"></a>  <span class="at">arb_filename =</span> <span class="st">&quot;Z:/microdata.arb&quot;</span>,</span>
+<span id="cb15-3"><a href="#cb15-3" tabindex="-1"></a>  <span class="at">asc_filename =</span> <span class="st">&quot;Z:/microdata.asc&quot;</span>,</span>
+<span id="cb15-4"><a href="#cb15-4" tabindex="-1"></a>  <span class="at">explanatory_vars =</span> <span class="st">&quot;V1&quot;</span>,</span>
+<span id="cb15-5"><a href="#cb15-5" tabindex="-1"></a>  <span class="at">safety_rules =</span> <span class="st">&quot;FREQ(3,10)&quot;</span>,</span>
+<span id="cb15-6"><a href="#cb15-6" tabindex="-1"></a>  <span class="at">suppress =</span> <span class="st">&quot;GH(.,100)&quot;</span>,</span>
+<span id="cb15-7"><a href="#cb15-7" tabindex="-1"></a>  <span class="at">output_names =</span> <span class="st">&quot;Z:/results/secretV1.csv&quot;</span></span>
+<span id="cb15-8"><a href="#cb15-8" tabindex="-1"></a>)</span></code></pre></div>
+<p>Content of the file created :</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" tabindex="-1"></a><span class="fu">file.show</span>(<span class="st">&quot;Z:/microdata.arb&quot;</span>, <span class="at">pager =</span> <span class="st">&quot;internal&quot;</span>)</span></code></pre></div>
+<pre><code>// Batch generated by package *rtauargus*
+// (2025-02-17 12:14:22 CET)
+&lt;OPENMICRODATA&gt; &quot;Z:\microdata.asc&quot;
+&lt;OPENMETADATA&gt; &quot;Z:\microdata.rda&quot;
+&lt;SPECIFYTABLE&gt; &quot;V1&quot;|&quot;&lt;freq&gt;&quot;||
+&lt;SAFETYRULE&gt; FREQ(3,10)
+&lt;READMICRODATA&gt;
+&lt;SUPPRESS&gt; GH(1,100)
+&lt;WRITETABLE&gt; (1,4,AS+SE+,&quot;Z:\results\secretV1.csv&quot;)</code></pre>
+</div>
+<div id="elaborate-example-2" class="section level4">
+<h4>Elaborate example</h4>
+<p>The previous example is completed with :</p>
+<ul>
+<li>a second tab ;</li>
+<li>a response variable to be summed (instead of a count) ;</li>
+<li>the addition of 85% dominance for the second table;</li>
+<li>a weighting in the first table (but not in the second);</li>
+<li>deletion of empty crossovers in both tables (SE+).</li>
+</ul>
+<p>Passing a single value for an option applies the same treatment to
+each tab. For differentiated options, it is necessary to pass a vector
+containing as many values as there are tabs.</p>
+<p>``{r arb2} micro_arb( arb_filename = “Z:/microdata.arb”, asc_filename
+= “Z:/microdata.asc”, explanatory_vars = list(“V1”, c(“V2”, “V3”)),
+response_var = “VAL”, safety_rules = c(“FREQ(3,10)”,
+“FREQ(3,10)|NK(1,85)”), weighted = c(TRUE, FALSE), suppress =
+“GH(.,100)”, output_options = “AS+SE+” )</p>
+<pre><code>
+
+``` r
+file.show(&quot;Z:/microdata.arb&quot;, pager = &quot;internal&quot;)</code></pre>
+<pre><code>// Batch generated by package *rtauargus*
+// (2025-02-17 12:14:22 CET)
+&lt;OPENMICRODATA&gt; &quot;Z:\microdata.asc&quot;
+&lt;OPENMETADATA&gt; &quot;Z:\microdata.rda&quot;
+&lt;SPECIFYTABLE&gt; &quot;V1&quot;|&quot;&lt;freq&gt;&quot;||
+&lt;SAFETYRULE&gt; FREQ(3,10)
+&lt;READMICRODATA&gt;
+&lt;SUPPRESS&gt; GH(1,100)
+&lt;WRITETABLE&gt; (1,4,AS+SE+,&quot;Z:\results\secretV1.csv&quot;)</code></pre>
+</div>
+<div id="temporary-files-1" class="section level4">
+<h4>Temporary files</h4>
+<p>In the previous example, the output file names
+(<code>output_names</code>) were not specified, which led to the
+generation of file names temporary. Specifying the name of the .arb file
+is not mandatory either. These information can be retrieved from the
+return value of the function.</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" tabindex="-1"></a>infos_arb <span class="ot">&lt;-</span></span>
+<span id="cb20-2"><a href="#cb20-2" tabindex="-1"></a>  <span class="fu">micro_arb</span>(</span>
+<span id="cb20-3"><a href="#cb20-3" tabindex="-1"></a>    <span class="at">asc_filename =</span> <span class="st">&quot;Z:/microdata.asc&quot;</span>,</span>
+<span id="cb20-4"><a href="#cb20-4" tabindex="-1"></a>    <span class="at">explanatory_vars =</span> <span class="fu">list</span>(<span class="st">&quot;V1&quot;</span>, <span class="fu">c</span>(<span class="st">&quot;V2&quot;</span>, <span class="st">&quot;V3&quot;</span>)),</span>
+<span id="cb20-5"><a href="#cb20-5" tabindex="-1"></a>    <span class="at">safety_rules =</span> <span class="st">&quot;FREQ(3,10)&quot;</span>,</span>
+<span id="cb20-6"><a href="#cb20-6" tabindex="-1"></a>    <span class="at">suppress =</span> <span class="st">&quot;GH(.,100)&quot;</span>,</span>
+<span id="cb20-7"><a href="#cb20-7" tabindex="-1"></a>    <span class="at">output_type =</span> <span class="st">&quot;4&quot;</span></span>
+<span id="cb20-8"><a href="#cb20-8" tabindex="-1"></a>  )</span>
+<span id="cb20-9"><a href="#cb20-9" tabindex="-1"></a>infos_arb</span>
+<span id="cb20-10"><a href="#cb20-10" tabindex="-1"></a><span class="co">#&gt; $arb_filename</span></span>
+<span id="cb20-11"><a href="#cb20-11" tabindex="-1"></a><span class="co">#&gt; [1] &quot;C:\\Users\\KQCFFL\\AppData\\Local\\Temp\\Rtmpm05wlj\\RTA_13aa83d136448.arb&quot;</span></span>
+<span id="cb20-12"><a href="#cb20-12" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb20-13"><a href="#cb20-13" tabindex="-1"></a><span class="co">#&gt; $output_names</span></span>
+<span id="cb20-14"><a href="#cb20-14" tabindex="-1"></a><span class="co">#&gt; [1] &quot;C:\\Users\\KQCFFL\\AppData\\Local\\Temp\\Rtmpm05wlj\\RTA_13aa81a11772c.sbs&quot;</span></span>
+<span id="cb20-15"><a href="#cb20-15" tabindex="-1"></a><span class="co">#&gt; [2] &quot;C:\\Users\\KQCFFL\\AppData\\Local\\Temp\\Rtmpm05wlj\\RTA_13aa822675f41.sbs&quot;</span></span></code></pre></div>
+<p style="text-align: right">
+<a href="#TOC" title="Back to summary">summary ↑</a>
+</p>
+</div>
+</div>
+<div id="function-run_arb" class="section level3">
+<h3>[3] Function <code>run_arb</code></h3>
+<p>Now that the instructions have been generated in an .arb file, we can
+submit it to τ-Argus in batch mode. We get the list of tables secreted
+:</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" tabindex="-1"></a>secret2 <span class="ot">&lt;-</span> <span class="fu">run_arb</span>(<span class="st">&quot;Z:/microdata.arb&quot;</span>, <span class="at">missing_dir =</span> <span class="st">&quot;create&quot;</span>)</span>
+<span id="cb21-2"><a href="#cb21-2" tabindex="-1"></a><span class="co">#&gt; Start of batch procedure; file: Z:\microdata.arb</span></span>
+<span id="cb21-3"><a href="#cb21-3" tabindex="-1"></a><span class="co">#&gt; &lt;OPENMICRODATA&gt; &quot;Z:\microdata.asc&quot;</span></span>
+<span id="cb21-4"><a href="#cb21-4" tabindex="-1"></a><span class="co">#&gt; &lt;OPENMETADATA&gt; &quot;Z:\microdata.rda&quot;</span></span>
+<span id="cb21-5"><a href="#cb21-5" tabindex="-1"></a><span class="co">#&gt; &lt;SPECIFYTABLE&gt; &quot;V1&quot;|&quot;&lt;freq&gt;&quot;||</span></span>
+<span id="cb21-6"><a href="#cb21-6" tabindex="-1"></a><span class="co">#&gt; &lt;SAFETYRULE&gt; FREQ(3,10)</span></span>
+<span id="cb21-7"><a href="#cb21-7" tabindex="-1"></a><span class="co">#&gt; &lt;READMICRODATA&gt;</span></span>
+<span id="cb21-8"><a href="#cb21-8" tabindex="-1"></a><span class="co">#&gt; Start explore file: Z:\microdata.asc</span></span>
+<span id="cb21-9"><a href="#cb21-9" tabindex="-1"></a><span class="co">#&gt; Start computing tables</span></span>
+<span id="cb21-10"><a href="#cb21-10" tabindex="-1"></a><span class="co">#&gt; Table: V1 | &lt;freq&gt; has been specified</span></span>
+<span id="cb21-11"><a href="#cb21-11" tabindex="-1"></a><span class="co">#&gt; Tables have been computed</span></span>
+<span id="cb21-12"><a href="#cb21-12" tabindex="-1"></a><span class="co">#&gt; Micro data file read; processing time 0 seconds</span></span>
+<span id="cb21-13"><a href="#cb21-13" tabindex="-1"></a><span class="co">#&gt; Tables from microdata have been read</span></span>
+<span id="cb21-14"><a href="#cb21-14" tabindex="-1"></a><span class="co">#&gt; &lt;SUPPRESS&gt; GH(1,100)</span></span>
+<span id="cb21-15"><a href="#cb21-15" tabindex="-1"></a><span class="co">#&gt; Start of the hypercube protection for table V1 | &lt;freq&gt;</span></span>
+<span id="cb21-16"><a href="#cb21-16" tabindex="-1"></a><span class="co">#&gt; End of hypercube protection. Time used 1 seconds</span></span>
+<span id="cb21-17"><a href="#cb21-17" tabindex="-1"></a><span class="co">#&gt;                    Number of suppressions: 1</span></span>
+<span id="cb21-18"><a href="#cb21-18" tabindex="-1"></a><span class="co">#&gt; The hypercube procedure has been applied</span></span>
+<span id="cb21-19"><a href="#cb21-19" tabindex="-1"></a><span class="co">#&gt;                    1 cells have been suppressed</span></span>
+<span id="cb21-20"><a href="#cb21-20" tabindex="-1"></a><span class="co">#&gt; &lt;WRITETABLE&gt; (1,4,AS+SE+,&quot;Z:\results\secretV1.csv&quot;)</span></span>
+<span id="cb21-21"><a href="#cb21-21" tabindex="-1"></a><span class="co">#&gt; Table: V1 | &lt;freq&gt; has been written</span></span>
+<span id="cb21-22"><a href="#cb21-22" tabindex="-1"></a><span class="co">#&gt;                    Output file name: Z:\results\secretV1.csv</span></span>
+<span id="cb21-23"><a href="#cb21-23" tabindex="-1"></a><span class="co">#&gt; End of TauArgus run</span></span></code></pre></div>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" tabindex="-1"></a></span>
+<span id="cb22-2"><a href="#cb22-2" tabindex="-1"></a>secret2</span>
+<span id="cb22-3"><a href="#cb22-3" tabindex="-1"></a><span class="co">#&gt; NULL</span></span></code></pre></div>
+<p><code>run_arb</code> is the only function in the package that runs
+τ-Argus. It requires that the software be accessible from the
+workstation.</p>
+<p>Only the <code>arb_filename</code> argument is mandatory, because all
+the information are present in the .arb file. Optional parameters are
+also available:</p>
+<ul>
+<li><code>missing_dir</code> : action to perform if a folder where the
+result will be written does not exist (trigger an error or create
+it)</li>
+<li><code>tauargus_exe</code> : to change the executable (override the
+<code>rtauargus.tauargus_exe</code> the time of the function) ;</li>
+<li><code>logbook</code> : location and name of the file containing the
+error log;</li>
+<li>show_batch_on_console` : to display or not the batch progress in the
+console ;</li>
+<li><code>import</code> : if disabled, the function only generates text
+files without importing them into R (see next section for details).</li>
+</ul>
+<p>If the tabs have been given a name in <code>micro_arb</code>, these
+names are used for the list of data.frames output from
+<code>run_arb</code> (no names defined in the example above).</p>
+<blockquote>
+<p>Checks are made before the actual launch of τ-Argus : existence of
+the software on the workstation, asc and rda files, folders where write
+the results, variables to be used (crosses, variable of response, …) in
+the metadata (rda file)._</p>
+</blockquote>
+<p style="text-align: right">
+<a href="#TOC" title="Back to summary">summary ↑</a>
+</p>
+</div>
+<div id="import-function" class="section level3">
+<h3>[4] Import function</h3>
+<p>This function imports the results produced by τ-Argus (text files) to
+from the information contained in an arb file. It therefore requires
+that that the batch has been completed without error and that the files
+are still present.</p>
+<p>For this last reason, the <code>import</code> function is typically
+called from <code>run_arb</code> by setting <code>import = TRUE</code>.
+It can also be used from independently (e.g. if you don’t want to
+restart a batch that has took a long time to execute).</p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" tabindex="-1"></a>secret2 <span class="ot">&lt;-</span> <span class="fu">import</span>(<span class="st">&quot;Z:/microdata.arb&quot;</span>)</span>
+<span id="cb23-2"><a href="#cb23-2" tabindex="-1"></a><span class="co"># produces the same result as run_arb(&quot;Z:/microdata.arb&quot;, import = TRUE)</span></span></code></pre></div>
+<div id="accepted-formats" class="section level4">
+<h4>Accepted formats</h4>
+<p>It is only possible (at the moment) to import results of type :</p>
+<ul>
+<li>2: csv for pivot-table</li>
+<li>4: sbs output format</li>
+</ul>
+<p>If the import is impossible for a given tab, an empty data.frame is
+returned (with a warning message).</p>
+</div>
+<div id="tab-attributes" class="section level4">
+<h4>Tab attributes</h4>
+<p>Each data.frame in the list is associated with a set of attributes,
+some metadata keeping track of the specifications passed to τ-Argus.</p>
+<p>For example, for <code>secret2[[2]]</code> (the second array of
+<code>secret2</code>), we have the parameters that were passed to the
+function (the other correspond to default values of the package).</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" tabindex="-1"></a><span class="fu">str</span>(secret2[[<span class="dv">2</span>]])</span>
+<span id="cb24-2"><a href="#cb24-2" tabindex="-1"></a><span class="co">#&gt;  NULL</span></span></code></pre></div>
+<p style="text-align: right">
+<a href="#TOC" title="Back to summary">summary ↑</a>
+</p>
+<!-- ####################################################################### -->
+</div>
+</div>
+</div>
+<div id="package-options" class="section level2">
+<h2>Package options</h2>
+<p>The package options define the default behavior of the functions.</p>
+<p>These options are used if a mandatory argument of a function is not
+filled in. They allow not to repeat systematically the same parameter at
+each call of a function. The option name is the name of the argument of
+a function preceded by <code>rtauargus.</code> :</p>
+<blockquote>
+<p>For example, <code>rtauargus.decimals</code> will be the value used
+if the argument The <code>decimals</code> of the
+<code>micro_asc_rda</code> function is not filled by the user.</p>
+</blockquote>
+<p>On loading, the package assigns a default value to all options of
+rtauargus that are not yet declared. The options already defined by the
+user keep their values.</p>
+<p>The available options and their default values are listed below:</p>
+<table>
+<colgroup>
+<col width="30%" />
+<col width="38%" />
+<col width="10%" />
+<col width="20%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">Option</th>
+<th align="left">Default value</th>
+<th align="left">Type</th>
+<th align="right">Function concerned</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">rtauargus.decimals</td>
+<td align="left">0</td>
+<td align="left">integer</td>
+<td align="right">tab_rda</td>
+</tr>
+<tr class="even">
+<td align="left">rtauargus.decimals</td>
+<td align="left">0</td>
+<td align="left">integer</td>
+<td align="right">micro_asc_rda</td>
+</tr>
+<tr class="odd">
+<td align="left">rtauargus.totcode</td>
+<td align="left">“Total”</td>
+<td align="left">character</td>
+<td align="right">tab_rda</td>
+</tr>
+<tr class="even">
+<td align="left">rtauargus.totcode</td>
+<td align="left">“Total”</td>
+<td align="left">character</td>
+<td align="right">micro_asc_rda</td>
+</tr>
+<tr class="odd">
+<td align="left">rtauargus.missing</td>
+<td align="left">“”</td>
+<td align="left">character</td>
+<td align="right">micro_asc_rda</td>
+</tr>
+<tr class="even">
+<td align="left">rtauargus.hierleadstring</td>
+<td align="left">“@”</td>
+<td align="left">character</td>
+<td align="right">micro_asc_rda</td>
+</tr>
+<tr class="odd">
+<td align="left">rtauargus.hierleadstring</td>
+<td align="left">“@”</td>
+<td align="left">character</td>
+<td align="right">tab_rda</td>
+</tr>
+<tr class="even">
+<td align="left">rtauargus.separator</td>
+<td align="left">“,”</td>
+<td align="left">character</td>
+<td align="right">tab_arb</td>
+</tr>
+<tr class="odd">
+<td align="left">rtauargus.separator</td>
+<td align="left">“,”</td>
+<td align="left">character</td>
+<td align="right">tab_rda</td>
+</tr>
+<tr class="even">
+<td align="left">rtauargus.response_var</td>
+<td align="left">“&lt;freq&gt;”</td>
+<td align="left">character</td>
+<td align="right">micro_arb</td>
+</tr>
+<tr class="odd">
+<td align="left">rtauargus.weighted</td>
+<td align="left">FALSE</td>
+<td align="left">logical</td>
+<td align="right">micro_arb</td>
+</tr>
+<tr class="even">
+<td align="left">rtauargus.linked</td>
+<td align="left">FALSE</td>
+<td align="left">logical</td>
+<td align="right">micro_arb</td>
+</tr>
+<tr class="odd">
+<td align="left">rtauargus.output_type</td>
+<td align="left">“4”</td>
+<td align="left">character</td>
+<td align="right">tab_arb</td>
+</tr>
+<tr class="even">
+<td align="left">rtauargus.output_type</td>
+<td align="left">“4”</td>
+<td align="left">character</td>
+<td align="right">micro_arb</td>
+</tr>
+<tr class="odd">
+<td align="left">rtauargus.output_options</td>
+<td align="left">“”</td>
+<td align="left">character</td>
+<td align="right">micro_arb</td>
+</tr>
+<tr class="even">
+<td align="left">rtauargus.output_options</td>
+<td align="left">“”</td>
+<td align="left">character</td>
+<td align="right">tab_arb</td>
+</tr>
+<tr class="odd">
+<td align="left">rtauargus.missing_dir</td>
+<td align="left">“stop”</td>
+<td align="left">character</td>
+<td align="right">run_arb</td>
+</tr>
+<tr class="even">
+<td align="left">rtauargus.tauargus_exe</td>
+<td align="left">“Y:/Logiciels/TauArgus/TauArgus.exe”</td>
+<td align="left">character</td>
+<td align="right">run_arb</td>
+</tr>
+<tr class="odd">
+<td align="left">rtauargus.show_batch_console</td>
+<td align="left">FALSE</td>
+<td align="left">logical</td>
+<td align="right">run_arb</td>
+</tr>
+<tr class="even">
+<td align="left">rtauargus.import</td>
+<td align="left">FALSE</td>
+<td align="left">logical</td>
+<td align="right">run_arb</td>
+</tr>
+<tr class="odd">
+<td align="left">rtauargus.is_tabular</td>
+<td align="left">TRUE</td>
+<td align="left">logical</td>
+<td align="right">run_arb</td>
+</tr>
+</tbody>
+</table>
+<div id="display" class="section level3">
+<h3>Display</h3>
+<p>To view the options set for the current session:</p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" tabindex="-1"></a><span class="fu">rtauargus_options</span>()</span>
+<span id="cb25-2"><a href="#cb25-2" tabindex="-1"></a><span class="co">#&gt; $rtauargus.decimals</span></span>
+<span id="cb25-3"><a href="#cb25-3" tabindex="-1"></a><span class="co">#&gt; [1] 0</span></span>
+<span id="cb25-4"><a href="#cb25-4" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb25-5"><a href="#cb25-5" tabindex="-1"></a><span class="co">#&gt; $rtauargus.hierleadstring</span></span>
+<span id="cb25-6"><a href="#cb25-6" tabindex="-1"></a><span class="co">#&gt; [1] &quot;@&quot;</span></span>
+<span id="cb25-7"><a href="#cb25-7" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb25-8"><a href="#cb25-8" tabindex="-1"></a><span class="co">#&gt; $rtauargus.import</span></span>
+<span id="cb25-9"><a href="#cb25-9" tabindex="-1"></a><span class="co">#&gt; [1] FALSE</span></span>
+<span id="cb25-10"><a href="#cb25-10" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb25-11"><a href="#cb25-11" tabindex="-1"></a><span class="co">#&gt; $rtauargus.is_tabular</span></span>
+<span id="cb25-12"><a href="#cb25-12" tabindex="-1"></a><span class="co">#&gt; [1] TRUE</span></span>
+<span id="cb25-13"><a href="#cb25-13" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb25-14"><a href="#cb25-14" tabindex="-1"></a><span class="co">#&gt; $rtauargus.linked</span></span>
+<span id="cb25-15"><a href="#cb25-15" tabindex="-1"></a><span class="co">#&gt; [1] FALSE</span></span>
+<span id="cb25-16"><a href="#cb25-16" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb25-17"><a href="#cb25-17" tabindex="-1"></a><span class="co">#&gt; $rtauargus.missing</span></span>
+<span id="cb25-18"><a href="#cb25-18" tabindex="-1"></a><span class="co">#&gt; [1] &quot;&quot;</span></span>
+<span id="cb25-19"><a href="#cb25-19" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb25-20"><a href="#cb25-20" tabindex="-1"></a><span class="co">#&gt; $rtauargus.missing_dir</span></span>
+<span id="cb25-21"><a href="#cb25-21" tabindex="-1"></a><span class="co">#&gt; [1] &quot;stop&quot;</span></span>
+<span id="cb25-22"><a href="#cb25-22" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb25-23"><a href="#cb25-23" tabindex="-1"></a><span class="co">#&gt; $rtauargus.output_options</span></span>
+<span id="cb25-24"><a href="#cb25-24" tabindex="-1"></a><span class="co">#&gt; [1] &quot;AS+SE+&quot;</span></span>
+<span id="cb25-25"><a href="#cb25-25" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb25-26"><a href="#cb25-26" tabindex="-1"></a><span class="co">#&gt; $rtauargus.output_type</span></span>
+<span id="cb25-27"><a href="#cb25-27" tabindex="-1"></a><span class="co">#&gt; [1] &quot;4&quot;</span></span>
+<span id="cb25-28"><a href="#cb25-28" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb25-29"><a href="#cb25-29" tabindex="-1"></a><span class="co">#&gt; $rtauargus.response_var</span></span>
+<span id="cb25-30"><a href="#cb25-30" tabindex="-1"></a><span class="co">#&gt; [1] &quot;&lt;freq&gt;&quot;</span></span>
+<span id="cb25-31"><a href="#cb25-31" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb25-32"><a href="#cb25-32" tabindex="-1"></a><span class="co">#&gt; $rtauargus.separator</span></span>
+<span id="cb25-33"><a href="#cb25-33" tabindex="-1"></a><span class="co">#&gt; [1] &quot;,&quot;</span></span>
+<span id="cb25-34"><a href="#cb25-34" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb25-35"><a href="#cb25-35" tabindex="-1"></a><span class="co">#&gt; $rtauargus.show_batch_console</span></span>
+<span id="cb25-36"><a href="#cb25-36" tabindex="-1"></a><span class="co">#&gt; [1] FALSE</span></span>
+<span id="cb25-37"><a href="#cb25-37" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb25-38"><a href="#cb25-38" tabindex="-1"></a><span class="co">#&gt; $rtauargus.tauargus_exe</span></span>
+<span id="cb25-39"><a href="#cb25-39" tabindex="-1"></a><span class="co">#&gt; [1] &quot;Y:/Logiciels/TauArgus/TauArgus4.2.3/TauArgus.exe&quot;</span></span>
+<span id="cb25-40"><a href="#cb25-40" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb25-41"><a href="#cb25-41" tabindex="-1"></a><span class="co">#&gt; $rtauargus.totcode</span></span>
+<span id="cb25-42"><a href="#cb25-42" tabindex="-1"></a><span class="co">#&gt; [1] &quot;Total&quot;</span></span>
+<span id="cb25-43"><a href="#cb25-43" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb25-44"><a href="#cb25-44" tabindex="-1"></a><span class="co">#&gt; $rtauargus.weighted</span></span>
+<span id="cb25-45"><a href="#cb25-45" tabindex="-1"></a><span class="co">#&gt; [1] FALSE</span></span></code></pre></div>
+<p>The values are identical to the default values, except for the
+location of τ-Argus, which has been previously modified. They appear in
+the order alphabetical.</p>
+<p style="text-align: right">
+<a href="#TOC" title="Back to summary">summary ↑</a>
+</p>
+</div>
+<div id="modification-reset" class="section level3">
+<h3>Modification, reset</h3>
+<p>To modify one or more options, use the following syntax (the same as
+above) than the one used to modify the location of τ-Argus) :</p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" tabindex="-1"></a><span class="fu">options</span>(</span>
+<span id="cb26-2"><a href="#cb26-2" tabindex="-1"></a>  <span class="at">rtauargus.show_batch_console =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb26-3"><a href="#cb26-3" tabindex="-1"></a>  <span class="at">rtauargus.output_options =</span> <span class="st">&quot;AS+SE+&quot;</span>,</span>
+<span id="cb26-4"><a href="#cb26-4" tabindex="-1"></a>  <span class="at">rtauargus.output_type =</span> <span class="st">&quot;4&quot;</span>,</span>
+<span id="cb26-5"><a href="#cb26-5" tabindex="-1"></a>  <span class="at">rtauargus.response_var =</span> <span class="st">&quot;VAL&quot;</span></span>
+<span id="cb26-6"><a href="#cb26-6" tabindex="-1"></a>)</span>
+<span id="cb26-7"><a href="#cb26-7" tabindex="-1"></a></span>
+<span id="cb26-8"><a href="#cb26-8" tabindex="-1"></a><span class="fu">str</span>(<span class="fu">rtauargus_options</span>())</span>
+<span id="cb26-9"><a href="#cb26-9" tabindex="-1"></a><span class="co">#&gt; List of 15</span></span>
+<span id="cb26-10"><a href="#cb26-10" tabindex="-1"></a><span class="co">#&gt;  $ rtauargus.decimals          : int 0</span></span>
+<span id="cb26-11"><a href="#cb26-11" tabindex="-1"></a><span class="co">#&gt;  $ rtauargus.hierleadstring    : chr &quot;@&quot;</span></span>
+<span id="cb26-12"><a href="#cb26-12" tabindex="-1"></a><span class="co">#&gt;  $ rtauargus.import            : logi FALSE</span></span>
+<span id="cb26-13"><a href="#cb26-13" tabindex="-1"></a><span class="co">#&gt;  $ rtauargus.is_tabular        : logi TRUE</span></span>
+<span id="cb26-14"><a href="#cb26-14" tabindex="-1"></a><span class="co">#&gt;  $ rtauargus.linked            : logi FALSE</span></span>
+<span id="cb26-15"><a href="#cb26-15" tabindex="-1"></a><span class="co">#&gt;  $ rtauargus.missing           : chr &quot;&quot;</span></span>
+<span id="cb26-16"><a href="#cb26-16" tabindex="-1"></a><span class="co">#&gt;  $ rtauargus.missing_dir       : chr &quot;stop&quot;</span></span>
+<span id="cb26-17"><a href="#cb26-17" tabindex="-1"></a><span class="co">#&gt;  $ rtauargus.output_options    : chr &quot;AS+SE+&quot;</span></span>
+<span id="cb26-18"><a href="#cb26-18" tabindex="-1"></a><span class="co">#&gt;  $ rtauargus.output_type       : chr &quot;4&quot;</span></span>
+<span id="cb26-19"><a href="#cb26-19" tabindex="-1"></a><span class="co">#&gt;  $ rtauargus.response_var      : chr &quot;VAL&quot;</span></span>
+<span id="cb26-20"><a href="#cb26-20" tabindex="-1"></a><span class="co">#&gt;  $ rtauargus.separator         : chr &quot;,&quot;</span></span>
+<span id="cb26-21"><a href="#cb26-21" tabindex="-1"></a><span class="co">#&gt;  $ rtauargus.show_batch_console: logi FALSE</span></span>
+<span id="cb26-22"><a href="#cb26-22" tabindex="-1"></a><span class="co">#&gt;  $ rtauargus.tauargus_exe      : chr &quot;Y:/Logiciels/TauArgus/TauArgus4.2.3/TauArgus.exe&quot;</span></span>
+<span id="cb26-23"><a href="#cb26-23" tabindex="-1"></a><span class="co">#&gt;  $ rtauargus.totcode           : chr &quot;Total&quot;</span></span>
+<span id="cb26-24"><a href="#cb26-24" tabindex="-1"></a><span class="co">#&gt;  $ rtauargus.weighted          : logi FALSE</span></span></code></pre></div>
+<p>To reset certain options:</p>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" tabindex="-1"></a><span class="fu">reset_rtauargus_options</span>(<span class="st">&quot;rtauargus.response_var&quot;</span>, <span class="st">&quot;rtauargus.output_type&quot;</span>)</span>
+<span id="cb27-2"><a href="#cb27-2" tabindex="-1"></a></span>
+<span id="cb27-3"><a href="#cb27-3" tabindex="-1"></a><span class="co"># It is possible to omit the prefix &#39;rtauargus.</span></span>
+<span id="cb27-4"><a href="#cb27-4" tabindex="-1"></a><span class="co"># The following instruction is equivalent:</span></span>
+<span id="cb27-5"><a href="#cb27-5" tabindex="-1"></a><span class="fu">reset_rtauargus_options</span>(<span class="st">&quot;response_var&quot;</span>, <span class="st">&quot;output_type&quot;</span>)</span>
+<span id="cb27-6"><a href="#cb27-6" tabindex="-1"></a></span>
+<span id="cb27-7"><a href="#cb27-7" tabindex="-1"></a><span class="fu">str</span>(<span class="fu">rtauargus_options</span>())</span>
+<span id="cb27-8"><a href="#cb27-8" tabindex="-1"></a><span class="co">#&gt; List of 15</span></span>
+<span id="cb27-9"><a href="#cb27-9" tabindex="-1"></a><span class="co">#&gt;  $ rtauargus.decimals          : int 0</span></span>
+<span id="cb27-10"><a href="#cb27-10" tabindex="-1"></a><span class="co">#&gt;  $ rtauargus.hierleadstring    : chr &quot;@&quot;</span></span>
+<span id="cb27-11"><a href="#cb27-11" tabindex="-1"></a><span class="co">#&gt;  $ rtauargus.import            : logi FALSE</span></span>
+<span id="cb27-12"><a href="#cb27-12" tabindex="-1"></a><span class="co">#&gt;  $ rtauargus.is_tabular        : logi TRUE</span></span>
+<span id="cb27-13"><a href="#cb27-13" tabindex="-1"></a><span class="co">#&gt;  $ rtauargus.linked            : logi FALSE</span></span>
+<span id="cb27-14"><a href="#cb27-14" tabindex="-1"></a><span class="co">#&gt;  $ rtauargus.missing           : chr &quot;&quot;</span></span>
+<span id="cb27-15"><a href="#cb27-15" tabindex="-1"></a><span class="co">#&gt;  $ rtauargus.missing_dir       : chr &quot;stop&quot;</span></span>
+<span id="cb27-16"><a href="#cb27-16" tabindex="-1"></a><span class="co">#&gt;  $ rtauargus.output_options    : chr &quot;AS+SE+&quot;</span></span>
+<span id="cb27-17"><a href="#cb27-17" tabindex="-1"></a><span class="co">#&gt;  $ rtauargus.output_type       : chr &quot;4&quot;</span></span>
+<span id="cb27-18"><a href="#cb27-18" tabindex="-1"></a><span class="co">#&gt;  $ rtauargus.response_var      : chr &quot;&lt;freq&gt;&quot;</span></span>
+<span id="cb27-19"><a href="#cb27-19" tabindex="-1"></a><span class="co">#&gt;  $ rtauargus.separator         : chr &quot;,&quot;</span></span>
+<span id="cb27-20"><a href="#cb27-20" tabindex="-1"></a><span class="co">#&gt;  $ rtauargus.show_batch_console: logi FALSE</span></span>
+<span id="cb27-21"><a href="#cb27-21" tabindex="-1"></a><span class="co">#&gt;  $ rtauargus.tauargus_exe      : chr &quot;Y:/Logiciels/TauArgus/TauArgus4.2.3/TauArgus.exe&quot;</span></span>
+<span id="cb27-22"><a href="#cb27-22" tabindex="-1"></a><span class="co">#&gt;  $ rtauargus.totcode           : chr &quot;Total&quot;</span></span>
+<span id="cb27-23"><a href="#cb27-23" tabindex="-1"></a><span class="co">#&gt;  $ rtauargus.weighted          : logi FALSE</span></span></code></pre></div>
+<p>To reset all values to default (including the path to τ-Argus
+modified at the beginning of the demonstration), do not specify any
+argument:</p>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" tabindex="-1"></a><span class="fu">reset_rtauargus_options</span>()</span></code></pre></div>
+<p style="text-align: right">
+<a href="#TOC" title="Back to summary">summary ↑</a>
+</p>
+</div>
+<div id="local-or-global-reach" class="section level3">
+<h3>Local or global reach</h3>
+<p>Like any R function, the parameterization is done by specifying each
+of the arguments when the function is called (local scope).</p>
+<p>The option system of the package allows by the instructions
+<code>options(rtauargus.&lt;option&gt; = &lt;value&gt;)</code> to define
+options in a more global. Depending on where these instructions are
+written, the configuration will last more or less long:</p>
+<ul>
+<li>in the script, for an effect on the current session only;</li>
+<li>in a user configuration file (.Rprofile…), to allow a user to keep
+track of his presets from a session on the other.</li>
+</ul>
+<p>The second way is <strong>not recommended if the chain of treatment
+is intended to be reproducible</strong>. Indeed, an identical script
+executed on two different machines could produce two results
+different._</p>
+<p style="text-align: right">
+<a href="#TOC" title="Back to summary">summary ↑</a>
+</p>
+<!-- ####################################################################### -->
+</div>
+</div>
+<div id="other-information" class="section level2">
+<h2>Other information</h2>
+<div id="other-features" class="section level4">
+<h4>Other features</h4>
+<p>Some features of the package are not mentioned in this getting
+started:</p>
+<ul>
+<li>management of linked arrays (argument <code>linked</code> in
+<code>micro_arb</code>)</li>
+<li>creation of hierarchical variables from microdata (function
+<code>write_hrc</code>).</li>
+<li>taking into account of apriori file (argument <code>apriori</code>
+in <code>micro_arb</code>)</li>
+<li>use of the <code>micro_rtauargus</code> function from microdata
+already under as a text file (not data.frame)</li>
+<li>optimized launch of a large number of crosses with the same
+parameters (primary secrecy rules, secondary secrecy method, …) :
+function <code>rtauargus_plus</code></li>
+</ul>
+<p>See the help for these functions for more information.</p>
+</div>
+<div id="ideas-for-the-future" class="section level4">
+<h4>Ideas for the future</h4>
+<ul>
+<li>implement <code>request</code> parameters…</li>
+<li>take into account tabulated input data</li>
+<li>…</li>
+</ul>
+</div>
+<div id="report-a-problem-suggest-an-improvement" class="section level4">
+<h4>Report a problem, suggest an improvement</h4>
+<p>The package is under construction. All the features of τ-Argus have
+not been integrated (the purpose is not to integrate them all, only the
+most frequently used).</p>
+<p>For any return or error report, please use <a href="https://gitlab.insee.fr/outilsconfidentialite/rtauargus/-/issues">this
+link</a> (click on <strong>“New issue”</strong>). Requires to be
+connected to gitlab-Insee.</p>
+</div>
+<div id="about-this-vignette" class="section level4">
+<h4>About this vignette</h4>
+<ul>
+<li>Author:
+<strong><a href="mailto:pierre-yves.berrard@insee.fr">Pierre-Yves
+Berrard</a></strong></li>
+<li>Updated by: <strong><a href="mailto:julien.jamme@insee.fr">Julien
+Jamme</a></strong></li>
+<li>Last update: <strong>17/02/2025</strong></li>
+<li>Version of rtauargus used: <strong>1.2.999</strong></li>
+<li>Version of τ-Argus used : <strong>TauArgus 4.2.3</strong></li>
+<li>R version used : <strong>4.3.3</strong></li>
+</ul>
+<p style="text-align: right">
+<a href="#TOC" title="Back to summary">summary ↑</a>
+</p>
+<!-- ####################################################################### -->
+</div>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

@@ -1,14 +1,14 @@
 ---
 title: "Automatic analysis of metadata"
 subtitle: <h2>![logo R](R_logo_small.png)![logo &tau;-Argus](TauBall2_small.png)<br/>Package {rtauargus}</h2>
-  output:
+output:
   rmarkdown::html_vignette:
-  toc: true
-toc_depth: 3
+    toc: true
+    toc_depth: 3
 vignette: >
   %\VignetteIndexEntry{Analyse automatique des métadonnées}
-%\VignetteEngine{knitr::rmarkdown}
-%\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
 
 

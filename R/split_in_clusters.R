@@ -88,7 +88,7 @@ split_in_clusters <- function(list_hrc_identified){
   # Handle cases where the 'field' variable is constant
   if(all(is.na(df_hrc_identified$field))){
     field <- list(df_hrc_identified)
-    cat("analyse à field constant\n")
+    cat("field constant analysis\n")
   } else {
     # Otherwise, split by 'field"
     field <- split_dataframe(df_hrc_identified,"field","hrc_field")

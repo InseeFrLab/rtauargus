@@ -1,0 +1,138 @@
+Start time: 2025-02-17  12:15:08
+-----------------------------------------
+Function called to protect the tables: tab_rtauargus2
+Interval Protection Level for primary secret cells: 10
+Interval Protection Level for other iterations: 0
+Nb of tables to treat:  3
+-----------------------------------------
+Tables to treat: act_size act_size_D_TO_M act_cj
+-----------------------------------------
+All explanatory variables: ACTIVITY SIZE CJ
+-----------------------------------------
+Initialisation work completed
+-----------------------------------------
+-----------------------------------------
+1 -Treatment of table act_size
+-----------------------------------------
+New cells status counts: 
+- apriori (primary) secret: 77 ( 18.6 %)
+- secondary secret: 78 ( 18.8 %)
+- valid cells: 259 ( 62.6 %)
+-----------------------------------------
+Nb of new common cells hit by the secret: 15
+-----------------------------------------
+-----------------------------------------
+2 -Treatment of table act_size_D_TO_M
+-----------------------------------------
+New cells status counts: 
+- apriori (primary) secret: 6 ( 13.6 %)
+- secondary secret: 1 ( 2.3 %)
+- valid cells: 37 ( 84.1 %)
+-----------------------------------------
+Nb of new common cells hit by the secret: 1
+-----------------------------------------
+-----------------------------------------
+3 -Treatment of table act_cj
+-----------------------------------------
+New cells status counts: 
+- apriori (primary) secret: 71 ( 17.5 %)
+- secondary secret: 77 ( 19 %)
+- valid cells: 258 ( 63.5 %)
+-----------------------------------------
+Nb of new common cells hit by the secret: 4
+-----------------------------------------
+-----------------------------------------
+4 -Treatment of table act_size
+-----------------------------------------
+New cells status counts: 
+- apriori (primary) secret: 160 ( 38.6 %)
+- secondary secret: 1 ( 0.2 %)
+- valid cells: 253 ( 61.1 %)
+-----------------------------------------
+Nb of new common cells hit by the secret: 0
+-----------------------------------------
+-----------------------------------------
+5 -Treatment of table act_size_D_TO_M
+-----------------------------------------
+New cells status counts: 
+- apriori (primary) secret: 8 ( 18.2 %)
+- secondary secret: 1 ( 2.3 %)
+- valid cells: 35 ( 79.5 %)
+-----------------------------------------
+Nb of new common cells hit by the secret: 1
+-----------------------------------------
+-----------------------------------------
+6 -Treatment of table act_size
+-----------------------------------------
+New cells status counts: 
+- apriori (primary) secret: 162 ( 39.1 %)
+- secondary secret: 1 ( 0.2 %)
+- valid cells: 251 ( 60.6 %)
+-----------------------------------------
+Nb of new common cells hit by the secret: 1
+-----------------------------------------
+-----------------------------------------
+7 -Treatment of table act_cj
+-----------------------------------------
+New cells status counts: 
+- apriori (primary) secret: 150 ( 36.9 %)
+- secondary secret: 7 ( 1.7 %)
+- valid cells: 249 ( 61.3 %)
+-----------------------------------------
+Nb of new common cells hit by the secret: 0
+-----------------------------------------
+-----------------------------------------
+End of iterating after 3 iterations for act_size
+End of iterating after 2 iterations for act_size_D_TO_M
+End of iterating after 2 iterations for act_cj
+-----------------------------------------
+Final Summary
+-----------------------------------------
+Secreted cells counts per table
+-----------------------------------------
+---TAB  act_size  ---
+primary_secret    77
+secondary_secret  86
+total_secret     163
+valid_cells      251
+-----------------------------------------
+---TAB  act_size_D_TO_M  ---
+primary_secret    2
+secondary_secret  7
+total_secret      9
+valid_cells      35
+-----------------------------------------
+---TAB  act_cj  ---
+primary_secret    60
+secondary_secret  97
+total_secret     157
+valid_cells      249
+-----------------------------------------
+-----------------------------------------
+Common cells hit by the secret:
+ACTIVITY SIZE CJ iteration
+D  tr1   Total 1
+E  tr2   Total 1
+E  tr3   Total 1
+K  tr2   Total 1
+08 Total Total 1
+30 Total Total 1
+63 Total Total 1
+64 Total Total 1
+66 Total Total 1
+72 Total Total 1
+73 Total Total 1
+81 Total Total 1
+84 Total Total 1
+86 Total Total 1
+O  Total Total 1
+E  tr1   Total 2
+24 Total Total 3
+35 Total Total 3
+B  Total Total 3
+D  Total Total 3
+E  Total Total 5
+39 Total Total 6
+-----------------------------------------
+End time:  2025-02-17  12:15:36
+-----------------------------------------

@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+
+
+<title>Analyse automatique des métadonnées</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+
+<style type="text/css">
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Analyse automatique des métadonnées</h1>
+<h3 class="subtitle"><h2><br />
+<img role="img" aria-label="logo R" src="data:image/png;base64,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" alt="logo R" /><img role="img" aria-label="logo τ-Argus" src="data:image/png;base64,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" alt="logo τ-Argus" /><br />Package {rtauargus}<br />
+</h2></h3>
+
+
+<div id="TOC">
+<ul>
+<li><a href="#introduction" id="toc-introduction">Introduction</a></li>
+<li><a href="#comment-fonctionne-lanalyse-automatique-automatique-des-métadonnées" id="toc-comment-fonctionne-lanalyse-automatique-automatique-des-métadonnées">Comment
+fonctionne l’analyse automatique automatique des métadonnées ?</a>
+<ul>
+<li><a href="#création-des-métadonnées" id="toc-création-des-métadonnées">Création des métadonnées </a></li>
+<li><a href="#input-formaté-templates-eurostat" id="toc-input-formaté-templates-eurostat">Input formaté : templates
+Eurostat</a></li>
+<li><a href="#les-arguments-de-analyse_metadata" id="toc-les-arguments-de-analyse_metadata">Les arguments de
+<code>analyse_metadata</code></a></li>
+<li><a href="#les-arguments-de-format_template" id="toc-les-arguments-de-format_template">Les arguments de
+<code>format_template</code> </a></li>
+</ul></li>
+<li><a href="#exemples" id="toc-exemples">Exemples</a>
+<ul>
+<li><a href="#cas-où-linput-sont-les-métadonnées" id="toc-cas-où-linput-sont-les-métadonnées">Cas où l’input sont les
+métadonnées</a></li>
+<li><a href="#cas-où-linput-est-un-template-eurostat" id="toc-cas-où-linput-est-un-template-eurostat">Cas où l’input est un
+template Eurostat</a></li>
+</ul></li>
+<li><a href="#pour-aller-plus-loin-visualiser-les-inclusions" id="toc-pour-aller-plus-loin-visualiser-les-inclusions">Pour aller plus
+loin : visualiser les inclusions</a></li>
+</ul>
+</div>
+
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(rtauargus)</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code></pre></div>
+<div id="introduction" class="section level1">
+<h1>Introduction</h1>
+<p>Avant de faire appel aux fonctions permettant la pose du secret il
+est nécessaire d’analyser les tableaux que l’on souhaite protéger. En
+effet,les tableaux diffusés sont différents des tableaux à protéger.
+Cela est expliqué en détail au chapitre 3 du <a href="https://inseefrlab.github.io/manuel-protection-tableaux/03_analyser_une_demande.html">Manuel
+de protection des tableaux</a>. Cette phase d’analyse des marges
+communes entre les différents tableaux peut s’avérer complexe. Ainsi,
+des fonctions ont été développées dans <code>rtauargus</code> pour
+faciliter ce travail.</p>
+</div>
+<div id="comment-fonctionne-lanalyse-automatique-automatique-des-métadonnées" class="section level1">
+<h1>Comment fonctionne l’analyse automatique automatique des métadonnées
+?</h1>
+<div id="création-des-métadonnées" class="section level2">
+<h2>Création des métadonnées </h2>
+<p>Les métadonnées doivent respecter un format spécifique. Une ligne
+représente un tableau et pour chaque tableau il faut préciser :</p>
+<ul>
+<li><code>table_name</code> : le nom du tableau ;</li>
+<li><code>field</code> : le champ (souvent, zone géographique,
+population étudiée, millésime) ;</li>
+<li><code>hrc_field</code> : s’il existe ou non un lien hiérarchique
+entre ce champ et un autre champ. S’il n’y a pas de lien hiérarchique
+cette case vaut <code>NA</code>. Si au contraire, un lien hiérarchique
+existe, il faut donner un nom à ce lien et réécrire ce même nom dans les
+autres tableaux ;</li>
+<li><code>indicator</code> : le nom de l’indicateur du tableau. Il
+s’agit du nom de la variable de ce qui est compté dans chaque cellule du
+tableau. Par exemple, si mon tableau présente le chiffre d’affaire des
+entreprises ma variable sera sans doute “CA”. Le mieux est de bien
+utiliser le nom de la variable tel que décrit dans les données ;</li>
+<li><code>hrc_indicator</code> : s’il existe ou non un lien hiérarchique
+entre cet indicateur et un autre indicateur. S’il n’y a pas de lien
+hiérarchique cette case vaut <code>NA</code>. Si au contraire, un lien
+hiérarchique existe, il faut donner un nom à ce lien et réécrire ce même
+nom dans les autres tableaux ;</li>
+<li><code>spanning_1</code> : le nom de la première variable de
+croisement. On ajoute une colonne par variable de croisement en suivant
+le nommage : <code>spanning_1</code>, <code>spanning_2</code>,
+<code>spanning_3</code>, etc ;</li>
+<li><code>hrc_spanning_1</code> : s’il existe ou non un lien
+hiérarchique entre cette variable de croisement et une autre variable de
+croisement. S’il n’y a pas de lien hiérarchique cette case vaut
+<code>NA</code>. Si au contraire, un lien hiérarchique existe, il faut
+donner un nom à ce lien et réécrire ce même nom dans les autres
+tableaux. On ajoute une colonne par variable de croisement en suivant le
+nommage : <code>hrc_spanning_1</code>, <code>hrc_spanning_2</code>,
+<code>hrc_spanning_3</code>, etc. N.B. il faut autant de colonnes
+<code>spanning_X</code> que de colonnes
+<code>hrc_spanning_X</code>.</li>
+</ul>
+</div>
+<div id="input-formaté-templates-eurostat" class="section level2">
+<h2>Input formaté : templates Eurostat</h2>
+<p>Lorsque les tableaux à traiter sont des tableaux Eurostat alors on
+peut créer automatiquement le fichier de métadonnées à partir du
+template des cellules publiées. En effet, pour les publications Eurostat
+les INS doivent livrer un template regroupant les cellules publiées.</p>
+<p>Pour cela, il faut tout de même bien comprendre chaque colonne du
+template. Déterminer pour chacune d’entre elles s’il s’agit de la
+variable réponse / indicateur, d’une variable de croisement ou d’un
+champ, afin de pouvoir le préciser dans les arguments de la fonction
+<span class="math inline">\(\ref{sec:args_template}\)</span>. Il faut
+notamment vérifier que le template respecte bien : une variable de
+croisement = une colonne du template, et donc un supertotal. En effet,
+si une colonne regroupe plusieurs variables de croisement, alors il faut
+créer autant de colonnes que de variables de croisement.</p>
+</div>
+<div id="les-arguments-de-analyse_metadata" class="section level2">
+<h2>Les arguments de <code>analyse_metadata</code></h2>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="fu">args</span>(analyse_metadata)</span></code></pre></div>
+<pre><code>## function (df_metadata, verbose = FALSE) 
+## NULL</code></pre>
+<p>Les arguments de la fonction sont les suivants :</p>
+<ul>
+<li><code>df_metadata</code> : un dataframe structuré comme précisé dans
+la section <span class="math inline">\(\ref{sec:crea_meta}\)</span>.</li>
+<li><code>verbose</code> : une variable de type <code>logical</code>, si
+<code>TRUE</code> la fonction retourne une liste avec les différentes
+étapes de l’analyse, si <code>FALSE</code> elle retourne juste le
+dataframe final avec l’indicatrice de cluster.</li>
+</ul>
+</div>
+<div id="les-arguments-de-format_template" class="section level2">
+<h2>Les arguments de <code>format_template</code> </h2>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="fu">args</span>(format_template)</span></code></pre></div>
+<pre><code>## function (data, indicator_column, spanning_var_tot, field_columns) 
+## NULL</code></pre>
+<p>Les arguments de la fonction sont les suivants :</p>
+<ul>
+<li><code>data</code> : dataframe du template Eurostat contenant toutes
+les cellules publiées.</li>
+<li><code>indicator_column</code> : nom de la colonne dans laquelle se
+trouvent les indicateurs.</li>
+<li><code>spanning_var_tot</code> : liste nommée des variables de
+croisements et de leurs totaux.</li>
+<li><code>field_columns</code> : vecteur de toutes les colonnes
+représentant des champs (ex : millésime).</li>
+</ul>
+</div>
+</div>
+<div id="exemples" class="section level1">
+<h1>Exemples</h1>
+<div id="cas-où-linput-sont-les-métadonnées" class="section level2">
+<h2>Cas où l’input sont les métadonnées</h2>
+<p>Dans cet exemple on part d’un fichier de métadonnées présentant 12
+tableaux à publier sur les chiffres d’affaires de ventes de pizzas et de
+salades.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="fu">str</span>(metadata_pizza_lettuce)</span></code></pre></div>
+<pre><code>## &#39;data.frame&#39;:    12 obs. of  9 variables:
+##  $ table_name    : chr  &quot;T1&quot; &quot;T2&quot; &quot;T3&quot; &quot;T4&quot; ...
+##  $ field         : chr  &quot;france_entreprises_2023&quot; &quot;france_entreprises_2023&quot; &quot;france_entreprises_2023&quot; &quot;france_entreprises_2023&quot; ...
+##  $ hrc_field     : logi  NA NA NA NA NA NA ...
+##  $ indicator     : chr  &quot;to_pizza&quot; &quot;to_pizza&quot; &quot;to_pizza&quot; &quot;to_pizza&quot; ...
+##  $ hrc_indicator : chr  NA NA NA NA ...
+##  $ spanning_1    : chr  &quot;nuts2&quot; &quot;nuts3&quot; &quot;a10&quot; &quot;a10&quot; ...
+##  $ hrc_spanning_1: chr  &quot;hrc_nuts&quot; &quot;hrc_nuts&quot; &quot;hrc_naf&quot; &quot;hrc_naf&quot; ...
+##  $ spanning_2    : chr  &quot;size&quot; &quot;size&quot; &quot;nuts2&quot; &quot;nuts3&quot; ...
+##  $ hrc_spanning_2: chr  NA NA &quot;hrc_nuts&quot; &quot;hrc_nuts&quot; ...</code></pre>
+<p>Exemple de code :</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="fu">library</span>(rtauargus)</span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a><span class="fu">data</span>(metadata_pizza_lettuce)</span>
+<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a></span>
+<span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a><span class="co"># Analyse complète, avec les étapes</span></span>
+<span id="cb8-6"><a href="#cb8-6" tabindex="-1"></a>detailed_analysis <span class="ot">&lt;-</span> <span class="fu">analyse_metadata</span>(metadata_pizza_lettuce, <span class="at">verbose =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb8-7"><a href="#cb8-7" tabindex="-1"></a></span>
+<span id="cb8-8"><a href="#cb8-8" tabindex="-1"></a><span class="co"># Output simplifié, uniquement le dataframe avec l&#39;indicatrice de cluster</span></span>
+<span id="cb8-9"><a href="#cb8-9" tabindex="-1"></a>cluster_id_dataframe <span class="ot">&lt;-</span> <span class="fu">analyse_metadata</span>(metadata_pizza_lettuce, <span class="at">verbose =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+<p>On obtient un dataframe nous présentant la façon de traiter les
+tableaux pour la pose du secret.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a>cluster_id_dataframe</span></code></pre></div>
+<pre><code>## # A tibble: 4 x 10
+## # Groups:   table_name [4]
+##   cluster table_name field indicator spanning_1 spanning_2 spanning_3 hrc_spanning_1 hrc_spanning_2
+##   &lt;chr&gt;   &lt;chr&gt;      &lt;chr&gt; &lt;chr&gt;     &lt;chr&gt;      &lt;chr&gt;      &lt;chr&gt;      &lt;chr&gt;          &lt;chr&gt;         
+## 1 france~ T10.T12.T8 fran~ LETTUCE   HRC_NAF    cj         HRC_LETTU~ hrc_naf        &lt;NA&gt;          
+## 2 france~ T11.T7.T9  fran~ LETTUCE   HRC_NAF    size       HRC_LETTU~ hrc_naf        &lt;NA&gt;          
+## 3 france~ T1.T2      fran~ to_pizza  HRC_NUTS   size       &lt;NA&gt;       hrc_nuts       &lt;NA&gt;          
+## 4 france~ T3.T4.T5.~ fran~ to_pizza  HRC_NAF    HRC_NUTS   &lt;NA&gt;       hrc_naf        hrc_nuts      
+## # i 1 more variable: hrc_spanning_3 &lt;chr&gt;</code></pre>
+<p>Pour les 12 tableaux à publier il suffit de protéger 4 tableaux. Ces
+tableaux sont repartis dans deux clusters différents. Il faudra donc
+faire appel deux fois à <code>tab_multi_manager()</code>. On remarque
+une nouvelle variable de croisement <code>HRC_LETTUCE^h</code>. I s’agit
+d’une variable qui prend pour modalités <code>batavia</code> et
+<code>arugula</code> et a pour total <code>lettuce</code>. L’indicateur
+<code>LETTUCE</code> renvoie ici au “turnover” (to) ou “chiffre
+d’affaires” de la vente de salades. Par exemple, le tableau
+<code>T10.T12.T8</code> présente le chiffre d’affaires de la vente de
+salades en fonction de l’activité et de la catégorie de l’entreprise
+ainsi que du type de salade.</p>
+<p>Si l’on souhaite avoir plus d’informations sur l’analyse de la
+demande, on peut spécifier l’argument <code>verbose = TRUE</code>.
+Ainsi, l’objet renvoyé par la fonction sur une liste des différentes
+étapes de l’analyse.</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a><span class="fu">names</span>(detailed_analysis)</span></code></pre></div>
+<pre><code>## [1] &quot;identify_hrc&quot;        &quot;info_var&quot;            &quot;split_in_clusters&quot;   &quot;create_edges&quot;       
+## [5] &quot;grp_tab_names&quot;       &quot;grp_tab_in_clusters&quot; &quot;tab_to_treat&quot;        &quot;df_tab_to_treat&quot;</code></pre>
+<p>On retrouve le dataframe avec l’indicatrice du cluster
+<code>df_tab_to_treat</code>. On a le même résultat mais en format liste
+: chaque élément de la liste est un cluster indépendant
+<code>tab_to_treat</code>. Mais aussi les 6 étapes de l’analyse.</p>
+</div>
+<div id="cas-où-linput-est-un-template-eurostat" class="section level2">
+<h2>Cas où l’input est un template Eurostat</h2>
+<p>La fonction <code>format_template()</code> permet de créer les
+métadonnées à mettre en input de <code>analyse_metadata()</code> à
+partir du template Eurostat des cellules publiées.</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a><span class="fu">data</span>(enterprise_template)</span>
+<span id="cb13-2"><a href="#cb13-2" tabindex="-1"></a></span>
+<span id="cb13-3"><a href="#cb13-3" tabindex="-1"></a><span class="fu">str</span>(enterprise_template)</span></code></pre></div>
+<pre><code>## &#39;data.frame&#39;:    3168 obs. of  5 variables:
+##  $ TIME_PERIOD: int  2022 2022 2022 2022 2022 2022 2022 2022 2022 2022 ...
+##  $ INDICATOR  : chr  &quot;SAL&quot; &quot;SAL&quot; &quot;SAL&quot; &quot;SAL&quot; ...
+##  $ ACTIVITY   : chr  &quot;B&quot; &quot;B&quot; &quot;B&quot; &quot;B&quot; ...
+##  $ NUMBER_EMPL: chr  &quot;E0&quot; &quot;E1T4&quot; &quot;E5T9&quot; &quot;EGE10&quot; ...
+##  $ LEGAL_FORM : chr  &quot;_T&quot; &quot;_T&quot; &quot;_T&quot; &quot;_T&quot; ...</code></pre>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" tabindex="-1"></a>template_formatted <span class="ot">&lt;-</span> <span class="fu">format_template</span>(</span>
+<span id="cb15-2"><a href="#cb15-2" tabindex="-1"></a>  <span class="at">data =</span> enterprise_template,</span>
+<span id="cb15-3"><a href="#cb15-3" tabindex="-1"></a>  <span class="at">indicator_column =</span> <span class="st">&quot;INDICATOR&quot;</span>,</span>
+<span id="cb15-4"><a href="#cb15-4" tabindex="-1"></a>  <span class="at">spanning_var_tot =</span> <span class="fu">list</span>(</span>
+<span id="cb15-5"><a href="#cb15-5" tabindex="-1"></a>    <span class="at">ACTIVITY =</span> <span class="st">&quot;BTSXO_S94&quot;</span>,</span>
+<span id="cb15-6"><a href="#cb15-6" tabindex="-1"></a>    <span class="at">NUMBER_EMPL =</span> <span class="st">&quot;_T&quot;</span>,</span>
+<span id="cb15-7"><a href="#cb15-7" tabindex="-1"></a>    <span class="at">LEGAL_FORM =</span> <span class="st">&quot;_T&quot;</span>),</span>
+<span id="cb15-8"><a href="#cb15-8" tabindex="-1"></a>  <span class="at">field_columns =</span> <span class="fu">c</span>(<span class="st">&quot;TIME_PERIOD&quot;</span>)</span>
+<span id="cb15-9"><a href="#cb15-9" tabindex="-1"></a>)</span>
+<span id="cb15-10"><a href="#cb15-10" tabindex="-1"></a></span>
+<span id="cb15-11"><a href="#cb15-11" tabindex="-1"></a>template_formatted<span class="sc">$</span>metadata</span></code></pre></div>
+<pre><code>##             table_name field indicator spanning_1  spanning_2   hrc_spanning_1    hrc_spanning_2
+## 1 table_2021_SAL_DTH_1  2021   SAL_DTH   ACTIVITY  LEGAL_FORM hrc_activity_131  hrc_legal_form_3
+## 2 table_2021_SAL_DTH_2  2021   SAL_DTH   ACTIVITY NUMBER_EMPL hrc_activity_131 hrc_number_empl_4
+## 3     table_2022_SAL_1  2022       SAL   ACTIVITY  LEGAL_FORM hrc_activity_131  hrc_legal_form_3
+## 4     table_2022_SAL_2  2022       SAL   ACTIVITY NUMBER_EMPL hrc_activity_131 hrc_number_empl_4
+## 5 table_2022_SAL_DTH_1  2022   SAL_DTH   ACTIVITY  LEGAL_FORM hrc_activity_131  hrc_legal_form_3
+## 6 table_2022_SAL_DTH_2  2022   SAL_DTH   ACTIVITY NUMBER_EMPL hrc_activity_131 hrc_number_empl_4</code></pre>
+<p>On voit qu’il y a 6 tableaux à publier.</p>
+<p>Remarque : <code>format_template()</code> ne construit pas la colonne
+<code>hrc_indicator</code> car les informations contenues dans le
+template ne permettent pas de la déterminer. Ainsi, il faut la créer
+soit-même en fonction des informations que l’ont a sur les
+indicateurs.</p>
+<p>Ici, il n’y a pas de lien hiérarchique entre <code>SAL</code>
+(effectifs salariés des entreprises actives) et <code>SAL_DTH</code>
+(effectifs salariés dans les décès).</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" tabindex="-1"></a><span class="co"># cas où il n&#39;y a aucune hiérarchie sur les indicateurs</span></span>
+<span id="cb17-2"><a href="#cb17-2" tabindex="-1"></a>metadata_template <span class="ot">&lt;-</span> template_formatted<span class="sc">$</span>metadata <span class="sc">%&gt;%</span> </span>
+<span id="cb17-3"><a href="#cb17-3" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">hrc_indicator =</span> <span class="cn">NA</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb17-4"><a href="#cb17-4" tabindex="-1"></a>  <span class="fu">select</span>(table_name,field,indicator,hrc_indicator, <span class="fu">everything</span>())</span>
+<span id="cb17-5"><a href="#cb17-5" tabindex="-1"></a></span>
+<span id="cb17-6"><a href="#cb17-6" tabindex="-1"></a>metadata_template</span></code></pre></div>
+<pre><code>##             table_name field indicator hrc_indicator spanning_1  spanning_2   hrc_spanning_1
+## 1 table_2021_SAL_DTH_1  2021   SAL_DTH            NA   ACTIVITY  LEGAL_FORM hrc_activity_131
+## 2 table_2021_SAL_DTH_2  2021   SAL_DTH            NA   ACTIVITY NUMBER_EMPL hrc_activity_131
+## 3     table_2022_SAL_1  2022       SAL            NA   ACTIVITY  LEGAL_FORM hrc_activity_131
+## 4     table_2022_SAL_2  2022       SAL            NA   ACTIVITY NUMBER_EMPL hrc_activity_131
+## 5 table_2022_SAL_DTH_1  2022   SAL_DTH            NA   ACTIVITY  LEGAL_FORM hrc_activity_131
+## 6 table_2022_SAL_DTH_2  2022   SAL_DTH            NA   ACTIVITY NUMBER_EMPL hrc_activity_131
+##      hrc_spanning_2
+## 1  hrc_legal_form_3
+## 2 hrc_number_empl_4
+## 3  hrc_legal_form_3
+## 4 hrc_number_empl_4
+## 5  hrc_legal_form_3
+## 6 hrc_number_empl_4</code></pre>
+<p>Ensuite, on utilise ce dataframe en input de la fonction
+d’analyse.</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" tabindex="-1"></a><span class="co"># Analyse complète, avec les étapes</span></span>
+<span id="cb19-2"><a href="#cb19-2" tabindex="-1"></a>detailed_analysis <span class="ot">&lt;-</span> <span class="fu">analyse_metadata</span>(metadata_template, <span class="at">verbose =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb19-3"><a href="#cb19-3" tabindex="-1"></a></span>
+<span id="cb19-4"><a href="#cb19-4" tabindex="-1"></a><span class="co"># Output simplifié, uniquement le dataframe avec l&#39;indicatrice de cluster</span></span>
+<span id="cb19-5"><a href="#cb19-5" tabindex="-1"></a>cluster_id_dataframe <span class="ot">&lt;-</span> <span class="fu">analyse_metadata</span>(metadata_template, <span class="at">verbose =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb19-6"><a href="#cb19-6" tabindex="-1"></a></span>
+<span id="cb19-7"><a href="#cb19-7" tabindex="-1"></a><span class="co"># visualisation du résultat de l&#39;analyse</span></span>
+<span id="cb19-8"><a href="#cb19-8" tabindex="-1"></a>cluster_id_dataframe</span></code></pre></div>
+<pre><code>## # A tibble: 6 x 8
+## # Groups:   table_name [6]
+##   cluster      table_name       field indicator spanning_1 spanning_2 hrc_spanning_1 hrc_spanning_2
+##   &lt;chr&gt;        &lt;chr&gt;            &lt;chr&gt; &lt;chr&gt;     &lt;chr&gt;      &lt;chr&gt;      &lt;chr&gt;          &lt;chr&gt;         
+## 1 2021.SAL_DTH table_2021_SAL_~ 2021  SAL_DTH   HRC_ACTIV~ HRC_LEGAL~ hrc_activity_~ hrc_legal_for~
+## 2 2021.SAL_DTH table_2021_SAL_~ 2021  SAL_DTH   HRC_ACTIV~ HRC_NUMBE~ hrc_activity_~ hrc_number_em~
+## 3 2022.SAL     table_2022_SAL_1 2022  SAL       HRC_ACTIV~ HRC_LEGAL~ hrc_activity_~ hrc_legal_for~
+## 4 2022.SAL     table_2022_SAL_2 2022  SAL       HRC_ACTIV~ HRC_NUMBE~ hrc_activity_~ hrc_number_em~
+## 5 2022.SAL_DTH table_2022_SAL_~ 2022  SAL_DTH   HRC_ACTIV~ HRC_LEGAL~ hrc_activity_~ hrc_legal_for~
+## 6 2022.SAL_DTH table_2022_SAL_~ 2022  SAL_DTH   HRC_ACTIV~ HRC_NUMBE~ hrc_activity_~ hrc_number_em~</code></pre>
+<p>Finalement, il y a 6 tableaux à traiter dans 3 clusters différents.
+Autrement dit, il faudra faire trois fois appel à
+<code>tab_multi_manager()</code>.</p>
+</div>
+</div>
+<div id="pour-aller-plus-loin-visualiser-les-inclusions" class="section level1">
+<h1>Pour aller plus loin : visualiser les inclusions</h1>
+<p>L’étape <code>create_edges</code> de l’analyse des métadonnées
+identifie les tableaux inclus dans d’autres tableaux. Par exemple, XXXXX
+est inclus dans XXXXX. Le code suivant permet de visualiser ces
+inclusions à l’aide de graphes afin de mieux comprendre la procédure
+d’analyse.</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" tabindex="-1"></a><span class="fu">library</span>(rtauargus)</span>
+<span id="cb21-2"><a href="#cb21-2" tabindex="-1"></a><span class="fu">library</span>(igraph)</span></code></pre></div>
+<pre><code>## 
+## Attachement du package : &#39;igraph&#39;</code></pre>
+<pre><code>## Les objets suivants sont masqués depuis &#39;package:dplyr&#39;:
+## 
+##     as_data_frame, groups, union</code></pre>
+<pre><code>## Les objets suivants sont masqués depuis &#39;package:stats&#39;:
+## 
+##     decompose, spectrum</code></pre>
+<pre><code>## L&#39;objet suivant est masqué depuis &#39;package:base&#39;:
+## 
+##     union</code></pre>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" tabindex="-1"></a><span class="fu">library</span>(visNetwork)</span>
+<span id="cb26-2"><a href="#cb26-2" tabindex="-1"></a></span>
+<span id="cb26-3"><a href="#cb26-3" tabindex="-1"></a>graph_links_tab <span class="ot">&lt;-</span> <span class="cf">function</span>(list_desc_links){</span>
+<span id="cb26-4"><a href="#cb26-4" tabindex="-1"></a>  list_desc_links <span class="sc">%&gt;%</span> purrr<span class="sc">::</span><span class="fu">imap</span>(<span class="cf">function</span>(ss_dem,i){</span>
+<span id="cb26-5"><a href="#cb26-5" tabindex="-1"></a>    <span class="cf">if</span>(<span class="sc">!</span><span class="fu">is.null</span>(ss_dem)){</span>
+<span id="cb26-6"><a href="#cb26-6" tabindex="-1"></a>      nodes <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">id =</span> <span class="fu">unique</span>(<span class="fu">unlist</span>(ss_dem)))</span>
+<span id="cb26-7"><a href="#cb26-7" tabindex="-1"></a>      <span class="fu">visNetwork</span>(<span class="at">nodes =</span> nodes, <span class="at">edges =</span> ss_dem, <span class="at">main =</span> i) <span class="sc">%&gt;%</span> </span>
+<span id="cb26-8"><a href="#cb26-8" tabindex="-1"></a>        <span class="fu">visIgraphLayout</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb26-9"><a href="#cb26-9" tabindex="-1"></a>        <span class="fu">visEdges</span>(<span class="at">shadow =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb26-10"><a href="#cb26-10" tabindex="-1"></a>                 <span class="at">arrows =</span><span class="fu">list</span>(<span class="at">to =</span> <span class="fu">list</span>(<span class="at">enabled =</span> <span class="cn">TRUE</span>, <span class="at">scaleFactor =</span> <span class="fl">0.5</span>)),</span>
+<span id="cb26-11"><a href="#cb26-11" tabindex="-1"></a>                 <span class="at">color =</span> <span class="fu">list</span>(<span class="at">color =</span> <span class="st">&quot;steelblue&quot;</span>, <span class="at">highlight =</span> <span class="st">&quot;red&quot;</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb26-12"><a href="#cb26-12" tabindex="-1"></a>        <span class="fu">visOptions</span>(<span class="at">highlightNearest =</span> <span class="fu">list</span>(<span class="at">enabled =</span> T, <span class="at">hover =</span> T), </span>
+<span id="cb26-13"><a href="#cb26-13" tabindex="-1"></a>                   <span class="at">nodesIdSelection =</span> T)</span>
+<span id="cb26-14"><a href="#cb26-14" tabindex="-1"></a>    }</span>
+<span id="cb26-15"><a href="#cb26-15" tabindex="-1"></a>  })</span>
+<span id="cb26-16"><a href="#cb26-16" tabindex="-1"></a>}</span>
+<span id="cb26-17"><a href="#cb26-17" tabindex="-1"></a></span>
+<span id="cb26-18"><a href="#cb26-18" tabindex="-1"></a><span class="fu">data</span>(metadata_pizza_lettuce)</span>
+<span id="cb26-19"><a href="#cb26-19" tabindex="-1"></a>detailed_analysis <span class="ot">&lt;-</span> <span class="fu">analyse_metadata</span>(metadata_pizza_lettuce, <span class="at">verbose =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb26-20"><a href="#cb26-20" tabindex="-1"></a></span>
+<span id="cb26-21"><a href="#cb26-21" tabindex="-1"></a><span class="fu">graph_links_tab</span>(detailed_analysis<span class="sc">$</span>create_edges)</span></code></pre></div>
+<pre><code>## $france_entreprises_2023.hrc_lettuce
+## 
+## $france_entreprises_2023.to_pizza</code></pre>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
