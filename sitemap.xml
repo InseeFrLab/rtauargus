@@ -1,165 +1,75 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://inseefrlab.github.io/rtauargus/404.html</loc>
-  </url>
-  <url>
-    <loc>https://inseefrlab.github.io/rtauargus/LICENSE-text.html</loc>
-  </url>
-  <url>
-    <loc>https://inseefrlab.github.io/rtauargus/articles/index.html</loc>
-  </url>
-  <url>
-    <loc>https://inseefrlab.github.io/rtauargus/articles/options_safety_rules.html</loc>
-  </url>
-  <url>
-    <loc>https://inseefrlab.github.io/rtauargus/articles/options_safety_rules_fr.html</loc>
-  </url>
-  <url>
-    <loc>https://inseefrlab.github.io/rtauargus/articles/protect_multi_tables.html</loc>
-  </url>
-  <url>
-    <loc>https://inseefrlab.github.io/rtauargus/articles/protect_multi_tables_fr.html</loc>
-  </url>
-  <url>
-    <loc>https://inseefrlab.github.io/rtauargus/articles/rtauargus.html</loc>
-  </url>
-  <url>
-    <loc>https://inseefrlab.github.io/rtauargus/articles/rtauargus_fr.html</loc>
-  </url>
-  <url>
-    <loc>https://inseefrlab.github.io/rtauargus/articles/rtauargus_micro.html</loc>
-  </url>
-  <url>
-    <loc>https://inseefrlab.github.io/rtauargus/articles/rtauargus_micro_fr.html</loc>
-  </url>
-  <url>
-    <loc>https://inseefrlab.github.io/rtauargus/articles/split_tab_fr.html</loc>
-  </url>
-  <url>
-    <loc>https://inseefrlab.github.io/rtauargus/authors.html</loc>
-  </url>
-  <url>
-    <loc>https://inseefrlab.github.io/rtauargus/index.html</loc>
-  </url>
-  <url>
-    <loc>https://inseefrlab.github.io/rtauargus/news/index.html</loc>
-  </url>
-  <url>
-    <loc>https://inseefrlab.github.io/rtauargus/reference/activity_corr_table.html</loc>
-  </url>
-  <url>
-    <loc>https://inseefrlab.github.io/rtauargus/reference/datatest1.html</loc>
-  </url>
-  <url>
-    <loc>https://inseefrlab.github.io/rtauargus/reference/datatest2.html</loc>
-  </url>
-  <url>
-    <loc>https://inseefrlab.github.io/rtauargus/reference/from_4_to_3.html</loc>
-  </url>
-  <url>
-    <loc>https://inseefrlab.github.io/rtauargus/reference/from_4_to_3_case_0_hr.html</loc>
-  </url>
-  <url>
-    <loc>https://inseefrlab.github.io/rtauargus/reference/from_4_to_3_case_1_hr.html</loc>
-  </url>
-  <url>
-    <loc>https://inseefrlab.github.io/rtauargus/reference/from_4_to_3_case_2_hr.html</loc>
-  </url>
-  <url>
-    <loc>https://inseefrlab.github.io/rtauargus/reference/from_5_to_3.html</loc>
-  </url>
-  <url>
-    <loc>https://inseefrlab.github.io/rtauargus/reference/import.html</loc>
-  </url>
-  <url>
-    <loc>https://inseefrlab.github.io/rtauargus/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>https://inseefrlab.github.io/rtauargus/reference/indiv_dt.html</loc>
-  </url>
-  <url>
-    <loc>https://inseefrlab.github.io/rtauargus/reference/length_tabs.html</loc>
-  </url>
-  <url>
-    <loc>https://inseefrlab.github.io/rtauargus/reference/micro_arb.html</loc>
-  </url>
-  <url>
-    <loc>https://inseefrlab.github.io/rtauargus/reference/micro_asc_rda.html</loc>
-  </url>
-  <url>
-    <loc>https://inseefrlab.github.io/rtauargus/reference/micro_rtauargus.html</loc>
-  </url>
-  <url>
-    <loc>https://inseefrlab.github.io/rtauargus/reference/nb_tab_generated.html</loc>
-  </url>
-  <url>
-    <loc>https://inseefrlab.github.io/rtauargus/reference/nuts23_fr_corr_table.html</loc>
-  </url>
-  <url>
-    <loc>https://inseefrlab.github.io/rtauargus/reference/reduce_dims.html</loc>
-  </url>
-  <url>
-    <loc>https://inseefrlab.github.io/rtauargus/reference/restore_format.html</loc>
-  </url>
-  <url>
-    <loc>https://inseefrlab.github.io/rtauargus/reference/rtauargus-package.html</loc>
-  </url>
-  <url>
-    <loc>https://inseefrlab.github.io/rtauargus/reference/rtauargus_options.html</loc>
-  </url>
-  <url>
-    <loc>https://inseefrlab.github.io/rtauargus/reference/rtauargus_plus.html</loc>
-  </url>
-  <url>
-    <loc>https://inseefrlab.github.io/rtauargus/reference/run_arb.html</loc>
-  </url>
-  <url>
-    <loc>https://inseefrlab.github.io/rtauargus/reference/sp_format.html</loc>
-  </url>
-  <url>
-    <loc>https://inseefrlab.github.io/rtauargus/reference/tab_arb.html</loc>
-  </url>
-  <url>
-    <loc>https://inseefrlab.github.io/rtauargus/reference/tab_multi_manager.html</loc>
-  </url>
-  <url>
-    <loc>https://inseefrlab.github.io/rtauargus/reference/tab_rda.html</loc>
-  </url>
-  <url>
-    <loc>https://inseefrlab.github.io/rtauargus/reference/tab_rtauargus.html</loc>
-  </url>
-  <url>
-    <loc>https://inseefrlab.github.io/rtauargus/reference/tab_rtauargus2.html</loc>
-  </url>
-  <url>
-    <loc>https://inseefrlab.github.io/rtauargus/reference/tab_rtauargus4.html</loc>
-  </url>
-  <url>
-    <loc>https://inseefrlab.github.io/rtauargus/reference/tabulate_micro_data.html</loc>
-  </url>
-  <url>
-    <loc>https://inseefrlab.github.io/rtauargus/reference/turnover_act_cj.html</loc>
-  </url>
-  <url>
-    <loc>https://inseefrlab.github.io/rtauargus/reference/turnover_act_nuts_size.html</loc>
-  </url>
-  <url>
-    <loc>https://inseefrlab.github.io/rtauargus/reference/turnover_act_size.html</loc>
-  </url>
-  <url>
-    <loc>https://inseefrlab.github.io/rtauargus/reference/turnover_nuts_cj.html</loc>
-  </url>
-  <url>
-    <loc>https://inseefrlab.github.io/rtauargus/reference/turnover_nuts_size.html</loc>
-  </url>
-  <url>
-    <loc>https://inseefrlab.github.io/rtauargus/reference/var_to_merge.html</loc>
-  </url>
-  <url>
-    <loc>https://inseefrlab.github.io/rtauargus/reference/write_hrc.html</loc>
-  </url>
-  <url>
-    <loc>https://inseefrlab.github.io/rtauargus/reference/write_hrc2.html</loc>
-  </url>
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>https://inseefrlab.github.io/rtauargus/404.html</loc></url>
+<url><loc>https://inseefrlab.github.io/rtauargus/LICENSE-text.html</loc></url>
+<url><loc>https://inseefrlab.github.io/rtauargus/articles/auto_metadata.html</loc></url>
+<url><loc>https://inseefrlab.github.io/rtauargus/articles/auto_metadata_fr.html</loc></url>
+<url><loc>https://inseefrlab.github.io/rtauargus/articles/index.html</loc></url>
+<url><loc>https://inseefrlab.github.io/rtauargus/articles/options_safety_rules.html</loc></url>
+<url><loc>https://inseefrlab.github.io/rtauargus/articles/options_safety_rules_fr.html</loc></url>
+<url><loc>https://inseefrlab.github.io/rtauargus/articles/protect_multi_tables.html</loc></url>
+<url><loc>https://inseefrlab.github.io/rtauargus/articles/protect_multi_tables_fr.html</loc></url>
+<url><loc>https://inseefrlab.github.io/rtauargus/articles/rtauargus.html</loc></url>
+<url><loc>https://inseefrlab.github.io/rtauargus/articles/rtauargus_fr.html</loc></url>
+<url><loc>https://inseefrlab.github.io/rtauargus/articles/rtauargus_micro.html</loc></url>
+<url><loc>https://inseefrlab.github.io/rtauargus/articles/rtauargus_micro_fr.html</loc></url>
+<url><loc>https://inseefrlab.github.io/rtauargus/articles/split_tab_fr.html</loc></url>
+<url><loc>https://inseefrlab.github.io/rtauargus/authors.html</loc></url>
+<url><loc>https://inseefrlab.github.io/rtauargus/index.html</loc></url>
+<url><loc>https://inseefrlab.github.io/rtauargus/news/index.html</loc></url>
+<url><loc>https://inseefrlab.github.io/rtauargus/reference/activity_corr_table.html</loc></url>
+<url><loc>https://inseefrlab.github.io/rtauargus/reference/analyse_metadata.html</loc></url>
+<url><loc>https://inseefrlab.github.io/rtauargus/reference/contains_non_total.html</loc></url>
+<url><loc>https://inseefrlab.github.io/rtauargus/reference/create_edges.html</loc></url>
+<url><loc>https://inseefrlab.github.io/rtauargus/reference/dataframe_result.html</loc></url>
+<url><loc>https://inseefrlab.github.io/rtauargus/reference/datatest1.html</loc></url>
+<url><loc>https://inseefrlab.github.io/rtauargus/reference/datatest2.html</loc></url>
+<url><loc>https://inseefrlab.github.io/rtauargus/reference/enterprise_template.html</loc></url>
+<url><loc>https://inseefrlab.github.io/rtauargus/reference/filter_on_marginal_of_spanning_var.html</loc></url>
+<url><loc>https://inseefrlab.github.io/rtauargus/reference/format_template.html</loc></url>
+<url><loc>https://inseefrlab.github.io/rtauargus/reference/from_4_to_3.html</loc></url>
+<url><loc>https://inseefrlab.github.io/rtauargus/reference/from_4_to_3_case_0_hr.html</loc></url>
+<url><loc>https://inseefrlab.github.io/rtauargus/reference/from_4_to_3_case_1_hr.html</loc></url>
+<url><loc>https://inseefrlab.github.io/rtauargus/reference/from_4_to_3_case_2_hr.html</loc></url>
+<url><loc>https://inseefrlab.github.io/rtauargus/reference/from_5_to_3.html</loc></url>
+<url><loc>https://inseefrlab.github.io/rtauargus/reference/get_combinations.html</loc></url>
+<url><loc>https://inseefrlab.github.io/rtauargus/reference/grp_tab_in_cluster.html</loc></url>
+<url><loc>https://inseefrlab.github.io/rtauargus/reference/grp_tab_names.html</loc></url>
+<url><loc>https://inseefrlab.github.io/rtauargus/reference/identify_hrc.html</loc></url>
+<url><loc>https://inseefrlab.github.io/rtauargus/reference/import.html</loc></url>
+<url><loc>https://inseefrlab.github.io/rtauargus/reference/index.html</loc></url>
+<url><loc>https://inseefrlab.github.io/rtauargus/reference/indiv_dt.html</loc></url>
+<url><loc>https://inseefrlab.github.io/rtauargus/reference/length_tabs.html</loc></url>
+<url><loc>https://inseefrlab.github.io/rtauargus/reference/metadata_pizza_lettuce.html</loc></url>
+<url><loc>https://inseefrlab.github.io/rtauargus/reference/micro_arb.html</loc></url>
+<url><loc>https://inseefrlab.github.io/rtauargus/reference/micro_asc_rda.html</loc></url>
+<url><loc>https://inseefrlab.github.io/rtauargus/reference/micro_rtauargus.html</loc></url>
+<url><loc>https://inseefrlab.github.io/rtauargus/reference/nb_tab_generated.html</loc></url>
+<url><loc>https://inseefrlab.github.io/rtauargus/reference/nuts23_fr_corr_table.html</loc></url>
+<url><loc>https://inseefrlab.github.io/rtauargus/reference/reduce_dims.html</loc></url>
+<url><loc>https://inseefrlab.github.io/rtauargus/reference/restore_format.html</loc></url>
+<url><loc>https://inseefrlab.github.io/rtauargus/reference/rtauargus-package.html</loc></url>
+<url><loc>https://inseefrlab.github.io/rtauargus/reference/rtauargus_options.html</loc></url>
+<url><loc>https://inseefrlab.github.io/rtauargus/reference/rtauargus_plus.html</loc></url>
+<url><loc>https://inseefrlab.github.io/rtauargus/reference/run_arb.html</loc></url>
+<url><loc>https://inseefrlab.github.io/rtauargus/reference/sp_format.html</loc></url>
+<url><loc>https://inseefrlab.github.io/rtauargus/reference/split_dataframe.html</loc></url>
+<url><loc>https://inseefrlab.github.io/rtauargus/reference/split_in_clusters.html</loc></url>
+<url><loc>https://inseefrlab.github.io/rtauargus/reference/tab_arb.html</loc></url>
+<url><loc>https://inseefrlab.github.io/rtauargus/reference/tab_multi_manager.html</loc></url>
+<url><loc>https://inseefrlab.github.io/rtauargus/reference/tab_rda.html</loc></url>
+<url><loc>https://inseefrlab.github.io/rtauargus/reference/tab_rtauargus.html</loc></url>
+<url><loc>https://inseefrlab.github.io/rtauargus/reference/tab_rtauargus2.html</loc></url>
+<url><loc>https://inseefrlab.github.io/rtauargus/reference/tab_rtauargus4.html</loc></url>
+<url><loc>https://inseefrlab.github.io/rtauargus/reference/tab_to_treat.html</loc></url>
+<url><loc>https://inseefrlab.github.io/rtauargus/reference/tabulate_micro_data.html</loc></url>
+<url><loc>https://inseefrlab.github.io/rtauargus/reference/turnover_act_cj.html</loc></url>
+<url><loc>https://inseefrlab.github.io/rtauargus/reference/turnover_act_nuts_size.html</loc></url>
+<url><loc>https://inseefrlab.github.io/rtauargus/reference/turnover_act_size.html</loc></url>
+<url><loc>https://inseefrlab.github.io/rtauargus/reference/turnover_nuts_cj.html</loc></url>
+<url><loc>https://inseefrlab.github.io/rtauargus/reference/turnover_nuts_size.html</loc></url>
+<url><loc>https://inseefrlab.github.io/rtauargus/reference/var_to_merge.html</loc></url>
+<url><loc>https://inseefrlab.github.io/rtauargus/reference/wide_to_long.html</loc></url>
+<url><loc>https://inseefrlab.github.io/rtauargus/reference/write_hrc.html</loc></url>
+<url><loc>https://inseefrlab.github.io/rtauargus/reference/write_hrc2.html</loc></url>
 </urlset>
+

@@ -1,18 +1,19 @@
-pandoc: 2.19.2
-pkgdown: 2.0.7
+pandoc: 3.1.11
+pkgdown: 2.1.1
 pkgdown_sha: ~
 articles:
-  options_safety_rules: options_safety_rules.html
+  auto_metadata_fr: auto_metadata_fr.html
+  auto_metadata: auto_metadata.html
   options_safety_rules_fr: options_safety_rules_fr.html
-  protect_multi_tables: protect_multi_tables.html
+  options_safety_rules: options_safety_rules.html
   protect_multi_tables_fr: protect_multi_tables_fr.html
-  rtauargus: rtauargus.html
+  protect_multi_tables: protect_multi_tables.html
   rtauargus_fr: rtauargus_fr.html
-  rtauargus_micro: rtauargus_micro.html
   rtauargus_micro_fr: rtauargus_micro_fr.html
+  rtauargus_micro: rtauargus_micro.html
+  rtauargus: rtauargus.html
   split_tab_fr: split_tab_fr.html
-last_built: 2024-01-21T21:34Z
+last_built: 2025-02-21T18:45Z
 urls:
   reference: https://inseefrlab.github.io/rtauargus/reference
   article: https://inseefrlab.github.io/rtauargus/articles
-

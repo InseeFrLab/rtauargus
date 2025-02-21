@@ -5,70 +5,63 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="description" content="rtauargus">
 <title>Protect several linked tables at once • rtauargus</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
-<!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Protect several linked tables at once">
-<meta property="og:description" content="rtauargus">
-<!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
-<script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-<![endif]-->
+<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
+<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Protect several linked tables at once">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
-    
 
-    <nav class="navbar fixed-top navbar-dark navbar-expand-lg bg-primary"><div class="container">
-    
+
+    <nav class="navbar navbar-expand-lg fixed-top bg-primary" data-bs-theme="dark" aria-label="Site navigation"><div class="container">
+
     <a class="navbar-brand me-2" href="../index.html">rtauargus</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.2.999</small>
 
-    
+
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
-<li class="nav-item">
-  <a class="nav-link" href="../articles/rtauargus.html">Get started</a>
+<li class="nav-item"><a class="nav-link" href="../articles/rtauargus.html">Get started</a></li>
+<li class="nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
+<li class="nav-item dropdown">
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
+<li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>tabular-wise</h6></li>
+    <li><a class="dropdown-item" href="../articles/rtauargus_fr.html">Tau-Argus depuis R - données tabulées</a></li>
+    <li><a class="dropdown-item" href="../articles/protect_multi_tables.html">Protect several linked tables at once</a></li>
+    <li><a class="dropdown-item" href="../articles/protect_multi_tables_fr.html">Protéger des tableaux liés</a></li>
+    <li><a class="dropdown-item" href="../articles/options_safety_rules.html">Safety rules and Suppress Options</a></li>
+    <li><a class="dropdown-item" href="../articles/options_safety_rules_fr.html">Les arguments Safety rules et Suppress</a></li>
+    <li><a class="dropdown-item" href="../articles/split_tab_fr.html">Comment poser du secret sur des tableaux à 4 ou 5 dimensions avec `rtauargus`?</a></li>
+    <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>auto-analysis</h6></li>
+    <li><a class="dropdown-item" href="../articles/auto_metadata.html">Automatic analysis of metadata</a></li>
+    <li><a class="dropdown-item" href="../articles/auto_metadata_fr.html">Analyse automatique des métadonnées</a></li>
+    <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>micro-wise</h6></li>
+    <li><a class="dropdown-item" href="../articles/rtauargus_micro.html">&amp;tau;-Argus from R - microdata version</a></li>
+    <li><a class="dropdown-item" href="../articles/rtauargus_micro_fr.html">Tau-Argus depuis R - sur microdonnées</a></li>
+  </ul>
 </li>
-<li class="nav-item">
-  <a class="nav-link" href="../reference/index.html">Reference</a>
-</li>
-<li class="active nav-item dropdown">
-  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
-  <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <h6 class="dropdown-header" data-toc-skip>tabular-wise</h6>
-    <a class="dropdown-item" href="../articles/rtauargus_fr.html">Tau-Argus depuis R - données tabulées</a>
-    <a class="dropdown-item" href="../articles/protect_multi_tables.html">Protect several linked tables at once</a>
-    <a class="dropdown-item" href="../articles/protect_multi_tables_fr.html">Protéger des tableaux liés</a>
-    <a class="dropdown-item" href="../articles/options_safety_rules.html">Safety rules and Suppress Options</a>
-    <a class="dropdown-item" href="../articles/options_safety_rules_fr.html">Les arguments Safety rules et Suppress</a>
-    <a class="dropdown-item" href="../articles/split_tab_fr.html">Comment poser du secret sur des tableaux à 4 ou 5 dimensions avec `rtauargus`?</a>
-    <div class="dropdown-divider"></div>
-    <h6 class="dropdown-header" data-toc-skip>micro-wise</h6>
-    <a class="dropdown-item" href="../articles/rtauargus_micro.html">&amp;tau;-Argus from R - microdata version</a>
-    <a class="dropdown-item" href="../articles/rtauargus_micro_fr.html">Tau-Argus depuis R - sur microdonnées</a>
-  </div>
-</li>
-<li class="nav-item">
-  <a class="nav-link" href="../news/index.html">Changelog</a>
-</li>
+<li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul>
-<form class="form-inline my-2 my-lg-0" role="search">
-        <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off">
-</form>
-
-      <ul class="navbar-nav"></ul>
+<ul class="navbar-nav">
+<li class="nav-item"><form class="form-inline" role="search">
+ <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json">
+</form></li>
+      </ul>
 </div>
 
-    
+
   </div>
 </nav><div class="container template-article">
 
@@ -77,11 +70,14 @@
 
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
-      <img src="" class="logo" alt=""><h1>Protect several linked tables at once</h1>
-            <h3 data-toc-skip class="subtitle"><h2> ¶ <img src="R_logo_small.png" alt="logo R"><img src="TauBall2_small.png" alt="logo τ-Argus"><br>Package {rtauargus} ¶ </h2></h3>
+
+      <h1>Protect several linked tables at once</h1>
+            <h3 data-toc-skip class="subtitle"><h2>
+<br><img src="R_logo_small.png" alt="logo R"><img src="TauBall2_small.png" alt="logo τ-Argus"><br>Package {rtauargus}<br>
+</h2></h3>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/inseefrlab/rtauargus/blob/HEAD/vignettes/protect_multi_tables.Rmd" class="external-link"><code>vignettes/protect_multi_tables.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/inseefrlab/rtauargus/blob/master/vignettes/protect_multi_tables.Rmd" class="external-link"><code>vignettes/protect_multi_tables.Rmd</code></a></small>
       <div class="d-none name"><code>protect_multi_tables.Rmd</code></div>
     </div>
 
@@ -269,8 +265,9 @@ turnover_nuts_cj</p>
 <span><span class="co">#&gt;  $ SIZE    : chr [1:414] "Total" "Total" "Total" "Total" ...</span></span>
 <span><span class="co">#&gt;  $ N_OBS   : int [1:414] 405 12878 28043 62053 8135 8140 11961 41359 26686 25108 ...</span></span>
 <span><span class="co">#&gt;  $ TOT     : num [1:414] 44475 24827613 8907311 26962063 8584917 ...</span></span>
-<span><span class="co">#&gt;  $ MAX     : num [1:414] 6212 1442029 1065833 3084242 3957364 ...</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">turnover_nuts_cj</span><span class="op">)</span></span>
+<span><span class="co">#&gt;  $ MAX     : num [1:414] 6212 1442029 1065833 3084242 3957364 ...</span></span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">turnover_nuts_cj</span><span class="op">)</span></span>
 <span><span class="co">#&gt; tibble [452 x 5] (S3: tbl_df/tbl/data.frame)</span></span>
 <span><span class="co">#&gt;  $ NUTS : chr [1:452] "FR10" "FR21" "FR22" "FR23" ...</span></span>
 <span><span class="co">#&gt;  $ CJ   : chr [1:452] "Total" "Total" "Total" "Total" ...</span></span>
@@ -280,7 +277,7 @@ turnover_nuts_cj</p>
 <p>The first step is to create a list containing our four tables, it is
 advised to give a name to each tables. By doing so it will be easier to
 track secondary suppression.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">list_data_4_tabs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>  act_size <span class="op">=</span> <span class="va">turnover_act_size</span>,</span>
 <span>  act_cj <span class="op">=</span> <span class="va">turnover_act_cj</span>,</span>
@@ -320,7 +317,7 @@ track secondary suppression.</p>
 <p>Then we need to apply the primary suppression for each table. Here we
 apply 2 rules : The dominance rule NK(1,85) and the frequency rule with
 a threshold set to 3.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">list_data_4_tabs</span> <span class="op">&lt;-</span> <span class="va">list_data_4_tabs</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map</a></span><span class="op">(</span></span>
 <span>    <span class="kw">function</span><span class="op">(</span><span class="va">df</span><span class="op">)</span><span class="op">{</span></span>
@@ -380,7 +377,7 @@ state the final status of the cells.</p>
 <p>Then we are going to create the list of explanatory variables of the
 tables. In our case, the explanatory variables are the 2 first columns
 of each table.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">nom_var_list</span> <span class="op">&lt;-</span> <span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map</a></span><span class="op">(</span></span>
 <span>  <span class="va">list_data_4_tabs</span>,</span>
 <span>  <span class="kw">function</span><span class="op">(</span><span class="va">data</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">]</span></span>
@@ -407,7 +404,7 @@ tables in the <code>list_tables</code> argument.</p>
 declared by the user, in a named list. However, when all of the
 variables have the same label to refer to the total, the information can
 be mentionned as follows:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">total_codes</span> <span class="op">&lt;-</span> <span class="st">"Total"</span></span></code></pre></div>
 </div>
 <div class="section level4">
@@ -416,10 +413,10 @@ be mentionned as follows:</p>
 <p><code>ACTIVITY</code> and <code>NUTS</code> are two hierarchical
 variables. We use a correspondance table for each of them to create the
 <code>.hrc</code> files that tau-Argus need.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">activity_corr_table</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">nuts23_fr_corr_table</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">hrc_file_activity</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/write_hrc2.html">write_hrc2</a></span><span class="op">(</span></span>
 <span>  corr_table <span class="op">=</span> <span class="va">activity_corr_table</span>,</span>
 <span>  file_name <span class="op">=</span> <span class="st">"hrc/activity.hrc"</span></span>
@@ -430,7 +427,7 @@ variables. We use a correspondance table for each of them to create the
 <span><span class="op">)</span></span></code></pre></div>
 <p>To mention the names of the hrc files, we create a named vector (or
 list) as follows:</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">hrc_files</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>  ACTIVITY <span class="op">=</span> <span class="va">hrc_file_activity</span>,</span>
 <span>  NUTS <span class="op">=</span> <span class="va">hrc_file_nuts</span></span>
@@ -441,7 +438,7 @@ hierarchical variables.</p>
 <div class="section level4">
 <h4 id="running-the-protection-of-all-the-tables-at-once">Running the protection of all the tables at once<a class="anchor" aria-label="anchor" href="#running-the-protection-of-all-the-tables-at-once"></a>
 </h4>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/tab_multi_manager.html">tab_multi_manager</a></span><span class="op">(</span></span>
 <span>    list_tables <span class="op">=</span> <span class="va">list_data_4_tabs</span>,</span>
 <span>    list_explanatory_vars <span class="op">=</span> <span class="va">nom_var_list</span>,</span>
@@ -461,7 +458,7 @@ hierarchical variables.</p>
 <div class="section level4">
 <h4 id="results-1">Results<a class="anchor" aria-label="anchor" href="#results-1"></a>
 </h4>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">list_with_status</span> <span class="op">&lt;-</span> <span class="va">res</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map</a></span><span class="op">(</span></span>
 <span>    <span class="kw">function</span><span class="op">(</span><span class="va">df</span><span class="op">)</span><span class="op">{</span></span>
@@ -485,7 +482,7 @@ hierarchical variables.</p>
 <span><span class="co">#&gt;  $ TOT     : num  853 853 43623 35503 8120 ...</span></span>
 <span><span class="co">#&gt;  $ N_OBS   : int  18 18 387 381 6 1 1 4 4 84 ...</span></span>
 <span><span class="co">#&gt;  $ status  : chr  "V" "V" "V" "V" ...</span></span></code></pre></div>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">list_with_status</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/imap.html" class="external-link">iwalk</a></span><span class="op">(</span></span>
 <span>    <span class="kw">function</span><span class="op">(</span><span class="va">df</span>,<span class="va">name</span><span class="op">)</span><span class="op">{</span></span>
@@ -534,7 +531,7 @@ hierarchy, this leads us to a case of non-nested hierarchies.</p>
 <p>To confirm the non-nesting of the two hierachies, let’s display an
 extract of both.</p>
 <p>Extract of the main hierarchy:</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">sdcHierarchies</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/sdcHierarchies/man/hier_create.html" class="external-link">hier_create</a></span><span class="op">(</span></span>
 <span>  root<span class="op">=</span><span class="st">"Total"</span>,</span>
 <span>  nodes <span class="op">=</span> <span class="va">activity_corr_table</span><span class="op">$</span><span class="va">A10</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="op">)</span></span>
@@ -552,17 +549,27 @@ extract of both.</p>
 <span><span class="co">#&gt; +-OQ</span></span>
 <span><span class="co">#&gt; \-RU</span></span></code></pre></div>
 <p>Extract of the alternative hierarchy:</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">sdcHierarchies</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/sdcHierarchies/man/hier_create.html" class="external-link">hier_create</a></span><span class="op">(</span></span>
 <span>  root<span class="op">=</span><span class="st">"D_TO_M"</span>,</span>
 <span>  nodes <span class="op">=</span> <span class="va">activity_corr_table_D_TO_M</span><span class="op">$</span><span class="va">A21</span></span>
 <span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu">sdcHierarchies</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/sdcHierarchies/man/hier_display.html" class="external-link">hier_display</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Error in sdcHierarchies::hier_create(root = "D_TO_M", nodes = activity_corr_table_D_TO_M$A21): object 'activity_corr_table_D_TO_M' not found</span></span></code></pre></div>
+<span><span class="co">#&gt; D_TO_M</span></span>
+<span><span class="co">#&gt; +-D</span></span>
+<span><span class="co">#&gt; +-E</span></span>
+<span><span class="co">#&gt; +-F</span></span>
+<span><span class="co">#&gt; +-G</span></span>
+<span><span class="co">#&gt; +-H</span></span>
+<span><span class="co">#&gt; +-I</span></span>
+<span><span class="co">#&gt; +-J</span></span>
+<span><span class="co">#&gt; +-K</span></span>
+<span><span class="co">#&gt; +-L</span></span>
+<span><span class="co">#&gt; \-M</span></span></code></pre></div>
 <p>To handle this case, the preferred approach is to create a third
 table crossing <code>ACTIVITY</code> and <code>SIZE</code> with D to M
 labels and the subtotal <code>D_TO_M</code>:</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">turnover_act_size_D_TO_M</span> <span class="op">&lt;-</span> <span class="va">turnover_act_size</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span></span>
 <span>    <span class="va">ACTIVITY</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">LETTERS</span><span class="op">[</span><span class="fl">4</span><span class="op">:</span><span class="fl">13</span><span class="op">]</span></span>
@@ -584,7 +591,7 @@ labels and the subtotal <code>D_TO_M</code>:</p>
 <span><span class="co">#&gt;  $ TOT     : num [1:44] 2438454 2264393 8907311 18244309 6273334 ...</span></span>
 <span><span class="co">#&gt;  $ MAX     : num [1:44] 981369 306905 1065833 765244 3084242 ...</span></span></code></pre></div>
 <p>Let’s create the alternative hierarchy file.</p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">activity_corr_table_D_TO_M</span> <span class="op">&lt;-</span> <span class="va">activity_corr_table</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">A21</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">LETTERS</span><span class="op">[</span><span class="fl">4</span><span class="op">:</span><span class="fl">13</span><span class="op">]</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="op">-</span><span class="va">A88</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
@@ -596,7 +603,7 @@ labels and the subtotal <code>D_TO_M</code>:</p>
 <span>  <span class="fu"><a href="../reference/write_hrc2.html">write_hrc2</a></span><span class="op">(</span>file_name <span class="op">=</span> <span class="st">"hrc/activity_D_TO_M"</span><span class="op">)</span></span></code></pre></div>
 <p>Then, let’s build the list of tables and apply the primary
 suppression rules on them.</p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">list_data_3_tabs_nn</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>  act_size <span class="op">=</span> <span class="va">turnover_act_size</span>,</span>
 <span>  act_size_D_TO_M <span class="op">=</span> <span class="va">turnover_act_size_D_TO_M</span>,</span>
@@ -627,7 +634,7 @@ where the alternative hierarchies have to be applied.</li>
 </ul>
 <p>The same rationale is used to fill the <code>alt_totcode</code>
 argument.</p>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/tab_multi_manager.html">tab_multi_manager</a></span><span class="op">(</span></span>
 <span>  list_tables <span class="op">=</span> <span class="va">list_data_3_tabs_nn</span>,</span>
 <span>  list_explanatory_vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
@@ -664,13 +671,13 @@ Jamme</a></strong> &amp;
 <strong><a href="mailto:nathanael.rastout@insee.fr">Nathanael
 Rastout</a></strong>
 </li>
-<li>Last update: <strong>21/09/2023</strong>
+<li>Last update: <strong>17/02/2025</strong>
 </li>
-<li>Version of rtauargus used: <strong>1.2.0</strong>
+<li>Version of rtauargus used: <strong>1.2.999</strong>
 </li>
 <li>Version of τ-Argus used : <strong>TauArgus 4.2.3</strong>
 </li>
-<li>R version used : <strong>4.2.3</strong>
+<li>R version used : <strong>4.3.3</strong>
 </li>
 </ul>
 <p style="text-align: right">
@@ -679,28 +686,26 @@ Rastout</a></strong>
 </div>
 </div>
 </div>
-  </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
+  </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
 </div>
 
 
 
     <footer><div class="pkgdown-footer-left">
-  <p></p>
-<p>Developed by Pierre-Yves Berrard, Julien Jamme, Nathanaël Rastout, Jeanne Pointet, Félix Beroud, André-Raymond Socard, Wistan Pomel.</p>
+  <p>Developed by Pierre-Yves Berrard, Julien Jamme, Nathanaël Rastout, Jeanne Pointet, Félix Beroud, André-Raymond Socard, Wistan Pomel, Clara Baudry.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
 </div>
 
     </footer>
 </div>
 
-  
 
-  
+
+
 
   </body>
 </html>
