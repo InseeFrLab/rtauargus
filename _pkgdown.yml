@@ -24,6 +24,26 @@ reference:
     - tab_rtauargus2
     - tab_rtauargus4
     - tabulate_micro_data
+  - title: Proceed to an automatic analysis
+    desc: >
+      Functions to help the links analysis between tables from a metadata file.
+    contents:
+    - analyse_metadata
+    - contains_non_total
+    - create_edges
+    - dataframe_result
+    - enterprise_template
+    - filter_on_marginal_of_spanning_var
+    - format_template
+    - get_combinations
+    - grp_tab_in_cluster
+    - grp_tab_names
+    - identify_hrc
+    - metadata_pizza_lettuce
+    - split_dataframe
+    - split_in_clusters
+    - tab_to_treat
+    - wide_to_long
   - title: Data
     desc: >
       Data to run examples
@@ -38,6 +58,8 @@ reference:
     - datatest1
     - datatest2
     - indiv_dt
+    - metadata_pizza_lettuce
+    - enterprise_template
   - title: Protect tables from microdata
     desc: >
       Functions for protecting magnitude and frequency tables, i.e. from
@@ -70,6 +92,11 @@ articles:
     - options_safety_rules
     - options_safety_rules_fr
     - split_tab_fr
+  - title: Automatic analysis
+    navbar: auto-analysis
+    contents:
+    - auto_metadata
+    - auto_metadata_fr
   - title: Work with microdata data (old version)
     navbar: micro-wise
     contents:
