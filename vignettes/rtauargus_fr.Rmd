@@ -22,7 +22,7 @@ vignette: >
 <!-- ####################################################################### -->
 
 
-```r
+``` r
 library(dplyr)
 ```
 
@@ -80,13 +80,17 @@ _rtauargus_ nécessite quelques autres packages R. Voici les dépendances à ins
 
 
 ```
-• purrr (>= 0.2),
-• dplyr (>= 0.7),
+• purrr (>= 0.2)
+• dplyr (>= 0.7)
+• tidyr
+• data.table
 • gdata,
-• stringr,
-• rlang,
-• zoo,
+• stringr
+• rlang
+• zoo
 • sdcHierarchies
+• igraph
+• lifecycle
 ```
 Le package _rtauargus_ peut être installé maintenant.
 
@@ -107,7 +111,7 @@ comment appliquer des méthodes de suppression en une seule instruction.
 Lors du chargement du package, la console affiche quelques informations :
 
 
-```r
+``` r
 library(rtauargus)
 ```
 
@@ -116,7 +120,7 @@ prédéfini. Celui-ci peut être modifié pour la durée de la session R, comme 
 
 
 
-```r
+``` r
 loc_tauargus <- "Y:/Logiciels/TauArgus/TauArgus4.2.3/TauArgus.exe"
 
 options(rtauargus.tauargus_exe = loc_tauargus)
@@ -150,7 +154,7 @@ Pour la présentation un tableau fictif sera utilisé :
 
 
 
-```r
+``` r
 act_size <-
   data.frame(
     ACTIVITY = c("01","01","01","02","02","02","06","06","06","Total","Total","Total"),
@@ -183,7 +187,7 @@ Nous utiliserons ces deux règles de secret primaire :
 Pour obtenir les résultats de la règle de dominance, nous devons spécifier le plus grand contributeur de chaque cellule, correspondant à la variable `MAX` dans les données tabulées.
 
 
-```r
+``` r
 ex1 <- tab_rtauargus(
   act_size,
   dir_name = "tauargus_files/ex1",
@@ -195,9 +199,9 @@ ex1 <- tab_rtauargus(
   maxscore = "MAX",
   totcode = c(ACTIVITY="Total",SIZE="Total")
 )
-#> Start of batch procedure; file: Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex1\ex1.arb
-#> <OPENTABLEDATA> "Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex1\ex1.tab"
-#> <OPENMETADATA> "Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex1\ex1.rda"
+#> Start of batch procedure; file: Z:\rtauargus\vignettes\tauargus_files\ex1\ex1.arb
+#> <OPENTABLEDATA> "Z:\rtauargus\vignettes\tauargus_files\ex1\ex1.tab"
+#> <OPENMETADATA> "Z:\rtauargus\vignettes\tauargus_files\ex1\ex1.rda"
 #> <SPECIFYTABLE> "ACTIVITY""SIZE"|"VAL"||
 #> <SAFETYRULE> FREQ(3,10)|NK(1,85)
 #> <READTABLE> 1
@@ -206,9 +210,9 @@ ex1 <- tab_rtauargus(
 #> Start of the modular protection for table ACTIVITY x SIZE | VAL
 #> End of modular protection. Time used 0 seconds
 #>                    Number of suppressions: 2
-#> <WRITETABLE> (1,4,,"Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex1\ex1.csv")
+#> <WRITETABLE> (1,4,,"Z:\rtauargus\vignettes\tauargus_files\ex1\ex1.csv")
 #> Table: ACTIVITY x SIZE | VAL has been written
-#>                    Output file name: Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex1\ex1.csv
+#>                    Output file name: Z:\rtauargus\vignettes\tauargus_files\ex1\ex1.csv
 #> End of TauArgus run
 ```
 
@@ -226,7 +230,7 @@ chaque cellule comme suit :
 -`V` : cellules valides - pas besoin de masquer.
 
 
-```r
+``` r
 ex1
 #>    ACTIVITY  SIZE VAL N_OBS MAX Status
 #> 1        01 Total 150    15  20      V
@@ -256,7 +260,7 @@ Tous les fichiers générés par la fonction sont écrits dans le répertoire sp
 Dans cet exemple, nous souhaitons protéger un tableau dans lequel le chiffre d'affaires des entreprises est ventilé par secteur d'activité et par taille. Pour charger les données :
 
 
-```r
+``` r
 data("turnover_act_size")
 head(turnover_act_size)
 #> # A tibble: 6 x 5
@@ -288,7 +292,7 @@ A partir d'un tableau de correspondance, la fonction `write_hrc2()` fait le trav
 Ici, le tableau de correspondance décrit l'imbrication des trois niveaux de secteurs d'activité, du plus agrégé au moins agrégé :
 
 
-```r
+``` r
 data(activity_corr_table)
 head(activity_corr_table)
 #>   A10 A21 A88
@@ -301,7 +305,7 @@ head(activity_corr_table)
 ```
 
 
-```r
+``` r
 hrc_file_activity <- write_hrc2(
   corr_table = activity_corr_table,
   file_name = "hrc/activity.hrc"
@@ -318,7 +322,7 @@ on obtient :
 
 
 
-```r
+``` r
 turnover_act_size <- turnover_act_size %>%
   mutate(
     is_secret_freq = N_OBS > 0 & N_OBS < 3,
@@ -341,7 +345,7 @@ Par défaut, `tab_rtauargus()` exécute la méthode Modular pour effectuer le se
 
 
 
-```r
+``` r
 ex2 <- tab_rtauargus(
   turnover_act_size,
   dir_name = "tauargus_files/ex2",
@@ -360,7 +364,7 @@ ex2 <- tab_rtauargus(
 ##### Résultat
 
 
-```r
+``` r
 str(ex2)
 #> 'data.frame':	414 obs. of  9 variables:
 #>  $ ACTIVITY      : chr  "01" "01" "02" "02" ...
@@ -375,7 +379,7 @@ str(ex2)
 ```
 
 
-```r
+``` r
 table(ex2$Status)
 #> 
 #>   B   D   V 
@@ -386,7 +390,7 @@ Comme on peut le voir dans les résultats du `table()`,dans la sortie produite p
 Pour corriger cela, nous pouvons faire :
 
 
-```r
+``` r
 ex2 %>%
   mutate(
     Status = dplyr::case_when(
@@ -414,7 +418,7 @@ Pour cet exemple, deux tableaux seront utilisés :
 
 
 
-```r
+``` r
 data("turnover_act_size")
 data("turnover_act_cj")
 str(turnover_act_cj)
@@ -441,7 +445,7 @@ Ici, on utilise les mêmes règles que précédemment.
 
 
 
-```r
+``` r
 list_data_2_tabs <- list(
   act_size = turnover_act_size,
   act_cj = turnover_act_cj
@@ -465,7 +469,7 @@ Maintenant que le secret primaire a été spécifié pour les deux tableaux, nou
 
 
 
-```r
+``` r
 ex3 <- tab_multi_manager(
   list_tables = list_data_2_tabs,
   list_explanatory_vars = list(
@@ -498,10 +502,10 @@ de la fonction `tab_multi_manager()`.
 #### Détail de la vignette
 
 - Authors: **<a href="mailto:julien.jamme@insee.fr">Julien Jamme</a>** & **<a href="mailto:nathanael.rastout@insee.fr">Nathanael Rastout</a>**
-- Last update: **21/09/2023**
-- Version of rtauargus used: **1.2.0**
+- Last update: **17/02/2025**
+- Version of rtauargus used: **1.2.999**
 - Version of &tau;-Argus used : **TauArgus 4.2.3**
-- R version used :  **4.2.3**
+- R version used :  **4.3.3**
 
 <p style="text-align: right">
   <a href="#TOC" title="Back to summary">summary &uarr;</a>

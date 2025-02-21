@@ -22,7 +22,7 @@ vignette: >
 <!-- ####################################################################### -->
 
 
-```r
+``` r
 library(dplyr)
 ```
 
@@ -80,14 +80,16 @@ The latest releases can be downloaded here: [https://github.com/sdcTools/tauargu
 
 
 ```
-• purrr (>= 0.2),
-• dplyr (>= 0.7),
-• data.table,
+• purrr (>= 0.2)
+• dplyr (>= 0.7)
+• tidyr
+• data.table
 • gdata,
-• stringr,
-• rlang,
-• zoo,
-• sdcHierarchies,
+• stringr
+• rlang
+• zoo
+• sdcHierarchies
+• igraph
 • lifecycle
 ```
 The package _rtauargus_ can be installed now.
@@ -109,7 +111,7 @@ how to apply suppressive methods in a single instruction.
 When loading the package, the console displays some information:
 
 
-```r
+``` r
 library(rtauargus)
 ```
 
@@ -117,7 +119,7 @@ In particular, a plausible location for the &tau;-Argus software is
 predefined. This can be changed for the duration of the R session, as follows:
 
 
-```r
+``` r
 loc_tauargus <- "Y:/Logiciels/TauArgus/TauArgus4.2.3/TauArgus.exe"
 
 options(rtauargus.tauargus_exe = loc_tauargus)
@@ -150,7 +152,7 @@ All the arguments and their default options will be detailed ( where?).
 For the following demonstration, a fictitious table will be used:
 
 
-```r
+``` r
 act_size <-
   data.frame(
     ACTIVITY = c("01","01","01","02","02","02","06","06","06","Total","Total","Total"),
@@ -183,7 +185,7 @@ As primary rules, we use the two following ones:
 To get the results for the dominance rule, we need to specify the largest contributor to each cell, corresponding to the `MAX` variable in the tabular data.
 
 
-```r
+``` r
 ex1 <- tab_rtauargus(
   act_size,
   dir_name = "tauargus_files/ex1",
@@ -195,9 +197,9 @@ ex1 <- tab_rtauargus(
   maxscore = "MAX",
   totcode = c(ACTIVITY="Total",SIZE="Total")
 )
-#> Start of batch procedure; file: Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex1\ex1.arb
-#> <OPENTABLEDATA> "Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex1\ex1.tab"
-#> <OPENMETADATA> "Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex1\ex1.rda"
+#> Start of batch procedure; file: Z:\rtauargus\vignettes\tauargus_files\ex1\ex1.arb
+#> <OPENTABLEDATA> "Z:\rtauargus\vignettes\tauargus_files\ex1\ex1.tab"
+#> <OPENMETADATA> "Z:\rtauargus\vignettes\tauargus_files\ex1\ex1.rda"
 #> <SPECIFYTABLE> "ACTIVITY""SIZE"|"VAL"||
 #> <SAFETYRULE> FREQ(3,10)|NK(1,85)
 #> <READTABLE> 1
@@ -206,9 +208,9 @@ ex1 <- tab_rtauargus(
 #> Start of the modular protection for table ACTIVITY x SIZE | VAL
 #> End of modular protection. Time used 0 seconds
 #>                    Number of suppressions: 2
-#> <WRITETABLE> (1,4,,"Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex1\ex1.csv")
+#> <WRITETABLE> (1,4,,"Z:\rtauargus\vignettes\tauargus_files\ex1\ex1.csv")
 #> Table: ACTIVITY x SIZE | VAL has been written
-#>                    Output file name: Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\tauargus_files\ex1\ex1.csv
+#>                    Output file name: Z:\rtauargus\vignettes\tauargus_files\ex1\ex1.csv
 #> End of TauArgus run
 ```
 
@@ -226,7 +228,7 @@ each cell as follows:
 -`V`: valid cells - no need to mask.
 
 
-```r
+``` r
 ex1
 #>    ACTIVITY  SIZE VAL N_OBS MAX Status
 #> 1        01 Total 150    15  20      V
@@ -258,7 +260,7 @@ For this example, we'd like to protect a table in which companies' turnover
 is broken down by business sectors and size. To load the data, do:
 
 
-```r
+``` r
 data("turnover_act_size")
 head(turnover_act_size)
 #> # A tibble: 6 x 5
@@ -292,7 +294,7 @@ Here, the correspondence table describes the nesting of the three levels of busi
 sectors, from the most aggregated to the least one:
 
 
-```r
+``` r
 data(activity_corr_table)
 head(activity_corr_table)
 #>   A10 A21 A88
@@ -306,7 +308,7 @@ head(activity_corr_table)
 
 
 
-```r
+``` r
 hrc_file_activity <- write_hrc2(
   corr_table = activity_corr_table,
   file_name = "hrc/activity.hrc"
@@ -322,7 +324,7 @@ which cells don't comply with the primary secret rules. Using the same rules as 
 we get:
 
 
-```r
+``` r
 turnover_act_size <- turnover_act_size %>%
   mutate(
     is_secret_freq = N_OBS > 0 & N_OBS < 3,
@@ -346,7 +348,7 @@ as to say that a 10% Interval Protection is applied.
 By default, `tab_rtauargus()` runs the Modular method to perform the secondary secret. Here, we choose to use the Optimal method by changing the `suppress` argument.
 
 
-```r
+``` r
 ex2 <- tab_rtauargus(
   turnover_act_size,
   dir_name = "tauargus_files/ex2",
@@ -365,7 +367,7 @@ ex2 <- tab_rtauargus(
 ##### Result
 
 
-```r
+``` r
 str(ex2)
 #> 'data.frame':	414 obs. of  9 variables:
 #>  $ ACTIVITY      : chr  "01" "01" "02" "02" ...
@@ -380,7 +382,7 @@ str(ex2)
 ```
 
 
-```r
+``` r
 table(ex2$Status)
 #> 
 #>   B   D   V 
@@ -391,7 +393,7 @@ As we can see in the `table()` results, all the primary secret has the status "B
 in the output produced by &tau;-Argus. To adjust this, we can do:
 
 
-```r
+``` r
 ex2 %>%
   mutate(
     Status = dplyr::case_when(
@@ -418,7 +420,7 @@ It is an iterating process, performing secondary suppression with one table at a
 For this example, two tables will be used :
 
 
-```r
+``` r
 data("turnover_act_size")
 data("turnover_act_cj")
 str(turnover_act_cj)
@@ -444,7 +446,7 @@ or not. A boolean variable is created, equal to TRUE if the cell doesn't comply.
 Here, we use the same rules as previously.
 
 
-```r
+``` r
 list_data_2_tabs <- list(
   act_size = turnover_act_size,
   act_cj = turnover_act_cj
@@ -467,7 +469,7 @@ list_data_2_tabs <- list(
 Now that the primary secret has been specified for both tables, we can run the process.
 
 
-```r
+``` r
 ex3 <- tab_multi_manager(
   list_tables = list_data_2_tabs,
   list_explanatory_vars = list(
@@ -500,10 +502,10 @@ of `tab_multi_manager()` function.
 #### About this vignette
 
 - Authors: **<a href="mailto:julien.jamme@insee.fr">Julien Jamme</a>** & **<a href="mailto:nathanael.rastout@insee.fr">Nathanael Rastout</a>**
-- Last update: **11/01/2024**
-- Version of rtauargus used: **1.2.0**
+- Last update: **17/02/2025**
+- Version of rtauargus used: **1.2.999**
 - Version of &tau;-Argus used : **TauArgus 4.2.3**
-- R version used :  **4.2.3**
+- R version used :  **4.3.3**
 
 <p style="text-align: right">
   <a href="#TOC" title="Back to summary">summary &uarr;</a>

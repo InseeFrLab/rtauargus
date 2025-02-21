@@ -67,7 +67,7 @@ For the following demonstration, a fictitious microdata set will be
 used :
 
 
-```r
+``` r
 microdata <-
   data.frame(
     V1    = c("A", "A", "A", "A", "B", "B", "B", "C"),
@@ -116,14 +116,16 @@ To work, _rtauargus_ depends on other R packages. These have to be installed bef
 
 
 ```
-- purrr (>= 0.2),
-- dplyr (>= 0.7),
-- data.table,
+- purrr (>= 0.2)
+- dplyr (>= 0.7)
+- tidyr
+- data.table
 - gdata,
-- stringr,
-- rlang,
-- zoo,
-- sdcHierarchies,
+- stringr
+- rlang
+- zoo
+- sdcHierarchies
+- igraph
 - lifecycle
 ```
 
@@ -148,7 +150,7 @@ how to apply statistical confidentiality in a single instruction.
 When the package is loaded, the console displays some information:
 
 
-```r
+``` r
 library(rtauargus)
 ```
 
@@ -157,7 +159,7 @@ predefined. It is possible to change it for the duration of the R session. A
 message indicates that this location is unknown, so we modify it:
 
 
-```r
+``` r
 loc_tauargus <- "Y:/Logiciels/TauArgus/TauArgus4.2.3/TauArgus.exe"
 
 options(rtauargus.tauargus_exe = loc_tauargus)
@@ -192,20 +194,20 @@ The last two arguments use the batch syntax &tau;-Argus.
 #### Minimalist example
 
 
-```r
+``` r
 micro_rtauargus(
   microdata = microdata,
   explanatory_vars = "V1",
   safety_rules = "FREQ(3,10)",
   suppress = "GH(1,100)"
 )
-#> Start of batch procedure; file: C:\Users\TMM7AN.AD\AppData\Local\Temp\Rtmpu6McgM\RTA_8a488545f97.arb
-#> <OPENMICRODATA> "C:\Users\TMM7AN.AD\AppData\Local\Temp\Rtmpu6McgM\RTA_8a484e1611c.asc"
-#> <OPENMETADATA> "C:\Users\TMM7AN.AD\AppData\Local\Temp\Rtmpu6McgM\RTA_8a484e1611c.rda"
+#> Start of batch procedure; file: C:\Users\KQCFFL\AppData\Local\Temp\Rtmpm05wlj\RTA_13aa85f527816.arb
+#> <OPENMICRODATA> "C:\Users\KQCFFL\AppData\Local\Temp\Rtmpm05wlj\RTA_13aa866f06f26.asc"
+#> <OPENMETADATA> "C:\Users\KQCFFL\AppData\Local\Temp\Rtmpm05wlj\RTA_13aa866f06f26.rda"
 #> <SPECIFYTABLE> "V1"|"<freq>"||
 #> <SAFETYRULE> FREQ(3,10)
 #> <READMICRODATA>
-#> Start explore file: C:\Users\TMM7AN.AD\AppData\Local\Temp\Rtmpu6McgM\RTA_8a484e1611c.asc
+#> Start explore file: C:\Users\KQCFFL\AppData\Local\Temp\Rtmpm05wlj\RTA_13aa866f06f26.asc
 #> Start computing tables
 #> Table: V1 | <freq> has been specified
 #> Tables have been computed
@@ -217,9 +219,9 @@ micro_rtauargus(
 #>                    Number of suppressions: 1
 #> The hypercube procedure has been applied
 #>                    1 cells have been suppressed
-#> <WRITETABLE> (1,4,,"C:\Users\TMM7AN.AD\AppData\Local\Temp\Rtmpu6McgM\RTA_8a4818452b3.sbs")
+#> <WRITETABLE> (1,4,AS+SE+,"C:\Users\KQCFFL\AppData\Local\Temp\Rtmpm05wlj\RTA_13aa826e25069.sbs")
 #> Table: V1 | <freq> has been written
-#>                    Output file name: C:\Users\TMM7AN.AD\AppData\Local\Temp\Rtmpu6McgM\RTA_8a4818452b3.sbs
+#>                    Output file name: C:\Users\KQCFFL\AppData\Local\Temp\Rtmpm05wlj\RTA_13aa826e25069.sbs
 #> End of TauArgus run
 #> NULL
 ```
@@ -242,7 +244,7 @@ They are stored in a `secret1` object (a list consisting of two
 data.frame), which we can continue to manipulate.
 
 
-```r
+``` r
 secret1 <-
   micro_rtauargus(
     microdata = microdata,
@@ -252,15 +254,15 @@ secret1 <-
     output_options = c("", "AS+"), # no status for the 1st array
     show_batch_console = FALSE # to hide the log
   )
-#> Start of batch procedure; file: C:\Users\TMM7AN.AD\AppData\Local\Temp\Rtmpu6McgM\RTA_8a48bef7dcb.arb
-#> <OPENMICRODATA> "C:\Users\TMM7AN.AD\AppData\Local\Temp\Rtmpu6McgM\RTA_8a484664de8.asc"
-#> <OPENMETADATA> "C:\Users\TMM7AN.AD\AppData\Local\Temp\Rtmpu6McgM\RTA_8a484664de8.rda"
+#> Start of batch procedure; file: C:\Users\KQCFFL\AppData\Local\Temp\Rtmpm05wlj\RTA_13aa821eb5b19.arb
+#> <OPENMICRODATA> "C:\Users\KQCFFL\AppData\Local\Temp\Rtmpm05wlj\RTA_13aa85d87423f.asc"
+#> <OPENMETADATA> "C:\Users\KQCFFL\AppData\Local\Temp\Rtmpm05wlj\RTA_13aa85d87423f.rda"
 #> <SPECIFYTABLE> "V1"|"<freq>"||
 #> <SAFETYRULE> FREQ(3,10)
 #> <SPECIFYTABLE> "V1""V2"|"<freq>"||
 #> <SAFETYRULE> FREQ(3,10)
 #> <READMICRODATA>
-#> Start explore file: C:\Users\TMM7AN.AD\AppData\Local\Temp\Rtmpu6McgM\RTA_8a484664de8.asc
+#> Start explore file: C:\Users\KQCFFL\AppData\Local\Temp\Rtmpm05wlj\RTA_13aa85d87423f.asc
 #> Start computing tables
 #> Table: V1 | <freq> has been specified
 #> Table: V1 x V2 | <freq> has been specified
@@ -273,19 +275,22 @@ secret1 <-
 #>                    Number of suppressions: 1
 #> The hypercube procedure has been applied
 #>                    1 cells have been suppressed
-#> <WRITETABLE> (1,4,,"C:\Users\TMM7AN.AD\AppData\Local\Temp\Rtmpu6McgM\RTA_8a4862103fbe.sbs")
+#> <WRITETABLE> (1,4,,"C:\Users\KQCFFL\AppData\Local\Temp\Rtmpm05wlj\RTA_13aa861ea459a.sbs")
 #> Table: V1 | <freq> has been written
-#>                    Output file name: C:\Users\TMM7AN.AD\AppData\Local\Temp\Rtmpu6McgM\RTA_8a4862103fbe.sbs
+#>                    Output file name: C:\Users\KQCFFL\AppData\Local\Temp\Rtmpm05wlj\RTA_13aa861ea459a.sbs
 #> <SUPPRESS> GH(2,100)
 #> Start of the hypercube protection for table V1 x V2 | <freq>
 #> End of hypercube protection. Time used 1 seconds
 #>                    Number of suppressions: 2
 #> The hypercube procedure has been applied
 #>                    2 cells have been suppressed
-#> <WRITETABLE> (2,4,AS+,"C:\Users\TMM7AN.AD\AppData\Local\Temp\Rtmpu6McgM\RTA_8a48589d7890.sbs")
+#> <WRITETABLE> (2,4,AS+,"C:\Users\KQCFFL\AppData\Local\Temp\Rtmpm05wlj\RTA_13aa844945238.sbs")
 #> Table: V1 x V2 | <freq> has been written
-#>                    Output file name: C:\Users\TMM7AN.AD\AppData\Local\Temp\Rtmpu6McgM\RTA_8a48589d7890.sbs
+#>                    Output file name: C:\Users\KQCFFL\AppData\Local\Temp\Rtmpm05wlj\RTA_13aa844945238.sbs
 #> End of TauArgus run
+```
+
+``` r
 
 secret1
 #> NULL
@@ -349,13 +354,13 @@ metadata file is not specified, it takes the same name as the
 asc, but with the extension .rda.
 
 
-```r
+``` r
 micro_asc_rda(microdata, asc_filename = "Z:/microdata.asc")
 ```
 
 Content of the files created :
 
-```r
+``` r
 file.show("Z:/microdata.asc", "Z:/microdata.rda", pager = "internal")
 ```
 
@@ -395,7 +400,7 @@ We add to the previous example :
 - a minimum number of decimal places to be written for numerical variables.
 
 
-```r
+``` r
 micro_asc_rda(
   microdata = microdata,
   asc_filename = "Z:/microdata.asc",
@@ -407,7 +412,7 @@ micro_asc_rda(
 ```
 Content of the files created :
 
-```r
+``` r
 file.show("Z:/microdata.asc", "Z:/microdata.rda", pager = "internal")
 ```
 
@@ -441,14 +446,14 @@ in a temporary folder. It is possible to retrieve the location and name
 (random) of these files in the return value of the function.
 
 
-```r
+``` r
 names_asc_rda <- micro_asc_rda(microdata)
 names_asc_rda
 #> $asc_filename
-#> [1] "C:\\Users\\TMM7AN.AD\\AppData\\Local\\Temp\\Rtmpu6McgM\\RTA_8a4868f0147e.asc"
+#> [1] "C:\\Users\\KQCFFL\\AppData\\Local\\Temp\\Rtmpm05wlj\\RTA_13aa875d56ea.asc"
 #> 
 #> $rda_filename
-#> [1] "C:\\Users\\TMM7AN.AD\\AppData\\Local\\Temp\\Rtmpu6McgM\\RTA_8a4868f0147e.rda"
+#> [1] "C:\\Users\\KQCFFL\\AppData\\Local\\Temp\\Rtmpm05wlj\\RTA_13aa875d56ea.rda"
 ```
 
 <p style="text-align: right">
@@ -475,7 +480,7 @@ the same name as the asc file with the .rda extension is used.
 #### Minimalist example
 
 
-```r
+``` r
 micro_arb(
   arb_filename = "Z:/microdata.arb",
   asc_filename = "Z:/microdata.asc",
@@ -488,21 +493,21 @@ micro_arb(
 
 Content of the file created :
 
-```r
+``` r
 file.show("Z:/microdata.arb", pager = "internal")
 ```
 
 
 ```
 // Batch generated by package *rtauargus*
-// (2024-01-11 16:39:46 CET)
+// (2025-02-17 12:14:22 CET)
 <OPENMICRODATA> "Z:\microdata.asc"
 <OPENMETADATA> "Z:\microdata.rda"
 <SPECIFYTABLE> "V1"|"<freq>"||
 <SAFETYRULE> FREQ(3,10)
 <READMICRODATA>
 <SUPPRESS> GH(1,100)
-<WRITETABLE> (1,4,,"Z:\results\secretV1.csv")
+<WRITETABLE> (1,4,AS+SE+,"Z:\results\secretV1.csv")
 ```
 
 #### Elaborate example
@@ -533,21 +538,21 @@ micro_arb(
 ```
 
 
-```r
+``` r
 file.show("Z:/microdata.arb", pager = "internal")
 ```
 
 
 ```
 // Batch generated by package *rtauargus*
-// (2024-01-11 16:39:46 CET)
+// (2025-02-17 12:14:22 CET)
 <OPENMICRODATA> "Z:\microdata.asc"
 <OPENMETADATA> "Z:\microdata.rda"
 <SPECIFYTABLE> "V1"|"<freq>"||
 <SAFETYRULE> FREQ(3,10)
 <READMICRODATA>
 <SUPPRESS> GH(1,100)
-<WRITETABLE> (1,4,,"Z:\results\secretV1.csv")
+<WRITETABLE> (1,4,AS+SE+,"Z:\results\secretV1.csv")
 ```
 
 #### Temporary files
@@ -558,7 +563,7 @@ temporary. Specifying the name of the .arb file is not mandatory either. These
 information can be retrieved from the return value of the function.
 
 
-```r
+``` r
 infos_arb <-
   micro_arb(
     asc_filename = "Z:/microdata.asc",
@@ -569,11 +574,11 @@ infos_arb <-
   )
 infos_arb
 #> $arb_filename
-#> [1] "C:\\Users\\TMM7AN.AD\\AppData\\Local\\Temp\\Rtmpu6McgM\\RTA_8a481d6c467c.arb"
+#> [1] "C:\\Users\\KQCFFL\\AppData\\Local\\Temp\\Rtmpm05wlj\\RTA_13aa83d136448.arb"
 #> 
 #> $output_names
-#> [1] "C:\\Users\\TMM7AN.AD\\AppData\\Local\\Temp\\Rtmpu6McgM\\RTA_8a483d7451b6.sbs"
-#> [2] "C:\\Users\\TMM7AN.AD\\AppData\\Local\\Temp\\Rtmpu6McgM\\RTA_8a48637e49a.sbs"
+#> [1] "C:\\Users\\KQCFFL\\AppData\\Local\\Temp\\Rtmpm05wlj\\RTA_13aa81a11772c.sbs"
+#> [2] "C:\\Users\\KQCFFL\\AppData\\Local\\Temp\\Rtmpm05wlj\\RTA_13aa822675f41.sbs"
 ```
 
 <p style="text-align: right">
@@ -588,7 +593,7 @@ submit it to &tau;-Argus in batch mode. We get the list of tables
 secreted :
 
 
-```r
+``` r
 secret2 <- run_arb("Z:/microdata.arb", missing_dir = "create")
 #> Start of batch procedure; file: Z:\microdata.arb
 #> <OPENMICRODATA> "Z:\microdata.asc"
@@ -608,10 +613,13 @@ secret2 <- run_arb("Z:/microdata.arb", missing_dir = "create")
 #>                    Number of suppressions: 1
 #> The hypercube procedure has been applied
 #>                    1 cells have been suppressed
-#> <WRITETABLE> (1,4,,"Z:\results\secretV1.csv")
+#> <WRITETABLE> (1,4,AS+SE+,"Z:\results\secretV1.csv")
 #> Table: V1 | <freq> has been written
 #>                    Output file name: Z:\results\secretV1.csv
 #> End of TauArgus run
+```
+
+``` r
 
 secret2
 #> NULL
@@ -660,7 +668,7 @@ independently (e.g. if you don't want to restart a batch that has
 took a long time to execute).
 
 
-```r
+``` r
 secret2 <- import("Z:/microdata.arb")
 # produces the same result as run_arb("Z:/microdata.arb", import = TRUE)
 ```
@@ -685,7 +693,7 @@ the parameters that were passed to the function (the other
 correspond to default values of the package).
 
 
-```r
+``` r
 str(secret2[[2]])
 #>  NULL
 ```
@@ -751,7 +759,7 @@ below:
 To view the options set for the current session:
 
 
-```r
+``` r
 rtauargus_options()
 #> $rtauargus.decimals
 #> [1] 0
@@ -775,7 +783,7 @@ rtauargus_options()
 #> [1] "stop"
 #> 
 #> $rtauargus.output_options
-#> [1] ""
+#> [1] "AS+SE+"
 #> 
 #> $rtauargus.output_type
 #> [1] "4"
@@ -813,7 +821,7 @@ To modify one or more options, use the following syntax (the same as above)
 than the one used to modify the location of &tau;-Argus) :
 
 
-```r
+``` r
 options(
   rtauargus.show_batch_console = FALSE,
   rtauargus.output_options = "AS+SE+",
@@ -843,7 +851,7 @@ str(rtauargus_options())
 To reset certain options:
 
 
-```r
+``` r
 reset_rtauargus_options("rtauargus.response_var", "rtauargus.output_type")
 
 # It is possible to omit the prefix 'rtauargus.
@@ -873,7 +881,7 @@ To reset all values to default (including the path to
 &tau;-Argus modified at the beginning of the demonstration), do not specify any argument:
 
 
-```r
+``` r
 reset_rtauargus_options()
 ```
 
@@ -947,10 +955,10 @@ For any return or error report, please use
 
 - Author: **<a href="mailto:pierre-yves.berrard@insee.fr">Pierre-Yves Berrard</a>**
 - Updated by: **<a href="mailto:julien.jamme@insee.fr">Julien Jamme</a>**
-- Last update: **11/01/2024**
-- Version of rtauargus used: **1.2.0**
+- Last update: **17/02/2025**
+- Version of rtauargus used: **1.2.999**
 - Version of &tau;-Argus used : **TauArgus 4.2.3**
-- R version used :  **4.2.3**
+- R version used :  **4.3.3**
 
 <p style="text-align: right">
   <a href="#TOC" title="Back to summary">summary &uarr;</a>

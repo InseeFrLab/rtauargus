@@ -1,0 +1,57 @@
+17-févr.-2025 12:02:23 : Start of batch procedure; file: Z:\rtauargus\vignettes\tauargus_files\ex4\act_cj.arb
+17-févr.-2025 12:02:23 : <OPENTABLEDATA> "Z:\rtauargus\vignettes\tauargus_files\ex4\act_cj.tab"
+17-févr.-2025 12:02:23 : <OPENMETADATA> "Z:\rtauargus\vignettes\tauargus_files\ex4\act_cj.rda"
+17-févr.-2025 12:02:23 : <SPECIFYTABLE> "ACTIVITY""CJ"|"TOT"||
+17-févr.-2025 12:02:23 : <SAFETYRULE> MAN(0)
+17-févr.-2025 12:02:23 : <READTABLE> 1
+17-févr.-2025 12:02:23 : Tables have been read
+17-févr.-2025 12:02:23 : <APRIORI> "Z:\rtauargus\vignettes\tauargus_files\ex4\act_cj.hst",1,",",0,0
+17-févr.-2025 12:02:23 : Apriory file: Z:\rtauargus\vignettes\tauargus_files\ex4\act_cj.hst has been applied
+                       to table: ACTIVITY x CJ | TOT
+17-févr.-2025 12:02:23 : Apriori file Z:\rtauargus\vignettes\tauargus_files\ex4\act_cj.hst has been read
+17-févr.-2025 12:02:23 : <SUPPRESS> MOD(1,5,1,0,0)
+17-févr.-2025 12:02:23 : Start of the modular protection for table ACTIVITY x CJ | TOT
+17-févr.-2025 12:02:24 : End of modular protection. Time used 1 seconds
+                       Number of suppressions: 77
+17-févr.-2025 12:02:24 : <WRITETABLE> (1,4,,"Z:\rtauargus\vignettes\tauargus_files\ex4\act_cj.csv")
+17-févr.-2025 12:02:24 : Table: ACTIVITY x CJ | TOT has been written
+                       Output file name: Z:\rtauargus\vignettes\tauargus_files\ex4\act_cj.csv
+17-févr.-2025 12:02:24 : End of TauArgus run
+17-févr.-2025 12:13:33 : Start of batch procedure; file: Z:\rtauargus\vignettes\tauargus_files\ex4\act_cj.arb
+17-févr.-2025 12:13:33 : <OPENTABLEDATA> "Z:\rtauargus\vignettes\tauargus_files\ex4\act_cj.tab"
+17-févr.-2025 12:13:33 : <OPENMETADATA> "Z:\rtauargus\vignettes\tauargus_files\ex4\act_cj.rda"
+17-févr.-2025 12:13:33 : <SPECIFYTABLE> "ACTIVITY""CJ"|"TOT"||
+17-févr.-2025 12:13:33 : <SAFETYRULE> MAN(0)
+17-févr.-2025 12:13:33 : <READTABLE> 1
+17-févr.-2025 12:13:33 : Tables have been read
+17-févr.-2025 12:13:33 : <APRIORI> "Z:\rtauargus\vignettes\tauargus_files\ex4\act_cj.hst",1,",",0,0
+17-févr.-2025 12:13:33 : Apriory file: Z:\rtauargus\vignettes\tauargus_files\ex4\act_cj.hst has been applied
+                       to table: ACTIVITY x CJ | TOT
+17-févr.-2025 12:13:33 : Apriori file Z:\rtauargus\vignettes\tauargus_files\ex4\act_cj.hst has been read
+17-févr.-2025 12:13:33 : <SUPPRESS> MOD(1,5,1,0,0)
+17-févr.-2025 12:13:33 : Start of the modular protection for table ACTIVITY x CJ | TOT
+17-févr.-2025 12:13:34 : End of modular protection. Time used 0 seconds
+                       Number of suppressions: 77
+17-févr.-2025 12:13:34 : <WRITETABLE> (1,4,,"Z:\rtauargus\vignettes\tauargus_files\ex4\act_cj.csv")
+17-févr.-2025 12:13:34 : Table: ACTIVITY x CJ | TOT has been written
+                       Output file name: Z:\rtauargus\vignettes\tauargus_files\ex4\act_cj.csv
+17-févr.-2025 12:13:34 : End of TauArgus run
+17-févr.-2025 12:14:54 : Start of batch procedure; file: Z:\rtauargus\vignettes\tauargus_files\ex4\act_cj.arb
+17-févr.-2025 12:14:54 : <OPENTABLEDATA> "Z:\rtauargus\vignettes\tauargus_files\ex4\act_cj.tab"
+17-févr.-2025 12:14:54 : <OPENMETADATA> "Z:\rtauargus\vignettes\tauargus_files\ex4\act_cj.rda"
+17-févr.-2025 12:14:54 : <SPECIFYTABLE> "ACTIVITY""CJ"|"TOT"||
+17-févr.-2025 12:14:54 : <SAFETYRULE> MAN(0)
+17-févr.-2025 12:14:54 : <READTABLE> 1
+17-févr.-2025 12:14:54 : Tables have been read
+17-févr.-2025 12:14:54 : <APRIORI> "Z:\rtauargus\vignettes\tauargus_files\ex4\act_cj.hst",1,",",0,0
+17-févr.-2025 12:14:54 : Apriory file: Z:\rtauargus\vignettes\tauargus_files\ex4\act_cj.hst has been applied
+                       to table: ACTIVITY x CJ | TOT
+17-févr.-2025 12:14:54 : Apriori file Z:\rtauargus\vignettes\tauargus_files\ex4\act_cj.hst has been read
+17-févr.-2025 12:14:54 : <SUPPRESS> MOD(1,5,1,0,0)
+17-févr.-2025 12:14:54 : Start of the modular protection for table ACTIVITY x CJ | TOT
+17-févr.-2025 12:14:55 : End of modular protection. Time used 1 seconds
+                       Number of suppressions: 77
+17-févr.-2025 12:14:55 : <WRITETABLE> (1,4,,"Z:\rtauargus\vignettes\tauargus_files\ex4\act_cj.csv")
+17-févr.-2025 12:14:55 : Table: ACTIVITY x CJ | TOT has been written
+                       Output file name: Z:\rtauargus\vignettes\tauargus_files\ex4\act_cj.csv
+17-févr.-2025 12:14:55 : End of TauArgus run

@@ -1,0 +1,194 @@
+---
+title: "Automatic analysis of metadata"
+subtitle: <h2>![logo R](R_logo_small.png)![logo &tau;-Argus](TauBall2_small.png)<br/>Package {rtauargus}</h2>
+output:
+  rmarkdown::html_vignette:
+    toc: true
+    toc_depth: 3
+vignette: >
+  %\VignetteIndexEntry{Analyse automatique des métadonnées}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r message = FALSE}
+library(rtauargus)
+library(dplyr)
+```
+
+
+# Introduction
+
+Before using the functions that produce safe tables, it is necessary to analyze the tables that need to be protected. Indeed, the disseminated tables differ from the tables to be protected. This is explained in detail in Chapter 3 of the [Manuel de protection des tableaux](https://inseefrlab.github.io/manuel-protection-tableaux/03_analyser_une_demande.html). This phase of analyzing common margins between different tables can be complex. Therefore, functions have been developed in `rtauargus` to facilitate this work.
+
+# How Does Automatic Metadata Analysis Work?
+## Creating Metadata \label{sec:crea_meta}
+
+Metadata must adhere to a specific format. Each line represents a table, and for each table, the following must be specified:
+
+- `table_name` : the name of the table ;
+- `field` : the field (often, geographical area, studied population, year of data collection) ;
+- `hrc_field` : whether there is a hierarchical link between this field and another field. If there is no hierarchical link, this field should be `NA`. If a hierarchical link exists, a name must be given to this link and the same name must be written in the other tables ;
+- `indicator` : the table's indicator name. This is the name of the variable that is counted in each cell of the table. For example, if my table presents the turnover of companies, my variable will likely be "Turnover". It is best to use the variable name as described in the data;
+- `hrc_indicator` : whether there is a hierarchical link between this indicator and another indicator. If there is no hierarchical link, this field should be NA. If a hierarchical link exists, a name must be given to this link and the same name must be written in the other tables;
+- `spanning_1` : the name of the first cross-tabulation (spanning) variable. Additional columns are added for each cross-tabulation variable, following the naming convention: `spanning_1`, `spanning_2`, `spanning_3`, etc ;
+- `hrc_spanning_1` : whether there is a hierarchical link between this cross-tabulation variable and another cross-tabulation variable. If there is no hierarchical link, this field should be NA. If a hierarchical link exists, a name must be given to this link and the same name must be written in the other tables. Additional columns are added for each cross-tabulation variable, following the naming convention: `hrc_spanning_1`, `hrc_spanning_2`, `hrc_spanning_3`, etc. Note: there must be as many `spanning_X` columns as `hrc_spanning_X` columns.
+
+## Formatted Input: Eurostat Templates
+
+When the tables to be processed are Eurostat tables, the metadata file can be automatically created from the template of the published cells. Indeed, for Eurostat publications, National Statistical Institutes (NSIs) must provide a template that groups the published cells.
+
+To do this, it is essential to understand each column of the template. Determine for each one whether it is the response variable/indicator, a cross-tabulation variable, or a field, in order to specify this in the arguments of the function \ref{sec:args_template}. It is particularly important to verify that the template adheres to the following: one cross-tabulation variable = one column in the template, and thus one supertotal. Indeed, if a column groups multiple cross-tabulation variables, then as many columns as cross-tabulation variables must be created.
+
+## The Arguments of `analyse_metadata`
+
+```{r}
+args(analyse_metadata)
+```
+
+The function arguments are as follows:
+
+- `df_metadata`: a dataframe structured as specified in section \ref{sec:crea_meta}.
+- `verbose`: a variable of type `logical`. If `TRUE` he function returns a list with the different steps of the analysis;  if `FALSE`, it returns only the final dataframe with the cluster indicator.
+
+
+## The Arguments of `format_template` \label{sec:args_template}
+
+```{r}
+args(format_template)
+```
+
+Les arguments de la fonction sont les suivants :
+
+- `data` : dataframe du template Eurostat contenant toutes les cellules publiées.
+- `indicator_column` : nom de la colonne dans laquelle se trouvent les indicateurs.
+- `spanning_var_tot` : liste nommée des variables de croisements et de leurs totaux.
+- `field_columns` : vecteur de toutes les colonnes représentant des champs (ex : millésime).
+
+# Examples
+
+## Case Where the Input is Metadata
+
+In this example, we start with a metadata file presenting 12 tables to be published on the turnover of pizza and salad sales.
+```{r}
+str(metadata_pizza_lettuce)
+```
+
+Example code:
+```{r}
+library(rtauargus)
+
+data(metadata_pizza_lettuce)
+
+# Analyse complète, avec les étapes
+detailed_analysis <- analyse_metadata(metadata_pizza_lettuce, verbose = TRUE)
+
+# Output simplifié, uniquement le dataframe avec l'indicatrice de cluster
+cluster_id_dataframe <- analyse_metadata(metadata_pizza_lettuce, verbose = FALSE)
+```
+
+The output is a dataframe showing how to process the tables for applying the secret.
+
+```{r}
+cluster_id_dataframe
+```
+
+For the 12 tables to be published, it is sufficient to protect 4 tables. These tables are distributed across two different clusters. Therefore, `tab_multi_manager()` needs to be called twice.
+A new spanning variable appeared `HRC_LETTUCE^h`. This variable takes 3 values `batavia`, `arugula` and `lettuce` the margin. The indicator `LETTUCE` here refers to the turnover (to) of salad sales. For example, the table `T10.T12.T8` presents the revenue from salad sales based on the activity and category of the company, as well as the type of salad.
+
+To obtain more information about the metadata analysis, the `verbose = TRUE` argument can be specified. This way, the object returned by the function will be a list of the different steps of the analysis.
+
+```{r}
+names(detailed_analysis)
+```
+
+One finds the dataframe with the cluster indicator `df_tab_to_treat`. The result is the same but in list format: each element of the list is an independent cluster `tab_to_treat`. Additionally, the 6 steps of the analysis are included.
+
+
+## Case Where the Input is a Eurostat Template
+
+The `format_template()` function allows creating the metadata to be used as input for `analyse_metadata()` from the Eurostat template of the published cells.
+
+```{r}
+data(enterprise_template)
+
+str(enterprise_template)
+
+template_formatted <- format_template(
+  data = enterprise_template,
+  indicator_column = "INDICATOR",
+  spanning_var_tot = list(
+    ACTIVITY = "BTSXO_S94",
+    NUMBER_EMPL = "_T",
+    LEGAL_FORM = "_T"),
+  field_columns = c("TIME_PERIOD")
+)
+
+template_formatted$metadata
+```
+
+There are 6 tables to be published.
+
+Remark: `format_template()` does not construct the `hrc_indicator` column because the information contained in the template does not allow it to be determined. Therefore, one must create it based on the information available about the indicators.
+
+Here, there is no hierarchical link between `SAL` (employees of active companies) and `SAL_DTH` (employees in deaths).
+
+```{r}
+# cas où il n'y a aucune hiérarchie sur les indicateurs
+metadata_template <- template_formatted$metadata %>%
+  mutate(hrc_indicator = NA) %>%
+  select(table_name,field,indicator,hrc_indicator, everything())
+
+metadata_template
+```
+
+Next, this dataframe is used as input for the analysis function.
+
+```{r}
+# Analyse complète, avec les étapes
+detailed_analysis <- analyse_metadata(metadata_template, verbose = TRUE)
+
+# Output simplifié, uniquement le dataframe avec l'indicatrice de cluster
+cluster_id_dataframe <- analyse_metadata(metadata_template, verbose = FALSE)
+
+# visualisation du résultat de l'analyse
+cluster_id_dataframe
+```
+
+Ultimately, there are 6 tables to process in 3 different clusters. In other words, `tab_multi_manager()` will need to be called three times.
+
+# Going Further: Visualizing Inclusions
+
+The create_edges step in the metadata analysis identifies tables included within other tables. For example, XXXXX is included in XXXXX. The following code allows visualizing these inclusions using graphs to better understand the analysis procedure.
+
+```{r}
+library(rtauargus)
+library(igraph)
+library(visNetwork)
+
+graph_links_tab <- function(list_desc_links){
+  list_desc_links %>% purrr::imap(function(ss_dem,i){
+    if(!is.null(ss_dem)){
+      nodes <- data.frame(id = unique(unlist(ss_dem)))
+      visNetwork(nodes = nodes, edges = ss_dem, main = i) %>%
+        visIgraphLayout() %>%
+        visEdges(shadow = TRUE,
+                 arrows =list(to = list(enabled = TRUE, scaleFactor = 0.5)),
+                 color = list(color = "steelblue", highlight = "red")) %>%
+        visOptions(highlightNearest = list(enabled = T, hover = T),
+                   nodesIdSelection = T)
+    }
+  })
+}
+
+data(metadata_pizza_lettuce)
+detailed_analysis <- analyse_metadata(metadata_pizza_lettuce, verbose = TRUE)
+
+graph_links_tab(detailed_analysis$create_edges)
+```
+

@@ -1,0 +1,45 @@
+17-févr.-2025 12:01:55 : Start of batch procedure; file: Z:\rtauargus\vignettes\tauargus_files\ex1\ex1.arb
+17-févr.-2025 12:01:55 : <OPENTABLEDATA> "Z:\rtauargus\vignettes\tauargus_files\ex1\ex1.tab"
+17-févr.-2025 12:01:55 : <OPENMETADATA> "Z:\rtauargus\vignettes\tauargus_files\ex1\ex1.rda"
+17-févr.-2025 12:01:55 : <SPECIFYTABLE> "ACTIVITY""SIZE"|"VAL"||
+17-févr.-2025 12:01:55 : <SAFETYRULE> FREQ(3,10)|NK(1,85)
+17-févr.-2025 12:01:55 : <READTABLE> 1
+17-févr.-2025 12:01:55 : Tables have been read
+17-févr.-2025 12:01:55 : <SUPPRESS> MOD(1,5,1,0,0)
+17-févr.-2025 12:01:55 : Start of the modular protection for table ACTIVITY x SIZE | VAL
+17-févr.-2025 12:01:56 : End of modular protection. Time used 0 seconds
+                       Number of suppressions: 2
+17-févr.-2025 12:01:56 : <WRITETABLE> (1,4,,"Z:\rtauargus\vignettes\tauargus_files\ex1\ex1.csv")
+17-févr.-2025 12:01:56 : Table: ACTIVITY x SIZE | VAL has been written
+                       Output file name: Z:\rtauargus\vignettes\tauargus_files\ex1\ex1.csv
+17-févr.-2025 12:01:56 : End of TauArgus run
+17-févr.-2025 12:13:07 : Start of batch procedure; file: Z:\rtauargus\vignettes\tauargus_files\ex1\ex1.arb
+17-févr.-2025 12:13:07 : <OPENTABLEDATA> "Z:\rtauargus\vignettes\tauargus_files\ex1\ex1.tab"
+17-févr.-2025 12:13:07 : <OPENMETADATA> "Z:\rtauargus\vignettes\tauargus_files\ex1\ex1.rda"
+17-févr.-2025 12:13:07 : <SPECIFYTABLE> "ACTIVITY""SIZE"|"VAL"||
+17-févr.-2025 12:13:07 : <SAFETYRULE> FREQ(3,10)|NK(1,85)
+17-févr.-2025 12:13:07 : <READTABLE> 1
+17-févr.-2025 12:13:07 : Tables have been read
+17-févr.-2025 12:13:07 : <SUPPRESS> MOD(1,5,1,0,0)
+17-févr.-2025 12:13:07 : Start of the modular protection for table ACTIVITY x SIZE | VAL
+17-févr.-2025 12:13:07 : End of modular protection. Time used 0 seconds
+                       Number of suppressions: 2
+17-févr.-2025 12:13:07 : <WRITETABLE> (1,4,,"Z:\rtauargus\vignettes\tauargus_files\ex1\ex1.csv")
+17-févr.-2025 12:13:07 : Table: ACTIVITY x SIZE | VAL has been written
+                       Output file name: Z:\rtauargus\vignettes\tauargus_files\ex1\ex1.csv
+17-févr.-2025 12:13:07 : End of TauArgus run
+17-févr.-2025 12:14:28 : Start of batch procedure; file: Z:\rtauargus\vignettes\tauargus_files\ex1\ex1.arb
+17-févr.-2025 12:14:28 : <OPENTABLEDATA> "Z:\rtauargus\vignettes\tauargus_files\ex1\ex1.tab"
+17-févr.-2025 12:14:28 : <OPENMETADATA> "Z:\rtauargus\vignettes\tauargus_files\ex1\ex1.rda"
+17-févr.-2025 12:14:28 : <SPECIFYTABLE> "ACTIVITY""SIZE"|"VAL"||
+17-févr.-2025 12:14:28 : <SAFETYRULE> FREQ(3,10)|NK(1,85)
+17-févr.-2025 12:14:28 : <READTABLE> 1
+17-févr.-2025 12:14:28 : Tables have been read
+17-févr.-2025 12:14:28 : <SUPPRESS> MOD(1,5,1,0,0)
+17-févr.-2025 12:14:28 : Start of the modular protection for table ACTIVITY x SIZE | VAL
+17-févr.-2025 12:14:29 : End of modular protection. Time used 0 seconds
+                       Number of suppressions: 2
+17-févr.-2025 12:14:29 : <WRITETABLE> (1,4,,"Z:\rtauargus\vignettes\tauargus_files\ex1\ex1.csv")
+17-févr.-2025 12:14:29 : Table: ACTIVITY x SIZE | VAL has been written
+                       Output file name: Z:\rtauargus\vignettes\tauargus_files\ex1\ex1.csv
+17-févr.-2025 12:14:29 : End of TauArgus run

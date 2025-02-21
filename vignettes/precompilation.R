@@ -25,11 +25,12 @@ knitr::knit(
   encoding = "UTF-8"
 )
 
-knitr::knit(
-  "vignettes/split_tab.Rmd.orig",
-  "vignettes/split_tab.Rmd",
-  encoding = "UTF-8"
-)
+# knitr::knit(
+#   "vignettes/split_tab.Rmd.orig",
+#   "vignettes/split_tab.Rmd",
+#   encoding = "UTF-8"
+# )
+# car plus de fichier
 
 ### Versions françaises
 
@@ -60,5 +61,17 @@ knitr::knit(
 knitr::knit(
   "vignettes/split_tab_fr.Rmd.orig",
   "vignettes/split_tab_fr.Rmd",
+  encoding = "UTF-8"
+)
+
+knitr::knit(
+  "vignettes/auto_metadata_fr.Rmd.orig",
+  "vignettes/auto_metadata_fr.Rmd",
+  encoding = "UTF-8"
+)
+
+knitr::knit(
+  "vignettes/auto_metadata.Rmd.orig",
+  "vignettes/auto_metadata.Rmd",
   encoding = "UTF-8"
 )

@@ -94,10 +94,10 @@ More details are available in the &tau;-Argus manual, especially in the section 
 #### About this vignette
 
 - Authors: **<a href="mailto:nathanael.rastout@insee.fr">Nathanael Rastout</a>**
-- Last update: **21/09/2023**
-- Version of rtauargus used: **1.2.0**
+- Last update: **17/02/2025**
+- Version of rtauargus used: **1.2.999**
 - Version of &tau;-Argus used : **TauArgus 4.2.3**
-- R version used :  **4.2.3**
+- R version used :  **4.3.3**
 
 <p style="text-align: right">
   <a href="#TOC" title="Back to summary">summary &uarr;</a>

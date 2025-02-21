@@ -186,3 +186,37 @@
 #'  \item{PRODUCTION}{Production, numeric}
 #' }
 "indiv_dt"
+
+#' Extract of SBS Eurostat template.
+#'
+#' A dataset describing all the cells expected by Eurostat.
+#'
+#' @format A data frame with 3 168 rows and 5 variables:
+#' \describe{
+#'   \item{TIME_PERIOD}{Integer. The year of observation (e.g., 2022).}
+#'   \item{INDICATOR}{Character. The type of indicator (e.g., "SAL").}
+#'   \item{ACTIVITY}{Character. The sector of activity coded using a standard classification (e.g., "B").}
+#'   \item{NUMBER_EMPL}{Character. Employment size category (e.g., "E0", "E1T4", "E5T9", "EGE10").}
+#'   \item{LEGAL_FORM}{Character. Legal form of the enterprise, where "_T" represents all legal forms combined.}
+#' }
+"enterprise_template"
+
+#' Metadata for pizza and lettuce dataset.
+#'
+#' A dataset containing metadata information for various tables and indicators related to
+#' enterprises turnover selling pizzas and lettuces in France.
+#'
+#' @format A data frame with 12 rows and 9 variables:
+#' \describe{
+#'   \item{table_name}{Character. Name of the table (e.g., "T1", "T2").}
+#'   \item{field}{Character. Data source or category (e.g., "france_entreprises_2023").}
+#'   \item{hrc_field}{Logical. Indicates if hierarchical classification is applied to the field (NA if not applicable).}
+#'   \item{indicator}{Character. The indicator being measured (e.g., "to_pizza").}
+#'   \item{hrc_indicator}{Character. Hierarchical classification for the indicator (NA if not applicable).}
+#'   \item{spanning_1}{Character. First spanning variable (e.g., "nuts2", "nuts3", "a10").}
+#'   \item{hrc_spanning_1}{Character. Hierarchical classification for spanning_1 (e.g., "hrc_nuts", "hrc_naf").}
+#'   \item{spanning_2}{Character. Second spanning variable (e.g., "size", "nuts2", "nuts3").}
+#'   \item{hrc_spanning_2}{Character. Hierarchical classification for spanning_2 (NA if not applicable).}
+#' }
+"metadata_pizza_lettuce"
+

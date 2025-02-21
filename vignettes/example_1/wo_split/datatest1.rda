@@ -1,0 +1,21 @@
+   <SEPARATOR> ","
+   <SAFE> "s"
+   <UNSAFE> "u"
+   <PROTECT> "p"
+treff
+  <RECODEABLE>
+  <TOTCODE> "Total"
+cj
+  <RECODEABLE>
+  <TOTCODE> "Total"
+A10
+  <RECODEABLE>
+  <TOTCODE> "Total"
+type_distrib
+  <RECODEABLE>
+  <TOTCODE> "Total"
+pizzas_tot
+  <NUMERIC>
+  <DECIMALS> 2
+nb_obs
+  <FREQUENCY>
