@@ -3,6 +3,8 @@
 
 # rtauargus <a href='https://inseefrlab.github.io/rtauargus/'><img src='man/figures/rtauargus_logo_small.png' align="right" width="120" /></a>
 
+The package documentation is available [here](https://inseefrlab.github.io/rtauargus/).
+
 <!-- badges: start -->
 <!-- [![pipeline status](https://gitlab.insee.fr/outilsconfidentialite/rtauargus/badges/master/pipeline.svg)](https://gitlab.insee.fr/outilsconfidentialite/rtauargus/-/pipelines) -->
 <!-- badges: end -->
