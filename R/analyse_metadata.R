@@ -49,6 +49,9 @@
 #' # Simplified output (non-verbose)
 #' cluster_id_dataframe <- analyse_metadata(metadata_pizza_lettuce, verbose = FALSE)
 #'
+#' @description
+#' `r lifecycle::badge("experimental")`
+#'
 #' @export
 analyse_metadata <- function(df_metadata,verbose = FALSE){
   df_metadata_long <- wide_to_long(df_metadata)
