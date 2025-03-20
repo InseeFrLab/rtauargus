@@ -118,6 +118,9 @@ filter_on_marginal_of_spanning_var <- function(data, criteria, subset_keys) {
 #' @importFrom tidyr pivot_longer
 #' @importFrom dplyr everything across all_of pull row_number bind_rows n_distinct
 #'
+#' @description
+#' `r lifecycle::badge("experimental")`
+#'
 #' @export
 format_template <- function(data,indicator_column,spanning_var_tot,field_columns) {
   data <- data %>% mutate(field = apply(across(all_of(field_columns)), 1, paste0, collapse = "_"))
