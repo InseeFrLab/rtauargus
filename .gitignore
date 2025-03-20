@@ -20,3 +20,7 @@ output/
 .httr-oauth
 .DS_Store
 .quarto
+
+vignettes/tauargus_files/
+vignettes/hrc/
+vignettes/example_1/

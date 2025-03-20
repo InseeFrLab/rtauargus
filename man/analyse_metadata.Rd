@@ -30,12 +30,14 @@ A list or dataframe, depending on the value of the \code{verbose} parameter:
 }
 }
 \description{
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
+}
+\details{
 This function analyzes a metadata dataframe to determine which tables should
 be treated together in the same cluster.
 It also rearranges and groups the tables based on hierarchical relationships,
 creating a structured output for further processing.
-}
-\details{
+
 The function performs the following steps:
 \itemize{
 \item Converts the metadata from wide format to long format using \code{wide_to_long}.

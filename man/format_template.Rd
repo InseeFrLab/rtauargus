@@ -20,7 +20,7 @@ named list of a dataframe describing the tables (metadata) and a list of
 the modalities of each hierarchical variable (modalities)
 }
 \description{
-Determines the tables described in a template gathering all the published cells
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
 }
 \examples{
 data(enterprise_template)
