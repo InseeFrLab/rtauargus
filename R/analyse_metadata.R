@@ -54,6 +54,53 @@
 #'
 #' @export
 analyse_metadata <- function(df_metadata,verbose = FALSE){
+  # check that the input is in the right format: right column names
+  check_column_names <- function(df) {
+    # Expected fixed column names
+    fixed_columns <- c("table_name", "field", "hrc_field", "indicator", "hrc_indicator")
+
+    # Check that the fixed columns exist
+    if (!all(fixed_columns %in% names(df))) {
+      stop("Error: The dataframe is missing one or more required columns: table_name, field, hrc_field, indicator, hrc_indicator.")
+    }
+
+    # Extract spanning_X and hrc_spanning_X columns
+    spanning_columns <- grep("^spanning_[0-9]+$", names(df), value = TRUE)
+    hrc_spanning_columns <- grep("^hrc_spanning_[0-9]+$", names(df), value = TRUE)
+
+    # Extract the numbers from the column names (e.g., 1 from spanning_1)
+    spanning_numbers <- gsub("^spanning_", "", spanning_columns)
+    hrc_spanning_numbers <- gsub("^hrc_spanning_", "", hrc_spanning_columns)
+
+    # Check if each spanning_X has a corresponding hrc_spanning_X
+    for (num in spanning_numbers) {
+      if (!(paste0("hrc_spanning_", num) %in% hrc_spanning_columns)) {
+        stop(paste0("Error: Missing corresponding 'hrc_spanning_", num, "' for 'spanning_", num, "'"))
+      }
+    }
+
+    # Check if each hrc_spanning_X has a corresponding spanning_X
+    for (num in hrc_spanning_numbers) {
+      if (!(paste0("spanning_", num) %in% spanning_columns)) {
+        stop(paste0("Error: Missing corresponding 'spanning_", num, "' for 'hrc_spanning_", num, "'"))
+      }
+    }
+
+    # Nothing to return if everything is valid
+  }
+  check_column_names(df_metadata)
+
+  # check that each table is named
+  if(any(is.na(df_metadata$table_name))){
+    stop("Each table needs to be named. No NA values for the table_name column.")
+  }
+
+  # check that each table has a unique name
+  if (anyDuplicated(df_metadata$table_name)) {
+    stop("Duplicate values found in 'table_name' column!")
+  }
+
+  # start of the actual analysis
   df_metadata_long <- wide_to_long(df_metadata)
   list_hrc_identified <- identify_hrc(df_metadata_long)
   list_split <- split_in_clusters(list_hrc_identified)

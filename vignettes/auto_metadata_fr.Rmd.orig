@@ -41,9 +41,9 @@ Les métadonnées doivent respecter un format spécifique. Une ligne représente
 
 ## Input formaté : templates Eurostat
 
-Lorsque les tableaux à traiter sont des tableaux Eurostat alors on peut créer automatiquement le fichier de métadonnées à partir du template des cellules publiées. En effet, pour les publications Eurostat les INS doivent livrer un template regroupant les cellules publiées. 
+Lorsque les tableaux à traiter sont des tableaux Eurostat alors on peut créer automatiquement le fichier de métadonnées à partir du template des cellules publiées. En effet, pour les publications Eurostat les INS doivent livrer un template regroupant les cellules publiées.
 
-Pour cela, il faut tout de même bien comprendre chaque colonne du template. Déterminer pour chacune d'entre elles s'il s'agit de la variable réponse / indicateur, d'une variable de croisement ou d'un champ, afin de pouvoir le préciser dans les arguments de la fonction \ref{sec:args_template}. Il faut notamment vérifier que le template respecte bien : une variable de croisement = une colonne du template, et donc un supertotal. En effet, si une colonne regroupe plusieurs variables de croisement, alors il faut créer autant de colonnes que de variables de croisement. 
+Pour cela, il faut tout de même bien comprendre chaque colonne du template. Déterminer pour chacune d'entre elles s'il s'agit de la variable réponse / indicateur, d'une variable de croisement ou d'un champ, afin de pouvoir le préciser dans les arguments de la fonction \ref{sec:args_template}. Il faut notamment vérifier que le template respecte bien : une variable de croisement = une colonne du template, et donc un supertotal. En effet, si une colonne regroupe plusieurs variables de croisement, alors il faut créer autant de colonnes que de variables de croisement.
 
 ## Les arguments de `analyse_metadata`
 
@@ -72,7 +72,7 @@ Les arguments de la fonction sont les suivants :
 
 # Exemples
 
-## Cas où l'input sont les métadonnées
+## Cas où les métadonnées en input sont au bon format
 
 Dans cet exemple on part d'un fichier de métadonnées présentant 12 tableaux à publier sur les chiffres d'affaires de ventes de pizzas et de salades.
 ```{r}
@@ -99,15 +99,15 @@ cluster_id_dataframe
 ```
 
 Pour les 12 tableaux à publier il suffit de protéger 4 tableaux. Ces tableaux sont repartis dans deux clusters différents. Il faudra donc faire appel deux fois à `tab_multi_manager()`.
-On remarque une nouvelle variable de croisement `HRC_LETTUCE^h`. I s'agit d'une variable qui prend pour modalités `batavia` et `arugula` et a pour total `lettuce`. L'indicateur `LETTUCE` renvoie ici au "turnover" (to) ou "chiffre d'affaires" de la vente de salades. Par exemple, le tableau `T10.T12.T8` présente le chiffre d'affaires de la vente de salades en fonction de l'activité et de la catégorie de l'entreprise ainsi que du type de salade.
+On remarque une nouvelle variable de croisement `HRC_LETTUCE^h`. Il s'agit d'une variable qui prend pour modalités `batavia` et `arugula` et a pour total `lettuce`. L'indicateur `LETTUCE` renvoie ici au "turnover" (to) ou "chiffre d'affaires" de la vente de salades. Par exemple, le tableau `T10.T12.T8` présente le chiffre d'affaires de la vente de salades en fonction de l'activité et de la catégorie de l'entreprise ainsi que du type de salade.
 
-Si l'on souhaite avoir plus d'informations sur l'analyse de la demande, on peut spécifier l'argument `verbose = TRUE`. Ainsi, l'objet renvoyé par la fonction sur une liste des différentes étapes de l'analyse.
+Si l'on souhaite avoir plus d'informations sur l'analyse de la demande, on peut spécifier l'argument `verbose = TRUE`. Ainsi, l'objet renvoyé par la fonction est une liste des différentes étapes de l'analyse.
 
 ```{r}
 names(detailed_analysis)
 ```
 
-On retrouve le dataframe avec l'indicatrice du cluster `df_tab_to_treat`. On a le même résultat mais en format liste : chaque élément de la liste est un cluster indépendant `tab_to_treat`. Mais aussi les 6 étapes de l'analyse.
+On retrouve le dataframe avec l'indicatrice du cluster `df_tab_to_treat`. On a le même résultat mais en format liste : chaque élément de la sous-liste `tab_to_treat` est un cluster indépendant. Les autres éléments de la liste sont les étapes de l'analyse.
 
 
 ## Cas où l'input est un template Eurostat
@@ -134,14 +134,14 @@ template_formatted$metadata
 
 On voit qu'il y a 6 tableaux à publier.
 
-Remarque : `format_template()` ne construit pas la colonne `hrc_indicator` car les informations contenues dans le template ne permettent pas de la déterminer. Ainsi, il faut la créer soit-même en fonction des informations que l'ont a sur les indicateurs.
+Remarque : `format_template()` ne construit pas la colonne `hrc_indicator` car les informations contenues dans le template ne permettent pas de la déterminer. Ainsi, il faut la créer soi-même en fonction des informations que l'on a sur les indicateurs.
 
 Ici, il n'y a pas de lien hiérarchique entre `SAL` (effectifs salariés des entreprises actives) et `SAL_DTH` (effectifs salariés dans les décès).
 
 ```{r}
 # cas où il n'y a aucune hiérarchie sur les indicateurs
-metadata_template <- template_formatted$metadata %>% 
-  mutate(hrc_indicator = NA) %>% 
+metadata_template <- template_formatted$metadata %>%
+  mutate(hrc_indicator = NA) %>%
   select(table_name,field,indicator,hrc_indicator, everything())
 
 metadata_template
@@ -174,12 +174,12 @@ graph_links_tab <- function(list_desc_links){
   list_desc_links %>% purrr::imap(function(ss_dem,i){
     if(!is.null(ss_dem)){
       nodes <- data.frame(id = unique(unlist(ss_dem)))
-      visNetwork(nodes = nodes, edges = ss_dem, main = i) %>% 
-        visIgraphLayout() %>% 
+      visNetwork(nodes = nodes, edges = ss_dem, main = i) %>%
+        visIgraphLayout() %>%
         visEdges(shadow = TRUE,
                  arrows =list(to = list(enabled = TRUE, scaleFactor = 0.5)),
-                 color = list(color = "steelblue", highlight = "red")) %>% 
-        visOptions(highlightNearest = list(enabled = T, hover = T), 
+                 color = list(color = "steelblue", highlight = "red")) %>%
+        visOptions(highlightNearest = list(enabled = T, hover = T),
                    nodesIdSelection = T)
     }
   })
