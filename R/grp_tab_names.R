@@ -50,91 +50,82 @@
 #' @importFrom dplyr left_join
 #' @importFrom igraph graph_from_data_frame
 #' @importFrom igraph which_mutual
-grp_tab_names <- function(list_split){
-  list_split %>% map(function(ss_dem){
+grp_tab_names <- function(list_split) {
+  list_split %>% map(function(ss_dem) {
     if (!is.null(ss_dem)) {
-      # Create graph from data frame
+      # Création du graphe
       graph_ssdem <- igraph::graph_from_data_frame(ss_dem)
 
-      # Identify mutual edges in the directed graph
+      # Identification des arêtes mutuelles
       ss_dem_mutual <- ss_dem %>%
         mutate(mutual = igraph::which_mutual(graph_ssdem))
 
-      # Create a table of mutual edges
+      # Création d'une table des relations d'inclusion
       tab_eg <- ss_dem_mutual %>%
-        filter(mutual) %>%
-        dplyr::rowwise() %>%
         mutate(mutual = paste(sort(c(from, to)), collapse = ".")) %>%
-        dplyr::ungroup()
+        distinct()
 
-      # Group mutual edges
+      # Détection des inclusions unidirectionnelles
       tab_eg_unique <- tab_eg %>%
-        select(from, mutual) %>%
-        mutate(mutual_full = sapply(strsplit(mutual, "\\."), function(x) paste(unique(sort(x)), collapse = "."))) %>%
-        dplyr::group_by(from) %>%
-        summarise(mutual_full = paste(unique(mutual_full), collapse = "."))
+        select(from, to) %>%
+        mutate(mutual_full = paste(from, to, sep = ".")) %>%
+        group_by(from) %>%
+        summarise(mutual_full = paste(unique(mutual_full), collapse = "."), .groups = "drop")
 
-      mutual <- as.list(setNames(strsplit(tab_eg_unique$mutual_full, "\\."),
-                                 tab_eg_unique$from))
-
-      # Initialize the list of table names to process
+      # Création des groupes d'inclusion
+      mutual <- setNames(strsplit(tab_eg_unique$mutual_full, "\\."), tab_eg_unique$from)
       noms_tab <- names(mutual)
       l <- list()
 
-      # Group tables by mutual inclusion
       while (length(noms_tab) != 0) {
         tab <- noms_tab[1]
-        noms_tab <- noms_tab[! noms_tab %in% tab]
+        noms_tab <- setdiff(noms_tab, tab)
         ch_old <- ch_new <- mutual[[tab]]
-        linked <- ch_old[! ch_old %in% tab]
+        linked <- setdiff(ch_old, tab)
+
         while (length(linked) != 0) {
-          noms_tab <- noms_tab[! noms_tab %in% linked]
+          noms_tab <- setdiff(noms_tab, linked)
           for (t in linked) {
             ch_new <- unique(sort(c(ch_old, mutual[[t]])))
           }
-          linked <- ch_new[! ch_new %in% ch_old]
+          linked <- setdiff(ch_new, ch_old)
           ch_old <- ch_new
         }
+
         nom <- paste(ch_new, collapse = ".")
         l[[nom]] <- ch_new
       }
 
-      # Create mapping of original table names to groups
+      # Création du mapping entre noms d'origine et groupes
       passage_nom_tab <- do.call(rbind, lapply(names(l), function(group_name) {
         data.frame(Original = l[[group_name]], Group = group_name, stringsAsFactors = FALSE)
       }))
 
-      # Merge inclusion relationships with group mapping
+      # Fusion des relations d'inclusion avec les groupes
       tab_from_to_eg <- ss_dem %>%
-        dplyr::left_join(passage_nom_tab, by = c("from" = "Original")) %>%
-        dplyr::rename(from.eg = Group) %>%
-        dplyr::left_join(passage_nom_tab, by = c("to" = "Original")) %>%
-        dplyr::rename(to.eg = Group) %>%
+        left_join(passage_nom_tab, by = c("from" = "Original")) %>%
+        rename(from.eg = Group) %>%
+        left_join(passage_nom_tab, by = c("to" = "Original")) %>%
+        rename(to.eg = Group) %>%
         mutate(from.eg = ifelse(is.na(from.eg), from, from.eg),
                to.eg = ifelse(is.na(to.eg), to, to.eg)) %>%
         select(from.eg, to.eg)
 
-      # Identify final tables in chains
+      # Identification des tables finales
       tab_egaux <- tab_from_to_eg %>%
         filter(from.eg == to.eg) %>%
-        select(from.eg) %>%
-        unique() %>%
-        unlist() %>%
-        as.vector()
+        distinct(from.eg) %>%
+        pull(from.eg)
 
       tab_fin_chaine_to <- tab_from_to_eg %>%
         filter(from.eg != to.eg) %>%
-        select(to.eg) %>%
-        unique() %>%
-        unlist() %>%
-        as.vector()
+        distinct(to.eg) %>%
+        pull(to.eg)
 
       tab_fin_chaine_from <- tab_from_to_eg %>%
         filter(from.eg != to.eg) %>%
-        select(from.eg) %>%
-        unique() %>%
-        unlist() %>%
-        as.vector()
+        distinct(from.eg) %>%
+        pull(from.eg)
 
       liste_finale <- setdiff(c(tab_egaux, tab_fin_chaine_to), tab_fin_chaine_from)
       tab_finales <- tab_from_to_eg %>% filter(to.eg %in% liste_finale)
@@ -144,3 +135,4 @@ grp_tab_names <- function(list_split){
     }
   })
 }
+

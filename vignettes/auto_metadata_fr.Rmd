@@ -40,9 +40,9 @@ Les métadonnées doivent respecter un format spécifique. Une ligne représente
 
 ## Input formaté : templates Eurostat
 
-Lorsque les tableaux à traiter sont des tableaux Eurostat alors on peut créer automatiquement le fichier de métadonnées à partir du template des cellules publiées. En effet, pour les publications Eurostat les INS doivent livrer un template regroupant les cellules publiées. 
+Lorsque les tableaux à traiter sont des tableaux Eurostat alors on peut créer automatiquement le fichier de métadonnées à partir du template des cellules publiées. En effet, pour les publications Eurostat les INS doivent livrer un template regroupant les cellules publiées.
 
-Pour cela, il faut tout de même bien comprendre chaque colonne du template. Déterminer pour chacune d'entre elles s'il s'agit de la variable réponse / indicateur, d'une variable de croisement ou d'un champ, afin de pouvoir le préciser dans les arguments de la fonction \ref{sec:args_template}. Il faut notamment vérifier que le template respecte bien : une variable de croisement = une colonne du template, et donc un supertotal. En effet, si une colonne regroupe plusieurs variables de croisement, alors il faut créer autant de colonnes que de variables de croisement. 
+Pour cela, il faut tout de même bien comprendre chaque colonne du template. Déterminer pour chacune d'entre elles s'il s'agit de la variable réponse / indicateur, d'une variable de croisement ou d'un champ, afin de pouvoir le préciser dans les arguments de la fonction \ref{sec:args_template}. Il faut notamment vérifier que le template respecte bien : une variable de croisement = une colonne du template, et donc un supertotal. En effet, si une colonne regroupe plusieurs variables de croisement, alors il faut créer autant de colonnes que de variables de croisement.
 
 ## Les arguments de `analyse_metadata`
 
@@ -83,7 +83,7 @@ Les arguments de la fonction sont les suivants :
 
 # Exemples
 
-## Cas où l'input sont les métadonnées
+## Cas où les métadonnées en input sont au bon format
 
 Dans cet exemple on part d'un fichier de métadonnées présentant 12 tableaux à publier sur les chiffres d'affaires de ventes de pizzas et de salades.
 
@@ -126,21 +126,22 @@ cluster_id_dataframe
 ```
 
 ```
-## # A tibble: 4 x 10
-## # Groups:   table_name [4]
-##   cluster table_name field indicator spanning_1 spanning_2 spanning_3 hrc_spanning_1 hrc_spanning_2
-##   <chr>   <chr>      <chr> <chr>     <chr>      <chr>      <chr>      <chr>          <chr>         
-## 1 france~ T10.T12.T8 fran~ LETTUCE   HRC_NAF    cj         HRC_LETTU~ hrc_naf        <NA>          
-## 2 france~ T11.T7.T9  fran~ LETTUCE   HRC_NAF    size       HRC_LETTU~ hrc_naf        <NA>          
-## 3 france~ T1.T2      fran~ to_pizza  HRC_NUTS   size       <NA>       hrc_nuts       <NA>          
-## 4 france~ T3.T4.T5.~ fran~ to_pizza  HRC_NAF    HRC_NUTS   <NA>       hrc_naf        hrc_nuts      
-## # i 1 more variable: hrc_spanning_3 <chr>
+##                               cluster  table_name                   field indicator spanning_1 spanning_2    spanning_3 hrc_spanning_1 hrc_spanning_2
+## 1 france_entreprises_2023.hrc_lettuce  T10.T12.T8 france_entreprises_2023   LETTUCE    HRC_NAF         cj HRC_LETTUCE^h        hrc_naf           <NA>
+## 2 france_entreprises_2023.hrc_lettuce   T11.T7.T9 france_entreprises_2023   LETTUCE    HRC_NAF       size HRC_LETTUCE^h        hrc_naf           <NA>
+## 3    france_entreprises_2023.to_pizza       T1.T2 france_entreprises_2023  to_pizza   HRC_NUTS       size          <NA>       hrc_nuts           <NA>
+## 4    france_entreprises_2023.to_pizza T3.T4.T5.T6 france_entreprises_2023  to_pizza    HRC_NAF   HRC_NUTS          <NA>        hrc_naf       hrc_nuts
+##   hrc_spanning_3
+## 1    hrc_lettuce
+## 2    hrc_lettuce
+## 3           <NA>
+## 4           <NA>
 ```
 
 Pour les 12 tableaux à publier il suffit de protéger 4 tableaux. Ces tableaux sont repartis dans deux clusters différents. Il faudra donc faire appel deux fois à `tab_multi_manager()`.
-On remarque une nouvelle variable de croisement `HRC_LETTUCE^h`. I s'agit d'une variable qui prend pour modalités `batavia` et `arugula` et a pour total `lettuce`. L'indicateur `LETTUCE` renvoie ici au "turnover" (to) ou "chiffre d'affaires" de la vente de salades. Par exemple, le tableau `T10.T12.T8` présente le chiffre d'affaires de la vente de salades en fonction de l'activité et de la catégorie de l'entreprise ainsi que du type de salade.
+On remarque une nouvelle variable de croisement `HRC_LETTUCE^h`. Il s'agit d'une variable qui prend pour modalités `batavia` et `arugula` et a pour total `lettuce`. L'indicateur `LETTUCE` renvoie ici au "turnover" (to) ou "chiffre d'affaires" de la vente de salades. Par exemple, le tableau `T10.T12.T8` présente le chiffre d'affaires de la vente de salades en fonction de l'activité et de la catégorie de l'entreprise ainsi que du type de salade.
 
-Si l'on souhaite avoir plus d'informations sur l'analyse de la demande, on peut spécifier l'argument `verbose = TRUE`. Ainsi, l'objet renvoyé par la fonction sur une liste des différentes étapes de l'analyse.
+Si l'on souhaite avoir plus d'informations sur l'analyse de la demande, on peut spécifier l'argument `verbose = TRUE`. Ainsi, l'objet renvoyé par la fonction est une liste des différentes étapes de l'analyse.
 
 
 ``` r
@@ -148,11 +149,11 @@ names(detailed_analysis)
 ```
 
 ```
-## [1] "identify_hrc"        "info_var"            "split_in_clusters"   "create_edges"       
-## [5] "grp_tab_names"       "grp_tab_in_clusters" "tab_to_treat"        "df_tab_to_treat"
+## [1] "identify_hrc"        "info_var"            "split_in_clusters"   "create_edges"        "grp_tab_names"       "grp_tab_in_clusters" "tab_to_treat"       
+## [8] "df_tab_to_treat"
 ```
 
-On retrouve le dataframe avec l'indicatrice du cluster `df_tab_to_treat`. On a le même résultat mais en format liste : chaque élément de la liste est un cluster indépendant `tab_to_treat`. Mais aussi les 6 étapes de l'analyse.
+On retrouve le dataframe avec l'indicatrice du cluster `df_tab_to_treat`. On a le même résultat mais en format liste : chaque élément de la sous-liste `tab_to_treat` est un cluster indépendant. Les autres éléments de la liste sont les étapes de l'analyse.
 
 
 ## Cas où l'input est un template Eurostat
@@ -201,35 +202,28 @@ template_formatted$metadata
 
 On voit qu'il y a 6 tableaux à publier.
 
-Remarque : `format_template()` ne construit pas la colonne `hrc_indicator` car les informations contenues dans le template ne permettent pas de la déterminer. Ainsi, il faut la créer soit-même en fonction des informations que l'ont a sur les indicateurs.
+Remarque : `format_template()` ne construit pas la colonne `hrc_indicator` car les informations contenues dans le template ne permettent pas de la déterminer. Ainsi, il faut la créer soi-même en fonction des informations que l'on a sur les indicateurs.
 
 Ici, il n'y a pas de lien hiérarchique entre `SAL` (effectifs salariés des entreprises actives) et `SAL_DTH` (effectifs salariés dans les décès).
 
 
 ``` r
 # cas où il n'y a aucune hiérarchie sur les indicateurs
-metadata_template <- template_formatted$metadata %>% 
-  mutate(hrc_indicator = NA) %>% 
+metadata_template <- template_formatted$metadata %>%
+  mutate(hrc_indicator = NA) %>%
   select(table_name,field,indicator,hrc_indicator, everything())
 
 metadata_template
 ```
 
 ```
-##             table_name field indicator hrc_indicator spanning_1  spanning_2   hrc_spanning_1
-## 1 table_2021_SAL_DTH_1  2021   SAL_DTH            NA   ACTIVITY  LEGAL_FORM hrc_activity_131
-## 2 table_2021_SAL_DTH_2  2021   SAL_DTH            NA   ACTIVITY NUMBER_EMPL hrc_activity_131
-## 3     table_2022_SAL_1  2022       SAL            NA   ACTIVITY  LEGAL_FORM hrc_activity_131
-## 4     table_2022_SAL_2  2022       SAL            NA   ACTIVITY NUMBER_EMPL hrc_activity_131
-## 5 table_2022_SAL_DTH_1  2022   SAL_DTH            NA   ACTIVITY  LEGAL_FORM hrc_activity_131
-## 6 table_2022_SAL_DTH_2  2022   SAL_DTH            NA   ACTIVITY NUMBER_EMPL hrc_activity_131
-##      hrc_spanning_2
-## 1  hrc_legal_form_3
-## 2 hrc_number_empl_4
-## 3  hrc_legal_form_3
-## 4 hrc_number_empl_4
-## 5  hrc_legal_form_3
-## 6 hrc_number_empl_4
+##             table_name field indicator hrc_indicator spanning_1  spanning_2   hrc_spanning_1    hrc_spanning_2
+## 1 table_2021_SAL_DTH_1  2021   SAL_DTH            NA   ACTIVITY  LEGAL_FORM hrc_activity_131  hrc_legal_form_3
+## 2 table_2021_SAL_DTH_2  2021   SAL_DTH            NA   ACTIVITY NUMBER_EMPL hrc_activity_131 hrc_number_empl_4
+## 3     table_2022_SAL_1  2022       SAL            NA   ACTIVITY  LEGAL_FORM hrc_activity_131  hrc_legal_form_3
+## 4     table_2022_SAL_2  2022       SAL            NA   ACTIVITY NUMBER_EMPL hrc_activity_131 hrc_number_empl_4
+## 5 table_2022_SAL_DTH_1  2022   SAL_DTH            NA   ACTIVITY  LEGAL_FORM hrc_activity_131  hrc_legal_form_3
+## 6 table_2022_SAL_DTH_2  2022   SAL_DTH            NA   ACTIVITY NUMBER_EMPL hrc_activity_131 hrc_number_empl_4
 ```
 
 Ensuite, on utilise ce dataframe en input de la fonction d'analyse.
@@ -238,25 +232,37 @@ Ensuite, on utilise ce dataframe en input de la fonction d'analyse.
 ``` r
 # Analyse complète, avec les étapes
 detailed_analysis <- analyse_metadata(metadata_template, verbose = TRUE)
+```
 
+```
+## Error in check_column_names(df_metadata): Error: The dataframe is missing one or more required columns: table_name, field, hrc_field, indicator, hrc_indicator.
+```
+
+``` r
 # Output simplifié, uniquement le dataframe avec l'indicatrice de cluster
 cluster_id_dataframe <- analyse_metadata(metadata_template, verbose = FALSE)
+```
 
+```
+## Error in check_column_names(df_metadata): Error: The dataframe is missing one or more required columns: table_name, field, hrc_field, indicator, hrc_indicator.
+```
+
+``` r
 # visualisation du résultat de l'analyse
 cluster_id_dataframe
 ```
 
 ```
-## # A tibble: 6 x 8
-## # Groups:   table_name [6]
-##   cluster      table_name       field indicator spanning_1 spanning_2 hrc_spanning_1 hrc_spanning_2
-##   <chr>        <chr>            <chr> <chr>     <chr>      <chr>      <chr>          <chr>         
-## 1 2021.SAL_DTH table_2021_SAL_~ 2021  SAL_DTH   HRC_ACTIV~ HRC_LEGAL~ hrc_activity_~ hrc_legal_for~
-## 2 2021.SAL_DTH table_2021_SAL_~ 2021  SAL_DTH   HRC_ACTIV~ HRC_NUMBE~ hrc_activity_~ hrc_number_em~
-## 3 2022.SAL     table_2022_SAL_1 2022  SAL       HRC_ACTIV~ HRC_LEGAL~ hrc_activity_~ hrc_legal_for~
-## 4 2022.SAL     table_2022_SAL_2 2022  SAL       HRC_ACTIV~ HRC_NUMBE~ hrc_activity_~ hrc_number_em~
-## 5 2022.SAL_DTH table_2022_SAL_~ 2022  SAL_DTH   HRC_ACTIV~ HRC_LEGAL~ hrc_activity_~ hrc_legal_for~
-## 6 2022.SAL_DTH table_2022_SAL_~ 2022  SAL_DTH   HRC_ACTIV~ HRC_NUMBE~ hrc_activity_~ hrc_number_em~
+##                               cluster  table_name                   field indicator spanning_1 spanning_2    spanning_3 hrc_spanning_1 hrc_spanning_2
+## 1 france_entreprises_2023.hrc_lettuce  T10.T12.T8 france_entreprises_2023   LETTUCE    HRC_NAF         cj HRC_LETTUCE^h        hrc_naf           <NA>
+## 2 france_entreprises_2023.hrc_lettuce   T11.T7.T9 france_entreprises_2023   LETTUCE    HRC_NAF       size HRC_LETTUCE^h        hrc_naf           <NA>
+## 3    france_entreprises_2023.to_pizza       T1.T2 france_entreprises_2023  to_pizza   HRC_NUTS       size          <NA>       hrc_nuts           <NA>
+## 4    france_entreprises_2023.to_pizza T3.T4.T5.T6 france_entreprises_2023  to_pizza    HRC_NAF   HRC_NUTS          <NA>        hrc_naf       hrc_nuts
+##   hrc_spanning_3
+## 1    hrc_lettuce
+## 2    hrc_lettuce
+## 3           <NA>
+## 4           <NA>
 ```
 
 Finalement, il y a 6 tableaux à traiter dans 3 clusters différents. Autrement dit, il faudra faire trois fois appel à `tab_multi_manager()`.
@@ -282,6 +288,12 @@ library(igraph)
 ```
 
 ```
+## L'objet suivant est masqué depuis 'package:testthat':
+## 
+##     compare
+```
+
+```
 ## Les objets suivants sont masqués depuis 'package:stats':
 ## 
 ##     decompose, spectrum
@@ -300,12 +312,12 @@ graph_links_tab <- function(list_desc_links){
   list_desc_links %>% purrr::imap(function(ss_dem,i){
     if(!is.null(ss_dem)){
       nodes <- data.frame(id = unique(unlist(ss_dem)))
-      visNetwork(nodes = nodes, edges = ss_dem, main = i) %>% 
-        visIgraphLayout() %>% 
+      visNetwork(nodes = nodes, edges = ss_dem, main = i) %>%
+        visIgraphLayout() %>%
         visEdges(shadow = TRUE,
                  arrows =list(to = list(enabled = TRUE, scaleFactor = 0.5)),
-                 color = list(color = "steelblue", highlight = "red")) %>% 
-        visOptions(highlightNearest = list(enabled = T, hover = T), 
+                 color = list(color = "steelblue", highlight = "red")) %>%
+        visOptions(highlightNearest = list(enabled = T, hover = T),
                    nodesIdSelection = T)
     }
   })
