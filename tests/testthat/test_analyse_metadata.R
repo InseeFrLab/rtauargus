@@ -62,25 +62,50 @@ test_that("hierarchies on indicators", {
 )
 
 ############################################################### TABLE INCLUSIONS
+# two tables included in each other
+answer <- data.frame(
+  cluster = "france_entreprises_2023.to_pizza",
+  table_name = "T1.T2",
+  field = "france_entreprises_2023",
+  indicator = "to_pizza",
+  spanning_1 = "HRC_NUTS",
+  spanning_2 = "size",
+  hrc_spanning_1 = "hrc_nuts",
+  hrc_spanning_2 = NA
+) %>% mutate(across(everything(),as.character))
+
+test_that("two tables included in each other", {
+
+  meta <- metadata_pizza_lettuce %>% filter(table_name %in% c("T1","T2"))
+
+  expect_equal(analyse_metadata(meta),answer)
+})
+
+
 # one table included in an other -----------------------------------------------
-cc <- metadata_pizza_lettuce %>% filter(table_name == "T7") %>%
+answer <- data.frame(
+  cluster = "france_entreprises_2023.to_pizza",
+  table_name = "T1.T1_bis",
+  field = "france_entreprises_2023",
+  indicator = "to_pizza",
+  spanning_1 = "nuts2",
+  spanning_2 = "size",
+  hrc_spanning_1 = NA,
+  hrc_spanning_2 = NA
+) %>% mutate(across(everything(),as.character))
+
+test_that("one-way table inclusion", {
+
+  meta <- metadata_pizza_lettuce %>% filter(table_name == "T1") %>%
   mutate(hrc_spanning_1 = as.character(NA)) %>%
-  bind_rows(.,.) %>%
-  mutate(
-    table_name = c("T7","T7_bis"),
-    spanning_2 = c("size",as.character(NA)))
+    bind_rows(.,.) %>%
+    mutate(
+      table_name = c("T1","T1_bis"),
+      spanning_2 = c("size",as.character(NA)))
 
-analyse_metadata(cc)
+  expect_equal(analyse_metadata(meta),answer)
 
-# Error in `map()`:
-# i In index: 1.
-# i With name: france_entreprises_2023.hrc_lettuce.
-# Caused by error in `auto_copy()`:
-#   ! `x` and `y` must share the same src.
-# i `x` is a <data.frame> object.
-# i `y` is `NULL`.
-# i Set `copy = TRUE` if `y` can be copied to the same source as `x` (may be slow).
-# Run `rlang::last_trace()` to see where the error occurred.
+})
 
 # two tables become one table once the hrc_spanning are taken into account -----
 answer <- data.frame(
