@@ -41,7 +41,6 @@ contains_non_total <- function(data, totals) {
 #' # Returns a list of combinations: c("key1"), c("key2"), c("key3"), c("key1", "key2"), ...
 #' }
 get_combinations <- function(criteria) {
-  # browser()
   keys <- names(criteria)
   unlist(lapply(1:length(keys), function(k) combn(keys, k, simplify = FALSE)), recursive = FALSE)
 }
@@ -71,7 +70,6 @@ get_combinations <- function(criteria) {
 #' # Filters the data frame based on the criteria and subset_keys.
 #' }
 filter_on_marginal_of_spanning_var <- function(data, criteria, subset_keys) {
-  # browser()
   # Create filter expressions for subset_keys with ==
   filter_expr_in <- purrr::map2(
     subset_keys,
@@ -126,14 +124,12 @@ filter_on_marginal_of_spanning_var <- function(data, criteria, subset_keys) {
 #' @export
 format_template <- function(data,indicator_column,spanning_var_tot,field_columns) {
   data <- data %>% mutate(field = apply(across(all_of(field_columns)), 1, paste0, collapse = "_"))
-  # browser()
   # each modality of field variables can be treated independently
   list_df_field <- split(data,data$field)
   list_metadata <- purrr::imap(list_df_field, function(df_field,field_name){
     cat(paste("treating the field",field_name,"\n"))
     # if there is no link between the indicators, then they can all be treated independently
     list_df_indicator <- split(df_field,df_field %>% select(!!indicator_column))
-    # browser()
     list_df_metadata <- purrr::imap(list_df_indicator, function(df_indicator,indicator_name){
       # Step 1: Identify valid columns with more than one unique value
       valid_columns <- df_indicator %>%
@@ -144,7 +140,6 @@ format_template <- function(data,indicator_column,spanning_var_tot,field_columns
       spanning_totals_valid <- spanning_var_tot[valid_columns]
       df_valid_columns <- df_indicator %>% select(all_of(valid_columns))
 
-      # browser()
       if(length(spanning_totals_valid) == 0){
         warning(paste("In the field",field_name,"the indicator",indicator_name,
                       "is not broken down by any spanning variable. It is removed from the final result.")
@@ -153,26 +148,34 @@ format_template <- function(data,indicator_column,spanning_var_tot,field_columns
       }
 
       # Step 2 : get all the possible combinations of spanning variables
-      # browser()
       combinations <- get_combinations(spanning_totals_valid)
+
       # Step 3: Filter and keep valid combinations, i.e. combinations with something
       # else than just the total
-      # browser()
-      tables_crossing_non_totals <- purrr::map(
-        combinations,
-        ~ {
-          # Apply the filter to get the filtered dataframe
-          filtered_df <- filter_on_marginal_of_spanning_var(df_valid_columns, spanning_totals_valid, .x)
-          # Check if there are non-total values in the filtered dataframe
-          if (contains_non_total(filtered_df, unlist(spanning_totals_valid))) {
-            return(filtered_df)  # Keep the dataframe if non-total values remain
-          } else {
-            return(NULL)  # Discard the dataframe if no non-total values remain
-          }
-        }
-      ) %>% compact()
+      # If there is only one spanning variable
+      if(length(combinations) == 1 & length(combinations[[1]]) == 1) # s'il n'y a qu'une seule variable de croisement
+      {
+        df_valid_columns_filtered <- df_valid_columns %>%
+          filter(!(.[[1]] %in% spanning_totals_valid[[1]]))
 
-      # browser()
+        tables_crossing_non_totals <- list(df_valid_columns_filtered)
+
+      } else {
+        # More than one spanning variable
+        tables_crossing_non_totals <- purrr::map(
+          combinations,
+          ~ {
+            # Apply the filter to get the filtered dataframe
+            filtered_df <- filter_on_marginal_of_spanning_var(df_valid_columns, spanning_totals_valid, .x)
+            # Check if there are non-total values in the filtered dataframe
+            if (contains_non_total(filtered_df, unlist(spanning_totals_valid))) {
+              return(filtered_df)  # Keep the dataframe if non-total values remain
+            } else {
+              return(NULL)  # Discard the dataframe if no non-total values remain
+            }
+          }
+        ) %>% compact()
+      }
 
       # Step 4: Name the list of dataframes
       valid_combinations <- purrr::keep(combinations, ~ {
@@ -201,7 +204,6 @@ format_template <- function(data,indicator_column,spanning_var_tot,field_columns
           FALSE
         }
       })
-      # browser()
       spanning_description <- purrr::imap_dfr(
         tables_crossing_variables,
         ~ {
@@ -227,7 +229,6 @@ format_template <- function(data,indicator_column,spanning_var_tot,field_columns
           ) %>% mutate(indicator = indicator_name, unique_modalities = list(unique_modalities))
         }
       )
-      # browser()
       spanning_description <- spanning_description %>%
         mutate(field = field_name) %>%
         mutate(
