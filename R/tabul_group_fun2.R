@@ -58,9 +58,9 @@ compute_margins <- function(
 #' @param df data.frame. Input microdata
 #' @param cat_vars Character vector. Categorical variables
 #' @param hrc_vars Named list. Hierarchical variables
-#' @param resp_var Character. Numerical variable to aggregate
+#' @param resp_var Character vector. Numerical variable(s) to aggregate
+#' @param pond_var Character. Numerical variable to use as weights
 #' @param marge_label Character. Margin label (default: "Total")
-#' @param freq_empiriq Logical. Generate empirical frequencies? (default: FALSE)
 #'
 #' @return Tibble or list with table and frequencies
 #'
@@ -153,7 +153,8 @@ tabulate_micro_data_2 <- function(
       )
     }
     ##TODO: les resp_var à gérer (le sort ne peut pas fonctionner en général)
-    data.table::setnames(inner_cells, old = paste0("V", 1:(length(resp_var)*2)), paste0(sort(rep(resp_var,2)), c("_tot","_max")))
+    names_resp_var <- map(resp_var, \(x) paste0(x, c("_tot","_max"))) |> list_c()
+    data.table::setnames(inner_cells, old = paste0("V", 1:(length(resp_var)*2)), new = names_resp_var)
   }
 
   res <- compute_margins(
