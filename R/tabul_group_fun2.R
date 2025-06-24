@@ -14,7 +14,7 @@ compute_margins <- function(
     resp_var = NULL,
     marge_label
 ) {
-  
+
   if(is.null(resp_var)){
 
     res <- data.table::cube(
@@ -24,6 +24,7 @@ compute_margins <- function(
       .SDcols = c("nb_obs"),
       label = marge_label
     )
+
   } else {
 
     res_sum <- data.table::cube(
@@ -33,59 +34,73 @@ compute_margins <- function(
       .SDcols = c("nb_obs", paste0(resp_var, "_tot")),
       label = marge_label
     )
+    setkeyv(res_sum, cols = margins)
 
-    res_max <- suppressWarnings({
-      data.table::cube(
+    suppressWarnings({
+      res_max <- data.table::cube(
         inner_cells[, .SD, .SDcols = c(margins, paste0(resp_var, "_max"))],
         j = lapply(.SD, \(x) max(x, na.rm = TRUE)),
         by = c(margins),
         .SDcols = c(paste0(resp_var, "_max")),
         label = marge_label
       )
-      res <- merge(res_sum, res_max, by = margins)
     })
+    setkeyv(res_max, cols = margins)
+    # res <- merge(res_sum, res_max, all = TRUE)
+    res <- do.call(cbind, list(res_sum, res_max[, .SD, .SDcols = paste0(resp_var, "_max")]))
+
   }
 
   return(res)
 
 }
 
-#' Build contingency table with margins from microdata
+#' tabulate grouped data with all margins, handling hierarchical variables
 #'
-#' Constructs a complete contingency table with all possible margins from
-#' microdata, including cell keys and optional numerical aggregation.
+#' @param df data.frame or data.table
+#' @param cat_vars vector of categorical variables but not hierarchical
+#' @param hrc_vars named list (name = VAR final name, value = VAR current names)
+#' @param pond_var weight (NULL if no weight is used)
+#' @param resp_var vector of response variables (NULL to only compute frequency table)
+#' @param marge_label label of margins (applied to all cat and hrc variables)
 #'
-#' @param df data.frame. Input microdata
-#' @param cat_vars Character vector. Categorical variables
-#' @param hrc_vars Named list. Hierarchical variables
-#' @param resp_var Character vector. Numerical variable(s) to aggregate
-#' @param pond_var Character. Numerical variable to use as weights
-#' @param marge_label Character. Margin label (default: "Total")
-#'
-#' @return Tibble or list with table and frequencies
-#'
+#' @return a tibble
 #' @export
 #'
 #' @examples
-#' \dontrun{
-#' library(dplyr)
-#' data("dtest")
-#' tab_comptage <- tabulate_cnt_micro_data(
-#'   df = dtest,
-#'   cat_vars = c("DIPLOME", "SEXE", "AGE"),
-#'   hrc_vars = list(GEO = c("REG", "DEP")),
-#'   marge_label = "Total"
-#' )
+#' library(data.table)
 #'
-#' # With numerical variable to aggregate
-#' tab_comptage_num <- tabulate_cnt_micro_data(
-#'   df = dtest |> mutate(NUM = 12),
-#'   cat_vars = c("DIPLOME", "SEXE", "AGE"),
-#'   hrc_vars = list(GEO = c("REG", "DEP")),
-#'   resp_var = "NUM",
+#' data("indiv_dt")
+#'
+#' #Non hierarchical variables
+#' res_all_dtp <- tabulate_micro_data_2(
+#'   df = indiv_dt,
+#'   #categorical but not hierarchical variables
+#'   cat_vars = c("A10", "SIZE","CJ"),
+#'   #weight var
+#'   pond_var = "WEIGHT",
+#'   #response variable
+#'   resp_var = "TURNOVER",
+#'   # Labels of the margins
 #'   marge_label = "Total"
 #' )
-#' }
+#' str(res_all_dtp)
+#'
+#' #With one hierarchical variable
+#' res_all_dtph <- tabulate_micro_data_2(
+#'   df = indiv_dt,
+#'   #categorical but not hierarchical variables
+#'   cat_vars = c("SIZE","CJ"),
+#'   #categorical nested variables
+#'   hrc_vars = list(ACTIVITY = c("A10","A21")),
+#'   pond_var = "WEIGHT",
+#'   resp_var = c("TURNOVER","PRODUCTION"),
+#'   marge_label = "Total"
+#' )
+#' str(res_all_dtph)
+#'
+#' @rawNamespace import(data.table, except = transpose)
+#' @importFrom purrr list_c
 tabulate_micro_data_2 <- function(
     df,
     cat_vars = NULL,
@@ -118,20 +133,20 @@ tabulate_micro_data_2 <- function(
     is.character(marge_label) && length(marge_label) == 1,
     msg = "The margin label must be a single character string."
   )
-  
+
   # If no categorical or hierarchical variables are provided, use all character columns
   if (is.null(cat_vars) & is.null(hrc_vars)) {
     all_cat_vars <- df |> dplyr::select(dplyr::where(is.character)) |> names()
   } else {
     all_cat_vars <- c(cat_vars, unlist(unname(hrc_vars)))
   }
-  
+
   data_dt <- data.table::as.data.table(df) |>
     dplyr::mutate(dplyr::across(dplyr::all_of(all_cat_vars), as.character))
-  
+
   summary_spec <- function(x, ponderation) list(tot = sum(x*ponderation, na.rm=TRUE), max = max(x, na.rm=TRUE))
 
-  
+
   if (is.null(resp_var)) {
     if (is.null(pond_var)) {
       inner_cells <- data_dt[, .(nb_obs = .N), by = c(all_cat_vars)]
@@ -140,17 +155,21 @@ tabulate_micro_data_2 <- function(
     }
   } else {
     if (is.null(pond_var)) {
-      inner_cells <- merge(
-        data_dt[, .(nb_obs = .N), by = c(all_cat_vars)],
-        data_dt[, (as.list(unlist(sapply(.SD, \(x) summary_spec(x, 1))))), by = c(all_cat_vars), .SDcols = c(resp_var)],
-        by = all_cat_vars
-      )
+
+      freqs <- data_dt[, .(nb_obs = .N), by = c(all_cat_vars)]
+      setkeyv(freqs, cols = all_cat_vars)
+      vals <- data_dt[, (as.list(unlist(sapply(.SD, \(x) summary_spec(x, 1))))), by = c(all_cat_vars), .SDcols = c(resp_var)]
+      setkeyv(vals, cols = all_cat_vars)
+      inner_cells <- merge( freqs, vals, all = TRUE )
+
     } else {
-      inner_cells <- merge(
-        data_dt[, .(nb_obs = sum(get(pond_var))), by = c(all_cat_vars)],
-        data_dt[, (as.list(unlist(sapply(.SD, \(x) summary_spec(x, get(pond_var)))))), by = c(all_cat_vars), .SDcols = c(resp_var)],
-        by = all_cat_vars
-      )
+
+      freqs <- data_dt[, .(nb_obs = sum(get(pond_var))), by = c(all_cat_vars)]
+      setkeyv(freqs, cols = all_cat_vars)
+      vals <- data_dt[, (as.list(unlist(sapply(.SD, \(x) summary_spec(x, get(pond_var)))))), by = c(all_cat_vars), .SDcols = c(resp_var)]
+      setkeyv(vals, cols = all_cat_vars)
+      inner_cells <- merge( freqs, vals, all = TRUE )
+
     }
     ##TODO: les resp_var à gérer (le sort ne peut pas fonctionner en général)
     names_resp_var <- map(resp_var, \(x) paste0(x, c("_tot","_max"))) |> list_c()
@@ -163,7 +182,7 @@ tabulate_micro_data_2 <- function(
     resp_var = resp_var,
     marge_label = marge_label
   )
-  
+
   # Remove inconsistent margin rows for hierarchical variables
   for (hvar in hrc_vars) {
     for (j in seq_along(hvar)) {
@@ -172,10 +191,10 @@ tabulate_micro_data_2 <- function(
       }
     }
   }
-  
+
   res[is.na(res)] <- marge_label
-  
+
   tab <- tibble::as_tibble(res)
-    
+
   return(tab)
 }
