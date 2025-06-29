@@ -19,3 +19,4 @@
 tauargus_files/*
 ^_pkgdown_old\.yml$
 ^README\.html$
+^renovate.json
