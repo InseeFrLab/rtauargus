@@ -212,7 +212,7 @@ représentant des champs (ex : millésime).</li>
 <h2 id="exemples">Exemples<a class="anchor" aria-label="anchor" href="#exemples"></a>
 </h2>
 <div class="section level3">
-<h3 id="cas-où-linput-sont-les-métadonnées">Cas où l’input sont les métadonnées<a class="anchor" aria-label="anchor" href="#cas-o%C3%B9-linput-sont-les-m%C3%A9tadonn%C3%A9es"></a>
+<h3 id="cas-où-les-métadonnées-en-input-sont-au-bon-format">Cas où les métadonnées en input sont au bon format<a class="anchor" aria-label="anchor" href="#cas-o%C3%B9-les-m%C3%A9tadonn%C3%A9es-en-input-sont-au-bon-format"></a>
 </h3>
 <p>Dans cet exemple on part d’un fichier de métadonnées présentant 12
 tableaux à publier sur les chiffres d’affaires de ventes de pizzas et de
@@ -244,20 +244,21 @@ salades.</p>
 tableaux pour la pose du secret.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cluster_id_dataframe</span></span></code></pre></div>
-<pre><code><span><span class="co">## # A tibble: 4 x 10</span></span>
-<span><span class="co">## # Groups:   table_name [4]</span></span>
-<span><span class="co">##   cluster table_name field indicator spanning_1 spanning_2 spanning_3 hrc_spanning_1 hrc_spanning_2</span></span>
-<span><span class="co">##   &lt;chr&gt;   &lt;chr&gt;      &lt;chr&gt; &lt;chr&gt;     &lt;chr&gt;      &lt;chr&gt;      &lt;chr&gt;      &lt;chr&gt;          &lt;chr&gt;         </span></span>
-<span><span class="co">## 1 france~ T10.T12.T8 fran~ LETTUCE   HRC_NAF    cj         HRC_LETTU~ hrc_naf        &lt;NA&gt;          </span></span>
-<span><span class="co">## 2 france~ T11.T7.T9  fran~ LETTUCE   HRC_NAF    size       HRC_LETTU~ hrc_naf        &lt;NA&gt;          </span></span>
-<span><span class="co">## 3 france~ T1.T2      fran~ to_pizza  HRC_NUTS   size       &lt;NA&gt;       hrc_nuts       &lt;NA&gt;          </span></span>
-<span><span class="co">## 4 france~ T3.T4.T5.~ fran~ to_pizza  HRC_NAF    HRC_NUTS   &lt;NA&gt;       hrc_naf        hrc_nuts      </span></span>
-<span><span class="co">## # i 1 more variable: hrc_spanning_3 &lt;chr&gt;</span></span></code></pre>
+<pre><code><span><span class="co">##                               cluster  table_name                   field indicator spanning_1 spanning_2    spanning_3 hrc_spanning_1 hrc_spanning_2</span></span>
+<span><span class="co">## 1 france_entreprises_2023.hrc_lettuce  T10.T12.T8 france_entreprises_2023   LETTUCE    HRC_NAF         cj HRC_LETTUCE^h        hrc_naf           &lt;NA&gt;</span></span>
+<span><span class="co">## 2 france_entreprises_2023.hrc_lettuce   T11.T7.T9 france_entreprises_2023   LETTUCE    HRC_NAF       size HRC_LETTUCE^h        hrc_naf           &lt;NA&gt;</span></span>
+<span><span class="co">## 3    france_entreprises_2023.to_pizza       T1.T2 france_entreprises_2023  to_pizza   HRC_NUTS       size          &lt;NA&gt;       hrc_nuts           &lt;NA&gt;</span></span>
+<span><span class="co">## 4    france_entreprises_2023.to_pizza T3.T4.T5.T6 france_entreprises_2023  to_pizza    HRC_NAF   HRC_NUTS          &lt;NA&gt;        hrc_naf       hrc_nuts</span></span>
+<span><span class="co">##   hrc_spanning_3</span></span>
+<span><span class="co">## 1    hrc_lettuce</span></span>
+<span><span class="co">## 2    hrc_lettuce</span></span>
+<span><span class="co">## 3           &lt;NA&gt;</span></span>
+<span><span class="co">## 4           &lt;NA&gt;</span></span></code></pre>
 <p>Pour les 12 tableaux à publier il suffit de protéger 4 tableaux. Ces
 tableaux sont repartis dans deux clusters différents. Il faudra donc
 faire appel deux fois à <code><a href="../reference/tab_multi_manager.html">tab_multi_manager()</a></code>. On remarque
-une nouvelle variable de croisement <code>HRC_LETTUCE^h</code>. I s’agit
-d’une variable qui prend pour modalités <code>batavia</code> et
+une nouvelle variable de croisement <code>HRC_LETTUCE^h</code>. Il
+s’agit d’une variable qui prend pour modalités <code>batavia</code> et
 <code>arugula</code> et a pour total <code>lettuce</code>. L’indicateur
 <code>LETTUCE</code> renvoie ici au “turnover” (to) ou “chiffre
 d’affaires” de la vente de salades. Par exemple, le tableau
@@ -266,16 +267,17 @@ salades en fonction de l’activité et de la catégorie de l’entreprise
 ainsi que du type de salade.</p>
 <p>Si l’on souhaite avoir plus d’informations sur l’analyse de la
 demande, on peut spécifier l’argument <code>verbose = TRUE</code>.
-Ainsi, l’objet renvoyé par la fonction sur une liste des différentes
+Ainsi, l’objet renvoyé par la fonction est une liste des différentes
 étapes de l’analyse.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">detailed_analysis</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## [1] "identify_hrc"        "info_var"            "split_in_clusters"   "create_edges"       </span></span>
-<span><span class="co">## [5] "grp_tab_names"       "grp_tab_in_clusters" "tab_to_treat"        "df_tab_to_treat"</span></span></code></pre>
+<pre><code><span><span class="co">## [1] "identify_hrc"        "info_var"            "split_in_clusters"   "create_edges"        "grp_tab_names"       "grp_tab_in_clusters" "tab_to_treat"       </span></span>
+<span><span class="co">## [8] "df_tab_to_treat"</span></span></code></pre>
 <p>On retrouve le dataframe avec l’indicatrice du cluster
 <code>df_tab_to_treat</code>. On a le même résultat mais en format liste
-: chaque élément de la liste est un cluster indépendant
-<code>tab_to_treat</code>. Mais aussi les 6 étapes de l’analyse.</p>
+: chaque élément de la sous-liste <code>tab_to_treat</code> est un
+cluster indépendant. Les autres éléments de la liste sont les étapes de
+l’analyse.</p>
 </div>
 <div class="section level3">
 <h3 id="cas-où-linput-est-un-template-eurostat">Cas où l’input est un template Eurostat<a class="anchor" aria-label="anchor" href="#cas-o%C3%B9-linput-est-un-template-eurostat"></a>
@@ -316,53 +318,48 @@ partir du template Eurostat des cellules publiées.</p>
 <p>Remarque : <code><a href="../reference/format_template.html">format_template()</a></code> ne construit pas la colonne
 <code>hrc_indicator</code> car les informations contenues dans le
 template ne permettent pas de la déterminer. Ainsi, il faut la créer
-soit-même en fonction des informations que l’ont a sur les
+soi-même en fonction des informations que l’on a sur les
 indicateurs.</p>
 <p>Ici, il n’y a pas de lien hiérarchique entre <code>SAL</code>
 (effectifs salariés des entreprises actives) et <code>SAL_DTH</code>
 (effectifs salariés dans les décès).</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># cas où il n'y a aucune hiérarchie sur les indicateurs</span></span>
-<span><span class="va">metadata_template</span> <span class="op">&lt;-</span> <span class="va">template_formatted</span><span class="op">$</span><span class="va">metadata</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>hrc_indicator <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span><span class="va">metadata_template</span> <span class="op">&lt;-</span> <span class="va">template_formatted</span><span class="op">$</span><span class="va">metadata</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>hrc_indicator <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">table_name</span>,<span class="va">field</span>,<span class="va">indicator</span>,<span class="va">hrc_indicator</span>, <span class="fu"><a href="https://tidyselect.r-lib.org/reference/everything.html" class="external-link">everything</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">metadata_template</span></span></code></pre></div>
-<pre><code><span><span class="co">##             table_name field indicator hrc_indicator spanning_1  spanning_2   hrc_spanning_1</span></span>
-<span><span class="co">## 1 table_2021_SAL_DTH_1  2021   SAL_DTH            NA   ACTIVITY  LEGAL_FORM hrc_activity_131</span></span>
-<span><span class="co">## 2 table_2021_SAL_DTH_2  2021   SAL_DTH            NA   ACTIVITY NUMBER_EMPL hrc_activity_131</span></span>
-<span><span class="co">## 3     table_2022_SAL_1  2022       SAL            NA   ACTIVITY  LEGAL_FORM hrc_activity_131</span></span>
-<span><span class="co">## 4     table_2022_SAL_2  2022       SAL            NA   ACTIVITY NUMBER_EMPL hrc_activity_131</span></span>
-<span><span class="co">## 5 table_2022_SAL_DTH_1  2022   SAL_DTH            NA   ACTIVITY  LEGAL_FORM hrc_activity_131</span></span>
-<span><span class="co">## 6 table_2022_SAL_DTH_2  2022   SAL_DTH            NA   ACTIVITY NUMBER_EMPL hrc_activity_131</span></span>
-<span><span class="co">##      hrc_spanning_2</span></span>
-<span><span class="co">## 1  hrc_legal_form_3</span></span>
-<span><span class="co">## 2 hrc_number_empl_4</span></span>
-<span><span class="co">## 3  hrc_legal_form_3</span></span>
-<span><span class="co">## 4 hrc_number_empl_4</span></span>
-<span><span class="co">## 5  hrc_legal_form_3</span></span>
-<span><span class="co">## 6 hrc_number_empl_4</span></span></code></pre>
+<pre><code><span><span class="co">##             table_name field indicator hrc_indicator spanning_1  spanning_2   hrc_spanning_1    hrc_spanning_2</span></span>
+<span><span class="co">## 1 table_2021_SAL_DTH_1  2021   SAL_DTH            NA   ACTIVITY  LEGAL_FORM hrc_activity_131  hrc_legal_form_3</span></span>
+<span><span class="co">## 2 table_2021_SAL_DTH_2  2021   SAL_DTH            NA   ACTIVITY NUMBER_EMPL hrc_activity_131 hrc_number_empl_4</span></span>
+<span><span class="co">## 3     table_2022_SAL_1  2022       SAL            NA   ACTIVITY  LEGAL_FORM hrc_activity_131  hrc_legal_form_3</span></span>
+<span><span class="co">## 4     table_2022_SAL_2  2022       SAL            NA   ACTIVITY NUMBER_EMPL hrc_activity_131 hrc_number_empl_4</span></span>
+<span><span class="co">## 5 table_2022_SAL_DTH_1  2022   SAL_DTH            NA   ACTIVITY  LEGAL_FORM hrc_activity_131  hrc_legal_form_3</span></span>
+<span><span class="co">## 6 table_2022_SAL_DTH_2  2022   SAL_DTH            NA   ACTIVITY NUMBER_EMPL hrc_activity_131 hrc_number_empl_4</span></span></code></pre>
 <p>Ensuite, on utilise ce dataframe en input de la fonction
 d’analyse.</p>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Analyse complète, avec les étapes</span></span>
-<span><span class="va">detailed_analysis</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/analyse_metadata.html">analyse_metadata</a></span><span class="op">(</span><span class="va">metadata_template</span>, verbose <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Output simplifié, uniquement le dataframe avec l'indicatrice de cluster</span></span>
-<span><span class="va">cluster_id_dataframe</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/analyse_metadata.html">analyse_metadata</a></span><span class="op">(</span><span class="va">metadata_template</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># visualisation du résultat de l'analyse</span></span>
+<span><span class="va">detailed_analysis</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/analyse_metadata.html">analyse_metadata</a></span><span class="op">(</span><span class="va">metadata_template</span>, verbose <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## Error in check_column_names(df_metadata): Error: The dataframe is missing one or more required columns: table_name, field, hrc_field, indicator, hrc_indicator.</span></span></code></pre>
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Output simplifié, uniquement le dataframe avec l'indicatrice de cluster</span></span>
+<span><span class="va">cluster_id_dataframe</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/analyse_metadata.html">analyse_metadata</a></span><span class="op">(</span><span class="va">metadata_template</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## Error in check_column_names(df_metadata): Error: The dataframe is missing one or more required columns: table_name, field, hrc_field, indicator, hrc_indicator.</span></span></code></pre>
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># visualisation du résultat de l'analyse</span></span>
 <span><span class="va">cluster_id_dataframe</span></span></code></pre></div>
-<pre><code><span><span class="co">## # A tibble: 6 x 8</span></span>
-<span><span class="co">## # Groups:   table_name [6]</span></span>
-<span><span class="co">##   cluster      table_name       field indicator spanning_1 spanning_2 hrc_spanning_1 hrc_spanning_2</span></span>
-<span><span class="co">##   &lt;chr&gt;        &lt;chr&gt;            &lt;chr&gt; &lt;chr&gt;     &lt;chr&gt;      &lt;chr&gt;      &lt;chr&gt;          &lt;chr&gt;         </span></span>
-<span><span class="co">## 1 2021.SAL_DTH table_2021_SAL_~ 2021  SAL_DTH   HRC_ACTIV~ HRC_LEGAL~ hrc_activity_~ hrc_legal_for~</span></span>
-<span><span class="co">## 2 2021.SAL_DTH table_2021_SAL_~ 2021  SAL_DTH   HRC_ACTIV~ HRC_NUMBE~ hrc_activity_~ hrc_number_em~</span></span>
-<span><span class="co">## 3 2022.SAL     table_2022_SAL_1 2022  SAL       HRC_ACTIV~ HRC_LEGAL~ hrc_activity_~ hrc_legal_for~</span></span>
-<span><span class="co">## 4 2022.SAL     table_2022_SAL_2 2022  SAL       HRC_ACTIV~ HRC_NUMBE~ hrc_activity_~ hrc_number_em~</span></span>
-<span><span class="co">## 5 2022.SAL_DTH table_2022_SAL_~ 2022  SAL_DTH   HRC_ACTIV~ HRC_LEGAL~ hrc_activity_~ hrc_legal_for~</span></span>
-<span><span class="co">## 6 2022.SAL_DTH table_2022_SAL_~ 2022  SAL_DTH   HRC_ACTIV~ HRC_NUMBE~ hrc_activity_~ hrc_number_em~</span></span></code></pre>
+<pre><code><span><span class="co">##                               cluster  table_name                   field indicator spanning_1 spanning_2    spanning_3 hrc_spanning_1 hrc_spanning_2</span></span>
+<span><span class="co">## 1 france_entreprises_2023.hrc_lettuce  T10.T12.T8 france_entreprises_2023   LETTUCE    HRC_NAF         cj HRC_LETTUCE^h        hrc_naf           &lt;NA&gt;</span></span>
+<span><span class="co">## 2 france_entreprises_2023.hrc_lettuce   T11.T7.T9 france_entreprises_2023   LETTUCE    HRC_NAF       size HRC_LETTUCE^h        hrc_naf           &lt;NA&gt;</span></span>
+<span><span class="co">## 3    france_entreprises_2023.to_pizza       T1.T2 france_entreprises_2023  to_pizza   HRC_NUTS       size          &lt;NA&gt;       hrc_nuts           &lt;NA&gt;</span></span>
+<span><span class="co">## 4    france_entreprises_2023.to_pizza T3.T4.T5.T6 france_entreprises_2023  to_pizza    HRC_NAF   HRC_NUTS          &lt;NA&gt;        hrc_naf       hrc_nuts</span></span>
+<span><span class="co">##   hrc_spanning_3</span></span>
+<span><span class="co">## 1    hrc_lettuce</span></span>
+<span><span class="co">## 2    hrc_lettuce</span></span>
+<span><span class="co">## 3           &lt;NA&gt;</span></span>
+<span><span class="co">## 4           &lt;NA&gt;</span></span></code></pre>
 <p>Finalement, il y a 6 tableaux à traiter dans 3 clusters différents.
 Autrement dit, il faudra faire trois fois appel à
 <code><a href="../reference/tab_multi_manager.html">tab_multi_manager()</a></code>.</p>
@@ -376,7 +373,7 @@ identifie les tableaux inclus dans d’autres tableaux. Par exemple, XXXXX
 est inclus dans XXXXX. Le code suivant permet de visualiser ces
 inclusions à l’aide de graphes afin de mieux comprendre la procédure
 d’analyse.</p>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://inseefrlab.github.io/rtauargus">rtauargus</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r.igraph.org/" class="external-link">igraph</a></span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## </span></span>
@@ -384,25 +381,28 @@ d’analyse.</p>
 <pre><code><span><span class="co">## Les objets suivants sont masqués depuis 'package:dplyr':</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">##     as_data_frame, groups, union</span></span></code></pre>
+<pre><code><span><span class="co">## L'objet suivant est masqué depuis 'package:testthat':</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">##     compare</span></span></code></pre>
 <pre><code><span><span class="co">## Les objets suivants sont masqués depuis 'package:stats':</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">##     decompose, spectrum</span></span></code></pre>
 <pre><code><span><span class="co">## L'objet suivant est masqué depuis 'package:base':</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">##     union</span></span></code></pre>
-<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://datastorm-open.github.io/visNetwork/" class="external-link">visNetwork</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">graph_links_tab</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">list_desc_links</span><span class="op">)</span><span class="op">{</span></span>
 <span>  <span class="va">list_desc_links</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/imap.html" class="external-link">imap</a></span><span class="op">(</span><span class="kw">function</span><span class="op">(</span><span class="va">ss_dem</span>,<span class="va">i</span><span class="op">)</span><span class="op">{</span></span>
 <span>    <span class="kw">if</span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NULL.html" class="external-link">is.null</a></span><span class="op">(</span><span class="va">ss_dem</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
 <span>      <span class="va">nodes</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unlist.html" class="external-link">unlist</a></span><span class="op">(</span><span class="va">ss_dem</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span>      <span class="fu"><a href="https://rdrr.io/pkg/visNetwork/man/visNetwork.html" class="external-link">visNetwork</a></span><span class="op">(</span>nodes <span class="op">=</span> <span class="va">nodes</span>, edges <span class="op">=</span> <span class="va">ss_dem</span>, main <span class="op">=</span> <span class="va">i</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
-<span>        <span class="fu"><a href="https://rdrr.io/pkg/visNetwork/man/visIgraphLayout.html" class="external-link">visIgraphLayout</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>      <span class="fu"><a href="https://rdrr.io/pkg/visNetwork/man/visNetwork.html" class="external-link">visNetwork</a></span><span class="op">(</span>nodes <span class="op">=</span> <span class="va">nodes</span>, edges <span class="op">=</span> <span class="va">ss_dem</span>, main <span class="op">=</span> <span class="va">i</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>        <span class="fu"><a href="https://rdrr.io/pkg/visNetwork/man/visIgraphLayout.html" class="external-link">visIgraphLayout</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>        <span class="fu"><a href="https://rdrr.io/pkg/visNetwork/man/visEdges.html" class="external-link">visEdges</a></span><span class="op">(</span>shadow <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>                 arrows <span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>to <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>enabled <span class="op">=</span> <span class="cn">TRUE</span>, scaleFactor <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>                 color <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>color <span class="op">=</span> <span class="st">"steelblue"</span>, highlight <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
-<span>        <span class="fu"><a href="https://rdrr.io/pkg/visNetwork/man/visOptions.html" class="external-link">visOptions</a></span><span class="op">(</span>highlightNearest <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>enabled <span class="op">=</span> <span class="cn">T</span>, hover <span class="op">=</span> <span class="cn">T</span><span class="op">)</span>, </span>
+<span>                 color <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>color <span class="op">=</span> <span class="st">"steelblue"</span>, highlight <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>        <span class="fu"><a href="https://rdrr.io/pkg/visNetwork/man/visOptions.html" class="external-link">visOptions</a></span><span class="op">(</span>highlightNearest <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>enabled <span class="op">=</span> <span class="cn">T</span>, hover <span class="op">=</span> <span class="cn">T</span><span class="op">)</span>,</span>
 <span>                   nodesIdSelection <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></span>
 <span>    <span class="op">}</span></span>
 <span>  <span class="op">}</span><span class="op">)</span></span>
