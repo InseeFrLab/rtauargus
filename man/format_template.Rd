@@ -34,6 +34,5 @@ template_formatted <- format_template(
     LEGAL_FORM = "_T"),
   field_columns = c("TIME_PERIOD")
 )
-View(template_formatted$metadata)
 
 }

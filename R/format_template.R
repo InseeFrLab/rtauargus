@@ -112,7 +112,6 @@ filter_on_marginal_of_spanning_var <- function(data, criteria, subset_keys) {
 #'     LEGAL_FORM = "_T"),
 #'   field_columns = c("TIME_PERIOD")
 #' )
-#' View(template_formatted$metadata)
 #'
 #' @importFrom purrr compact
 #' @importFrom tidyr pivot_longer
