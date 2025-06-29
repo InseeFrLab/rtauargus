@@ -147,7 +147,7 @@ dataframe_result <- function(list_independent_tables) {
       # Dynamically order columns hrc_spanning_xxx by their numeric suffix
       all_of(names(.)[grepl("^hrc_spanning_\\d+$", names(.))] %>%
                .[order(as.numeric(sub("hrc_spanning_", "", .)))])
-    )
+    ) %>% as.data.frame()
 }
 
 
