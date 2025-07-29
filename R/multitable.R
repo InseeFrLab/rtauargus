@@ -454,7 +454,7 @@ tab_multi_manager <- function(
     )
 
     # update of common cells that have been modified
-    modified <- common_cells[common_cells[[var_secret_apriori]] != common_cells[[var_secret]],all_expl_vars]
+    modified <- common_cells[common_cells[[var_secret_apriori]] != common_cells[[var_secret]],all_expl_vars, drop=FALSE]
     # modified <- if(sum(is.na(modified))>0) modified[1,][-1,] else modified
     if(nrow(modified) > 0){
       modified <- cbind(modified, iteration = num_iter_all)
