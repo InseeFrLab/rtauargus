@@ -25,7 +25,7 @@ Build:
     - |
       set -e
       R --version
-      R CMD build .
+      R CMD build --no-build-vignettes --no-manual .
   artifacts:
     paths:
       - "*.tar.gz"
