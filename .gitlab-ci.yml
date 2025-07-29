@@ -21,6 +21,7 @@ Build:
   rules:
     - when: manual
   script:
+    - Rscript -e 'devtools::install()'
     - |
       set -e
       R --version
