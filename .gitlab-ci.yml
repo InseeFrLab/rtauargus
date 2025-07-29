@@ -1,41 +1,46 @@
-image: gitlab-registry.insee.fr/kubernetes/images/build/r-toolbox/onyxia-rstudio-insee:r4.2.1
-
-stages:
-  - check
-  - deploy
+include:
+  - project: "idda/applications/nexus/pipeline-admission/ci-templates"
+    ref: main
+    file: "livraison-package.yaml"
 
 variables:
   GIT_SSL_NO_VERIFY: "1"
   PKG_NAME: "rtauargus"
 
-pkg_check:
-  stage: check
-  tags:
-    - docker
-  script:
-    - Rscript -e 'install.packages(c("zoo", "gdata"))'
-    - Rscript -e 'devtools::check(check_dir = ".",
-                                  error_on  = "error",
-                                  cran      = FALSE,
-                                  document  = FALSE,
-                                  manual    = FALSE)'
-  artifacts:
-    paths:
-      - "${PKG_NAME}_*.tar.gz"
-  only:
-    - master
-    - developpement
+image: gitlab-registry.insee.fr:443/datascience/registry-prod/onyxia-rstudio:r4.4.2
 
-pages:
-  stage: deploy
-  tags:
-    - docker
+stages:
+  - 📦️ Package
+
+Build:
+  stage: 📦️ Package
+  image: inseefrlab/onyxia-rstudio:latest
+  retry:
+    max: 2
+    when: runner_system_failure
+  rules:
+    - when: manual
   script:
-    - Rscript -e 'install.packages(c("zoo", "gdata"))'
-    - Rscript -e 'options(pkgdown.internet = FALSE) ; pkgdown::build_site()'
+    - |
+      set -e
+      R --version
+      R CMD build .
   artifacts:
     paths:
-      - public
-  when: manual # pour declencher manuellement le job quand version stable
-  only:
-    - master
+      - "*.tar.gz"
+
+Nexus:
+  stage: 📦️ Package
+  variables:
+    DEST_REPOSITORY: "r-local"
+    PATH_ARTEFACT_A_DEPLOYER: "${PKG_NAME}_*.tar.gz"
+    NOM_DU_JOB_CONTENANT_LE_LIVRABLE: "Build"
+  extends: .template:livraison-package
+  retry:
+    max: 2
+    when: runner_system_failure
+  rules:
+    - when: manual
+  needs:
+    - job: Build
+      artifacts: true
