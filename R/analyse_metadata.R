@@ -53,7 +53,7 @@
 #' `r lifecycle::badge("experimental")`
 #'
 #' @export
-analyse_metadata <- function(df_metadata,verbose = FALSE){
+analyse_metadata <- function(df_metadata,df_eq_indicator = NULL,verbose = FALSE){
   # check that the input is in the right format: right column names
   check_column_names <- function(df) {
     # Expected fixed column names
@@ -102,7 +102,14 @@ analyse_metadata <- function(df_metadata,verbose = FALSE){
 
   # start of the actual analysis
   df_metadata_long <- wide_to_long(df_metadata)
-  list_hrc_identified <- identify_hrc(df_metadata_long)
+  if(is.null(df_eq_indicator)){
+    list_hrc_identified <- identify_hrc(df_metadata_long)
+  }else{
+    warning("The hrc_indicator column will be ignored. All links between indicators
+            must be specified in a dataframe (df_eq_indicator).")
+    list_hrc_identified <- identify_hrc_with_eq(df_metadata_long,df_eq_indicator)
+  }
+
   list_split <- split_in_clusters(list_hrc_identified)
   list_desc_links <- create_edges(list_split)
   list_translation_tables <- grp_tab_names(list_desc_links)
