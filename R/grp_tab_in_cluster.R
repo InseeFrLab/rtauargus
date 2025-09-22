@@ -66,7 +66,7 @@ grp_tab_in_cluster <- function(list_split, list_translation_tables) {
       # Process the cluster
       big_tibble_eg <- big_tibble %>%
         mutate(
-          spanning = map(data, function(small_tibble) { small_tibble$spanning })
+          spanning = map(data, function(small_tibble) {small_tibble$spanning})
         ) %>%
         dplyr::left_join(tab_to_keep[[2]], by = c("table_name" = "Original")) %>%
         mutate(table_eg = ifelse(is.na(Group), table_name, Group)) %>%
@@ -87,7 +87,8 @@ grp_tab_in_cluster <- function(list_split, list_translation_tables) {
       # adding the tables that are not included in each other in the cluster
       if(length(big_tibble$table_name) != length(tab_to_keep$passage_nom_tab$Original)){
         tables_no_inclusion <- big_tibble %>%
-          filter(table_name %in% setdiff(big_tibble$table_name,tab_to_keep$passage_nom_tab$Original))
+          filter(table_name %in% setdiff(big_tibble$table_name,tab_to_keep$passage_nom_tab$Original)) %>%
+          mutate(spanning = map(data, function(small_tibble) {small_tibble$spanning}))
         big_tibble_eg <- bind_rows(tables_no_inclusion,big_tibble_eg)
       }
 
