@@ -46,6 +46,7 @@ identify_hrc_with_eq <- function(df_metadata_long,df_eq_indicator){
     }}
   check_column_names(df_eq_indicator)
 
+  # browser()
   # parse the equations
   parsed_equations <- df_eq_indicator %>%
     tidyr::separate(eq_indicator, into = c("total", "rhs"), sep = "=", extra = "merge") %>%
@@ -83,25 +84,66 @@ identify_hrc_with_eq <- function(df_metadata_long,df_eq_indicator){
   ) %>% unique()
   df_spannings <- df_spannings %>% select(-spanning_old)
 
-  df_indicators <- df_spannings %>%
+  # df_indicators <- df_spannings %>%
+  #   # delete all the non-word elements, specifically for the white spaces
+  #   mutate(across(where(is.character), ~ gsub("[^[:alnum:]_]", "", .))) %>%
+  #   left_join(equations_long, by = c("indicator" = "var")) %>%
+  #   filter(!is.na(eq_name)) %>%
+  #   dplyr::group_by(table_name) %>%
+  #   summarise(
+  #     field = last(field),
+  #     hrc_field = last(hrc_field),
+  #     spanning = paste0(toupper(last(eq_name)),"^h"),
+  #     hrc_spanning = paste0("hrc_",last(eq_name)),
+  #     indicator = last(unit),
+  #     hrc_indicator = last(hrc_indicator)
+  #   ) %>%
+  #   bind_rows(df_spannings, .) %>%
+  #   group_by(table_name) %>%
+  #   mutate(indicator = last(indicator)) %>%
+  #   ungroup() %>%
+  #   arrange(table_name)
+
+  df_spannings_eq <- df_spannings %>%
     # delete all the non-word elements, specifically for the white spaces
     mutate(across(where(is.character), ~ gsub("[^[:alnum:]_]", "", .))) %>%
-    left_join(equations_long, by = c("indicator" = "var")) %>%
+    left_join(equations_long, by = c("indicator" = "var"))
+
+  df_initial_spannings <- df_spannings_eq %>%
     filter(!is.na(eq_name)) %>%
-    dplyr::group_by(table_name) %>%
+    group_by(eq_name) %>%
     summarise(
+      table_name = paste(table_name, collapse = "."),
       field = last(field),
       hrc_field = last(hrc_field),
-      spanning = paste0(toupper(last(eq_name)),"^h"),
-      hrc_spanning = paste0("hrc_",last(eq_name)),
+      spanning = last(spanning),
+      hrc_spanning = last(hrc_spanning),
       indicator = last(unit),
-      hrc_indicator = last(hrc_indicator)
+      hrc_indicator = last(hrc_indicator),
+      .groups = "drop"
     ) %>%
-    bind_rows(df_spannings, .) %>%
-    group_by(table_name) %>%
-    mutate(indicator = last(indicator)) %>%
-    ungroup() %>%
+    select(-eq_name)
+
+  df_indicator_spannings <- df_spannings_eq %>%
+    filter(!is.na(eq_name)) %>%
+    group_by(eq_name) %>%
+    summarise(
+      table_name = paste(table_name, collapse = "."),
+      field = last(field),
+      hrc_field = last(hrc_field),
+      spanning = paste0(toupper(last(eq_name)), "^h"),
+      hrc_spanning = paste0("hrc_", last(eq_name)),
+      indicator = last(unit),
+      hrc_indicator = last(hrc_indicator),
+      .groups = "drop"
+    ) %>%
+    select(-eq_name)
+
+  # browser()
+  df_indicators <- bind_rows(df_initial_spannings,df_indicator_spannings) %>%
+    select(table_name,field,hrc_field,indicator,hrc_indicator,everything()) %>%
     arrange(table_name)
+
   list_hrc_identified = list(df_indicators,df_variable_info)
   return(list_hrc_identified)
 }
