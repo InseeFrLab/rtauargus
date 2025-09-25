@@ -46,7 +46,6 @@ identify_hrc_with_eq <- function(df_metadata_long,df_eq_indicator){
     }}
   check_column_names(df_eq_indicator)
 
-  # browser()
   # parse the equations
   parsed_equations <- df_eq_indicator %>%
     tidyr::separate(eq_indicator, into = c("total", "rhs"), sep = "=", extra = "merge") %>%
@@ -109,7 +108,7 @@ identify_hrc_with_eq <- function(df_metadata_long,df_eq_indicator){
     mutate(across(where(is.character), ~ gsub("[^[:alnum:]_]", "", .))) %>%
     left_join(equations_long, by = c("indicator" = "var"))
 
-  df_initial_spannings <- df_spannings_eq %>%
+  df_eq_initial_spannings <- df_spannings_eq %>%
     filter(!is.na(eq_name)) %>%
     group_by(eq_name) %>%
     summarise(
@@ -124,7 +123,7 @@ identify_hrc_with_eq <- function(df_metadata_long,df_eq_indicator){
     ) %>%
     select(-eq_name)
 
-  df_indicator_spannings <- df_spannings_eq %>%
+  df_eq_indicator_spannings <- df_spannings_eq %>%
     filter(!is.na(eq_name)) %>%
     group_by(eq_name) %>%
     summarise(
@@ -139,11 +138,30 @@ identify_hrc_with_eq <- function(df_metadata_long,df_eq_indicator){
     ) %>%
     select(-eq_name)
 
-  # browser()
-  df_indicators <- bind_rows(df_initial_spannings,df_indicator_spannings) %>%
+  df_indicators <- bind_rows(df_eq_initial_spannings,df_eq_indicator_spannings) %>%
     select(table_name,field,hrc_field,indicator,hrc_indicator,everything()) %>%
     arrange(table_name)
 
-  list_hrc_identified = list(df_indicators,df_variable_info)
-  return(list_hrc_identified)
+  df_no_eq_spannings <- df_spannings_eq %>% filter(is.na(eq_name))
+  if(all(is.na(df_no_eq_spannings$hrc_indicator)) & nrow(df_no_eq_spannings) > 0){
+    df_indicators <- bind_rows(df_indicators,df_no_eq_spannings) %>% arrange(table_name)
+    return(list(df_indicators,df_variable_info))
+  } else {
+    df_no_eq_indicators <- df_no_eq_spannings %>%
+      filter(!is.na(hrc_indicator)) %>%
+      dplyr::group_by(table_name) %>%
+      summarise(
+        field = last(field),
+        hrc_field = last(hrc_field),
+        spanning = paste0(toupper(last(hrc_indicator)),"^h"),
+        hrc_spanning = last(hrc_indicator),
+        indicator = last(indicator),
+        hrc_indicator = last(hrc_indicator)
+      ) %>%
+      bind_rows(df_spannings, .) %>%
+      arrange(table_name)
+    df_indicators <- bind_rows(df_indicators,df_no_eq_indicators) %>% arrange(table_name)
+    list_hrc_identified = list(df_indicators,df_variable_info)
+    return(list_hrc_identified)
+  }
 }

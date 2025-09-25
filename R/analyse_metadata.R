@@ -105,8 +105,8 @@ analyse_metadata <- function(df_metadata,df_eq_indicator = NULL,verbose = FALSE)
   if(is.null(df_eq_indicator)){
     list_hrc_identified <- identify_hrc(df_metadata_long)
   }else{
-    warning("The hrc_indicator column will be ignored. All links between indicators
-            must be specified in a dataframe (df_eq_indicator).")
+    warning("For the variables part of equations specified in df_eq_indicator,
+    the hrc_indicator column will be ignored.")
     list_hrc_identified <- identify_hrc_with_eq(df_metadata_long,df_eq_indicator)
   }
 

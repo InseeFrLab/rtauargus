@@ -57,7 +57,7 @@ create_edges <- function(list_split){
         small_tibble$spanning}))
   })
   list_desc_links <- nested_crois %>% map(function(big_tibble) {
-    # Condition for clusters that only have one table
+    # Only compare the spanning variables for clusters that have more than 1 table
     if(length(big_tibble$table_name) > 1) {
       spannings_nom_tab <- combn(big_tibble$table_name, 2, FUN = list)
       tab_to_keep <- map(spannings_nom_tab, function(crois) {
