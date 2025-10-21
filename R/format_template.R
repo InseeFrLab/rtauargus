@@ -94,7 +94,7 @@ filter_on_marginal_of_spanning_var <- function(data, criteria, subset_keys) {
 #' @param data template gathering all the published cells
 #' @param indicator_column name of the column in which the indicators are
 #' @param spanning_var_tot a named list of the spanning variables and their totals
-#' @param field_columns vecotr of all the columns that are fields (ex: year of collect)
+#' @param field_columns vector of all the columns that are fields (ex: year of collect)
 #'
 #' @return named list of a dataframe describing the tables (metadata) and a list of
 #' the modalities of each hierarchical variable (modalities)
