@@ -60,8 +60,6 @@ identify_hrc_with_eq <- function(df_metadata_long,df_eq_indicator){
     dplyr::ungroup() %>%
     dplyr::select(eq_name, unit, total, everything())
 
-  browser()
-
   # change to long format in order to join with df_metadata_long
   equations_long <- parsed_equations %>%
     mutate(across(c(total, starts_with("rhs")), trimws)) %>%
@@ -71,6 +69,35 @@ identify_hrc_with_eq <- function(df_metadata_long,df_eq_indicator){
       values_to = "var"
     ) %>%
     filter(!is.na(var))
+
+  # Identify chained equations (A = B + C, B = D + E → group both equations together)
+
+  # Build dependency links between totals and rhs
+  links <- parsed_equations %>%
+    tidyr::pivot_longer(
+      cols = starts_with("rhs"),
+      names_to = "rhs_term",
+      values_to = "rhs"
+    ) %>%
+    dplyr::filter(!is.na(rhs)) %>%
+    dplyr::select(total, rhs) %>%
+    dplyr::mutate(
+      total = trimws(as.character(total)),
+      rhs   = trimws(as.character(rhs))
+    ) %>%
+    dplyr::distinct()
+
+
+  # Create an adjacency-like mapping
+  g <- igraph::graph_from_data_frame(links, directed = TRUE)
+
+  # Find connected components (groups of linked equations)
+  comp <- igraph::components(g)$membership
+  comp_df <- data.frame(var = names(comp), group = comp, stringsAsFactors = FALSE)
+
+  # Add this group info to equations_long
+  equations_long <- equations_long %>%
+    left_join(comp_df, by = c("var" = "var"))
 
   # 'df_spannings' is a modified version of 'df_metadata_long' where:
   #   - 'spanning' is replaced by its uppercase hierarchical version if available,
@@ -106,7 +133,7 @@ identify_hrc_with_eq <- function(df_metadata_long,df_eq_indicator){
   # Each equation keeps the last relevant field values, with concatenated table names.
   df_eq_initial_spannings <- df_spannings_eq %>%
     filter(!is.na(eq_name)) %>%
-    group_by(eq_name) %>%
+    group_by(group) %>%
     summarise(
       table_name = paste(table_name, collapse = "."),
       field = last(field),
@@ -116,26 +143,32 @@ identify_hrc_with_eq <- function(df_metadata_long,df_eq_indicator){
       indicator = last(unit),
       hrc_indicator = last(hrc_indicator),
       .groups = "drop"
-    ) %>%
-    select(-eq_name)
+    )
 
   # 'df_eq_indicator_spannings' defines the spanning information for equation indicators.
   # Each equation name is transformed into its uppercase form with a "^h" suffix,
   # and its hierarchical version prefixed with "hrc_".
   df_eq_indicator_spannings <- df_spannings_eq %>%
     filter(!is.na(eq_name)) %>%
-    group_by(eq_name) %>%
+    group_by(group) %>%
     summarise(
       table_name = paste(table_name, collapse = "."),
       field = last(field),
       hrc_field = last(hrc_field),
-      spanning = paste0(toupper(last(eq_name)), "^h"),
-      hrc_spanning = paste0("hrc_", last(eq_name)),
+      spanning = if(length(unique(eq_name)) > 1) {
+        paste0(paste0(unique(toupper(eq_name)), collapse = "_"), "^h")
+      } else {
+        paste0(toupper(last(eq_name)), "^h")
+      },
+      hrc_spanning = if(length(unique(eq_name)) > 1) {
+        paste0("hrc_", paste0(unique(toupper(eq_name)), collapse = "_"))
+      } else {
+        paste0("hrc_", toupper(last(eq_name)))
+      },
       indicator = last(unit),
       hrc_indicator = last(hrc_indicator),
       .groups = "drop"
-    ) %>%
-    select(-eq_name)
+    )
 
   # 'df_indicators' combines both initial and indicator spanning information
   # into a single harmonized dataset, keeping key structural columns
