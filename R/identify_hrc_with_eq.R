@@ -51,9 +51,10 @@ identify_hrc_with_eq <- function(df_metadata_long,df_eq_indicator){
   # with each rhs term placed in a separate column.
   parsed_equations <- df_eq_indicator %>%
     tidyr::separate(eq_indicator, into = c("total", "rhs"), sep = "=", extra = "merge") %>%
-    dplyr::mutate(rhs = stringr::str_trim(rhs)) %>%
+    dplyr::mutate(rhs = trimws(rhs)) %>%
     tidyr::separate_rows(rhs, sep = "\\+") %>%
-    dplyr::mutate(rhs = stringr::str_trim(rhs)) %>%
+    dplyr::mutate(rhs = trimws(rhs),
+                  total = trimws(total)) %>%
     dplyr::group_by(dplyr::across(-rhs)) %>%
     dplyr::mutate(term_number = paste0("rhs", dplyr::row_number())) %>%
     tidyr::pivot_wider(names_from = term_number, values_from = rhs) %>%
@@ -80,24 +81,57 @@ identify_hrc_with_eq <- function(df_metadata_long,df_eq_indicator){
       values_to = "rhs"
     ) %>%
     dplyr::filter(!is.na(rhs)) %>%
-    dplyr::select(total, rhs) %>%
     dplyr::mutate(
       total = trimws(as.character(total)),
       rhs   = trimws(as.character(rhs))
     ) %>%
     dplyr::distinct()
 
+  # browser()
+  # Compter le nombre de fois qu'une variable apparaît à gauche
+  total_counts <- parsed_equations %>%
+    dplyr::count(total, name = "n_total")
 
-  # Create an adjacency-like mapping
-  g <- igraph::graph_from_data_frame(links, directed = TRUE)
+  # Identifier les "totals" ambigus (définis plusieurs fois)
+  ambiguous_totals <- total_counts %>%
+    dplyr::filter(n_total > 1) %>%
+    dplyr::pull(total)
 
-  # Find connected components (groups of linked equations)
+  # Ne garder que les liens dont le total n’est pas ambigu
+  links_filtered <- links %>%
+    dplyr::filter(!total %in% ambiguous_totals)
+
+  # Créer un graphe uniquement avec les liens non ambigus
+  g <- igraph::graph_from_data_frame(links_filtered %>% select(total,rhs), directed = TRUE)
+
+  # Trouver les composantes connexes (chaînes d’équations cohérentes)
   comp <- igraph::components(g)$membership
   comp_df <- data.frame(var = names(comp), group = comp, stringsAsFactors = FALSE)
 
-  # Add this group info to equations_long
+  # Affecter les groupes aux équations
   equations_long <- equations_long %>%
-    left_join(comp_df, by = c("var" = "var"))
+    dplyr::left_join(comp_df, by = c("var" = "var"))
+
+  # browser()
+  # Pour les équations dont le total est ambigu,
+  # on leur donne un nouveau groupe unique PAR ÉQUATION
+  if (length(ambiguous_totals) > 0) {
+    max_group <- ifelse(length(comp_df$group) == 0, 0, max(comp_df$group, na.rm = TRUE))
+
+    # Extraire les équations dont le total est ambigu
+    ambiguous_eqs <- equations_long %>%
+      dplyr::filter(side == "total", var %in% ambiguous_totals) %>%
+      dplyr::distinct(eq_name, var) %>%
+      dplyr::mutate(group = seq(max_group, max_group + dplyr::n() - 1))
+
+    # Rejoindre ces nouveaux groupes à toutes les lignes de la même équation
+    equations_long <- equations_long %>%
+      dplyr::left_join(ambiguous_eqs %>% dplyr::select(eq_name, group),
+                       by = "eq_name",
+                       suffix = c("", "_ambig")) %>%
+      dplyr::mutate(group = dplyr::coalesce(group_ambig, group)) %>%
+      dplyr::select(-group_ambig)
+  }
 
   # 'df_spannings' is a modified version of 'df_metadata_long' where:
   #   - 'spanning' is replaced by its uppercase hierarchical version if available,
@@ -135,7 +169,7 @@ identify_hrc_with_eq <- function(df_metadata_long,df_eq_indicator){
     filter(!is.na(eq_name)) %>%
     group_by(group) %>%
     summarise(
-      table_name = paste(table_name, collapse = "."),
+      table_name = paste(unique(table_name), collapse = "."),
       field = last(field),
       hrc_field = last(hrc_field),
       spanning = last(spanning),
@@ -152,7 +186,7 @@ identify_hrc_with_eq <- function(df_metadata_long,df_eq_indicator){
     filter(!is.na(eq_name)) %>%
     group_by(group) %>%
     summarise(
-      table_name = paste(table_name, collapse = "."),
+      table_name = paste(unique(table_name), collapse = "."),
       field = last(field),
       hrc_field = last(hrc_field),
       spanning = if(length(unique(eq_name)) > 1) {
