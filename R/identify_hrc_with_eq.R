@@ -87,7 +87,6 @@ identify_hrc_with_eq <- function(df_metadata_long,df_eq_indicator){
     ) %>%
     dplyr::distinct()
 
-  # browser()
   # Compter le nombre de fois qu'une variable apparaît à gauche
   total_counts <- parsed_equations %>%
     dplyr::count(total, name = "n_total")
@@ -112,7 +111,6 @@ identify_hrc_with_eq <- function(df_metadata_long,df_eq_indicator){
   equations_long <- equations_long %>%
     dplyr::left_join(comp_df, by = c("var" = "var"))
 
-  # browser()
   # Pour les équations dont le total est ambigu,
   # on leur donne un nouveau groupe unique PAR ÉQUATION
   if (length(ambiguous_totals) > 0) {
@@ -122,7 +120,7 @@ identify_hrc_with_eq <- function(df_metadata_long,df_eq_indicator){
     ambiguous_eqs <- equations_long %>%
       dplyr::filter(side == "total", var %in% ambiguous_totals) %>%
       dplyr::distinct(eq_name, var) %>%
-      dplyr::mutate(group = seq(max_group, max_group + dplyr::n() - 1))
+      dplyr::mutate(group = seq(max_group + 1, max_group + dplyr::n()))
 
     # Rejoindre ces nouveaux groupes à toutes les lignes de la même équation
     equations_long <- equations_long %>%
