@@ -87,8 +87,6 @@ identify_hrc_with_eq <- function(df_metadata_long,df_eq_indicator){
     ) %>%
     dplyr::distinct()
 
-  # browser()
-
   # ---- 1) Identif. totaux ambigus ----
   total_counts <- parsed_equations %>% count(total, name = "n_total")
   ambiguous_totals <- total_counts %>% filter(n_total > 1) %>% pull(total)
@@ -148,7 +146,6 @@ identify_hrc_with_eq <- function(df_metadata_long,df_eq_indicator){
     # si pour certains var_mapped il n'y a pas de group (isolés), on peut laisser NA ou donner un groupe unique
     mutate(group = as.integer(group))
 
-  browser()
   # 'df_spannings' is a modified version of 'df_metadata_long' where:
   #   - 'spanning' is replaced by its uppercase hierarchical version if available,
   #   - 'indicator' is replaced by its uppercase hierarchical version
