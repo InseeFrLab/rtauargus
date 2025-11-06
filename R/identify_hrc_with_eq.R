@@ -87,50 +87,68 @@ identify_hrc_with_eq <- function(df_metadata_long,df_eq_indicator){
     ) %>%
     dplyr::distinct()
 
-  # Compter le nombre de fois qu'une variable apparaît à gauche
-  total_counts <- parsed_equations %>%
-    dplyr::count(total, name = "n_total")
+  # browser()
 
-  # Identifier les "totals" ambigus (définis plusieurs fois)
-  ambiguous_totals <- total_counts %>%
-    dplyr::filter(n_total > 1) %>%
-    dplyr::pull(total)
+  # ---- 1) Identif. totaux ambigus ----
+  total_counts <- parsed_equations %>% count(total, name = "n_total")
+  ambiguous_totals <- total_counts %>% filter(n_total > 1) %>% pull(total)
 
-  # Ne garder que les liens dont le total n’est pas ambigu
-  links_filtered <- links %>%
-    dplyr::filter(!total %in% ambiguous_totals)
+  # ---- 2) Construire un mapping total -> total_alt par eq_name ----
+  # pour toutes les équations (ambigües ou non) on crée une ligne ;
+  # pour les non-ambigües total_alt == total
+  alt_map <- parsed_equations %>%
+    distinct(eq_name, total) %>%
+    group_by(total) %>%
+    arrange(eq_name) %>%                 # ordre stable
+    mutate(alt_idx = row_number(),
+           total_alt = case_when(
+             n() == 1 ~ total,
+             alt_idx == 1 ~ total,
+             TRUE ~ paste0(total, "_alt", alt_idx - 1)
+           )
+    ) %>%
+    ungroup() %>%
+    select(eq_name, total, total_alt)
 
-  # Créer un graphe uniquement avec les liens non ambigus
-  g <- igraph::graph_from_data_frame(links_filtered %>% select(total,rhs), directed = TRUE)
+  # ---- 3) Appliquer le mapping aux liens ----
+  # 'links' contient total, rhs, eq_name (si tu ne l'as pas, il faut le joindre)
+  # ici j'assume links a colonne eq_name ; sinon faire left_join(links, parsed_equations %>% select(eq_name, total, rhs)...) auparavant
+  links_full <- links %>%
+    # remplacer le total par sa version alt spécifique à l'eq
+    left_join(alt_map, by = c("eq_name", "total")) %>%
+    mutate(total = coalesce(total_alt, total)) %>%
+    select(-total_alt) %>%
+    # maintenant, remplacer rhs s'il existe comme "total" dans alt_map :
+    # on doit choisir la bonne total_alt pour le rhs selon l'équation où il joue le rôle de total.
+    # pour cela on joint alt_map en faisant rhs -> total, et en gardant l'alt correspondant à l'eq_name de la ligne SOURCE.
+    left_join(alt_map, by = c("eq_name", "rhs" = "total")) %>%
+    mutate(rhs = coalesce(total_alt, rhs)) %>%
+    select(total, rhs, eq_name) %>%
+    distinct()
 
-  # Trouver les composantes connexes (chaînes d’équations cohérentes)
-  comp <- igraph::components(g)$membership
-  comp_df <- data.frame(var = names(comp), group = comp, stringsAsFactors = FALSE)
+  # ---- 4) Construire le graphe complet (avec toutes les copies) ----
+  g_full <- graph_from_data_frame(links_full %>% select(total, rhs), directed = TRUE)
 
-  # Affecter les groupes aux équations
-  equations_long <- equations_long %>%
-    dplyr::left_join(comp_df, by = c("var" = "var"))
+  # ---- 5) calculer les composantes sur g_full ----
+  comp_full <- components(g_full)$membership
+  comp_df <- data.frame(var = names(comp_full), group = as.integer(comp_full), stringsAsFactors = FALSE)
 
-  # Pour les équations dont le total est ambigu,
-  # on leur donne un nouveau groupe unique PAR ÉQUATION
-  if (length(ambiguous_totals) > 0) {
-    max_group <- ifelse(length(comp_df$group) == 0, 0, max(comp_df$group, na.rm = TRUE))
+  # ---- 6) Mettre à jour equations_long :
+  #       associer le var alt (si present) et le groupe correspondant ----
+  # Remarques :
+  # - equations_long contient les variables originales (var) et eq_name ;
+  # - on veut retrouver la version "var" ou "var_alt" utilisée dans g_full.
+  equations_long_full <- equations_long %>%
+    # joindre la correspondance eq_name + var(original total) -> total_alt (si existant)
+    left_join(alt_map, by = c("eq_name", "var" = "total")) %>%
+    mutate(var_mapped = coalesce(total_alt, var)) %>%
+    select(-total_alt) %>%
+    # joindre le groupe calculé sur le graphe complet
+    left_join(comp_df, by = c("var_mapped" = "var")) %>%
+    # si pour certains var_mapped il n'y a pas de group (isolés), on peut laisser NA ou donner un groupe unique
+    mutate(group = as.integer(group))
 
-    # Extraire les équations dont le total est ambigu
-    ambiguous_eqs <- equations_long %>%
-      dplyr::filter(side == "total", var %in% ambiguous_totals) %>%
-      dplyr::distinct(eq_name, var) %>%
-      dplyr::mutate(group = seq(max_group + 1, max_group + dplyr::n()))
-
-    # Rejoindre ces nouveaux groupes à toutes les lignes de la même équation
-    equations_long <- equations_long %>%
-      dplyr::left_join(ambiguous_eqs %>% dplyr::select(eq_name, group),
-                       by = "eq_name",
-                       suffix = c("", "_ambig")) %>%
-      dplyr::mutate(group = dplyr::coalesce(group_ambig, group)) %>%
-      dplyr::select(-group_ambig)
-  }
-
+  browser()
   # 'df_spannings' is a modified version of 'df_metadata_long' where:
   #   - 'spanning' is replaced by its uppercase hierarchical version if available,
   #   - 'indicator' is replaced by its uppercase hierarchical version
@@ -158,7 +176,7 @@ identify_hrc_with_eq <- function(df_metadata_long,df_eq_indicator){
   df_spannings_eq <- df_spannings %>%
     # delete all the non-word elements, specifically for the white spaces
     mutate(across(where(is.character), ~ gsub("[^[:alnum:]_]", "", .))) %>%
-    left_join(equations_long, by = c("indicator" = "var"))
+    left_join(equations_long_full, by = c("indicator" = "var"))
 
   # 'df_eq_initial_spannings' contains the initial spanning information
   # for equations (rows where 'eq_name' is not missing), summarised by equation name.
