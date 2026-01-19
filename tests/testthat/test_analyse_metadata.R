@@ -158,3 +158,50 @@ test_that("hierarchies on indicators", {
   expect_equal(analyse_metadata(meta),answer)
 }
 )
+
+##################################################### INDICATOR EQUATIONS CHECKS
+# all the spanning variables are taken into account when using equations on
+# indicators -------------------------------------------------------------------
+answer <- data.frame(
+  cluster = c(
+    "france_entreprises_2023.hrc_lettuce",
+    "france_entreprises_2023.hrc_lettuce",
+    "france_entreprises_2023.to_pizza",
+    "france_entreprises_2023.to_pizza"
+  ),
+  table_name = c(
+    "T10.T12.T8",
+    "T11.T7.T9",
+    "T1.T2",
+    "T3.T4.T5.T6"
+  ),
+  field = rep("france_entreprises_2023", 4),
+  indicator = c("LETTUCE", "LETTUCE", "to_pizza", "to_pizza"),
+  spanning_1 = c("HRC_NAF", "HRC_NAF", "HRC_NUTS", "HRC_NAF"),
+  spanning_2 = c("cj", "size", "size", "HRC_NUTS"),
+  spanning_3 = c("HRC_LETTUCE^h", "HRC_LETTUCE^h", NA, NA),
+  hrc_spanning_1 = c("hrc_naf", "hrc_naf", "hrc_nuts", "hrc_naf"),
+  hrc_spanning_2 = c(NA, NA, NA, "hrc_nuts"),
+  hrc_spanning_3 = c("hrc_lettuce", "hrc_lettuce", NA, NA)
+)
+
+test_that("indicators equation", {
+  df_eq_ex <- data.frame(
+    eq_name = c("eq1"),
+    eq_indicator = c("ca_salades = ca_batavia + ca_mache"),
+    unit = c("EUR"),
+    stringsAsFactors = FALSE
+  )
+
+  expect_warning(
+    expect_equal(
+      analyse_metadata(df_metadata = metadata_pizza_lettuce,df_eq_indicator = df_eq_ex),
+      answer
+    ),
+    "hrc_indicator column will be ignored"
+  )
+
+}
+)
+
+
