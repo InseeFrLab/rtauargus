@@ -88,25 +88,25 @@ identify_hrc_with_eq <- function(df_metadata_long,df_eq_indicator){
     dplyr::distinct()
 
   # ---- 1) Identif. totaux ambigus ----
-  total_counts <- parsed_equations %>% count(total, name = "n_total")
-  ambiguous_totals <- total_counts %>% filter(n_total > 1) %>% pull(total)
+  total_counts <- parsed_equations %>% dplyr::count(total, name = "n_total")
+  ambiguous_totals <- total_counts %>% dplyr::filter(n_total > 1) %>% pull(total)
 
   # ---- 2) Construire un mapping total -> total_alt par eq_name ----
   # pour toutes les équations (ambigües ou non) on crée une ligne ;
   # pour les non-ambigües total_alt == total
   alt_map <- parsed_equations %>%
-    distinct(eq_name, total) %>%
-    group_by(total) %>%
-    arrange(eq_name) %>%                 # ordre stable
-    mutate(alt_idx = row_number(),
-           total_alt = case_when(
-             n() == 1 ~ total,
+    dplyr::distinct(eq_name, total) %>%
+    dplyr::group_by(total) %>%
+    dplyr::arrange(eq_name) %>%                 # ordre stable
+    dplyr::mutate(alt_idx = dplyr::row_number(),
+           total_alt = dplyr::case_when(
+             dplyr::n() == 1 ~ total,
              alt_idx == 1 ~ total,
              TRUE ~ paste0(total, "_alt", alt_idx - 1)
            )
     ) %>%
-    ungroup() %>%
-    select(eq_name, total, total_alt)
+    dplyr::ungroup() %>%
+    dplyr::select(eq_name, total, total_alt)
 
   # ---- 3) Appliquer le mapping aux liens ----
   # 'links' contient total, rhs, eq_name (si tu ne l'as pas, il faut le joindre)
@@ -114,21 +114,21 @@ identify_hrc_with_eq <- function(df_metadata_long,df_eq_indicator){
   links_full <- links %>%
     # remplacer le total par sa version alt spécifique à l'eq
     left_join(alt_map, by = c("eq_name", "total")) %>%
-    mutate(total = coalesce(total_alt, total)) %>%
+    mutate(total = dplyr::coalesce(total_alt, total)) %>%
     select(-total_alt) %>%
     # maintenant, remplacer rhs s'il existe comme "total" dans alt_map :
     # on doit choisir la bonne total_alt pour le rhs selon l'équation où il joue le rôle de total.
     # pour cela on joint alt_map en faisant rhs -> total, et en gardant l'alt correspondant à l'eq_name de la ligne SOURCE.
     left_join(alt_map, by = c("eq_name", "rhs" = "total")) %>%
-    mutate(rhs = coalesce(total_alt, rhs)) %>%
+    mutate(rhs = dplyr::coalesce(total_alt, rhs)) %>%
     select(total, rhs, eq_name) %>%
-    distinct()
+    dplyr::distinct()
 
   # ---- 4) Construire le graphe complet (avec toutes les copies) ----
   g_full <- graph_from_data_frame(links_full %>% select(total, rhs), directed = TRUE)
 
   # ---- 5) calculer les composantes sur g_full ----
-  comp_full <- components(g_full)$membership
+  comp_full <- igraph::components(g_full)$membership
   comp_df <- data.frame(var = names(comp_full), group = as.integer(comp_full), stringsAsFactors = FALSE)
 
   # ---- 6) Mettre à jour equations_long :
@@ -139,13 +139,13 @@ identify_hrc_with_eq <- function(df_metadata_long,df_eq_indicator){
   equations_long_full <- equations_long %>%
     # joindre la correspondance eq_name + var(original total) -> total_alt (si existant)
     left_join(alt_map, by = c("eq_name", "var" = "total")) %>%
-    mutate(var_mapped = coalesce(total_alt, var)) %>%
+    mutate(var_mapped = dplyr::coalesce(total_alt, var)) %>%
     select(-total_alt) %>%
     # joindre le groupe calculé sur le graphe complet
     left_join(comp_df, by = c("var_mapped" = "var")) %>%
     # si pour certains var_mapped il n'y a pas de group (isolés), on peut laisser NA ou donner un groupe unique
     mutate(group = as.integer(group))
-
+  # browser()
   # 'df_spannings' is a modified version of 'df_metadata_long' where:
   #   - 'spanning' is replaced by its uppercase hierarchical version if available,
   #   - 'indicator' is replaced by its uppercase hierarchical version
@@ -178,19 +178,32 @@ identify_hrc_with_eq <- function(df_metadata_long,df_eq_indicator){
   # 'df_eq_initial_spannings' contains the initial spanning information
   # for equations (rows where 'eq_name' is not missing), summarised by equation name.
   # Each equation keeps the last relevant field values, with concatenated table names.
+  # df_eq_initial_spannings <- df_spannings_eq %>%
+  #   filter(!is.na(eq_name)) %>%
+  #   group_by(group) %>%
+  #   summarise(
+  #     table_name = paste(unique(table_name), collapse = "."),
+  #     field = last(field),
+  #     hrc_field = last(hrc_field),
+  #     spanning = last(spanning),
+  #     hrc_spanning = last(hrc_spanning),
+  #     indicator = last(unit),
+  #     hrc_indicator = last(hrc_indicator),
+  #     .groups = "drop"
+  #   ) # TODO changer ici pour le pbm d'un manque de var de crois !!
+
   df_eq_initial_spannings <- df_spannings_eq %>%
     filter(!is.na(eq_name)) %>%
     group_by(group) %>%
-    summarise(
-      table_name = paste(unique(table_name), collapse = "."),
-      field = last(field),
-      hrc_field = last(hrc_field),
-      spanning = last(spanning),
-      hrc_spanning = last(hrc_spanning),
-      indicator = last(unit),
-      hrc_indicator = last(hrc_indicator),
-      .groups = "drop"
-    )
+    dplyr::reframe(
+      table_name    = paste(unique(table_name), collapse = "."),
+      field         = last(field),
+      hrc_field     = last(hrc_field),
+      spanning      = spanning,
+      hrc_spanning  = hrc_spanning,
+      indicator     = last(unit),
+      hrc_indicator = last(hrc_indicator)
+    ) %>% unique()
 
   # 'df_eq_indicator_spannings' defines the spanning information for equation indicators.
   # Each equation name is transformed into its uppercase form with a "^h" suffix,
