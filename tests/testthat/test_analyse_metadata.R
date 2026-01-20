@@ -67,7 +67,7 @@ test_that("error message for wrong column name - df_eq_indicator", {
 test_that("warning when hrc_indicator is ignored because df_eq_indicator used", {
   expect_warning(
     analyse_metadata(df_meta_for_eq, df_eq_ex),
-    "The hrc_indicator column will be ignored"
+    "the hrc_indicator column will be ignored"
   )
 })
 
@@ -203,5 +203,3 @@ test_that("indicators equation", {
 
 }
 )
-
-

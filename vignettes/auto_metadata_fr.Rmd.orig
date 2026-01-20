@@ -6,10 +6,10 @@ output:
     toc: true
     toc_depth: 3
 vignette: >
-  %\VignetteIndexEntry{Analyse automatique des métadonnées}
+%\VignetteIndexEntry{Analyse automatique des métadonnées}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
----
+  ---
 
 
 ```{r setup, include=FALSE}
@@ -54,7 +54,15 @@ args(analyse_metadata)
 Les arguments de la fonction sont les suivants :
 
 - `df_metadata` : un dataframe structuré comme précisé dans la section \ref{sec:crea_meta}.
+- `df_eq_indicator` : un dataframe regroupant les équations entre les indicateurs.
 - `verbose` : une variable de type `logical`, si `TRUE` la fonction retourne une liste avec les différentes étapes de l'analyse, si `FALSE` elle retourne juste le dataframe final avec l'indicatrice de cluster.
+
+Le dataframe `df_eq_indicator` est constitué de trois colonnes qui doivent respecter le format suivant :
+```{r}
+data.frame(eq_name = c("eq1"),
+           eq_indicator = c("ca_salades = ca_batavia + ca_mache"),
+           unit = c("EUR"))
+```
 
 
 ## Les arguments de `format_template` \label{sec:args_template}
@@ -161,6 +169,47 @@ cluster_id_dataframe
 ```
 
 Finalement, il y a 6 tableaux à traiter dans 3 clusters différents. Autrement dit, il faudra faire trois fois appel à `tab_multi_manager()`.
+
+## Equations entre indicateurs
+
+Dans cet exemple on part d'un fichier de métadonnées présentant 12 tableaux à publier sur les chiffres d'affaires de ventes de pizzas et de salades.
+```{r}
+str(metadata_pizza_lettuce)
+```
+
+Auquel on ajoute un dataframe décrivant les liens entre les indicateurs.
+```{r}
+liens_eq <- data.frame(eq_name = c("eq1"),
+                       eq_indicator = c("ca_salades = ca_batavia + ca_mache"),
+                       unit = c("EUR"))
+```
+
+
+Exemple de code :
+```{r}
+library(rtauargus)
+
+data(metadata_pizza_lettuce)
+
+# Analyse complète, avec les étapes
+detailed_analysis <- analyse_metadata(metadata_pizza_lettuce,
+                                      df_eq_indicator = liens_eq,
+                                      verbose = TRUE)
+
+# Output simplifié, uniquement le dataframe avec l'indicatrice de cluster
+cluster_id_dataframe <- analyse_metadata(metadata_pizza_lettuce, verbose = FALSE)
+```
+
+Ici, un warning nous prévient que la colonne `hrc_indicator` sera ignorée puisque l'on a précisé
+les liens entre indicateurs avec l'argument `df_eq_indicator`. Ainsi, il ne faut pas mettre
+des liens dans `hrc_indicator` lorsque l'on utilise l'argument `df_eq_indicator`.
+
+On obtient le même dataframe nous présentant la façon de traiter les tableaux pour la pose du secret
+que dans le premier exemple.
+
+```{r}
+cluster_id_dataframe
+```
 
 # Pour aller plus loin : visualiser les inclusions
 L'étape `create_edges` de l'analyse des métadonnées identifie les tableaux inclus dans d'autres tableaux. Par exemple, XXXXX est inclus dans XXXXX. Le code suivant permet de visualiser ces inclusions à l'aide de graphes afin de mieux comprendre la procédure d'analyse.

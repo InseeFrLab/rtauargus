@@ -6,6 +6,7 @@
 #' creating a structured output for further processing.
 #'
 #' @param df_metadata A dataframe containing metadata in wide format.
+#' @param df_eq_indicator A datadframe containing the indicators equations if needed.
 #' @param verbose Logical. If `TRUE`, returns a detailed list of intermediate results
 #' from each processing step. If `FALSE`, returns only the cluster assignments. Defaults to `FALSE`.
 #'
@@ -28,7 +29,7 @@
 #' @details The function performs the following steps:
 #' \itemize{
 #'   \item Converts the metadata from wide format to long format using \code{wide_to_long}.
-#'   \item Identifies hierarchical relationships and renames variables with \code{identify_hrc}.
+#'   \item Identifies hierarchical relationships and renames variables with \code{identify_hrc} or \code{identify_hrc_with_eq}.
 #'   \item Splits hierarchical relationships into clusters using \code{split_in_clusters}.
 #'   \item Creates edges to describe the relationships via \code{create_edges}.
 #'   \item Generates translation tables for regrouping with \code{grp_tab_names}.
