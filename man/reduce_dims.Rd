@@ -79,6 +79,7 @@ variables during dimension reduction
 General function that selects the appropriate separator and applies dimension reduction.
 }
 \examples{
+\dontrun{
 library(dplyr)
 # Examples for dimension 4
 
@@ -238,5 +239,6 @@ res6 <- reduce_dims(
   limit = 4470,
   over_split = TRUE
 )
+}
 }
 \keyword{internal}

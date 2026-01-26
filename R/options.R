@@ -88,7 +88,7 @@ df_op.rtauargus <- function(html = FALSE) {
 #' name of the function prefixed by `rtauargus.` :
 #'
 #' *For example, `rtauargus.decimals` will be used if the argument
-#' `decimals` in the `micro_asc_rda` function is not set by the
+#' `decimals` in the `micro_asc_rda()` function is not set by the
 #' user.*
 #'
 #' On loading the package, all the rtauargus options, that are not already
@@ -111,7 +111,7 @@ df_op.rtauargus <- function(html = FALSE) {
 #' l’argument d’une fonction précédé de `rtauargus.` :
 #'
 #' *Par exemple, `rtauargus.decimals` sera la valeur utilisée si l’argument
-#' `decimals` de la fonction `micro_asc_rda` n’est pas renseigné par
+#' `decimals` de la fonction `micro_asc_rda()` n’est pas renseigné par
 #' l’utilisateur.*
 #'
 #' Au chargement, le package attribue une valeur par défaut à toutes les options
@@ -138,18 +138,18 @@ df_op.rtauargus <- function(html = FALSE) {
 #' \tabular{lll}{
 #'  **Option**                  \tab  **Default Value**                                    \tab **Function**   \cr
 #'  `------------------------`  \tab  `---------------------------------`                      \tab `-------------`\cr
-#'  rtauargus.decimals               \tab  \Sexpr{rtauargus:::op.rtauargus$rtauargus.decimals}           \tab [micro_asc_rda]\cr
+#'  rtauargus.decimals               \tab  \Sexpr{rtauargus:::op.rtauargus$rtauargus.decimals}           \tab `micro_asc_rda()`\cr
 #'  rtauargus.totcode                \tab "\Sexpr{rtauargus:::op.rtauargus$rtauargus.totcode}"           \tab                     \cr
 #'  rtauargus.missing                \tab "\Sexpr{rtauargus:::op.rtauargus$rtauargus.missing}"           \tab                     \cr
 #'  rtauargus.hierleadstring         \tab "\Sexpr{rtauargus:::op.rtauargus$rtauargus.hierleadstring}"    \tab                     \cr
 #'  `------------------------`  \tab  `---------------------------------`                      \tab `-------------`\cr
-#'  rtauargus.response_var           \tab "\Sexpr{rtauargus:::op.rtauargus$rtauargus.response_var}"      \tab [micro_arb]    \cr
+#'  rtauargus.response_var           \tab "\Sexpr{rtauargus:::op.rtauargus$rtauargus.response_var}"      \tab `micro_arb()`    \cr
 #'  rtauargus.weighted               \tab  \Sexpr{rtauargus:::op.rtauargus$rtauargus.weighted}           \tab                     \cr
 #'  rtauargus.linked                 \tab  \Sexpr{rtauargus:::op.rtauargus$rtauargus.linked}             \tab                     \cr
 #'  rtauargus.output_type            \tab "\Sexpr{rtauargus:::op.rtauargus$rtauargus.output_type}"       \tab                     \cr
 #'  rtauargus.output_options         \tab "\Sexpr{rtauargus:::op.rtauargus$rtauargus.output_options}"    \tab                     \cr
 #'  `------------------------`  \tab  `---------------------------------`                      \tab `-------------`\cr
-#'  rtauargus.missing_dir            \tab "\Sexpr{rtauargus:::op.rtauargus$rtauargus.missing_dir}"       \tab [run_arb]      \cr
+#'  rtauargus.missing_dir            \tab "\Sexpr{rtauargus:::op.rtauargus$rtauargus.missing_dir}"       \tab `run_arb()`      \cr
 #'  rtauargus.tauargus_exe           \tab "\Sexpr{rtauargus:::op.rtauargus$rtauargus.tauargus_exe}"      \tab                     \cr
 #'  rtauargus.show_batch_console     \tab  \Sexpr{rtauargus:::op.rtauargus$rtauargus.show_batch_console} \tab                     \cr
 #'  rtauargus.import                 \tab  \Sexpr{rtauargus:::op.rtauargus$rtauargus.import}             \tab

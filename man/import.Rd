@@ -29,7 +29,7 @@ contenues dans un fichier arb.)
 \details{
 Requires that the batch has been executed and finished without error. In order
 to import immediately after the batch has been executed, this function will be
-most often called via \code{link{run_arb}} (by setting
+most often called via \code{run_arb()} (by setting
 \code{import = TRUE}).
 
 It is only possible (for the moment) to import results of type "2"
@@ -39,7 +39,7 @@ message). \cr
 
 (Nécessite que le batch ait été exécuté et se soit terminé sans erreur. Afin
 d'importer immédiatement après exécution du batch, cette fonction sera ainsi
-le plus souvent appelée via \code{\link[=run_arb]{run_arb()}} (en paramétrant
+le plus souvent appelée via \code{run_arb()} (en paramétrant
 \code{import = TRUE}).
 
 Il n'est possible (pour l'instant) que d'importer les résultats de type "2"
@@ -74,9 +74,9 @@ l'utilisateur : \code{shadow_var}, \code{cost_var}, \code{output_options}.)
 \section{See also}{
 
 
-The function \code{\link[=micro_rtauargus]{micro_rtauargus()}}, which uses this
+The function \code{micro_rtauargus()}, which uses this
 function and inherits its parameters. \cr
-(La fonction \code{\link[=micro_rtauargus]{micro_rtauargus()}}, qui utilise cette
+(La fonction \code{micro_rtauargus()}, qui utilise cette
 fonction et hérite de ses paramètres.)
 }
 

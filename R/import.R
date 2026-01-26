@@ -124,7 +124,7 @@ meta_import <- function(data,
 #'
 #' Requires that the batch has been executed and finished without error. In order
 #' to import immediately after the batch has been executed, this function will be
-#' most often called via \code{link{run_arb}} (by setting
+#' most often called via `run_arb()` (by setting
 #' `import = TRUE`).
 #'
 #' It is only possible (for the moment) to import results of type "2"
@@ -134,7 +134,7 @@ meta_import <- function(data,
 #'
 #' (Nécessite que le batch ait été exécuté et se soit terminé sans erreur. Afin
 #' d'importer immédiatement après exécution du batch, cette fonction sera ainsi
-#' le plus souvent appelée via [run_arb()] (en paramétrant
+#' le plus souvent appelée via `run_arb()` (en paramétrant
 #' `import = TRUE`).
 #'
 #' Il n'est possible (pour l'instant) que d'importer les résultats de type "2"

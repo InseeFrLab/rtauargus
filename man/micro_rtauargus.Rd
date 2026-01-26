@@ -49,10 +49,10 @@ secondaire (syntaxe batch de Tau-Argus). Si la méthode est la même pour
 chaque tabulation, le premier paramètre (numéro du tableau) sera ignoré et
 renuméroté automatiquement (voir la section 'Syntax').)}
 
-\item{...}{optional parameters for \code{micro_asc_rda}, \code{micro_arb}
-and \code{run_arb}. See the help for these functions. \cr
-(paramètres optionnels pour \code{micro_asc_rda}, \code{micro_arb}
-et \code{run_arb}. Voir l'aide de ces fonctions.)}
+\item{...}{optional parameters for \code{micro_asc_rda()}, \code{micro_arb()}
+and \code{run_arb()}. See the help for these functions. \cr
+(paramètres optionnels pour \code{micro_asc_rda()}, \code{micro_arb()}
+et \code{run_arb()}. Voir l'aide de ces fonctions.)}
 }
 \value{
 If \code{import = TRUE}, a list of data.frames (protected tables),
@@ -84,9 +84,9 @@ du fichier arb, le lancement effectif de Tau-Argus et la récupération
 
 The function executes sequentially the functions: \itemize{
 \item{
-\code{\link[=micro_asc_rda]{micro_asc_rda()}} \verb{->}
-\code{\link[=micro_arb]{micro_arb()}} \verb{->}
-\code{\link[=run_arb]{run_arb()}}
+\code{micro_asc_rda()} \verb{->}
+\code{micro_arb()} \verb{->}
+\code{run_arb()}
 }
 }
 
@@ -98,9 +98,9 @@ processing in R. \cr
 
 (La fonction exécute séquentiellement les fonctions : \itemize{
 \item{
-\code{\link[=micro_asc_rda]{micro_asc_rda()}} \verb{->}
-\code{\link[=micro_arb]{micro_arb()}} \verb{->}
-\code{\link[=run_arb]{run_arb()}}
+\code{micro_asc_rda()} \verb{->}
+\code{micro_arb()} \verb{->}
+\code{run_arb()}
 }
 }
 
@@ -180,8 +180,8 @@ rtauargus(
 )}
 }
 \seealso{
-\code{link{rtauargus_plus}}, a version optimized for a large
+\code{rtauargus_plus()}, a version optimized for a large
 number of tables (at the cost of some usage restrictions). \cr
-(\code{\link[=rtauargus_plus]{rtauargus_plus()}}, une version optimisée pour un grand
+(\code{rtauargus_plus()}, une version optimisée pour un grand
 nombre de tableaux (au prix de quelques restrictions d'usage).)
 }
