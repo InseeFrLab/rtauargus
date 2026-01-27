@@ -54,7 +54,7 @@ args(analyse_metadata)
 The function arguments are as follows:
 
 - `df_metadata`: a dataframe structured as specified in section \ref{sec:crea_meta}.
-- `df_eq_indicator` : un dataframe regroupant les équations entre les indicateurs.
+- `df_eq_indicator` : a dataframe of equations on indicators.
 - `verbose`: a variable of type `logical`. If `TRUE` he function returns a list with the different steps of the analysis;  if `FALSE`, it returns only the final dataframe with the cluster indicator.
 
 The `df_eq_indicator` data frame consists of three columns that must follow the format below:
