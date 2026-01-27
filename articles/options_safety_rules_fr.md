@@ -1,0 +1,95 @@
+# Les arguments Safety rules et Suppress
+
+## Application du secret primaire avec le paramètre `safety_rules` :
+
+Dans la fonction
+[`tab_rtauargus()`](https://inseefrlab.github.io/rtauargus/reference/tab_rtauargus.md),
+les options du secret primaire doivent être définies dans l’argument
+`safety_rules`. Par défaut, ce paramètre est fixé à **“MAN(10)”**, afin
+d’appliquer un intervalle de protection à 10%. .
+
+Si vous voulez définir des règles pour la suppression primaire, la
+syntaxe est la suivante : -
+*“règle_numéro1\|règle_numéro2\|règle_numéro3\|…”*. Au moins une règle
+de sécurité est requise.
+
+Voci toutes les règles possibles selon le manuel de τ-Argus.
+
+Les règles les plus courantes sont :
+
+- La règle de dominance **NK(n,k)** avec :
+  - n la taille de la coalition
+  - k la proportion à ne pas dépasser
+- La règle de fréquence **Freq(n,p)** avec :
+  - n la fréquence minimale autorisée
+  - p le seuil de sécurité de la fréquence
+- La règle du p pourcent **P(p,n)** avec :
+  - la précision maximale de l’estimation en pourcentage
+  - n (facultatif, par défaut = 1), la taille de la coalition
+- Les intervalles de protection (ManualSafetyRange) **MAN(p)** avec :
+  - p le seuil d’estimation acceptable en pourcent
+
+Les autres :
+
+- La règle de requête (request rule) **REQ(p1,p2,SafetyMargin)**. (non
+  utilisé en France)
+- Les intervalles de protection pour les zéros
+  (ZeroSafetyMargin)**ZERO(p)** (inutile)
+- Le statut des codes manquants **MIS(b)** avec :
+  - b = 0 (par défaut) les cellules avec un code manquant sont
+    considérés à risque
+  - b = 1 ces cellules sont toujours sûres
+
+Certaines règles peuvent apparaître plusieurs fois **P,NK**.
+
+Vous pouvez obtenir plus de détails avec le manuel τ-Argus dans les
+sections : - *4.4.4 Specify Tables* - *5.7 The Batch command file*
+
+## Les options de `suppress` :
+
+Les options par défaut sont **“MOD(1,5,1,0,0)”**. Cela convient pour les
+statistiques d’entreprises.
+
+Pour chacun des paramètres suivants, le numéro du tableau est
+nécessaire, dans notre cas il sera toujours **1**.
+
+Les options possibles sont :
+
+- **MOD : Modular** :
+  - MOD(TabNo, MaxTimePerSubtable, SingleSingle,SingleMultiple, MinFreq)
+  - Les 3 derniers paramètres sont les options singleton. Chaque
+    paramètre peut être 0 ou 1. Si 1, l’option est activée.
+- **OPT : Optimal** :
+  - OPT(TabNo, MaxComputingTime)
+- **GH Hypercube** :
+  - GH(TabNo, A priori Bounds Percentage, ModelSize,ApplySingleton)
+  - ModelSize 0 = normal, 1 indique le grand modèle.
+  - ApplySingleton : 1 = oui, 0 = non ; par défaut = oui si le tableau a
+    des informations sur la fréquence, non sinon.
+- **NET : Network** :
+  - NET(TabNo)
+- **RND : Arrondi contrôlé (Controlled rounding)** :
+  - RND(TabNo, RoundingBase, Steps, MaxTime, Partitions, StopRule)
+  - Steps : nombre de pas autorisés, normalement 0 (par défaut)
+  - MaxTime : Temps de calcul maximum (10 = par défaut)
+  - Partitions : 0, 1 (0 = pas de partitionnement (par défaut), 1 =
+    appliquer la procédure de partitionnement)
+  - StopRule : 1 = Rapide uniquement, 2 = Première solution réalisable,
+    3 = Solution optimale (3 = par défaut)
+- **CTA : Ajustement Tabulaire Contrôlé** :
+  - CTA(TabNo)
+
+Plus de détails sont disponibles dans le manuel de τ-Argus, notamment
+dans la section **4.2.3**.
+
+#### Détail de la vignette
+
+#### About this vignette
+
+- Authors: **[Nathanael Rastout](mailto:nathanael.rastout@insee.fr)**
+- Last update: **17/02/2025**
+- Version of rtauargus used: **1.2.999**
+- Version of τ-Argus used : **TauArgus 4.2.3**
+- R version used : **4.3.3**
+
+[summary ↑](#TOC "Back to summary")

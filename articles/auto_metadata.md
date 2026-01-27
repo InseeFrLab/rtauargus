@@ -1,0 +1,433 @@
+# Automatic analysis of metadata
+
+``` r
+library(rtauargus)
+library(dplyr)
+```
+
+## Introduction
+
+Before using the functions that produce safe tables, it is necessary to
+analyze the tables that need to be protected. Indeed, the disseminated
+tables differ from the tables to be protected. This is explained in
+detail in Chapter 3 of the [Manuel de protection des
+tableaux](https://inseefrlab.github.io/manuel-protection-tableaux/03_analyser_une_demande.html).
+This phase of analyzing common margins between different tables can be
+complex. Therefore, functions have been developed in `rtauargus` to
+facilitate this work.
+
+## How Does Automatic Metadata Analysis Work?
+
+### Creating Metadata
+
+Metadata must adhere to a specific format. Each line represents a table,
+and for each table, the following must be specified:
+
+- `table_name` : the name of the table ;
+- `field` : the field (often, geographical area, studied population,
+  year of data collection) ;
+- `hrc_field` : whether there is a hierarchical link between this field
+  and another field. If there is no hierarchical link, this field should
+  be `NA`. If a hierarchical link exists, a name must be given to this
+  link and the same name must be written in the other tables ;
+- `indicator` : the table’s indicator name. This is the name of the
+  variable that is counted in each cell of the table. For example, if my
+  table presents the turnover of companies, my variable will likely be
+  “Turnover”. It is best to use the variable name as described in the
+  data;
+- `hrc_indicator` : whether there is a hierarchical link between this
+  indicator and another indicator. If there is no hierarchical link,
+  this field should be NA. If a hierarchical link exists, a name must be
+  given to this link and the same name must be written in the other
+  tables;
+- `spanning_1` : the name of the first cross-tabulation (spanning)
+  variable. Additional columns are added for each cross-tabulation
+  variable, following the naming convention: `spanning_1`, `spanning_2`,
+  `spanning_3`, etc ;
+- `hrc_spanning_1` : whether there is a hierarchical link between this
+  cross-tabulation variable and another cross-tabulation variable. If
+  there is no hierarchical link, this field should be NA. If a
+  hierarchical link exists, a name must be given to this link and the
+  same name must be written in the other tables. Additional columns are
+  added for each cross-tabulation variable, following the naming
+  convention: `hrc_spanning_1`, `hrc_spanning_2`, `hrc_spanning_3`, etc.
+  Note: there must be as many `spanning_X` columns as `hrc_spanning_X`
+  columns.
+
+### Formatted Input: Eurostat Templates
+
+When the tables to be processed are Eurostat tables, the metadata file
+can be automatically created from the template of the published cells.
+Indeed, for Eurostat publications, National Statistical Institutes
+(NSIs) must provide a template that groups the published cells.
+
+To do this, it is essential to understand each column of the template.
+Determine for each one whether it is the response variable/indicator, a
+cross-tabulation variable, or a field, in order to specify this in the
+arguments of the function . It is particularly important to verify that
+the template adheres to the following: one cross-tabulation variable =
+one column in the template, and thus one supertotal. Indeed, if a column
+groups multiple cross-tabulation variables, then as many columns as
+cross-tabulation variables must be created.
+
+### The Arguments of `analyse_metadata`
+
+``` r
+args(analyse_metadata)
+```
+
+    ## function (df_metadata, df_eq_indicator = NULL, verbose = FALSE) 
+    ## NULL
+
+The function arguments are as follows:
+
+- `df_metadata`: a dataframe structured as specified in section .
+- `df_eq_indicator` : un dataframe regroupant les équations entre les
+  indicateurs.
+- `verbose`: a variable of type `logical`. If `TRUE` he function returns
+  a list with the different steps of the analysis; if `FALSE`, it
+  returns only the final dataframe with the cluster indicator.
+
+The `df_eq_indicator` data frame consists of three columns that must
+follow the format below:
+
+``` r
+data.frame(eq_name = c("eq1"),
+           eq_indicator = c("ca_salades = ca_batavia + ca_mache"),
+           unit = c("EUR"))
+```
+
+    ##   eq_name                       eq_indicator unit
+    ## 1     eq1 ca_salades = ca_batavia + ca_mache  EUR
+
+### The Arguments of `format_template`
+
+``` r
+args(format_template)
+```
+
+    ## function (data, indicator_column, spanning_var_tot, field_columns) 
+    ## NULL
+
+The function arguments are as follows:
+
+- `data`: the Eurostat template data frame containing all published
+  cells.
+- `indicator_column`: the name of the column containing the indicators.
+- `spanning_var_tot`: a named list of the crossing variables and their
+  totals.
+- `field_columns`: a vector of all columns representing fields (e.g.,
+  vintage/year).
+
+## Examples
+
+### Case Where the Input is Metadata
+
+In this example, we start with a metadata file presenting 12 tables to
+be published on the turnover of pizza and salad sales.
+
+``` r
+str(metadata_pizza_lettuce)
+```
+
+    ## 'data.frame':    12 obs. of  9 variables:
+    ##  $ table_name    : chr  "T1" "T2" "T3" "T4" ...
+    ##  $ field         : chr  "france_entreprises_2023" "france_entreprises_2023" "france_entreprises_2023" "france_entreprises_2023" ...
+    ##  $ hrc_field     : logi  NA NA NA NA NA NA ...
+    ##  $ indicator     : chr  "to_pizza" "to_pizza" "to_pizza" "to_pizza" ...
+    ##  $ hrc_indicator : chr  NA NA NA NA ...
+    ##  $ spanning_1    : chr  "nuts2" "nuts3" "a10" "a10" ...
+    ##  $ hrc_spanning_1: chr  "hrc_nuts" "hrc_nuts" "hrc_naf" "hrc_naf" ...
+    ##  $ spanning_2    : chr  "size" "size" "nuts2" "nuts3" ...
+    ##  $ hrc_spanning_2: chr  NA NA "hrc_nuts" "hrc_nuts" ...
+
+Example code:
+
+``` r
+library(rtauargus)
+
+data(metadata_pizza_lettuce)
+
+# Analyse complète, avec les étapes
+detailed_analysis <- analyse_metadata(metadata_pizza_lettuce, verbose = TRUE)
+
+# Output simplifié, uniquement le dataframe avec l'indicatrice de cluster
+cluster_id_dataframe <- analyse_metadata(metadata_pizza_lettuce, verbose = FALSE)
+```
+
+The output is a dataframe showing how to process the tables for applying
+the secret.
+
+``` r
+cluster_id_dataframe
+```
+
+    ##                               cluster  table_name                   field indicator spanning_1 spanning_2    spanning_3 hrc_spanning_1
+    ## 1 france_entreprises_2023.hrc_lettuce  T10.T12.T8 france_entreprises_2023   LETTUCE    HRC_NAF         cj HRC_LETTUCE^h        hrc_naf
+    ## 2 france_entreprises_2023.hrc_lettuce   T11.T7.T9 france_entreprises_2023   LETTUCE    HRC_NAF       size HRC_LETTUCE^h        hrc_naf
+    ## 3    france_entreprises_2023.to_pizza       T1.T2 france_entreprises_2023  to_pizza   HRC_NUTS       size          <NA>       hrc_nuts
+    ## 4    france_entreprises_2023.to_pizza T3.T4.T5.T6 france_entreprises_2023  to_pizza    HRC_NAF   HRC_NUTS          <NA>        hrc_naf
+    ##   hrc_spanning_2 hrc_spanning_3
+    ## 1           <NA>    hrc_lettuce
+    ## 2           <NA>    hrc_lettuce
+    ## 3           <NA>           <NA>
+    ## 4       hrc_nuts           <NA>
+
+For the 12 tables to be published, it is sufficient to protect 4 tables.
+These tables are distributed across two different clusters. Therefore,
+[`tab_multi_manager()`](https://inseefrlab.github.io/rtauargus/reference/tab_multi_manager.md)
+needs to be called twice. A new spanning variable appeared
+`HRC_LETTUCE^h`. This variable takes 3 values `batavia`, `arugula` and
+`lettuce` the margin. The indicator `LETTUCE` here refers to the
+turnover (to) of salad sales. For example, the table `T10.T12.T8`
+presents the revenue from salad sales based on the activity and category
+of the company, as well as the type of salad.
+
+To obtain more information about the metadata analysis, the
+`verbose = TRUE` argument can be specified. This way, the object
+returned by the function will be a list of the different steps of the
+analysis.
+
+``` r
+names(detailed_analysis)
+```
+
+    ## [1] "identify_hrc"        "info_var"            "split_in_clusters"   "create_edges"        "grp_tab_names"       "grp_tab_in_clusters"
+    ## [7] "tab_to_treat"        "df_tab_to_treat"
+
+One finds the dataframe with the cluster indicator `df_tab_to_treat`.
+The result is the same but in list format: each element of the list is
+an independent cluster `tab_to_treat`. Additionally, the 6 steps of the
+analysis are included.
+
+### Case Where the Input is a Eurostat Template
+
+The
+[`format_template()`](https://inseefrlab.github.io/rtauargus/reference/format_template.md)
+function allows creating the metadata to be used as input for
+[`analyse_metadata()`](https://inseefrlab.github.io/rtauargus/reference/analyse_metadata.md)
+from the Eurostat template of the published cells.
+
+``` r
+data(enterprise_template)
+
+str(enterprise_template)
+```
+
+    ## 'data.frame':    3168 obs. of  5 variables:
+    ##  $ TIME_PERIOD: int  2022 2022 2022 2022 2022 2022 2022 2022 2022 2022 ...
+    ##  $ INDICATOR  : chr  "SAL" "SAL" "SAL" "SAL" ...
+    ##  $ ACTIVITY   : chr  "B" "B" "B" "B" ...
+    ##  $ NUMBER_EMPL: chr  "E0" "E1T4" "E5T9" "EGE10" ...
+    ##  $ LEGAL_FORM : chr  "_T" "_T" "_T" "_T" ...
+
+``` r
+template_formatted <- format_template(
+  data = enterprise_template,
+  indicator_column = "INDICATOR",
+  spanning_var_tot = list(
+    ACTIVITY = "BTSXO_S94",
+    NUMBER_EMPL = "_T",
+    LEGAL_FORM = "_T"),
+  field_columns = c("TIME_PERIOD")
+)
+```
+
+    ## treating the field 2021 
+    ## treating the field 2022
+
+``` r
+template_formatted$metadata
+```
+
+    ##             table_name field indicator spanning_1  spanning_2   hrc_spanning_1    hrc_spanning_2
+    ## 1 table_2021_SAL_DTH_1  2021   SAL_DTH   ACTIVITY  LEGAL_FORM hrc_activity_131  hrc_legal_form_3
+    ## 2 table_2021_SAL_DTH_2  2021   SAL_DTH   ACTIVITY NUMBER_EMPL hrc_activity_131 hrc_number_empl_4
+    ## 3     table_2022_SAL_1  2022       SAL   ACTIVITY  LEGAL_FORM hrc_activity_131  hrc_legal_form_3
+    ## 4     table_2022_SAL_2  2022       SAL   ACTIVITY NUMBER_EMPL hrc_activity_131 hrc_number_empl_4
+    ## 5 table_2022_SAL_DTH_1  2022   SAL_DTH   ACTIVITY  LEGAL_FORM hrc_activity_131  hrc_legal_form_3
+    ## 6 table_2022_SAL_DTH_2  2022   SAL_DTH   ACTIVITY NUMBER_EMPL hrc_activity_131 hrc_number_empl_4
+
+There are 6 tables to be published.
+
+Remark:
+[`format_template()`](https://inseefrlab.github.io/rtauargus/reference/format_template.md)
+does not construct the `hrc_indicator` column because the information
+contained in the template does not allow it to be determined. Therefore,
+one must create it based on the information available about the
+indicators.
+
+Here, there is no hierarchical link between `SAL` (employees of active
+companies) and `SAL_DTH` (employees in deaths).
+
+``` r
+# cas où il n'y a aucune hiérarchie sur les indicateurs
+metadata_template <- template_formatted$metadata %>%
+  mutate(hrc_indicator = NA) %>%
+  select(table_name,field,indicator,hrc_indicator, everything())
+
+metadata_template
+```
+
+    ##             table_name field indicator hrc_indicator spanning_1  spanning_2   hrc_spanning_1    hrc_spanning_2
+    ## 1 table_2021_SAL_DTH_1  2021   SAL_DTH            NA   ACTIVITY  LEGAL_FORM hrc_activity_131  hrc_legal_form_3
+    ## 2 table_2021_SAL_DTH_2  2021   SAL_DTH            NA   ACTIVITY NUMBER_EMPL hrc_activity_131 hrc_number_empl_4
+    ## 3     table_2022_SAL_1  2022       SAL            NA   ACTIVITY  LEGAL_FORM hrc_activity_131  hrc_legal_form_3
+    ## 4     table_2022_SAL_2  2022       SAL            NA   ACTIVITY NUMBER_EMPL hrc_activity_131 hrc_number_empl_4
+    ## 5 table_2022_SAL_DTH_1  2022   SAL_DTH            NA   ACTIVITY  LEGAL_FORM hrc_activity_131  hrc_legal_form_3
+    ## 6 table_2022_SAL_DTH_2  2022   SAL_DTH            NA   ACTIVITY NUMBER_EMPL hrc_activity_131 hrc_number_empl_4
+
+Next, this dataframe is used as input for the analysis function.
+
+``` r
+# Analyse complète, avec les étapes
+detailed_analysis <- analyse_metadata(metadata_template, verbose = TRUE)
+```
+
+    ## Error in check_column_names(df_metadata): Error: The dataframe is missing one or more required columns: table_name, field, hrc_field, indicator, hrc_indicator.
+
+``` r
+# Output simplifié, uniquement le dataframe avec l'indicatrice de cluster
+cluster_id_dataframe <- analyse_metadata(metadata_template, verbose = FALSE)
+```
+
+    ## Error in check_column_names(df_metadata): Error: The dataframe is missing one or more required columns: table_name, field, hrc_field, indicator, hrc_indicator.
+
+``` r
+# visualisation du résultat de l'analyse
+cluster_id_dataframe
+```
+
+    ##                               cluster  table_name                   field indicator spanning_1 spanning_2    spanning_3 hrc_spanning_1
+    ## 1 france_entreprises_2023.hrc_lettuce  T10.T12.T8 france_entreprises_2023   LETTUCE    HRC_NAF         cj HRC_LETTUCE^h        hrc_naf
+    ## 2 france_entreprises_2023.hrc_lettuce   T11.T7.T9 france_entreprises_2023   LETTUCE    HRC_NAF       size HRC_LETTUCE^h        hrc_naf
+    ## 3    france_entreprises_2023.to_pizza       T1.T2 france_entreprises_2023  to_pizza   HRC_NUTS       size          <NA>       hrc_nuts
+    ## 4    france_entreprises_2023.to_pizza T3.T4.T5.T6 france_entreprises_2023  to_pizza    HRC_NAF   HRC_NUTS          <NA>        hrc_naf
+    ##   hrc_spanning_2 hrc_spanning_3
+    ## 1           <NA>    hrc_lettuce
+    ## 2           <NA>    hrc_lettuce
+    ## 3           <NA>           <NA>
+    ## 4       hrc_nuts           <NA>
+
+Ultimately, there are 6 tables to process in 3 different clusters. In
+other words,
+[`tab_multi_manager()`](https://inseefrlab.github.io/rtauargus/reference/tab_multi_manager.md)
+will need to be called three times.
+
+### Equations between indicators
+
+In this example, we start from a metadata file describing 12 tables to
+be published on the turnover from pizza and salad sales.
+
+``` r
+str(metadata_pizza_lettuce)
+```
+
+    ## 'data.frame':    12 obs. of  9 variables:
+    ##  $ table_name    : chr  "T1" "T2" "T3" "T4" ...
+    ##  $ field         : chr  "france_entreprises_2023" "france_entreprises_2023" "france_entreprises_2023" "france_entreprises_2023" ...
+    ##  $ hrc_field     : logi  NA NA NA NA NA NA ...
+    ##  $ indicator     : chr  "to_pizza" "to_pizza" "to_pizza" "to_pizza" ...
+    ##  $ hrc_indicator : chr  NA NA NA NA ...
+    ##  $ spanning_1    : chr  "nuts2" "nuts3" "a10" "a10" ...
+    ##  $ hrc_spanning_1: chr  "hrc_nuts" "hrc_nuts" "hrc_naf" "hrc_naf" ...
+    ##  $ spanning_2    : chr  "size" "size" "nuts2" "nuts3" ...
+    ##  $ hrc_spanning_2: chr  NA NA "hrc_nuts" "hrc_nuts" ...
+
+This time a data frame describing the relationships between indicators
+is added.
+
+``` r
+liens_eq <- data.frame(eq_name = c("eq1"),
+                       eq_indicator = c("ca_salades = ca_batavia + ca_mache"),
+                       unit = c("EUR"))
+```
+
+Example code :
+
+``` r
+library(rtauargus)
+
+data(metadata_pizza_lettuce)
+
+# Full analysis, with intermediate steps
+detailed_analysis <- analyse_metadata(metadata_pizza_lettuce,
+                                      df_eq_indicator = liens_eq,
+                                      verbose = TRUE)
+```
+
+    ## Warning in analyse_metadata(metadata_pizza_lettuce, df_eq_indicator = liens_eq, : For the variables part of equations specified in df_eq_indicator,
+    ##     the hrc_indicator column will be ignored.
+
+    ## Warning: Returning more (or less) than 1 row per `summarise()` group was deprecated in dplyr 1.1.0.
+    ## i Please use `reframe()` instead.
+    ## i When switching from `summarise()` to `reframe()`, remember that `reframe()` always returns an ungrouped data frame and adjust
+    ##   accordingly.
+    ## i The deprecated feature was likely used in the rtauargus package.
+    ##   Please report the issue at <https://github.com/inseefrlab/rtauargus/issues>.
+    ## This warning is displayed once every 8 hours.
+    ## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was generated.
+
+``` r
+# Simplified output, only the data frame with the cluster indicator
+cluster_id_dataframe <- analyse_metadata(metadata_pizza_lettuce, verbose = FALSE)
+```
+
+Here, a warning informs us that the `hrc_indicator` column will be
+ignored since the relationships between indicators have been specified
+using the `df_eq_indicator` argument. Therefore, links should not be
+defined in `hrc_indicator` when using the `df_eq_indicator` argument.
+
+The result is the same as the first example.
+
+``` r
+cluster_id_dataframe
+```
+
+    ##                               cluster  table_name                   field indicator spanning_1 spanning_2    spanning_3 hrc_spanning_1
+    ## 1 france_entreprises_2023.hrc_lettuce  T10.T12.T8 france_entreprises_2023   LETTUCE    HRC_NAF         cj HRC_LETTUCE^h        hrc_naf
+    ## 2 france_entreprises_2023.hrc_lettuce   T11.T7.T9 france_entreprises_2023   LETTUCE    HRC_NAF       size HRC_LETTUCE^h        hrc_naf
+    ## 3    france_entreprises_2023.to_pizza       T1.T2 france_entreprises_2023  to_pizza   HRC_NUTS       size          <NA>       hrc_nuts
+    ## 4    france_entreprises_2023.to_pizza T3.T4.T5.T6 france_entreprises_2023  to_pizza    HRC_NAF   HRC_NUTS          <NA>        hrc_naf
+    ##   hrc_spanning_2 hrc_spanning_3
+    ## 1           <NA>    hrc_lettuce
+    ## 2           <NA>    hrc_lettuce
+    ## 3           <NA>           <NA>
+    ## 4       hrc_nuts           <NA>
+
+## Going Further: Visualizing Inclusions
+
+The create_edges step in the metadata analysis identifies tables
+included within other tables. For example, XXXXX is included in XXXXX.
+The following code allows visualizing these inclusions using graphs to
+better understand the analysis procedure.
+
+``` r
+library(rtauargus)
+library(igraph)
+library(visNetwork)
+
+graph_links_tab <- function(list_desc_links){
+  list_desc_links %>% purrr::imap(function(ss_dem,i){
+    if(!is.null(ss_dem)){
+      nodes <- data.frame(id = unique(unlist(ss_dem)))
+      visNetwork(nodes = nodes, edges = ss_dem, main = i) %>%
+        visIgraphLayout() %>%
+        visEdges(shadow = TRUE,
+                 arrows =list(to = list(enabled = TRUE, scaleFactor = 0.5)),
+                 color = list(color = "steelblue", highlight = "red")) %>%
+        visOptions(highlightNearest = list(enabled = T, hover = T),
+                   nodesIdSelection = T)
+    }
+  })
+}
+
+data(metadata_pizza_lettuce)
+detailed_analysis <- analyse_metadata(metadata_pizza_lettuce, verbose = TRUE)
+
+graph_links_tab(detailed_analysis$create_edges)
+```
+
+    ## $france_entreprises_2023.hrc_lettuce
+    ## 
+    ## $france_entreprises_2023.to_pizza

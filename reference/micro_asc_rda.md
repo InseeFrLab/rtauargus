@@ -1,0 +1,312 @@
+# Creates asc and rda files from microdata
+
+**\[superseded\]**
+
+Development on `micro_asc_rda()` is complete, and for new code we
+recommend switching to the tabular-wise protection provided by
+[`tab_rtauargus()`](https://inseefrlab.github.io/rtauargus/reference/tab_rtauargus.md)
+or
+[`tab_multi_manager()`](https://inseefrlab.github.io/rtauargus/reference/tab_multi_manager.md),
+which offer a lot more features for your protection problems.
+
+See more details in
+[`vignette("rtauargus")`](https://inseefrlab.github.io/rtauargus/articles/rtauargus.md)
+or in `vignette("protect_multi_tables)`.
+
+Creates a fixed length text file (asc) and a metadata file (rda) from
+microdata and additional information.  
+(Crée un fichier texte de longueur fixe (asc) et un fichier de
+métadonnées (rda) à partir de microdonnées et d'informations
+additionnelles.)
+
+## Utilisation
+
+``` r
+micro_asc_rda(
+  microdata,
+  asc_filename = NULL,
+  rda_filename = NULL,
+  weight_var = NULL,
+  holding_var = NULL,
+  decimals = getOption("rtauargus.decimals"),
+  hrc = NULL,
+  hierleadstring = getOption("rtauargus.hierleadstring"),
+  totcode = getOption("rtauargus.totcode"),
+  missing = getOption("rtauargus.missing"),
+  codelist = NULL,
+  request = NULL
+)
+```
+
+## Arguments
+
+- microdata:
+
+  data.frame containing the microdata.  
+  ( data.frame contenant les microdonnées.)
+
+- asc_filename:
+
+  name of the asc file (with extension). If not filled in, a temporary
+  file.  
+  (nom du fichier asc (avec extension). Si non renseigné, un fichier
+  temporaire.)
+
+- rda_filename:
+
+  name of the rda file (with extension). If not filled in,
+  `asc_filename` with the extension "rda" instead of "asc".  
+  (nom du fichier rda (avec extension). Si non renseigné, `asc_filename`
+  avec l'extension "rda" à la place de "asc".)
+
+- weight_var:
+
+  name of the weight variable.  
+  (nom de la variable de poids.)
+
+- holding_var:
+
+  nom de la variable de holding. (name of the holding variable.)  
+
+- decimals:
+
+  minimum number of decimals to display (see section 'Number of of
+  decimals'). (nombre minimal de décimales à afficher (voir section
+  'Number of of decimals').)
+
+- hrc:
+
+  information about the hierarchical variables (see section section
+  'Hierarchical variables').  
+  (informations sur les variables hiérarchiques (voir section
+  'Hierarchical variables').)
+
+- hierleadstring:
+
+  character which, repeated n times, indicates that the value is at n
+  levels deep in the hierarchy.  
+  (caractère qui, répété n fois, indique que la valeur est à n niveaux
+  de profondeur dans la hiérarchie.)
+
+- totcode:
+
+  code(s) for the total of a categorical variable (see section 'Specific
+  parameters' for the syntax of this parameter). The variables not
+  specified (neither by default nor explicitly) will be assigned the
+  value of `rtauargus.totcode`.  
+  (code(s) pour le total d'une variable catégorielle (voir section
+  'Specific parameters' pour la syntaxe de ce paramètre). Les variables
+  non spécifiées (ni par défaut, ni explicitement) se verront attribuer
+  la valeur de `rtauargus.totcode`.)
+
+- missing:
+
+  code(s) for a missing value (see section 'Specific parameters' for the
+  syntax of this parameter).  
+  (code(s) pour une valeur manquante (voir section 'Specific parameters'
+  pour la syntaxe de ce paramètre).)
+
+- codelist:
+
+  file(s) containing labels for categorical variables (see section
+  'Specific parameters' for the syntax of this parameter).  
+  (fichier(s) contenant les libellés des variables catégorielles (voir
+  section 'Specific parameters' pour la syntaxe de ce paramètre).)
+
+- request:
+
+  (not yet implemented - pas encore implémenté)
+
+## Valeur de retour
+
+Returns the names of the asc and rda files as a list (invisibly).
+invisibly). Empty columns (filled with `NA` or empty strings) are not
+strings) will not be exported to the asc file. A warning message will
+list the affected columns.  
+(Renvoie les noms des fichiers asc et rda sous forme de liste (de
+manière invisible). Les colonnes vides (remplies de `NA` ou de chaînes
+de caractères vides) ne seront pas exportées dans le fichier asc. Un
+message d'avertissement listera les colonnes concernées.)
+
+## Specific parameters
+
+The parameters `totcode`, `missing` and `codelist` are to be filled in
+as a vector indicating the value to take for each variable.
+
+The names of the elements of the vector give the variable concerned, the
+elements of the vector give the value of the parameter for Tau-Argus. An
+unnamed element element will be the default value, which will be
+assigned to all variables that can take this parameter.
+
+For example :
+
+- `totcode = "All"` : écrit `<TOTCODE> "All"` for all categorical
+  variables
+
+- `totcode = c("All", GEO = "France")` : idem, except for the `GEO`
+  variable
+
+(Les paramètres `totcode`, `missing` et `codelist` sont à renseigner
+sous la forme d'un vecteur indiquant la valeur à prendre pour chaque
+variable.
+
+Les noms des éléments du vecteur donnent la variable concernée, les
+éléments du vecteur donnent la valeur du paramètre pour Tau-Argus. Un
+élément non nommé constituera la valeur par défaut, qui sera attribuée à
+toutes les variables pouvant prendre ce paramètre.
+
+Par exemple :
+
+- `totcode = "Ensemble"` : écrit `<TOTCODE> "Ensemble"` pour toutes les
+  variables catégorielles
+
+- `totcode = c("Ensemble", GEO = "France")` : idem, sauf pour la
+  variable `GEO`
+
+)
+
+## Hierarchical variables
+
+The parameter `hrc` follows the same syntax rules as `totcode`,
+`missing` and `codelist` (named vector containing as many elements as
+there are variables to describe). It also has the particularity to
+accept several ways of specifying the values associated with the
+hierarchical variables.
+
+To define a hierarchy based on the positions of characters
+(**hierierlevels**), pass a sequence of integers separated by spaces.
+
+*Example :* `c(CODECOM = "2 3 0 0 0")`
+
+If the hierarchy is defined in a separate hrc file (**hiercodelist**),
+the function expects the location of this file (and a possible
+`hiercodelist` if it differs from the default option of the package). In
+this case, you can write explicitly the path to an existing file file
+(`c(A38 = "a38.hrc")`), but also make a call to
+[`write_hrc()`](https://inseefrlab.github.io/rtauargus/reference/write_hrc.md)
+which will generate an hrc file from microdata.
+
+*Example :* `c(A38 = write_hrc(microdata, c("A38", "A21", "A10")))`
+
+A shortcut for this call is to write the variables constituting the
+hierarchy separated by "\>". In this case, the microdata and
+hierleadstring that
+[`write_hrc()`](https://inseefrlab.github.io/rtauargus/reference/write_hrc.md)
+uses are those declared in `micro_asc_rda()`.
+
+*Example :* `c(A38 = "A38 > A21 > A10")` *(number of spaces any before
+and after the "\>")*
+
+The last two methods require the creation of a temporary file. For a
+reusable hrc file, it is necessary to create it beforehand using
+[`write_hrc()`](https://inseefrlab.github.io/rtauargus/reference/write_hrc.md).
+
+The three methods require that the elements of the vector in parameter
+be named (with the name of the variable), even if there is only one
+element.
+
+(Le paramètre `hrc` obéit aux mêmes règles de syntaxe que `totcode`,
+`missing` et `codelist` (vecteur nommé contenant autant d'éléments que
+de variables à décrire). Il présente de plus la particularité d'accepter
+plusieurs façons de spécifier les valeurs associées aux variables
+hiérarchiques.
+
+Pour définir une hiérarchie basée sur les positions des caractères
+(**hierlevels**), passer une suite de nombre entiers séparés par des
+espaces.
+
+Si la hiérarchie est définie dans un fichier hrc à part
+(**hiercodelist**), la fonction attend l'emplacement de ce fichier (et
+un éventuel `hierleadstring` s'il diffère de l'option par défaut du
+package). Dans ce cas, on peut écrire explicitement le chemin vers un
+fichier existant (`c(A38 = "a38.hrc")`), mais aussi passer un appel à
+[`write_hrc()`](https://inseefrlab.github.io/rtauargus/reference/write_hrc.md)
+qui génèrera un fichier hrc à partir de microdonnées.
+
+Un raccourci pour cet appel est d'écrire les variables constituant la
+hiérarchie séparées par des "\>". Dans ce cas, les microdonnées et
+hierleadstring qu'utilise
+[`write_hrc()`](https://inseefrlab.github.io/rtauargus/reference/write_hrc.md)
+sont ceux déclarés dans `micro_asc_rda`.
+
+*Exemple :* `c(A38 = "A38 > A21 > A10")` *(nombre d'espaces quelconque
+avant et après les "\>")*
+
+Les deux dernières méthodes passent par la création d'un fichier
+temporaire. Pour un fichier hrc réutilisable, il est nécessaire de le
+créer au préalable à l'aide de
+[`write_hrc()`](https://inseefrlab.github.io/rtauargus/reference/write_hrc.md).
+
+Les trois méthodes nécessitent que les éléments du vecteur en paramètre
+soient nommés (avec le nom de la variable), même s'il n'y a qu'un seul
+élément.)
+
+## Number of decimals
+
+The parameter `decimals` indicates the minimum number of decimals to be
+appear in the output file (whatever the number of decimals actually
+present in `microdata`). It applies to all real variables (double) but
+not to integer variables (integer). For add zeros to an integer
+variable, convert it with `as.double` beforehand.
+
+The digits after the decimal point may be incorrect in the asc file if
+the total number of digits (before or after the decimal separator) is
+greater than 15. See
+[`gdata::write.fwf()`](https://rdrr.io/pkg/gdata/man/write.fwf.html)
+(function used to writing the asc file) for more details.  
+
+(Le paramètre `decimals` indique le nombre minimal de décimales à faire
+figurer dans le fichier en sortie (quel que soit le nombre de décimales
+effectivement présent dans `microdata`). Il s'applique à toutes les
+variables réelles (double) mais pas aux variables entières (integer).
+Pour ajouter des zéros à une variable entière, la convertir avec
+`as.double` au préalable.
+
+Les chiffres après la virgule peuvent être incorrects dans le fichier
+asc si le nombre total de chiffres (avant ou après le séparateur
+décimal) est supérieur à 15. Voir
+[`gdata::write.fwf()`](https://rdrr.io/pkg/gdata/man/write.fwf.html)
+(fonction utilisée pour écrire le fichier asc) pour plus de détails.)
+
+## See also
+
+The function
+[`micro_rtauargus()`](https://inseefrlab.github.io/rtauargus/reference/micro_rtauargus.md),
+which uses this function and inherits its parameters.  
+(La fonction
+[`micro_rtauargus()`](https://inseefrlab.github.io/rtauargus/reference/micro_rtauargus.md),
+qui utilise cette fonction et hérite de ses paramètres.)
+
+## Exemples
+
+``` r
+# dummy data/donnees fictives
+micro_df <-
+  data.frame(
+    GEO   = c("443", "541", "543"),
+    A10   = c( "AZ",  "BE",  "BE"),
+    A21   = c(  "A",   "B",   "C"),
+    DIPL  = c( "01",  "??",  "02"),
+    CA    = c(  100,     0,     7),
+    POIDS = c(    1,  2.71,   4.2)
+  )
+
+# creation asc + rda
+res <-
+  micro_asc_rda(
+    microdata  = micro_df,
+    weight_var = "POIDS",
+    decimals   = 1,
+    hrc        = c(A21 = "A21>A10", GEO = "2 1 0", DIPL = "dipl.hrc"),
+    totcode    = c(GEO = "France"),
+    missing    = c(DIPL = "??")
+  )
+
+# Content of output files/visualisation des fichiers produits
+file.show(
+  res$asc_filename, res$rda_filename,
+  header = unlist(res),
+  pager = "internal"
+)
+#> Warning: erreur lors de l'exécution d'une commande
+```

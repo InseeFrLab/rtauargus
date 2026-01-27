@@ -1,0 +1,857 @@
+# &tau;-Argus from R - microdata version
+
+## Introduction
+
+### Presentation of the package
+
+The *rtauargus* package provides an **R** interface for **τ-Argus**. It
+allows to:
+
+- create inputs (asc and rda files) from data in R format;
+- generate the sequence of instructions to be executed in batch mode
+  (arb file) ;
+- launch a batch τ-Argus in command line;
+- retrieve the results in R.
+
+These different operations can be performed at once, but also in a
+modular way. They allow the integration of tasks performed by τ-Argus in
+a processing chain written in R.
+
+The syntax of some of the arguments closely matches the *batch* syntax
+of τ-Argus. This allows you to use a large number of features without
+multiply the arguments of the functions. The package can also be adapted
+to more easily to possible modifications of the software (new available
+methods, additional options…). Syntax rules for the batch writing are in
+the reference manual of τ-Argus.
+
+> The package was developed on the basis of open source versions of τ
+> Argus (versions 4.1 and higher), especially the latest version
+> available during development (4.2.3).\_
+>
+> It is not compatible with version 3.5.\*\*\_
+>
+> For the moment, **only microdata are accepted** as input (not data
+> already tabulated).
+
+### Purpose of this document
+
+This document aims to show how the main features of the can be
+articulated, based on relatively simple examples. A detailed
+documentation of a function (exhaustive list of arguments, technical
+aspects…) is available via the dedicated help section.
+
+For the following demonstration, a fictitious microdata set will be used
+:
+
+``` r
+microdata <-
+  data.frame(
+    V1    = c("A", "A", "A", "A", "B", "B", "B", "C"),
+    V2    = c("Y", "Z"),
+    V3    = c("T1", "T2", "T1", "S_", "T1", "T1", "T1", "S_"),
+    VAL   = c(100, 0, 7, 25, 0, 4, 0, 5),
+    WEIGHT = c(1, 2.71, 4.2, 1)
+  )
+microdata
+#>   V1 V2 V3 VAL WEIGHT
+#> 1  A  Y T1 100   1.00
+#> 2  A  Z T2   0   2.71
+#> 3  A  Y T1   7   4.20
+#> 4  A  Z S_  25   1.00
+#> 5  B  Y T1   0   1.00
+#> 6  B  Z T1   4   2.71
+#> 7  B  Y T1   0   4.20
+#> 8  C  Z S_   5   1.00
+```
+
+[summary ↑](#TOC "Back to summary")
+
+## Installation
+
+The following installations must be carried out before the first use
+(and more later).
+
+### τ-Argus
+
+The functions of *rtauargus* calling τ-Argus require that this software
+is accessible from the workstation. The download of τ-Argus can be found
+on the [dedicated page](https://research.cbs.nl/casc/tau.htm) of the
+Dutch statistical office.
+
+However, not all functions execute τ-Argus (creation of microdata…). Not
+having it on your computer is not a problem.
+
+### Dependencies
+
+To work, *rtauargus* depends on other R packages. These have to be
+installed beforehand (in brackets the minimum versions required).
+
+    - purrr (>= 0.2)
+    - dplyr (>= 0.7)
+    - tidyr
+    - data.table
+    - gdata,
+    - stringr
+    - rlang
+    - zoo
+    - sdcHierarchies
+    - igraph
+    - lifecycle
+
+### Package
+
+The *rtauargus* package is ready to be installed.
+
+[summary ↑](#TOC "Back to summary")
+
+## Quick start
+
+This part explains how to perform a minimal configuration of the package
+and how to apply statistical confidentiality in a single instruction.
+
+### Location of τ-Argus
+
+When the package is loaded, the console displays some information:
+
+``` r
+library(rtauargus)
+```
+
+In particular, a plausible location for the τ-Argus software is
+predefined. It is possible to change it for the duration of the R
+session. A message indicates that this location is unknown, so we modify
+it:
+
+``` r
+loc_tauargus <- "Y:/Logiciels/TauArgus/TauArgus4.2.3/TauArgus.exe"
+
+options(rtauargus.tauargus_exe = loc_tauargus)
+```
+
+After this small adjustment, the package is ready to be used.
+
+> For a more customized configuration, see the section
+> [package-options](#package-options).\_
+
+### Function `rtauargus`.
+
+The function `micro_rtauargus` performs a processing and retrieves the
+results immediately in R.
+
+Completely abstaining from the internal workings of τ-Argus, it allows
+to perform the entire process in a single instruction (specifically, all
+the intermediate files are created in a temporary directory which is
+deleted at the end of the R session).
+
+`rtauargus` takes as mandatory arguments :
+
+- a data.frame containing the microdata ;
+- a list of 1 to 10 tabs composed of data.frame variables (a alone in
+  the example below);
+- the rule(s) to be applied for primary secrecy ;
+- the method(s) for deleting the secondary secret boxes.
+
+The last two arguments use the batch syntax τ-Argus.
+
+#### Minimalist example
+
+``` r
+micro_rtauargus(
+  microdata = microdata,
+  explanatory_vars = "V1",
+  safety_rules = "FREQ(3,10)",
+  suppress = "GH(1,100)"
+)
+#> Start of batch procedure; file: C:\Users\KQCFFL\AppData\Local\Temp\Rtmpm05wlj\RTA_13aa85f527816.arb
+#> <OPENMICRODATA> "C:\Users\KQCFFL\AppData\Local\Temp\Rtmpm05wlj\RTA_13aa866f06f26.asc"
+#> <OPENMETADATA> "C:\Users\KQCFFL\AppData\Local\Temp\Rtmpm05wlj\RTA_13aa866f06f26.rda"
+#> <SPECIFYTABLE> "V1"|"<freq>"||
+#> <SAFETYRULE> FREQ(3,10)
+#> <READMICRODATA>
+#> Start explore file: C:\Users\KQCFFL\AppData\Local\Temp\Rtmpm05wlj\RTA_13aa866f06f26.asc
+#> Start computing tables
+#> Table: V1 | <freq> has been specified
+#> Tables have been computed
+#> Micro data file read; processing time 0 seconds
+#> Tables from microdata have been read
+#> <SUPPRESS> GH(1,100)
+#> Start of the hypercube protection for table V1 | <freq>
+#> End of hypercube protection. Time used 1 seconds
+#>                    Number of suppressions: 1
+#> The hypercube procedure has been applied
+#>                    1 cells have been suppressed
+#> <WRITETABLE> (1,4,AS+SE+,"C:\Users\KQCFFL\AppData\Local\Temp\Rtmpm05wlj\RTA_13aa826e25069.sbs")
+#> Table: V1 | <freq> has been written
+#>                    Output file name: C:\Users\KQCFFL\AppData\Local\Temp\Rtmpm05wlj\RTA_13aa826e25069.sbs
+#> End of TauArgus run
+#> NULL
+```
+
+As no response variable is given, a count is made (“\<freq\>”).
+
+#### Elaborate example
+
+Other parameters are available. For example, you can add the previous
+instruction with :
+
+- a second tabulation (the two tables will be treated independently) ;
+- a parameter allowing to not display the status of the secret for the
+  FIRST TABLE;
+- a parameter to hide the log of τ-Argus in the console.
+
+In addition, the tables produced are no longer simply sent to the
+console. They are stored in a `secret1` object (a list consisting of two
+data.frame), which we can continue to manipulate.
+
+``` r
+secret1 <-
+  micro_rtauargus(
+    microdata = microdata,
+    explanatory_vars = list("V1", c("V1", "V2")), # 2 tabs (V1, V1xV2)
+    safety_rules = "FREQ(3,10)",
+    suppress = "GH(.,100)", # . replaces the tab number
+    output_options = c("", "AS+"), # no status for the 1st array
+    show_batch_console = FALSE # to hide the log
+  )
+#> Start of batch procedure; file: C:\Users\KQCFFL\AppData\Local\Temp\Rtmpm05wlj\RTA_13aa821eb5b19.arb
+#> <OPENMICRODATA> "C:\Users\KQCFFL\AppData\Local\Temp\Rtmpm05wlj\RTA_13aa85d87423f.asc"
+#> <OPENMETADATA> "C:\Users\KQCFFL\AppData\Local\Temp\Rtmpm05wlj\RTA_13aa85d87423f.rda"
+#> <SPECIFYTABLE> "V1"|"<freq>"||
+#> <SAFETYRULE> FREQ(3,10)
+#> <SPECIFYTABLE> "V1""V2"|"<freq>"||
+#> <SAFETYRULE> FREQ(3,10)
+#> <READMICRODATA>
+#> Start explore file: C:\Users\KQCFFL\AppData\Local\Temp\Rtmpm05wlj\RTA_13aa85d87423f.asc
+#> Start computing tables
+#> Table: V1 | <freq> has been specified
+#> Table: V1 x V2 | <freq> has been specified
+#> Tables have been computed
+#> Micro data file read; processing time 0 seconds
+#> Tables from microdata have been read
+#> <SUPPRESS> GH(1,100)
+#> Start of the hypercube protection for table V1 | <freq>
+#> End of hypercube protection. Time used 1 seconds
+#>                    Number of suppressions: 1
+#> The hypercube procedure has been applied
+#>                    1 cells have been suppressed
+#> <WRITETABLE> (1,4,,"C:\Users\KQCFFL\AppData\Local\Temp\Rtmpm05wlj\RTA_13aa861ea459a.sbs")
+#> Table: V1 | <freq> has been written
+#>                    Output file name: C:\Users\KQCFFL\AppData\Local\Temp\Rtmpm05wlj\RTA_13aa861ea459a.sbs
+#> <SUPPRESS> GH(2,100)
+#> Start of the hypercube protection for table V1 x V2 | <freq>
+#> End of hypercube protection. Time used 1 seconds
+#>                    Number of suppressions: 2
+#> The hypercube procedure has been applied
+#>                    2 cells have been suppressed
+#> <WRITETABLE> (2,4,AS+,"C:\Users\KQCFFL\AppData\Local\Temp\Rtmpm05wlj\RTA_13aa844945238.sbs")
+#> Table: V1 x V2 | <freq> has been written
+#>                    Output file name: C:\Users\KQCFFL\AppData\Local\Temp\Rtmpm05wlj\RTA_13aa844945238.sbs
+#> End of TauArgus run
+```
+
+``` r
+
+secret1
+#> NULL
+```
+
+> Note on the writing `suppress = "GH(.,100)"` :\_
+>
+> The first parameter expected by τ-Argus is the tab number. Here, we
+> want to apply the same method of deleting the secondary secret to each
+> table. If there is only one method and several tabs, the characters
+> between the parenthesis and the first comma are ignored and the
+> automatically calculated tabulation numbers.
+
+The function help only describes the 4 mandatory arguments. The
+arguments available are documented in the basic functions the
+constituent (`micro_asc_rda`, `micro_arb`, `run_arb`, `import`). All
+argument of these functions can be used in `rtauargus`. Their The
+following section provides details on the operation of the system.
+
+[summary ↑](#TOC "Back to summary")
+
+## Process decomposition
+
+Using the `micro_rtauargus` function is convenient in terms of lines of
+code to enter. However, this approach can be quite cumbersome if the
+tables to be secreted have in common a certain number of
+characteristics.
+
+For example, we would like to generate only the asc and rda files, then
+run several batches using these same files. This was not the case in the
+examples seen so far, where all intermediate files were systematically
+regenerated, even if their content was identical.
+
+To do this, we can use the functions called successively by the function
+`micro_rtauargus`, namely :
+
+> **[micro_asc_rda()](#function-micro_asc_rda)   → 
+> [micro_arb()](#function-micro_arb)   →  [run_arb()](#function-run_arb)
+>   →   [import()](#function-import)**
+
+### \[1\] Function `micro_asc_rda`.
+
+Argus only accepts microdata as input in a well-defined form:
+
+- a text file with fixed length columns, without column headers (.asc
+  file) ;
+- a variable description file (.rda file).
+
+The function `micro_asc_rda` produces these two files from a data.frame.
+
+#### Minimalist example
+
+Only the data and the name of the asc file are entered here. As the name
+of the metadata file is not specified, it takes the same name as the
+asc, but with the extension .rda.
+
+``` r
+micro_asc_rda(microdata, asc_filename = "Z:/microdata.asc")
+```
+
+Content of the files created :
+
+``` r
+file.show("Z:/microdata.asc", "Z:/microdata.rda", pager = "internal")
+```
+
+     microdata.asc     microdata.rda      
+                                          
+     A Y T1 100 1.00   V1 1 1             
+     A Z T2   0 2.71     <RECODEABLE>     
+     A Y T1   7 4.20     <TOTCODE> "Total"
+     A Z S_  25 1.00   V2 3 1             
+     B Y T1   0 1.00     <RECODEABLE>     
+     B Z T1   4 2.71     <TOTCODE> "Total"
+     B Y T1   0 4.20   V3 5 2             
+     C Z S_   5 1.00     <RECODEABLE>     
+                         <TOTCODE> "Total"
+                       VAL 8 3            
+                         <NUMERIC>        
+                         <DECIMALS> 0     
+                       WEIGHT 12 4        
+                         <NUMERIC>        
+                         <DECIMALS> 2     
+
+> The package functions accept file locations in the form of relative
+> path. For example, `asc_filename = "microdata.asc"` with a working
+> directory on `Z:/` is equivalent to
+> `asc_filename = "Z:/microdata.asc"`.\_
+
+#### Elaborate example
+
+We add to the previous example :
+
+- a weight variable ;
+- information on a hierarchical variable ;
+- differentiated codes for totals;
+- a minimum number of decimal places to be written for numerical
+  variables.
+
+``` r
+micro_asc_rda(
+  microdata = microdata,
+  asc_filename = "Z:/microdata.asc",
+  weight_var = "WEIGHT",
+  hrc = c(V3 = "1 1"),
+  totcode = c("Ensemble", V2 = "TOTAL"),
+  decimals = 1
+)
+```
+
+Content of the files created :
+
+``` r
+file.show("Z:/microdata.asc", "Z:/microdata.rda", pager = "internal")
+```
+
+     microdata.asc       microdata.rda         
+                                               
+     A Y T1 100.0 1.00   V1 1 1                
+     A Z T2   0.0 2.71     <RECODEABLE>        
+     A Y T1   7.0 4.20     <TOTCODE> "Ensemble"
+     A Z S_  25.0 1.00   V2 3 1                
+     B Y T1   0.0 1.00     <RECODEABLE>        
+     B Z T1   4.0 2.71     <TOTCODE> "TOTAL"   
+     B Y T1   0.0 4.20   V3 5 2                
+     C Z S_   5.0 1.00     <RECODEABLE>        
+                           <TOTCODE> "Ensemble"
+                           <HIERARCHICAL>      
+                           <HIERLEVELS> 1 1    
+                         VAL 8 5               
+                           <NUMERIC>           
+                           <DECIMALS> 1        
+                         WEIGHT 14 4           
+                           <WEIGHT>            
+                           <DECIMALS> 2        
+
+#### Temporary files
+
+For any parameter `*_filename` not filled, the generated files are
+placed in a temporary folder. It is possible to retrieve the location
+and name (random) of these files in the return value of the function.
+
+``` r
+names_asc_rda <- micro_asc_rda(microdata)
+names_asc_rda
+#> $asc_filename
+#> [1] "C:\\Users\\KQCFFL\\AppData\\Local\\Temp\\Rtmpm05wlj\\RTA_13aa875d56ea.asc"
+#> 
+#> $rda_filename
+#> [1] "C:\\Users\\KQCFFL\\AppData\\Local\\Temp\\Rtmpm05wlj\\RTA_13aa875d56ea.rda"
+```
+
+[summary ↑](#TOC "Back to summary")
+
+### \[2\] Function `micro_arb`.
+
+This function builds a batch file executable by τ-Argus. It takes as
+mandatory arguments:
+
+- asc file name ;
+- tab(s) (up to 10, as a list) ;
+- primary secrecy rule(s);
+- method(s) for managing secondary secrecy.
+
+The function also needs the name of the rda file. If it is not
+specified, the same name as the asc file with the .rda extension is
+used.
+
+> The function does not check the existence of the specified directories
+> or files. It only generates a file of instructions, without evaluating
+> the validity.\_
+
+#### Minimalist example
+
+``` r
+micro_arb(
+  arb_filename = "Z:/microdata.arb",
+  asc_filename = "Z:/microdata.asc",
+  explanatory_vars = "V1",
+  safety_rules = "FREQ(3,10)",
+  suppress = "GH(.,100)",
+  output_names = "Z:/results/secretV1.csv"
+)
+```
+
+Content of the file created :
+
+``` r
+file.show("Z:/microdata.arb", pager = "internal")
+```
+
+    // Batch generated by package *rtauargus*
+    // (2025-02-17 12:14:22 CET)
+    <OPENMICRODATA> "Z:\microdata.asc"
+    <OPENMETADATA> "Z:\microdata.rda"
+    <SPECIFYTABLE> "V1"|"<freq>"||
+    <SAFETYRULE> FREQ(3,10)
+    <READMICRODATA>
+    <SUPPRESS> GH(1,100)
+    <WRITETABLE> (1,4,AS+SE+,"Z:\results\secretV1.csv")
+
+#### Elaborate example
+
+The previous example is completed with :
+
+- a second tab ;
+- a response variable to be summed (instead of a count) ;
+- the addition of 85% dominance for the second table;
+- a weighting in the first table (but not in the second);
+- deletion of empty crossovers in both tables (SE+).
+
+Passing a single value for an option applies the same treatment to each
+tab. For differentiated options, it is necessary to pass a vector
+containing as many values as there are tabs.
+
+\`\`{r arb2} micro_arb( arb_filename = “Z:/microdata.arb”, asc_filename
+= “Z:/microdata.asc”, explanatory_vars = list(“V1”, c(“V2”, “V3”)),
+response_var = “VAL”, safety_rules = c(“FREQ(3,10)”,
+“FREQ(3,10)\|NK(1,85)”), weighted = c(TRUE, FALSE), suppress =
+“GH(.,100)”, output_options = “AS+SE+” )
+
+
+    ``` r
+    file.show("Z:/microdata.arb", pager = "internal")
+
+    // Batch generated by package *rtauargus*
+    // (2025-02-17 12:14:22 CET)
+    <OPENMICRODATA> "Z:\microdata.asc"
+    <OPENMETADATA> "Z:\microdata.rda"
+    <SPECIFYTABLE> "V1"|"<freq>"||
+    <SAFETYRULE> FREQ(3,10)
+    <READMICRODATA>
+    <SUPPRESS> GH(1,100)
+    <WRITETABLE> (1,4,AS+SE+,"Z:\results\secretV1.csv")
+
+#### Temporary files
+
+In the previous example, the output file names (`output_names`) were not
+specified, which led to the generation of file names temporary.
+Specifying the name of the .arb file is not mandatory either. These
+information can be retrieved from the return value of the function.
+
+``` r
+infos_arb <-
+  micro_arb(
+    asc_filename = "Z:/microdata.asc",
+    explanatory_vars = list("V1", c("V2", "V3")),
+    safety_rules = "FREQ(3,10)",
+    suppress = "GH(.,100)",
+    output_type = "4"
+  )
+infos_arb
+#> $arb_filename
+#> [1] "C:\\Users\\KQCFFL\\AppData\\Local\\Temp\\Rtmpm05wlj\\RTA_13aa83d136448.arb"
+#> 
+#> $output_names
+#> [1] "C:\\Users\\KQCFFL\\AppData\\Local\\Temp\\Rtmpm05wlj\\RTA_13aa81a11772c.sbs"
+#> [2] "C:\\Users\\KQCFFL\\AppData\\Local\\Temp\\Rtmpm05wlj\\RTA_13aa822675f41.sbs"
+```
+
+[summary ↑](#TOC "Back to summary")
+
+### \[3\] Function `run_arb`
+
+Now that the instructions have been generated in an .arb file, we can
+submit it to τ-Argus in batch mode. We get the list of tables secreted :
+
+``` r
+secret2 <- run_arb("Z:/microdata.arb", missing_dir = "create")
+#> Start of batch procedure; file: Z:\microdata.arb
+#> <OPENMICRODATA> "Z:\microdata.asc"
+#> <OPENMETADATA> "Z:\microdata.rda"
+#> <SPECIFYTABLE> "V1"|"<freq>"||
+#> <SAFETYRULE> FREQ(3,10)
+#> <READMICRODATA>
+#> Start explore file: Z:\microdata.asc
+#> Start computing tables
+#> Table: V1 | <freq> has been specified
+#> Tables have been computed
+#> Micro data file read; processing time 0 seconds
+#> Tables from microdata have been read
+#> <SUPPRESS> GH(1,100)
+#> Start of the hypercube protection for table V1 | <freq>
+#> End of hypercube protection. Time used 1 seconds
+#>                    Number of suppressions: 1
+#> The hypercube procedure has been applied
+#>                    1 cells have been suppressed
+#> <WRITETABLE> (1,4,AS+SE+,"Z:\results\secretV1.csv")
+#> Table: V1 | <freq> has been written
+#>                    Output file name: Z:\results\secretV1.csv
+#> End of TauArgus run
+```
+
+``` r
+
+secret2
+#> NULL
+```
+
+`run_arb` is the only function in the package that runs τ-Argus. It
+requires that the software be accessible from the workstation.
+
+Only the `arb_filename` argument is mandatory, because all the
+information are present in the .arb file. Optional parameters are also
+available:
+
+- `missing_dir` : action to perform if a folder where the result will be
+  written does not exist (trigger an error or create it)
+- `tauargus_exe` : to change the executable (override the
+  `rtauargus.tauargus_exe` the time of the function) ;
+- `logbook` : location and name of the file containing the error log;
+- show_batch_on_console\` : to display or not the batch progress in the
+  console ;
+- `import` : if disabled, the function only generates text files without
+  importing them into R (see next section for details).
+
+If the tabs have been given a name in `micro_arb`, these names are used
+for the list of data.frames output from `run_arb` (no names defined in
+the example above).
+
+> Checks are made before the actual launch of τ-Argus : existence of the
+> software on the workstation, asc and rda files, folders where write
+> the results, variables to be used (crosses, variable of response, …)
+> in the metadata (rda file).\_
+
+[summary ↑](#TOC "Back to summary")
+
+### \[4\] Import function
+
+This function imports the results produced by τ-Argus (text files) to
+from the information contained in an arb file. It therefore requires
+that that the batch has been completed without error and that the files
+are still present.
+
+For this last reason, the `import` function is typically called from
+`run_arb` by setting `import = TRUE`. It can also be used from
+independently (e.g. if you don’t want to restart a batch that has took a
+long time to execute).
+
+``` r
+secret2 <- import("Z:/microdata.arb")
+# produces the same result as run_arb("Z:/microdata.arb", import = TRUE)
+```
+
+#### Accepted formats
+
+It is only possible (at the moment) to import results of type :
+
+- 2: csv for pivot-table
+- 4: sbs output format
+
+If the import is impossible for a given tab, an empty data.frame is
+returned (with a warning message).
+
+#### Tab attributes
+
+Each data.frame in the list is associated with a set of attributes, some
+metadata keeping track of the specifications passed to τ-Argus.
+
+For example, for `secret2[[2]]` (the second array of `secret2`), we have
+the parameters that were passed to the function (the other correspond to
+default values of the package).
+
+``` r
+str(secret2[[2]])
+#>  NULL
+```
+
+[summary ↑](#TOC "Back to summary")
+
+## Package options
+
+The package options define the default behavior of the functions.
+
+These options are used if a mandatory argument of a function is not
+filled in. They allow not to repeat systematically the same parameter at
+each call of a function. The option name is the name of the argument of
+a function preceded by `rtauargus.` :
+
+> For example, `rtauargus.decimals` will be the value used if the
+> argument The `decimals` of the `micro_asc_rda` function is not filled
+> by the user.
+
+On loading, the package assigns a default value to all options of
+rtauargus that are not yet declared. The options already defined by the
+user keep their values.
+
+The available options and their default values are listed below:
+
+| Option                       | Default value                        | Type      | Function concerned |
+|:-----------------------------|:-------------------------------------|:----------|-------------------:|
+| rtauargus.decimals           | 0                                    | integer   |            tab_rda |
+| rtauargus.decimals           | 0                                    | integer   |      micro_asc_rda |
+| rtauargus.totcode            | “Total”                              | character |            tab_rda |
+| rtauargus.totcode            | “Total”                              | character |      micro_asc_rda |
+| rtauargus.missing            | “”                                   | character |      micro_asc_rda |
+| rtauargus.hierleadstring     | “@”                                  | character |      micro_asc_rda |
+| rtauargus.hierleadstring     | “@”                                  | character |            tab_rda |
+| rtauargus.separator          | “,”                                  | character |            tab_arb |
+| rtauargus.separator          | “,”                                  | character |            tab_rda |
+| rtauargus.response_var       | “\<freq\>”                           | character |          micro_arb |
+| rtauargus.weighted           | FALSE                                | logical   |          micro_arb |
+| rtauargus.linked             | FALSE                                | logical   |          micro_arb |
+| rtauargus.output_type        | “4”                                  | character |            tab_arb |
+| rtauargus.output_type        | “4”                                  | character |          micro_arb |
+| rtauargus.output_options     | “”                                   | character |          micro_arb |
+| rtauargus.output_options     | “”                                   | character |            tab_arb |
+| rtauargus.missing_dir        | “stop”                               | character |            run_arb |
+| rtauargus.tauargus_exe       | “Y:/Logiciels/TauArgus/TauArgus.exe” | character |            run_arb |
+| rtauargus.show_batch_console | FALSE                                | logical   |            run_arb |
+| rtauargus.import             | FALSE                                | logical   |            run_arb |
+| rtauargus.is_tabular         | TRUE                                 | logical   |            run_arb |
+
+### Display
+
+To view the options set for the current session:
+
+``` r
+rtauargus_options()
+#> $rtauargus.decimals
+#> [1] 0
+#> 
+#> $rtauargus.hierleadstring
+#> [1] "@"
+#> 
+#> $rtauargus.import
+#> [1] FALSE
+#> 
+#> $rtauargus.is_tabular
+#> [1] TRUE
+#> 
+#> $rtauargus.linked
+#> [1] FALSE
+#> 
+#> $rtauargus.missing
+#> [1] ""
+#> 
+#> $rtauargus.missing_dir
+#> [1] "stop"
+#> 
+#> $rtauargus.output_options
+#> [1] "AS+SE+"
+#> 
+#> $rtauargus.output_type
+#> [1] "4"
+#> 
+#> $rtauargus.response_var
+#> [1] "<freq>"
+#> 
+#> $rtauargus.separator
+#> [1] ","
+#> 
+#> $rtauargus.show_batch_console
+#> [1] FALSE
+#> 
+#> $rtauargus.tauargus_exe
+#> [1] "Y:/Logiciels/TauArgus/TauArgus4.2.3/TauArgus.exe"
+#> 
+#> $rtauargus.totcode
+#> [1] "Total"
+#> 
+#> $rtauargus.weighted
+#> [1] FALSE
+```
+
+The values are identical to the default values, except for the location
+of τ-Argus, which has been previously modified. They appear in the order
+alphabetical.
+
+[summary ↑](#TOC "Back to summary")
+
+### Modification, reset
+
+To modify one or more options, use the following syntax (the same as
+above) than the one used to modify the location of τ-Argus) :
+
+``` r
+options(
+  rtauargus.show_batch_console = FALSE,
+  rtauargus.output_options = "AS+SE+",
+  rtauargus.output_type = "4",
+  rtauargus.response_var = "VAL"
+)
+
+str(rtauargus_options())
+#> List of 15
+#>  $ rtauargus.decimals          : int 0
+#>  $ rtauargus.hierleadstring    : chr "@"
+#>  $ rtauargus.import            : logi FALSE
+#>  $ rtauargus.is_tabular        : logi TRUE
+#>  $ rtauargus.linked            : logi FALSE
+#>  $ rtauargus.missing           : chr ""
+#>  $ rtauargus.missing_dir       : chr "stop"
+#>  $ rtauargus.output_options    : chr "AS+SE+"
+#>  $ rtauargus.output_type       : chr "4"
+#>  $ rtauargus.response_var      : chr "VAL"
+#>  $ rtauargus.separator         : chr ","
+#>  $ rtauargus.show_batch_console: logi FALSE
+#>  $ rtauargus.tauargus_exe      : chr "Y:/Logiciels/TauArgus/TauArgus4.2.3/TauArgus.exe"
+#>  $ rtauargus.totcode           : chr "Total"
+#>  $ rtauargus.weighted          : logi FALSE
+```
+
+To reset certain options:
+
+``` r
+reset_rtauargus_options("rtauargus.response_var", "rtauargus.output_type")
+
+# It is possible to omit the prefix 'rtauargus.
+# The following instruction is equivalent:
+reset_rtauargus_options("response_var", "output_type")
+
+str(rtauargus_options())
+#> List of 15
+#>  $ rtauargus.decimals          : int 0
+#>  $ rtauargus.hierleadstring    : chr "@"
+#>  $ rtauargus.import            : logi FALSE
+#>  $ rtauargus.is_tabular        : logi TRUE
+#>  $ rtauargus.linked            : logi FALSE
+#>  $ rtauargus.missing           : chr ""
+#>  $ rtauargus.missing_dir       : chr "stop"
+#>  $ rtauargus.output_options    : chr "AS+SE+"
+#>  $ rtauargus.output_type       : chr "4"
+#>  $ rtauargus.response_var      : chr "<freq>"
+#>  $ rtauargus.separator         : chr ","
+#>  $ rtauargus.show_batch_console: logi FALSE
+#>  $ rtauargus.tauargus_exe      : chr "Y:/Logiciels/TauArgus/TauArgus4.2.3/TauArgus.exe"
+#>  $ rtauargus.totcode           : chr "Total"
+#>  $ rtauargus.weighted          : logi FALSE
+```
+
+To reset all values to default (including the path to τ-Argus modified
+at the beginning of the demonstration), do not specify any argument:
+
+``` r
+reset_rtauargus_options()
+```
+
+[summary ↑](#TOC "Back to summary")
+
+### Local or global reach
+
+Like any R function, the parameterization is done by specifying each of
+the arguments when the function is called (local scope).
+
+The option system of the package allows by the instructions
+`options(rtauargus.<option> = <value>)` to define options in a more
+global. Depending on where these instructions are written, the
+configuration will last more or less long:
+
+- in the script, for an effect on the current session only;
+- in a user configuration file (.Rprofile…), to allow a user to keep
+  track of his presets from a session on the other.
+
+The second way is **not recommended if the chain of treatment is
+intended to be reproducible**. Indeed, an identical script executed on
+two different machines could produce two results different.\_
+
+[summary ↑](#TOC "Back to summary")
+
+## Other information
+
+#### Other features
+
+Some features of the package are not mentioned in this getting started:
+
+- management of linked arrays (argument `linked` in `micro_arb`)
+- creation of hierarchical variables from microdata (function
+  `write_hrc`).
+- taking into account of apriori file (argument `apriori` in
+  `micro_arb`)
+- use of the `micro_rtauargus` function from microdata already under as
+  a text file (not data.frame)
+- optimized launch of a large number of crosses with the same parameters
+  (primary secrecy rules, secondary secrecy method, …) : function
+  `rtauargus_plus`
+
+See the help for these functions for more information.
+
+#### Ideas for the future
+
+- implement `request` parameters…
+- take into account tabulated input data
+- …
+
+#### Report a problem, suggest an improvement
+
+The package is under construction. All the features of τ-Argus have not
+been integrated (the purpose is not to integrate them all, only the most
+frequently used).
+
+For any return or error report, please use [this
+link](https://gitlab.insee.fr/outilsconfidentialite/rtauargus/-/issues)
+(click on **“New issue”**). Requires to be connected to gitlab-Insee.
+
+#### About this vignette
+
+- Author: **[Pierre-Yves Berrard](mailto:pierre-yves.berrard@insee.fr)**
+- Updated by: **[Julien Jamme](mailto:julien.jamme@insee.fr)**
+- Last update: **17/02/2025**
+- Version of rtauargus used: **1.2.999**
+- Version of τ-Argus used : **TauArgus 4.2.3**
+- R version used : **4.3.3**
+
+[summary ↑](#TOC "Back to summary")

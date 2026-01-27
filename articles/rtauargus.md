@@ -1,0 +1,507 @@
+# &tau;-Argus from R - tabular version
+
+``` r
+library(dplyr)
+```
+
+## Introduction
+
+### Presentation of the package
+
+The *rtauargus* package offers an **R** interface for **τ-Argus**. It
+allows to :
+
+- create inputs (asc, tab and rda files) from R data;
+- generate the sequence of instructions to be executed in batch mode
+  (arb file);
+- launch a batch τ-Argus ;
+- retrieve the results in R.
+
+The syntax of some of the arguments closely matches the *batch* syntax
+of τ-Argus. This allows a large number of functions to be used without
+multiplying the arguments of the functions. The package will also be
+able to adapt more easily to possible modifications of the software (new
+methods available, additional options…). The syntax rules for writing
+batch are given in the τ-Argus reference manual and will be specified in
+a dedicated help section.
+
+> The package was developed on the basis of open source versions of
+> τ-Argus (versions 4.2 and above), in particular the latest version
+> available at the time of development (4.2.3).
+>
+> It is not compatible with version 3.5.\*\*\_
+
+### Purpose of this document
+
+This document aims to explain the main functionalities of the package,
+using relatively simple examples. A detailed documentation of any
+function (exhaustive list of arguments, technical aspects…) is available
+*via* the dedicated help section.
+
+[summary ↑](#TOC "Return to summary")
+
+## Setup
+
+The following setup should be made before the first use (and no longer
+afterwards)
+
+### τ-Argus
+
+*rtauargus* fonctions using τ-Argus requires that the software can be
+used from the workstation. The github repository of τ-Argus is here:
+<https://github.com/sdcTools/tauargus>. The latest releases can be
+downloaded here: <https://github.com/sdcTools/tauargus/releases>.
+
+### Dependencies
+
+*rtauargus* requires some other R packages.Those are the dependencies to
+install.
+
+    • purrr (>= 0.2)
+    • dplyr (>= 0.7)
+    • tidyr
+    • data.table
+    • gdata,
+    • stringr
+    • rlang
+    • zoo
+    • sdcHierarchies
+    • igraph
+    • lifecycle
+
+The package *rtauargus* can be installed now.
+
+[sommaire ↑](#TOC "Return to summary")
+
+## Quick Start
+
+This section explains how to perform a minimal configuration of the
+package and how to apply suppressive methods in a single instruction.
+
+### Location of τ-Argus
+
+When loading the package, the console displays some information:
+
+``` r
+library(rtauargus)
+```
+
+In particular, a plausible location for the τ-Argus software is
+predefined. This can be changed for the duration of the R session, as
+follows:
+
+``` r
+loc_tauargus <- "Y:/Logiciels/TauArgus/TauArgus4.2.3/TauArgus.exe"
+
+options(rtauargus.tauargus_exe = loc_tauargus)
+```
+
+With this small adjustment done, the package is ready to be used.
+
+> *For a more customized configuration, see the specific vignettes*
+
+### Protecting a single tabular data with `tab_rtauargus()` function
+
+The
+[`tab_rtauargus()`](https://inseefrlab.github.io/rtauargus/reference/tab_rtauargus.md)
+function performs a full processing to protect the table and retrieves
+the results immediately in R.
+
+Completely abstracting from the inner workings of τ-Argus, it allows the
+entire processing to be made in a single instruction. All intermediate
+files are created in a local directory.
+
+[`tab_rtauargus()`](https://inseefrlab.github.io/rtauargus/reference/tab_rtauargus.md)
+requires the following arguments :
+
+- `tabular`: a data.frame containing the table ;
+- `dir_name`: the directory for the outputs;
+- `files_name`: all the τ-Argus files will be named with it (different
+  extensions);
+- `explanatory_vars`: the name of all explanatory variables in
+  `tabular`;
+- `secret_var` or `safety_rules`: the way to apply primary suppression
+  (explain later)
+- `totcode`: the code for total of each explanatory variable in
+  `tabular`
+
+All the arguments and their default options will be detailed ( where?).
+
+#### Minimal example
+
+For the following demonstration, a fictitious table will be used:
+
+``` r
+act_size <-
+  data.frame(
+    ACTIVITY = c("01","01","01","02","02","02","06","06","06","Total","Total","Total"),
+    SIZE = c("tr1","tr2","Total","tr1","tr2","Total","tr1","tr2","Total","tr1","tr2","Total"),
+    VAL = c(100,50,150,30,20,50,60,40,100,190,110,300),
+    N_OBS = c(10,5,15,2,5,7,8,6,14,20,16,36),
+    MAX = c(20,15,20,20,10,20,16,38,38,20,38,38)
+  )
+act_size
+#>    ACTIVITY  SIZE VAL N_OBS MAX
+#> 1        01   tr1 100    10  20
+#> 2        01   tr2  50     5  15
+#> 3        01 Total 150    15  20
+#> 4        02   tr1  30     2  20
+#> 5        02   tr2  20     5  10
+#> 6        02 Total  50     7  20
+#> 7        06   tr1  60     8  16
+#> 8        06   tr2  40     6  38
+#> 9        06 Total 100    14  38
+#> 10    Total   tr1 190    20  20
+#> 11    Total   tr2 110    16  38
+#> 12    Total Total 300    36  38
+```
+
+As primary rules, we use the two following ones:
+
+- The n-k dominance rule with n=1 and k = 85
+- The minimum frequency rule with n = 3 and a safety range of 10.
+
+To get the results for the dominance rule, we need to specify the
+largest contributor to each cell, corresponding to the `MAX` variable in
+the tabular data.
+
+``` r
+ex1 <- tab_rtauargus(
+  act_size,
+  dir_name = "tauargus_files/ex1",
+  files_name = "ex1",
+  explanatory_vars = c("ACTIVITY","SIZE"),
+  safety_rules = "FREQ(3,10)|NK(1,85)",
+  value = "VAL",
+  freq = "N_OBS",
+  maxscore = "MAX",
+  totcode = c(ACTIVITY="Total",SIZE="Total")
+)
+#> Start of batch procedure; file: Z:\rtauargus\vignettes\tauargus_files\ex1\ex1.arb
+#> <OPENTABLEDATA> "Z:\rtauargus\vignettes\tauargus_files\ex1\ex1.tab"
+#> <OPENMETADATA> "Z:\rtauargus\vignettes\tauargus_files\ex1\ex1.rda"
+#> <SPECIFYTABLE> "ACTIVITY""SIZE"|"VAL"||
+#> <SAFETYRULE> FREQ(3,10)|NK(1,85)
+#> <READTABLE> 1
+#> Tables have been read
+#> <SUPPRESS> MOD(1,5,1,0,0)
+#> Start of the modular protection for table ACTIVITY x SIZE | VAL
+#> End of modular protection. Time used 0 seconds
+#>                    Number of suppressions: 2
+#> <WRITETABLE> (1,4,,"Z:\rtauargus\vignettes\tauargus_files\ex1\ex1.csv")
+#> Table: ACTIVITY x SIZE | VAL has been written
+#>                    Output file name: Z:\rtauargus\vignettes\tauargus_files\ex1\ex1.csv
+#> End of TauArgus run
+```
+
+By default, the function displays in the console the logbook content in
+which user can read all steps run by τ-Argus. This can be retrieved in
+the logbook.txt file. With `verbose = FALSE`, the function can be
+silenced.
+
+By default, the function returns the original dataset with one variable
+more, called `Status`, directly resulting from τ-Argus and describing
+the status of each cell as follows:
+
+\-`A`: primary secret cell because of frequency rule; -`B`: primary
+secret cell because of dominance rule (1st contributor); -`C`: primary
+secret cell because of frequency rule (more contributors in case when
+n\>1); -`D`: secondary secret cell; -`V`: valid cells - no need to mask.
+
+``` r
+ex1
+#>    ACTIVITY  SIZE VAL N_OBS MAX Status
+#> 1        01 Total 150    15  20      V
+#> 2        01   tr1 100    10  20      V
+#> 3        01   tr2  50     5  15      V
+#> 4        02 Total  50     7  20      V
+#> 5        02   tr1  30     2  20      A
+#> 6        02   tr2  20     5  10      D
+#> 7        06 Total 100    14  38      V
+#> 8        06   tr1  60     8  16      D
+#> 9        06   tr2  40     6  38      B
+#> 10    Total Total 300    36  38      V
+#> 11    Total   tr1 190    20  20      V
+#> 12    Total   tr2 110    16  38      V
+```
+
+All the files generated by the function are written in the specified
+directory (`dir_name` argument). The default format for the protected
+table is csv but it can be changed. All the τ-Argus files (.tab, .rda,
+.arb and .txt) are written in the same directory, too. To go further,
+you can consult the latest version of the τ-Argus manual is downloadable
+here: <https://research.cbs.nl/casc/Software/TauManualV4.1.pdf>.
+
+#### Example with hierarchy and primary secret already done
+
+##### Data
+
+For this example, we’d like to protect a table in which companies’
+turnover is broken down by business sectors and size. To load the data,
+do:
+
+``` r
+data("turnover_act_size")
+head(turnover_act_size)
+#> # A tibble: 6 x 5
+#>   ACTIVITY SIZE  N_OBS       TOT       MAX
+#>   <chr>    <chr> <int>     <dbl>     <dbl>
+#> 1 AZ       Total   405    44475.     6212.
+#> 2 BE       Total 12878 24827613.  1442029.
+#> 3 FZ       Total 28043  8907311.  1065833.
+#> 4 GI       Total 62053 26962063.  3084242.
+#> 5 JZ       Total  8135  8584917.  3957364.
+#> 6 KZ       Total  8140 62556596. 10018017.
+```
+
+The meaning of each variable is:
+
+\-`ACTIVITY`: business sector, hierarchical variables with three levels
+described in the `activity_corr_table` dataset. The root is noted
+“Total”; -`SIZE`: size of the companies (Number of employees in three
+categories + overall category “Total”); -`N_OBS`: Frequency, number of
+companies; -`TOT`: turnover value in euros; -`MAX`: turnover of the
+company which contributes the most to the cell.
+
+##### Hierarchy’s file
+
+Before performing the
+[`tab_rtauargus()`](https://inseefrlab.github.io/rtauargus/reference/tab_rtauargus.md)
+function, we have to prepare the hierarchical information into the
+appropriate format for τ-Argus, *.i.e.* a `.hrc` file. From a
+correspondence table, the
+[`write_hrc2()`](https://inseefrlab.github.io/rtauargus/reference/write_hrc2.md)
+function does the job for you.
+
+Here, the correspondence table describes the nesting of the three levels
+of business sectors, from the most aggregated to the least one:
+
+``` r
+data(activity_corr_table)
+head(activity_corr_table)
+#>   A10 A21 A88
+#> 1  AZ   A  01
+#> 2  AZ   A  02
+#> 3  AZ   X   X
+#> 4  BE   B  06
+#> 5  BE   B  07
+#> 6  BE   B  08
+```
+
+``` r
+hrc_file_activity <- write_hrc2(
+  corr_table = activity_corr_table,
+  file_name = "hrc/activity.hrc"
+)
+```
+
+##### Primary secret
+
+In this example, we’ll apply the primary secret ourselves, *i.e.* not
+with the help of τ-Argus. The idea is to use τ-Argus with an apriori
+file. For that purpose, we create a boolean variable to specify which
+cells don’t comply with the primary secret rules. Using the same rules
+as before, we get:
+
+``` r
+turnover_act_size <- turnover_act_size %>%
+  mutate(
+    is_secret_freq = N_OBS > 0 & N_OBS < 3,
+    is_secret_dom = MAX > TOT*0.85,
+    is_secret_prim = is_secret_freq | is_secret_dom
+  )
+```
+
+##### Running τ-Argus
+
+Two arguments has to be added to the
+[`tab_rtauargus()`](https://inseefrlab.github.io/rtauargus/reference/tab_rtauargus.md)
+function:
+
+\-`secret_var`, indicating the name of the variable in `tabular`
+containing the primary secret (apriori) information; -`hrc`, indicating
+the name of the hierarchy file to use for `ACTIVITY` variable.
+
+Since the primary suppression was already specified, no need to use the
+arguments, `safety_rules` and `maxscore`. The first one is set by
+default to “MAN(10)”, so as to say that a 10% Interval Protection is
+applied.
+
+By default,
+[`tab_rtauargus()`](https://inseefrlab.github.io/rtauargus/reference/tab_rtauargus.md)
+runs the Modular method to perform the secondary secret. Here, we choose
+to use the Optimal method by changing the `suppress` argument.
+
+``` r
+ex2 <- tab_rtauargus(
+  turnover_act_size,
+  dir_name = "tauargus_files/ex2",
+  files_name = "ex2",
+  explanatory_vars = c("ACTIVITY","SIZE"),
+  value = "TOT",
+  freq = "N_OBS",
+  secret_var = "is_secret_prim",
+  hrc = c(ACTIVITY = hrc_file_activity),
+  totcode = c(ACTIVITY="Total",SIZE="Total"),
+  suppress = "OPT(1,5)",
+  verbose=FALSE
+)
+```
+
+##### Result
+
+``` r
+str(ex2)
+#> 'data.frame':    414 obs. of  9 variables:
+#>  $ ACTIVITY      : chr  "01" "01" "02" "02" ...
+#>  $ SIZE          : chr  "Total" "tr1" "Total" "tr1" ...
+#>  $ N_OBS         : int  18 18 387 381 6 1 1 4 4 84 ...
+#>  $ TOT           : num  853 853 43623 35503 8120 ...
+#>  $ MAX           : num  303 303 6212 6212 4812 ...
+#>  $ is_secret_freq: logi  FALSE FALSE FALSE FALSE FALSE TRUE ...
+#>  $ is_secret_dom : logi  FALSE FALSE FALSE FALSE FALSE TRUE ...
+#>  $ is_secret_prim: logi  FALSE FALSE FALSE FALSE FALSE TRUE ...
+#>  $ Status        : chr  "V" "V" "V" "V" ...
+```
+
+``` r
+table(ex2$Status)
+#> 
+#>   B   D   V 
+#>  77  64 273
+```
+
+As we can see in the [`table()`](https://rdrr.io/r/base/table.html)
+results, all the primary secret has the status “B” in the output
+produced by τ-Argus. To adjust this, we can do:
+
+``` r
+ex2 %>%
+  mutate(
+    Status = dplyr::case_when(
+      is_secret_freq ~ "A",
+      TRUE ~ Status
+    )
+  ) %>%
+  dplyr::count(Status)
+#>   Status   n
+#> 1      A  52
+#> 2      B  25
+#> 3      D  64
+#> 4      V 273
+```
+
+### Protecting several tables at the same time, with `tab_muli_manager()` function
+
+The function
+[`tab_multi_manager()`](https://inseefrlab.github.io/rtauargus/reference/tab_multi_manager.md)
+can deal with a whole set of (linked or not) tables. It is an iterating
+process, performing secondary suppression with one table at a time and
+it ensures that the common cells have the same status. When a common
+cell is concerned by secondary suppression, it reverberates the secret
+on each table that shares this common cell. The process ends when the
+secondary secret is consistent in every tables. See more details in
+vignettes *Manage the protection of linked tables*
+
+#### Data
+
+For this example, two tables will be used :
+
+``` r
+data("turnover_act_size")
+data("turnover_act_cj")
+str(turnover_act_cj)
+#> tibble [406 x 5] (S3: tbl_df/tbl/data.frame)
+#>  $ ACTIVITY: chr [1:406] "AZ" "BE" "FZ" "GI" ...
+#>  $ CJ      : chr [1:406] "Total" "Total" "Total" "Total" ...
+#>  $ N_OBS   : int [1:406] 405 12878 28043 62053 8135 8140 11961 41359 26686 25108 ...
+#>  $ TOT     : num [1:406] 44475 24827613 8907311 26962063 8584917 ...
+#>  $ MAX     : num [1:406] 6212 1442029 1065833 3084242 3957364 ...
+```
+
+The second tabular dataset provides the turnover of companies broken
+down by business sectors (`ACTIVITY`) and type of company (`CJ`). The
+latter has three categories and the overall category is noted “Total”.
+
+Since the two tables share one common explanatory variable (`ACTIVITY`),
+they can’t be treated separately without risk of inconsistent
+protection.
+
+#### Primary secret
+
+The first step consists in indicating whether each cell complies with
+the primary rules, or not. A boolean variable is created, equal to TRUE
+if the cell doesn’t comply.
+
+Here, we use the same rules as previously.
+
+``` r
+list_data_2_tabs <- list(
+  act_size = turnover_act_size,
+  act_cj = turnover_act_cj
+) %>%
+  purrr::map(
+    function(df){
+      df %>%
+        mutate(
+          is_secret_freq = N_OBS > 0 & N_OBS < 3,
+          is_secret_dom = MAX > TOT*0.85,
+          is_secret_prim = is_secret_freq | is_secret_dom
+        )
+    }
+  )
+```
+
+#### Running τ-Argus
+
+Now that the primary secret has been specified for both tables, we can
+run the process.
+
+``` r
+ex3 <- tab_multi_manager(
+  list_tables = list_data_2_tabs,
+  list_explanatory_vars = list(
+    act_size = c("ACTIVITY", "SIZE"),
+    act_cj = c("ACTIVITY", "CJ")
+  ),
+  hrc = c(ACTIVITY = hrc_file_activity),
+  dir_name = "tauargus_files/ex3",
+  value = "TOT",
+  freq = "N_OBS",
+  secret_var = "is_secret_prim",
+  totcode =  "Total"
+)
+#> --- Current table to treat:  act_size ---
+#> --- Current table to treat:  act_cj ---
+#> --- Current table to treat:  act_size ---
+```
+
+By default, the function uses a wrapper of
+[`tab_rtauargus()`](https://inseefrlab.github.io/rtauargus/reference/tab_rtauargus.md)
+function, called
+[`tab_rtauargus2()`](https://inseefrlab.github.io/rtauargus/reference/tab_rtauargus2.md),
+to apply secondary secret with τ-Argus. Many default parameters are set.
+In particular:
+
+- Interval Protection fixed to 10;
+- Suppress method set to “MOD(1,5,1,0,0);
+- Output.
+
+When running, the function displays at each iteration which table is
+treated.
+
+The vignette *Manage the protection of linked tables* provides a full
+presentation of
+[`tab_multi_manager()`](https://inseefrlab.github.io/rtauargus/reference/tab_multi_manager.md)
+function.
+
+#### About this vignette
+
+- Authors: **[Julien Jamme](mailto:julien.jamme@insee.fr)** &
+  **[Nathanael Rastout](mailto:nathanael.rastout@insee.fr)**
+- Last update: **17/02/2025**
+- Version of rtauargus used: **1.2.999**
+- Version of τ-Argus used : **TauArgus 4.2.3**
+- R version used : **4.3.3**
+
+[summary ↑](#TOC "Back to summary")

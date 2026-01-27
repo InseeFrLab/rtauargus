@@ -1,0 +1,41 @@
+# data - Turnover broken down by NUTS and size of French companies (fake values).
+
+A tabular dataset containing the turnover broken down by NUTS
+geographical localisation and Type of companies. Useful for playing with
+tab\_ functions.
+
+## Utilisation
+
+``` r
+turnover_nuts_cj
+```
+
+## Format
+
+A tibble/data frame with 452 rows and 5 variables:
+
+- NUTS:
+
+  nuts - european denomination of administrative levels. Hierarchical
+  variables with two levels (nuts2 and nuts3) described in the
+  nuts23_fr_corr_table dataset. The root is noted "Total"
+
+- CJ:
+
+  Type of companies (3 categories + overall category "Total")
+
+- N_OBS:
+
+  Frequency, number of companies
+
+- TOT:
+
+  turnover value in euros
+
+- MAX:
+
+  turnover of the company which contributes the most to the cell.
+
+## Voir également
+
+nuts23_fr_corr_table
