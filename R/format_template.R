@@ -78,15 +78,27 @@ filter_on_marginal_of_spanning_var <- function(data, criteria, subset_keys) {
   )
   # Create filter expressions for all other keys with !=
   other_keys <- setdiff(names(criteria), subset_keys)
-  filter_expr_not_in <- purrr::map2(
-    other_keys,
-    criteria[other_keys],
-    ~ rlang::expr(!!rlang::sym(.x) != !!.y)
-  )
+  if(all(other_keys == "")){
+    # treat the eventuality of all spanning variables being crossed on their
+    # non total values
+    not_totals_all_spannings <- purrr::map2(
+      subset_keys,
+      criteria[subset_keys],
+      ~ rlang::expr(!!rlang::sym(.x) != !!.y)
+    )
+    return(data %>% filter(!!!not_totals_all_spannings))
+  } else {
+    filter_expr_not_in <- purrr::map2(
+      other_keys,
+      criteria[other_keys],
+      ~ rlang::expr(!!rlang::sym(.x) != !!.y)
+    )
+  }
+
   # Combine the two sets of expressions
   combined_filter_expr <- c(filter_expr_in, filter_expr_not_in)
   # Apply the combined filter
-  data %>% filter(!!!combined_filter_expr) %>% select(-!!subset_keys)
+  return(data %>% filter(!!!combined_filter_expr) %>% select(-!!subset_keys))
 }
 
 #' Determines the tables described in a template gathering all the published cells
@@ -94,7 +106,7 @@ filter_on_marginal_of_spanning_var <- function(data, criteria, subset_keys) {
 #' @param data template gathering all the published cells
 #' @param indicator_column name of the column in which the indicators are
 #' @param spanning_var_tot a named list of the spanning variables and their totals
-#' @param field_columns vecotr of all the columns that are fields (ex: year of collect)
+#' @param field_columns vector of all the columns that are fields (ex: year of collect)
 #'
 #' @return named list of a dataframe describing the tables (metadata) and a list of
 #' the modalities of each hierarchical variable (modalities)

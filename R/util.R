@@ -61,7 +61,9 @@ following_dup <- function(x) {
 
 
 # fonction normalizePath sans warning
-normPath2 <- purrr::partial(normalizePath, mustWork = FALSE)
+normPath2 <- function(path) {
+  normalizePath(path, mustWork = FALSE)
+}
 
 # lien parametre extension
 output_extensions <- c(

@@ -47,3 +47,29 @@ test_that("only one spanning variable", {
   expect_equal(length(spanning_vars), 1)
 })
 
+# check that it takes into acocunt tables that cross all spanning variables
+test_that("only one spanning variable", {
+  # add lines where all spanning variables are crossed
+  template <- enterprise_template %>%
+    # We're only doing it for the "B" and NUMBER_EMPL crossings
+    filter(ACTIVITY == "B", NUMBER_EMPL != "_T") %>%
+    select(-LEGAL_FORM) %>%
+    tidyr::crossing(LEGAL_FORM = c("LL", "PA", "SP")) %>%
+    bind_rows(enterprise_template)
+
+  result <- format_template(
+    data = template,
+    indicator_column = "INDICATOR",
+    spanning_var_tot = list(ACTIVITY = "BTSXO_S94", NUMBER_EMPL = "_T", LEGAL_FORM = "_T"),
+    field_columns = c("TIME_PERIOD")
+  )$metadata
+
+  # select all the columns starting with "spanning_"
+  spanning_vars <- grep("^spanning_", names(result), value = TRUE)
+
+  # check there is three variables
+  expect_equal(length(spanning_vars), 3)
+})
+
+
+

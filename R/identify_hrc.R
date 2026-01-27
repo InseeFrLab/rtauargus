@@ -48,7 +48,7 @@ identify_hrc <- function(df_metadata_long){
     table_name = df_spannings$table_name
   ) %>% unique()
   df_spannings <- df_spannings %>% select(-spanning_old)
-  if(all(is.na(df_spannings$hrc_indicator))){ # condition pour les hiérarchies sur les indicateurs
+  if(all(is.na(df_spannings$hrc_indicator))){ # condition for hierarchies on indicators
     df_indicators <- df_spannings
     return(list(df_indicators,df_variable_info))
   } else {

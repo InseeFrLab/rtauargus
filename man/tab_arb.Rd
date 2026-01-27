@@ -73,7 +73,7 @@ Valeur par défaut du package : \code{"2"} (csv for pivot-table).
 Pour le format SBS utiliser \code{"4"})}
 
 \item{output_options}{Additionnal parameter for the output,
-by default : code{"AS+"} (print Status). To specify no options : \code{""}.\cr
+by default : \code{"AS+"} (print Status). To specify no options : \code{""}.\cr
 (Options supplémentaires des fichiers en sortie. Valeur
 par défaut du package : \code{"AS+"} (affichage du statut). Pour ne
 spécifier aucune option, \code{""}.)}

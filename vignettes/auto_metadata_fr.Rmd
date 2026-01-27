@@ -6,10 +6,10 @@ output:
     toc: true
     toc_depth: 3
 vignette: >
-  %\VignetteIndexEntry{Analyse automatique des métadonnées}
+%\VignetteIndexEntry{Analyse automatique des métadonnées}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
----
+  ---
 
 
 
@@ -52,14 +52,28 @@ args(analyse_metadata)
 ```
 
 ```
-## function (df_metadata, verbose = FALSE) 
+## function (df_metadata, df_eq_indicator = NULL, verbose = FALSE) 
 ## NULL
 ```
 
 Les arguments de la fonction sont les suivants :
 
 - `df_metadata` : un dataframe structuré comme précisé dans la section \ref{sec:crea_meta}.
+- `df_eq_indicator` : un dataframe regroupant les équations entre les indicateurs.
 - `verbose` : une variable de type `logical`, si `TRUE` la fonction retourne une liste avec les différentes étapes de l'analyse, si `FALSE` elle retourne juste le dataframe final avec l'indicatrice de cluster.
+
+Le dataframe `df_eq_indicator` est constitué de trois colonnes qui doivent respecter le format suivant :
+
+``` r
+data.frame(eq_name = c("eq1"),
+           eq_indicator = c("ca_salades = ca_batavia + ca_mache"),
+           unit = c("EUR"))
+```
+
+```
+##   eq_name                       eq_indicator unit
+## 1     eq1 ca_salades = ca_batavia + ca_mache  EUR
+```
 
 
 ## Les arguments de `format_template` \label{sec:args_template}
@@ -126,16 +140,16 @@ cluster_id_dataframe
 ```
 
 ```
-##                               cluster  table_name                   field indicator spanning_1 spanning_2    spanning_3 hrc_spanning_1 hrc_spanning_2
-## 1 france_entreprises_2023.hrc_lettuce  T10.T12.T8 france_entreprises_2023   LETTUCE    HRC_NAF         cj HRC_LETTUCE^h        hrc_naf           <NA>
-## 2 france_entreprises_2023.hrc_lettuce   T11.T7.T9 france_entreprises_2023   LETTUCE    HRC_NAF       size HRC_LETTUCE^h        hrc_naf           <NA>
-## 3    france_entreprises_2023.to_pizza       T1.T2 france_entreprises_2023  to_pizza   HRC_NUTS       size          <NA>       hrc_nuts           <NA>
-## 4    france_entreprises_2023.to_pizza T3.T4.T5.T6 france_entreprises_2023  to_pizza    HRC_NAF   HRC_NUTS          <NA>        hrc_naf       hrc_nuts
-##   hrc_spanning_3
-## 1    hrc_lettuce
-## 2    hrc_lettuce
-## 3           <NA>
-## 4           <NA>
+##                               cluster  table_name                   field indicator spanning_1 spanning_2    spanning_3 hrc_spanning_1
+## 1 france_entreprises_2023.hrc_lettuce  T10.T12.T8 france_entreprises_2023   LETTUCE    HRC_NAF         cj HRC_LETTUCE^h        hrc_naf
+## 2 france_entreprises_2023.hrc_lettuce   T11.T7.T9 france_entreprises_2023   LETTUCE    HRC_NAF       size HRC_LETTUCE^h        hrc_naf
+## 3    france_entreprises_2023.to_pizza       T1.T2 france_entreprises_2023  to_pizza   HRC_NUTS       size          <NA>       hrc_nuts
+## 4    france_entreprises_2023.to_pizza T3.T4.T5.T6 france_entreprises_2023  to_pizza    HRC_NAF   HRC_NUTS          <NA>        hrc_naf
+##   hrc_spanning_2 hrc_spanning_3
+## 1           <NA>    hrc_lettuce
+## 2           <NA>    hrc_lettuce
+## 3           <NA>           <NA>
+## 4       hrc_nuts           <NA>
 ```
 
 Pour les 12 tableaux à publier il suffit de protéger 4 tableaux. Ces tableaux sont repartis dans deux clusters différents. Il faudra donc faire appel deux fois à `tab_multi_manager()`.
@@ -149,8 +163,8 @@ names(detailed_analysis)
 ```
 
 ```
-## [1] "identify_hrc"        "info_var"            "split_in_clusters"   "create_edges"        "grp_tab_names"       "grp_tab_in_clusters" "tab_to_treat"       
-## [8] "df_tab_to_treat"
+## [1] "identify_hrc"        "info_var"            "split_in_clusters"   "create_edges"        "grp_tab_names"       "grp_tab_in_clusters"
+## [7] "tab_to_treat"        "df_tab_to_treat"
 ```
 
 On retrouve le dataframe avec l'indicatrice du cluster `df_tab_to_treat`. On a le même résultat mais en format liste : chaque élément de la sous-liste `tab_to_treat` est un cluster indépendant. Les autres éléments de la liste sont les étapes de l'analyse.
@@ -186,7 +200,14 @@ template_formatted <- format_template(
     LEGAL_FORM = "_T"),
   field_columns = c("TIME_PERIOD")
 )
+```
 
+```
+## treating the field 2021 
+## treating the field 2022
+```
+
+``` r
 template_formatted$metadata
 ```
 
@@ -253,19 +274,101 @@ cluster_id_dataframe
 ```
 
 ```
-##                               cluster  table_name                   field indicator spanning_1 spanning_2    spanning_3 hrc_spanning_1 hrc_spanning_2
-## 1 france_entreprises_2023.hrc_lettuce  T10.T12.T8 france_entreprises_2023   LETTUCE    HRC_NAF         cj HRC_LETTUCE^h        hrc_naf           <NA>
-## 2 france_entreprises_2023.hrc_lettuce   T11.T7.T9 france_entreprises_2023   LETTUCE    HRC_NAF       size HRC_LETTUCE^h        hrc_naf           <NA>
-## 3    france_entreprises_2023.to_pizza       T1.T2 france_entreprises_2023  to_pizza   HRC_NUTS       size          <NA>       hrc_nuts           <NA>
-## 4    france_entreprises_2023.to_pizza T3.T4.T5.T6 france_entreprises_2023  to_pizza    HRC_NAF   HRC_NUTS          <NA>        hrc_naf       hrc_nuts
-##   hrc_spanning_3
-## 1    hrc_lettuce
-## 2    hrc_lettuce
-## 3           <NA>
-## 4           <NA>
+##                               cluster  table_name                   field indicator spanning_1 spanning_2    spanning_3 hrc_spanning_1
+## 1 france_entreprises_2023.hrc_lettuce  T10.T12.T8 france_entreprises_2023   LETTUCE    HRC_NAF         cj HRC_LETTUCE^h        hrc_naf
+## 2 france_entreprises_2023.hrc_lettuce   T11.T7.T9 france_entreprises_2023   LETTUCE    HRC_NAF       size HRC_LETTUCE^h        hrc_naf
+## 3    france_entreprises_2023.to_pizza       T1.T2 france_entreprises_2023  to_pizza   HRC_NUTS       size          <NA>       hrc_nuts
+## 4    france_entreprises_2023.to_pizza T3.T4.T5.T6 france_entreprises_2023  to_pizza    HRC_NAF   HRC_NUTS          <NA>        hrc_naf
+##   hrc_spanning_2 hrc_spanning_3
+## 1           <NA>    hrc_lettuce
+## 2           <NA>    hrc_lettuce
+## 3           <NA>           <NA>
+## 4       hrc_nuts           <NA>
 ```
 
 Finalement, il y a 6 tableaux à traiter dans 3 clusters différents. Autrement dit, il faudra faire trois fois appel à `tab_multi_manager()`.
+
+## Equations entre indicateurs
+
+Dans cet exemple on part d'un fichier de métadonnées présentant 12 tableaux à publier sur les chiffres d'affaires de ventes de pizzas et de salades.
+
+``` r
+str(metadata_pizza_lettuce)
+```
+
+```
+## 'data.frame':	12 obs. of  9 variables:
+##  $ table_name    : chr  "T1" "T2" "T3" "T4" ...
+##  $ field         : chr  "france_entreprises_2023" "france_entreprises_2023" "france_entreprises_2023" "france_entreprises_2023" ...
+##  $ hrc_field     : logi  NA NA NA NA NA NA ...
+##  $ indicator     : chr  "to_pizza" "to_pizza" "to_pizza" "to_pizza" ...
+##  $ hrc_indicator : chr  NA NA NA NA ...
+##  $ spanning_1    : chr  "nuts2" "nuts3" "a10" "a10" ...
+##  $ hrc_spanning_1: chr  "hrc_nuts" "hrc_nuts" "hrc_naf" "hrc_naf" ...
+##  $ spanning_2    : chr  "size" "size" "nuts2" "nuts3" ...
+##  $ hrc_spanning_2: chr  NA NA "hrc_nuts" "hrc_nuts" ...
+```
+
+Auquel on ajoute un dataframe décrivant les liens entre les indicateurs.
+
+``` r
+liens_eq <- data.frame(eq_name = c("eq1"),
+                       eq_indicator = c("ca_salades = ca_batavia + ca_mache"),
+                       unit = c("EUR"))
+```
+
+
+Exemple de code :
+
+``` r
+library(rtauargus)
+
+data(metadata_pizza_lettuce)
+
+# Analyse complète, avec les étapes
+detailed_analysis <- analyse_metadata(metadata_pizza_lettuce,
+                                      df_eq_indicator = liens_eq,
+                                      verbose = TRUE)
+```
+
+```
+## Warning in analyse_metadata(metadata_pizza_lettuce, df_eq_indicator = liens_eq, : For the variables part of equations specified in df_eq_indicator,
+##     the hrc_indicator column will be ignored.
+```
+
+```
+## Error in components(g_full): impossible de trouver la fonction "components"
+```
+
+``` r
+# Output simplifié, uniquement le dataframe avec l'indicatrice de cluster
+cluster_id_dataframe <- analyse_metadata(metadata_pizza_lettuce, verbose = FALSE)
+```
+
+Ici, un warning nous prévient que la colonne `hrc_indicator` sera ignorée puisque l'on a précisé
+les liens entre indicateurs avec l'argument `df_eq_indicator`. Ainsi, il ne faut pas mettre
+des liens dans `hrc_indicator` lorsque l'on utilise l'argument `df_eq_indicator`.
+
+On obtient le même dataframe nous présentant la façon de traiter les tableaux pour la pose du secret
+que dans le premier exemple.
+
+
+``` r
+cluster_id_dataframe
+```
+
+```
+##                               cluster  table_name                   field indicator spanning_1 spanning_2    spanning_3 hrc_spanning_1
+## 1 france_entreprises_2023.hrc_lettuce  T10.T12.T8 france_entreprises_2023   LETTUCE    HRC_NAF         cj HRC_LETTUCE^h        hrc_naf
+## 2 france_entreprises_2023.hrc_lettuce   T11.T7.T9 france_entreprises_2023   LETTUCE    HRC_NAF       size HRC_LETTUCE^h        hrc_naf
+## 3    france_entreprises_2023.to_pizza       T1.T2 france_entreprises_2023  to_pizza   HRC_NUTS       size          <NA>       hrc_nuts
+## 4    france_entreprises_2023.to_pizza T3.T4.T5.T6 france_entreprises_2023  to_pizza    HRC_NAF   HRC_NUTS          <NA>        hrc_naf
+##   hrc_spanning_2 hrc_spanning_3
+## 1           <NA>    hrc_lettuce
+## 2           <NA>    hrc_lettuce
+## 3           <NA>           <NA>
+## 4       hrc_nuts           <NA>
+```
 
 # Pour aller plus loin : visualiser les inclusions
 L'étape `create_edges` de l'analyse des métadonnées identifie les tableaux inclus dans d'autres tableaux. Par exemple, XXXXX est inclus dans XXXXX. Le code suivant permet de visualiser ces inclusions à l'aide de graphes afin de mieux comprendre la procédure d'analyse.
@@ -285,12 +388,6 @@ library(igraph)
 ## Les objets suivants sont masqués depuis 'package:dplyr':
 ## 
 ##     as_data_frame, groups, union
-```
-
-```
-## L'objet suivant est masqué depuis 'package:testthat':
-## 
-##     compare
 ```
 
 ```

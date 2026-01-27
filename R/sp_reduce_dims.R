@@ -48,6 +48,7 @@
 #' @importFrom dplyr select mutate filter
 #'
 #' @examples
+#' \dontrun{
 #' library(dplyr)
 #' # Examples for dimension 4
 #'
@@ -207,6 +208,7 @@
 #'   limit = 4470,
 #'   over_split = TRUE
 #' )
+#' }
 #' @keywords internal
 #' @export
 reduce_dims <- function(

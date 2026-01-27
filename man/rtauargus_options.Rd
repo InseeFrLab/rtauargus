@@ -32,7 +32,7 @@ for each call of a function. The name of the option is the same as the
 name of the function prefixed by \code{rtauargus.} :
 
 \emph{For example, \code{rtauargus.decimals} will be used if the argument
-\code{decimals} in the \code{micro_asc_rda} function is not set by the
+\code{decimals} in the \code{micro_asc_rda()} function is not set by the
 user.}
 
 On loading the package, all the rtauargus options, that are not already
@@ -55,7 +55,7 @@ paramètre à chaque appel d'une fonction. Le nom de l’option est le nom de
 l’argument d’une fonction précédé de \code{rtauargus.} :
 
 \emph{Par exemple, \code{rtauargus.decimals} sera la valeur utilisée si l’argument
-\code{decimals} de la fonction \code{micro_asc_rda} n’est pas renseigné par
+\code{decimals} de la fonction \code{micro_asc_rda()} n’est pas renseigné par
 l’utilisateur.}
 
 Au chargement, le package attribue une valeur par défaut à toutes les options
@@ -76,18 +76,18 @@ utiliseront les valeurs par défaut du package.)
 \tabular{lll}{
 \strong{Option}                  \tab  \strong{Default Value}                                    \tab \strong{Function}   \cr
 \verb{------------------------}  \tab  \verb{---------------------------------}                      \tab \verb{-------------}\cr
-rtauargus.decimals               \tab  \Sexpr{rtauargus:::op.rtauargus$rtauargus.decimals}           \tab \link{micro_asc_rda}\cr
+rtauargus.decimals               \tab  \Sexpr{rtauargus:::op.rtauargus$rtauargus.decimals}           \tab \code{micro_asc_rda()}\cr
 rtauargus.totcode                \tab "\Sexpr{rtauargus:::op.rtauargus$rtauargus.totcode}"           \tab                     \cr
 rtauargus.missing                \tab "\Sexpr{rtauargus:::op.rtauargus$rtauargus.missing}"           \tab                     \cr
 rtauargus.hierleadstring         \tab "\Sexpr{rtauargus:::op.rtauargus$rtauargus.hierleadstring}"    \tab                     \cr
 \verb{------------------------}  \tab  \verb{---------------------------------}                      \tab \verb{-------------}\cr
-rtauargus.response_var           \tab "\Sexpr{rtauargus:::op.rtauargus$rtauargus.response_var}"      \tab \link{micro_arb}    \cr
+rtauargus.response_var           \tab "\Sexpr{rtauargus:::op.rtauargus$rtauargus.response_var}"      \tab \code{micro_arb()}    \cr
 rtauargus.weighted               \tab  \Sexpr{rtauargus:::op.rtauargus$rtauargus.weighted}           \tab                     \cr
 rtauargus.linked                 \tab  \Sexpr{rtauargus:::op.rtauargus$rtauargus.linked}             \tab                     \cr
 rtauargus.output_type            \tab "\Sexpr{rtauargus:::op.rtauargus$rtauargus.output_type}"       \tab                     \cr
 rtauargus.output_options         \tab "\Sexpr{rtauargus:::op.rtauargus$rtauargus.output_options}"    \tab                     \cr
 \verb{------------------------}  \tab  \verb{---------------------------------}                      \tab \verb{-------------}\cr
-rtauargus.missing_dir            \tab "\Sexpr{rtauargus:::op.rtauargus$rtauargus.missing_dir}"       \tab \link{run_arb}      \cr
+rtauargus.missing_dir            \tab "\Sexpr{rtauargus:::op.rtauargus$rtauargus.missing_dir}"       \tab \code{run_arb()}      \cr
 rtauargus.tauargus_exe           \tab "\Sexpr{rtauargus:::op.rtauargus$rtauargus.tauargus_exe}"      \tab                     \cr
 rtauargus.show_batch_console     \tab  \Sexpr{rtauargus:::op.rtauargus$rtauargus.show_batch_console} \tab                     \cr
 rtauargus.import                 \tab  \Sexpr{rtauargus:::op.rtauargus$rtauargus.import}             \tab

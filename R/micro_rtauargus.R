@@ -23,9 +23,9 @@
 #'
 #' The function executes sequentially the functions: \itemize{
 #' \item{
-#' [micro_asc_rda()] `->`
-#' [micro_arb()] `->`
-#' [run_arb()]
+#' `micro_asc_rda()` `->`
+#' `micro_arb()` `->`
+#' `run_arb()`
 #' }
 #' }
 #'
@@ -37,9 +37,9 @@
 #'
 #' (La fonction exécute séquentiellement les fonctions : \itemize{
 #'   \item{
-#'     [micro_asc_rda()] `->`
-#'     [micro_arb()] `->`
-#'     [run_arb()]
+#'     `micro_asc_rda()` `->`
+#'     `micro_arb()` `->`
+#'     `run_arb()`
 #'   }
 #' }
 #'
@@ -56,10 +56,10 @@
 #' ( data.frame contenant les microdonnées
 #'   (ou chemin vers des fichiers texte déjà présents : voir section
 #'   *Microdata already as text files*).)
-#' @param ... optional parameters for `micro_asc_rda`, `micro_arb`
-#' and `run_arb`. See the help for these functions. \cr
-#' (paramètres optionnels pour `micro_asc_rda`, `micro_arb`
-#'    et `run_arb`. Voir l'aide de ces fonctions.)
+#' @param ... optional parameters for `micro_asc_rda()`, `micro_arb()`
+#' and `run_arb()`. See the help for these functions. \cr
+#' (paramètres optionnels pour `micro_asc_rda()`, `micro_arb()`
+#'    et `run_arb()`. Voir l'aide de ces fonctions.)
 #'
 #' @inheritSection micro_arb Syntax
 #'
@@ -93,9 +93,9 @@
 #'   secrétisés), `NULL` sinon.)
 #'
 #' @seealso
-#' \code{link{rtauargus_plus}}, a version optimized for a large
+#' `rtauargus_plus()`, a version optimized for a large
 #' number of tables (at the cost of some usage restrictions). \cr
-#' ([rtauargus_plus()], une version optimisée pour un grand
+#' (`rtauargus_plus()`, une version optimisée pour un grand
 #'   nombre de tableaux (au prix de quelques restrictions d'usage).)
 #'
 #' @examples
@@ -110,10 +110,10 @@
 #' @export
 
 micro_rtauargus <- function(microdata,
-                      explanatory_vars,
-                      safety_rules,
-                      suppress,
-                      ...) {
+                            explanatory_vars,
+                            safety_rules,
+                            suppress,
+                            ...) {
 
   .dots <- list(...)
 

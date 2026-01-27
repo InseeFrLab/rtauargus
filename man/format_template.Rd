@@ -13,7 +13,7 @@ format_template(data, indicator_column, spanning_var_tot, field_columns)
 
 \item{spanning_var_tot}{a named list of the spanning variables and their totals}
 
-\item{field_columns}{vecotr of all the columns that are fields (ex: year of collect)}
+\item{field_columns}{vector of all the columns that are fields (ex: year of collect)}
 }
 \value{
 named list of a dataframe describing the tables (metadata) and a list of

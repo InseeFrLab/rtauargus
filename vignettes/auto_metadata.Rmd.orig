@@ -54,7 +54,16 @@ args(analyse_metadata)
 The function arguments are as follows:
 
 - `df_metadata`: a dataframe structured as specified in section \ref{sec:crea_meta}.
+- `df_eq_indicator` : un dataframe regroupant les équations entre les indicateurs.
 - `verbose`: a variable of type `logical`. If `TRUE` he function returns a list with the different steps of the analysis;  if `FALSE`, it returns only the final dataframe with the cluster indicator.
+
+The `df_eq_indicator` data frame consists of three columns that must follow the format below:
+```{r}
+data.frame(eq_name = c("eq1"),
+           eq_indicator = c("ca_salades = ca_batavia + ca_mache"),
+           unit = c("EUR"))
+```
+
 
 
 ## The Arguments of `format_template` \label{sec:args_template}
@@ -63,12 +72,12 @@ The function arguments are as follows:
 args(format_template)
 ```
 
-Les arguments de la fonction sont les suivants :
+The function arguments are as follows:
 
-- `data` : dataframe du template Eurostat contenant toutes les cellules publiées.
-- `indicator_column` : nom de la colonne dans laquelle se trouvent les indicateurs.
-- `spanning_var_tot` : liste nommée des variables de croisements et de leurs totaux.
-- `field_columns` : vecteur de toutes les colonnes représentant des champs (ex : millésime).
+- `data`: the Eurostat template data frame containing all published cells.
+- `indicator_column`: the name of the column containing the indicators.
+- `spanning_var_tot`: a named list of the crossing variables and their totals.
+- `field_columns`: a vector of all columns representing fields (e.g., vintage/year).
 
 # Examples
 
@@ -161,6 +170,48 @@ cluster_id_dataframe
 ```
 
 Ultimately, there are 6 tables to process in 3 different clusters. In other words, `tab_multi_manager()` will need to be called three times.
+
+## Equations between indicators
+
+In this example, we start from a metadata file describing 12 tables to be published on the turnover from pizza and salad sales.
+
+```{r}
+str(metadata_pizza_lettuce)
+```
+
+This time a data frame describing the relationships between indicators is added.
+```{r}
+liens_eq <- data.frame(eq_name = c("eq1"),
+                       eq_indicator = c("ca_salades = ca_batavia + ca_mache"),
+                       unit = c("EUR"))
+```
+
+
+Example code :
+```{r}
+library(rtauargus)
+
+data(metadata_pizza_lettuce)
+
+# Full analysis, with intermediate steps
+detailed_analysis <- analyse_metadata(metadata_pizza_lettuce,
+                                      df_eq_indicator = liens_eq,
+                                      verbose = TRUE)
+
+# Simplified output, only the data frame with the cluster indicator
+cluster_id_dataframe <- analyse_metadata(metadata_pizza_lettuce, verbose = FALSE)
+```
+
+Here, a warning informs us that the `hrc_indicator` column will be ignored since the
+relationships between indicators have been specified using the `df_eq_indicator` argument.
+Therefore, links should not be defined in `hrc_indicator` when using the `df_eq_indicator` argument.
+
+The result is the same as the first example.
+
+```{r}
+cluster_id_dataframe
+```
+
 
 # Going Further: Visualizing Inclusions
 

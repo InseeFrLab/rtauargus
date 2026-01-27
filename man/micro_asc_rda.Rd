@@ -159,21 +159,21 @@ If the hierarchy is defined in a separate hrc file
 a possible \code{hiercodelist} if it differs from the default option of the
 package). In this case, you can write explicitly the path to an existing file
 file (\code{c(A38 = "a38.hrc")}), but also make a call to
-\code{\link[=write_hrc]{write_hrc()}} which will generate an hrc file from microdata.
+\code{write_hrc()} which will generate an hrc file from microdata.
 
 \emph{Example :} \code{c(A38 = write_hrc(microdata, c("A38", "A21", "A10")))}
 
 A shortcut for this call is to write the variables constituting the
 hierarchy separated by ">". In this case, the microdata and
-hierleadstring that \code{write_hrc} uses are those declared in
-\code{micro_asc_rda}.
+hierleadstring that \code{write_hrc()} uses are those declared in
+\code{micro_asc_rda()}.
 
 \emph{Example :} \code{c(A38 = "A38 > A21 > A10")} \emph{(number of spaces
 any before and after the ">")}
 
 The last two methods require the creation of a temporary file.
 For a reusable hrc file, it is necessary to create it beforehand
-using \code{write_hrc}.
+using \code{write_hrc()}.
 
 The three methods require that the elements of the vector in parameter
 be named (with the name of the variable), even if there is only one
@@ -194,11 +194,11 @@ Si la hiérarchie est définie dans un fichier hrc à part
 un éventuel \code{hierleadstring} s'il diffère de l'option par défaut du
 package). Dans ce cas, on peut écrire explicitement le chemin vers un fichier
 existant (\code{c(A38 = "a38.hrc")}), mais aussi passer un appel à
-\code{\link[=write_hrc]{write_hrc()}} qui génèrera un fichier hrc à partir de microdonnées.
+\code{write_hrc()} qui génèrera un fichier hrc à partir de microdonnées.
 
 Un raccourci pour cet appel est d'écrire les variables constituant la
 hiérarchie séparées par des ">". Dans ce cas, les microdonnées et
-hierleadstring qu'utilise \code{write_hrc} sont ceux déclarés dans
+hierleadstring qu'utilise \code{write_hrc()} sont ceux déclarés dans
 \code{micro_asc_rda}.
 
 \emph{Exemple :} \code{c(A38 = "A38 > A21 > A10")} \emph{(nombre d'espaces
@@ -206,7 +206,7 @@ quelconque avant et après les ">")}
 
 Les deux dernières méthodes passent par la création d'un fichier temporaire.
 Pour un fichier hrc réutilisable, il est nécessaire de le créer au préalable
-à l'aide de \code{write_hrc}.
+à l'aide de \code{write_hrc()}.
 
 Les trois méthodes nécessitent que les éléments du vecteur en paramètre
 soient nommés (avec le nom de la variable), même s'il n'y a qu'un seul
@@ -244,9 +244,9 @@ supérieur à 15. Voir \code{\link[gdata:write.fwf]{gdata::write.fwf()}} (foncti
 \section{See also}{
 
 
-The function \code{\link[=micro_rtauargus]{micro_rtauargus()}}, which uses this
+The function \code{micro_rtauargus()}, which uses this
 function and inherits its parameters. \cr
-(La fonction \code{\link[=micro_rtauargus]{micro_rtauargus()}}, qui utilise cette
+(La fonction \code{micro_rtauargus()}, qui utilise cette
 fonction et hérite de ses paramètres.)
 }
 

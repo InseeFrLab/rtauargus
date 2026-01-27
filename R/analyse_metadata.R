@@ -6,6 +6,7 @@
 #' creating a structured output for further processing.
 #'
 #' @param df_metadata A dataframe containing metadata in wide format.
+#' @param df_eq_indicator A datadframe containing the indicators equations if needed.
 #' @param verbose Logical. If `TRUE`, returns a detailed list of intermediate results
 #' from each processing step. If `FALSE`, returns only the cluster assignments. Defaults to `FALSE`.
 #'
@@ -28,7 +29,7 @@
 #' @details The function performs the following steps:
 #' \itemize{
 #'   \item Converts the metadata from wide format to long format using \code{wide_to_long}.
-#'   \item Identifies hierarchical relationships and renames variables with \code{identify_hrc}.
+#'   \item Identifies hierarchical relationships and renames variables with \code{identify_hrc} or \code{identify_hrc_with_eq}.
 #'   \item Splits hierarchical relationships into clusters using \code{split_in_clusters}.
 #'   \item Creates edges to describe the relationships via \code{create_edges}.
 #'   \item Generates translation tables for regrouping with \code{grp_tab_names}.
@@ -53,7 +54,7 @@
 #' `r lifecycle::badge("experimental")`
 #'
 #' @export
-analyse_metadata <- function(df_metadata,verbose = FALSE){
+analyse_metadata <- function(df_metadata,df_eq_indicator = NULL,verbose = FALSE){
   # check that the input is in the right format: right column names
   check_column_names <- function(df) {
     # Expected fixed column names
@@ -102,7 +103,14 @@ analyse_metadata <- function(df_metadata,verbose = FALSE){
 
   # start of the actual analysis
   df_metadata_long <- wide_to_long(df_metadata)
-  list_hrc_identified <- identify_hrc(df_metadata_long)
+  if(is.null(df_eq_indicator)){
+    list_hrc_identified <- identify_hrc(df_metadata_long)
+  }else{
+    warning("For the variables part of equations specified in df_eq_indicator,
+    the hrc_indicator column will be ignored.")
+    list_hrc_identified <- identify_hrc_with_eq(df_metadata_long,df_eq_indicator)
+  }
+
   list_split <- split_in_clusters(list_hrc_identified)
   list_desc_links <- create_edges(list_split)
   list_translation_tables <- grp_tab_names(list_desc_links)

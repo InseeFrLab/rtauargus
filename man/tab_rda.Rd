@@ -187,14 +187,14 @@ explanatory vars}
 \item{\code{totcode = c("global", size="total", income="total")} :
 \verb{<TOTCODE> "global"} for each variable except for \code{size} and
 \code{income}} assigned with \verb{<TOTCODE> "total"}
-by default : {\if{html}{\out{<TOTCODE>}} "Total"}
+by default : \verb{<TOTCODE> "Total"}
 \item{\code{totcode = "global"} : écrit \verb{<TOTCODE> "global"} pour
 toutes les variables catégorielles}
 \item{\code{totcode = c("global", size="total", income="total")} :
 \verb{<TOTCODE> "global"} pour toutes les variables catégorielles
 sauf  \code{size} and \code{income}} qui se verront affecter
 le total : \verb{<TOTCODE> "total"}
-Par defaut : {\if{html}{\out{<TOTCODE>}} "Total"}
+Par defaut : \verb{<TOTCODE> "Total"}
 }
 }
 
@@ -204,21 +204,21 @@ Par defaut : {\if{html}{\out{<TOTCODE>}} "Total"}
 Parameter \code{hrc} has the same syntax as \code{totcode} and
 \code{codelist} (named vector containing as many elements as variables to describe).
 Hierarchy is defined in an separate hrc file (\strong{hiercodelist}).
-which can be written with the function \code{link{write_hrc2}}.
+which can be written with the function \code{write_hrc2()}.
 The function expects the location of this file (and a possible \code{hierleadstring}
 if it differs from the default option of the package : @.
 The path to the existing file is explicitly given.
 The elements of the vector in parameter must be named (with the name of the variable),
 even if there is only one element.
 
-emph{Example :}\code{c(category="category.hrc")} \cr
+\emph{Example :}\code{c(category="category.hrc")} \cr
 
 (Le paramètre \code{hrc} obéit aux mêmes règles de syntaxe que \code{totcode}
 et \code{codelist} (vecteur nommé contenant autant d'éléments
 que de variables à décrire).
 
 La hiérarchie est définie dans un fichier hrc à part (\strong{hiercodelist})
-qui peut être écrit à l'aide de la fonction \code{\link[=write_hrc2]{write_hrc2()}}.
+qui peut être écrit à l'aide de la fonction \code{write_hrc2()}.
 
 La fonction attend l'emplacement de ce fichier (et un éventuel \code{hierleadstring}
 s'il diffère de l'option par défaut du package).

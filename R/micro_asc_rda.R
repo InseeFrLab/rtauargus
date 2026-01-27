@@ -3,12 +3,12 @@ write_rda_1var <- function(info_var) {
   # écrit partie du .rda à partir des infos (une liste) pour une seule variable
 
   ligne1 <- with(info_var,
-    paste(
-      colname,
-      position,
-      width,
-      if (!is.na(missing) & missing != "") missing
-    )
+                 paste(
+                   colname,
+                   position,
+                   width,
+                   if (!is.na(missing) & missing != "") missing
+                 )
   )
 
   with(
@@ -183,21 +183,21 @@ write_rda <- function(info_vars) {
 #' a possible `hiercodelist` if it differs from the default option of the
 #' package). In this case, you can write explicitly the path to an existing file
 #' file (`c(A38 = "a38.hrc")`), but also make a call to
-#' [write_hrc()] which will generate an hrc file from microdata.
+#' `write_hrc()` which will generate an hrc file from microdata.
 #'
 #' *Example :* `c(A38 = write_hrc(microdata, c("A38", "A21", "A10")))`
 #'
 #' A shortcut for this call is to write the variables constituting the
 #' hierarchy separated by ">". In this case, the microdata and
-#' hierleadstring that `write_hrc` uses are those declared in
-#' `micro_asc_rda`.
+#' hierleadstring that `write_hrc()` uses are those declared in
+#' `micro_asc_rda()`.
 #'
 #' *Example :* `c(A38 = "A38 > A21 > A10")` *(number of spaces
 #' any before and after the ">")*
 #'
 #' The last two methods require the creation of a temporary file.
 #' For a reusable hrc file, it is necessary to create it beforehand
-#' using `write_hrc`.
+#' using `write_hrc()`.
 #'
 #' The three methods require that the elements of the vector in parameter
 #' be named (with the name of the variable), even if there is only one
@@ -218,11 +218,11 @@ write_rda <- function(info_vars) {
 #' un éventuel `hierleadstring` s'il diffère de l'option par défaut du
 #' package). Dans ce cas, on peut écrire explicitement le chemin vers un fichier
 #' existant (`c(A38 = "a38.hrc")`), mais aussi passer un appel à
-#' [write_hrc()] qui génèrera un fichier hrc à partir de microdonnées.
+#' `write_hrc()` qui génèrera un fichier hrc à partir de microdonnées.
 #'
 #' Un raccourci pour cet appel est d'écrire les variables constituant la
 #' hiérarchie séparées par des ">". Dans ce cas, les microdonnées et
-#' hierleadstring qu'utilise `write_hrc` sont ceux déclarés dans
+#' hierleadstring qu'utilise `write_hrc()` sont ceux déclarés dans
 #' `micro_asc_rda`.
 #'
 #' *Exemple :* `c(A38 = "A38 > A21 > A10")` *(nombre d'espaces
@@ -230,7 +230,7 @@ write_rda <- function(info_vars) {
 #'
 #' Les deux dernières méthodes passent par la création d'un fichier temporaire.
 #' Pour un fichier hrc réutilisable, il est nécessaire de le créer au préalable
-#' à l'aide de `write_hrc`.
+#' à l'aide de `write_hrc()`.
 #'
 #' Les trois méthodes nécessitent que les éléments du vecteur en paramètre
 #' soient nommés (avec le nom de la variable), même s'il n'y a qu'un seul
@@ -264,9 +264,9 @@ write_rda <- function(info_vars) {
 #'
 #' @section See also:
 #'
-#' The function [micro_rtauargus()], which uses this
+#' The function `micro_rtauargus()`, which uses this
 #' function and inherits its parameters. \cr
-#' (La fonction [micro_rtauargus()], qui utilise cette
+#' (La fonction `micro_rtauargus()`, qui utilise cette
 #' fonction et hérite de ses paramètres.)
 #'
 #' @examples

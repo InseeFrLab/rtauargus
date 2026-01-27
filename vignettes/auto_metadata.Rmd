@@ -52,14 +52,29 @@ args(analyse_metadata)
 ```
 
 ```
-## function (df_metadata, verbose = FALSE) 
+## function (df_metadata, df_eq_indicator = NULL, verbose = FALSE) 
 ## NULL
 ```
 
 The function arguments are as follows:
 
 - `df_metadata`: a dataframe structured as specified in section \ref{sec:crea_meta}.
+- `df_eq_indicator` : un dataframe regroupant les équations entre les indicateurs.
 - `verbose`: a variable of type `logical`. If `TRUE` he function returns a list with the different steps of the analysis;  if `FALSE`, it returns only the final dataframe with the cluster indicator.
+
+The `df_eq_indicator` data frame consists of three columns that must follow the format below:
+
+``` r
+data.frame(eq_name = c("eq1"),
+           eq_indicator = c("ca_salades = ca_batavia + ca_mache"),
+           unit = c("EUR"))
+```
+
+```
+##   eq_name                       eq_indicator unit
+## 1     eq1 ca_salades = ca_batavia + ca_mache  EUR
+```
+
 
 
 ## The Arguments of `format_template` \label{sec:args_template}
@@ -74,12 +89,12 @@ args(format_template)
 ## NULL
 ```
 
-Les arguments de la fonction sont les suivants :
+The function arguments are as follows:
 
-- `data` : dataframe du template Eurostat contenant toutes les cellules publiées.
-- `indicator_column` : nom de la colonne dans laquelle se trouvent les indicateurs.
-- `spanning_var_tot` : liste nommée des variables de croisements et de leurs totaux.
-- `field_columns` : vecteur de toutes les colonnes représentant des champs (ex : millésime).
+- `data`: the Eurostat template data frame containing all published cells.
+- `indicator_column`: the name of the column containing the indicators.
+- `spanning_var_tot`: a named list of the crossing variables and their totals.
+- `field_columns`: a vector of all columns representing fields (e.g., vintage/year).
 
 # Examples
 
@@ -126,14 +141,16 @@ cluster_id_dataframe
 ```
 
 ```
-## # A tibble: 4 x 10
-## # Groups:   table_name [4]
-##   cluster        table_name field indicator spanning_1 spanning_2 spanning_3 hrc_spanning_1 hrc_spanning_2 hrc_spanning_3
-##   <chr>          <chr>      <chr> <chr>     <chr>      <chr>      <chr>      <chr>          <chr>          <chr>         
-## 1 france_entrep~ T10.T12.T8 fran~ LETTUCE   HRC_NAF    cj         HRC_LETTU~ hrc_naf        <NA>           hrc_lettuce   
-## 2 france_entrep~ T11.T7.T9  fran~ LETTUCE   HRC_NAF    size       HRC_LETTU~ hrc_naf        <NA>           hrc_lettuce   
-## 3 france_entrep~ T1.T2      fran~ to_pizza  HRC_NUTS   size       <NA>       hrc_nuts       <NA>           <NA>          
-## 4 france_entrep~ T3.T4.T5.~ fran~ to_pizza  HRC_NAF    HRC_NUTS   <NA>       hrc_naf        hrc_nuts       <NA>
+##                               cluster  table_name                   field indicator spanning_1 spanning_2    spanning_3 hrc_spanning_1
+## 1 france_entreprises_2023.hrc_lettuce  T10.T12.T8 france_entreprises_2023   LETTUCE    HRC_NAF         cj HRC_LETTUCE^h        hrc_naf
+## 2 france_entreprises_2023.hrc_lettuce   T11.T7.T9 france_entreprises_2023   LETTUCE    HRC_NAF       size HRC_LETTUCE^h        hrc_naf
+## 3    france_entreprises_2023.to_pizza       T1.T2 france_entreprises_2023  to_pizza   HRC_NUTS       size          <NA>       hrc_nuts
+## 4    france_entreprises_2023.to_pizza T3.T4.T5.T6 france_entreprises_2023  to_pizza    HRC_NAF   HRC_NUTS          <NA>        hrc_naf
+##   hrc_spanning_2 hrc_spanning_3
+## 1           <NA>    hrc_lettuce
+## 2           <NA>    hrc_lettuce
+## 3           <NA>           <NA>
+## 4       hrc_nuts           <NA>
 ```
 
 For the 12 tables to be published, it is sufficient to protect 4 tables. These tables are distributed across two different clusters. Therefore, `tab_multi_manager()` needs to be called twice.
@@ -147,8 +164,8 @@ names(detailed_analysis)
 ```
 
 ```
-## [1] "identify_hrc"        "info_var"            "split_in_clusters"   "create_edges"        "grp_tab_names"      
-## [6] "grp_tab_in_clusters" "tab_to_treat"        "df_tab_to_treat"
+## [1] "identify_hrc"        "info_var"            "split_in_clusters"   "create_edges"        "grp_tab_names"       "grp_tab_in_clusters"
+## [7] "tab_to_treat"        "df_tab_to_treat"
 ```
 
 One finds the dataframe with the cluster indicator `df_tab_to_treat`. The result is the same but in list format: each element of the list is an independent cluster `tab_to_treat`. Additionally, the 6 steps of the analysis are included.
@@ -184,7 +201,14 @@ template_formatted <- format_template(
     LEGAL_FORM = "_T"),
   field_columns = c("TIME_PERIOD")
 )
+```
 
+```
+## treating the field 2021 
+## treating the field 2022
+```
+
+``` r
 template_formatted$metadata
 ```
 
@@ -230,28 +254,130 @@ Next, this dataframe is used as input for the analysis function.
 ``` r
 # Analyse complète, avec les étapes
 detailed_analysis <- analyse_metadata(metadata_template, verbose = TRUE)
+```
 
+```
+## Error in check_column_names(df_metadata): Error: The dataframe is missing one or more required columns: table_name, field, hrc_field, indicator, hrc_indicator.
+```
+
+``` r
 # Output simplifié, uniquement le dataframe avec l'indicatrice de cluster
 cluster_id_dataframe <- analyse_metadata(metadata_template, verbose = FALSE)
+```
 
+```
+## Error in check_column_names(df_metadata): Error: The dataframe is missing one or more required columns: table_name, field, hrc_field, indicator, hrc_indicator.
+```
+
+``` r
 # visualisation du résultat de l'analyse
 cluster_id_dataframe
 ```
 
 ```
-## # A tibble: 6 x 8
-## # Groups:   table_name [6]
-##   cluster      table_name           field indicator spanning_1       spanning_2        hrc_spanning_1   hrc_spanning_2   
-##   <chr>        <chr>                <chr> <chr>     <chr>            <chr>             <chr>            <chr>            
-## 1 2021.SAL_DTH table_2021_SAL_DTH_1 2021  SAL_DTH   HRC_ACTIVITY_131 HRC_LEGAL_FORM_3  hrc_activity_131 hrc_legal_form_3 
-## 2 2021.SAL_DTH table_2021_SAL_DTH_2 2021  SAL_DTH   HRC_ACTIVITY_131 HRC_NUMBER_EMPL_4 hrc_activity_131 hrc_number_empl_4
-## 3 2022.SAL     table_2022_SAL_1     2022  SAL       HRC_ACTIVITY_131 HRC_LEGAL_FORM_3  hrc_activity_131 hrc_legal_form_3 
-## 4 2022.SAL     table_2022_SAL_2     2022  SAL       HRC_ACTIVITY_131 HRC_NUMBER_EMPL_4 hrc_activity_131 hrc_number_empl_4
-## 5 2022.SAL_DTH table_2022_SAL_DTH_1 2022  SAL_DTH   HRC_ACTIVITY_131 HRC_LEGAL_FORM_3  hrc_activity_131 hrc_legal_form_3 
-## 6 2022.SAL_DTH table_2022_SAL_DTH_2 2022  SAL_DTH   HRC_ACTIVITY_131 HRC_NUMBER_EMPL_4 hrc_activity_131 hrc_number_empl_4
+##                               cluster  table_name                   field indicator spanning_1 spanning_2    spanning_3 hrc_spanning_1
+## 1 france_entreprises_2023.hrc_lettuce  T10.T12.T8 france_entreprises_2023   LETTUCE    HRC_NAF         cj HRC_LETTUCE^h        hrc_naf
+## 2 france_entreprises_2023.hrc_lettuce   T11.T7.T9 france_entreprises_2023   LETTUCE    HRC_NAF       size HRC_LETTUCE^h        hrc_naf
+## 3    france_entreprises_2023.to_pizza       T1.T2 france_entreprises_2023  to_pizza   HRC_NUTS       size          <NA>       hrc_nuts
+## 4    france_entreprises_2023.to_pizza T3.T4.T5.T6 france_entreprises_2023  to_pizza    HRC_NAF   HRC_NUTS          <NA>        hrc_naf
+##   hrc_spanning_2 hrc_spanning_3
+## 1           <NA>    hrc_lettuce
+## 2           <NA>    hrc_lettuce
+## 3           <NA>           <NA>
+## 4       hrc_nuts           <NA>
 ```
 
 Ultimately, there are 6 tables to process in 3 different clusters. In other words, `tab_multi_manager()` will need to be called three times.
+
+## Equations between indicators
+
+In this example, we start from a metadata file describing 12 tables to be published on the turnover from pizza and salad sales.
+
+
+``` r
+str(metadata_pizza_lettuce)
+```
+
+```
+## 'data.frame':	12 obs. of  9 variables:
+##  $ table_name    : chr  "T1" "T2" "T3" "T4" ...
+##  $ field         : chr  "france_entreprises_2023" "france_entreprises_2023" "france_entreprises_2023" "france_entreprises_2023" ...
+##  $ hrc_field     : logi  NA NA NA NA NA NA ...
+##  $ indicator     : chr  "to_pizza" "to_pizza" "to_pizza" "to_pizza" ...
+##  $ hrc_indicator : chr  NA NA NA NA ...
+##  $ spanning_1    : chr  "nuts2" "nuts3" "a10" "a10" ...
+##  $ hrc_spanning_1: chr  "hrc_nuts" "hrc_nuts" "hrc_naf" "hrc_naf" ...
+##  $ spanning_2    : chr  "size" "size" "nuts2" "nuts3" ...
+##  $ hrc_spanning_2: chr  NA NA "hrc_nuts" "hrc_nuts" ...
+```
+
+This time a data frame describing the relationships between indicators is added.
+
+``` r
+liens_eq <- data.frame(eq_name = c("eq1"),
+                       eq_indicator = c("ca_salades = ca_batavia + ca_mache"),
+                       unit = c("EUR"))
+```
+
+
+Example code :
+
+``` r
+library(rtauargus)
+
+data(metadata_pizza_lettuce)
+
+# Full analysis, with intermediate steps
+detailed_analysis <- analyse_metadata(metadata_pizza_lettuce,
+                                      df_eq_indicator = liens_eq,
+                                      verbose = TRUE)
+```
+
+```
+## Warning in analyse_metadata(metadata_pizza_lettuce, df_eq_indicator = liens_eq, : For the variables part of equations specified in df_eq_indicator,
+##     the hrc_indicator column will be ignored.
+```
+
+```
+## Warning: Returning more (or less) than 1 row per `summarise()` group was deprecated in dplyr 1.1.0.
+## i Please use `reframe()` instead.
+## i When switching from `summarise()` to `reframe()`, remember that `reframe()` always returns an ungrouped data frame and adjust
+##   accordingly.
+## i The deprecated feature was likely used in the rtauargus package.
+##   Please report the issue at <https://github.com/inseefrlab/rtauargus/issues>.
+## This warning is displayed once every 8 hours.
+## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was generated.
+```
+
+``` r
+# Simplified output, only the data frame with the cluster indicator
+cluster_id_dataframe <- analyse_metadata(metadata_pizza_lettuce, verbose = FALSE)
+```
+
+Here, a warning informs us that the `hrc_indicator` column will be ignored since the
+relationships between indicators have been specified using the `df_eq_indicator` argument.
+Therefore, links should not be defined in `hrc_indicator` when using the `df_eq_indicator` argument.
+
+The result is the same as the first example.
+
+
+``` r
+cluster_id_dataframe
+```
+
+```
+##                               cluster  table_name                   field indicator spanning_1 spanning_2    spanning_3 hrc_spanning_1
+## 1 france_entreprises_2023.hrc_lettuce  T10.T12.T8 france_entreprises_2023   LETTUCE    HRC_NAF         cj HRC_LETTUCE^h        hrc_naf
+## 2 france_entreprises_2023.hrc_lettuce   T11.T7.T9 france_entreprises_2023   LETTUCE    HRC_NAF       size HRC_LETTUCE^h        hrc_naf
+## 3    france_entreprises_2023.to_pizza       T1.T2 france_entreprises_2023  to_pizza   HRC_NUTS       size          <NA>       hrc_nuts
+## 4    france_entreprises_2023.to_pizza T3.T4.T5.T6 france_entreprises_2023  to_pizza    HRC_NAF   HRC_NUTS          <NA>        hrc_naf
+##   hrc_spanning_2 hrc_spanning_3
+## 1           <NA>    hrc_lettuce
+## 2           <NA>    hrc_lettuce
+## 3           <NA>           <NA>
+## 4       hrc_nuts           <NA>
+```
+
 
 # Going Further: Visualizing Inclusions
 

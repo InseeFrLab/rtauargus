@@ -29,19 +29,19 @@ creer_hst <- function(tabular,
 
     tabular$label_apriori <-paste0("c",separator,tabular[[cost_var]])
 
-  if(!is.null(secret_var)){
+    if(!is.null(secret_var)){
 
-    is_cost_value_identical <- tabular[[cost_var]] == tabular[[value]]
-    is_secret_val <- tabular[[secret_var]]
+      is_cost_value_identical <- tabular[[cost_var]] == tabular[[value]]
+      is_secret_val <- tabular[[secret_var]]
 
-    tab_hst_cost = tabular[
-      !(is_secret_val | is_cost_value_identical),
-      c(explanatory_vars[(explanatory_vars %in% colnames(tabular))],"label_apriori")
-    ]
-      } else {
-        tab_hst_cost = tabular[,
-          c(explanatory_vars[(explanatory_vars %in% colnames(tabular))],"label_apriori")
-        ]
+      tab_hst_cost = tabular[
+        !(is_secret_val | is_cost_value_identical),
+        c(explanatory_vars[(explanatory_vars %in% colnames(tabular))],"label_apriori")
+      ]
+    } else {
+      tab_hst_cost = tabular[,
+                             c(explanatory_vars[(explanatory_vars %in% colnames(tabular))],"label_apriori")
+      ]
     }
 
   } else {tab_hst_cost <- data.frame()}
@@ -258,14 +258,14 @@ write_rda_tab <- function(info_vars) {
 #'   \item{`totcode = c("global", size="total", income="total")` :
 #'   `<TOTCODE> "global"` for each variable except for `size` and
 #'   `income`} assigned with `<TOTCODE> "total"`
-#'   by default : {<TOTCODE> "Total"}
+#'   by default : `<TOTCODE> "Total"`
 #'   \item{`totcode = "global"` : écrit `<TOTCODE> "global"` pour
 #'     toutes les variables catégorielles}
 #'   \item{`totcode = c("global", size="total", income="total")` :
 #'   `<TOTCODE> "global"` pour toutes les variables catégorielles
 #'   sauf  `size` and `income`} qui se verront affecter
 #'   le total : `<TOTCODE> "total"`
-#'   Par defaut : {<TOTCODE> "Total"}
+#'   Par defaut : `<TOTCODE> "Total"`
 #' }
 #'
 #'
@@ -275,21 +275,21 @@ write_rda_tab <- function(info_vars) {
 #' Parameter `hrc` has the same syntax as `totcode` and
 #' `codelist` (named vector containing as many elements as variables to describe).
 #' Hierarchy is defined in an separate hrc file (**hiercodelist**).
-#' which can be written with the function \code{link{write_hrc2}}.
+#' which can be written with the function `write_hrc2()`.
 #' The function expects the location of this file (and a possible `hierleadstring`
 #' if it differs from the default option of the package : @.
 #' The path to the existing file is explicitly given.
 #' The elements of the vector in parameter must be named (with the name of the variable),
 #' even if there is only one element.
 #'
-#' emph{Example :}`c(category="category.hrc")` \cr
+#' \emph{Example :}`c(category="category.hrc")` \cr
 #'
 #' (Le paramètre `hrc` obéit aux mêmes règles de syntaxe que `totcode`
 #'  et `codelist` (vecteur nommé contenant autant d'éléments
 #' que de variables à décrire).
 #'
 #' La hiérarchie est définie dans un fichier hrc à part (**hiercodelist**)
-#' qui peut être écrit à l'aide de la fonction [write_hrc2()].
+#' qui peut être écrit à l'aide de la fonction `write_hrc2()`.
 #'
 #' La fonction attend l'emplacement de ce fichier (et un éventuel `hierleadstring`
 #' s'il diffère de l'option par défaut du package).

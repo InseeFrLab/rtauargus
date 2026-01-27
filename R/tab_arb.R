@@ -162,7 +162,7 @@ tab_apriori_batch <- function(hst_names, sep, ignore_err = 0 , exp_triv = 0) {
 #' Valeur par défaut du package : `"2"` (csv for pivot-table).
 #' Pour le format SBS utiliser `"4"`)
 #' @param output_options Additionnal parameter for the output,
-#' by default : code{"AS+"} (print Status). To specify no options : `""`.\cr
+#' by default : \code{"AS+"} (print Status). To specify no options : `""`.\cr
 #' (Options supplémentaires des fichiers en sortie. Valeur
 #'   par défaut du package : `"AS+"` (affichage du statut). Pour ne
 #'   spécifier aucune option, `""`.)
