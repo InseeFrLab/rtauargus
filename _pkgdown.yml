@@ -29,21 +29,7 @@ reference:
       Functions to help the links analysis between tables from a metadata file.
     contents:
     - analyse_metadata
-    - contains_non_total
-    - create_edges
-    - dataframe_result
-    - enterprise_template
-    - filter_on_marginal_of_spanning_var
     - format_template
-    - get_combinations
-    - grp_tab_in_cluster
-    - grp_tab_names
-    - identify_hrc
-    - metadata_pizza_lettuce
-    - split_dataframe
-    - split_in_clusters
-    - tab_to_treat
-    - wide_to_long
   - title: Data
     desc: >
       Data to run examples
@@ -81,6 +67,21 @@ reference:
     - rtauargus_options
     - write_hrc
     - rtauargus-package
+    - contains_non_total
+    - create_edges
+    - dataframe_result
+    - enterprise_template
+    - filter_on_marginal_of_spanning_var
+    - get_combinations
+    - grp_tab_in_cluster
+    - grp_tab_names
+    - identify_hrc
+    - identify_hrc_with_eq
+    - metadata_pizza_lettuce
+    - split_dataframe
+    - split_in_clusters
+    - tab_to_treat
+    - wide_to_long
 articles:
   - title: Work with tabular data (Advised)
     navbar: tabular-wise
