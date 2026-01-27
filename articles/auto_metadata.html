@@ -179,8 +179,8 @@ created.</p>
 <code>df_metadata</code>: a dataframe structured as specified in
 section .</li>
 <li>
-<code>df_eq_indicator</code> : un dataframe regroupant les équations
-entre les indicateurs.</li>
+<code>df_eq_indicator</code> : a dataframe of equations on
+indicators.</li>
 <li>
 <code>verbose</code>: a variable of type <code>logical</code>. If
 <code>TRUE</code> he function returns a list with the different steps of
@@ -255,16 +255,16 @@ to be published on the turnover of pizza and salad sales.</p>
 applying the secret.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cluster_id_dataframe</span></span></code></pre></div>
-<pre><code><span><span class="co">##                               cluster  table_name                   field indicator spanning_1 spanning_2    spanning_3 hrc_spanning_1</span></span>
-<span><span class="co">## 1 france_entreprises_2023.hrc_lettuce  T10.T12.T8 france_entreprises_2023   LETTUCE    HRC_NAF         cj HRC_LETTUCE^h        hrc_naf</span></span>
-<span><span class="co">## 2 france_entreprises_2023.hrc_lettuce   T11.T7.T9 france_entreprises_2023   LETTUCE    HRC_NAF       size HRC_LETTUCE^h        hrc_naf</span></span>
-<span><span class="co">## 3    france_entreprises_2023.to_pizza       T1.T2 france_entreprises_2023  to_pizza   HRC_NUTS       size          &lt;NA&gt;       hrc_nuts</span></span>
-<span><span class="co">## 4    france_entreprises_2023.to_pizza T3.T4.T5.T6 france_entreprises_2023  to_pizza    HRC_NAF   HRC_NUTS          &lt;NA&gt;        hrc_naf</span></span>
-<span><span class="co">##   hrc_spanning_2 hrc_spanning_3</span></span>
-<span><span class="co">## 1           &lt;NA&gt;    hrc_lettuce</span></span>
-<span><span class="co">## 2           &lt;NA&gt;    hrc_lettuce</span></span>
-<span><span class="co">## 3           &lt;NA&gt;           &lt;NA&gt;</span></span>
-<span><span class="co">## 4       hrc_nuts           &lt;NA&gt;</span></span></code></pre>
+<pre><code><span><span class="co">##                               cluster  table_name                   field indicator spanning_1 spanning_2    spanning_3</span></span>
+<span><span class="co">## 1 france_entreprises_2023.hrc_lettuce  T10.T12.T8 france_entreprises_2023   LETTUCE    HRC_NAF         cj HRC_LETTUCE^h</span></span>
+<span><span class="co">## 2 france_entreprises_2023.hrc_lettuce   T11.T7.T9 france_entreprises_2023   LETTUCE    HRC_NAF       size HRC_LETTUCE^h</span></span>
+<span><span class="co">## 3    france_entreprises_2023.to_pizza       T1.T2 france_entreprises_2023  to_pizza   HRC_NUTS       size          &lt;NA&gt;</span></span>
+<span><span class="co">## 4    france_entreprises_2023.to_pizza T3.T4.T5.T6 france_entreprises_2023  to_pizza    HRC_NAF   HRC_NUTS          &lt;NA&gt;</span></span>
+<span><span class="co">##   hrc_spanning_1 hrc_spanning_2 hrc_spanning_3</span></span>
+<span><span class="co">## 1        hrc_naf           &lt;NA&gt;    hrc_lettuce</span></span>
+<span><span class="co">## 2        hrc_naf           &lt;NA&gt;    hrc_lettuce</span></span>
+<span><span class="co">## 3       hrc_nuts           &lt;NA&gt;           &lt;NA&gt;</span></span>
+<span><span class="co">## 4        hrc_naf       hrc_nuts           &lt;NA&gt;</span></span></code></pre>
 <p>For the 12 tables to be published, it is sufficient to protect 4
 tables. These tables are distributed across two different clusters.
 Therefore, <code><a href="../reference/tab_multi_manager.html">tab_multi_manager()</a></code> needs to be called twice. A
@@ -281,8 +281,8 @@ object returned by the function will be a list of the different steps of
 the analysis.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">detailed_analysis</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## [1] "identify_hrc"        "info_var"            "split_in_clusters"   "create_edges"        "grp_tab_names"       "grp_tab_in_clusters"</span></span>
-<span><span class="co">## [7] "tab_to_treat"        "df_tab_to_treat"</span></span></code></pre>
+<pre><code><span><span class="co">## [1] "identify_hrc"        "info_var"            "split_in_clusters"   "create_edges"        "grp_tab_names"      </span></span>
+<span><span class="co">## [6] "grp_tab_in_clusters" "tab_to_treat"        "df_tab_to_treat"</span></span></code></pre>
 <p>One finds the dataframe with the cluster indicator
 <code>df_tab_to_treat</code>. The result is the same but in list format:
 each element of the list is an independent cluster
@@ -352,24 +352,26 @@ deaths).</p>
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Analyse complète, avec les étapes</span></span>
 <span><span class="va">detailed_analysis</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/analyse_metadata.html">analyse_metadata</a></span><span class="op">(</span><span class="va">metadata_template</span>, verbose <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error in check_column_names(df_metadata): Error: The dataframe is missing one or more required columns: table_name, field, hrc_field, indicator, hrc_indicator.</span></span></code></pre>
+<pre><code><span><span class="co">## Error in `check_column_names()`:</span></span>
+<span><span class="co">## ! Error: The dataframe is missing one or more required columns: table_name, field, hrc_field, indicator, hrc_indicator.</span></span></code></pre>
 <div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Output simplifié, uniquement le dataframe avec l'indicatrice de cluster</span></span>
 <span><span class="va">cluster_id_dataframe</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/analyse_metadata.html">analyse_metadata</a></span><span class="op">(</span><span class="va">metadata_template</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error in check_column_names(df_metadata): Error: The dataframe is missing one or more required columns: table_name, field, hrc_field, indicator, hrc_indicator.</span></span></code></pre>
+<pre><code><span><span class="co">## Error in `check_column_names()`:</span></span>
+<span><span class="co">## ! Error: The dataframe is missing one or more required columns: table_name, field, hrc_field, indicator, hrc_indicator.</span></span></code></pre>
 <div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># visualisation du résultat de l'analyse</span></span>
 <span><span class="va">cluster_id_dataframe</span></span></code></pre></div>
-<pre><code><span><span class="co">##                               cluster  table_name                   field indicator spanning_1 spanning_2    spanning_3 hrc_spanning_1</span></span>
-<span><span class="co">## 1 france_entreprises_2023.hrc_lettuce  T10.T12.T8 france_entreprises_2023   LETTUCE    HRC_NAF         cj HRC_LETTUCE^h        hrc_naf</span></span>
-<span><span class="co">## 2 france_entreprises_2023.hrc_lettuce   T11.T7.T9 france_entreprises_2023   LETTUCE    HRC_NAF       size HRC_LETTUCE^h        hrc_naf</span></span>
-<span><span class="co">## 3    france_entreprises_2023.to_pizza       T1.T2 france_entreprises_2023  to_pizza   HRC_NUTS       size          &lt;NA&gt;       hrc_nuts</span></span>
-<span><span class="co">## 4    france_entreprises_2023.to_pizza T3.T4.T5.T6 france_entreprises_2023  to_pizza    HRC_NAF   HRC_NUTS          &lt;NA&gt;        hrc_naf</span></span>
-<span><span class="co">##   hrc_spanning_2 hrc_spanning_3</span></span>
-<span><span class="co">## 1           &lt;NA&gt;    hrc_lettuce</span></span>
-<span><span class="co">## 2           &lt;NA&gt;    hrc_lettuce</span></span>
-<span><span class="co">## 3           &lt;NA&gt;           &lt;NA&gt;</span></span>
-<span><span class="co">## 4       hrc_nuts           &lt;NA&gt;</span></span></code></pre>
+<pre><code><span><span class="co">##                               cluster  table_name                   field indicator spanning_1 spanning_2    spanning_3</span></span>
+<span><span class="co">## 1 france_entreprises_2023.hrc_lettuce  T10.T12.T8 france_entreprises_2023   LETTUCE    HRC_NAF         cj HRC_LETTUCE^h</span></span>
+<span><span class="co">## 2 france_entreprises_2023.hrc_lettuce   T11.T7.T9 france_entreprises_2023   LETTUCE    HRC_NAF       size HRC_LETTUCE^h</span></span>
+<span><span class="co">## 3    france_entreprises_2023.to_pizza       T1.T2 france_entreprises_2023  to_pizza   HRC_NUTS       size          &lt;NA&gt;</span></span>
+<span><span class="co">## 4    france_entreprises_2023.to_pizza T3.T4.T5.T6 france_entreprises_2023  to_pizza    HRC_NAF   HRC_NUTS          &lt;NA&gt;</span></span>
+<span><span class="co">##   hrc_spanning_1 hrc_spanning_2 hrc_spanning_3</span></span>
+<span><span class="co">## 1        hrc_naf           &lt;NA&gt;    hrc_lettuce</span></span>
+<span><span class="co">## 2        hrc_naf           &lt;NA&gt;    hrc_lettuce</span></span>
+<span><span class="co">## 3       hrc_nuts           &lt;NA&gt;           &lt;NA&gt;</span></span>
+<span><span class="co">## 4        hrc_naf       hrc_nuts           &lt;NA&gt;</span></span></code></pre>
 <p>Ultimately, there are 6 tables to process in 3 different clusters. In
 other words, <code><a href="../reference/tab_multi_manager.html">tab_multi_manager()</a></code> will need to be called
 three times.</p>
@@ -410,12 +412,12 @@ indicators is added.</p>
 <pre><code><span><span class="co">## Warning in analyse_metadata(metadata_pizza_lettuce, df_eq_indicator = liens_eq, : For the variables part of equations specified in df_eq_indicator,</span></span>
 <span><span class="co">##     the hrc_indicator column will be ignored.</span></span></code></pre>
 <pre><code><span><span class="co">## Warning: Returning more (or less) than 1 row per `summarise()` group was deprecated in dplyr 1.1.0.</span></span>
-<span><span class="co">## i Please use `reframe()` instead.</span></span>
-<span><span class="co">## i When switching from `summarise()` to `reframe()`, remember that `reframe()` always returns an ungrouped data frame and adjust</span></span>
+<span><span class="co">## ℹ Please use `reframe()` instead.</span></span>
+<span><span class="co">## ℹ When switching from `summarise()` to `reframe()`, remember that `reframe()` always returns an ungrouped data frame and adjust</span></span>
 <span><span class="co">##   accordingly.</span></span>
-<span><span class="co">## i The deprecated feature was likely used in the rtauargus package.</span></span>
+<span><span class="co">## ℹ The deprecated feature was likely used in the rtauargus package.</span></span>
 <span><span class="co">##   Please report the issue at &lt;https://github.com/inseefrlab/rtauargus/issues&gt;.</span></span>
-<span><span class="co">## This warning is displayed once every 8 hours.</span></span>
+<span><span class="co">## This warning is displayed once per session.</span></span>
 <span><span class="co">## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was generated.</span></span></code></pre>
 <div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Simplified output, only the data frame with the cluster indicator</span></span>
@@ -428,16 +430,16 @@ links should not be defined in <code>hrc_indicator</code> when using the
 <p>The result is the same as the first example.</p>
 <div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cluster_id_dataframe</span></span></code></pre></div>
-<pre><code><span><span class="co">##                               cluster  table_name                   field indicator spanning_1 spanning_2    spanning_3 hrc_spanning_1</span></span>
-<span><span class="co">## 1 france_entreprises_2023.hrc_lettuce  T10.T12.T8 france_entreprises_2023   LETTUCE    HRC_NAF         cj HRC_LETTUCE^h        hrc_naf</span></span>
-<span><span class="co">## 2 france_entreprises_2023.hrc_lettuce   T11.T7.T9 france_entreprises_2023   LETTUCE    HRC_NAF       size HRC_LETTUCE^h        hrc_naf</span></span>
-<span><span class="co">## 3    france_entreprises_2023.to_pizza       T1.T2 france_entreprises_2023  to_pizza   HRC_NUTS       size          &lt;NA&gt;       hrc_nuts</span></span>
-<span><span class="co">## 4    france_entreprises_2023.to_pizza T3.T4.T5.T6 france_entreprises_2023  to_pizza    HRC_NAF   HRC_NUTS          &lt;NA&gt;        hrc_naf</span></span>
-<span><span class="co">##   hrc_spanning_2 hrc_spanning_3</span></span>
-<span><span class="co">## 1           &lt;NA&gt;    hrc_lettuce</span></span>
-<span><span class="co">## 2           &lt;NA&gt;    hrc_lettuce</span></span>
-<span><span class="co">## 3           &lt;NA&gt;           &lt;NA&gt;</span></span>
-<span><span class="co">## 4       hrc_nuts           &lt;NA&gt;</span></span></code></pre>
+<pre><code><span><span class="co">##                               cluster  table_name                   field indicator spanning_1 spanning_2    spanning_3</span></span>
+<span><span class="co">## 1 france_entreprises_2023.hrc_lettuce  T10.T12.T8 france_entreprises_2023   LETTUCE    HRC_NAF         cj HRC_LETTUCE^h</span></span>
+<span><span class="co">## 2 france_entreprises_2023.hrc_lettuce   T11.T7.T9 france_entreprises_2023   LETTUCE    HRC_NAF       size HRC_LETTUCE^h</span></span>
+<span><span class="co">## 3    france_entreprises_2023.to_pizza       T1.T2 france_entreprises_2023  to_pizza   HRC_NUTS       size          &lt;NA&gt;</span></span>
+<span><span class="co">## 4    france_entreprises_2023.to_pizza T3.T4.T5.T6 france_entreprises_2023  to_pizza    HRC_NAF   HRC_NUTS          &lt;NA&gt;</span></span>
+<span><span class="co">##   hrc_spanning_1 hrc_spanning_2 hrc_spanning_3</span></span>
+<span><span class="co">## 1        hrc_naf           &lt;NA&gt;    hrc_lettuce</span></span>
+<span><span class="co">## 2        hrc_naf           &lt;NA&gt;    hrc_lettuce</span></span>
+<span><span class="co">## 3       hrc_nuts           &lt;NA&gt;           &lt;NA&gt;</span></span>
+<span><span class="co">## 4        hrc_naf       hrc_nuts           &lt;NA&gt;</span></span></code></pre>
 </div>
 </div>
 <div class="section level2">
@@ -449,10 +451,24 @@ The following code allows visualizing these inclusions using graphs to
 better understand the analysis procedure.</p>
 <div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://inseefrlab.github.io/rtauargus">rtauargus</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r.igraph.org/" class="external-link">igraph</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://datastorm-open.github.io/visNetwork/" class="external-link">visNetwork</a></span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">graph_links_tab</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">list_desc_links</span><span class="op">)</span><span class="op">{</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r.igraph.org/" class="external-link">igraph</a></span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## </span></span>
+<span><span class="co">## Attaching package: 'igraph'</span></span></code></pre>
+<pre><code><span><span class="co">## The following objects are masked from 'package:dplyr':</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">##     as_data_frame, groups, union</span></span></code></pre>
+<pre><code><span><span class="co">## The following objects are masked from 'package:stats':</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">##     decompose, spectrum</span></span></code></pre>
+<pre><code><span><span class="co">## The following object is masked from 'package:base':</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">##     union</span></span></code></pre>
+<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://datastorm-open.github.io/visNetwork/" class="external-link">visNetwork</a></span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## Error in `library()`:</span></span>
+<span><span class="co">## ! there is no package called 'visNetwork'</span></span></code></pre>
+<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">graph_links_tab</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">list_desc_links</span><span class="op">)</span><span class="op">{</span></span>
 <span>  <span class="va">list_desc_links</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/imap.html" class="external-link">imap</a></span><span class="op">(</span><span class="kw">function</span><span class="op">(</span><span class="va">ss_dem</span>,<span class="va">i</span><span class="op">)</span><span class="op">{</span></span>
 <span>    <span class="kw">if</span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NULL.html" class="external-link">is.null</a></span><span class="op">(</span><span class="va">ss_dem</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
 <span>      <span class="va">nodes</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unlist.html" class="external-link">unlist</a></span><span class="op">(</span><span class="va">ss_dem</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
@@ -471,9 +487,11 @@ better understand the analysis procedure.</p>
 <span><span class="va">detailed_analysis</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/analyse_metadata.html">analyse_metadata</a></span><span class="op">(</span><span class="va">metadata_pizza_lettuce</span>, verbose <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">graph_links_tab</span><span class="op">(</span><span class="va">detailed_analysis</span><span class="op">$</span><span class="va">create_edges</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## $france_entreprises_2023.hrc_lettuce</span></span>
-<span><span class="co">## </span></span>
-<span><span class="co">## $france_entreprises_2023.to_pizza</span></span></code></pre>
+<pre><code><span><span class="co">## Error in `map2()`:</span></span>
+<span><span class="co">## ℹ In index: 1.</span></span>
+<span><span class="co">## ℹ With name: france_entreprises_2023.hrc_lettuce.</span></span>
+<span><span class="co">## Caused by error in `visOptions()`:</span></span>
+<span><span class="co">## ! could not find function "visOptions"</span></span></code></pre>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table des matières"><h2>Sur cette page</h2>
     </nav></aside>
