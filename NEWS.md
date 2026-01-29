@@ -4,6 +4,31 @@ subtitle: History of changes / Historique des modifications
 output: rmarkdown::html_vignette
 ---
 
+
+## rtauargus 1.3.2
+
+[01/2026]
+
+* Add automatic analysis of links between indicators
+
+This version adds a new parameter to `analyse_metadata()` : `df_eq_indicator`. 
+This parameter allows the user to specify links between indicators.
+
+An article presenting this new feature was presented at the JMS conference 
+in 2025 (paper in French): 
+https://journees-methodologie-statistique.insee.net/analyse-automatique-des-metadonnees-pour-la-protection-des-donnees-tabulees/#presentation
+
+
+## rtauargus 1.3.1
+
+[07/2025]
+
+Bug fixed:
+
+Previously, a list of 1-dimensional tables with no common cells hit by 
+secondary suppression would have produced an error during the call 
+of `tab_multi_manager()`.
+
 ## rtauargus 1.2.999-dev
 
 [02/2025]
