@@ -4,7 +4,7 @@ General function to choose variables to merge, limiting the number of
 generated tables while ensuring not to generate tables that are too
 large.
 
-## Utilisation
+## Usage
 
 ``` r
 var_to_merge(
@@ -50,11 +50,11 @@ var_to_merge(
 
   maximum allowed row count in the 'smart' case
 
-## Valeur de retour
+## Value
 
 A list of vectors representing the chosen variables to merge
 
-## Exemples
+## Examples
 
 ``` r
 library(dplyr)

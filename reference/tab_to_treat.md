@@ -5,7 +5,7 @@ hierarchical clusters, and transforms them into a flat, easy-to-read
 format. Each column corresponds to a dplyr::distinct variable,
 simplifying downstream analysis and use.
 
-## Utilisation
+## Usage
 
 ``` r
 tab_to_treat(list_independent_tables)
@@ -19,7 +19,7 @@ tab_to_treat(list_independent_tables)
   [`grp_tab_in_cluster()`](https://inseefrlab.github.io/rtauargus/reference/grp_tab_in_cluster.md),
   where each tibble represents independent tables grouped by clusters.
 
-## Valeur de retour
+## Value
 
 A list of unnested tibbles, where each tibble contains the following
 columns:
@@ -36,7 +36,7 @@ columns:
 - `hrc_spanning_*`: Columns derived from hierarchical spanning metadata
   (expanded into multiple columns).
 
-## Exemples
+## Examples
 
 ``` r
 if (FALSE) { # \dontrun{

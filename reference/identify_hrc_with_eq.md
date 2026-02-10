@@ -6,7 +6,7 @@ using the name of their hierarchy in uppercase, while response variables
 linked by an equation (specified in the `hrc_indicator` column) are
 grouped together, and a new grouping variable is created.
 
-## Utilisation
+## Usage
 
 ``` r
 identify_hrc_with_eq(df_metadata_long, df_eq_indicator)
@@ -40,7 +40,7 @@ identify_hrc_with_eq(df_metadata_long, df_eq_indicator)
 
   - `unit`: The unit of the indicators in the equation.
 
-## Valeur de retour
+## Value
 
 `list_hrc_identified`, a list with two elements:
 
@@ -50,7 +50,7 @@ identify_hrc_with_eq(df_metadata_long, df_eq_indicator)
 - `df_variable_info`: A data frame mapping original variable names
   (`spanning_old`) to their renamed counterparts (`spanning`).
 
-## Exemples
+## Examples
 
 ``` r
 if (FALSE) { # \dontrun{

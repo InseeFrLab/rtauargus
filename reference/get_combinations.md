@@ -3,7 +3,7 @@
 This function generates all possible combinations of keys from a given
 named list or vector.
 
-## Utilisation
+## Usage
 
 ``` r
 get_combinations(criteria)
@@ -15,12 +15,12 @@ get_combinations(criteria)
 
   A named list or vector, where the names represent the keys.
 
-## Valeur de retour
+## Value
 
 A list of combinations, where each combination is a character vector of
 key names.
 
-## Exemples
+## Examples
 
 ``` r
 if (FALSE) { # \dontrun{

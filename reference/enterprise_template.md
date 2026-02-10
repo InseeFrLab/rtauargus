@@ -2,7 +2,7 @@
 
 A dataset describing all the cells expected by Eurostat.
 
-## Utilisation
+## Usage
 
 ``` r
 enterprise_template

@@ -3,7 +3,7 @@
 This function checks if any column in a data frame contains values that
 are not part of a given set of totals.
 
-## Utilisation
+## Usage
 
 ``` r
 contains_non_total(data, totals)
@@ -19,12 +19,12 @@ contains_non_total(data, totals)
 
   A vector of values considered as totals.
 
-## Valeur de retour
+## Value
 
 A logical value: `TRUE` if at least one non-total value exists,
 otherwise `FALSE`.
 
-## Exemples
+## Examples
 
 ``` r
 if (FALSE) { # \dontrun{

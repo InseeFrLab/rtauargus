@@ -2,7 +2,7 @@
 
 Companies data at individual level.
 
-## Utilisation
+## Usage
 
 ``` r
 indiv_dt

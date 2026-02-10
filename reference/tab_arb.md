@@ -5,7 +5,7 @@ Function doesn't check if the asc and rda files exists
 Tau-Argus en ligne de commande. La fonction ne vérifie pas si les
 fichiers asc et rda existent.)
 
-## Utilisation
+## Usage
 
 ``` r
 tab_arb(
@@ -114,7 +114,7 @@ tab_arb(
   (Possibilité de lancer le batch depuis le menu de Tau-Argus (`FALSE`
   par défaut).)
 
-## Valeur de retour
+## Value
 
 A list containing two elements : the arb file name and the output name
 (usefull if the name is generated randomly)  
@@ -157,7 +157,7 @@ pour le séparateur, `ignore_err` pour IgnoreError et `exp_triv` pour
 ExpandTrivial. Comme pour les noms de fichiers, spécifier une seule
 valeur par paramètre ou autant de valeurs que de tabulations.)
 
-## Exemples
+## Examples
 
 ``` r
 if (FALSE) { # \dontrun{

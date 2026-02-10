@@ -3,7 +3,7 @@
 General function that selects the appropriate separator and applies
 dimension reduction.
 
-## Utilisation
+## Usage
 
 ``` r
 reduce_dims(
@@ -86,7 +86,7 @@ reduce_dims(
   print the different steps of the function to inform the user of
   progress
 
-## Valeur de retour
+## Value
 
 A list containing:
 
@@ -110,7 +110,7 @@ A list containing:
 - `fus_vars`: named vector of vectors representing the merged variables
   during dimension reduction
 
-## Exemples
+## Examples
 
 ``` r
 if (FALSE) { # \dontrun{

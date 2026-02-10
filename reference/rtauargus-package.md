@@ -2,7 +2,7 @@
 
 Protects tables by calling the Tau-Argus software from R.
 
-## Voir également
+## See also
 
 Useful links:
 
@@ -14,7 +14,7 @@ Useful links:
 
 - Report bugs at <https://github.com/inseefrlab/rtauargus/issues>
 
-## Auteur·rice
+## Author
 
 **Maintainer**: Julien Jamme <julien.jamme@insee.fr>
 

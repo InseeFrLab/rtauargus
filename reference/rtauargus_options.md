@@ -3,7 +3,7 @@
 Manages (displays, modifies, resets) the options of rtauargus package.  
 Gère les options du package (affiche, modifie, réinitialise).
 
-## Utilisation
+## Usage
 
 ``` r
 rtauargus_options()
@@ -24,7 +24,7 @@ reset_rtauargus_options(...)
   nom n'est spécifié, toutes les options du package seront
   réinitialisées. Le préfixe `"rtauargus."` est facultatif.
 
-## Détails
+## Details
 
 The options of the package define the default behaviour of the
 functions.
@@ -98,13 +98,13 @@ fonctions utiliseront les valeurs par défaut du package.)
 | rtauargus.show_batch_console | FALSE                                 |                                                                                        |
 | rtauargus.import             | FALSE                                 |                                                                                        |
 
-## Voir également
+## See also
 
 [options](https://rdrr.io/r/base/options.html), R options system  
 le système d'options de R dans lequel s'insèrent les options de ce
 package.
 
-## Exemples
+## Examples
 
 ``` r
 rtauargus_options()

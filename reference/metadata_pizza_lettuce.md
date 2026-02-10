@@ -4,7 +4,7 @@ A dataset containing metadata information for various tables and
 indicators related to enterprises turnover selling pizzas and lettuces
 in France.
 
-## Utilisation
+## Usage
 
 ``` r
 metadata_pizza_lettuce

@@ -6,7 +6,7 @@ variable (`hrc_var`). The function handles cases where `hrc_var`
 contains character values or is missing, ensuring that independent and
 hierarchical groupings are managed appropriately.
 
-## Utilisation
+## Usage
 
 ``` r
 split_dataframe(tab, var, hrc_var)
@@ -28,12 +28,12 @@ split_dataframe(tab, var, hrc_var)
   present, the data frame will first be split by its values; otherwise,
   it will be split directly by `var`.
 
-## Valeur de retour
+## Value
 
 A list of data frames (`list_diff`), where each element corresponds to a
 grouping determined by `var` and/or `hrc_var`.
 
-## Exemples
+## Examples
 
 ``` r
 if (FALSE) { # \dontrun{

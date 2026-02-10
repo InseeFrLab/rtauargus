@@ -2,7 +2,7 @@
 
 **\[experimental\]**
 
-## Utilisation
+## Usage
 
 ``` r
 tab_rtauargus4(
@@ -160,12 +160,12 @@ tab_rtauargus4(
 
   additional parameters#'
 
-## Valeur de retour
+## Value
 
 The original tabular is returned with additional variables indicating
 whether or not the cell has to be masked according to Tau-Argus
 
-## Exemples
+## Examples
 
 ``` r
 if (FALSE) { # \dontrun{

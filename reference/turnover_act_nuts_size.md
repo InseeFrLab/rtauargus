@@ -6,7 +6,7 @@ restricted to only three NUTS2 of France (codes FR41, FR42 and FR43) and
 their corresponding NUTS3 areas. Useful for playing with tab\_
 functions.
 
-## Utilisation
+## Usage
 
 ``` r
 turnover_act_nuts_size
@@ -46,6 +46,6 @@ A tibble/data frame with 3 168 rows and 6 variables:
 
   turnover of the company which contributes the most to the cell.
 
-## Voir également
+## See also
 
 activity_corr_table nuts23_fr_corr_table

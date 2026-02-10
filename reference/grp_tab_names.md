@@ -8,7 +8,7 @@ function, the tables are aggregated to minimize redundancy. The output
 identifies the final tables that need to be protected and provides a
 mapping of original table names to their respective groups.
 
-## Utilisation
+## Usage
 
 ``` r
 grp_tab_names(list_split)
@@ -24,7 +24,7 @@ grp_tab_names(list_split)
   [`create_edges()`](https://inseefrlab.github.io/rtauargus/reference/create_edges.md)
   function.
 
-## Valeur de retour
+## Value
 
 A list of results for each cluster, where each result is a list
 containing:
@@ -35,7 +35,7 @@ containing:
 - `passage_nom_tab`: A data frame mapping original table names
   (`Original`) to their respective groups (`Group`).
 
-## Exemples
+## Examples
 
 ``` r
 if (FALSE) { # \dontrun{

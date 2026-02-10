@@ -5,7 +5,7 @@ long format. The goal is to consolidate spanning variables into a single
 column, making the table easier to handle regardless of the number of
 spanning variables described.
 
-## Utilisation
+## Usage
 
 ``` r
 wide_to_long(df_metadata)
@@ -19,7 +19,7 @@ wide_to_long(df_metadata)
   "spanning" and "hrc_spanning", representing spanning variables and
   their hierarchical counterparts.
 
-## Valeur de retour
+## Value
 
 A data frame in long format. The resulting data frame contains two
 columns:
@@ -30,7 +30,7 @@ columns:
   where the names of "spanning" and "hrc_spanning" do not match, or
   where `spanning` values are NA, are filtered out.
 
-## Exemples
+## Examples
 
 ``` r
 if (FALSE) { # \dontrun{

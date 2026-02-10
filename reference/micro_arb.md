@@ -21,7 +21,7 @@ ligne de commande.)
 The function does not check if asc and rda files exist.  
 (La fonction ne vérifie pas si les fichiers asc et rda existent.)
 
-## Utilisation
+## Usage
 
 ``` r
 micro_arb(
@@ -169,7 +169,7 @@ micro_arb(
   (pour avoir la possibilité de lancer le batch depuis le menu de
   Tau-Argus (`FALSE` par défaut).)
 
-## Valeur de retour
+## Value
 
 A list of two elements: arb filename and names of output files (useful
 to get back the randomly generated names)  
@@ -261,7 +261,7 @@ which uses this function and inherits its parameters.
 [`micro_rtauargus()`](https://inseefrlab.github.io/rtauargus/reference/micro_rtauargus.md),
 qui utilise cette fonction et hérite de ses paramètres.)
 
-## Exemples
+## Examples
 
 ``` r
 # creation of the .arb file

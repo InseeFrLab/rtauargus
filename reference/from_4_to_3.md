@@ -2,7 +2,7 @@
 
 Function reducing from 4 to 3 categorical variables
 
-## Utilisation
+## Usage
 
 ``` r
 from_4_to_3(
@@ -69,7 +69,7 @@ from_4_to_3(
   sizes, or non-hierarchical variables with the fewest modalities
   (FALSE) to create fewer tables
 
-## Valeur de retour
+## Value
 
 A list containing the following components:
 
@@ -84,16 +84,16 @@ A list containing the following components:
 - `vars`: named list of vectors representing the merged variables during
   the two stages of dimension reduction
 
-## Exemples
+## Examples
 
 ``` r
 library(dplyr)
 #> 
-#> Attachement du package : ‘dplyr’
-#> Les objets suivants sont masqués depuis ‘package:stats’:
+#> Attaching package: ‘dplyr’
+#> The following objects are masked from ‘package:stats’:
 #> 
 #>     filter, lag
-#> Les objets suivants sont masqués depuis ‘package:base’:
+#> The following objects are masked from ‘package:base’:
 #> 
 #>     intersect, setdiff, setequal, union
 data <- expand.grid(

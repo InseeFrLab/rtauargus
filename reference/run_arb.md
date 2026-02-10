@@ -4,7 +4,7 @@ Executes the instructions contained in an .arb file for Tau-Argus.
 (Exécute les instructions contenues dans un fichier .arb pour
 Tau-Argus.)
 
-## Utilisation
+## Usage
 
 ``` r
 run_arb(
@@ -77,14 +77,14 @@ run_arb(
   (paramètres supplémentaires pour
   [`system()`](https://rdrr.io/r/base/system.html).)
 
-## Valeur de retour
+## Value
 
 - a list of data.frame containing the results if `import = TRUE` (via
   the `link{import}` function) ;
 
 - `NULL` otherwise.
 
-## Détails
+## Details
 
 Only the argument `arb_filename` is required, because all necessary
 information is present in this file.
@@ -126,7 +126,7 @@ which uses this function and inherits its parameters.
 [`micro_rtauargus()`](https://inseefrlab.github.io/rtauargus/reference/micro_rtauargus.md),
 qui utilise cette fonction et hérite de ses paramètres.)
 
-## Exemples
+## Examples
 
 ``` r
 if (FALSE) { # \dontrun{

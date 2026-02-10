@@ -2,7 +2,7 @@
 
 **\[experimental\]**
 
-## Utilisation
+## Usage
 
 ``` r
 analyse_metadata(df_metadata, df_eq_indicator = NULL, verbose = FALSE)
@@ -24,7 +24,7 @@ analyse_metadata(df_metadata, df_eq_indicator = NULL, verbose = FALSE)
   from each processing step. If `FALSE`, returns only the cluster
   assignments. Defaults to `FALSE`.
 
-## Valeur de retour
+## Value
 
 A list or dataframe, depending on the value of the `verbose` parameter:
 
@@ -66,7 +66,7 @@ A list or dataframe, depending on the value of the `verbose` parameter:
 - If `verbose = FALSE`, returns only the cluster assignments
   (`tab_to_treat`).
 
-## Détails
+## Details
 
 This function analyzes a metadata dataframe to determine which tables
 should be treated together in the same cluster. It also rearranges and
@@ -95,7 +95,7 @@ The function performs the following steps:
 - Produces a final dataframe summarizing the cluster assignments using
   `dataframe_result`.
 
-## Exemples
+## Examples
 
 ``` r
 data(metadata_pizza_lettuce)

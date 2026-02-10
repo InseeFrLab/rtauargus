@@ -6,7 +6,7 @@ to include another if all its spanning variables (columns defining the
 structure of the table) are contained within the spanning variables of
 the other table.
 
-## Utilisation
+## Usage
 
 ``` r
 create_edges(list_split)
@@ -20,14 +20,14 @@ create_edges(list_split)
   frames. Typically, this is the output of the `split_in_clusters`
   function.
 
-## Valeur de retour
+## Value
 
 A list of data frames (`list_desc_links`), where each data frame
 describes the inclusion relationships (`from` and `to`) within a cluster
 of tables. Each row in a data frame indicates that the table in the
 `from` column is fully included in the table in the `to` column.
 
-## Détails
+## Details
 
 For example, consider two tables to be published:
 
@@ -40,7 +40,7 @@ All the information in **T1** is included in **T2**. By protecting
 identifies such inclusion relationships and outputs a data frame that
 describes these links.
 
-## Exemples
+## Examples
 
 ``` r
 if (FALSE) { # \dontrun{

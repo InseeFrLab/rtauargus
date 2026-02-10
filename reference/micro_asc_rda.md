@@ -19,7 +19,7 @@ microdata and additional information.
 métadonnées (rda) à partir de microdonnées et d'informations
 additionnelles.)
 
-## Utilisation
+## Usage
 
 ``` r
 micro_asc_rda(
@@ -117,7 +117,7 @@ micro_asc_rda(
 
   (not yet implemented - pas encore implémenté)
 
-## Valeur de retour
+## Value
 
 Returns the names of the asc and rda files as a list (invisibly).
 invisibly). Empty columns (filled with `NA` or empty strings) are not
@@ -277,7 +277,7 @@ which uses this function and inherits its parameters.
 [`micro_rtauargus()`](https://inseefrlab.github.io/rtauargus/reference/micro_rtauargus.md),
 qui utilise cette fonction et hérite de ses paramètres.)
 
-## Exemples
+## Examples
 
 ``` r
 # dummy data/donnees fictives
@@ -308,5 +308,5 @@ file.show(
   header = unlist(res),
   pager = "internal"
 )
-#> Warning: erreur lors de l'exécution d'une commande
+#> Warning: error in running command
 ```

@@ -1,4 +1,4 @@
-# Index du paquet
+# Package index
 
 ## Protect tables from tabular
 

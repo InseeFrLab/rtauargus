@@ -3,7 +3,7 @@
 A tabular dataset containing the turnover broken down by Business sector
 and Size of companies. Useful for playing with tab\_ functions.
 
-## Utilisation
+## Usage
 
 ``` r
 turnover_act_size
@@ -35,6 +35,6 @@ A tibble/data frame with 414 rows and 5 variables:
 
   turnover of the company which contributes the most to the cell.
 
-## Voir également
+## See also
 
 activity_corr_table

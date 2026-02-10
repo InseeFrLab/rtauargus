@@ -5,7 +5,7 @@ microdata set.
 Crée un fichier hrc (hiérarchie) à partir de plusieurs variables d'un
 jeu de microdonnées.
 
-## Utilisation
+## Usage
 
 ``` r
 write_hrc(
@@ -85,14 +85,14 @@ write_hrc(
   Par exemple, `hierlevels = "2 3"` pour construire une hiérarchie
   département-commune à partir d'un code commune.)
 
-## Valeur de retour
+## Value
 
 The name of the hrc file (useful in the case of a temporary file with
 random name).  
 (Le nom du fichier hrc (utile dans le cas d'un fichier temporaire au nom
 aléatoire).)
 
-## Détails
+## Details
 
 The function reconstructs the variable hierarchy from the levels present
 in the data. The variables in `vars_hrc` must be **classified from the
@@ -139,7 +139,7 @@ Le paramètre `compact` permet de créer des hiérarchies à profondeurs
 variables. L'idée est de couper les branches constituées d'une seule
 valeur répétée jusqu'à la profondeur maximale (voir exemples).
 
-## Exemples
+## Examples
 
 ``` r
 # Full Hierarchy ............................

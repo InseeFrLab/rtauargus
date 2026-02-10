@@ -3,7 +3,7 @@
 Calculate the number of tables generated when merging 3 variables in the
 transition from 5 to 3 dimensions
 
-## Utilisation
+## Usage
 
 ``` r
 nb_tab_generated(v1, v2, v3 = NULL, v4 = NULL, hrcfiles = NULL, data = NULL)
@@ -36,11 +36,11 @@ nb_tab_generated(v1, v2, v3 = NULL, v4 = NULL, hrcfiles = NULL, data = NULL)
 
   data.frame (used only in the case where a trio is formed)
 
-## Valeur de retour
+## Value
 
 an integer representing the number of tables generated
 
-## Exemples
+## Examples
 
 ``` r
 # Dimension 4

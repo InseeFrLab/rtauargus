@@ -52,7 +52,7 @@ aléatoirement. Ce mécanisme permet à l'utilisateur de s'abstraire de la
 préparation des données propre à Tau-Argus et de maintenir l'intégralité
 de la chaîne de traitements dans R.)
 
-## Utilisation
+## Usage
 
 ``` r
 micro_rtauargus(microdata, explanatory_vars, safety_rules, suppress, ...)
@@ -118,7 +118,7 @@ micro_rtauargus(microdata, explanatory_vars, safety_rules, suppress, ...)
   [`run_arb()`](https://inseefrlab.github.io/rtauargus/reference/run_arb.md).
   Voir l'aide de ces fonctions.)
 
-## Valeur de retour
+## Value
 
 If `import = TRUE`, a list of data.frames (protected tables), `NULL`
 otherwise.  
@@ -182,7 +182,7 @@ numéros recalculés automatiquement pour le batch. Dans l'écriture
 `suppress = "GH(n,100)"`, n sera ainsi transformé en 1 pour la première
 tabulation, en 2 pour la deuxième tabulation, etc.)
 
-## Voir également
+## See also
 
 [`rtauargus_plus()`](https://inseefrlab.github.io/rtauargus/reference/rtauargus_plus.md),
 a version optimized for a large number of tables (at the cost of some
@@ -191,7 +191,7 @@ usage restrictions).
 une version optimisée pour un grand nombre de tableaux (au prix de
 quelques restrictions d'usage).)
 
-## Exemples
+## Examples
 
 ``` r
 if (FALSE) { # \dontrun{

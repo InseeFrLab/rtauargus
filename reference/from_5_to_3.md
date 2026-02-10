@@ -2,7 +2,7 @@
 
 Function reducing from 5 to 3 categorical variables
 
-## Utilisation
+## Usage
 
 ``` r
 from_5_to_3(
@@ -87,7 +87,7 @@ from_5_to_3(
   prints the different steps of the function to notify the user of the
   progress, mainly for the general function gen_tabs_5_4_to_3()
 
-## Valeur de retour
+## Value
 
 a list containing the following components:
 
@@ -109,7 +109,7 @@ a list containing the following components:
 - `vars`: named list of vectors representing the merged variables during
   the two steps of dimension reduction
 
-## Exemples
+## Examples
 
 ``` r
 library(dplyr)

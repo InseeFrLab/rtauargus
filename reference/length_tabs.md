@@ -3,7 +3,7 @@
 Calculation of the table sizes generated a priori during the reduction
 of dimension from 4 or 5 dimensions to 3 dimensions
 
-## Utilisation
+## Usage
 
 ``` r
 length_tabs(dfs, v1, v2, v3 = NULL, v4 = NULL, totcode, hrcfiles = NULL)
@@ -44,12 +44,12 @@ length_tabs(dfs, v1, v2, v3 = NULL, v4 = NULL, totcode, hrcfiles = NULL)
 
   named vector of hrc files related to the variables
 
-## Valeur de retour
+## Value
 
 a list of the lengths of the tables created during the dimension
 reduction
 
-## Exemples
+## Examples
 
 ``` r
 # Dimension 4

@@ -6,7 +6,7 @@ crossovers (all having the same parameters).
 [`micro_rtauargus()`](https://inseefrlab.github.io/rtauargus/reference/micro_rtauargus.md)
 pour un grand nombre de croisements (ayant tous les mêmes paramètres).)
 
-## Utilisation
+## Usage
 
 ``` r
 rtauargus_plus(
@@ -81,12 +81,12 @@ rtauargus_plus(
   [`run_arb()`](https://inseefrlab.github.io/rtauargus/reference/run_arb.md).
   Voir l'aide de ces fonctions.)
 
-## Valeur de retour
+## Value
 
 A list of data.frames (secret arrays).  
 (Une liste de data.frames (tableaux secrétisés).)
 
-## Détails
+## Details
 
 In interactive mode, Tau-Argus can process up to 10 tabs simultaneously
 for the same microdata set. In batch mode, a larger number of of
@@ -169,13 +169,13 @@ rda pas autorisés).
 Si l'option `linked` est utilisée, la liaison ne sera effective qu'à
 l'intérieur de chaque groupe de tabulations.)
 
-## Voir également
+## See also
 
 [`micro_rtauargus()`](https://inseefrlab.github.io/rtauargus/reference/micro_rtauargus.md),
 a function called repeatedly by `rtauargus_plus`.  
 fonction appelée de manière répétée par `rtauargus_plus`.
 
-## Exemples
+## Examples
 
 ``` r
 if (FALSE) { # \dontrun{

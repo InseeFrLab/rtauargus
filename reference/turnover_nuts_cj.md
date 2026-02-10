@@ -4,7 +4,7 @@ A tabular dataset containing the turnover broken down by NUTS
 geographical localisation and Type of companies. Useful for playing with
 tab\_ functions.
 
-## Utilisation
+## Usage
 
 ``` r
 turnover_nuts_cj
@@ -36,6 +36,6 @@ A tibble/data frame with 452 rows and 5 variables:
 
   turnover of the company which contributes the most to the cell.
 
-## Voir également
+## See also
 
 nuts23_fr_corr_table

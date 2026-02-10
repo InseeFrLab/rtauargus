@@ -2,7 +2,7 @@
 
 Manages the secondary secret of a list of tables
 
-## Utilisation
+## Usage
 
 ``` r
 tab_multi_manager(
@@ -154,18 +154,18 @@ tab_multi_manager(
   other arguments of
   [`tab_rtauargus2()`](https://inseefrlab.github.io/rtauargus/reference/tab_rtauargus2.md)
 
-## Valeur de retour
+## Value
 
 original list of tables. Secret Results of each iteration is added to
 each table. For example, the result of first iteration is called
 'is_secret_1' in each table. It's a boolean variable, whether the cell
 has to be masked or not.
 
-## Voir également
+## See also
 
 `tab_rtauargus2`
 
-## Exemples
+## Examples
 
 ``` r
 library(rtauargus)

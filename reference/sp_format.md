@@ -3,7 +3,7 @@
 Change the result of dimension reduction to be directly usable in
 rtauargus
 
-## Utilisation
+## Usage
 
 ``` r
 sp_format(res, dfs_name, sep, totcode, hrcfiles)
@@ -34,7 +34,7 @@ sp_format(res, dfs_name, sep, totcode, hrcfiles)
 
   character named vector
 
-## Valeur de retour
+## Value
 
 A list containing:
 
@@ -58,7 +58,7 @@ A list containing:
 - `fus_vars`: named vector of vectors representing the merged variables
   during dimension reduction
 
-## Exemples
+## Examples
 
 ``` r
 library(dplyr)

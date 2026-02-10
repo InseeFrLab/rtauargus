@@ -5,7 +5,7 @@ It applies filtering conditions to a subset of keys and their
 corresponding values, and excludes rows where other keys match the given
 totals.
 
-## Utilisation
+## Usage
 
 ``` r
 filter_on_marginal_of_spanning_var(data, criteria, subset_keys)
@@ -27,12 +27,12 @@ filter_on_marginal_of_spanning_var(data, criteria, subset_keys)
   A character vector of keys (column names) to be included in the filter
   criteria.
 
-## Valeur de retour
+## Value
 
 A filtered data frame where rows meet the specified criteria and exclude
 the subset keys.
 
-## Exemples
+## Examples
 
 ``` r
 if (FALSE) { # \dontrun{

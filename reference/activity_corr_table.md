@@ -4,7 +4,7 @@ A dataset describing the nesting of three levels of business sectors,
 useful when working with the ACTIVITY variables in the turnover\_
 datasets.
 
-## Utilisation
+## Usage
 
 ``` r
 activity_corr_table
@@ -26,7 +26,7 @@ A data frame with 92 rows and 3 variables:
 
   business sectors in 88 categories
 
-## Détails
+## Details
 
 Use the `write_hrc2` function to create a .hrc file from this
 correspondence table.

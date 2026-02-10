@@ -5,7 +5,7 @@ contained in an arb file.
 (Importe dans R les résultats générés par Tau-Argus à partir des
 informations contenues dans un fichier arb.)
 
-## Utilisation
+## Usage
 
 ``` r
 import(arb_filename)
@@ -20,7 +20,7 @@ import(arb_filename)
   (nom du fichier arb (avec extension) contenant les informations
   nécessaires à l'import.)
 
-## Valeur de retour
+## Value
 
 A list of one or more data.frames. Each data.frame corresponds to to the
 result of a tabulation. The names of the tables filled in the lines of
@@ -29,7 +29,7 @@ the batch of the form `// <TABLE_ID> "..."` are recovered.
 au résultat d'une tabulation. Les noms des tableaux renseignés dans les
 lignes du batch de la forme `// <TABLE_ID> "..."` sont récupérés.)
 
-## Détails
+## Details
 
 Requires that the batch has been executed and finished without error. In
 order to import immediately after the batch has been executed, this

@@ -184,7 +184,7 @@ the *sdcTools* git repository.
 this version is τ-Argus 4.2.3. It is not compatible with version
 3.5.\*\*\_
 
-# Index du paquet
+# Package index
 
 ## Protect tables from tabular
 

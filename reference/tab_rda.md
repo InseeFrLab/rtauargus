@@ -3,7 +3,7 @@
 Creates an apriori file for the primary secret, a tabular file (tab) and
 a metadata file (rda) from tabulated data and additional information.  
 
-## Utilisation
+## Usage
 
 ``` r
 tab_rda(
@@ -170,13 +170,13 @@ tab_rda(
   (default), the protection levels are applied on each cell which gets a
   `TRUE` status for the `secret_var`.  
 
-## Valeur de retour
+## Value
 
 Return the rda file name as a list (invisible).  
 (Renvoie le nom du fichier rda sous forme de liste (de manière
 invisible).)
 
-## Détails
+## Details
 
 Crée un fichier d'apriori pour le secret primaire, un fichier tabular
 (tab) et un fichier de métadonnées (rda) à partir de données tabulées et
@@ -280,4 +280,4 @@ variables réelles (double) mais pas aux variables entières (integer).
 Pour ajouter des zéros à une variable entière, la convertir avec
 `as.double` au préalable.)
 
-## Exemples
+## Examples

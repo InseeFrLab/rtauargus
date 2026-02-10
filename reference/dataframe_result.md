@@ -4,7 +4,7 @@ This function consolidates a list of dataframes, each representing a
 cluster of tables, into a single dataframe. It includes an additional
 column, `cluster`, to identify the cluster each table belongs to.
 
-## Utilisation
+## Usage
 
 ``` r
 dataframe_result(list_independent_tables)
@@ -21,7 +21,7 @@ dataframe_result(list_independent_tables)
   Each tibble contains metadata for tables grouped within a specific
   cluster.
 
-## Valeur de retour
+## Value
 
 A single dataframe (`dfMetadata_to_treat`) with the following structure:
 
@@ -39,7 +39,7 @@ A single dataframe (`dfMetadata_to_treat`) with the following structure:
 - `hrc_spanning_*`: Columns derived from hierarchical spanning metadata,
   ordered by numeric suffix.
 
-## Exemples
+## Examples
 
 ``` r
 if (FALSE) { # \dontrun{

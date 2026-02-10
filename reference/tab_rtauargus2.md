@@ -2,7 +2,7 @@
 
 Wrapper of tab_rtauargus adapted for `tab_multi_manager` function.
 
-## Utilisation
+## Usage
 
 ``` r
 tab_rtauargus2(
@@ -151,18 +151,18 @@ tab_rtauargus2(
 
   Other arguments of `tab_rtauargus` function
 
-## Valeur de retour
+## Value
 
 The original tabular is returned with a new column called Status,
 indicating the status of the cell coming from Tau-Argus : "A" for a
 primary secret due to frequency rule, "B" for a primary secret due to
 dominance rule, "D" for secondary secret and "V" for no secret cell.
 
-## Voir également
+## See also
 
 `tab_rtauargus`
 
-## Exemples
+## Examples
 
 ``` r
 if (FALSE) { # \dontrun{

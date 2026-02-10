@@ -6,7 +6,7 @@ Tables are grouped based on the `field` variable and their corresponding
 `indicator` values. The hierarchical relationships specified in the
 `hrc_*` columns are also considered.
 
-## Utilisation
+## Usage
 
 ``` r
 split_in_clusters(list_hrc_identified)
@@ -27,19 +27,19 @@ split_in_clusters(list_hrc_identified)
 
   - `hrc_indicator`: The hierarchical counterpart of `indicator`.
 
-## Valeur de retour
+## Value
 
 A named list of data frames. Each element of the list corresponds to a
 cluster of linked tables, and the names of the list elements reflect the
 hierarchical grouping path.
 
-## Détails
+## Details
 
 The function handles cases where the `field` variable is constant across
 the data frame or when `field` varies, in which case the data frame is
 split by `field` and further split by `indicator` and `hrc_indicator`.
 
-## Exemples
+## Examples
 
 ``` r
 if (FALSE) { # \dontrun{

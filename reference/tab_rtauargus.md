@@ -3,7 +3,7 @@
 The function prepares all the files needed by Tau-Argus and launches the
 software with the good settings and gets back the result.
 
-## Utilisation
+## Usage
 
 ``` r
 tab_rtauargus(
@@ -201,7 +201,7 @@ tab_rtauargus(
   any parameter of the tab_rda, tab_arb or run_arb functions, relevant
   for the treatment of tabular.
 
-## Valeur de retour
+## Value
 
 If output_type equals to 4 and split_tab = FALSE, then the original
 tabular is returned with a new column called Status, indicating the
@@ -232,7 +232,7 @@ modified in the tabular data and an another hrc file is created to be
 relevant with the tabular. In the output, these modifications are
 removed.
 
-## Exemples
+## Examples
 
 ``` r
 if (FALSE) { # \dontrun{

@@ -2,7 +2,7 @@
 
 tabulate grouped data with all margins, handling hierarchical variables
 
-## Utilisation
+## Usage
 
 ``` r
 tabulate_micro_data(
@@ -41,17 +41,17 @@ tabulate_micro_data(
 
   label of margins (applied to all cat and hrc variables)
 
-## Valeur de retour
+## Value
 
 a tibble
 
-## Exemples
+## Examples
 
 ``` r
 library(data.table)
 #> 
-#> Attachement du package : ‘data.table’
-#> Les objets suivants sont masqués depuis ‘package:dplyr’:
+#> Attaching package: ‘data.table’
+#> The following objects are masked from ‘package:dplyr’:
 #> 
 #>     between, first, last
 

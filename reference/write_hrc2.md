@@ -3,7 +3,7 @@
 Creates a .hrc hierarchy from a correspondence table.  
 Ecrit une hiérarchie .hrc à partir d'une table de correspondance.
 
-## Utilisation
+## Usage
 
 ``` r
 write_hrc2(
@@ -74,12 +74,12 @@ write_hrc2(
   cela ne crée pas de doublons dans la hiérarchie.La chaine de caractère
   sera ajouté au début d'une feuille unique. Par defaut :"ZZZ"
 
-## Valeur de retour
+## Value
 
 Invisible. Path to the written .hrc file.  
 Chemin vers le fichier .hrc.
 
-## Détails
+## Details
 
 Creates a .hrc hierarchy file adapted to tau-Argus from a correspondence
 table fully describing it. By default, lines are sorted alphabetically
@@ -242,7 +242,7 @@ suivants : *Missing values on the last column of the correspondence
 table is not allowed. If relevant, you could fill in with the value of
 the previous column*
 
-## Exemples
+## Examples
 
 ``` r
 # 1. Standard example. Table will be written on your working directory.

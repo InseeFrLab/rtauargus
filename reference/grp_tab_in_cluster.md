@@ -6,7 +6,7 @@ relationships identified by
 [`grp_tab_names()`](https://inseefrlab.github.io/rtauargus/reference/grp_tab_names.md)
 and uses the grouped structure of tables from `list_split`.
 
-## Utilisation
+## Usage
 
 ``` r
 grp_tab_in_cluster(list_split, list_translation_tables)
@@ -28,7 +28,7 @@ grp_tab_in_cluster(list_split, list_translation_tables)
   containing inclusion relationships and mappings of table names to
   their respective groups.
 
-## Valeur de retour
+## Value
 
 A list of tibbles (`big_tibble_eg`) for each cluster, where each tibble
 contains:
@@ -42,13 +42,13 @@ contains:
 - `tab_inclus`: A list of original table names included within each
   grouped table.
 
-## Détails
+## Details
 
 The resulting tibble contains updated table names (to align with the
 group mapping) and metadata for each independent table in the cluster.
 Additionally, it tracks which tables are included within each group.
 
-## Exemples
+## Examples
 
 ``` r
 if (FALSE) { # \dontrun{

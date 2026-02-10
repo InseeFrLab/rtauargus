@@ -3,7 +3,7 @@
 Transition from 4 to 3 variables via the merging of two hierarchical
 variables
 
-## Utilisation
+## Usage
 
 ``` r
 from_4_to_3_case_2_hr(
@@ -54,7 +54,7 @@ from_4_to_3_case_2_hr(
 
   separator used during the concatenation of variables
 
-## Valeur de retour
+## Value
 
 A list containing the following components:
 
@@ -69,7 +69,7 @@ A list containing the following components:
 - `vars`: named list of vectors representing the merged variables during
   the two stages of dimension reduction
 
-## Exemples
+## Examples
 
 ``` r
 library(dplyr)

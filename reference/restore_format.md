@@ -2,7 +2,7 @@
 
 Function to reverse the process of dimension reduction
 
-## Utilisation
+## Usage
 
 ``` r
 restore_format(masq, res)
@@ -19,11 +19,11 @@ restore_format(masq, res)
   the result of the dimension reduction function (to retrieve the merged
   variables) and the separator (sep).
 
-## Valeur de retour
+## Value
 
 the original dataframe with 4 or 5 dimensions
 
-## Exemples
+## Examples
 
 ``` r
 # Examples with dimension 4

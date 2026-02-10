@@ -2,7 +2,7 @@
 
 data crossing 4 categorical variables, none are hierarchical.
 
-## Utilisation
+## Usage
 
 ``` r
 datatest1

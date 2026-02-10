@@ -3,7 +3,7 @@
 Transition from 4 to 3 variables by merging two non-hierarchical
 variables
 
-## Utilisation
+## Usage
 
 ``` r
 from_4_to_3_case_0_hr(dfs, dfs_name, v1, v2, totcode, dir_name, sep = "_")
@@ -40,7 +40,7 @@ from_4_to_3_case_0_hr(dfs, dfs_name, v1, v2, totcode, dir_name, sep = "_")
 
   separator used when concatenating variables
 
-## Valeur de retour
+## Value
 
 A list containing:
 
@@ -54,7 +54,7 @@ A list containing:
 - `vars`: named list of vectors representing the merged variables during
   the two steps of dimension reduction
 
-## Exemples
+## Examples
 
 ``` r
 library(dplyr)

@@ -2,7 +2,7 @@
 
 **\[experimental\]**
 
-## Utilisation
+## Usage
 
 ``` r
 format_template(data, indicator_column, spanning_var_tot, field_columns)
@@ -26,12 +26,12 @@ format_template(data, indicator_column, spanning_var_tot, field_columns)
 
   vector of all the columns that are fields (ex: year of collect)
 
-## Valeur de retour
+## Value
 
 named list of a dataframe describing the tables (metadata) and a list of
 the modalities of each hierarchical variable (modalities)
 
-## Exemples
+## Examples
 
 ``` r
 data(enterprise_template)
