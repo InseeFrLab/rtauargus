@@ -390,7 +390,14 @@ run_arb <- function(
     show.output.on.console = show_batch_console,
     ...
   )
-  display_console(verbose, logbook_file)
+  # To manage encoding pbs of the logbook files created
+  # by Tau-Argus. If any issues, the logbook is not displayed.
+  tryCatch({
+    suppressMessages(display_console(verbose, logbook_file))
+  },
+  error = function(e) message(paste0("The logbook can't be displayed. If needed, open directly the file ", logbook_file)),
+  warning = function(e) NULL
+  )
 
   if(import) import(arb_filename) else invisible(NULL)
 

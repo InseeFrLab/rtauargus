@@ -5,6 +5,20 @@ output: rmarkdown::html_vignette
 ---
 
 
+## rtauargus 1.3.3
+
+[02/2026]
+
+* Bug fixed
+
+Importing some files built by $\tau$-ARGUS produced errors 
+because of encoding. From French users, this bug appeared during 
+december and february months ("Décembre", "Février"). 
+
+The fix consists in blocking logbook importation during the process while this 
+kind of error is produced. It has no effect on the suppression process, only 
+on the information displayed in the console.
+
 ## rtauargus 1.3.2
 
 [01/2026]
