@@ -201,7 +201,7 @@ identify_hrc_with_eq <- function(df_metadata_long,df_eq_indicator){
       indicator     = last(unit),
       hrc_indicator = last(hrc_indicator)
     ) %>%
-    distinct(group, spanning, hrc_spanning, .keep_all = TRUE)
+    dplyr::distinct(group, spanning, hrc_spanning, .keep_all = TRUE)
 
   # 'df_eq_indicator_spannings' defines the spanning information for equation indicators.
   # Each equation name is transformed into its uppercase form with a "^h" suffix,
@@ -226,7 +226,8 @@ identify_hrc_with_eq <- function(df_metadata_long,df_eq_indicator){
       indicator = last(unit),
       hrc_indicator = last(hrc_indicator),
       .groups = "drop"
-    )
+    ) %>%
+    dplyr::distinct(group, spanning, hrc_spanning, .keep_all = TRUE)
 
   # 'df_indicators' combines both initial and indicator spanning information
   # into a single harmonized dataset, keeping key structural columns
