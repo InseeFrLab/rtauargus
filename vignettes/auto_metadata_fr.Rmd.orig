@@ -149,7 +149,8 @@ Ici, il n'y a pas de lien hiérarchique entre `SAL` (effectifs salariés des ent
 ```{r}
 # cas où il n'y a aucune hiérarchie sur les indicateurs
 metadata_template <- template_formatted$metadata %>%
-  mutate(hrc_indicator = NA) %>%
+  mutate(hrc_field = NA,
+         hrc_indicator = NA) %>%
   select(table_name,field,indicator,hrc_indicator, everything())
 
 metadata_template
