@@ -6,17 +6,17 @@ output:
     toc: true
     toc_depth: 3
 vignette: >
-%\VignetteIndexEntry{Analyse automatique des métadonnées}
+  %\VignetteIndexEntry{Automatic analysis of metadata}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
-  ---
+---
 
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-```{r message = FALSE}
+```{r message = FALSE, warning = FALSE}
 library(rtauargus)
 library(dplyr)
 ```
@@ -212,9 +212,9 @@ cluster_id_dataframe
 ```
 
 # Pour aller plus loin : visualiser les inclusions
-L'étape `create_edges` de l'analyse des métadonnées identifie les tableaux inclus dans d'autres tableaux. Par exemple, XXXXX est inclus dans XXXXX. Le code suivant permet de visualiser ces inclusions à l'aide de graphes afin de mieux comprendre la procédure d'analyse.
+L'étape `create_edges` de l'analyse des métadonnées identifie les tableaux inclus dans d'autres tableaux. Par exemple, `T1` est inclus dans `T2`. Le code suivant permet de visualiser ces inclusions à l'aide de graphes afin de mieux comprendre la procédure d'analyse.
 
-```{r}
+```{r message = FALSE, warning = FALSE}
 library(rtauargus)
 library(igraph)
 library(visNetwork)
