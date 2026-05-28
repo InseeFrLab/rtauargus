@@ -16,7 +16,7 @@ vignette: >
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-```{r message = FALSE}
+```{r message = FALSE, warning = FALSE}
 library(rtauargus)
 library(dplyr)
 ```
@@ -150,7 +150,8 @@ Here, there is no hierarchical link between `SAL` (employees of active companies
 ```{r}
 # cas où il n'y a aucune hiérarchie sur les indicateurs
 metadata_template <- template_formatted$metadata %>%
-  mutate(hrc_indicator = NA) %>%
+  mutate(hrc_field = NA,
+         hrc_indicator = NA) %>%
   select(table_name,field,indicator,hrc_indicator, everything())
 
 metadata_template
@@ -215,9 +216,9 @@ cluster_id_dataframe
 
 # Going Further: Visualizing Inclusions
 
-The create_edges step in the metadata analysis identifies tables included within other tables. For example, XXXXX is included in XXXXX. The following code allows visualizing these inclusions using graphs to better understand the analysis procedure.
+The create_edges step in the metadata analysis identifies tables included within other tables. For example, `T1` is included in `T2`. The following code allows visualizing these inclusions using graphs to better understand the analysis procedure.
 
-```{r}
+```{r message = FALSE, warning = FALSE}
 library(rtauargus)
 library(igraph)
 library(visNetwork)
