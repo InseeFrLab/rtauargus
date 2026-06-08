@@ -444,14 +444,12 @@ tab_multi_manager <- function(
     lignes_modifs <- which(table_majeure[[var_secret_apriori]] != table_majeure[[var_secret]])
 
     cur_tab <- paste0("T_", num_tableau)
-    common_cells <- unique(
-      purrr::map_dfr(
-        setdiff(noms_col_T, cur_tab),
-        function(col_T){
-          table_majeure[table_majeure[[col_T]] & table_majeure[[cur_tab]],]
-        }
-      )
-    )
+    other_tabs <- setdiff(noms_col_T, cur_tab)
+    cur_cells <- rowSums(table_majeure[, cur_tab, drop=FALSE])
+    other_cells <- rowSums(table_majeure[, other_tabs, drop=FALSE])
+
+    common_cells_rows <- which(cur_cells == 1 & other_cells > 0)
+    common_cells <- table_majeure[common_cells_rows, , drop=FALSE]
 
     # update of common cells that have been modified
     modified <- common_cells[common_cells[[var_secret_apriori]] != common_cells[[var_secret]],all_expl_vars, drop=FALSE]
