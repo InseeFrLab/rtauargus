@@ -4,6 +4,12 @@ subtitle: History of changes / Historique des modifications
 output: rmarkdown::html_vignette
 ---
 
+## rtauargus 1.3.4
+
+[06/2026]
+
+Improving the reporting of common cells in `tab_multi_manager()`.
+
 
 ## rtauargus 1.3.3
 
