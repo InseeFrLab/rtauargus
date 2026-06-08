@@ -1,6 +1,7 @@
 # Automatic analysis of metadata
 
 ``` r
+
 library(rtauargus)
 library(dplyr)
 ```
@@ -73,6 +74,7 @@ cross-tabulation variables must be created.
 ### The Arguments of `analyse_metadata`
 
 ``` r
+
 args(analyse_metadata)
 ```
 
@@ -91,6 +93,7 @@ The `df_eq_indicator` data frame consists of three columns that must
 follow the format below:
 
 ``` r
+
 data.frame(eq_name = c("eq1"),
            eq_indicator = c("ca_salades = ca_batavia + ca_mache"),
            unit = c("EUR"))
@@ -102,6 +105,7 @@ data.frame(eq_name = c("eq1"),
 ### The Arguments of `format_template`
 
 ``` r
+
 args(format_template)
 ```
 
@@ -126,6 +130,7 @@ In this example, we start with a metadata file presenting 12 tables to
 be published on the turnover of pizza and salad sales.
 
 ``` r
+
 str(metadata_pizza_lettuce)
 ```
 
@@ -143,6 +148,7 @@ str(metadata_pizza_lettuce)
 Example code:
 
 ``` r
+
 library(rtauargus)
 
 data(metadata_pizza_lettuce)
@@ -158,6 +164,7 @@ The output is a dataframe showing how to process the tables for applying
 the secret.
 
 ``` r
+
 cluster_id_dataframe
 ```
 
@@ -188,6 +195,7 @@ returned by the function will be a list of the different steps of the
 analysis.
 
 ``` r
+
 names(detailed_analysis)
 ```
 
@@ -208,6 +216,7 @@ function allows creating the metadata to be used as input for
 from the Eurostat template of the published cells.
 
 ``` r
+
 data(enterprise_template)
 
 str(enterprise_template)
@@ -221,6 +230,7 @@ str(enterprise_template)
     ##  $ LEGAL_FORM : chr  "_T" "_T" "_T" "_T" ...
 
 ``` r
+
 template_formatted <- format_template(
   data = enterprise_template,
   indicator_column = "INDICATOR",
@@ -236,6 +246,7 @@ template_formatted <- format_template(
     ## treating the field 2022
 
 ``` r
+
 template_formatted$metadata
 ```
 
@@ -260,6 +271,7 @@ Here, there is no hierarchical link between `SAL` (employees of active
 companies) and `SAL_DTH` (employees in deaths).
 
 ``` r
+
 # cas où il n'y a aucune hiérarchie sur les indicateurs
 metadata_template <- template_formatted$metadata %>%
   mutate(hrc_indicator = NA) %>%
@@ -279,6 +291,7 @@ metadata_template
 Next, this dataframe is used as input for the analysis function.
 
 ``` r
+
 # Analyse complète, avec les étapes
 detailed_analysis <- analyse_metadata(metadata_template, verbose = TRUE)
 ```
@@ -287,6 +300,7 @@ detailed_analysis <- analyse_metadata(metadata_template, verbose = TRUE)
     ## ! Error: The dataframe is missing one or more required columns: table_name, field, hrc_field, indicator, hrc_indicator.
 
 ``` r
+
 # Output simplifié, uniquement le dataframe avec l'indicatrice de cluster
 cluster_id_dataframe <- analyse_metadata(metadata_template, verbose = FALSE)
 ```
@@ -295,6 +309,7 @@ cluster_id_dataframe <- analyse_metadata(metadata_template, verbose = FALSE)
     ## ! Error: The dataframe is missing one or more required columns: table_name, field, hrc_field, indicator, hrc_indicator.
 
 ``` r
+
 # visualisation du résultat de l'analyse
 cluster_id_dataframe
 ```
@@ -321,6 +336,7 @@ In this example, we start from a metadata file describing 12 tables to
 be published on the turnover from pizza and salad sales.
 
 ``` r
+
 str(metadata_pizza_lettuce)
 ```
 
@@ -339,6 +355,7 @@ This time a data frame describing the relationships between indicators
 is added.
 
 ``` r
+
 liens_eq <- data.frame(eq_name = c("eq1"),
                        eq_indicator = c("ca_salades = ca_batavia + ca_mache"),
                        unit = c("EUR"))
@@ -347,6 +364,7 @@ liens_eq <- data.frame(eq_name = c("eq1"),
 Example code :
 
 ``` r
+
 library(rtauargus)
 
 data(metadata_pizza_lettuce)
@@ -370,6 +388,7 @@ detailed_analysis <- analyse_metadata(metadata_pizza_lettuce,
     ## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was generated.
 
 ``` r
+
 # Simplified output, only the data frame with the cluster indicator
 cluster_id_dataframe <- analyse_metadata(metadata_pizza_lettuce, verbose = FALSE)
 ```
@@ -382,6 +401,7 @@ defined in `hrc_indicator` when using the `df_eq_indicator` argument.
 The result is the same as the first example.
 
 ``` r
+
 cluster_id_dataframe
 ```
 
@@ -404,6 +424,7 @@ The following code allows visualizing these inclusions using graphs to
 better understand the analysis procedure.
 
 ``` r
+
 library(rtauargus)
 library(igraph)
 ```
@@ -424,6 +445,7 @@ library(igraph)
     ##     union
 
 ``` r
+
 library(visNetwork)
 ```
 
@@ -431,6 +453,7 @@ library(visNetwork)
     ## ! there is no package called 'visNetwork'
 
 ``` r
+
 graph_links_tab <- function(list_desc_links){
   list_desc_links %>% purrr::imap(function(ss_dem,i){
     if(!is.null(ss_dem)){

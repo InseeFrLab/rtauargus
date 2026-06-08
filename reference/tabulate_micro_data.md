@@ -54,6 +54,9 @@ library(data.table)
 #> The following objects are masked from ‘package:dplyr’:
 #> 
 #>     between, first, last
+#> The following object is masked from ‘package:base’:
+#> 
+#>     %notin%
 
 data("indiv_dt")
 
@@ -77,7 +80,7 @@ str(res_all_dtp)
 #>  $ nb_obs      : num  11421 4082 22478 36112 1825 ...
 #>  $ TURNOVER_tot: num  11087582 3344353 22236029 34765446 1849758 ...
 #>  $ TURNOVER_max: num  8016 9373 9400 9400 6510 ...
-#>  - attr(*, ".internal.selfref")=<externalptr> 
+#>  - attr(*, ".internal.selfref")=<pointer: 0x55c98ebb7a10> 
 
 #With one hierarchical variable
 res_all_dtph <- tabulate_micro_data(
@@ -100,5 +103,5 @@ str(res_all_dtph)
 #>  $ PRODUCTION_tot: num  2209740 670391 4435408 6931152 373839 ...
 #>  $ TURNOVER_max  : num  8016 9373 9400 9400 6510 ...
 #>  $ PRODUCTION_max: num  1612 1870 1876 1876 1317 ...
-#>  - attr(*, ".internal.selfref")=<externalptr> 
+#>  - attr(*, ".internal.selfref")=<pointer: 0x55c98ebb7a10> 
 ```

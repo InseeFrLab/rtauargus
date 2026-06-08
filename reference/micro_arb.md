@@ -279,4 +279,5 @@ infos_arb <- micro_arb(
 # Content of the created file visible in the R console
 # (Visualisation du contenu du fichier dans la console)
 file.show(infos_arb$arb_filename, pager = "console")
+#> Warning: error in running command
 ```

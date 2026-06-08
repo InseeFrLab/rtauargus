@@ -1,12 +1,19 @@
 # Changelog
 
+## rtauargus 1.3.4
+
+\[06/2026\]
+
+Improving the reporting of common cells in
+[`tab_multi_manager()`](https://inseefrlab.github.io/rtauargus/reference/tab_multi_manager.md).
+
 ## rtauargus 1.3.3
 
 \[02/2026\]
 
 - Bug fixed
 
-Importing some files built by $\tau$-ARGUS produced errors because of
+Importing some files built by $`\tau`$-ARGUS produced errors because of
 encoding. From French users, this bug appeared during december and
 february months (“Décembre”, “Février”).
 

@@ -14,6 +14,7 @@
 | %                                            |
 
 ``` r
+
 library(rtauargus)
 library(dplyr)
 ```
@@ -84,6 +85,7 @@ il faut créer autant de colonnes que de variables de croisement.
 ### Les arguments de `analyse_metadata`
 
 ``` r
+
 args(analyse_metadata)
 ```
 
@@ -104,6 +106,7 @@ Le dataframe `df_eq_indicator` est constitué de trois colonnes qui
 doivent respecter le format suivant :
 
 ``` r
+
 data.frame(eq_name = c("eq1"),
            eq_indicator = c("ca_salades = ca_batavia + ca_mache"),
            unit = c("EUR"))
@@ -115,6 +118,7 @@ data.frame(eq_name = c("eq1"),
 ### Les arguments de `format_template`
 
 ``` r
+
 args(format_template)
 ```
 
@@ -141,6 +145,7 @@ tableaux à publier sur les chiffres d’affaires de ventes de pizzas et de
 salades.
 
 ``` r
+
 str(metadata_pizza_lettuce)
 ```
 
@@ -158,6 +163,7 @@ str(metadata_pizza_lettuce)
 Exemple de code :
 
 ``` r
+
 library(rtauargus)
 
 data(metadata_pizza_lettuce)
@@ -173,6 +179,7 @@ On obtient un dataframe nous présentant la façon de traiter les tableaux
 pour la pose du secret.
 
 ``` r
+
 cluster_id_dataframe
 ```
 
@@ -204,6 +211,7 @@ on peut spécifier l’argument `verbose = TRUE`. Ainsi, l’objet renvoyé
 par la fonction est une liste des différentes étapes de l’analyse.
 
 ``` r
+
 names(detailed_analysis)
 ```
 
@@ -224,6 +232,7 @@ permet de créer les métadonnées à mettre en input de
 à partir du template Eurostat des cellules publiées.
 
 ``` r
+
 data(enterprise_template)
 
 str(enterprise_template)
@@ -237,6 +246,7 @@ str(enterprise_template)
     ##  $ LEGAL_FORM : chr  "_T" "_T" "_T" "_T" ...
 
 ``` r
+
 template_formatted <- format_template(
   data = enterprise_template,
   indicator_column = "INDICATOR",
@@ -252,6 +262,7 @@ template_formatted <- format_template(
     ## treating the field 2022
 
 ``` r
+
 template_formatted$metadata
 ```
 
@@ -277,6 +288,7 @@ des entreprises actives) et `SAL_DTH` (effectifs salariés dans les
 décès).
 
 ``` r
+
 # cas où il n'y a aucune hiérarchie sur les indicateurs
 metadata_template <- template_formatted$metadata %>%
   mutate(hrc_indicator = NA) %>%
@@ -296,6 +308,7 @@ metadata_template
 Ensuite, on utilise ce dataframe en input de la fonction d’analyse.
 
 ``` r
+
 # Analyse complète, avec les étapes
 detailed_analysis <- analyse_metadata(metadata_template, verbose = TRUE)
 ```
@@ -303,6 +316,7 @@ detailed_analysis <- analyse_metadata(metadata_template, verbose = TRUE)
     ## Error in check_column_names(df_metadata): Error: The dataframe is missing one or more required columns: table_name, field, hrc_field, indicator, hrc_indicator.
 
 ``` r
+
 # Output simplifié, uniquement le dataframe avec l'indicatrice de cluster
 cluster_id_dataframe <- analyse_metadata(metadata_template, verbose = FALSE)
 ```
@@ -310,6 +324,7 @@ cluster_id_dataframe <- analyse_metadata(metadata_template, verbose = FALSE)
     ## Error in check_column_names(df_metadata): Error: The dataframe is missing one or more required columns: table_name, field, hrc_field, indicator, hrc_indicator.
 
 ``` r
+
 # visualisation du résultat de l'analyse
 cluster_id_dataframe
 ```
@@ -336,6 +351,7 @@ tableaux à publier sur les chiffres d’affaires de ventes de pizzas et de
 salades.
 
 ``` r
+
 str(metadata_pizza_lettuce)
 ```
 
@@ -353,6 +369,7 @@ str(metadata_pizza_lettuce)
 Auquel on ajoute un dataframe décrivant les liens entre les indicateurs.
 
 ``` r
+
 liens_eq <- data.frame(eq_name = c("eq1"),
                        eq_indicator = c("ca_salades = ca_batavia + ca_mache"),
                        unit = c("EUR"))
@@ -361,6 +378,7 @@ liens_eq <- data.frame(eq_name = c("eq1"),
 Exemple de code :
 
 ``` r
+
 library(rtauargus)
 
 data(metadata_pizza_lettuce)
@@ -377,6 +395,7 @@ detailed_analysis <- analyse_metadata(metadata_pizza_lettuce,
     ## Error in components(g_full): impossible de trouver la fonction "components"
 
 ``` r
+
 # Output simplifié, uniquement le dataframe avec l'indicatrice de cluster
 cluster_id_dataframe <- analyse_metadata(metadata_pizza_lettuce, verbose = FALSE)
 ```
@@ -390,6 +409,7 @@ On obtient le même dataframe nous présentant la façon de traiter les
 tableaux pour la pose du secret que dans le premier exemple.
 
 ``` r
+
 cluster_id_dataframe
 ```
 
@@ -412,6 +432,7 @@ dans XXXXX. Le code suivant permet de visualiser ces inclusions à l’aide
 de graphes afin de mieux comprendre la procédure d’analyse.
 
 ``` r
+
 library(rtauargus)
 library(igraph)
 ```
@@ -432,6 +453,7 @@ library(igraph)
     ##     union
 
 ``` r
+
 library(visNetwork)
 
 graph_links_tab <- function(list_desc_links){

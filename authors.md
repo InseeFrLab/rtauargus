@@ -24,16 +24,16 @@
 ## Citation
 
 Source:
-[`DESCRIPTION`](https://github.com/inseefrlab/rtauargus/blob/v-1.3.3/DESCRIPTION)
+[`DESCRIPTION`](https://github.com/inseefrlab/rtauargus/blob/master/DESCRIPTION)
 
 Berrard P, Jamme J, Rastout N, Pointet J, Beroud F, Socard A, Pomel W,
 Baudry C (2026). *rtauargus: Using Tau-Argus from R*. R package version
-1.3.3, <https://inseefrlab.github.io/rtauargus>.
+1.3.4, <https://inseefrlab.github.io/rtauargus>.
 
     @Manual{,
       title = {rtauargus: Using Tau-Argus from R},
       author = {Pierre-Yves Berrard and Julien Jamme and Nathanaël Rastout and Jeanne Pointet and Félix Beroud and André-Raymond Socard and Wistan Pomel and Clara Baudry},
       year = {2026},
-      note = {R package version 1.3.3},
+      note = {R package version 1.3.4},
       url = {https://inseefrlab.github.io/rtauargus},
     }

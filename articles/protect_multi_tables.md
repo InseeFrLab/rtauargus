@@ -146,6 +146,7 @@ advise users to provide totals in their tables.
 Let’s specify the location of the TauArgus.exe file in our computer:
 
 ``` r
+
 options(
   rtauargus.tauargus_exe =
     "Y:/Logiciels/TauArgus/TauArgus4.2.3/TauArgus.exe"
@@ -160,6 +161,7 @@ tables sharing the same response variable, that is turnover.
 #### Preparing the data
 
 ``` r
+
 data("turnover_act_size")
 data("turnover_act_cj")
 data ("turnover_nuts_size")
@@ -171,6 +173,7 @@ turnover_act_cj NUTS X SIZE named turnover_nuts_size NUTS X CJ named
 turnover_nuts_cj
 
 ``` r
+
 str(turnover_act_size)
 #> tibble [414 x 5] (S3: tbl_df/tbl/data.frame)
 #>  $ ACTIVITY: chr [1:414] "AZ" "BE" "FZ" "GI" ...
@@ -181,6 +184,7 @@ str(turnover_act_size)
 ```
 
 ``` r
+
 str(turnover_nuts_cj)
 #> tibble [452 x 5] (S3: tbl_df/tbl/data.frame)
 #>  $ NUTS : chr [1:452] "FR10" "FR21" "FR22" "FR23" ...
@@ -195,6 +199,7 @@ advised to give a name to each tables. By doing so it will be easier to
 track secondary suppression.
 
 ``` r
+
 list_data_4_tabs <- list(
   act_size = turnover_act_size,
   act_cj = turnover_act_cj,
@@ -236,6 +241,7 @@ apply 2 rules : The dominance rule NK(1,85) and the frequency rule with
 a threshold set to 3.
 
 ``` r
+
 list_data_4_tabs <- list_data_4_tabs %>%
   purrr::map(
     function(df){
@@ -298,6 +304,7 @@ tables. In our case, the explanatory variables are the 2 first columns
 of each table.
 
 ``` r
+
 nom_var_list <- purrr::map(
   list_data_4_tabs,
   function(data) colnames(data)[1:2]
@@ -327,6 +334,7 @@ the same label to refer to the total, the information can be mentionned
 as follows:
 
 ``` r
+
 total_codes <- "Total"
 ```
 
@@ -337,11 +345,13 @@ correspondance table for each of them to create the `.hrc` files that
 tau-Argus need.
 
 ``` r
+
 data(activity_corr_table)
 data(nuts23_fr_corr_table)
 ```
 
 ``` r
+
 hrc_file_activity <- write_hrc2(
   corr_table = activity_corr_table,
   file_name = "hrc/activity.hrc"
@@ -356,6 +366,7 @@ To mention the names of the hrc files, we create a named vector (or
 list) as follows:
 
 ``` r
+
 hrc_files <- list(
   ACTIVITY = hrc_file_activity,
   NUTS = hrc_file_nuts
@@ -368,6 +379,7 @@ hierarchical variables.
 #### Running the protection of all the tables at once
 
 ``` r
+
 res <- tab_multi_manager(
     list_tables = list_data_4_tabs,
     list_explanatory_vars = nom_var_list,
@@ -388,6 +400,7 @@ res <- tab_multi_manager(
 #### Results
 
 ``` r
+
 list_with_status <- res %>%
   purrr::map(
     function(df){
@@ -414,6 +427,7 @@ str(list_with_status$act_size)
 ```
 
 ``` r
+
 list_with_status %>%
   purrr::iwalk(
     function(df,name){
@@ -463,6 +477,7 @@ extract of both.
 Extract of the main hierarchy:
 
 ``` r
+
 sdcHierarchies::hier_create(
   root="Total",
   nodes = activity_corr_table$A10 %>% unique()
@@ -484,6 +499,7 @@ sdcHierarchies::hier_create(
 Extract of the alternative hierarchy:
 
 ``` r
+
 sdcHierarchies::hier_create(
   root="D_TO_M",
   nodes = activity_corr_table_D_TO_M$A21
@@ -507,6 +523,7 @@ crossing `ACTIVITY` and `SIZE` with D to M labels and the subtotal
 `D_TO_M`:
 
 ``` r
+
 turnover_act_size_D_TO_M <- turnover_act_size %>%
   filter(
     ACTIVITY %in% LETTERS[4:13]
@@ -532,6 +549,7 @@ str(turnover_act_size_D_TO_M)
 Let’s create the alternative hierarchy file.
 
 ``` r
+
 activity_corr_table_D_TO_M <- activity_corr_table %>%
   filter(A21 %in% LETTERS[4:13]) %>%
   select(-A88) %>%
@@ -547,6 +565,7 @@ Then, let’s build the list of tables and apply the primary suppression
 rules on them.
 
 ``` r
+
 list_data_3_tabs_nn <- list(
   act_size = turnover_act_size,
   act_size_D_TO_M = turnover_act_size_D_TO_M,
@@ -578,6 +597,7 @@ of the `ACTIVITY` variable:
 The same rationale is used to fill the `alt_totcode` argument.
 
 ``` r
+
 res <- tab_multi_manager(
   list_tables = list_data_3_tabs_nn,
   list_explanatory_vars = list(

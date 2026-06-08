@@ -34,6 +34,7 @@ one is, from now on, encouraged.
   - For Insee agents:
 
     ``` r
+
     install.packages(
       "rtauargus",
       repos = "https://nexus.insee.fr/repository/r-public",
@@ -44,6 +45,7 @@ one is, from now on, encouraged.
   - Elsewhere:
 
     ``` r
+
     install.packages("remotes")
     remotes::install_github(
       "InseeFrLab/rtauargus",
@@ -64,6 +66,7 @@ To install a specific version, add to the directory a reference
 When loading the package, the console displays some information:
 
 ``` r
+
 library(rtauargus)
 ```
 
@@ -72,6 +75,7 @@ predefined. This can be changed for the duration of the R session, as
 follows:
 
 ``` r
+
 loc_tauargus <- "Y:/Logiciels/TauArgus/TauArgus4.2.2b1/TauArgus.exe"
 options(rtauargus.tauargus_exe = loc_tauargus)
 ```
@@ -81,6 +85,7 @@ With this small adjustment done, the package is ready to be used.
 For the following demonstration, a fictitious table will be used:
 
 ``` r
+
 act_size <-
   data.frame(
     ACTIVITY = c("01","01","01","02","02","02","06","06","06","Total","Total","Total"),
@@ -101,6 +106,7 @@ largest contributor to each cell, corresponding to the `MAX` variable in
 the tabular data.
 
 ``` r
+
 ex1 <- tab_rtauargus(
   act_size,
   dir_name = "tauargus_files",
@@ -146,6 +152,7 @@ in case when n\>1);
 -`V`: valid cells - no need to mask.
 
 ``` r
+
 ex1
 #>    ACTIVITY  SIZE VAL N_OBS MAX Status
 #> 1        01 Total 150    15  20      V

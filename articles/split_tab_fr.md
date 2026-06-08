@@ -151,12 +151,14 @@ dimensions.
 #### Préparation des données
 
 ``` r
+
 library(tictoc)
 library(dplyr)
 library(rtauargus)
 ```
 
 ``` r
+
 options(
   rtauargus.tauargus_exe =
     "Y:/Logiciels/TauArgus/TauArgus4.2.3/TauArgus.exe"
@@ -164,6 +166,7 @@ options(
 ```
 
 ``` r
+
 data("datatest1")
 str(datatest1)
 #> tibble [689 x 12] (S3: tbl_df/tbl/data.frame)
@@ -186,6 +189,7 @@ str(datatest1)
 
 ``` r
 
+
 totcode <- c(treff ="Total",cj ="Total", A10 = "Total", type_distrib ="Total")
 explanatory_vars<- names(totcode)
 ```
@@ -193,6 +197,7 @@ explanatory_vars<- names(totcode)
 #### Pose du secret primaire
 
 ``` r
+
 datatest1_with_prim <- datatest1 %>%
     mutate(
       is_secret_freq = (nb_obs > 0 & nb_obs < 3),
@@ -215,6 +220,7 @@ tables qui seront protégées comme des tables liées avec un appel
 sous-jacent à `tab_multi_manager`.
 
 ``` r
+
 tictoc::tic()
 res_wi_split <- tab_rtauargus(
     tabular = datatest1_with_prim,
@@ -254,6 +260,7 @@ La réduction de dimensions a conduit à construire deux sous-tableaux de
 3 dimensions à partir du tableau original.
 
 ``` r
+
 str(res_wi_split)
 #> 'data.frame':    689 obs. of  17 variables:
 #>  $ treff         : chr  "Total" "tr1" "tr1" "tr1" ...
@@ -276,6 +283,7 @@ str(res_wi_split)
 ```
 
 ``` r
+
 stats_wi_split <- res_wi_split %>%
     rename_with( ~"final_suppress", last_col()) %>%
     mutate(
@@ -308,6 +316,7 @@ secondaire que lorsqu’il traite deux tables liées issues du tableau
 original.
 
 ``` r
+
 tictoc::tic()
 res_wo_split <- tab_rtauargus(
     tabular = datatest1_with_prim,
@@ -359,6 +368,7 @@ Avec seulement 689 lignes et aucune variable hiérarchique, la pose
 directe du secret prend environ 5 minutes à `Tau-Argus`.
 
 ``` r
+
 stats_wo_split <- res_wo_split %>%
     mutate(
       flag = case_when(

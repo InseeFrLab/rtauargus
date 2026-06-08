@@ -47,6 +47,7 @@ Pour la démonstration qui va suivre, un jeu de microdonnées fictif sera
 utilisé :
 
 ``` r
+
 donnees <-
   data.frame(
     V1    = c("A", "A", "A", "A", "B", "B", "B", "C"),
@@ -120,6 +121,7 @@ instruction.
 Au chargement du package, la console affiche quelques informations :
 
 ``` r
+
 library(rtauargus)
 ```
 
@@ -129,6 +131,7 @@ session R. Un message indique que cet emplacement est inconnu, on le
 modifie donc :
 
 ``` r
+
 loc_tauargus <- "Y:/Logiciels/TauArgus/TauArgus4.2.3/TauArgus.exe"
 
 options(rtauargus.tauargus_exe = loc_tauargus)
@@ -163,6 +166,7 @@ Les deux derniers arguments utilisent la syntaxe batch τ-Argus.
 #### Exemple minimaliste
 
 ``` r
+
 rtauargus(
   microdata        = donnees,
   explanatory_vars = "V1",
@@ -192,6 +196,7 @@ console. Elles sont stockées dans un objet `secret1` (une liste
 constituée de deux data.frame), que l’on pourra continuer de manipuler.
 
 ``` r
+
 secret1 <-
   rtauargus(
     microdata          = donnees,
@@ -205,6 +210,7 @@ secret1 <-
 ```
 
 ``` r
+
 
 secret1
 #> NULL
@@ -266,12 +272,14 @@ nom du fichier de métadonnées n’est pas spécifié, il prend le même nom
 que le fichier asc, mais avec l’extension .rda.
 
 ``` r
+
 micro_asc_rda(donnees, asc_filename = "Z:/donnees.asc")
 ```
 
 Contenu des fichiers créés :
 
 ``` r
+
 file.show("Z:/donnees.asc", "Z:/donnees.rda", pager = "internal")
 ```
 
@@ -308,6 +316,7 @@ On ajoute à l’exemple précédent :
 - un nombre minimal de décimales à écrire pour les variables numériques.
 
 ``` r
+
 micro_asc_rda(
   microdata    = donnees,
   asc_filename = "Z:/donnees.asc",
@@ -321,6 +330,7 @@ micro_asc_rda(
 Contenu des fichiers créés :
 
 ``` r
+
 file.show("Z:/donnees.asc", "Z:/donnees.rda", pager = "internal")
 ```
 
@@ -352,6 +362,7 @@ l’emplacement et le nom (aléatoire) de ces fichiers dans la valeur de
 retour de la fonction.
 
 ``` r
+
 noms_asc_rda <- micro_asc_rda(donnees)
 noms_asc_rda
 #> $asc_filename
@@ -384,6 +395,7 @@ utilisé.
 #### Exemple minimaliste
 
 ``` r
+
 micro_arb(
   arb_filename     = "Z:/donnees.arb",
   asc_filename     = "Z:/donnees.asc",
@@ -397,6 +409,7 @@ micro_arb(
 Contenu du fichier créé :
 
 ``` r
+
 file.show("Z:/donnees.arb", pager = "internal")
 ```
 
@@ -426,6 +439,7 @@ impérativement passer un vecteur contenant autant de valeurs que de
 tabulations.
 
 ``` r
+
 micro_arb(
   arb_filename     = "Z:/donnees.arb",
   asc_filename     = "Z:/donnees.asc",
@@ -439,6 +453,7 @@ micro_arb(
 ```
 
 ``` r
+
 file.show("Z:/donnees.arb", pager = "internal")
 ```
 
@@ -465,6 +480,7 @@ génération de noms de fichiers temporaires. Préciser le nom du fichier
 dans la valeur de retour de la fonction.
 
 ``` r
+
 infos_arb <-
   micro_arb(
     asc_filename     = "Z:/donnees.asc",
@@ -491,6 +507,7 @@ on peut le soumettre à τ-Argus en mode batch. On récupère la liste des
 tableaux secrétisés :
 
 ``` r
+
 secret2 <- run_arb("Z:/donnees.arb")
 #> Start of batch procedure; file: Z:\donnees.arb
 #> <OPENMICRODATA> "Z:\donnees.asc"
@@ -529,6 +546,7 @@ secret2 <- run_arb("Z:/donnees.arb")
 ```
 
 ``` r
+
 
 secret2
 #> NULL
@@ -579,6 +597,7 @@ utilisable de manière indépendante (par exemple si on ne souhaite pas
 relancer un batch qui a mis beaucoup de temps à s’exécuter).
 
 ``` r
+
 secret2 <- import("Z:/donnees.arb")
 #  produit le même résultat que run_arb("Z:/donnees.arb", import = TRUE)
 ```
@@ -604,6 +623,7 @@ y retrouve les paramètres que l’on a transmis à la fonction (les autres
 correspondent à des valeurs par défaut du package).
 
 ``` r
+
 str(secret2[[2]])
 #>  NULL
 ```
@@ -631,35 +651,36 @@ définies par l’utilisateur gardent leurs valeurs.
 Les options disponibles ainsi que leurs valeurs par défaut sont listées
 ci-dessous :
 
-| Option                       | Valeur par défaut                    | Type      | Fonction concernée |
-|:-----------------------------|:-------------------------------------|:----------|-------------------:|
-| rtauargus.decimals           | 0                                    | integer   |            tab_rda |
-| rtauargus.decimals           | 0                                    | integer   |      micro_asc_rda |
-| rtauargus.totcode            | “Total”                              | character |            tab_rda |
-| rtauargus.totcode            | “Total”                              | character |      micro_asc_rda |
-| rtauargus.missing            | “”                                   | character |      micro_asc_rda |
-| rtauargus.hierleadstring     | “@”                                  | character |      micro_asc_rda |
-| rtauargus.hierleadstring     | “@”                                  | character |            tab_rda |
-| rtauargus.separator          | “,”                                  | character |            tab_arb |
-| rtauargus.separator          | “,”                                  | character |            tab_rda |
-| rtauargus.response_var       | “\<freq\>”                           | character |          micro_arb |
-| rtauargus.weighted           | FALSE                                | logical   |          micro_arb |
-| rtauargus.linked             | FALSE                                | logical   |          micro_arb |
-| rtauargus.output_type        | “4”                                  | character |            tab_arb |
-| rtauargus.output_type        | “4”                                  | character |          micro_arb |
-| rtauargus.output_options     | “”                                   | character |          micro_arb |
-| rtauargus.output_options     | “”                                   | character |            tab_arb |
-| rtauargus.missing_dir        | “stop”                               | character |            run_arb |
-| rtauargus.tauargus_exe       | “Y:/Logiciels/TauArgus/TauArgus.exe” | character |            run_arb |
-| rtauargus.show_batch_console | FALSE                                | logical   |            run_arb |
-| rtauargus.import             | FALSE                                | logical   |            run_arb |
-| rtauargus.is_tabular         | TRUE                                 | logical   |            run_arb |
+| Option | Valeur par défaut | Type | Fonction concernée |
+|:---|:---|:---|---:|
+| rtauargus.decimals | 0 | integer | tab_rda |
+| rtauargus.decimals | 0 | integer | micro_asc_rda |
+| rtauargus.totcode | “Total” | character | tab_rda |
+| rtauargus.totcode | “Total” | character | micro_asc_rda |
+| rtauargus.missing | “” | character | micro_asc_rda |
+| rtauargus.hierleadstring | “@” | character | micro_asc_rda |
+| rtauargus.hierleadstring | “@” | character | tab_rda |
+| rtauargus.separator | “,” | character | tab_arb |
+| rtauargus.separator | “,” | character | tab_rda |
+| rtauargus.response_var | “\<freq\>” | character | micro_arb |
+| rtauargus.weighted | FALSE | logical | micro_arb |
+| rtauargus.linked | FALSE | logical | micro_arb |
+| rtauargus.output_type | “4” | character | tab_arb |
+| rtauargus.output_type | “4” | character | micro_arb |
+| rtauargus.output_options | “” | character | micro_arb |
+| rtauargus.output_options | “” | character | tab_arb |
+| rtauargus.missing_dir | “stop” | character | run_arb |
+| rtauargus.tauargus_exe | “Y:/Logiciels/TauArgus/TauArgus.exe” | character | run_arb |
+| rtauargus.show_batch_console | FALSE | logical | run_arb |
+| rtauargus.import | FALSE | logical | run_arb |
+| rtauargus.is_tabular | TRUE | logical | run_arb |
 
 ### Affichage
 
 Pour afficher les options définies pour la session en cours :
 
 ``` r
+
 rtauargus_options()
 #> $rtauargus.decimals
 #> [1] 0
@@ -719,6 +740,7 @@ Pour modifier une ou plusieurs options, utiliser la syntaxe suivante (la
 même que celle employée pour modifier l’emplacement de τ-Argus) :
 
 ``` r
+
 options(
   rtauargus.show_batch_console = FALSE,
   rtauargus.output_options     = "AS+SE+",
@@ -748,6 +770,7 @@ str(rtauargus_options())
 Pour réinitialiser certaines options :
 
 ``` r
+
 reset_rtauargus_options("rtauargus.response_var", "rtauargus.output_type")
 
 # Il est possible d'omettre le préfixe 'rtauargus.'
@@ -778,6 +801,7 @@ Pour remettre toutes les valeurs par défaut (y compris le chemin vers
 :
 
 ``` r
+
 reset_rtauargus_options()
 ```
 

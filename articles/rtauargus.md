@@ -1,6 +1,7 @@
 # &tau;-Argus from R - tabular version
 
 ``` r
+
 library(dplyr)
 ```
 
@@ -83,6 +84,7 @@ package and how to apply suppressive methods in a single instruction.
 When loading the package, the console displays some information:
 
 ``` r
+
 library(rtauargus)
 ```
 
@@ -91,6 +93,7 @@ predefined. This can be changed for the duration of the R session, as
 follows:
 
 ``` r
+
 loc_tauargus <- "Y:/Logiciels/TauArgus/TauArgus4.2.3/TauArgus.exe"
 
 options(rtauargus.tauargus_exe = loc_tauargus)
@@ -132,6 +135,7 @@ All the arguments and their default options will be detailed ( where?).
 For the following demonstration, a fictitious table will be used:
 
 ``` r
+
 act_size <-
   data.frame(
     ACTIVITY = c("01","01","01","02","02","02","06","06","06","Total","Total","Total"),
@@ -166,6 +170,7 @@ largest contributor to each cell, corresponding to the `MAX` variable in
 the tabular data.
 
 ``` r
+
 ex1 <- tab_rtauargus(
   act_size,
   dir_name = "tauargus_files/ex1",
@@ -209,6 +214,7 @@ secret cell because of frequency rule (more contributors in case when
 n\>1); -`D`: secondary secret cell; -`V`: valid cells - no need to mask.
 
 ``` r
+
 ex1
 #>    ACTIVITY  SIZE VAL N_OBS MAX Status
 #> 1        01 Total 150    15  20      V
@@ -241,6 +247,7 @@ turnover is broken down by business sectors and size. To load the data,
 do:
 
 ``` r
+
 data("turnover_act_size")
 head(turnover_act_size)
 #> # A tibble: 6 x 5
@@ -277,6 +284,7 @@ Here, the correspondence table describes the nesting of the three levels
 of business sectors, from the most aggregated to the least one:
 
 ``` r
+
 data(activity_corr_table)
 head(activity_corr_table)
 #>   A10 A21 A88
@@ -289,6 +297,7 @@ head(activity_corr_table)
 ```
 
 ``` r
+
 hrc_file_activity <- write_hrc2(
   corr_table = activity_corr_table,
   file_name = "hrc/activity.hrc"
@@ -304,6 +313,7 @@ cells don’t comply with the primary secret rules. Using the same rules
 as before, we get:
 
 ``` r
+
 turnover_act_size <- turnover_act_size %>%
   mutate(
     is_secret_freq = N_OBS > 0 & N_OBS < 3,
@@ -333,6 +343,7 @@ runs the Modular method to perform the secondary secret. Here, we choose
 to use the Optimal method by changing the `suppress` argument.
 
 ``` r
+
 ex2 <- tab_rtauargus(
   turnover_act_size,
   dir_name = "tauargus_files/ex2",
@@ -351,6 +362,7 @@ ex2 <- tab_rtauargus(
 ##### Result
 
 ``` r
+
 str(ex2)
 #> 'data.frame':    414 obs. of  9 variables:
 #>  $ ACTIVITY      : chr  "01" "01" "02" "02" ...
@@ -365,6 +377,7 @@ str(ex2)
 ```
 
 ``` r
+
 table(ex2$Status)
 #> 
 #>   B   D   V 
@@ -376,6 +389,7 @@ results, all the primary secret has the status “B” in the output
 produced by τ-Argus. To adjust this, we can do:
 
 ``` r
+
 ex2 %>%
   mutate(
     Status = dplyr::case_when(
@@ -408,6 +422,7 @@ vignettes *Manage the protection of linked tables*
 For this example, two tables will be used :
 
 ``` r
+
 data("turnover_act_size")
 data("turnover_act_cj")
 str(turnover_act_cj)
@@ -436,6 +451,7 @@ if the cell doesn’t comply.
 Here, we use the same rules as previously.
 
 ``` r
+
 list_data_2_tabs <- list(
   act_size = turnover_act_size,
   act_cj = turnover_act_cj
@@ -458,6 +474,7 @@ Now that the primary secret has been specified for both tables, we can
 run the process.
 
 ``` r
+
 ex3 <- tab_multi_manager(
   list_tables = list_data_2_tabs,
   list_explanatory_vars = list(

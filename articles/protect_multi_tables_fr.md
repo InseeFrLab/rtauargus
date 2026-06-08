@@ -157,6 +157,7 @@ Spécifions l’emplacement du fichier TauArgus.exe sur notre ordinateur :
 \`\`{r version} options( rtauargus.tauargus_exe =
 “Y:/Logiciels/TauArgus/TauArgus4.2.3/TauArgus.exe” )
 
+
     ## Comment protéger 4 tableaux liés en même temps
 
     Dans l'exemple suivant, nous allons protéger un ensemble de 4 tableaux liés partageant
@@ -176,6 +177,7 @@ turnover_act_cj NUTS X SIZE nommé turnover_nuts_size NUTS X CJ nommé
 turnover_nuts_cj
 
 ``` r
+
 str(turnover_act_size)
 #> tibble [414 x 5] (S3: tbl_df/tbl/data.frame)
 #>  $ ACTIVITY: chr [1:414] "AZ" "BE" "FZ" "GI" ...
@@ -186,6 +188,7 @@ str(turnover_act_size)
 ```
 
 ``` r
+
 str(turnover_nuts_cj)
 #> tibble [452 x 5] (S3: tbl_df/tbl/data.frame)
 #>  $ NUTS : chr [1:452] "FR10" "FR21" "FR22" "FR23" ...
@@ -201,6 +204,7 @@ faisant cela, il sera plus facile de suivre le déroulement de la pose du
 secret secondaire.
 
 ``` r
+
 list_data_4_tabs <- list(
   act_size = turnover_act_size,
   act_cj = turnover_act_cj,
@@ -242,6 +246,7 @@ table. Ici, nous appliquons 2 règles : La règle de dominance à 85%
 NK(1,85) et la règle de fréquence avec un seuil fixé à 3.
 
 ``` r
+
 list_data_4_tabs <- list_data_4_tabs %>%
   purrr::map(
     function(df){
@@ -304,6 +309,7 @@ tableaux. Dans notre cas, les variables explicatives sont les 2
 premières colonnes de chaque tableau.
 
 ``` r
+
 nom_var_list <- purrr::map(
   list_data_4_tabs,
   function(data) colnames(data)[1:2]
@@ -333,6 +339,7 @@ Toutefois, lorsque toutes les variables ont la même modalité pour pour
 le total, l’information peut être spécifiée de la manière suivante :
 
 ``` r
+
 total_codes <- "Total"
 ```
 
@@ -343,11 +350,13 @@ table de correspondance pour chacunes d’entre elles pour créer le
 fichier .hrc dont τ-Argus a besoin.
 
 ``` r
+
 data(activity_corr_table)
 data(nuts23_fr_corr_table)
 ```
 
 ``` r
+
 hrc_file_activity <- write_hrc2(
   corr_table = activity_corr_table,
   file_name = "hrc/activity.hrc"
@@ -362,6 +371,7 @@ Pour spécifier les nom des fichiers hrc, on crée un vecteur nommé (ou
 une liste) :
 
 ``` r
+
 hrc_files <- list(
   ACTIVITY = hrc_file_activity,
   NUTS = hrc_file_nuts
@@ -374,6 +384,7 @@ hiérarchiques présentes dans la table
 #### Protéger tous les tableaux en un seul appel
 
 ``` r
+
 res <- tab_multi_manager(
     list_tables = list_data_4_tabs,
     list_explanatory_vars = nom_var_list,
@@ -394,6 +405,7 @@ res <- tab_multi_manager(
 #### Résultats
 
 ``` r
+
 list_with_status <- res %>%
   purrr::map(
     function(df){
@@ -420,6 +432,7 @@ str(list_with_status$act_size)
 ```
 
 ``` r
+
 list_with_status %>%
   purrr::iwalk(
     function(df,name){
@@ -470,6 +483,7 @@ extrait des deux.
 Extrait de la hiérarchie principale :
 
 ``` r
+
 sdcHierarchies::hier_create(
   root="Total",
   nodes = activity_corr_table$A10 %>% unique()
@@ -491,6 +505,7 @@ sdcHierarchies::hier_create(
 Extrait de la hiérarchie alternative:
 
 ``` r
+
 sdcHierarchies::hier_create(
   root="D_TO_M",
   nodes = activity_corr_table_D_TO_M$A21
@@ -514,6 +529,7 @@ tableau croisant `ACTIVITY` et `SIZE` avec les modalités D à M et le
 sous-total `D_TO_M` :
 
 ``` r
+
 turnover_act_size_D_TO_M <- turnover_act_size %>%
   filter(
     ACTIVITY %in% LETTERS[4:13]
@@ -539,6 +555,7 @@ str(turnover_act_size_D_TO_M)
 Créons le fichier correspondant à cette hiérarchie :
 
 ``` r
+
 activity_corr_table_D_TO_M <- activity_corr_table %>%
   filter(A21 %in% LETTERS[4:13]) %>%
   select(-A88) %>%
@@ -554,6 +571,7 @@ Ensuite, construisons la liste des tableaux et appliquons les règles de
 secret primaire dessus.
 
 ``` r
+
 list_data_3_tabs_nn <- list(
   act_size = turnover_act_size,
   act_size_D_TO_M = turnover_act_size_D_TO_M,
@@ -585,6 +603,7 @@ hiérarchies de la variable `ACTIVITY` :
 Le même raisonnement est utilisé pour remplir l’argument `alt_totcode`.
 
 ``` r
+
 res <- tab_multi_manager(
   list_tables = list_data_3_tabs_nn,
   list_explanatory_vars = list(

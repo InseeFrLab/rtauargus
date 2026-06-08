@@ -78,25 +78,25 @@ fonctions utiliseront les valeurs par défaut du package.)
 
 ## List of options
 
-|                              |                                       |                                                                                        |
-|------------------------------|---------------------------------------|----------------------------------------------------------------------------------------|
-| **Option**                   | **Default Value**                     | **Function**                                                                           |
-| `------------------------`   | `---------------------------------`   | `-------------`                                                                        |
-| rtauargus.decimals           | 0                                     | [`micro_asc_rda()`](https://inseefrlab.github.io/rtauargus/reference/micro_asc_rda.md) |
-| rtauargus.totcode            | "Total "                              |                                                                                        |
-| rtauargus.missing            | " "                                   |                                                                                        |
-| rtauargus.hierleadstring     | "@ "                                  |                                                                                        |
-| `------------------------`   | `---------------------------------`   | `-------------`                                                                        |
-| rtauargus.response_var       | "\<freq\> "                           | [`micro_arb()`](https://inseefrlab.github.io/rtauargus/reference/micro_arb.md)         |
-| rtauargus.weighted           | FALSE                                 |                                                                                        |
-| rtauargus.linked             | FALSE                                 |                                                                                        |
-| rtauargus.output_type        | "4 "                                  |                                                                                        |
-| rtauargus.output_options     | " "                                   |                                                                                        |
-| `------------------------`   | `---------------------------------`   | `-------------`                                                                        |
-| rtauargus.missing_dir        | "stop "                               | [`run_arb()`](https://inseefrlab.github.io/rtauargus/reference/run_arb.md)             |
-| rtauargus.tauargus_exe       | "Y:/Logiciels/TauArgus/TauArgus.exe " |                                                                                        |
-| rtauargus.show_batch_console | FALSE                                 |                                                                                        |
-| rtauargus.import             | FALSE                                 |                                                                                        |
+|  |  |  |
+|----|----|----|
+| **Option** | **Default Value** | **Function** |
+| `------------------------` | `---------------------------------` | `-------------` |
+| rtauargus.decimals | 0 | [`micro_asc_rda()`](https://inseefrlab.github.io/rtauargus/reference/micro_asc_rda.md) |
+| rtauargus.totcode | "Total " |  |
+| rtauargus.missing | " " |  |
+| rtauargus.hierleadstring | "@ " |  |
+| `------------------------` | `---------------------------------` | `-------------` |
+| rtauargus.response_var | "\<freq\> " | [`micro_arb()`](https://inseefrlab.github.io/rtauargus/reference/micro_arb.md) |
+| rtauargus.weighted | FALSE |  |
+| rtauargus.linked | FALSE |  |
+| rtauargus.output_type | "4 " |  |
+| rtauargus.output_options | " " |  |
+| `------------------------` | `---------------------------------` | `-------------` |
+| rtauargus.missing_dir | "stop " | [`run_arb()`](https://inseefrlab.github.io/rtauargus/reference/run_arb.md) |
+| rtauargus.tauargus_exe | "Y:/Logiciels/TauArgus/TauArgus.exe " |  |
+| rtauargus.show_batch_console | FALSE |  |
+| rtauargus.import | FALSE |  |
 
 ## See also
 

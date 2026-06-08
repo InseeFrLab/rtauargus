@@ -152,9 +152,11 @@ df_naf <- data.frame(
 
 tmp_file <- write_hrc(df_naf, c("A88", "A21", "A10"))
 file.show(tmp_file, pager = "console")
+#> Warning: error in running command
 
 tmp_file <- write_hrc(df_naf, c("A88", "A10"), hierleadstring = ":")
 file.show(tmp_file, pager = "console")
+#> Warning: error in running command
 
 # Hierarchy with varying depth  ...............
 
@@ -167,8 +169,10 @@ df <- data.frame(
 tmp_file <- write_hrc(df, c("niv3", "niv2", "niv1"))
 #> Warning: valeurs manquantes imputees pour construire la hierarchie
 file.show(tmp_file, pager = "console")
+#> Warning: error in running command
 
 tmp_file <- write_hrc(df, c("niv3", "niv2", "niv1"), compact = FALSE)
 #> Warning: valeurs manquantes imputees pour construire la hierarchie
 file.show(tmp_file, pager = "console")
+#> Warning: error in running command
 ```
