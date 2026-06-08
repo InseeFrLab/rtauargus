@@ -24,7 +24,7 @@
 ## Citation
 
 Source:
-[`DESCRIPTION`](https://github.com/inseefrlab/rtauargus/blob/master/DESCRIPTION)
+[`DESCRIPTION`](https://github.com/inseefrlab/rtauargus/blob/v-1.3.4/DESCRIPTION)
 
 Berrard P, Jamme J, Rastout N, Pointet J, Beroud F, Socard A, Pomel W,
 Baudry C (2026). *rtauargus: Using Tau-Argus from R*. R package version
