@@ -130,24 +130,42 @@ tab_to_treat <- function(list_independent_tables) {
 #' }
 #'
 #' @importFrom purrr imap_dfr
-dataframe_result <- function(list_independent_tables) {
-  # TODO modifier car il y a une erreur (column field doesn't exist)
-  # Combine the list of tibbles into a single dataframe with cluster identifiers
+dataframe_result <- function(list_independent_tables, list_hrc_identified) {
   dataframe_metadata <- purrr::imap_dfr(list_independent_tables, function(tibble, tibble_name) {
     tibble %>% mutate(cluster = tibble_name)
-  }) %>%
+  })
+
+  # If the initial_indicator column exists in list_hrc_identified,
+  # replace indicator with initial_indicator whenever initial_indicator is not NA
+  if ("initial_indicator" %in% names(list_hrc_identified[[1]])) {
+    hrc_indicator_map <- list_hrc_identified %>%
+      purrr::map_dfr(identity) %>%
+      filter(!is.na(initial_indicator)) %>%
+      select(table_name, field, indicator, initial_indicator) %>%
+      distinct()
+
+    dataframe_metadata <- dataframe_metadata %>%
+      left_join(hrc_indicator_map, by = c("table_name", "field", "indicator")) %>%
+      mutate(indicator = if_else(!is.na(initial_indicator), initial_indicator, indicator)) %>%
+      select(-initial_indicator)
+  }
+
+  dataframe_metadata <- dataframe_metadata %>%
     select(
       cluster,
       table_name,
       field,
       indicator,
-      # Dynamically order columns spanning_xxx by their numeric suffix
       all_of(names(.)[grepl("^spanning_\\d+$", names(.))] %>%
                .[order(as.numeric(sub("spanning_", "", .)))]),
-      # Dynamically order columns hrc_spanning_xxx by their numeric suffix
       all_of(names(.)[grepl("^hrc_spanning_\\d+$", names(.))] %>%
                .[order(as.numeric(sub("hrc_spanning_", "", .)))])
-    ) %>% as.data.frame()
+    ) %>%
+    as.data.frame()
+
+  return(dataframe_metadata)
 }
+
+
 
 
