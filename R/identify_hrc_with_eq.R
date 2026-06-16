@@ -98,11 +98,11 @@ identify_hrc_with_eq <- function(df_metadata_long,df_eq_indicator){
     ) %>%
     dplyr::distinct()
 
-  # ---- 1) Identify ambiguous totals ----
+  # Identify ambiguous totals
   total_counts <- parsed_equations %>% dplyr::count(total, name = "n_total")
   ambiguous_totals <- total_counts %>% dplyr::filter(n_total > 1) %>% pull(total)
 
-  # ---- 2) Build a total -> total_alt mapping by eq_name ----
+  # Build a total -> total_alt mapping by eq_name
   # For all equations (ambiguous or not), create one row;
   # for non-ambiguous totals, total_alt == total
   alt_map <- parsed_equations %>%
@@ -119,7 +119,7 @@ identify_hrc_with_eq <- function(df_metadata_long,df_eq_indicator){
     dplyr::ungroup() %>%
     dplyr::select(eq_name, total, total_alt)
 
-  # ---- 3) Apply the mapping to the links ----
+  # Apply the mapping to the links
   # 'links' contains total, rhs, eq_name (if not, it must be joined beforehand)
   # here we assume links has an eq_name column; otherwise do
   # left_join(links, parsed_equations %>% select(eq_name, total, rhs), ...) first
@@ -138,14 +138,19 @@ identify_hrc_with_eq <- function(df_metadata_long,df_eq_indicator){
     select(total, rhs, eq_name) %>%
     dplyr::distinct()
 
-  # ---- 4) Build the full graph (including all copies) ----
+  # Build the full graph (including all copies)
   g_full <- graph_from_data_frame(links_full %>% select(total, rhs), directed = TRUE)
 
-  # ---- 5) Compute components on g_full ----
+  # Compute components on g_full
   comp_full <- igraph::components(g_full)$membership
   comp_df <- data.frame(var = names(comp_full), group = as.integer(comp_full), stringsAsFactors = FALSE)
 
-  # ---- 6) Update equations_long:
+  ##############################################################################
+  # browser() # use this combined with "./rtauargus/dev/graphes_equations_objet_browser.R"
+  # to get the graphs showing indicators links based on the equations
+  ##############################################################################
+
+  # Update equations_long:
   #       associate the alternative variable (if present) and the corresponding group ----
   # Notes:
   # - equations_long contains the original variables (var) and eq_name;
@@ -189,19 +194,65 @@ identify_hrc_with_eq <- function(df_metadata_long,df_eq_indicator){
     mutate(across(dplyr::where(is.character), ~ gsub("[^[:alnum:]_]", "", .))) %>%
     left_join(equations_long_full, by = c("indicator" = "var"))
 
-  df_eq_initial_spannings <- df_spannings_eq %>%
-    filter(!is.na(eq_name)) %>%
+  # For each table, retrieve its spannings
+  spanning_par_table <- df_spannings_eq %>%
+    distinct(table_name, spanning, group)
+
+  # Identify spannings shared within each group
+  spannings_communs <- spanning_par_table %>%
+    group_by(group, spanning) %>%
+    summarise(
+      tables_avec_ce_spanning = list(sort(unique(table_name))),
+      n_tables = n(),
+      .groups = "drop"
+    )
+
+  # Total number of tables per group
+  n_tables_par_group <- spanning_par_table %>%
     group_by(group) %>%
-    dplyr::reframe(
-      table_name    = paste(unique(table_name), collapse = "."),
-      field         = last(field),
-      hrc_field     = last(hrc_field),
-      spanning      = spanning,
-      hrc_spanning  = hrc_spanning,
-      indicator     = last(unit),
-      hrc_indicator = last(hrc_indicator)
+    summarise(n_total = n_distinct(table_name), .groups = "drop")
+
+  spannings_communs <- spannings_communs %>%
+    left_join(n_tables_par_group, by = "group")
+
+  # Spannings shared by all tables in the group
+  spanning_all <- spannings_communs %>%
+    filter(n_tables == n_total)  # spanning present in every table
+
+  # Tables with additional spannings (not shared by all tables)
+  spanning_extra <- spannings_communs %>%
+    filter(n_tables < n_total) %>%
+    tidyr::unnest(tables_avec_ce_spanning) %>%
+    rename(table_name = tables_avec_ce_spanning)
+
+  # Build the merged group
+  # (all tables in the group + all spannings shared by every table)
+  df_groupe <- df_spannings_eq %>%
+    group_by(across(-c(table_name,side,var_mapped,indicator))) %>%
+    summarise(
+      table_name = paste(sort(unique(table_name)), collapse = "."),
+      indicator = last(unit),
+      .groups = "drop"
     ) %>%
-    dplyr::distinct(group, spanning, hrc_spanning, .keep_all = TRUE)
+    filter(spanning %in% spanning_all$spanning)
+
+  # Build standalone rows for tables with extra spannings, keep the table on its
+  # own with all of its spannings
+  tables_extra <- spanning_extra %>%
+    distinct(table_name, group)
+
+  df_solo <- df_spannings_eq %>%
+    semi_join(tables_extra, by = c("table_name", "group")) %>%
+    # Use the same indicator name as the other tables that share at least
+    # one cross-classification variable, so that all tables are processed
+    # within the same cluster.
+    # Rule for the next steps: the minimum condition for creating a cluster
+    # is that the tables share the same indicator.
+    mutate(initial_indicator = indicator,
+           indicator = unit)
+
+  df_eq_initial_spannings <- bind_rows(df_groupe, df_solo %>% select(-c(side,var_mapped))) %>%
+    arrange(group, table_name, spanning)
 
   # 'df_eq_indicator_spannings' defines the spanning information for equation indicators.
   # Each equation name is transformed into its uppercase form with a "^h" suffix,
@@ -219,9 +270,9 @@ identify_hrc_with_eq <- function(df_metadata_long,df_eq_indicator){
         paste0(toupper(last(eq_name)), "^h")
       },
       hrc_spanning = if(length(unique(eq_name)) > 1) {
-        paste0("hrc_", paste0(unique(toupper(eq_name)), collapse = "_"))
+        paste0("hrc_", paste0(unique(toupper(eq_name)), collapse = "_"),".totcode.",var_mapped[side == "total"][1])
       } else {
-        paste0("hrc_", toupper(last(eq_name)))
+        paste0("hrc_", toupper(last(eq_name)),".totcode.",var_mapped[side == "total"][1])
       },
       indicator = last(unit),
       hrc_indicator = last(hrc_indicator),
