@@ -72,17 +72,7 @@ identify_hrc_with_eq <- function(df_metadata_long,df_eq_indicator){
     dplyr::ungroup() %>%
     dplyr::select(eq_name, unit, total, everything())
 
-  # change to long format in order to join with df_metadata_long
-  equations_long <- parsed_equations %>%
-    mutate(across(c(total, starts_with("rhs")), trimws)) %>%
-    tidyr::pivot_longer(
-      cols = c(total, starts_with("rhs")),
-      names_to = "side",   # côté équation (total / rhs1 / rhs2...)
-      values_to = "var"
-    ) %>%
-    filter(!is.na(var))
-
-  # Identify chained equations (A = B + C, B = D + E → group both equations together)
+  # Identify chained equations (A = B + C, B = D + E) and group equations together
 
   # Build dependency links between totals and rhs
   links <- parsed_equations %>%
@@ -110,11 +100,11 @@ identify_hrc_with_eq <- function(df_metadata_long,df_eq_indicator){
     dplyr::group_by(total) %>%
     dplyr::arrange(eq_name) %>%                 # ordre stable
     dplyr::mutate(alt_idx = dplyr::row_number(),
-           total_alt = dplyr::case_when(
-             dplyr::n() == 1 ~ total,
-             alt_idx == 1 ~ total,
-             TRUE ~ paste0(total, "_alt", alt_idx - 1)
-           )
+                  total_alt = dplyr::case_when(
+                    dplyr::n() == 1 ~ total,
+                    alt_idx == 1 ~ total,
+                    TRUE ~ paste0(total, "_alt", alt_idx - 1)
+                  )
     ) %>%
     dplyr::ungroup() %>%
     dplyr::select(eq_name, total, total_alt)
@@ -150,8 +140,18 @@ identify_hrc_with_eq <- function(df_metadata_long,df_eq_indicator){
   # to get the graphs showing indicators links based on the equations
   ##############################################################################
 
+  # reformat parsed_equations in long format in order to join with df_metadata_long
+  equations_long <- parsed_equations %>%
+    mutate(across(c(total, starts_with("rhs")), trimws)) %>%
+    tidyr::pivot_longer(
+      cols = c(total, starts_with("rhs")),
+      names_to = "side",   # côté équation (total / rhs1 / rhs2...)
+      values_to = "var"
+    ) %>%
+    filter(!is.na(var))
+
   # Update equations_long:
-  #       associate the alternative variable (if present) and the corresponding group ----
+  #       associate the alternative variable (if present) and the corresponding group
   # Notes:
   # - equations_long contains the original variables (var) and eq_name;
   # - we want to recover the "var" or "var_alt" version used in g_full.
@@ -168,15 +168,18 @@ identify_hrc_with_eq <- function(df_metadata_long,df_eq_indicator){
   # 'df_spannings' is a modified version of 'df_metadata_long' where:
   #   - 'spanning' is replaced by its uppercase hierarchical version if available,
   #   - 'indicator' is replaced by its uppercase hierarchical version
-  #   (without the 'hrc_' prefix) if available.
+  #   (without the 'hrc_' prefix) if available and 'indicator' not part of 'df_eq_indicator'
+  browser()
+  indic_not_in_eq <- setdiff(unique(df_metadata_long$indicator),unique(equations_long$var))
+
   df_spannings <- df_metadata_long %>%
     mutate(spanning_old = spanning) %>%
     mutate(spanning = ifelse(is.na(hrc_spanning),
                              spanning,
                              toupper(hrc_spanning))) %>%
-    mutate(indicator = ifelse(is.na(hrc_indicator),
-                              indicator,
-                              toupper(sub("hrc_","",hrc_indicator))))
+    mutate(indicator = ifelse(indicator %in% indic_not_in_eq & !is.na(hrc_indicator),
+      toupper(sub("hrc_","",hrc_indicator)),
+      indicator))
 
   # 'df_variable_info' is a reference table linking original spanning names ('spanning_old')
   # to their transformed counterparts ('spanning'), along with the corresponding table name.
@@ -194,65 +197,89 @@ identify_hrc_with_eq <- function(df_metadata_long,df_eq_indicator){
     mutate(across(dplyr::where(is.character), ~ gsub("[^[:alnum:]_]", "", .))) %>%
     left_join(equations_long_full, by = c("indicator" = "var"))
 
-  # For each table, retrieve its spannings
-  spanning_par_table <- df_spannings_eq %>%
-    distinct(table_name, spanning, group)
 
-  # Identify spannings shared within each group
-  spannings_communs <- spanning_par_table %>%
-    group_by(group, spanning) %>%
-    summarise(
-      tables_avec_ce_spanning = list(sort(unique(table_name))),
-      n_tables = n(),
-      .groups = "drop"
-    )
+  ##############################################################################
+  # Séparer les lignes avec et sans group
+  df_with_group <- df_spannings_eq %>% filter(!is.na(group))
+  df_without_group <- df_spannings_eq %>% filter(is.na(group))
 
-  # Total number of tables per group
-  n_tables_par_group <- spanning_par_table %>%
+  # ---- Traitement des lignes SANS group (ancien code) ----
+  df_eq_initial_spannings_no_group <- df_without_group %>%
+    filter(!is.na(eq_name)) %>%
     group_by(group) %>%
-    summarise(n_total = n_distinct(table_name), .groups = "drop")
+    dplyr::reframe(
+      table_name    = paste(unique(table_name), collapse = "."),
+      field         = last(field),
+      hrc_field     = last(hrc_field),
+      spanning      = spanning,
+      hrc_spanning  = hrc_spanning,
+      indicator     = last(unit),
+      hrc_indicator = last(hrc_indicator)
+    ) %>% unique()
 
-  spannings_communs <- spannings_communs %>%
-    left_join(n_tables_par_group, by = "group")
+  # ---- Traitement des lignes AVEC group (nouveau code) ----
+  if(nrow(df_with_group) > 0){
+    spanning_by_table <- df_with_group %>%
+      distinct(table_name, spanning, group)
 
-  # Spannings shared by all tables in the group
-  spanning_all <- spannings_communs %>%
-    filter(n_tables == n_total)  # spanning present in every table
+    common_spannings <- spanning_by_table %>%
+      group_by(group, spanning) %>%
+      summarise(
+        tables_avec_ce_spanning = list(sort(unique(table_name))),
+        n_tables = n(),
+        .groups = "drop"
+      )
 
-  # Tables with additional spannings (not shared by all tables)
-  spanning_extra <- spannings_communs %>%
-    filter(n_tables < n_total) %>%
-    tidyr::unnest(tables_avec_ce_spanning) %>%
-    rename(table_name = tables_avec_ce_spanning)
+    n_tables_par_group <- df_with_group %>%
+      group_by(group) %>%
+      summarise(n_total = n_distinct(table_name), .groups = "drop")
 
-  # Build the merged group
-  # (all tables in the group + all spannings shared by every table)
-  df_groupe <- df_spannings_eq %>%
-    group_by(across(-c(table_name,side,var_mapped,indicator))) %>%
-    summarise(
-      table_name = paste(sort(unique(table_name)), collapse = "."),
-      indicator = last(unit),
-      .groups = "drop"
+    common_spannings <- common_spannings %>%
+      left_join(n_tables_par_group, by = "group")
+
+    spanning_all <- common_spannings %>%
+      filter(n_tables == n_total)
+
+    spanning_extra <- common_spannings %>%
+      filter(n_tables < n_total) %>%
+      tidyr::unnest(tables_avec_ce_spanning) %>%
+      rename(table_name = tables_avec_ce_spanning)
+
+    df_groupe <- df_with_group %>%
+      group_by(across(-c(table_name, side, var_mapped, indicator))) %>%
+      summarise(
+        table_name = paste(sort(unique(table_name)), collapse = "."),
+        indicator  = last(unit),
+        .groups    = "drop"
+      ) %>%
+      filter(spanning %in% spanning_all$spanning)
+
+    tables_extra <- spanning_extra %>%
+      distinct(table_name, group)
+
+    df_solo <- df_with_group %>%
+      semi_join(tables_extra, by = c("table_name", "group")) %>%
+      mutate(
+        initial_indicator = var_mapped[side == "total"][1],
+        indicator = unit
+      )
+
+    df_eq_initial_spannings_with_group <- bind_rows(
+      df_groupe,
+      df_solo %>% select(-c(side, var_mapped))
     ) %>%
-    filter(spanning %in% spanning_all$spanning)
+      arrange(group, table_name, spanning)
 
-  # Build standalone rows for tables with extra spannings, keep the table on its
-  # own with all of its spannings
-  tables_extra <- spanning_extra %>%
-    distinct(table_name, group)
+    # ---- Combinaison finale ----
+    df_eq_initial_spannings <- bind_rows(
+      df_eq_initial_spannings_no_group,
+      df_eq_initial_spannings_with_group
+    )
+  }else{
+    df_eq_initial_spannings <- df_eq_initial_spannings_no_group
+  }
 
-  df_solo <- df_spannings_eq %>%
-    semi_join(tables_extra, by = c("table_name", "group")) %>%
-    # Use the same indicator name as the other tables that share at least
-    # one cross-classification variable, so that all tables are processed
-    # within the same cluster.
-    # Rule for the next steps: the minimum condition for creating a cluster
-    # is that the tables share the same indicator.
-    mutate(initial_indicator = indicator,
-           indicator = unit)
-
-  df_eq_initial_spannings <- bind_rows(df_groupe, df_solo %>% select(-c(side,var_mapped))) %>%
-    arrange(group, table_name, spanning)
+  ##############################################################################
 
   # 'df_eq_indicator_spannings' defines the spanning information for equation indicators.
   # Each equation name is transformed into its uppercase form with a "^h" suffix,
