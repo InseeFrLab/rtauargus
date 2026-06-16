@@ -188,7 +188,7 @@ answer <- data.frame(
 test_that("indicators equation", {
   df_eq_ex <- data.frame(
     eq_name = c("eq1"),
-    eq_indicator = c("ca_salades = ca_batavia + ca_mache"),
+    eq_indicator = c("to_lettuce = to_batavia + to_arugula"),
     unit = c("EUR"),
     stringsAsFactors = FALSE
   )
