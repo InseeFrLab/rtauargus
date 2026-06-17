@@ -169,17 +169,19 @@ identify_hrc_with_eq <- function(df_metadata_long,df_eq_indicator){
   #   - 'spanning' is replaced by its uppercase hierarchical version if available,
   #   - 'indicator' is replaced by its uppercase hierarchical version
   #   (without the 'hrc_' prefix) if available and 'indicator' not part of 'df_eq_indicator'
-  browser()
   indic_not_in_eq <- setdiff(unique(df_metadata_long$indicator),unique(equations_long$var))
 
   df_spannings <- df_metadata_long %>%
-    mutate(spanning_old = spanning) %>%
-    mutate(spanning = ifelse(is.na(hrc_spanning),
+    mutate(spanning_old = spanning,
+           spanning = ifelse(is.na(hrc_spanning),
                              spanning,
-                             toupper(hrc_spanning))) %>%
-    mutate(indicator = ifelse(indicator %in% indic_not_in_eq & !is.na(hrc_indicator),
-      toupper(sub("hrc_","",hrc_indicator)),
-      indicator))
+                             toupper(hrc_spanning)),
+           indicator = ifelse(indicator %in% indic_not_in_eq & !is.na(hrc_indicator),
+                              toupper(sub("hrc_","",hrc_indicator)),
+                              indicator),
+           hrc_indicator = ifelse(indicator %in% unique(equations_long$var),
+                                  NA,
+                                  hrc_indicator))
 
   # 'df_variable_info' is a reference table linking original spanning names ('spanning_old')
   # to their transformed counterparts ('spanning'), along with the corresponding table name.
@@ -197,25 +199,10 @@ identify_hrc_with_eq <- function(df_metadata_long,df_eq_indicator){
     mutate(across(dplyr::where(is.character), ~ gsub("[^[:alnum:]_]", "", .))) %>%
     left_join(equations_long_full, by = c("indicator" = "var"))
 
-
   ##############################################################################
   # Séparer les lignes avec et sans group
   df_with_group <- df_spannings_eq %>% filter(!is.na(group))
   df_without_group <- df_spannings_eq %>% filter(is.na(group))
-
-  # ---- Traitement des lignes SANS group (ancien code) ----
-  df_eq_initial_spannings_no_group <- df_without_group %>%
-    filter(!is.na(eq_name)) %>%
-    group_by(group) %>%
-    dplyr::reframe(
-      table_name    = paste(unique(table_name), collapse = "."),
-      field         = last(field),
-      hrc_field     = last(hrc_field),
-      spanning      = spanning,
-      hrc_spanning  = hrc_spanning,
-      indicator     = last(unit),
-      hrc_indicator = last(hrc_indicator)
-    ) %>% unique()
 
   # ---- Traitement des lignes AVEC group (nouveau code) ----
   if(nrow(df_with_group) > 0){
