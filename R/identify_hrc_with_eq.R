@@ -204,67 +204,107 @@ identify_hrc_with_eq <- function(df_metadata_long,df_eq_indicator){
   df_with_group <- df_spannings_eq %>% filter(!is.na(group))
   df_without_group <- df_spannings_eq %>% filter(is.na(group))
 
-  # ---- Traitement des lignes AVEC group (nouveau code) ----
-  if(nrow(df_with_group) > 0){
-    spanning_by_table <- df_with_group %>%
-      distinct(table_name, spanning, group)
+  spanning_combination_group <- df_with_group |>
+    group_by(group, table_name) |>
+    summarise(
+      spanning = list(sort(unique(spanning))),
+      side     = first(side),
+      .groups  = "drop"
+    ) |>
+    group_by(group) |>
+    mutate(
+      all_sides    = list(sort(unique(side))),
+      spanning_key = purrr::map_chr(spanning, paste, collapse = "|")
+    ) |>
+    ungroup()
 
-    common_spannings <- spanning_by_table %>%
-      group_by(group, spanning) %>%
-      summarise(
-        tables_avec_ce_spanning = list(sort(unique(table_name))),
-        n_tables = n(),
-        .groups = "drop"
-      )
+  # Pour chaque combinaison unique, les sides couverts sont ceux des tables
+  # dont le spanning_set est un sur-ensemble de la combinaison
+  spanning_combination_group <- spanning_combination_group |>
+    distinct(group, spanning_key, spanning, all_sides) |>
+    group_by(group, spanning_key) |>
+    summarise(
+      spanning  = list(spanning[[1]]),
+      all_sides = list(all_sides[[1]]),
+      .groups   = "drop"
+    ) |>
+    mutate(
+      # Pour chaque combinaison, chercher tous les sides des tables
+      # dont le spanning_set contient cette combinaison
+      sides_couverts = purrr::map2(spanning, group, function(span_set, grp) {
+        spanning_combination_group |>
+          filter(group == grp) |>
+          filter(purrr::map_lgl(spanning, ~ all(span_set %in% .x))) |>
+          pull(side) |>
+          sort() |>
+          unique()
+      }),
+      sides_manquants      = purrr::map2(all_sides, sides_couverts, setdiff),
+      combinaison_complete = purrr::map_lgl(sides_manquants, ~ length(.x) == 0)
+    ) |>
+    unnest_wider(spanning, names_sep = "_")
 
-    n_tables_par_group <- df_with_group %>%
-      group_by(group) %>%
-      summarise(n_total = n_distinct(table_name), .groups = "drop")
+  list_groups <- split(df_with_group, df_with_group$group)
 
-    common_spannings <- common_spannings %>%
-      left_join(n_tables_par_group, by = "group")
+  df_eq_initial_spannings <- purrr::imap(list_groups, function(df_group, group_nb) {
+    x <- spanning_combination_group |> dplyr::filter(group == group_nb) |>
+      dplyr::pull(combinaison_complete)
 
-    spanning_all <- common_spannings %>%
-      filter(n_tables == n_total)
+    if (all(x)) {
+      regroup_tables(df_group, spanning_combination_group)
+    } else if (all(!x)) {
+      df_group |>
+        dplyr::mutate(
+          initial_indicator = var_mapped[side == "total"][1],
+          indicator = unit
+        ) |>
+        dplyr::select(table_name, field, hrc_field, indicator, hrc_indicator,
+                      spanning, hrc_spanning, eq_name, unit, group, initial_indicator)
+    } else if (!all(x)) {
+      # Combinaisons incomplètes : certaines combis couvrent tous les sides, d'autres non
+      # On récupère les spanning_keys complètes depuis spanning_combination_group
+      span_comb <- spanning_combination_group |> filter(group == as.integer(group_nb))
 
-    spanning_extra <- common_spannings %>%
-      filter(n_tables < n_total) %>%
-      tidyr::unnest(tables_avec_ce_spanning) %>%
-      rename(table_name = tables_avec_ce_spanning)
+      complete_span_keys <- span_comb |> filter(combinaison_complete) |> pull(spanning_key)
+      incomplete_span_keys <- span_comb |> filter(!combinaison_complete) |> pull(spanning_key)
 
-    df_groupe <- df_with_group %>%
-      group_by(across(-c(table_name, side, var_mapped, indicator))) %>%
-      summarise(
-        table_name = paste(sort(unique(table_name)), collapse = "."),
-        indicator  = last(unit),
-        .groups    = "drop"
-      ) %>%
-      filter(spanning %in% spanning_all$spanning)
+      # Tables dont le spanning_key est complet -> regrouper
+      spanning_by_table <- df_group |>
+        group_by(table_name) |>
+        summarise(spanning_key = paste(sort(unique(spanning)), collapse = "|"), .groups = "drop")
 
-    tables_extra <- spanning_extra %>%
-      distinct(table_name, group)
+      tables_complete <- spanning_by_table |> filter(spanning_key %in% complete_span_keys) |> pull(table_name)
+      tables_incomplete <- spanning_by_table |> filter(spanning_key %in% incomplete_span_keys) |> pull(table_name)
 
-    df_solo <- df_with_group %>%
-      semi_join(tables_extra, by = c("table_name", "group")) %>%
-      mutate(
-        initial_indicator = var_mapped[side == "total"][1],
-        indicator = unit
-      )
+      # Tables avec combinaison complète -> fusionner
+      df_merged <- if (length(tables_complete) > 0) {
+        df_group |>
+          filter(table_name %in% tables_complete) |>
+          group_by(across(-c(table_name, side, var_mapped, indicator))) |>
+          summarise(
+            table_name        = paste(sort(unique(table_name)), collapse = "."),
+            indicator         = last(unit),
+            initial_indicator = var_mapped[side == "total"][1],
+            .groups           = "drop"
+          )
+      }
 
-    df_eq_initial_spannings_with_group <- bind_rows(
-      df_groupe,
-      df_solo %>% select(-c(side, var_mapped))
-    ) %>%
-      arrange(group, table_name, spanning)
+      # Tables avec combinaison incomplète -> garder seules
+      df_solo <- if (length(tables_incomplete) > 0) {
+        df_group |>
+          filter(table_name %in% tables_incomplete) |>
+          mutate(
+            initial_indicator = var_mapped[side == "total"][1],
+            indicator         = unit
+          ) |>
+          select(-c(side, var_mapped))
+      }
 
-    # ---- Combinaison finale ----
-    df_eq_initial_spannings <- bind_rows(
-      df_eq_initial_spannings_no_group,
-      df_eq_initial_spannings_with_group
-    )
-  }else{
-    df_eq_initial_spannings <- df_eq_initial_spannings_no_group
-  }
+      bind_rows(df_merged, df_solo) |> arrange(group, table_name, spanning)
+    }
+  }) |>
+    purrr::compact() |>
+    dplyr::bind_rows()
 
   ##############################################################################
 
@@ -275,7 +315,7 @@ identify_hrc_with_eq <- function(df_metadata_long,df_eq_indicator){
     filter(!is.na(eq_name)) %>%
     group_by(group) %>%
     summarise(
-      table_name = paste(unique(table_name), collapse = "."),
+      table_name = paste(sort(unique(table_name)), collapse = "."),
       field = last(field),
       hrc_field = last(hrc_field),
       spanning = if(length(unique(eq_name)) > 1) {
@@ -332,3 +372,43 @@ identify_hrc_with_eq <- function(df_metadata_long,df_eq_indicator){
     return(list_hrc_identified)
   }
 }
+
+regroup_tables <- function(df_group, spanning_combination_group) {
+
+  current_group <- unique(df_group$group)
+
+  # Récupérer les spanning_keys du groupe courant
+  span_comb <- spanning_combination_group |> filter(group == current_group)
+
+  # Spanning_key par table
+  spanning_by_table <- df_group |>
+    group_by(table_name) |>
+    summarise(
+      spanning_key = paste(sort(unique(spanning)), collapse = "|"),
+      .groups = "drop"
+    )
+
+  # Grouper les tables par spanning_key identique
+  table_clusters <- spanning_by_table |>
+    group_by(spanning_key) |>
+    summarise(tables = list(sort(unique(table_name))), .groups = "drop")
+
+  # Pour chaque cluster, fusionner les tables
+  purrr::map_dfr(seq_len(nrow(table_clusters)), function(i) {
+    cluster_tables   <- table_clusters$tables[[i]]
+    cluster_span_key <- table_clusters$spanning_key[[i]]
+
+    df_group |>
+      filter(table_name %in% cluster_tables) |>
+      group_by(across(-c(table_name, side, var_mapped, indicator))) |>
+      summarise(
+        table_name        = paste(sort(unique(table_name)), collapse = "."),
+        indicator         = last(unit),
+        initial_indicator = var_mapped[side == "total"][1],
+        .groups           = "drop"
+      ) |>
+      unique() |>
+      select(table_name,field,hrc_field,indicator,everything())
+  })
+}
+
