@@ -161,7 +161,8 @@ dataframe_result <- function(list_independent_tables, list_hrc_identified) {
       all_of(names(.)[grepl("^hrc_spanning_\\d+$", names(.))] %>%
                .[order(as.numeric(sub("hrc_spanning_", "", .)))])
     ) %>%
-    as.data.frame()
+    as.data.frame() %>%
+    unique() # TODO come back to this, why where there duplicates in the first place
 
   return(dataframe_metadata)
 }
