@@ -240,7 +240,7 @@ identify_hrc_with_eq <- function(df_metadata_long,df_eq_indicator){
           unique()
       }),
       sides_manquants      = purrr::map2(all_sides, sides_couverts, setdiff),
-      combinaison_complete = purrr::map_lgl(sides_manquants, ~ length(.x) == 0)
+      all_combinations = purrr::map_lgl(sides_manquants, ~ length(.x) == 0)
     ) |>
     unnest_wider(spanning, names_sep = "_")
 
@@ -253,15 +253,27 @@ identify_hrc_with_eq <- function(df_metadata_long,df_eq_indicator){
     dplyr::bind_rows()
 
   ##############################################################################
+  table_group_mapping <- df_eq_initial_spannings %>%
+    # On éclate le table_name combiné pour retrouver les tables individuelles
+    mutate(table_name_combined = table_name) %>%
+    tidyr::separate_rows(table_name, sep = "\\.") %>%
+    select(table_name, table_name_combined, group)
+
+  totcode_equation <- df_spannings_eq %>%
+    filter(side == "total") %>%
+    group_by(group) %>%
+    summarise(totcode = first(var_mapped), .groups = "drop")
 
   # 'df_eq_indicator_spannings' defines the spanning information for equation indicators.
   # Each equation name is transformed into its uppercase form with a "^h" suffix,
   # and its hierarchical version prefixed with "hrc_".
   df_eq_indicator_spannings <- df_spannings_eq %>%
     filter(!is.na(eq_name)) %>%
-    group_by(group) %>%
+    left_join(table_group_mapping, by = c("table_name", "group")) %>%
+    left_join(totcode_equation, by = "group") %>%
+    group_by(group, table_name_combined) %>%
     summarise(
-      table_name = paste(sort(unique(table_name)), collapse = "."),
+      table_name = first(table_name_combined),
       field = last(field),
       hrc_field = last(hrc_field),
       spanning = if(length(unique(eq_name)) > 1) {
@@ -270,15 +282,15 @@ identify_hrc_with_eq <- function(df_metadata_long,df_eq_indicator){
         paste0(toupper(last(eq_name)), "^h")
       },
       hrc_spanning = if(length(unique(eq_name)) > 1) {
-        paste0("hrc_", paste0(unique(toupper(eq_name)), collapse = "_"),".totcode.",var_mapped[side == "total"][1])
+        paste0("hrc_", paste0(unique(toupper(eq_name)), collapse = "_"),".totcode.",first(totcode))
       } else {
-        paste0("hrc_", toupper(last(eq_name)),".totcode.",var_mapped[side == "total"][1])
+        paste0("hrc_", toupper(last(eq_name)),".totcode.",first(totcode))
       },
       indicator = last(unit),
       hrc_indicator = last(hrc_indicator),
       .groups = "drop"
     ) %>%
-    dplyr::distinct(group, spanning, hrc_spanning, .keep_all = TRUE)
+    dplyr::distinct(group, table_name, spanning, hrc_spanning, .keep_all = TRUE)
 
   # 'df_indicators' combines both initial and indicator spanning information
   # into a single harmonized dataset, keeping key structural columns
@@ -319,6 +331,47 @@ identify_hrc_with_eq <- function(df_metadata_long,df_eq_indicator){
   }
 }
 
+#' Regroup tables within a group (i.e. equation / group of linked equations)
+#' based on spanning combination completeness
+#'
+#' @description
+#' For a given group of tables, this function identifies which tables cover all
+#' sides of an equation (total, rhs1, rhs2, ...) for their spanning combination,
+#' and which do not. Tables with complete combinations are merged into a single
+#' row; tables with incomplete combinations are kept as standalone rows with
+#' their original spannings.
+#'
+#' @param df_group A tibble containing the rows of a single group from
+#'   \code{df_with_group}. Must contain columns: \code{table_name},
+#'   \code{spanning}, \code{side}, \code{var_mapped}, \code{indicator},
+#'   \code{unit}, and \code{group}.
+#' @param spanning_combination_group A tibble produced by the
+#'   \code{spanning_combination_group} pipeline, containing one row per
+#'   (group, spanning_key) combination. Must contain columns: \code{group},
+#'   \code{spanning_key}, and \code{all_combinations} (logical indicating
+#'   whether the spanning combination covers all sides of the equation).
+#'
+#' @return A tibble with one row per (merged or solo) table cluster and
+#'   spanning, containing the following columns (among others):
+#'   \describe{
+#'     \item{table_name}{Dot-separated list of merged table names (e.g.
+#'       \code{"T7.T9.T11"}) for complete combinations, or the original
+#'       table name for incomplete ones.}
+#'     \item{indicator}{The unit value shared across the merged tables.}
+#'     \item{initial_indicator}{The \code{var_mapped} value of the \code{total}
+#'       side, used to track the original indicator before merging.}
+#'   }
+#'
+#' @examples
+#' \dontrun{
+#' list_groups <- split(df_with_group, df_with_group$group)
+#'
+#' df_eq_initial_spannings <- purrr::map(list_groups, function(df_group) {
+#'   regroup_tables(df_group, spanning_combination_group)
+#' }) |>
+#'   purrr::compact() |>
+#'   dplyr::bind_rows()
+#' }
 regroup_tables <- function(df_group, spanning_combination_group) {
   current_group <- unique(df_group$group)
 
@@ -330,24 +383,26 @@ regroup_tables <- function(df_group, spanning_combination_group) {
   # Récupérer le statut complet/incomplet par spanning_key
   span_comb <- spanning_combination_group |>
     filter(group == current_group) |>
-    select(spanning_key, combinaison_complete)
+    select(spanning_key, all_combinations)
 
   spanning_by_table <- spanning_by_table |> left_join(span_comb, by = "spanning_key")
 
-  tables_complete   <- spanning_by_table |> filter(combinaison_complete)  |> pull(table_name)
-  tables_incomplete <- spanning_by_table |> filter(!combinaison_complete) |> pull(table_name)
+  tables_complete   <- spanning_by_table |> filter(all_combinations)  |> pull(table_name)
+  tables_incomplete <- spanning_by_table |> filter(!all_combinations) |> pull(table_name)
 
   # Tables complètes -> fusionner par spanning_key identique
   df_merged <- if (length(tables_complete) > 0) {
     df_group |>
       filter(table_name %in% tables_complete) |>
+      left_join(spanning_by_table |> select(table_name, spanning_key), by = "table_name") |>
       group_by(across(-c(table_name, side, var_mapped, indicator))) |>
       summarise(
         table_name        = paste(sort(unique(table_name)), collapse = "."),
         indicator         = last(unit),
         initial_indicator = var_mapped[side == "total"][1],
         .groups           = "drop"
-      )
+      ) |>
+      select(-spanning_key)
   }
 
   # Tables incomplètes -> garder seules
