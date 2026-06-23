@@ -70,22 +70,6 @@ identify_hrc_with_eq <- function(df_metadata_long,df_eq_indicator){
     dplyr::ungroup() %>%
     dplyr::select(eq_name, unit, total, everything())
 
-  # Identify chained equations (A = B + C, B = D + E) and group equations together
-
-  # Build dependency links between totals and rhs
-  links <- parsed_equations %>%
-    tidyr::pivot_longer(
-      cols = starts_with("rhs"),
-      names_to = "rhs_term",
-      values_to = "rhs"
-    ) %>%
-    dplyr::filter(!is.na(rhs)) %>%
-    dplyr::mutate(
-      total = trimws(as.character(total)),
-      rhs   = trimws(as.character(rhs))
-    ) %>%
-    dplyr::distinct()
-
   # Identify ambiguous totals
   total_counts <- parsed_equations %>% dplyr::count(total, name = "n_total")
   ambiguous_totals <- total_counts %>% dplyr::filter(n_total > 1) %>% pull(total)
@@ -107,11 +91,22 @@ identify_hrc_with_eq <- function(df_metadata_long,df_eq_indicator){
     dplyr::ungroup() %>%
     dplyr::select(eq_name, total, total_alt)
 
-  # Apply the mapping to the links
-  # 'links' contains total, rhs, eq_name (if not, it must be joined beforehand)
+  # Identify chained equations (A = B + C, B = D + E) and group equations together
+  # and apply the mapping to the links
   # here we assume links has an eq_name column; otherwise do
   # left_join(links, parsed_equations %>% select(eq_name, total, rhs), ...) first
-  links_full <- links %>%
+  links_full <- parsed_equations %>%
+    tidyr::pivot_longer(
+      cols = starts_with("rhs"),
+      names_to = "rhs_term",
+      values_to = "rhs"
+    ) %>%
+    dplyr::filter(!is.na(rhs)) %>%
+    dplyr::mutate(
+      total = trimws(as.character(total)),
+      rhs   = trimws(as.character(rhs))
+    ) %>%
+    dplyr::distinct() %>%
     # replace total with its equation-specific alternative
     left_join(alt_map, by = c("eq_name", "total")) %>%
     mutate(total = dplyr::coalesce(total_alt, total)) %>%
