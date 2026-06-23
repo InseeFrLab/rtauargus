@@ -162,10 +162,25 @@ test_that("hierarchies on indicators", {
 ##################################################### INDICATOR EQUATIONS CHECKS
 # all the spanning variables are taken into account when using equations on
 # indicators -------------------------------------------------------------------
+df_eq_lettuce_1 <- data.frame(
+  eq_name = c("eq1"),
+  eq_indicator = c("to_lettuce = to_batavia + to_arugula"),
+  unit = c("EUR"),
+  stringsAsFactors = FALSE
+)
+
+df_eq_lettuce_2 <- data.frame(
+  eq_name = c("eq1","eq2"),
+  eq_indicator = c("to_lettuce = to_batavia + to_arugula",
+                   "to_pizza = to_tomates + to_pate"),
+  unit = c("EUR","EUR"),
+  stringsAsFactors = FALSE
+)
+
 answer <- data.frame(
   cluster = c(
-    "france_entreprises_2023.hrc_lettuce",
-    "france_entreprises_2023.hrc_lettuce",
+    "france_entreprises_2023.EUR",
+    "france_entreprises_2023.EUR",
     "france_entreprises_2023.to_pizza",
     "france_entreprises_2023.to_pizza"
   ),
@@ -176,26 +191,198 @@ answer <- data.frame(
     "T3.T4.T5.T6"
   ),
   field = rep("france_entreprises_2023", 4),
-  indicator = c("LETTUCE", "LETTUCE", "to_pizza", "to_pizza"),
+  indicator = c("to_lettuce", "to_lettuce", "to_pizza", "to_pizza"),
   spanning_1 = c("HRC_NAF", "HRC_NAF", "HRC_NUTS", "HRC_NAF"),
   spanning_2 = c("cj", "size", "size", "HRC_NUTS"),
-  spanning_3 = c("HRC_LETTUCE^h", "HRC_LETTUCE^h", NA, NA),
+  spanning_3 = c("EQ1^h", "EQ1^h", NA, NA),
   hrc_spanning_1 = c("hrc_naf", "hrc_naf", "hrc_nuts", "hrc_naf"),
   hrc_spanning_2 = c(NA, NA, NA, "hrc_nuts"),
-  hrc_spanning_3 = c("hrc_lettuce", "hrc_lettuce", NA, NA)
+  hrc_spanning_3 = c("hrc_EQ1.totcode.to_lettuce", "hrc_EQ1.totcode.to_lettuce", NA, NA)
 )
 
 test_that("indicators equation", {
-  df_eq_ex <- data.frame(
-    eq_name = c("eq1"),
-    eq_indicator = c("to_lettuce = to_batavia + to_arugula"),
-    unit = c("EUR"),
-    stringsAsFactors = FALSE
+  expect_warning(
+    expect_equal(
+      analyse_metadata(df_metadata = metadata_pizza_lettuce,df_eq_indicator = df_eq_lettuce_1),
+      answer
+    ),
+    "hrc_indicator column will be ignored"
   )
+
+}
+)
+
+# Nommer test 1 ----------------------------------------------------------------
+answer <- data.frame(
+  cluster = c("france_entreprises_2023.EUR"),
+  table_name = c("T11.T7.T9"),
+  field = c("france_entreprises_2023"),
+  indicator = c("to_lettuce"),
+  spanning_1 = c("a10"),
+  spanning_2 = c("EQ1^h"),
+  hrc_spanning_1 = NA_character_,
+  hrc_spanning_2 = c("hrc_EQ1.totcode.to_lettuce")
+)
+
+test_that("meme_var_crois_1", {
+  meta <- metadata_pizza_lettuce[,c(1:7)] %>% filter(table_name %in% c("T7","T9","T11"))
+  meta$hrc_spanning_1 <- NA_character_
 
   expect_warning(
     expect_equal(
-      analyse_metadata(df_metadata = metadata_pizza_lettuce,df_eq_indicator = df_eq_ex),
+      analyse_metadata(df_metadata = meta,df_eq_indicator = df_eq_lettuce_1),
+      answer
+    ),
+    "hrc_indicator column will be ignored"
+  )
+
+}
+)
+
+# Nommer test 2 ----------------------------------------------------------------
+answer <- data.frame(
+  cluster = c("france_entreprises_2023.EUR","france_entreprises_2023.EUR"),
+  table_name = c("T10.T12.T8","T11.T7.T9"),
+  field = c("france_entreprises_2023","france_entreprises_2023"),
+  indicator = c("to_lettuce","to_lettuce"),
+  spanning_1 = c("a10","a10"),
+  spanning_2 = c("cj","size"),
+  spanning_3 = c("EQ1^h","EQ1^h"),
+  hrc_spanning_1 = NA_character_,
+  hrc_spanning_2 = NA_character_,
+  hrc_spanning_3 = c("hrc_EQ1.totcode.to_lettuce","hrc_EQ1.totcode.to_lettuce")
+)
+
+test_that("meme_var_crois_2", {
+  meta <- metadata_pizza_lettuce[c(7:12),]
+  meta$hrc_spanning_1 <- NA_character_
+
+  expect_warning(
+    expect_equal(
+      analyse_metadata(df_metadata = meta,df_eq_indicator = df_eq_lettuce_1),
+      answer
+    ),
+    "hrc_indicator column will be ignored"
+  )
+
+}
+)
+
+# Nommer test 3 ----------------------------------------------------------------
+answer <- data.frame(
+  cluster = c("france_entreprises_2023.EUR","france_entreprises_2023.EUR"),
+  table_name = c("T10.T11.T12.T7.T8.T9","T4.T5.T6"),
+  field = c("france_entreprises_2023","france_entreprises_2023"),
+  indicator = c("to_lettuce","to_pizza"),
+  spanning_1 = c("a10","a10"),
+  spanning_2 = c("EQ1^h","EQ2^h"),
+  hrc_spanning_1 = NA_character_,
+  hrc_spanning_2 = c("hrc_EQ1.totcode.to_lettuce","hrc_EQ2.totcode.to_pizza")
+)
+
+test_that("meme_var_crois_1_deux_eq", {
+  meta <- metadata_pizza_lettuce[c(4:12),c(1:7)]
+  meta$indicator <- c("to_pizza","to_tomates","to_pate","to_batavia","to_batavia","to_arugula","to_arugula","to_lettuce","to_lettuce")
+  meta <- meta %>% mutate(spanning_1 = "a10",hrc_spanning_1 = NA_character_)
+
+  expect_warning(
+    expect_equal(
+      analyse_metadata(df_metadata = meta,df_eq_indicator = df_eq_lettuce_2),
+      answer
+    ),
+    "hrc_indicator column will be ignored"
+  )
+
+}
+)
+
+# Nommer test 4 ----------------------------------------------------------------
+answer <- data.frame(
+  cluster = rep("france_entreprises_2023.EUR"),
+  table_name = c("T10.T12.T8","T11.T7.T9","T4.T5.T6"),
+  field = rep("france_entreprises_2023"),
+  indicator = c("to_lettuce","to_lettuce","to_pizza"),
+  spanning_1 = rep("a10"),
+  spanning_2 = c("cj","size","size"),
+  spanning_3 = c("EQ1^h","EQ1^h","EQ2^h"),
+  hrc_spanning_1 = NA_character_,
+  hrc_spanning_2 = NA_character_,
+  hrc_spanning_3 = c("hrc_EQ1.totcode.to_lettuce","hrc_EQ1.totcode.to_lettuce","hrc_EQ2.totcode.to_pizza")
+)
+
+test_that("meme_var_crois_2_deux_eq", {
+  meta <- metadata_pizza_lettuce[c(4:12),]
+  meta$indicator <- c("to_pizza","to_tomates","to_pate","to_batavia","to_batavia","to_arugula","to_arugula","to_lettuce","to_lettuce")
+  meta <- meta %>% mutate(spanning_1 = "a10",
+                          hrc_spanning_1 = NA_character_,
+                          spanning_2 = c("size","size","size","size","cj","size","cj","size","cj"),
+                          hrc_spanning_2 = NA_character_)
+
+  expect_warning(
+    expect_equal(
+      analyse_metadata(df_metadata = meta,df_eq_indicator = df_eq_lettuce_2),
+      answer
+    ),
+    "hrc_indicator column will be ignored"
+  )
+
+}
+)
+
+# Nommer test 5 ----------------------------------------------------------------
+answer <- data.frame(
+  cluster = rep("france_entreprises_2023.EUR"),
+  table_name = c("T11","T7.T9"),
+  field = rep("france_entreprises_2023"),
+  indicator = c("to_lettuce","EUR"),
+  spanning_1 = c("cj","a10"),
+  spanning_2 = c("EQ1^h","EQ1^h"),
+  hrc_spanning_1 = NA_character_,
+  hrc_spanning_2 = c("hrc_EQ1.totcode.to_lettuce","hrc_EQ1.totcode.to_lettuce")
+)
+
+
+test_that("pas_meme_var_crois_1", {
+  meta <- metadata_pizza_lettuce[,c(1:7)] %>%
+    filter(table_name %in% c("T7","T9","T11")) %>%
+    mutate(spanning_1 = c("a10","a10","cj"))
+  meta$hrc_spanning_1 <- NA_character_
+
+  expect_warning(
+    expect_equal(
+      analyse_metadata(df_metadata = meta,df_eq_indicator = df_eq_lettuce_1),
+      answer
+    ),
+    "hrc_indicator column will be ignored"
+  )
+
+}
+)
+
+# Nommer test 6 ----------------------------------------------------------------
+answer <- data.frame(
+  cluster = rep("france_entreprises_2023.EUR"),
+  table_name = c("T1.T2","T1.T2.T3"),
+  field = rep("france_entreprises_2023"),
+  indicator = c("EUR","EUR"),
+  spanning_1 = c("a10","a10"),
+  spanning_2 = c("EQ1^h","size"),
+  spanning_3 = c(NA,"EQ1^h"),
+  hrc_spanning_1 = NA_character_,
+  hrc_spanning_2 = c("hrc_EQ1.totcode.to_lettuce",NA),
+  hrc_spanning_3 = c(NA,"hrc_EQ1.totcode.to_lettuce")
+)
+
+test_that("pas_meme_var_crois_2", {
+  meta <- metadata_pizza_lettuce %>% filter(table_name %in% c("T7","T9","T11"))
+  meta$spanning_2 <- c(NA,NA,"size")
+  meta$hrc_spanning_1 <- NA_character_
+  meta$hrc_indicator <- NA_character_
+  meta$table_name <- c("T1","T2","T3")
+
+  expect_warning(
+    expect_equal(
+      analyse_metadata(df_metadata = meta,df_eq_indicator = df_eq_lettuce_1),
       answer
     ),
     "hrc_indicator column will be ignored"
