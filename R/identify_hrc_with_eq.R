@@ -62,10 +62,8 @@ identify_hrc_with_eq <- function(df_metadata_long,df_eq_indicator){
   # with each rhs term placed in a separate column.
   parsed_equations <- df_eq_indicator %>%
     tidyr::separate(eq_indicator, into = c("total", "rhs"), sep = "=", extra = "merge") %>%
-    dplyr::mutate(rhs = trimws(rhs)) %>%
     tidyr::separate_rows(rhs, sep = "\\+") %>%
-    dplyr::mutate(rhs = trimws(rhs),
-                  total = trimws(total)) %>%
+    dplyr::mutate(across(c(total, rhs), trimws)) %>%
     dplyr::group_by(dplyr::across(-rhs)) %>%
     dplyr::mutate(term_number = paste0("rhs", dplyr::row_number())) %>%
     tidyr::pivot_wider(names_from = term_number, values_from = rhs) %>%
@@ -200,10 +198,36 @@ identify_hrc_with_eq <- function(df_metadata_long,df_eq_indicator){
     left_join(equations_long_full, by = c("indicator" = "var"))
 
   ##############################################################################
-  # Séparer les lignes avec et sans group
   df_with_group <- df_spannings_eq %>% filter(!is.na(group))
   df_without_group <- df_spannings_eq %>% filter(is.na(group))
 
+  # --- CAS 1 : aucune ligne avec group → pas d'équation à traiter ---
+  if (nrow(df_with_group) == 0) {
+    if (nrow(df_without_group) > 0) {
+      if (all(is.na(df_without_group$hrc_indicator))) {
+        return(list(df_without_group, df_variable_info))
+      } else {
+        df_no_eq_indicators <- df_without_group %>%
+          filter(!is.na(hrc_indicator)) %>%
+          dplyr::group_by(table_name) %>%
+          summarise(
+            field         = last(field),
+            hrc_field     = last(hrc_field),
+            spanning      = paste0(toupper(last(hrc_indicator)), "^h"),
+            hrc_spanning  = last(hrc_indicator),
+            indicator     = last(indicator),
+            hrc_indicator = last(hrc_indicator)
+          ) %>%
+          bind_rows(df_spannings, .) %>%
+          arrange(table_name)
+        return(list(df_no_eq_indicators, df_variable_info))
+      }
+    } else {
+      return(list(df_spannings_eq, df_variable_info))
+    }
+  }
+
+  # --- CAS 2 : il y a des lignes avec group → traitement des équations ---
   spanning_combination_group <- df_with_group |>
     group_by(group, table_name) |>
     summarise(
@@ -218,8 +242,6 @@ identify_hrc_with_eq <- function(df_metadata_long,df_eq_indicator){
     ) |>
     ungroup()
 
-  # Pour chaque combinaison unique, les sides couverts sont ceux des tables
-  # dont le spanning_set est un sur-ensemble de la combinaison
   spanning_combination_group <- spanning_combination_group |>
     distinct(group, spanning_key, spanning, all_sides) |>
     group_by(group, spanning_key) |>
@@ -229,8 +251,6 @@ identify_hrc_with_eq <- function(df_metadata_long,df_eq_indicator){
       .groups   = "drop"
     ) |>
     mutate(
-      # Pour chaque combinaison, chercher tous les sides des tables
-      # dont le spanning_set contient cette combinaison
       sides_couverts = purrr::map2(spanning, group, function(span_set, grp) {
         spanning_combination_group |>
           filter(group == grp) |>
@@ -239,7 +259,7 @@ identify_hrc_with_eq <- function(df_metadata_long,df_eq_indicator){
           sort() |>
           unique()
       }),
-      sides_manquants      = purrr::map2(all_sides, sides_couverts, setdiff),
+      sides_manquants  = purrr::map2(all_sides, sides_couverts, setdiff),
       all_combinations = purrr::map_lgl(sides_manquants, ~ length(.x) == 0)
     ) |>
     unnest_wider(spanning, names_sep = "_")
@@ -252,82 +272,69 @@ identify_hrc_with_eq <- function(df_metadata_long,df_eq_indicator){
     purrr::compact() |>
     dplyr::bind_rows()
 
-  ##############################################################################
   table_group_mapping <- df_eq_initial_spannings %>%
-    # On éclate le table_name combiné pour retrouver les tables individuelles
     mutate(table_name_combined = table_name) %>%
     tidyr::separate_rows(table_name, sep = "\\.") %>%
     select(table_name, table_name_combined, group)
 
-  totcode_equation <- df_spannings_eq %>%
+  totcode_equation <- df_with_group %>%           # <-- df_with_group, pas df_spannings_eq
     filter(side == "total") %>%
     group_by(group) %>%
     summarise(totcode = first(var_mapped), .groups = "drop")
 
-  # 'df_eq_indicator_spannings' defines the spanning information for equation indicators.
-  # Each equation name is transformed into its uppercase form with a "^h" suffix,
-  # and its hierarchical version prefixed with "hrc_".
-  df_eq_indicator_spannings <- df_spannings_eq %>%
+  df_eq_indicator_spannings <- df_with_group %>%  # <-- df_with_group, pas df_spannings_eq
     filter(!is.na(eq_name)) %>%
     left_join(table_group_mapping, by = c("table_name", "group")) %>%
     left_join(totcode_equation, by = "group") %>%
     group_by(group, table_name_combined) %>%
     summarise(
-      table_name = first(table_name_combined),
-      field = last(field),
-      hrc_field = last(hrc_field),
-      spanning = if(length(unique(eq_name)) > 1) {
+      table_name    = first(table_name_combined),
+      field         = last(field),
+      hrc_field     = last(hrc_field),
+      spanning      = if (length(unique(eq_name)) > 1) {
         paste0(paste0(unique(toupper(eq_name)), collapse = "_"), "^h")
       } else {
         paste0(toupper(last(eq_name)), "^h")
       },
-      hrc_spanning = if(length(unique(eq_name)) > 1) {
-        paste0("hrc_", paste0(unique(toupper(eq_name)), collapse = "_"),".totcode.",first(totcode))
+      hrc_spanning  = if (length(unique(eq_name)) > 1) {
+        paste0("hrc_", paste0(unique(toupper(eq_name)), collapse = "_"), ".totcode.", first(totcode))
       } else {
-        paste0("hrc_", toupper(last(eq_name)),".totcode.",first(totcode))
+        paste0("hrc_", toupper(last(eq_name)), ".totcode.", first(totcode))
       },
-      indicator = last(unit),
+      indicator     = last(unit),
       hrc_indicator = last(hrc_indicator),
-      .groups = "drop"
+      .groups       = "drop"
     ) %>%
     dplyr::distinct(group, table_name, spanning, hrc_spanning, .keep_all = TRUE)
 
-  # 'df_indicators' combines both initial and indicator spanning information
-  # into a single harmonized dataset, keeping key structural columns
-  # and sorting rows by table name.
-  df_indicators <- bind_rows(df_eq_initial_spannings,df_eq_indicator_spannings) %>%
-    select(table_name,field,hrc_field,indicator,hrc_indicator,everything()) %>%
+  df_indicators <- bind_rows(df_eq_initial_spannings, df_eq_indicator_spannings) %>%
+    select(table_name, field, hrc_field, indicator, hrc_indicator, everything()) %>%
     arrange(table_name)
 
-  # 'df_no_eq_spannings' contains all spanning rows
-  # that are not associated with any equation (eq_name is missing).
-  df_no_eq_spannings <- df_spannings_eq %>% filter(is.na(eq_name))
-
-  if(nrow(df_no_eq_spannings) > 0){
-    if(all(is.na(df_no_eq_spannings$hrc_indicator))){
-      df_indicators <- bind_rows(df_indicators,df_no_eq_spannings) %>% arrange(table_name)
-      return(list(df_indicators,df_variable_info))
+  # Lignes sans group (sans équation) — df_without_group réutilisé ici
+  if (nrow(df_without_group) > 0) {
+    if (all(is.na(df_without_group$hrc_indicator))) {
+      df_indicators <- bind_rows(df_indicators, df_without_group) %>% arrange(table_name)
+      return(list(df_indicators, df_variable_info))
     } else {
-      df_no_eq_indicators <- df_no_eq_spannings %>%
+      df_no_eq_indicators <- df_without_group %>%
         filter(!is.na(hrc_indicator)) %>%
         dplyr::group_by(table_name) %>%
         summarise(
-          field = last(field),
-          hrc_field = last(hrc_field),
-          spanning = paste0(toupper(last(hrc_indicator)),"^h"),
-          hrc_spanning = last(hrc_indicator),
-          indicator = last(indicator),
+          field         = last(field),
+          hrc_field     = last(hrc_field),
+          spanning      = paste0(toupper(last(hrc_indicator)), "^h"),
+          hrc_spanning  = last(hrc_indicator),
+          indicator     = last(indicator),
           hrc_indicator = last(hrc_indicator)
         ) %>%
         bind_rows(df_spannings, .) %>%
         arrange(table_name)
-      df_indicators <- bind_rows(df_indicators,df_no_eq_indicators) %>% arrange(table_name)
-      list_hrc_identified = list(df_indicators,df_variable_info)
-      return(list_hrc_identified)
+      df_indicators <- bind_rows(df_indicators, df_no_eq_indicators) %>% arrange(table_name)
+      return(list(df_indicators, df_variable_info))
     }
   } else {
-    list_hrc_identified = list(df_indicators,df_variable_info)
-    return(list_hrc_identified)
+    return(list(df_indicators, df_variable_info))
   }
 }
 
