@@ -72,7 +72,6 @@ identify_hrc_with_eq <- function(df_metadata_long,df_eq_indicator){
 
   # Identify ambiguous totals
   total_counts <- parsed_equations %>% dplyr::count(total, name = "n_total")
-  ambiguous_totals <- total_counts %>% dplyr::filter(n_total > 1) %>% pull(total)
 
   # Build a total -> total_alt mapping by eq_name
   # For all equations (ambiguous or not), create one row;
