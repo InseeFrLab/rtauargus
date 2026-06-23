@@ -163,35 +163,25 @@ identify_hrc_with_eq <- function(df_metadata_long,df_eq_indicator){
   #   (without the 'hrc_' prefix) if available and 'indicator' not part of 'df_eq_indicator'
   indic_not_in_eq <- setdiff(unique(df_metadata_long$indicator),unique(equations_long$var))
 
+  df_variable_info <- df_metadata_long %>%
+    mutate(
+      spanning_new = ifelse(is.na(hrc_spanning), spanning, toupper(hrc_spanning))
+    ) %>%
+    distinct(var_start_name = spanning, var_end_name = spanning_new, table_name)
+
   df_spannings <- df_metadata_long %>%
-    mutate(spanning_old = spanning,
-           spanning = ifelse(is.na(hrc_spanning),
-                             spanning,
-                             toupper(hrc_spanning)),
-           indicator = ifelse(indicator %in% indic_not_in_eq & !is.na(hrc_indicator),
-                              toupper(sub("hrc_","",hrc_indicator)),
-                              indicator),
-           hrc_indicator = ifelse(indicator %in% unique(equations_long$var),
-                                  NA,
-                                  hrc_indicator))
-
-  # 'df_variable_info' is a reference table linking original spanning names ('spanning_old')
-  # to their transformed counterparts ('spanning'), along with the corresponding table name.
-  df_variable_info <- data.frame(
-    var_start_name = df_spannings$spanning_old,
-    var_end_name = df_spannings$spanning,
-    table_name = df_spannings$table_name
-  ) %>% unique()
-
-  # Update 'df_spannings' by removing the temporary 'spanning_old' column.
-  df_spannings <- df_spannings %>% select(-spanning_old)
+    mutate(
+      spanning      = ifelse(is.na(hrc_spanning), spanning, toupper(hrc_spanning)),
+      indicator     = ifelse(indicator %in% indic_not_in_eq & !is.na(hrc_indicator),
+                             toupper(sub("hrc_", "", hrc_indicator)), indicator),
+      hrc_indicator = ifelse(indicator %in% unique(equations_long$var), NA, hrc_indicator)
+    )
 
   df_spannings_eq <- df_spannings %>%
     # delete all the non-word elements, specifically for the white spaces
     mutate(across(dplyr::where(is.character), ~ gsub("[^[:alnum:]_]", "", .))) %>%
     left_join(equations_long_full, by = c("indicator" = "var"))
 
-  ##############################################################################
   df_with_group <- df_spannings_eq %>% filter(!is.na(group))
   df_without_group <- df_spannings_eq %>% filter(is.na(group))
 
