@@ -111,10 +111,7 @@ identify_hrc_with_eq <- function(df_metadata_long,df_eq_indicator){
     select(total, rhs, eq_name) %>%
     dplyr::distinct()
 
-  # Build the full graph (including all copies)
   g_full <- graph_from_data_frame(links_full %>% select(total, rhs), directed = TRUE)
-
-  # Compute components on g_full
   comp_full <- igraph::components(g_full)$membership
   comp_df <- data.frame(var = names(comp_full), group = as.integer(comp_full), stringsAsFactors = FALSE)
 
@@ -123,24 +120,16 @@ identify_hrc_with_eq <- function(df_metadata_long,df_eq_indicator){
     mutate(across(c(total, starts_with("rhs")), trimws)) %>%
     tidyr::pivot_longer(
       cols = c(total, starts_with("rhs")),
-      names_to = "side",   # côté équation (total / rhs1 / rhs2...)
+      names_to = "side",
       values_to = "var"
     ) %>%
     filter(!is.na(var))
 
-  # Update equations_long:
-  #       associate the alternative variable (if present) and the corresponding group
-  # Notes:
-  # - equations_long contains the original variables (var) and eq_name;
-  # - we want to recover the "var" or "var_alt" version used in g_full.
   equations_long_full <- equations_long %>%
-    # join the correspondence eq_name + var (original total) -> total_alt (if any)
     left_join(alt_map, by = c("eq_name", "var" = "total")) %>%
     mutate(var_mapped = dplyr::coalesce(total_alt, var)) %>%
     select(-total_alt) %>%
-    # join the group computed on the full graph
     left_join(comp_df, by = c("var_mapped" = "var")) %>%
-    # for var_mapped without a group (isolated), keep NA or assign a single group
     mutate(group = as.integer(group))
 
   # 'df_spannings' is a modified version of 'df_metadata_long' where:
@@ -170,7 +159,6 @@ identify_hrc_with_eq <- function(df_metadata_long,df_eq_indicator){
   df_with_group <- df_spannings_eq %>% filter(!is.na(group))
   df_without_group <- df_spannings_eq %>% filter(is.na(group))
 
-  # --- CAS 1 : aucune ligne avec group → pas d'équation à traiter ---
   if (nrow(df_with_group) == 0) {
     warning(
     "Check the coherence of `df_eq_indicator` and `df_metadata`.
@@ -186,7 +174,6 @@ identify_hrc_with_eq <- function(df_metadata_long,df_eq_indicator){
     }
   }
 
-  # --- CAS 2 : il y a des lignes avec group → traitement des équations ---
   spanning_combination_group <- df_with_group |>
     group_by(group, table_name) |>
     summarise(
@@ -236,12 +223,12 @@ identify_hrc_with_eq <- function(df_metadata_long,df_eq_indicator){
     tidyr::separate_rows(table_name, sep = "\\.") %>%
     select(table_name, table_name_combined, group)
 
-  totcode_equation <- df_with_group %>%           # <-- df_with_group, pas df_spannings_eq
+  totcode_equation <- df_with_group %>%
     filter(side == "total") %>%
     group_by(group) %>%
     summarise(totcode = first(var_mapped), .groups = "drop")
 
-  df_eq_indicator_spannings <- df_with_group %>%  # <-- df_with_group, pas df_spannings_eq
+  df_eq_indicator_spannings <- df_with_group %>%
     filter(!is.na(eq_name)) %>%
     left_join(table_group_mapping, by = c("table_name", "group")) %>%
     left_join(totcode_equation, by = "group") %>%
@@ -376,12 +363,10 @@ build_spanning_based_on_hrc_indicator <- function(df_without_group, df_spannings
 regroup_tables <- function(df_group, spanning_combination_group) {
   current_group <- unique(df_group$group)
 
-  # spanning_key par table
   spanning_by_table <- df_group |>
     group_by(table_name) |>
     summarise(spanning_key = paste(sort(unique(spanning)), collapse = "|"), .groups = "drop")
 
-  # Récupérer le statut complet/incomplet par spanning_key
   span_comb <- spanning_combination_group |>
     filter(group == current_group) |>
     select(spanning_key, all_combinations)
@@ -391,7 +376,6 @@ regroup_tables <- function(df_group, spanning_combination_group) {
   tables_complete <- spanning_by_table |> filter(all_combinations)  |> pull(table_name)
   tables_incomplete <- spanning_by_table |> filter(!all_combinations) |> pull(table_name)
 
-  # Tables complètes -> fusionner par spanning_key identique
   df_merged <- if (length(tables_complete) > 0) {
     df_group |>
       filter(table_name %in% tables_complete) |>
@@ -406,7 +390,6 @@ regroup_tables <- function(df_group, spanning_combination_group) {
       select(-spanning_key)
   }
 
-  # Tables incomplètes -> garder seules
   df_solo <- if (length(tables_incomplete) > 0) {
     df_group |>
       filter(table_name %in% tables_incomplete) |>
