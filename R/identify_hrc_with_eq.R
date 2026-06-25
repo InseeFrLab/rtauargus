@@ -118,11 +118,6 @@ identify_hrc_with_eq <- function(df_metadata_long,df_eq_indicator){
   comp_full <- igraph::components(g_full)$membership
   comp_df <- data.frame(var = names(comp_full), group = as.integer(comp_full), stringsAsFactors = FALSE)
 
-  ##############################################################################
-  # browser() # use this combined with "./rtauargus/dev/graphes_equations_objet_browser.R"
-  # to get the graphs showing indicators links based on the equations
-  ##############################################################################
-
   # reformat parsed_equations in long format in order to join with df_metadata_long
   equations_long <- parsed_equations %>%
     mutate(across(c(total, starts_with("rhs")), trimws)) %>%
