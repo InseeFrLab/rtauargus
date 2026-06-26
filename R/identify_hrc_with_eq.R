@@ -257,7 +257,7 @@ identify_hrc_with_eq <- function(df_metadata_long,df_eq_indicator){
     select(table_name, field, hrc_field, indicator, hrc_indicator, everything()) %>%
     arrange(table_name)
 
-  # Lignes sans group (sans équation) — df_without_group réutilisé ici
+  # Tables without group (i.e. withtout group)
   if (nrow(df_without_group) > 0) {
     if (all(is.na(df_without_group$hrc_indicator))) {
       df_indicators <- bind_rows(df_indicators, df_without_group) %>% arrange(table_name)
