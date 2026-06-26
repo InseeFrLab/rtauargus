@@ -212,7 +212,7 @@ test_that("indicators equation", {
 }
 )
 
-# Nommer test 1 ----------------------------------------------------------------
+# All indicators in the same equation broken down by the same spanning variable ----
 answer <- data.frame(
   cluster = c("france_entreprises_2023.EUR"),
   table_name = c("T11.T7.T9"),
@@ -239,7 +239,7 @@ test_that("meme_var_crois_1", {
 }
 )
 
-# Nommer test 2 ----------------------------------------------------------------
+# All indicators in the same equation broken down by the same spanning variables ----
 answer <- data.frame(
   cluster = c("france_entreprises_2023.EUR","france_entreprises_2023.EUR"),
   table_name = c("T10.T12.T8","T11.T7.T9"),
@@ -268,7 +268,7 @@ test_that("meme_var_crois_2", {
 }
 )
 
-# Nommer test 3 ----------------------------------------------------------------
+# Two equations, all indiicators broken down by the same spanning variable -----
 answer <- data.frame(
   cluster = c("france_entreprises_2023.EUR","france_entreprises_2023.EUR"),
   table_name = c("T10.T11.T12.T7.T8.T9","T4.T5.T6"),
@@ -296,7 +296,8 @@ test_that("meme_var_crois_1_deux_eq", {
 }
 )
 
-# Nommer test 4 ----------------------------------------------------------------
+# Two equations, all indicators in each equations are broken down by the same
+# spanning variables -----------------------------------------------------------
 answer <- data.frame(
   cluster = rep("france_entreprises_2023.EUR"),
   table_name = c("T10.T12.T8","T11.T7.T9","T4.T5.T6"),
@@ -329,7 +330,8 @@ test_that("meme_var_crois_2_deux_eq", {
 }
 )
 
-# Nommer test 5 ----------------------------------------------------------------
+# One equation, but the indicators are not broken down by the same spanning
+# variables (only one spanning variable by table) ------------------------------
 answer <- data.frame(
   cluster = rep("france_entreprises_2023.EUR"),
   table_name = c("T11","T7.T9"),
@@ -359,7 +361,8 @@ test_that("pas_meme_var_crois_1", {
 }
 )
 
-# Nommer test 6 ----------------------------------------------------------------
+# One equation, but the indicators are not broken down by the same spanning
+# variables (one or two spanning variable by table) ------------------------------
 answer <- data.frame(
   cluster = rep("france_entreprises_2023.EUR"),
   table_name = c("T1.T2","T1.T2.T3"),
