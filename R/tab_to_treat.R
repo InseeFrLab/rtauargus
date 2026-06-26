@@ -85,6 +85,12 @@ tab_to_treat <- function(list_independent_tables) {
 #' @param list_independent_tables A list of tibbles, typically the output of
 #'   `grp_tab_in_cluster()` or `tab_to_treat()`. Each tibble contains metadata
 #'   for tables grouped within a specific cluster.
+#' @param list_hrc_identified A list returned by the `identify_hrc` function. The first
+#'   element of the list must be a data frame containing the variables:
+#'   - `field`: A grouping variable.
+#'   - `hrc_field`: The hierarchical counterpart of `field`.
+#'   - `indicator`: A variable used to link tables.
+#'   - `hrc_indicator`: The hierarchical counterpart of `indicator`.
 #'
 #' @return A single dataframe (`dfMetadata_to_treat`) with the following structure:
 #'   - `cluster`: Identifier for the cluster each table belongs to.
