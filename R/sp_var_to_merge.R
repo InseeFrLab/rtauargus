@@ -1,3 +1,29 @@
+# Cache environment to store imported sdcHierarchies levels and prevent redundant disk parsing.
+.hrc_cache <- new.env(parent = emptyenv())
+
+# # Optimized node counting function leveraging the cached sdcHierarchies levels.
+nb_nodes <- function(hrcfiles = NULL, v) {
+  if (!is.null(hrcfiles) && v %in% names(hrcfiles)) {
+    return(length(import_hierarchy(hrcfiles[[v]])))
+  }
+  return(1)
+}
+
+# Hierarchy importer using local cache to bypass slow sdcHierarchies disk parsing on repeated hits.
+import_hierarchy <- function(hrcfile) {
+  if (exists(hrcfile, envir = .hrc_cache)) {
+    return(get(hrcfile, envir = .hrc_cache))
+  }
+  total <- "BIG_Total"
+  res_sdc <- sdcHierarchies::hier_import(inp = hrcfile, from = "hrc", root = total) %>%
+    sdcHierarchies::hier_convert(as = "sdc")
+  levels <- lapply(res_sdc$dims, names)
+
+  # Cache levels to avoid disk parsing.
+  assign(hrcfile, levels, envir = .hrc_cache)
+  return(levels)
+}
+
 #' General function to choose variables to merge,
 #' limiting the number of generated tables while ensuring not to generate
 #' tables that are too large.
@@ -118,6 +144,16 @@ var_to_merge <- function(
     nb_tab_option = "min",
     limit = 150)
 {
+
+  # Clear the local hierarchy cache on each fresh entry of the top-level selection function.
+  if (exists(".hrc_cache")) {
+    rm(list = ls(envir = .hrc_cache), envir = .hrc_cache)
+  }
+
+  # Precompute unique values for all categorical variables once.
+  # This prevents redundant, high-overhead unique() calls on large dataframes during loops.
+  unique_mods <- lapply(dfs[names(totcode)], unique)
+
   # Case of 2 pairs in dimension 5
   if (nb_var == 4){
     result_comb <- generate_two_pairs(totcode)
@@ -131,12 +167,15 @@ var_to_merge <- function(
     result_comb <- generate_a_pair(totcode)
   }
 
+  # Pass the precomputed unique_mods down to the evaluation fragment.
   return(var_to_merge_fragment(dfs = dfs,
-                                 result_comb = result_comb,
-                                 totcode = totcode,
-                                 hrcfiles = hrcfiles,
-                                 limit = limit,
-                                 nb_tab_option = nb_tab_option))
+                               result_comb = result_comb,
+                               totcode = totcode,
+                               hrcfiles = hrcfiles,
+                               limit = limit,
+                               nb_tab_option = nb_tab_option,
+                               unique_mods = unique_mods)
+         )
 }
 
 var_to_merge_fragment <- function(
@@ -145,9 +184,16 @@ var_to_merge_fragment <- function(
     totcode,
     hrcfiles = NULL,
     limit = 150,
-    nb_tab_option = "smart")
+    nb_tab_option = "smart",
+    unique_mods = NULL)
 {
-  # Calculate the number of tables and maximum rows for each combination of variables
+
+  # Fallback initialization for unique_mods if called directly without precomputed list.
+  if (is.null(unique_mods)) {
+    unique_mods <- lapply(dfs[names(totcode)], unique)
+  }
+
+  # Pass the precomputed unique_mods lookup list to length_tabs on each iteration.
   res_func <- lapply(result_comb, function(x) length_tabs(
     dfs = dfs,
     v1 = x[1],
@@ -155,7 +201,8 @@ var_to_merge_fragment <- function(
     v3 = x[3],
     v4 = x[4],
     totcode = totcode,
-    hrcfiles = hrcfiles))
+    hrcfiles = hrcfiles,
+    unique_mods = unique_mods))
 
   # Get the maximum rows and number of created tables
   res_max <- sapply(res_func, function(x) max(unlist(x)))
@@ -219,18 +266,10 @@ var_to_merge_fragment <- function(
       # Return the result with the fewest tables among those
       # with the shortest tables
       min_res_max <- min(df$res_max)
-
-      # Silence warning since it is only display at the end...
-      # warning(c("
-      # The limit of ",limit," cannot be achieved.
-      # The largest table has ",min_res_max," rows."))
-
       filtered_df <- df[df$res_max == min_res_max, ]
 
       # Get the index of the filtered table
       min_index <- which.min(filtered_df$res_len)
-
-      # Print the original index
       i <- filtered_df$original_index[min_index]
 
       return(list(vars = result_comb[[i]],
@@ -425,12 +464,18 @@ length_tabs <- function(
   v3 = NULL,
   v4 = NULL,
   totcode,
-  hrcfiles = NULL)
+  hrcfiles = NULL,
+  unique_mods = NULL)
 {
 
   # To generalize the function to handle NA for an external function
   v3 <- if (!is.null(v3) && is.na(v3)) NULL else v3
   v4 <- if (!is.null(v4) && is.na(v4)) NULL else v4
+
+  # Security in case the function is called outside var_to_merge
+  if (is.null(unique_mods)) {
+    unique_mods <- lapply(dfs[names(totcode)], unique)
+  }
 
   # If 4 variables are specified -> 5 dimensions case, 2 couples are created
   if (!is.null(v4)) {
@@ -438,42 +483,45 @@ length_tabs <- function(
                                hrcfiles = hrcfiles,
                                v1 = v1, v2 = v2,
                                v3 = v3, v4 = v4,
-                               totcode = totcode))
+                               totcode = totcode,
+                               unique_mods = unique_mods))
 
     # If 3 variables are specified -> 5 dimensions case, a trio is merged
   } else if (!is.null(v3)) {
     return(length_tabs_5_3_var(dfs = dfs,
                                hrcfiles = hrcfiles,
                                v1 = v1, v2 = v2, v3 = v3,
-                               totcode = totcode))
+                               totcode = totcode,
+                               unique_mods = unique_mods))
 
     # If 2 variables are specified -> 4 dimensions case
   } else {
     return(length_tabs_4(dfs = dfs,
                          hrcfiles = hrcfiles,
                          v1 = v1, v2 = v2,
-                         totcode = totcode))
+                         totcode = totcode,
+                         unique_mods = unique_mods))
   }
 }
 
 # case : 4 dimensions
-length_tabs_4 <- function(dfs,v1,v2,totcode,hrcfiles=NULL){
+length_tabs_4 <- function(dfs, v1, v2, totcode, hrcfiles = NULL, unique_mods = NULL){
 
   # Retrieval of groupings {nodes + branch}
   # based on whether the variable is hierarchical or not
 
-  # We need to list and then unlist
-  # otherwise the ifelse returns the first element of import_hierarchy (big total)
-  # instead of returning all the nodes
-  level_v1 <- unlist(ifelse(v1 %in% names(hrcfiles),
-                            list(import_hierarchy(hrcfiles[[v1]])),
-                            list(list(unique(dfs[[v1]])))),
-                     recursive = FALSE)
+  # Retrieve parent-child vectors using unique_mods to avoid calling unique() on the raw dataframe
+  if (v1 %in% names(hrcfiles)) {
+    level_v1 <- import_hierarchy(hrcfiles[[v1]])
+  } else {
+    level_v1 <- list(unique_mods[[v1]])
+  }
 
-  level_v2 <- unlist(ifelse(v2 %in% names(hrcfiles),
-                            list(import_hierarchy(hrcfiles[[v2]])),
-                            list(list(unique(dfs[[v2]])))),
-                     recursive = FALSE)
+  if (v2 %in% names(hrcfiles)) {
+    level_v2 <- import_hierarchy(hrcfiles[[v2]])
+  } else {
+    level_v2 <- list(unique_mods[[v2]])
+  }
 
   # If case 1 non hrc (not hierarchical) and v2 in hrcfiles, then we need to reorder
   if (!(v2 %in% names(hrcfiles)) & (v1 %in% names(hrcfiles))) {
@@ -485,47 +533,83 @@ length_tabs_4 <- function(dfs,v1,v2,totcode,hrcfiles=NULL){
   # We do all possible combinations between v1 and v2
   # which represents the tables created during the creation of v1_v2 in the 5->4 step
 
-  # For each of these tables, there are two possible hierarchies
-  # one with the totals of v1, and the other with the totals of v2
-  # thus, for one of the modalities, we do not make any combination with its total
-  # hence the -1
-  # and finally, we add the grand total, hence the +1
-  nb_rows <- lapply(1:length(level_v1), function(i) {
-    lapply(1:length(level_v2), function(j) {
-      c((length(level_v1[[i]]) - 1) * length(level_v2[[j]]) + 1,
-        length(level_v1[[i]]) * (length(level_v2[[j]]) - 1) + 1)
-    })
-  })
+  # # For each of these tables, there are two possible hierarchies
+  # # one with the totals of v1, and the other with the totals of v2
+  # # thus, for one of the modalities, we do not make any combination with its total
+  # # hence the -1
+  # # and finally, we add the grand total, hence the +1
+  # nb_rows <- lapply(1:length(level_v1), function(i) {
+  #   lapply(1:length(level_v2), function(j) {
+  #     c((length(level_v1[[i]]) - 1) * length(level_v2[[j]]) + 1,
+  #       length(level_v1[[i]]) * (length(level_v2[[j]]) - 1) + 1)
+  #   })
+  # })
+
+  # Vectorization of the calculations.
+  len1 <- sapply(level_v1, length)
+  len2 <- sapply(level_v2, length)
+
+  L1 <- length(len1)
+  L2 <- length(len2)
+
+  len1_grid <- rep(len1, each = L2)
+  len2_grid <- rep(len2, times = L1)
+
+  val1 <- (len1_grid - 1) * len2_grid + 1
+  val2 <- len1_grid * (len2_grid - 1) + 1
+
+  nb_rows <- as.vector(rbind(val1, val2))
 
   # Now we need to multiply by the modalities of the non-merged variables
 
   list_non_merged_vars <- names(totcode[!(names(totcode) %in% c(v1, v2))])
 
-  mod_non_merged_vars <- lapply(list_non_merged_vars,
-                                function(x)  length(unique(dfs[[x]])))
+  # Get the number of non-merged modalities using unique_mods lengths (much faster than lapply on unique).
+  mod_non_merged_vars <- sapply(list_non_merged_vars,
+                                function(x) length(unique_mods[[x]]))
 
   prod_numbers <- prod(unlist(mod_non_merged_vars))
 
-  nb_rows_tot <- lapply(unlist(nb_rows), function(x) x * prod_numbers)
+  # Direct vector multiplication and conversion to a list for optimization.
+  nb_rows_tot <- as.list(nb_rows * prod_numbers)
 
   return(nb_rows_tot)
 }
 
 # case : 5 dimensions, two pairs of merged variables
-length_tabs_5_4_var <- function(dfs, v1, v2, v3, v4, totcode, hrcfiles = NULL) {
+length_tabs_5_4_var <- function(dfs, v1, v2, v3, v4, totcode, hrcfiles = NULL, unique_mods = NULL){
+
+  # Fallback security in case unique_mods is not provided.
+  if (is.null(unique_mods)) {
+    unique_mods <- lapply(dfs[names(totcode)], unique)
+  }
 
   # Retrieve groupings {nodes + branches} based on whether the variable is hierarchical or not, transitioning from 5 dimensions to 4 dimensions.
 
   # List and then unlist the results; ifelse returns all nodes instead of just the first one.
-  level_v1 <- unlist(ifelse(v1 %in% names(hrcfiles),
-                            list(import_hierarchy(hrcfiles[[v1]])),
-                            list(list(unique(dfs[[v1]])))),
-                     recursive = FALSE)
+  # level_v1 <- unlist(ifelse(v1 %in% names(hrcfiles),
+  #                           list(import_hierarchy(hrcfiles[[v1]])),
+  #                           list(list(unique(dfs[[v1]])))),
+  #                    recursive = FALSE)
+  #
+  # level_v2 <- unlist(ifelse(v2 %in% names(hrcfiles),
+  #                           list(import_hierarchy(hrcfiles[[v2]])),
+  #                           list(list(unique(dfs[[v2]])))),
+  #                    recursive = FALSE)
 
-  level_v2 <- unlist(ifelse(v2 %in% names(hrcfiles),
-                            list(import_hierarchy(hrcfiles[[v2]])),
-                            list(list(unique(dfs[[v2]])))),
-                     recursive = FALSE)
+  # Retrieve parent-child vectors using unique_mods to avoid calling unique() on the raw dataframe.
+  # Replaced ifelse/unlist with a direct if/else block for performance.
+  if (v1 %in% names(hrcfiles)) {
+    level_v1 <- import_hierarchy(hrcfiles[[v1]])
+  } else {
+    level_v1 <- list(unique_mods[[v1]])
+  }
+
+  if (v2 %in% names(hrcfiles)) {
+    level_v2 <- import_hierarchy(hrcfiles[[v2]])
+  } else {
+    level_v2 <- list(unique_mods[[v2]])
+  }
 
   # Swap level_v1 and level_v2 in case v2 is not hierarchical but v1 is (to maintain order).
   if (!(v2 %in% names(hrcfiles)) & (v1 %in% names(hrcfiles))) {
@@ -534,17 +618,40 @@ length_tabs_5_4_var <- function(dfs, v1, v2, v3, v4, totcode, hrcfiles = NULL) {
     level_v2 <- tmp
   }
 
-  level_v3 <- unlist(ifelse(v3 %in% names(hrcfiles),
-                            list(import_hierarchy(hrcfiles[[v3]])),
-                            list(list(unique(dfs[[v3]])))),
-                     recursive = FALSE)
+  # level_v3 <- unlist(ifelse(v3 %in% names(hrcfiles),
+  #                           list(import_hierarchy(hrcfiles[[v3]])),
+  #                           list(list(unique(dfs[[v3]])))),
+  #                    recursive = FALSE)
+  #
+  # level_v4 <- unlist(ifelse(v4 %in% names(hrcfiles),
+  #                           list(import_hierarchy(hrcfiles[[v4]])),
+  #                           list(list(unique(dfs[[v4]])))),
+  #                    recursive = FALSE)
+  #
+  # # Swap level_v3 and level_v4 in case v4 is not hierarchical but v3 is (to maintain order).
+  # if (!(v4 %in% names(hrcfiles)) & (v3 %in% names(hrcfiles))) {
+  #   tmp <- level_v3
+  #   level_v3 <- level_v4
+  #   level_v4 <- tmp
+  #
+  #   tmp <- v3
+  #   v3 <- v4
+  #   v4 <- tmp
+  # }
 
-  level_v4 <- unlist(ifelse(v4 %in% names(hrcfiles),
-                            list(import_hierarchy(hrcfiles[[v4]])),
-                            list(list(unique(dfs[[v4]])))),
-                     recursive = FALSE)
+  # Replaced ifelse/unlist with a direct if/else block for v3 and v4.
+  if (v3 %in% names(hrcfiles)) {
+    level_v3 <- import_hierarchy(hrcfiles[[v3]])
+  } else {
+    level_v3 <- list(unique_mods[[v3]])
+  }
 
-  # Swap level_v3 and level_v4 in case v4 is not hierarchical but v3 is (to maintain order).
+  if (v4 %in% names(hrcfiles)) {
+    level_v4 <- import_hierarchy(hrcfiles[[v4]])
+  } else {
+    level_v4 <- list(unique_mods[[v4]])
+  }
+
   if (!(v4 %in% names(hrcfiles)) & (v3 %in% names(hrcfiles))) {
     tmp <- level_v3
     level_v3 <- level_v4
@@ -557,55 +664,90 @@ length_tabs_5_4_var <- function(dfs, v1, v2, v3, v4, totcode, hrcfiles = NULL) {
 
   # Calculate the length of resulting 4-dimensional datasets for each combination of variables.
 
-  nb_rows <- lapply(1:length(level_v1), function(i) {
-    lapply(1:length(level_v2), function(j) {
+  # nb_rows <- lapply(1:length(level_v1), function(i) {
+  #   lapply(1:length(level_v2), function(j) {
+  #
+  #     c(
+  #       lapply(1:length(level_v3), function(k) {
+  #         lapply(1:length(level_v4), function(l) {
+  #
+  #           # A formula to calculate the length of the arrays.
+  #           c( ((length(level_v1[[i]]) - 1) * length(level_v2[[j]]) + 1) *
+  #                ((length(level_v3[[k]]) - 1) * length(level_v4[[l]]) + 1),
+  #
+  #              ((length(level_v1[[i]]) - 1) * length(level_v2[[j]]) + 1) *
+  #                (length(level_v3[[k]]) * (length(level_v4[[l]]) - 1) + 1)
+  #           )
+  #         })
+  #       }),
+  #
+  #       lapply(1:length(level_v3), function(k) {
+  #         lapply(1:length(level_v4), function(l) {
+  #
+  #           c( (length(level_v1[[i]]) * (length(level_v2[[j]]) - 1) + 1) *
+  #                ((length(level_v3[[k]]) - 1) * length(level_v4[[l]]) + 1),
+  #
+  #              (length(level_v1[[i]]) * (length(level_v2[[j]]) - 1) + 1) *
+  #                (length(level_v3[[k]]) * (length(level_v4[[l]]) - 1) + 1)
+  #           )
+  #         })
+  #       })
+  #     )
+  #
+  #   })
+  # })
 
-      c(
-        lapply(1:length(level_v3), function(k) {
-          lapply(1:length(level_v4), function(l) {
+  # Fully vectorized 5-to-4 dimension variable calculation (no lapply loops).
+  len1 <- sapply(level_v1, length)
+  len2 <- sapply(level_v2, length)
+  len3 <- sapply(level_v3, length)
+  len4 <- sapply(level_v4, length)
 
-            # A formula to calculate the length of the arrays.
-            c( ((length(level_v1[[i]]) - 1) * length(level_v2[[j]]) + 1) *
-                 ((length(level_v3[[k]]) - 1) * length(level_v4[[l]]) + 1),
+  L1 <- length(len1)
+  L2 <- length(len2)
+  L3 <- length(len3)
+  L4 <- length(len4)
 
-               ((length(level_v1[[i]]) - 1) * length(level_v2[[j]]) + 1) *
-                 (length(level_v3[[k]]) * (length(level_v4[[l]]) - 1) + 1)
-            )
-          })
-        }),
+  len1_ij <- rep(len1, each = L2)
+  len2_ij <- rep(len2, times = L1)
+  A_ij <- (len1_ij - 1) * len2_ij + 1
+  B_ij <- len1_ij * (len2_ij - 1) + 1
 
-        lapply(1:length(level_v3), function(k) {
-          lapply(1:length(level_v4), function(l) {
+  len3_kl <- rep(len3, each = L4)
+  len4_kl <- rep(len4, times = L3)
+  C_kl <- (len3_kl - 1) * len4_kl + 1
+  D_kl <- len3_kl * (len4_kl - 1) + 1
 
-            c( (length(level_v1[[i]]) * (length(level_v2[[j]]) - 1) + 1) *
-                 ((length(level_v3[[k]]) - 1) * length(level_v4[[l]]) + 1),
+  CD_woven <- as.vector(rbind(C_kl, D_kl))
+  AB_woven <- as.vector(rbind(A_ij, B_ij))
 
-               (length(level_v1[[i]]) * (length(level_v2[[j]]) - 1) + 1) *
-                 (length(level_v3[[k]]) * (length(level_v4[[l]]) - 1) + 1)
-            )
-          })
-        })
-      )
+  multipliers <- rep(AB_woven, each = length(CD_woven))
+  nb_rows <- multipliers * rep(CD_woven, times = 2 * L1 * L2)
 
-    })
-  })
 
   # Calculate the total number of rows by multiplying with the unique modalities of non-merged variables.
 
   list_non_fused_vars <- names(totcode[!(names(totcode) %in% c(v1, v2, v3, v4))])
 
-  non_fused_vars_mod <- lapply(list_non_fused_vars,
-                                   function(x)  length(unique(dfs[[x]])))
+  # Get the number of non-merged modalities using unique_mods lengths (much faster than lapply on unique).
+  non_fused_vars_mod <- sapply(list_non_fused_vars,
+                               function(x) length(unique_mods[[x]]))
 
   prod_numbers <- prod(unlist(non_fused_vars_mod))
 
-  nb_rows_tot <- lapply(unlist(nb_rows), function(x) x * prod_numbers)
+  nb_rows_tot <- as.list(nb_rows * prod_numbers)
+
 
   return(nb_rows_tot)
 }
 
 # case : 5 dimensions, three variables merged into one
-length_tabs_5_3_var <- function(dfs, v1, v2, v3, totcode, hrcfiles = NULL) {
+length_tabs_5_3_var <- function(dfs, v1, v2, v3, totcode, hrcfiles = NULL, unique_mods = NULL) {
+
+  # Fallback security in case unique_mods is not provided.
+  if (is.null(unique_mods)) {
+    unique_mods <- lapply(dfs[names(totcode)], unique)
+  }
 
   # Case of at least one hierarchical variable
   if (length(setdiff(names(hrcfiles), c(v1, v2, v3))) != length(hrcfiles)) {
@@ -620,15 +762,28 @@ length_tabs_5_3_var <- function(dfs, v1, v2, v3, totcode, hrcfiles = NULL) {
     # Transition from 5 dimensions to 4 dimensions
 
     # List and then unlist the results; ifelse returns all nodes instead of just the first one.
-    level_v1 <- unlist(ifelse(v1 %in% names(hrcfiles),
-                              list(import_hierarchy(hrcfiles[[v1]])),
-                              list(list(unique(dfs[[v1]])))),
-                       recursive = FALSE)
+    # level_v1 <- unlist(ifelse(v1 %in% names(hrcfiles),
+    #                           list(import_hierarchy(hrcfiles[[v1]])),
+    #                           list(list(unique(dfs[[v1]])))),
+    #                    recursive = FALSE)
+    #
+    # level_v2 <- unlist(ifelse(v2 %in% names(hrcfiles),
+    #                           list(import_hierarchy(hrcfiles[[v2]])),
+    #                           list(list(unique(dfs[[v2]])))),
+    #                    recursive = FALSE)
 
-    level_v2 <- unlist(ifelse(v2 %in% names(hrcfiles),
-                              list(import_hierarchy(hrcfiles[[v2]])),
-                              list(list(unique(dfs[[v2]])))),
-                       recursive = FALSE)
+    # Replaced ifelse/unlist with a direct if/else block.
+    if (v1 %in% names(hrcfiles)) {
+      level_v1 <- import_hierarchy(hrcfiles[[v1]])
+    } else {
+      level_v1 <- list(unique_mods[[v1]])
+    }
+
+    if (v2 %in% names(hrcfiles)) {
+      level_v2 <- import_hierarchy(hrcfiles[[v2]])
+    } else {
+      level_v2 <- list(unique_mods[[v2]])
+    }
 
     # Swap level_v1 and level_v2 if v2 is not hierarchical but v1 is (to maintain order).
     if (!(v2 %in% names(hrcfiles)) & (v1 %in% names(hrcfiles))) {
@@ -640,47 +795,92 @@ length_tabs_5_3_var <- function(dfs, v1, v2, v3, totcode, hrcfiles = NULL) {
     # Transition from 4 dimensions to 3 dimensions
 
     # List and then unlist the results; ifelse returns all nodes instead of just the first one.
-    level_v3 <- unlist(ifelse(v3 %in% names(hrcfiles),
-                              list(import_hierarchy(hrcfiles[[v3]])),
-                              list(list(unique(dfs[[v3]])))),
-                       recursive = FALSE)
+    # level_v3 <- unlist(ifelse(v3 %in% names(hrcfiles),
+    #                           list(import_hierarchy(hrcfiles[[v3]])),
+    #                           list(list(unique(dfs[[v3]])))),
+    #                    recursive = FALSE)
+
+    if (v3 %in% names(hrcfiles)) {
+      level_v3 <- import_hierarchy(hrcfiles[[v3]])
+    } else {
+      level_v3 <- list(unique_mods[[v3]])
+    }
 
 
-    nb_rows <- lapply(1:length(level_v1), function(i) {
+    # nb_rows <- lapply(1:length(level_v1), function(i) {
+    #
+    #   lapply(1:length(level_v3), function(k) {
+    #
+    #     c( (length(level_v1[[i]]) - 1) * length(level_v3[[k]]) + 1,
+    #        length(level_v1[[i]]) * (length(level_v3[[k]]) - 1) + 1
+    #     )
+    #   })
+    #
+    #   lapply(1:length(level_v2), function(j) {
+    #     lapply(1:length(level_v3), function(k) {
+    #
+    #       c(
+    #         rep(c((length(level_v2[[j]]) - 1) * length(level_v3[[k]]) + 1,
+    #               length(level_v2[[j]]) * (length(level_v3[[k]]) - 1) + 1
+    #         ),
+    #         times = length(level_v1[[i]])
+    #         ),
+    #
+    #         rep(c((length(level_v1[[i]]) - 1) * length(level_v3[[k]]) + 1,
+    #               length(level_v1[[i]]) * (length(level_v3[[k]]) - 1) + 1
+    #         ),
+    #         times = length(level_v2[[j]])
+    #         )
+    #       )
+    #     })
+    #   })
+    # })
 
-      lapply(1:length(level_v3), function(k) {
+    # Replaced nested lapply structures with sequential indexing and preallocated lists.
+    len1 <- sapply(level_v1, length)
+    len2 <- sapply(level_v2, length)
+    len3 <- sapply(level_v3, length)
+    L1 <- length(len1)
+    L2 <- length(len2)
+    L3 <- length(len3)
 
-        c( (length(level_v1[[i]]) - 1) * length(level_v3[[k]]) + 1,
-           length(level_v1[[i]]) * (length(level_v3[[k]]) - 1) + 1
-        )
-      })
+    nb_rows_list <- list()
+    idx <- 1
+    for (i in seq_len(L1)) {
+      val1_ik <- (len1[i] - 1) * len3 + 1
+      val2_ik <- len1[i] * (len3 - 1) + 1
+      part1_i <- as.vector(rbind(val1_ik, val2_ik))
 
-      lapply(1:length(level_v2), function(j) {
-        lapply(1:length(level_v3), function(k) {
+      part2_i_list <- vector("list", L2)
+      for (j in seq_len(L2)) {
+        val1_jk <- (len2[j] - 1) * len3 + 1
+        val2_jk <- len2[j] * (len3 - 1) + 1
+        A_jk <- rbind(val1_jk, val2_jk)
 
-          c(
-            rep(c((length(level_v2[[j]]) - 1) * length(level_v3[[k]]) + 1,
-                  length(level_v2[[j]]) * (length(level_v3[[k]]) - 1) + 1
-            ),
-            times = length(level_v1[[i]])
-            ),
+        val1_ik_rep <- (len1[i] - 1) * len3 + 1
+        val2_ik_rep <- len1[i] * (len3 - 1) + 1
+        B_ik <- rbind(val1_ik_rep, val2_ik_rep)
 
-            rep(c((length(level_v1[[i]]) - 1) * length(level_v3[[k]]) + 1,
-                  length(level_v1[[i]]) * (length(level_v3[[k]]) - 1) + 1
-            ),
-            times = length(level_v2[[j]])
-            )
-          )
-        })
-      })
-    })
+        # Fully vectorized list generation by replicating matrix rows using integer index replication.
+        # This completely removes the slow lapply(seq_len(L3), function(k) ...) inner loop.
+        A_jk_rep <- A_jk[rep(c(1, 2), times = len1[i]), , drop = FALSE]
+        B_ik_rep <- B_ik[rep(c(1, 2), times = len2[j]), , drop = FALSE]
+        part2_i_list[[j]] <- as.vector(rbind(A_jk_rep, B_ik_rep))
+      }
+      # Rq : Fix an issue, the originale code had a bug since the functions calculated 2 items
+      # but returned only a single intem
+      nb_rows_list[[idx]] <- c(part1_i, unlist(part2_i_list))
+      idx <- idx + 1
+    }
+    nb_rows <- unlist(nb_rows_list)
 
     # Case of 3 non-hierarchical variables: exact result (the length of table i is known)
   } else {
 
-    n_mod_v1 <- length(unique(dfs[[v1]]))
-    n_mod_v2 <- length(unique(dfs[[v2]]))
-    n_mod_v3 <- length(unique(dfs[[v3]]))
+    # Fetch unique modality counts directly from unique_mods list rather than executing raw unique() calls.
+    n_mod_v1 <- length(unique_mods[[v1]])
+    n_mod_v2 <- length(unique_mods[[v2]])
+    n_mod_v3 <- length(unique_mods[[v3]])
 
     nb_rows <- c(
       1 + (n_mod_v3 - 1) * n_mod_v1,
@@ -700,24 +900,15 @@ length_tabs_5_3_var <- function(dfs, v1, v2, v3, totcode, hrcfiles = NULL) {
 
   list_non_fused_vars <- names(totcode[!(names(totcode) %in% c(v1, v2, v3))])
 
-  non_fused_vars_mod <- lapply(list_non_fused_vars,
-                                   function(x)  length(unique(dfs[[x]])))
+  # Get the number of non-merged modalities using unique_mods lengths (much faster than lapply on unique).
+  non_fused_vars_mod <- sapply(list_non_fused_vars,
+                               function(x) length(unique_mods[[x]]))
 
   prod_numbers <- prod(unlist(non_fused_vars_mod))
 
-  nb_rows_tot <- lapply(unlist(nb_rows), function(x) x * prod_numbers)
+  nb_rows_tot <- as.list(nb_rows * prod_numbers)
 
   return(nb_rows_tot)
-}
-
-# Function to manage the import of the hierarchy
-import_hierarchy <- function(hrcfile) {
-  total <- "BIG_Total"
-  res_sdc <- sdcHierarchies::hier_import(inp = hrcfile, from = "hrc", root = total) %>%
-    sdcHierarchies::hier_convert(as = "sdc")
-  # Store all sets of parent + direct child
-  levels <- lapply(res_sdc$dims, names)
-  return(levels)
 }
 
 #' Calculate the number of tables generated when merging 3 variables
@@ -822,8 +1013,16 @@ nb_tab_generated <- function(
   v3 = NULL,
   v4 = NULL,
   hrcfiles = NULL,
-  data = NULL)
+  data = NULL,
+  unique_mods = NULL)
 {
+
+  # Fallback setup to minimize duplicate calculations in nb_tab_generated
+  if (is.null(unique_mods) && !is.null(data)) {
+    needed_vars <- c(v1, v2, v3, v4)
+    needed_vars <- needed_vars[!is.null(needed_vars) & !is.na(needed_vars)]
+    unique_mods <- lapply(data[needed_vars], unique)
+  }
 
   # Case dimension 5: 2 couples created
   if (!is.null(v4)) {
@@ -861,14 +1060,14 @@ nb_tab_generated <- function(
       # which can have two hierarchies
       # totals on v1, or totals on v2
       # the number of nodes is equivalent to the number of modalities
-      nb_noeuds_var <- length(unique(data[[v1]])) + length(unique(data[[v2]]))
+      nb_noeuds_var <- length(unique_mods[[v1]]) + length(unique_mods[[v2]])
 
       # 1 hierarchical variable and 1 non-hierarchical variable merged
     } else {
       var_hier <- ifelse(v1 %in% names(hrcfiles), v1, v2)
       mod_var_non_hier <- ifelse(var_hier == v1,
-                                 length(unique(data[[v2]])),
-                                 length(unique(data[[v1]])))
+                                 length(unique_mods[[v2]]),
+                                 length(unique_mods[[v1]]))
 
       # Analysis of the hierarchy of var_hier
       level_var_hier <- import_hierarchy(hrcfiles[[var_hier]])
