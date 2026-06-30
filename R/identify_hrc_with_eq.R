@@ -265,7 +265,7 @@ identify_hrc_with_eq <- function(df_metadata_long,df_eq_indicator){
     group_by(table_name) %>%
     summarise(
       initial_indicator = {
-        x <- na.omit(initial_indicator)
+        x <- stats::na.omit(initial_indicator)
         if (length(x) == 0) NA_character_ else x[1]
       },
       .groups = "drop"
