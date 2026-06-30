@@ -255,8 +255,18 @@ identify_hrc_with_eq <- function(df_metadata_long,df_eq_indicator){
 
   df_indicators <- bind_rows(df_eq_initial_spannings, df_eq_indicator_spannings) %>%
     select(table_name, field, hrc_field, indicator, hrc_indicator, spanning, hrc_spanning, group) %>%
-    mutate(table_name = paste(table_name,"group",group,sep="_")) %>% select(-c(group)) %>% unique() %>%
+    mutate(table_name = paste(table_name, "group", group, sep = "_")) %>%
+    select(-group) %>%
+    unique() %>%
     arrange(table_name)
+
+  df_initial_indicator <- bind_rows(df_eq_initial_spannings, df_eq_indicator_spannings) %>%
+    mutate(table_name = paste(table_name, "group", group, sep = "_")) %>%
+    group_by(table_name) %>%
+    summarise(initial_indicator = first(na.omit(initial_indicator)), .groups = "drop")
+
+  df_indicators <- df_indicators %>%
+    left_join(df_initial_indicator, by = "table_name")
 
   # Tables without group (i.e. withtout group)
   if (nrow(df_without_group) > 0) {
