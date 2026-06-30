@@ -140,7 +140,7 @@ dataframe_result <- function(list_independent_tables, list_hrc_identified) {
   dataframe_metadata <- purrr::imap_dfr(list_independent_tables, function(tibble, tibble_name) {
     tibble %>% mutate(cluster = tibble_name)
   })
-  # browser()
+
   # If the initial_indicator column exists in list_hrc_identified,
   # replace indicator with initial_indicator whenever initial_indicator is not NA
   if ("initial_indicator" %in% names(list_hrc_identified[[1]])) {

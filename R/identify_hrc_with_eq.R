@@ -254,7 +254,8 @@ identify_hrc_with_eq <- function(df_metadata_long,df_eq_indicator){
     dplyr::distinct(group, table_name, spanning, hrc_spanning, .keep_all = TRUE)
 
   df_indicators <- bind_rows(df_eq_initial_spannings, df_eq_indicator_spannings) %>%
-    select(table_name, field, hrc_field, indicator, hrc_indicator, everything()) %>%
+    select(table_name, field, hrc_field, indicator, hrc_indicator, spanning, hrc_spanning, group) %>%
+    mutate(table_name = paste(table_name,"group",group,sep="_")) %>% select(-c(group)) %>% unique() %>%
     arrange(table_name)
 
   # Tables without group (i.e. withtout group)
