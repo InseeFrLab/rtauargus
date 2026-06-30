@@ -157,7 +157,7 @@ dataframe_result <- function(list_independent_tables, list_hrc_identified) {
   }
 
   dataframe_metadata <- dataframe_metadata %>%
-    mutate(table_name = sub("_group_.*", "", table_name)) %>%
+    mutate(table_name = gsub("_group_[0-9]+", "", table_name)) %>%
     select(
       cluster,
       table_name,

@@ -263,7 +263,13 @@ identify_hrc_with_eq <- function(df_metadata_long,df_eq_indicator){
   df_initial_indicator <- bind_rows(df_eq_initial_spannings, df_eq_indicator_spannings) %>%
     mutate(table_name = paste(table_name, "group", group, sep = "_")) %>%
     group_by(table_name) %>%
-    summarise(initial_indicator = first(na.omit(initial_indicator)), .groups = "drop")
+    summarise(
+      initial_indicator = {
+        x <- na.omit(initial_indicator)
+        if (length(x) == 0) NA_character_ else x[1]
+      },
+      .groups = "drop"
+    )
 
   df_indicators <- df_indicators %>%
     left_join(df_initial_indicator, by = "table_name")
