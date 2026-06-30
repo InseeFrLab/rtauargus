@@ -3,7 +3,7 @@ Type: Package
 Title: Using Tau-Argus from R
 Language: fr
 Version: 1.3.5
-Depends: R (>= 3.5.0)
+Depends: R (>= 4.1.0)
 Imports:
     purrr (>= 0.2),
     dplyr (>= 0.7),
