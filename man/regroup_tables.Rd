@@ -48,4 +48,6 @@ df_eq_initial_spannings <- purrr::map(list_groups, function(df_group) {
   purrr::compact() |>
   dplyr::bind_rows()
 }
+
 }
+\keyword{internal}
