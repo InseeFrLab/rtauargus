@@ -377,6 +377,8 @@ build_spanning_based_on_hrc_indicator <- function(df_without_group, df_spannings
 #'   purrr::compact() |>
 #'   dplyr::bind_rows()
 #' }
+#'
+#' @keywords internal
 regroup_tables <- function(df_group, spanning_combination_group) {
   current_group <- unique(df_group$group)
 
