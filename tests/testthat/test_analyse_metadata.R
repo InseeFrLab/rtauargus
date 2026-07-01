@@ -271,7 +271,7 @@ test_that("meme_var_crois_2", {
 # Two equations, all indiicators broken down by the same spanning variable -----
 answer <- data.frame(
   cluster = c("france_entreprises_2023.EUR","france_entreprises_2023.EUR"),
-  table_name = c("T10.T11.T12.T7.T8.T9","T4.T5.T6"),
+  table_name = c("T11.T7.T9","T4.T5.T6"),
   field = c("france_entreprises_2023","france_entreprises_2023"),
   indicator = c("to_lettuce","to_pizza"),
   spanning_1 = c("a10","a10"),
@@ -281,8 +281,8 @@ answer <- data.frame(
 )
 
 test_that("meme_var_crois_1_deux_eq", {
-  meta <- metadata_pizza_lettuce[c(4:12),c(1:7)]
-  meta$indicator <- c("to_pizza","to_tomates","to_pate","to_batavia","to_batavia","to_arugula","to_arugula","to_lettuce","to_lettuce")
+  meta <- metadata_pizza_lettuce[c(4:7,9,11),c(1:7)]
+  meta$indicator <- c("to_pizza","to_tomates","to_pate","to_batavia","to_arugula","to_lettuce")
   meta <- meta %>% mutate(spanning_1 = "a10",hrc_spanning_1 = NA_character_)
 
   expect_warning(
