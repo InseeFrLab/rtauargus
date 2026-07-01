@@ -50,28 +50,46 @@
 #' @importFrom tidyr unnest_wider
 #' @importFrom dplyr distinct
 tab_to_treat <- function(list_independent_tables) {
-  # Process each tibble in the list
   list_independent_tables %>% purrr::map(function(big_tibble) {
-    # Remove duplicate rows within each nested `data` field
     big_tibble <- big_tibble %>%
       mutate(data = map(data, ~ dplyr::distinct(.x)))
 
-    # Extract key fields and indicators, ensuring consistent values across rows
-    big_tibble <- big_tibble %>%
-      mutate(
-        field = map(data, function(data) { data$field[[1]] }),
-        indicator = map(data, function(data) { data$indicator[[1]] }),
-        hrc_spanning = map(data, function(data) { data$hrc_spanning })
-      )
+    has_initial_indicator <- any(purrr::map_lgl(
+      big_tibble$data, ~ "initial_indicator" %in% names(.x)
+    ))
 
-    # Select and unnest the data into a flat structure
-    big_tibble %>%
-      select(-c(data, tab_inclus)) %>%
-      tidyr::unnest(c(field, indicator)) %>%
-      select(table_name, field, indicator, spanning, hrc_spanning) %>%
-      tidyr::unnest_wider(spanning, names_sep = "_") %>%
-      tidyr::unnest_wider(hrc_spanning, names_sep = "_") %>%
-      arrange(table_name)
+    if (has_initial_indicator) {
+      big_tibble <- big_tibble %>%
+        mutate(
+          field = map(data, ~ .x$field[[1]]),
+          indicator = map(data, ~ .x$indicator[[1]]),
+          hrc_spanning = map(data, ~ .x$hrc_spanning),
+          initial_indicator = map(data, ~ .x$initial_indicator[[1]])
+        )
+
+      big_tibble %>%
+        select(-c(data, tab_inclus)) %>%
+        tidyr::unnest(c(field, indicator, initial_indicator)) %>%
+        select(table_name, field, indicator, spanning, hrc_spanning, initial_indicator) %>%
+        tidyr::unnest_wider(spanning, names_sep = "_") %>%
+        tidyr::unnest_wider(hrc_spanning, names_sep = "_") %>%
+        arrange(table_name)
+    } else {
+      big_tibble <- big_tibble %>%
+        mutate(
+          field = map(data, ~ .x$field[[1]]),
+          indicator = map(data, ~ .x$indicator[[1]]),
+          hrc_spanning = map(data, ~ .x$hrc_spanning)
+        )
+
+      big_tibble %>%
+        select(-c(data, tab_inclus)) %>%
+        tidyr::unnest(c(field, indicator)) %>%
+        select(table_name, field, indicator, spanning, hrc_spanning) %>%
+        tidyr::unnest_wider(spanning, names_sep = "_") %>%
+        tidyr::unnest_wider(hrc_spanning, names_sep = "_") %>%
+        arrange(table_name)
+    }
   })
 }
 
@@ -147,7 +165,7 @@ dataframe_result <- function(list_independent_tables, list_hrc_identified) {
     hrc_indicator_map <- list_hrc_identified %>%
       purrr::map_dfr(identity) %>%
       filter(!is.na(initial_indicator)) %>%
-      select(table_name, field, indicator, initial_indicator) %>%
+      select(table_name, field, indicator) %>%
       distinct()
 
     dataframe_metadata <- dataframe_metadata %>%

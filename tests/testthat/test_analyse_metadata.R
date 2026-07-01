@@ -268,7 +268,7 @@ test_that("meme_var_crois_2", {
 }
 )
 
-# Two equations, all indiicators broken down by the same spanning variable -----
+# Two equations, all indicators broken down by the same spanning variable -----
 answer <- data.frame(
   cluster = c("france_entreprises_2023.EUR","france_entreprises_2023.EUR"),
   table_name = c("T11.T7.T9","T4.T5.T6"),
@@ -336,7 +336,7 @@ answer <- data.frame(
   cluster = rep("france_entreprises_2023.EUR"),
   table_name = c("T11","T7.T9"),
   field = rep("france_entreprises_2023"),
-  indicator = c("to_lettuce","EUR"),
+  indicator = c("to_lettuce","to_lettuce"),
   spanning_1 = c("cj","a10"),
   spanning_2 = c("EQ1^h","EQ1^h"),
   hrc_spanning_1 = NA_character_,
@@ -362,12 +362,12 @@ test_that("pas_meme_var_crois_1", {
 )
 
 # One equation, but the indicators are not broken down by the same spanning
-# variables (one or two spanning variable by table) ------------------------------
+# variables (one or two spanning variable by table) ----------------------------
 answer <- data.frame(
   cluster = rep("france_entreprises_2023.EUR"),
   table_name = c("T1.T2","T1.T2.T3"),
   field = rep("france_entreprises_2023"),
-  indicator = c("EUR","EUR"),
+  indicator = c("EUR","to_lettuce"),
   spanning_1 = c("a10","a10"),
   spanning_2 = c("EQ1^h","size"),
   spanning_3 = c(NA,"EQ1^h"),
@@ -393,3 +393,4 @@ test_that("pas_meme_var_crois_2", {
 
 }
 )
+
