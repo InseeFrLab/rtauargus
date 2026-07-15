@@ -1,28 +1,3 @@
-# Count the number of nodes in a hierarchical file
-# Expects 2 arguments:
-# - Either a named list and a variable,
-# - Or an hrc (hierarchical file) and hrc_name = FALSE
-nb_nodes <- function(hrcfiles, v = NULL, hrc_name = TRUE) {
-  # Check if the variable has an associated hrc file or if hrc_name == FALSE
-  if (hrc_name && !(v %in% names(hrcfiles)) || (!hrc_name && is.null(hrcfiles))) {
-    # Non-hierarchical variable or hrcfiles == NULL
-    return(1)
-  }
-
-  # Take the specified file if hrc_name = TRUE, otherwise take the hrc directly provided
-  hrc <- ifelse(hrc_name, hrcfiles[[v]], hrcfiles)
-
-  # Unimportant value for the following steps
-  total <- "This_Is_My_Total"
-
-  # Convert to hierarchy
-  res_sdc <- sdcHierarchies::hier_import(inp = hrc, from = "hrc", root = total) %>%
-    sdcHierarchies::hier_convert(as = "sdc")
-
-  # Return the number of nodes
-  return(length(res_sdc$dims))
-}
-
 #' Function reducing from 5 to 3 categorical variables
 #'
 #' @param dfs data.frame with 5 categorical variables (n >= 3 in the general case)
@@ -303,11 +278,10 @@ from_5_to_3 <- function(
 
     # Calculate the value of nb_nodes once for each res_5_4$hrcs[[x]]
     # to avoid calculating the same quantity twice
-    results <- lapply(1:length(res_5_4$hrcs), function(x) {
-      nb_node_value <- 2 * nb_nodes(res_5_4$hrcs[[x]], hrc_name = FALSE) *
-                           nb_nodes(hrcfiles2, non_fused_var)
-
-      # Use the calculated value for hrcs5_4 and alt_tot5_4
+    results <- lapply(seq_along(res_5_4$hrcs), function(x) {
+      nb_node_value <- 2 * nb_nodes(res_5_4$hrcs[[x]], hrc_name = FALSE,
+                                    total = res_5_4$alt_tot[[x]]) *
+        nb_nodes(hrcfiles2, non_fused_var, totcode = totcode2)
       list(
         hrcs = rep(res_5_4$hrcs[[x]], nb_node_value),
         alt_tot = rep(res_5_4$alt_tot[[x]], nb_node_value)

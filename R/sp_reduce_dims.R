@@ -226,10 +226,11 @@ reduce_dims <- function(
     verbose = FALSE
 ){
 
-  # TODO OR NOT:
-  # to save time: parallelize the lapply for variable selection
-  #                                     lapply for reducing from 4 to 3 dimensions
-  #                                    in the case of dimension 5
+  # Test pour vérifier quelle fonction est chargée
+  if (!exists(".reduce_dims_local", envir = .GlobalEnv)) {
+    message(">>> Version LOCALE de reduce_dims utilisée <<<")
+    assign(".reduce_dims_local", TRUE, envir = .GlobalEnv)
+  }
 
   dfs <- as.data.frame(dfs)
 
@@ -312,7 +313,10 @@ reduce_dims <- function(
     }
   }
 
-
+  # clear the hierarchy cache at the very beginning of the dimension reduction process
+  if (exists(".hrc_cache")) {
+    rm(list = ls(envir = .hrc_cache), envir = .hrc_cache)
+  }
 
   # Choose the separator
   data_var_cat <- dfs[names(dfs) %in% names(totcode)]
@@ -578,10 +582,12 @@ split_tab <- function(res, var_fus, limit) {
     total <- res$alt_totcode[[t]][[var_fus]]
     other_total <-res$alt_totcode[[t]][names(res$alt_totcode[[t]]) != (var_fus)]
 
-    res_sdc <-sdcHierarchies::hier_import(inp = hrc, from = "hrc",root = total) %>%
-      sdcHierarchies::hier_convert(as = "sdc")
+    # res_sdc <-sdcHierarchies::hier_import(inp = hrc, from = "hrc",root = total) %>%
+    #   sdcHierarchies::hier_convert(as = "sdc")
+    #
+    # codes_split <- lapply(res_sdc$dims,names)
+    codes_split <- import_hierarchy(hrc, total)  # same, but using cache for faster calculation
 
-    codes_split <- lapply(res_sdc$dims,names)
     n <- length(codes_split)
 
     # Names use for tauargus

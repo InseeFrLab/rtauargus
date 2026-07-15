@@ -2,25 +2,49 @@
 .hrc_cache <- new.env(parent = emptyenv())
 
 # # Optimized node counting function leveraging the cached sdcHierarchies levels.
-nb_nodes <- function(hrcfiles = NULL, v) {
-  if (!is.null(hrcfiles) && v %in% names(hrcfiles)) {
-    return(length(import_hierarchy(hrcfiles[[v]])))
+# Unified nb_nodes function that uses the cache.
+#' Count the number of nodes in a hierarchical file
+#'
+#' @param hrcfiles named vector of hrc files, can be NULL
+#' @param v variable name (must be present in names(hrcfiles) if hrcfiles is not NULL)
+#' @param hrc_name logical, if TRUE v is a name in hrcfiles, else hrcfiles is the hrc path itself (optional)
+#' @return integer number of nodes
+#' @keywords internal
+#' @export
+nb_nodes <- function(hrcfiles = NULL, v = NULL, hrc_name = TRUE,
+                     totcode = NULL, total = NULL) {
+  if (hrc_name && !is.null(hrcfiles) && v %in% names(hrcfiles)) {
+    # On a besoin du total associé à v
+    if (is.null(totcode)) stop("totcode est requis quand hrc_name = TRUE")
+    return(length(import_hierarchy(hrcfiles[[v]], totcode[[v]])))
+  } else if (!hrc_name && !is.null(hrcfiles)) {
+    # Chemin direct : il faut le total explicite
+    if (is.null(total)) stop("total est requis quand hrc_name = FALSE")
+    return(length(import_hierarchy(hrcfiles, total)))
+  } else {
+    return(1)
   }
-  return(1)
 }
 
 # Hierarchy importer using local cache to bypass slow sdcHierarchies disk parsing on repeated hits.
-import_hierarchy <- function(hrcfile) {
-  if (exists(hrcfile, envir = .hrc_cache)) {
-    return(get(hrcfile, envir = .hrc_cache))
+
+#' Import a hierarchy and cache its levels
+#'
+#' @param hrcfile character path to a .hrc file
+#' @param total character, the root total for the hierarchy
+#' @return a list of character vectors, each representing a node of the hierarchy
+#' @keywords internal
+#' @export
+import_hierarchy <- function(hrcfile, total) {
+  # Clé combinée fichier + total
+  cache_key <- paste0(hrcfile, "|||", total)
+  if (exists(cache_key, envir = .hrc_cache)) {
+    return(get(cache_key, envir = .hrc_cache))
   }
-  total <- "BIG_Total"
   res_sdc <- sdcHierarchies::hier_import(inp = hrcfile, from = "hrc", root = total) %>%
     sdcHierarchies::hier_convert(as = "sdc")
   levels <- lapply(res_sdc$dims, names)
-
-  # Cache levels to avoid disk parsing.
-  assign(hrcfile, levels, envir = .hrc_cache)
+  assign(cache_key, levels, envir = .hrc_cache)
   return(levels)
 }
 
@@ -144,11 +168,6 @@ var_to_merge <- function(
     nb_tab_option = "min",
     limit = 150)
 {
-
-  # Clear the local hierarchy cache on each fresh entry of the top-level selection function.
-  if (exists(".hrc_cache")) {
-    rm(list = ls(envir = .hrc_cache), envir = .hrc_cache)
-  }
 
   # Precompute unique values for all categorical variables once.
   # This prevents redundant, high-overhead unique() calls on large dataframes during loops.
@@ -512,13 +531,13 @@ length_tabs_4 <- function(dfs, v1, v2, totcode, hrcfiles = NULL, unique_mods = N
 
   # Retrieve parent-child vectors using unique_mods to avoid calling unique() on the raw dataframe
   if (v1 %in% names(hrcfiles)) {
-    level_v1 <- import_hierarchy(hrcfiles[[v1]])
+    level_v1 <- import_hierarchy(hrcfiles[[v1]], totcode[[v1]])
   } else {
     level_v1 <- list(unique_mods[[v1]])
   }
 
   if (v2 %in% names(hrcfiles)) {
-    level_v2 <- import_hierarchy(hrcfiles[[v2]])
+    level_v2 <- import_hierarchy(hrcfiles[[v2]], totcode[[v2]])
   } else {
     level_v2 <- list(unique_mods[[v2]])
   }
@@ -600,13 +619,13 @@ length_tabs_5_4_var <- function(dfs, v1, v2, v3, v4, totcode, hrcfiles = NULL, u
   # Retrieve parent-child vectors using unique_mods to avoid calling unique() on the raw dataframe.
   # Replaced ifelse/unlist with a direct if/else block for performance.
   if (v1 %in% names(hrcfiles)) {
-    level_v1 <- import_hierarchy(hrcfiles[[v1]])
+    level_v1 <- import_hierarchy(hrcfiles[[v1]], totcode[[v1]])
   } else {
     level_v1 <- list(unique_mods[[v1]])
   }
 
   if (v2 %in% names(hrcfiles)) {
-    level_v2 <- import_hierarchy(hrcfiles[[v2]])
+    level_v2 <- import_hierarchy(hrcfiles[[v2]], totcode[[v2]])
   } else {
     level_v2 <- list(unique_mods[[v2]])
   }
@@ -641,13 +660,13 @@ length_tabs_5_4_var <- function(dfs, v1, v2, v3, v4, totcode, hrcfiles = NULL, u
 
   # Replaced ifelse/unlist with a direct if/else block for v3 and v4.
   if (v3 %in% names(hrcfiles)) {
-    level_v3 <- import_hierarchy(hrcfiles[[v3]])
+    level_v3 <- import_hierarchy(hrcfiles[[v3]], totcode[[v3]])
   } else {
     level_v3 <- list(unique_mods[[v3]])
   }
 
   if (v4 %in% names(hrcfiles)) {
-    level_v4 <- import_hierarchy(hrcfiles[[v4]])
+    level_v4 <- import_hierarchy(hrcfiles[[v4]], totcode[[v4]])
   } else {
     level_v4 <- list(unique_mods[[v4]])
   }
@@ -774,13 +793,13 @@ length_tabs_5_3_var <- function(dfs, v1, v2, v3, totcode, hrcfiles = NULL, uniqu
 
     # Replaced ifelse/unlist with a direct if/else block.
     if (v1 %in% names(hrcfiles)) {
-      level_v1 <- import_hierarchy(hrcfiles[[v1]])
+      level_v1 <- import_hierarchy(hrcfiles[[v1]], totcode[[v1]])
     } else {
       level_v1 <- list(unique_mods[[v1]])
     }
 
     if (v2 %in% names(hrcfiles)) {
-      level_v2 <- import_hierarchy(hrcfiles[[v2]])
+      level_v2 <- import_hierarchy(hrcfiles[[v2]], totcode[[v2]])
     } else {
       level_v2 <- list(unique_mods[[v2]])
     }
@@ -801,7 +820,7 @@ length_tabs_5_3_var <- function(dfs, v1, v2, v3, totcode, hrcfiles = NULL, uniqu
     #                    recursive = FALSE)
 
     if (v3 %in% names(hrcfiles)) {
-      level_v3 <- import_hierarchy(hrcfiles[[v3]])
+      level_v3 <- import_hierarchy(hrcfiles[[v3]], totcode[[v3]])
     } else {
       level_v3 <- list(unique_mods[[v3]])
     }
@@ -882,18 +901,29 @@ length_tabs_5_3_var <- function(dfs, v1, v2, v3, totcode, hrcfiles = NULL, uniqu
     n_mod_v2 <- length(unique_mods[[v2]])
     n_mod_v3 <- length(unique_mods[[v3]])
 
+    # nb_rows <- c(
+    #   1 + (n_mod_v3 - 1) * n_mod_v1,
+    #   1 + n_mod_v3 * (n_mod_v1 - 1),
+    #
+    #   rep(c(1 + (n_mod_v3 - 1) * n_mod_v2,
+    #         1 + n_mod_v3 * (n_mod_v2 - 1))
+    #       , n_mod_v1),
+    #
+    #   rep(c(1 + (n_mod_v3 - 1) * n_mod_v1,
+    #         1 + n_mod_v3 * (n_mod_v1 - 1))
+    #       , n_mod_v2 - 1)
+    # )
+
+    # Corrected formula
     nb_rows <- c(
-      1 + (n_mod_v3 - 1) * n_mod_v1,
-      1 + n_mod_v3 * (n_mod_v1 - 1),
-
       rep(c(1 + (n_mod_v3 - 1) * n_mod_v2,
-            1 + n_mod_v3 * (n_mod_v2 - 1))
-          , n_mod_v1),
-
+            1 + n_mod_v3 * (n_mod_v2 - 1)),
+          times = n_mod_v1 - 1),
       rep(c(1 + (n_mod_v3 - 1) * n_mod_v1,
-            1 + n_mod_v3 * (n_mod_v1 - 1))
-          , n_mod_v2 - 1)
+            1 + n_mod_v3 * (n_mod_v1 - 1)),
+          times = n_mod_v2 - 1)
     )
+
   }
 
   # Calculate the total number of rows by multiplying with the unique modalities of non-merged variables.
@@ -1013,6 +1043,7 @@ nb_tab_generated <- function(
   v3 = NULL,
   v4 = NULL,
   hrcfiles = NULL,
+  totcode = NULL,
   data = NULL,
   unique_mods = NULL)
 {
@@ -1026,10 +1057,10 @@ nb_tab_generated <- function(
 
   # Case dimension 5: 2 couples created
   if (!is.null(v4)) {
-    return(4 * nb_nodes(hrcfiles = hrcfiles, v = v1) *
-             nb_nodes(hrcfiles = hrcfiles, v = v2) *
-             nb_nodes(hrcfiles = hrcfiles, v = v3) *
-             nb_nodes(hrcfiles = hrcfiles, v = v4))
+    return(4 * nb_nodes(hrcfiles = hrcfiles, v = v1, totcode = totcode) *
+             nb_nodes(hrcfiles = hrcfiles, v = v2, totcode = totcode) *
+             nb_nodes(hrcfiles = hrcfiles, v = v3, totcode = totcode) *
+             nb_nodes(hrcfiles = hrcfiles, v = v4, totcode = totcode))
 
     # Case dimension 5: one triplet merged
   } else if (!is.null(v3)) {
@@ -1038,8 +1069,8 @@ nb_tab_generated <- function(
     if (!is.null(hrcfiles) & v1 %in% names(hrcfiles) & v2 %in% names(hrcfiles)) {
 
       # The hierarchy of each variable
-      level_v1 <- import_hierarchy(hrcfiles[[v1]])
-      level_v2 <- import_hierarchy(hrcfiles[[v2]])
+      level_v1 <- import_hierarchy(hrcfiles[[v1]], totcode[[v1]])
+      level_v2 <- import_hierarchy(hrcfiles[[v2]], totcode[[v2]])
 
       # Store the sum of nodes of v1_v2 for each table
       # We consider all possible combinations between v1 and v2
@@ -1070,7 +1101,7 @@ nb_tab_generated <- function(
                                  length(unique_mods[[v1]]))
 
       # Analysis of the hierarchy of var_hier
-      level_var_hier <- import_hierarchy(hrcfiles[[var_hier]])
+      level_var_hier <- import_hierarchy(hrcfiles[[var_hier]], totcode[[var_hier]])
 
       # We consider all possible combinations between v1 and v2
       # => represents the tables created during the creation of v1_v2 in the 5->4 step
@@ -1089,11 +1120,11 @@ nb_tab_generated <- function(
     # and we create as many tables as its hierarchy has nodes
     # finally, for each created table, two hierarchies are possible
     # totals on v1_v2 and totals on v3
-    return(2 * nb_noeuds_var * nb_nodes(hrcfiles, v = v3))
+    return(2 * nb_noeuds_var * nb_nodes(hrcfiles, v = v3, totcode = totcode))
 
     # Case dimension 4
   } else {
-    return(2 * nb_nodes(hrcfiles = hrcfiles, v = v1) *
-             nb_nodes(hrcfiles = hrcfiles, v = v2))
+    return(2 * nb_nodes(hrcfiles = hrcfiles, v = v1, totcode = totcode) *
+             nb_nodes(hrcfiles = hrcfiles, v = v2, totcode = totcode))
   }
 }

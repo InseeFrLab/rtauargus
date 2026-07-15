@@ -1,25 +1,24 @@
 # Small functions for use in from_4_to_3()
 
 # Returns the hierarchical variable with the fewest nodes (= subtotals)
-smallest_hrc <- function(hrcfiles) {
+smallest_hrc <- function(hrcfiles, totcode) {
   v <- list()
-  for (i in 1:length(hrcfiles)) {
-    v <- append(v, nb_nodes(hrcfiles, names(hrcfiles[i])))
+  for (i in seq_along(hrcfiles)) {
+    v <- append(v, nb_nodes(hrcfiles, names(hrcfiles)[i], totcode = totcode))
   }
   index_smaller_hrc <- which.min(v)
   name_smaller_hrc <- names(hrcfiles)[index_smaller_hrc]
   return(name_smaller_hrc)
 }
 
-# Returns the variable with the fewest modalities
-smallest_mod <- function(dfs) {
+bigger_hrc <- function(hrcfiles, totcode) {
   v <- list()
-  for (colonne in dfs) {
-    v <- append(v,length(unique(colonne)))
+  for (i in seq_along(hrcfiles)) {
+    v <- append(v, nb_nodes(hrcfiles, names(hrcfiles)[i], totcode = totcode))
   }
-  index_smaller_mod <- which.min(v)
-  name_smaller_mod <- names(dfs)[index_smaller_mod]
-  return(name_smaller_mod)
+  index_bigger_hrc <- which.max(v)
+  name_bigger_hrc <- names(hrcfiles)[index_bigger_hrc]
+  return(name_bigger_hrc)
 }
 
 # Choose a categorical variable
@@ -49,19 +48,8 @@ choose_var_priority_non_hierarchical <- function(dfs,totcode,hrcfiles){
   }
   # Otherwise choose the hierarchical variable with the fewest subtotals
   else {
-    return (smallest_hrc(hrcfiles))
+    return (smallest_hrc(hrcfiles, totcode))
   }
-}
-
-# Returns the hierarchical variable with the most nodes
-bigger_hrc <- function(hrcfiles) {
-  v <- list()
-  for (i in 1:length(hrcfiles)) {
-    v <- append(v, nb_nodes(hrcfiles, names(hrcfiles[i])))
-  }
-  index_bigger_hrc <- which.max(v)
-  name_bigger_hrc <- names(hrcfiles)[index_bigger_hrc]
-  return(name_bigger_hrc)
 }
 
 # Returns the variable with the most modalities
@@ -86,7 +74,7 @@ choose_var_priority_hierarchical <- function(dfs, totcode, hrcfiles) {
     return(bigger_mod(dfs[names(dfs) %in% names(totcode)]))
     # Otherwise, choose the hierarchical variable with the most subtotals
   } else {
-    return(bigger_hrc(hrcfiles))
+    return(bigger_hrc(hrcfiles, totcode))
   }
 }
 

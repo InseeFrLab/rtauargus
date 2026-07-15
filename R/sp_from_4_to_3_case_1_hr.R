@@ -80,15 +80,16 @@ from_4_to_3_case_1_hr <- function(
   hrc <- hrcfiles[[v2]]
   total <- totcode[[v2]]
 
-  res_sdc <- sdcHierarchies::hier_import(inp = hrc, from = "hrc", root = total) %>%
-    sdcHierarchies::hier_convert(as = "sdc")
-
-  # Code split gives us the hierarchies as well as the hierarchy levels
-  # Allows to select a node of the tree and its direct branches
-  codes_split <- lapply(
-    res_sdc$dims,
-    names
-  )
+  # res_sdc <- sdcHierarchies::hier_import(inp = hrc, from = "hrc", root = total) %>%
+  #   sdcHierarchies::hier_convert(as = "sdc")
+  #
+  # # Code split gives us the hierarchies as well as the hierarchy levels
+  # # Allows to select a node of the tree and its direct branches
+  # codes_split <- lapply(
+  #   res_sdc$dims,
+  #   names
+  # )
+  codes_split <- import_hierarchy(hrc, total) # same, but using cache for faster calculation
 
   ###########################
   # Reduction of hierarchy #

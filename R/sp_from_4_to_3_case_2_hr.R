@@ -79,14 +79,15 @@ from_4_to_3_case_2_hr <- function(
   hrc1 <- hrcfiles[[v1]]
   total1 <- totcode[[v1]]
 
-  # Creating the table providing the hierarchy levels
-  res_sdc <- sdcHierarchies::hier_import(inp = hrc1, from = "hrc", root = total1) %>%
-    sdcHierarchies::hier_convert(as = "sdc")
-
-  codes_split_1 <- lapply(
-    res_sdc$dims,
-    names
-  )
+  # # Creating the table providing the hierarchy levels
+  # res_sdc <- sdcHierarchies::hier_import(inp = hrc1, from = "hrc", root = total1) %>%
+  #   sdcHierarchies::hier_convert(as = "sdc")
+  #
+  # codes_split_1 <- lapply(
+  #   res_sdc$dims,
+  #   names
+  # )
+  codes_split_1 <- import_hierarchy(hrc1, total1)  # same, but using cache for faster calculation
 
   ###########################
   # Hierarchy Reduction #
