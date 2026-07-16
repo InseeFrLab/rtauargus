@@ -14,12 +14,12 @@
 nb_nodes <- function(hrcfiles = NULL, v = NULL, hrc_name = TRUE,
                      totcode = NULL, total = NULL) {
   if (hrc_name && !is.null(hrcfiles) && v %in% names(hrcfiles)) {
-    # On a besoin du total associé à v
-    if (is.null(totcode)) stop("totcode est requis quand hrc_name = TRUE")
+    # Fallback to "Total" if totcode is NULL or if v is not present in totcode
+    total_val <- if (!is.null(totcode) && v %in% names(totcode)) totcode[[v]] else "Total"
     return(length(import_hierarchy(hrcfiles[[v]], totcode[[v]])))
   } else if (!hrc_name && !is.null(hrcfiles)) {
-    # Chemin direct : il faut le total explicite
-    if (is.null(total)) stop("total est requis quand hrc_name = FALSE")
+    # Fallback to "Total" if total is NULL
+    total_val <- if (!is.null(total)) total else "Total"
     return(length(import_hierarchy(hrcfiles, total)))
   } else {
     return(1)

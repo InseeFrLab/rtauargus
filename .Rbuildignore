@@ -20,3 +20,9 @@ tauargus_files/*
 ^_pkgdown_old\.yml$
 ^README\.html$
 ^renovate.json
+^bench_perf_improv_functions\.R$
+^export_sp\.txt$
+\.hrc$
+^hrc_loc$
+^hrc_off$
+^hrc_temp$
