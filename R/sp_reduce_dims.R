@@ -230,6 +230,8 @@ reduce_dims <- function(
     vec_sep = c("___","_XXX_","_YYY_", "_TTT_", "_UVW_"),
     verbose = FALSE
 ){
+  # Rq for later: using data.table may speed up the process in from_4_to_3_case_*
+  # for merging / filtering etc ?
 
   dfs <- as.data.frame(dfs)
 
@@ -579,10 +581,13 @@ split_tab <- function(res, var_fus, limit) {
 
   # data to stock
 
-  all_tot_stock <- list()
-  tabs2 <- list()
-  list_vars <- list()
-  list_alt_hrcs <- list()
+  # Instead of initializing flat lists that we grow iteratively using append() (which triggers expensive
+  # O(N^2) memory reallocation on every iteration), we temporarily accumulate nested lists here.
+  # Assigning sublists directly to indices (e.g., list[[t]] <- sublist) is an O(1) pointer assignment in R.
+  tabs_split         <- list()
+  alt_totcode_split  <- list()
+  vars_split         <- list()
+  hrcs_split         <- list()
 
   # loop for table to treat
 
@@ -613,7 +618,9 @@ split_tab <- function(res, var_fus, limit) {
                    })
 
     names(tabs) <- new_names
-    tabs2 <- append(tabs2, tabs)
+
+    # Store nested lists instead of iteratively flattening with append() inside the loop.
+    tabs_split[[t]] <- tabs
 
     # alt_totcode for tauargus
 
@@ -622,14 +629,18 @@ split_tab <- function(res, var_fus, limit) {
       totali <- setNames(list(totali), var_fus)
       totali <- c(totali, other_total)
       return(totali) }), new_names)
-    all_tot_stock <- append(all_tot_stock, liste_alt_tot)
+
+    # Store nested lists instead of iteratively flattening with append() inside the loop.
+    alt_totcode_split[[t]] <- liste_alt_tot
 
     # list of variables for the created tables
 
     var <- replicate(n, list(res$vars[[1]]))
     list_add <- replicate(n, list(res$vars[[1]]))
     names(list_add) <- new_names
-    list_vars <- append(list_vars, list_add)
+
+    # Store nested lists instead of iteratively flattening with append() inside the loop.
+    vars_split[[t]] <- list_add
 
     # remove hierarchies from the variable we split and naming it
 
@@ -643,9 +654,18 @@ split_tab <- function(res, var_fus, limit) {
       alt_hrcs <- replicate(n, hrc_e)
       names(alt_hrcs) <- new_names
 
-      list_alt_hrcs <- append(list_alt_hrcs, alt_hrcs)
+      # Store nested lists instead of iteratively flattening with append() inside the loop.
+      hrcs_split[[t]] <- alt_hrcs
     }
   }
+
+  # Flatten the nested lists into the original variable names in a single step after the loop.
+  # Using do.call(c, ...) instantly reconstructs a flat list and keeps internal names intact,
+  # completely bypassing the quadratic memory allocation cost of loop-level append() calls.
+  tabs2         <- if (length(tabs_split) > 0) do.call(c, tabs_split) else list()
+  all_tot_stock <- if (length(alt_totcode_split) > 0) do.call(c, alt_totcode_split) else list()
+  list_vars     <- if (length(vars_split) > 0) do.call(c, vars_split) else list()
+  list_alt_hrcs <- if (length(hrcs_split) > 0) do.call(c, hrcs_split) else list()
 
   # adding the names tables we created to the already existing tables
 
