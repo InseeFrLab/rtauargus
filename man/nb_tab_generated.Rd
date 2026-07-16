@@ -5,7 +5,16 @@
 \title{Calculate the number of tables generated when merging 3 variables
 in the transition from 5 to 3 dimensions}
 \usage{
-nb_tab_generated(v1, v2, v3 = NULL, v4 = NULL, hrcfiles = NULL, data = NULL)
+nb_tab_generated(
+  v1,
+  v2,
+  v3 = NULL,
+  v4 = NULL,
+  hrcfiles = NULL,
+  totcode = NULL,
+  data = NULL,
+  unique_mods = NULL
+)
 }
 \arguments{
 \item{v1}{first variable to be merged}

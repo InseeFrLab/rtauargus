@@ -5,7 +5,16 @@
 \title{Calculation of the table sizes generated a priori during the reduction of dimension
 from 4 or 5 dimensions to 3 dimensions}
 \usage{
-length_tabs(dfs, v1, v2, v3 = NULL, v4 = NULL, totcode, hrcfiles = NULL)
+length_tabs(
+  dfs,
+  v1,
+  v2,
+  v3 = NULL,
+  v4 = NULL,
+  totcode,
+  hrcfiles = NULL,
+  unique_mods = NULL
+)
 }
 \arguments{
 \item{dfs}{a data.frame
