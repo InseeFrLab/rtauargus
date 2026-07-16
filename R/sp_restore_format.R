@@ -104,13 +104,11 @@
 restore_format <- function(masq, res) {
 
   sep <- res$sep
-  sep_regex <- gsub("([+])", "\\\\\\1", sep)
-
-
 
   # Unique values from 'masq' (a list) are concatenated into a data frame
 
-  masq_liste_empilee <- unique(do.call("rbind",  unname(masq)))
+  # masq_liste_empilee <- unique(do.call("rbind",  unname(masq)))
+  masq_liste_empilee <- dplyr::distinct(dplyr::bind_rows(masq))
 
   if (is.character(res$fus_vars)) {
     # Case with 4 categorical variables
@@ -121,7 +119,7 @@ restore_format <- function(masq, res) {
 
     v1_v2 <- paste(v1, v2, sep = sep)
 
-    result <- separer4_3(masq_liste_empilee, v1, v2,v1_v2, sep_regex)
+    result <- separer4_3(masq_liste_empilee, v1, v2,v1_v2, sep)
     return(result)
   }
 
@@ -138,9 +136,9 @@ restore_format <- function(masq, res) {
     # Case of fusion between 3 different variables
     v3_v4 <- paste(v3, v4, sep = sep)
     # Split based on 'v1', 'v2', and 'v1_v2' using 'separer4_3' function
-    split1 <- separer4_3(masq_liste_empilee, v1, v2, v1_v2, sep_regex)
+    split1 <- separer4_3(masq_liste_empilee, v1, v2, v1_v2, sep)
     # Further split based on 'v3', 'v4', and 'v3_v4'
-    result <- separer4_3(split1, v3, v4, v3_v4, sep_regex)
+    result <- separer4_3(split1, v3, v4, v3_v4, sep)
 
   } else {
     # Case of fusion with an already fused variable
@@ -148,10 +146,10 @@ restore_format <- function(masq, res) {
 
     if(v1_v2 == v3){
       # Split based on 'v1', 'v2', and 'v4' using 'separer5_3' function
-      result<-separer5_3(masq_liste_empilee, v1,v2, v4, v3_v4, sep_regex)
+      result<-separer5_3(masq_liste_empilee, v1,v2, v4, v3_v4, sep)
     }else{
       # Split based on 'v1', 'v2', and 'v3' using 'separer5_3' function
-      result<-separer5_3(masq_liste_empilee, v1,v2,v3, v3_v4, sep_regex)
+      result<-separer5_3(masq_liste_empilee, v1,v2,v3, v3_v4, sep)
 
     }
 
@@ -163,11 +161,23 @@ restore_format <- function(masq, res) {
 
 
 # Function for splitting the merged variable v1_v2_v3 into v1, v2, and v3
-separer5_3 <- function(df, v1, v2, v3,v3_v4, sep_regex) {
-  splits <- strsplit(df[[v3_v4]], split = sep_regex)
-  df[[v3]] <- sapply(splits, `[`, 1)
-  df[[v1]] <- sapply(splits, `[`, 2)
-  df[[v2]] <- sapply(splits, `[`, 3)
+separer5_3 <- function(df, v1, v2, v3,v3_v4, sep) {
+  # splits <- strsplit(df[[v3_v4]], split = sep_regex)
+
+  # fixed = TRUE évite d'appeler le moteur d'expressions régulières (beaucoup plus rapide)
+  splits <- strsplit(df[[v3_v4]], split = sep, fixed = TRUE)
+
+  # df[[v3]] <- sapply(splits, `[`, 1)
+  # df[[v1]] <- sapply(splits, `[`, 2)
+  # df[[v2]] <- sapply(splits, `[`, 3)
+  # df[[v3_v4]] <- NULL
+
+  # Conversion directe de la liste en matrice en C (évite l'overhead des appels de fonction R)
+  mat <- matrix(unlist(splits, use.names = FALSE), ncol = 3, byrow = TRUE)
+
+  df[[v3]] <- mat[, 1]
+  df[[v1]] <- mat[, 2]
+  df[[v2]] <- mat[, 3]
   df[[v3_v4]] <- NULL
 
   # Réorganiser les colonnes
@@ -179,10 +189,19 @@ separer5_3 <- function(df, v1, v2, v3,v3_v4, sep_regex) {
 
 
 # Function for splitting the merged variable v1_v2 into v1 and v2
-separer4_3 <- function(df, v1, v2, v1_v2, sep_regex) {
-  splits <- strsplit(df[[v1_v2]], split = sep_regex)
-  df[[v1]] <- sapply(splits, `[`, 1)
-  df[[v2]] <- sapply(splits, `[`, 2)
+separer4_3 <- function(df, v1, v2, v1_v2, sep) {
+  # splits <- strsplit(df[[v1_v2]], split = sep_regex)
+
+  splits <- strsplit(df[[v1_v2]], split = sep, fixed = TRUE)
+  #
+  # df[[v1]] <- sapply(splits, `[`, 1)
+  # df[[v2]] <- sapply(splits, `[`, 2)
+  # df[[v1_v2]] <- NULL
+
+  mat <- matrix(unlist(splits, use.names = FALSE), ncol = 2, byrow = TRUE)
+
+  df[[v1]] <- mat[, 1]
+  df[[v2]] <- mat[, 2]
   df[[v1_v2]] <- NULL
 
   # Réorganiser les colonnes
