@@ -901,24 +901,50 @@ length_tabs_5_3_var <- function(dfs, v1, v2, v3, totcode, hrcfiles = NULL, uniqu
     n_mod_v2 <- length(unique_mods[[v2]])
     n_mod_v3 <- length(unique_mods[[v3]])
 
-    # nb_rows <- c(
-    #   1 + (n_mod_v3 - 1) * n_mod_v1,
-    #   1 + n_mod_v3 * (n_mod_v1 - 1),
+    # RATIONALE FOR THE 14-TABLE FORMULA (e.g., n_mod_v1=3, n_mod_v2=4, n_mod_v3=3):
+    # Merging 3 flat variables v1, v2, v3 in a 5D-to-3D reduction is a nested process:
     #
-    #   rep(c(1 + (n_mod_v3 - 1) * n_mod_v2,
-    #         1 + n_mod_v3 * (n_mod_v2 - 1))
-    #       , n_mod_v1),
+    # Step 1: Merges v1 and v2, generating 2 intermediate 4D tables (tab1 and tab2).
+    #   - tab1: v1 is the primary split variable. Its custom hierarchy has:
+    #           * 1 Root Split (total "Total_Total" cut into v1 level 1 children)
+    #           * (n_mod_v1 - 1) Intermediate Splits (v1 node cut into v2 children)
+    #   - tab2: v2 is the primary split variable. Its custom hierarchy has:
+    #           * 1 Root Split (total "Total_Total" cut into v2 level 1 children)
+    #           * (n_mod_v2 - 1) Intermediate Splits (v2 node cut into v1 children)
     #
-    #   rep(c(1 + (n_mod_v3 - 1) * n_mod_v1,
-    #         1 + n_mod_v3 * (n_mod_v1 - 1))
-    #       , n_mod_v2 - 1)
-    # )
-
-    # Corrected formula
+    # Step 2: Merges the newly hierarchical V1_V2 with v3 using 'from_4_to_3_case_1_hr'.
+    # Every single split from Step 1 (both Root and Intermediate splits) is further
+    # split and crossed with v3, generating TWO 3D tables per split.
+    #
+    # Summing all generated tables:
+    #   - From tab1:
+    #     * 1 pair from the Root Split (sizes based on v1 and v3)
+    #     * (n_mod_v1 - 1) pairs from the Intermediate Splits (sizes based on v2 and v3)
+    #   - From tab2:
+    #     * 1 pair from the Root Split (sizes based on v2 and v3)
+    #     * (n_mod_v2 - 1) pairs from the Intermediate Splits (sizes based on v1 and v3)
+    #
+    # Grouping these symmetrically (which yields the original package's formula):
+    #   - Root Split of tab1 + Intermediate Splits of tab2 (both based on v1 & v3)
+    #     Total splits = 1 + (n_mod_v2 - 1) = n_mod_v2 splits (2 * n_mod_v2 tables).
+    #   - Root Split of tab2 + Intermediate Splits of tab1 (both based on v2 & v3)
+    #     Total splits = 1 + (n_mod_v1 - 1) = n_mod_v1 splits (2 * n_mod_v1 tables).
     nb_rows <- c(
+      # Standalone: 1 pair of tables from tab1's Root Split (sizes based on v1 and v3)
+      1 + (n_mod_v3 - 1) * n_mod_v1,
+      1 + n_mod_v3 * (n_mod_v1 - 1),
+
+      # Rep 1: n_mod_v1 pairs of tables representing:
+      #   - (n_mod_v1 - 1) Intermediate Splits from tab1
+      #   - 1 Root Split from tab2
+      # (All of these have sizes based on v2 and v3)
       rep(c(1 + (n_mod_v3 - 1) * n_mod_v2,
             1 + n_mod_v3 * (n_mod_v2 - 1)),
-          times = n_mod_v1 - 1),
+          times = n_mod_v1),
+
+      # Rep 2: (n_mod_v2 - 1) pairs of tables representing:
+      #   - (n_mod_v2 - 1) Intermediate Splits from tab2
+      # (All of these have sizes based on v1 and v3)
       rep(c(1 + (n_mod_v3 - 1) * n_mod_v1,
             1 + n_mod_v3 * (n_mod_v1 - 1)),
           times = n_mod_v2 - 1)
@@ -1072,18 +1098,17 @@ nb_tab_generated <- function(
       level_v1 <- import_hierarchy(hrcfiles[[v1]], totcode[[v1]])
       level_v2 <- import_hierarchy(hrcfiles[[v2]], totcode[[v2]])
 
-      # Store the sum of nodes of v1_v2 for each table
-      # We consider all possible combinations between v1 and v2
-      # => represents the tables created during the creation of v1_v2 in the 5->4 step
+      # ALGEBRAIC SIMPLIFICATION JUSTIFICATION:
+      # The original nested sapply loops computed:
+      #   sum_{i=1}^{L1} [ sum_{j=1}^{L2} ( length(level_v1[[i]]) + length(level_v2[[j]]) ) ]
+      # By linearity of summation, this can be distributed as:
+      #   L2 * sum_{i=1}^{L1} length(level_v1[[i]]) + L1 * sum_{j=1}^{L2} length(level_v2[[j]])
+      # Where L1 = length(level_v1) and L2 = length(level_v2).
+      # This removes all nested loops and executes instantaneously.
+      len1 <- sapply(level_v1, length)
+      len2 <- sapply(level_v2, length)
 
-      # For each of these tables, there are two possible hierarchies
-      # one with the totals of v1, and the other with the totals of v2
-      # the number of nodes is equal to their number of modalities
-      nb_noeuds_var <- sum(sapply(1:length(level_v1), function(i) {
-        sum(sapply(1:length(level_v2), function(j) {
-          length(level_v1[[i]]) + length(level_v2[[j]])
-        }))
-      }))
+      nb_noeuds_var <- length(level_v2) * sum(len1) + length(level_v1) * sum(len2)
 
       # 2 non-hierarchical variables merged
     } else if (is.null(hrcfiles) | !(v1 %in% names(hrcfiles)) & !(v2 %in% names(hrcfiles))) {
@@ -1103,15 +1128,15 @@ nb_tab_generated <- function(
       # Analysis of the hierarchy of var_hier
       level_var_hier <- import_hierarchy(hrcfiles[[var_hier]], totcode[[var_hier]])
 
-      # We consider all possible combinations between v1 and v2
-      # => represents the tables created during the creation of v1_v2 in the 5->4 step
+      # ALGEBRAIC SIMPLIFICATION JUSTIFICATION:
+      # The original single sapply computed:
+      #   sum_{i=1}^{L_hier} ( length(level_var_hier[[i]]) + mod_var_non_hier )
+      # Since mod_var_non_hier is a constant across all iterations, this is equivalent to:
+      #   sum_{i=1}^{L_hier} length(level_var_hier[[i]]) + L_hier * mod_var_non_hier
+      # Where L_hier = length(level_var_hier).
+      len_hier <- sapply(level_var_hier, length)
 
-      # For each of these tables, there are two possible hierarchies
-      # one with the totals of v1, and the other with the totals of v2
-      # the number of nodes is equal to their number of modalities
-      nb_noeuds_var <- sum(sapply(1:length(level_var_hier), function(i) {
-        length(level_var_hier[[i]]) + mod_var_non_hier
-      }))
+      nb_noeuds_var <- sum(len_hier) + length(level_var_hier) * mod_var_non_hier
     }
 
     # nb_nodes corresponds to the number of tables that need to be created

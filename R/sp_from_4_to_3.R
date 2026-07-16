@@ -52,15 +52,16 @@ choose_var_priority_non_hierarchical <- function(dfs,totcode,hrcfiles){
   }
 }
 
+# Returns the variable with the fewest modalities
+smallest_mod <- function(dfs) {
+  v <- sapply(dfs, function(col) length(unique(col)))
+  names(which.min(v))
+}
+
 # Returns the variable with the most modalities
 bigger_mod <- function(dfs) {
-  v <- list()
-  for (colonne in dfs) {
-    v <- append(v, length(unique(colonne)))
-  }
-  index_bigger_mod <- which.max(v)
-  name_bigger_mod <- names(dfs)[index_bigger_mod]
-  return(name_bigger_mod)
+  v <- sapply(dfs, function(col) length(unique(col)))
+  names(which.max(v))
 }
 
 # Choose a categorical variable

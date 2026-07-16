@@ -93,16 +93,6 @@ from_4_to_3_case_2_hr <- function(
   # Hierarchy Reduction #
   ###########################
 
-  # fonc_liste_df_4_var_1_non_hr <- function(codes_split,dfs){
-  #   lapply(
-  #     codes_split_1,
-  #     function(codes){
-  #       res <- dfs %>%
-  #         filter(dfs[[v1]] %in% codes)
-  #     }
-  #   )
-  # }
-
   liste_df_4_var_1_hr <- lapply(
     codes_split_1,
     function(codes){
@@ -110,6 +100,29 @@ from_4_to_3_case_2_hr <- function(
         filter(dfs[[v1]] %in% codes)
     }
   )
+
+  # ----- Remove empty data frames to avoid downstream errors -----
+  # Some hierarchy nodes may produce empty subsets when the data is sparse.
+  # Passing an empty data frame to `from_4_to_3_case_1_hr` eventually causes
+  # `write_hrc2` to fail because it cannot build a valid hierarchy from 0 rows.
+  # We filter them out here, keeping only non-empty tables.
+  is_empty <- vapply(liste_df_4_var_1_hr, function(df) nrow(df) == 0, logical(1))
+  valid_idx <- which(!is_empty)
+
+  # If all tables are empty, return an empty result early
+  if (length(valid_idx) == 0) {
+    return(list(
+      tabs = list(),
+      hrcs = list(),
+      alt_tot = list(),
+      vars = c(v1, v2)
+    ))
+  }
+
+  # Keep only non-empty tables and corresponding hierarchy nodes
+  liste_df_4_var_1_hr <- liste_df_4_var_1_hr[valid_idx]
+  codes_split_1 <- codes_split_1[valid_idx]   # important for correct indexing inside call_4_to_3_1_hr
+  # -----------------------------------------------------------------
 
   # We now have data.frames with 1 hierarchical variables (v1)
   # therefore we can apply the dedicated method

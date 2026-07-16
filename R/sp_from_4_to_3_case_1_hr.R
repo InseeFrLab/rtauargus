@@ -102,6 +102,26 @@ from_4_to_3_case_1_hr <- function(
         filter(dfs[[v2]] %in% codes)
     }
   )
+
+  # ----- Remove empty data frames to avoid downstream errors -----
+  # Same reason as in from_4_to_3_case_2_hr: an empty table will break
+  # the hierarchy writing in from_4_to_3_case_0_hr.
+  is_empty <- vapply(liste_df_4_var_0_hr, function(df) nrow(df) == 0, logical(1))
+  valid_idx <- which(!is_empty)
+
+  if (length(valid_idx) == 0) {
+    return(list(
+      tabs = list(),
+      hrcs = list(),
+      alt_tot = list(),
+      vars = c(v1, v2)
+    ))
+  }
+
+  liste_df_4_var_0_hr <- liste_df_4_var_0_hr[valid_idx]
+  codes_split <- codes_split[valid_idx]
+  # -----------------------------------------------------------------
+
   # We now have data.frames with 0 hierarchical variables
   # therefore we can apply the dedicated method
 

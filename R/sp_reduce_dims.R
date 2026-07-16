@@ -313,6 +313,12 @@ reduce_dims <- function(
     }
   }
 
+  # ============================================================================
+  # Safety initialization to prevent the latent undefined variable bug
+  # in 'smart' modes or when merge variables are enforced.
+  # ============================================================================
+  maximize_nb_tabs <- FALSE
+
   # clear the hierarchy cache at the very beginning of the dimension reduction process
   if (exists(".hrc_cache")) {
     rm(list = ls(envir = .hrc_cache), envir = .hrc_cache)
@@ -328,7 +334,16 @@ reduce_dims <- function(
       v1 <- vars_to_merge[[1]]
       v2 <- vars_to_merge[[2]]
       v3 <- vars_to_merge[[3]]
-      v4 <- paste(v1, v2, sep = sep)
+
+      # Predict the actual merged variable name, accounting for possible swap
+      # in from_4_to_3 (non-hierarchical variable always comes first).
+      non_hier_vars <- setdiff(names(totcode), names(hrcfiles))
+      if (v1 %in% names(hrcfiles) && v2 %in% non_hier_vars) {
+        # v2 is non-hierarchical, v1 is hierarchical => swap
+        v4 <- paste(v2, v1, sep = sep)
+      } else {
+        v4 <- paste(v1, v2, sep = sep)
+      }
 
     } else if (length(vars_to_merge) == 4) {
       v1 <- vars_to_merge[[1]]
