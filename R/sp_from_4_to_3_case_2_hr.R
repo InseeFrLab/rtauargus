@@ -93,23 +93,32 @@ from_4_to_3_case_2_hr <- function(
   # Hierarchy Reduction #
   ###########################
 
-  # liste_df_4_var_1_hr <- lapply(
-  #   codes_split_1,
-  #   function(codes){
-  #     res <- dfs %>%
-  #       filter(dfs[[v1]] %in% codes)
-  #   }
-  # )
+  # -----------------------------------------------------------------------------
+  # OPTIMIZATION: Index-based pre-grouping with physical row-order sorting.
+  #
+  # Goal:
+  #   Extract sub-dataframes for overlapping hierarchy nodes of variable v1.
+  #
+  # Baseline implementation:
+  #   Originally, it scanned the v1 column iteratively inside a lapply loop:
+  #   lapply(codes_split_1, function(codes) dfs[dfs[[v1]] %in% codes, , drop = FALSE])
+  #   This performed redundant character matching operations over large datasets.
+  #
+  # Why the new implementation is faster:
+  #   Pre-indexing physical coordinates for unique v1 keys via split() keeps
+  #   the subsequent lookups entirely in integer space. Iteratively assembling
+  #   and indexing integer vectors is processed at the C level, saving CPU cycles.
+  #
+  # Why it yields the exact same result:
+  #   Applying sort() on combined indices restores the original row sequence,
+  #   ensuring complete alignment with the baseline's row sequence.
+  # -----------------------------------------------------------------------------
+  row_indices <- split(seq_len(nrow(dfs)), dfs[[v1]])
 
-  # PERFORMANCE OPTIMIZATION: Use base R bracket subsetting instead of dplyr::filter
-  # inside this tight lapply loop. This bypasses tidy-evaluation and S3 method
-  # dispatch overhead, which accumulates heavily over hundreds of hierarchy split nodes.
-  liste_df_4_var_1_hr <- lapply(
-    codes_split_1,
-    function(codes){
-      dfs[dfs[[v1]] %in% codes, , drop = FALSE]
-    }
-  )
+  liste_df_4_var_1_hr <- lapply(codes_split_1, function(codes) {
+    idx <- sort(unlist(row_indices[codes], use.names = FALSE))
+    dfs[idx, , drop = FALSE]
+  })
 
   # ----- Remove empty data frames to avoid downstream errors -----
   # Some hierarchy nodes may produce empty subsets when the data is sparse.

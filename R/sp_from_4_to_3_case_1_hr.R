@@ -95,23 +95,37 @@ from_4_to_3_case_1_hr <- function(
   # Reduction of hierarchy #
   ###########################
 
-  # liste_df_4_var_0_hr <- lapply(
-  #   codes_split,
-  #   function(codes){
-  #     res <- dfs %>%
-  #       filter(dfs[[v2]] %in% codes)
-  #   }
-  # )
+  # -----------------------------------------------------------------------------
+  # OPTIMIZATION: Index-based pre-grouping with physical row-order sorting.
+  #
+  # Goal:
+  #   Extract sub-dataframes for each node of the hierarchy split codes.
+  #
+  # Baseline implementation:
+  #   Originally, this block used %in% inside an lapply loop to scan column v2:
+  #   lapply(codes_split, function(codes) dfs[dfs[[v2]] %in% codes, , drop = FALSE])
+  #   This triggered O(K * N) string scans (K = split nodes, N = rows), which is
+  #   computationally heavy for large tables.
+  #
+  # Why the new implementation is faster:
+  #   We use R's highly optimized split() function on seq_len(nrow(dfs)) by dfs[[v2]]
+  #   exactly once (O(N) complexity). This pre-maps physical row positions as
+  #   integer vectors. Inside the loop, we retrieve and concatenate these pre-mapped
+  #   indices. Operating on small integer vectors avoids repeating expensive string
+  #   scans on millions of records.
+  #
+  # Why it yields the exact same result:
+  #   Wrapping the unlisted indices with sort() guarantees that row positions are
+  #   re-sorted in their original sequential order of appearance. This produces
+  #   outputs that are 100% identical in values and row order compared to the
+  #   baseline %in% behavior.
+  # -----------------------------------------------------------------------------
+  row_indices <- split(seq_len(nrow(dfs)), dfs[[v2]])
 
-  # PERFORMANCE OPTIMIZATION: Use base R bracket subsetting instead of dplyr::filter
-  # inside this tight lapply loop. This bypasses tidy-evaluation and S3 method
-  # dispatch overhead, which accumulates heavily over hundreds of hierarchy split nodes.
-  liste_df_4_var_0_hr <- lapply(
-    codes_split,
-    function(codes){
-      dfs[dfs[[v2]] %in% codes, , drop = FALSE]
-    }
-  )
+  liste_df_4_var_0_hr <- lapply(codes_split, function(codes) {
+    idx <- sort(unlist(row_indices[codes], use.names = FALSE))
+    dfs[idx, , drop = FALSE]
+  })
 
   # ----- Remove empty data frames to avoid downstream errors -----
   # Same reason as in from_4_to_3_case_2_hr: an empty table will break

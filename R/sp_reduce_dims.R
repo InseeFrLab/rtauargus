@@ -610,21 +610,31 @@ split_tab <- function(res, var_fus, limit) {
     # Names use for tauargus
     new_names <- lapply(1:n, function(i) paste(t, i, sep = "_"))
 
-    # Create tabs by filtering
-    # tabs <- lapply(codes_split,
-    #                function(codes) {
-    #                  res <- res$tabs[[t]] %>%
-    #                    filter(res$tabs[[t]][[var_fus]] %in% codes)
-    #                })
+    # -----------------------------------------------------------------------------
+    # OPTIMIZATION: Fast integer indexing for secondary table splitting.
+    #
+    # Goal:
+    #   Split a table into sub-tables when its size exceeds the specified row limit.
+    #
+    # Baseline implementation:
+    #   Filtered the target table's var_fus column with %in% inside lapply:
+    #   lapply(codes_split, function(codes) df_t[df_t[[var_fus]] %in% codes, , drop = FALSE])
+    #
+    # Why the new implementation is faster:
+    #   Grouping row indices by var_fus using split() transforms subsequent table
+    #   slicing into a direct integer lookup. This avoids repeated evaluation
+    #   of the var_fus character vectors on tables being split.
+    #
+    # Why it yields the exact same result:
+    #   Applying sort() on the gathered indices matches the original record order.
+    # -----------------------------------------------------------------------------
+    df_t <- res$tabs[[t]]
+    row_indices <- split(seq_len(nrow(df_t)), df_t[[var_fus]])
 
-    # PERFORMANCE OPTIMIZATION: Use base R bracket subsetting instead of dplyr::filter
-    # inside this tight lapply loop to bypass tidy evaluation overhead on large tables
-    # being split. Assigning the sub-table to a local variable avoids repeated list indexing.
-    tabs <- lapply(codes_split,
-                   function(codes) {
-                     df_t <- res$tabs[[t]]
-                     df_t[df_t[[var_fus]] %in% codes, , drop = FALSE]
-                   })
+    tabs <- lapply(codes_split, function(codes) {
+      idx <- sort(unlist(row_indices[codes], use.names = FALSE))
+      df_t[idx, , drop = FALSE]
+    })
 
     names(tabs) <- new_names
 

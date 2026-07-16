@@ -16,11 +16,11 @@ nb_nodes <- function(hrcfiles = NULL, v = NULL, hrc_name = TRUE,
   if (hrc_name && !is.null(hrcfiles) && v %in% names(hrcfiles)) {
     # Fallback to "Total" if totcode is NULL or if v is not present in totcode
     total_val <- if (!is.null(totcode) && v %in% names(totcode)) totcode[[v]] else "Total"
-    return(length(import_hierarchy(hrcfiles[[v]], totcode[[v]])))
+    return(length(import_hierarchy(hrcfiles[[v]], total_val)))
   } else if (!hrc_name && !is.null(hrcfiles)) {
     # Fallback to "Total" if total is NULL
     total_val <- if (!is.null(total)) total else "Total"
-    return(length(import_hierarchy(hrcfiles, total)))
+    return(length(import_hierarchy(hrcfiles, total_val)))
   } else {
     return(1)
   }
