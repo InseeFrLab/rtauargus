@@ -714,7 +714,7 @@ chose_sep <- function(
   while (i <= n_sep & is_in_mod) {
     i <- i + 1
     sep <- liste_sep[i]
-    is_in_mod = sum(unlist(lapply(liste_mod, function(x) stringr::str_detect(x, sep)))) > 0
+    is_in_mod = any(stringr::str_detect(liste_mod, stringr::fixed(sep)))
   }
 
   # We have a working separator!
