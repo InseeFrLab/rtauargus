@@ -771,27 +771,10 @@ length_tabs_5_3_var <- function(dfs, v1, v2, v3, totcode, hrcfiles = NULL, uniqu
   # Case of at least one hierarchical variable
   if (length(setdiff(names(hrcfiles), c(v1, v2, v3))) != length(hrcfiles)) {
 
-    # WARNING
-    # This case is a work in progress (WIP)
-    # Only the different lengths of modalities are calculated
-    # But we do not know specifically the length of table i, for example
-    # However, this is not currently critical
-    # All modalities appear the correct number of times, but not in the correct order
-
-    # Transition from 5 dimensions to 4 dimensions
-
-    # List and then unlist the results; ifelse returns all nodes instead of just the first one.
-    # level_v1 <- unlist(ifelse(v1 %in% names(hrcfiles),
-    #                           list(import_hierarchy(hrcfiles[[v1]])),
-    #                           list(list(unique(dfs[[v1]])))),
-    #                    recursive = FALSE)
-    #
-    # level_v2 <- unlist(ifelse(v2 %in% names(hrcfiles),
-    #                           list(import_hierarchy(hrcfiles[[v2]])),
-    #                           list(list(unique(dfs[[v2]])))),
-    #                    recursive = FALSE)
-
-    # Replaced ifelse/unlist with a direct if/else block.
+    # --- Load hierarchy levels ---
+    # For each variable, if it has an HRC file, use import_hierarchy to get
+    # the list of parent-child node sets; otherwise treat it as a flat list
+    # containing all its unique values (a single "node").
     if (v1 %in% names(hrcfiles)) {
       level_v1 <- import_hierarchy(hrcfiles[[v1]], totcode[[v1]])
     } else {
@@ -804,20 +787,14 @@ length_tabs_5_3_var <- function(dfs, v1, v2, v3, totcode, hrcfiles = NULL, uniqu
       level_v2 <- list(unique_mods[[v2]])
     }
 
-    # Swap level_v1 and level_v2 if v2 is not hierarchical but v1 is (to maintain order).
+    # Ensure v1 is non-hierarchical if only one of {v1, v2} has a hierarchy.
+    # The merging algorithm always places the non-hierarchical variable first
+    # for the 4‑D to 3‑D step, so we swap if necessary.
     if (!(v2 %in% names(hrcfiles)) & (v1 %in% names(hrcfiles))) {
       tmp <- level_v1
       level_v1 <- level_v2
       level_v2 <- tmp
     }
-
-    # Transition from 4 dimensions to 3 dimensions
-
-    # List and then unlist the results; ifelse returns all nodes instead of just the first one.
-    # level_v3 <- unlist(ifelse(v3 %in% names(hrcfiles),
-    #                           list(import_hierarchy(hrcfiles[[v3]])),
-    #                           list(list(unique(dfs[[v3]])))),
-    #                    recursive = FALSE)
 
     if (v3 %in% names(hrcfiles)) {
       level_v3 <- import_hierarchy(hrcfiles[[v3]], totcode[[v3]])
@@ -825,37 +802,7 @@ length_tabs_5_3_var <- function(dfs, v1, v2, v3, totcode, hrcfiles = NULL, uniqu
       level_v3 <- list(unique_mods[[v3]])
     }
 
-
-    # nb_rows <- lapply(1:length(level_v1), function(i) {
-    #
-    #   lapply(1:length(level_v3), function(k) {
-    #
-    #     c( (length(level_v1[[i]]) - 1) * length(level_v3[[k]]) + 1,
-    #        length(level_v1[[i]]) * (length(level_v3[[k]]) - 1) + 1
-    #     )
-    #   })
-    #
-    #   lapply(1:length(level_v2), function(j) {
-    #     lapply(1:length(level_v3), function(k) {
-    #
-    #       c(
-    #         rep(c((length(level_v2[[j]]) - 1) * length(level_v3[[k]]) + 1,
-    #               length(level_v2[[j]]) * (length(level_v3[[k]]) - 1) + 1
-    #         ),
-    #         times = length(level_v1[[i]])
-    #         ),
-    #
-    #         rep(c((length(level_v1[[i]]) - 1) * length(level_v3[[k]]) + 1,
-    #               length(level_v1[[i]]) * (length(level_v3[[k]]) - 1) + 1
-    #         ),
-    #         times = length(level_v2[[j]])
-    #         )
-    #       )
-    #     })
-    #   })
-    # })
-
-    # Replaced nested lapply structures with sequential indexing and preallocated lists.
+    # Number of modalities within each hierarchy node
     len1 <- sapply(level_v1, length)
     len2 <- sapply(level_v2, length)
     len3 <- sapply(level_v3, length)
@@ -863,38 +810,121 @@ length_tabs_5_3_var <- function(dfs, v1, v2, v3, totcode, hrcfiles = NULL, uniqu
     L2 <- length(len2)
     L3 <- length(len3)
 
-    nb_rows_list <- list()
-    idx <- 1
-    for (i in seq_len(L1)) {
-      val1_ik <- (len1[i] - 1) * len3 + 1
-      val2_ik <- len1[i] * (len3 - 1) + 1
-      part1_i <- as.vector(rbind(val1_ik, val2_ik))
+    # nb_rows_list <- list()
+    # idx <- 1
+    # for (i in seq_len(L1)) {
+    #
+    #   part2_i_list <- vector("list", L2)
+    #   for (j in seq_len(L2)) {
+    #     val1_jk <- (len2[j] - 1) * len3 + 1
+    #     val2_jk <- len2[j] * (len3 - 1) + 1
+    #     A_jk <- rbind(val1_jk, val2_jk)
+    #
+    #     val1_ik_rep <- (len1[i] - 1) * len3 + 1
+    #     val2_ik_rep <- len1[i] * (len3 - 1) + 1
+    #     B_ik <- rbind(val1_ik_rep, val2_ik_rep)
+    #
+    #     # Fully vectorized list generation by replicating matrix rows using integer index replication.
+    #     # This completely removes the slow lapply(seq_len(L3), function(k) ...) inner loop.
+    #     A_jk_rep <- A_jk[rep(c(1, 2), times = len1[i]), , drop = FALSE]
+    #     B_ik_rep <- B_ik[rep(c(1, 2), times = len2[j]), , drop = FALSE]
+    #     part2_i_list[[j]] <- as.vector(rbind(A_jk_rep, B_ik_rep))
+    #   }
+    #   # Rq : Fix an issue, the originale code had a bug since the functions calculated 2 items
+    #   # but returned only a single intem
+    #   nb_rows_list[[idx]] <- unlist(part2_i_list)
+    #   idx <- idx + 1
+    # }
+    # nb_rows <- unlist(nb_rows_list)
 
-      part2_i_list <- vector("list", L2)
-      for (j in seq_len(L2)) {
-        val1_jk <- (len2[j] - 1) * len3 + 1
-        val2_jk <- len2[j] * (len3 - 1) + 1
-        A_jk <- rbind(val1_jk, val2_jk)
+    # --- Build all (i, j) pairs ---
+    # Each pair corresponds to a combination of a node from level_v1 (i)
+    # and a node from level_v2 (j). These represent the tables created during
+    # the 5‑D to 4‑D merging step.
+    grid_ij <- expand.grid(i = seq_len(L1), j = seq_len(L2))
+    i <- grid_ij$i
+    j <- grid_ij$j
 
-        val1_ik_rep <- (len1[i] - 1) * len3 + 1
-        val2_ik_rep <- len1[i] * (len3 - 1) + 1
-        B_ik <- rbind(val1_ik_rep, val2_ik_rep)
+    len1_i <- len1[i]   # len1 for each pair
+    len2_j <- len2[j]   # len2 for each pair
 
-        # Fully vectorized list generation by replicating matrix rows using integer index replication.
-        # This completely removes the slow lapply(seq_len(L3), function(k) ...) inner loop.
-        A_jk_rep <- A_jk[rep(c(1, 2), times = len1[i]), , drop = FALSE]
-        B_ik_rep <- B_ik[rep(c(1, 2), times = len2[j]), , drop = FALSE]
-        part2_i_list[[j]] <- as.vector(rbind(A_jk_rep, B_ik_rep))
-      }
-      # Rq : Fix an issue, the originale code had a bug since the functions calculated 2 items
-      # but returned only a single intem
-      nb_rows_list[[idx]] <- c(part1_i, unlist(part2_i_list))
-      idx <- idx + 1
+    # --- Calculate the four pattern matrices ---
+    # These formulas come from the original nested lapply structure:
+    #   For a given (i, j, k), the original code generates four numbers:
+    #     (len2_j - 1) * len3[k] + 1
+    #     len2_j * (len3[k] - 1) + 1
+    #     (len1_i - 1) * len3[k] + 1
+    #     len1_i * (len3[k] - 1) + 1
+    # We compute them all at once for every (i, j) and every k using
+    # matrix multiplication (%*%) to obtain matrices of size (n_pairs, L3).
+    n_pairs <- length(i)
+
+    # Pattern A: based on v2 & v3
+    A1 <- (len2_j - 1) %*% t(len3) + 1      # (n_pairs x L3)
+    A2 <-  len2_j      %*% t(len3 - 1) + 1  # (n_pairs x L3)
+
+    # Pattern B: based on v1 & v3
+    B1 <- (len1_i - 1) %*% t(len3) + 1
+    B2 <-  len1_i      %*% t(len3 - 1) + 1
+
+    # --- Replicate rows according to the original repetition logic ---
+    # In the original algorithm, for a given (i, j):
+    #   - A1 and A2 are repeated len1_i times (once for each element of the v1 node)
+    #   - B1 and B2 are repeated len2_j times (once for each element of the v2 node)
+    # They are then interleaved column‑wise (i.e., by k) in the order:
+    #   A1, A2, B1, B2, A1, A2, B1, B2, ... (for each k)
+    # Here we stack all repetitions row‑wise first, then interleave by rows.
+
+    # Indices to repeat each pair's row in A1/A2 len1_i times
+    idx_A <- rep(seq_len(n_pairs), times = len1_i)
+    # Indices to repeat each pair's row in B1/B2 len2_j times
+    idx_B <- rep(seq_len(n_pairs), times = len2_j)
+
+    # Stack the matrices with the appropriate row repetitions
+    stack_A1 <- A1[idx_A, , drop = FALSE]
+    stack_A2 <- A2[idx_A, , drop = FALSE]
+    stack_B1 <- B1[idx_B, , drop = FALSE]
+    stack_B2 <- B2[idx_B, , drop = FALSE]
+
+    # --- Interleave the stacked rows in the correct order ---
+    # For each pair (i, j), we must place:
+    #   len1_i rows of A1, len1_i rows of A2, len2_j rows of B1, len2_j rows of B2.
+    # This small loop iterates only over n_pairs, not over the data size,
+    # so it remains negligible while keeping the code readable.
+    total_rows <- nrow(stack_A1) + nrow(stack_A2) + nrow(stack_B1) + nrow(stack_B2)
+    res_mat <- matrix(0, nrow = total_rows, ncol = L3)
+
+    pos <- 1
+    start_A <- 1   # current position in stack_A1 / stack_A2
+    start_B <- 1   # current position in stack_B1 / stack_B2
+    for (k in seq_len(n_pairs)) {
+      rA <- len1_i[k]   # number of rows for this pair from A1/A2
+      rB <- len2_j[k]   # number of rows for this pair from B1/B2
+
+      # Copy the rA rows of A1, then rA rows of A2
+      res_mat[pos:(pos + rA - 1), ] <- stack_A1[start_A:(start_A + rA - 1), ]
+      pos <- pos + rA
+      res_mat[pos:(pos + rA - 1), ] <- stack_A2[start_A:(start_A + rA - 1), ]
+      pos <- pos + rA
+
+      # Copy the rB rows of B1, then rB rows of B2
+      res_mat[pos:(pos + rB - 1), ] <- stack_B1[start_B:(start_B + rB - 1), ]
+      pos <- pos + rB
+      res_mat[pos:(pos + rB - 1), ] <- stack_B2[start_B:(start_B + rB - 1), ]
+      pos <- pos + rB
+
+      start_A <- start_A + rA
+      start_B <- start_B + rB
     }
-    nb_rows <- unlist(nb_rows_list)
 
-    # Case of 3 non-hierarchical variables: exact result (the length of table i is known)
+    # Flatten the matrix column‑wise (by k) to obtain the final vector of sizes
+    nb_rows <- as.vector(t(res_mat))
   } else {
+    # -------------------------------------------------------------------
+    # 3 non‑hierarchical variables: exact result (the length of table i is known)
+    # The formulas below come from the analytical derivation for flat variables.
+    # They are already fully vectorized and correctly predict every table size.
+    # -------------------------------------------------------------------
 
     # Fetch unique modality counts directly from unique_mods list rather than executing raw unique() calls.
     n_mod_v1 <- length(unique_mods[[v1]])

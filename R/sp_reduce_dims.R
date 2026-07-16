@@ -1,3 +1,8 @@
+# Utility function to clear hrc cache
+clear_hrc_cache <- function() {
+  rm(list = ls(envir = .hrc_cache, all.names = TRUE), envir = .hrc_cache)
+}
+
 #' General function that selects the appropriate separator and applies dimension reduction.
 #'
 #' @param dfs data.frame with 4 or 5 categorical variables
@@ -226,12 +231,6 @@ reduce_dims <- function(
     verbose = FALSE
 ){
 
-  # Test pour vérifier quelle fonction est chargée
-  if (!exists(".reduce_dims_local", envir = .GlobalEnv)) {
-    message(">>> Version LOCALE de reduce_dims utilisée <<<")
-    assign(".reduce_dims_local", TRUE, envir = .GlobalEnv)
-  }
-
   dfs <- as.data.frame(dfs)
 
 
@@ -320,9 +319,7 @@ reduce_dims <- function(
   maximize_nb_tabs <- FALSE
 
   # clear the hierarchy cache at the very beginning of the dimension reduction process
-  if (exists(".hrc_cache")) {
-    rm(list = ls(envir = .hrc_cache), envir = .hrc_cache)
-  }
+  clear_hrc_cache()
 
   # Choose the separator
   data_var_cat <- dfs[names(dfs) %in% names(totcode)]
