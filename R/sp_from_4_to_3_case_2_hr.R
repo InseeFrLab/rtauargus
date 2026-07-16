@@ -93,11 +93,21 @@ from_4_to_3_case_2_hr <- function(
   # Hierarchy Reduction #
   ###########################
 
+  # liste_df_4_var_1_hr <- lapply(
+  #   codes_split_1,
+  #   function(codes){
+  #     res <- dfs %>%
+  #       filter(dfs[[v1]] %in% codes)
+  #   }
+  # )
+
+  # PERFORMANCE OPTIMIZATION: Use base R bracket subsetting instead of dplyr::filter
+  # inside this tight lapply loop. This bypasses tidy-evaluation and S3 method
+  # dispatch overhead, which accumulates heavily over hundreds of hierarchy split nodes.
   liste_df_4_var_1_hr <- lapply(
     codes_split_1,
     function(codes){
-      res <- dfs %>%
-        filter(dfs[[v1]] %in% codes)
+      dfs[dfs[[v1]] %in% codes, , drop = FALSE]
     }
   )
 
