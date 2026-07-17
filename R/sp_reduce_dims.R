@@ -389,7 +389,14 @@ reduce_dims <- function(
           v1 <- choice_3_var$vars[[1]]
           v2 <- choice_3_var$vars[[2]]
           v3 <- choice_3_var$vars[[3]]
-          v4 <- paste(v1, v2, sep = sep)
+
+          # Correct the swap prediction (non-hierarchical must come first)
+          non_hier_vars <- setdiff(names(totcode), names(hrcfiles))
+          if (v1 %in% names(hrcfiles) && v2 %in% non_hier_vars) {
+            v4 <- paste(v2, v1, sep = sep)
+          } else {
+            v4 <- paste(v1, v2, sep = sep)
+          }
 
           if (choice_3_var$max_row > limit){
             cat(c("Warning when choosing variables:
