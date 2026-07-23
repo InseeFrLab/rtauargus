@@ -26,3 +26,5 @@ tauargus_files/*
 ^hrc_loc$
 ^hrc_off$
 ^hrc_temp$
+^^bench_\.*\\.R$$
+^bench$
