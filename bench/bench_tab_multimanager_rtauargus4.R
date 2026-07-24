@@ -448,3 +448,20 @@ b4_is_identical <- identical(
 cat("\n======================================================================\n")
 cat("Égalité stricte du tableau 4D final reconstitué :", b4_is_identical, "\n")
 cat("======================================================================\n")
+
+
+# 1. Récupérer la liste des colonnes communes (les 9 colonnes de res_4d_new)
+cols_communes <- colnames(res_4d_new)
+
+# 2. Filtrer res_4d_old pour ne garder que ces 9 colonnes
+res_4d_old_clean <- res_4d_old[, cols_communes]
+
+# 3. Ré-exécuter le test d'égalité stricte
+b4_is_identical <- identical(
+  normalize_for_compare(res_4d_old_clean, names(tot4)),
+  normalize_for_compare(res_4d_new, names(tot4))
+)
+
+cat("\n======================================================================\n")
+cat("Égalité stricte du tableau 4D final (colonnes communes) :", b4_is_identical, "\n")
+cat("======================================================================\n")

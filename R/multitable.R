@@ -125,8 +125,11 @@ tab_multi_manager <- function(
     split_tab = FALSE,
     nb_tab_option = "smart",
     limit = 14700,
+    keep_history = FALSE, # Par défaut FALSE : n'exporte que le résultat final
     ...
 ){
+
+  print(paste0("keep_history : ", keep_history))
 
   start_time <- Sys.time()
   dir_name <- if(is.null(dir_name)) getwd() else dir_name
@@ -386,10 +389,19 @@ tab_multi_manager <- function(
   # NEW: Initialisation obligatoire de all_col_T (Evite l'erreur 'object all_col_T not found')
   all_col_T <- unname(noms_col_T)
 
+  # NEW 4: Initialisation de la colonne de travail in-place si keep_history = FALSE
+  if (!keep_history) {
+    if (!"is_secret_curr" %in% names(table_majeure)) {
+      table_majeure[, is_secret_curr := get(secret_var)]
+    }
+    table_majeure[, is_secret_prev := is_secret_curr]
+  }
+
   while(length(todolist) > 0 & all(num_iter_par_tab <= num_iter_max)){
 
     num_iter_all <- num_iter_all + 1
     num_tableau <- todolist[1]
+
     num_iter_par_tab[num_tableau] <- num_iter_par_tab[num_tableau] + 1
     cat("--- Current table to treat: ", num_tableau, "---\n")
 
@@ -399,10 +411,27 @@ tab_multi_manager <- function(
     nom_col_identifiante <- paste0("T_", num_tableau)
     tableau_a_traiter <- which(table_majeure[[nom_col_identifiante]])
 
-    if (num_iter_all == 1){
-      var_secret_apriori <- secret_var
+    # OLD:
+    # if (num_iter_all == 1){
+    #   var_secret_apriori <- secret_var
+    # } else {
+    #   var_secret_apriori <- paste0("is_secret_", num_iter_all-1, collapse = "")
+    # }
+
+    # NEW 4: Gestion dynamique des variables selon keep_history
+    if (keep_history) {
+      # Mode historique classique (creation de multiples colonnes)
+      if (num_iter_all == 1){
+        var_secret_apriori <- secret_var
+      } else {
+        var_secret_apriori <- paste0("is_secret_", num_iter_all - 1)
+      }
+      var_secret <- paste0("is_secret_", num_iter_all)
     } else {
-      var_secret_apriori <- paste0("is_secret_", num_iter_all-1, collapse = "")
+      # Mode optimise (1 seule colonne mise a jour in-place)
+      table_majeure[, is_secret_prev := is_secret_curr] # Sauvegarde de l'etat avant traitement
+      var_secret_apriori <- "is_secret_curr"
+      var_secret <- "is_secret_curr"
     }
 
     ex_var <- list_explanatory_vars[[num_tableau]]
@@ -453,7 +482,8 @@ tab_multi_manager <- function(
     # ADDITION : Conversion explicite de res en data.table
     data.table::setDT(res)
 
-    var_secret <- paste0("is_secret_", num_iter_all)
+    # OLD: (cette ligne ecrasait var_secret meme en keep_history = FALSE)
+    # var_secret <- paste0("is_secret_", num_iter_all)
 
     # ============================================================================
     # BLOC 2 : MISE A JOUR DE TABLE_MAJEURE (TRAITEMENT ET PROPAGATION)
@@ -486,11 +516,22 @@ tab_multi_manager <- function(
       data.table::set(res, j = v, value = as.character(val_tot))
     }
 
-    # NEW: Initialisation de la nouvelle colonne avec les statuts a priori
-    table_majeure[, (var_secret) := get(var_secret_apriori)]
+    # OLD
+    # # NEW: Initialisation de la nouvelle colonne avec les statuts a priori
+    # table_majeure[, (var_secret) := get(var_secret_apriori)]
+    #
+    # # NEW: Mise a jour en place par reference sur all_expl_vars
+    # table_majeure[res, (var_secret) := i.is_secret, on = all_expl_vars]
 
-    # NEW: Mise a jour en place par reference sur all_expl_vars
-    table_majeure[res, (var_secret) := i.is_secret, on = all_expl_vars]
+    # NEW 4: Mise a jour conditionnelle selon keep_history
+    if (keep_history) {
+      # Mode avec historique : creation d'une nouvelle colonne is_secret_N a chaque iteration
+      table_majeure[, (var_secret) := get(var_secret_apriori)]
+      table_majeure[res, (var_secret) := i.is_secret, on = all_expl_vars]
+    } else {
+      # Mode optimise : mise a jour direct in-place de la colonne unique is_secret_curr
+      table_majeure[res, is_secret_curr := i.is_secret, on = all_expl_vars]
+    }
 
     # NEW: Mise a jour de secret_no_pl_iter
     table_majeure[, secret_no_pl_iter := data.table::fifelse(get(secret_var), secret_no_pl, get(var_secret))]
@@ -534,8 +575,17 @@ tab_multi_manager <- function(
     # }
     #
 
-    # NEW: Restreindre la recherche aux seules lignes de la sous-table courante
-    idx_changed <- table_majeure[[var_secret_apriori]][tableau_a_traiter] != table_majeure[[var_secret]][tableau_a_traiter]
+    # OLD
+    # #  NEW: Restreindre la recherche aux seules lignes de la sous-table courante
+    # idx_changed <- table_majeure[[var_secret_apriori]][tableau_a_traiter] != table_majeure[[var_secret]][tableau_a_traiter]
+
+    # NEW 4: Detection des changements adaptee et corrigee
+    if (keep_history) {
+      idx_changed <- table_majeure[[var_secret_apriori]][tableau_a_traiter] != table_majeure[[var_secret]][tableau_a_traiter]
+    } else {
+      idx_changed <- table_majeure[["is_secret_prev"]][tableau_a_traiter] != table_majeure[["is_secret_curr"]][tableau_a_traiter]
+    }
+
     lignes_modifs <- tableau_a_traiter[idx_changed]
 
     other_tabs <- setdiff(all_col_T, nom_col_identifiante)
@@ -592,6 +642,12 @@ tab_multi_manager <- function(
     journal_add_break_line(journal)
     journal_add_break_line(journal)
 
+  }
+
+  # NEW 4: Creation de la colonne finale unique apres la boucle pour compatibilite avec le BLOC 4
+  if (!keep_history) {
+    last_secret_col <- paste0("is_secret_", num_iter_all)
+    table_majeure[, (last_secret_col) := is_secret_curr]
   }
 
   # ============================================================================
