@@ -17,6 +17,15 @@ journal_add_line <- function(journal,...){
 #' @param ip_start integer: Interval protection level to apply at first treatment of each table
 #' @param ip_end integer: Interval protection level to apply at other treatments
 #' @param num_iter_max integer: Maximum of treatments to do on each table (default to 10)
+#' @param keep_history logical, default `FALSE`. Controls whether intermediate
+#'   suppression columns are retained in the output.
+#'   - `FALSE`: a single column `is_secret_<N>` (where N is the total number
+#'     of iterations) is written in-place. Memory footprint is minimal and
+#'     independent of the number of iterations. Recommended for production.
+#'   - `TRUE`: one column `is_secret_1`, `is_secret_2`, ..., `is_secret_N` is
+#'     created at each iteration, preserving the full suppression history.
+#'     Useful for debugging propagation across tables, at the cost of O(N_iter)
+#'     additional columns
 #' @param ... other arguments of `tab_rtauargus2()`
 #'
 #' @return original list of tables. Secret Results of each iteration is added to each table.
@@ -125,7 +134,7 @@ tab_multi_manager <- function(
     split_tab = FALSE,
     nb_tab_option = "smart",
     limit = 14700,
-    keep_history = FALSE, # Par défaut FALSE : n'exporte que le résultat final
+    keep_history = FALSE,
     ...
 ){
 

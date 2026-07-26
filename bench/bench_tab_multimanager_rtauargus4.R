@@ -198,9 +198,13 @@ dfs4_agg <- dfs4 %>%
     .groups = "drop"
   )
 
+# Libère la RAM inutile pendant le reste des benchmarks
+rm(dfs4, big4); gc()
+
 # 3. POSE DU SECRET PRIMAIRE : 10% de secret aléatoire déterministe
 set.seed(42)
-dfs4_agg$is_secret_prim <- sample(c(TRUE, FALSE), nrow(dfs4_agg), replace = TRUE, prob = c(0.10, 0.90))
+prop_secret = 0.01 # proabilité qu'une cellule soit en secret primaire
+dfs4_agg$is_secret_prim <- sample(c(TRUE, FALSE), nrow(dfs4_agg), replace = TRUE, prob = c(prop_secret, 1 - prop_secret))
 dfs4_agg$secret_no_pl <- FALSE
 
 # AFFICHAGE DU SECRET AVANT TAU-ARGUS
@@ -371,6 +375,7 @@ t_full_new <- system.time({
     suppress         = "GH(1,100)",
     nb_tab_option    = "max",
     dfs_name         = "tab_4d_int",
+    keep_history = TRUE, # pour conserver le comportement par défaut
     limit = 1000000L # très grand nombre, pour ne pas avoir d'oversplit
   )
 })
@@ -449,19 +454,84 @@ cat("\n======================================================================\n"
 cat("Égalité stricte du tableau 4D final reconstitué :", b4_is_identical, "\n")
 cat("======================================================================\n")
 
+# =============================================================================
+# 4. BENCHMARK COMPLÉMENTAIRE : KEEP_HISTORY = FALSE (EXÉCUTION SEULE)
+# =============================================================================
+cat("\n======================================================================\n")
+cat("  BENCHMARK COMPLÉMENTAIRE : EXÉCUTION AVEC KEEP_HISTORY = FALSE       \n")
+cat("======================================================================\n")
 
-# 1. Récupérer la liste des colonnes communes (les 9 colonnes de res_4d_new)
-cols_communes <- colnames(res_4d_new)
+dir_kh_false <- file.path(tempdir(), "tau_4d_kh_false")
+if (!dir.exists(dir_kh_false)) dir.create(dir_kh_false, recursive = TRUE)
 
-# 2. Filtrer res_4d_old pour ne garder que ces 9 colonnes
-res_4d_old_clean <- res_4d_old[, cols_communes]
+cat("\n--- Exécution de la version optimisée avec keep_history = FALSE ---\n")
+t_full_no_hist <- system.time({
+  res_4d_no_hist <- tab_rtauargus4(
+    tabular          = dfs4_agg,
+    explanatory_vars = names(tot4),
+    dir_name         = dir_kh_false,
+    secret_var       = "is_secret_prim",
+    totcode          = tot4,
+    hrc              = hrc4,
+    value            = "VALUE",
+    freq             = "freq",
+    suppress         = "GH(1,100)",
+    nb_tab_option    = "max",
+    dfs_name         = "tab_4d_int",
+    limit            = 1000000L,
+    keep_history     = FALSE
+  )
+})
 
-# 3. Ré-exécuter le test d'égalité stricte
-b4_is_identical <- identical(
-  normalize_for_compare(res_4d_old_clean, names(tot4)),
-  normalize_for_compare(res_4d_new, names(tot4))
+print(t_full_no_hist)
+
+# =============================================================================
+# 5. VÉRIFICATION DE L'ÉGALITÉ ET COMPARISON : TRUE vs FALSE
+# =============================================================================
+cat("\n======================================================================\n")
+cat("=== COMPARISON KEEP_HISTORY = TRUE vs KEEP_HISTORY = FALSE ===\n")
+cat("======================================================================\n")
+
+get_last_secret_col <- function(df) {
+  sec_cols <- names(df)[grep("^is_secret_[0-9]+$", names(df))]
+  if (length(sec_cols) == 0) return(NULL)
+  sec_cols[order(as.integer(gsub("is_secret_", "", sec_cols)))] |> tail(1)
+}
+
+last_col_true  <- get_last_secret_col(res_4d_new)
+last_col_false <- get_last_secret_col(res_4d_no_hist)
+
+cat("Colonne de secret final (keep_history = TRUE)  :", last_col_true, "\n")
+cat("Colonne de secret final (keep_history = FALSE) :", last_col_false, "\n")
+
+cols_base <- c(names(tot4), "VALUE", "freq", "is_secret_prim", "secret_no_pl")
+
+df_true_sub  <- res_4d_new[, c(cols_base, last_col_true)]
+df_false_sub <- res_4d_no_hist[, c(cols_base, last_col_false)]
+
+colnames(df_true_sub)[ncol(df_true_sub)]   <- "final_secret_mask"
+colnames(df_false_sub)[ncol(df_false_sub)] <- "final_secret_mask"
+
+b_identical_history <- identical(
+  normalize_for_compare(df_true_sub, names(tot4)),
+  normalize_for_compare(df_false_sub, names(tot4))
 )
 
-cat("\n======================================================================\n")
-cat("Égalité stricte du tableau 4D final (colonnes communes) :", b4_is_identical, "\n")
-cat("======================================================================\n")
+cat("\n----------------------------------------------------------------------\n")
+cat("Égalité stricte des masques de secret finaux :", b_identical_history, "\n")
+cat("----------------------------------------------------------------------\n")
+
+cat("Cellules en secret secondaire (TRUE)  :", sum(df_true_sub$final_secret_mask & !df_true_sub$is_secret_prim), "\n")
+cat("Cellules en secret secondaire (FALSE) :", sum(df_false_sub$final_secret_mask & !df_false_sub$is_secret_prim), "\n")
+
+mem_true  <- format(object.size(res_4d_new), units = "auto")
+mem_false <- format(object.size(res_4d_no_hist), units = "auto")
+
+cat("\n[Bilan Mémoire R (object.size)] :\n")
+cat("  - keep_history = TRUE  (274 colonnes) :", mem_true, "\n")
+cat("  - keep_history = FALSE ( 9 colonnes)  :", mem_false, "\n")
+
+cat("\n[Bilan Temps d'exécution (Elapsed)] :\n")
+cat("  - keep_history = TRUE  :", round(t_full_new["elapsed"], 2), "s\n")
+cat("  - keep_history = FALSE :", round(t_full_no_hist["elapsed"], 2), "s\n")
+cat("  - Gain de temps        :", round(t_full_new["elapsed"] - t_full_no_hist["elapsed"], 2), "s\n")

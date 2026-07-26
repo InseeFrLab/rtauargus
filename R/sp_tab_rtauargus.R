@@ -17,6 +17,13 @@
 #'   of their row count.
 #' }
 #' @param dfs_name name used to write hrc files when reducing dims
+#' @param keep_history logical, default `FALSE`. If `TRUE`, the result contains
+#'   one boolean column `is_secret_N` per iteration, recording the full
+#'   suppression history (primary + secondary secret at each pass).
+#'   If `FALSE` (recommended for large tables), only the final suppression
+#'   status is kept in a single column `is_secret_<last_iter>`, which avoids
+#'   accumulating hundreds of columns and saves memory proportionally to the
+#'   number of iterations.
 #' @param ... additional parameters#'
 #'
 #' @return The original tabular is returned with additional variables indicating
@@ -87,6 +94,7 @@ tab_rtauargus4 <- function(
     nb_tab_option = "smart",
     limit = 14700L,
     dfs_name = 'tab',
+    keep_history = FALSE,
     ...
 ){
 
