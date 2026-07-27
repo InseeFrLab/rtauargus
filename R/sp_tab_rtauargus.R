@@ -106,6 +106,10 @@ tab_rtauargus4 <- function(
     ...
 ){
 
+  if (!is.null(sort_table) && !sort_table %in% c("ASC", "DESC")) {
+    stop('`sort_table` must be NULL, "ASC" or "DESC".')
+  }
+
   .dots = list(...)
 
   hrc_path <- file.path(dir_name, "hrc")
@@ -144,7 +148,7 @@ tab_rtauargus4 <- function(
       list_tables$alt_hrc     <- list_tables$alt_hrc[ord]
       list_tables$alt_totcode <- list_tables$alt_totcode[ord]
 
-      if (verbose_sort <- isTRUE(list(...)[["verbose"]])) {
+      if (isTRUE(.dots[["verbose"]])){
         cat("Ordre de traitement des tables (sort_table =", sort_table, ") :\n")
         print(data.frame(table = names(list_tables$tabs), total_value = totals[ord]))
       }

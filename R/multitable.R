@@ -137,9 +137,6 @@ tab_multi_manager <- function(
     keep_history = FALSE,
     ...
 ){
-
-  print(paste0("keep_history : ", keep_history))
-
   start_time <- Sys.time()
   dir_name <- if(is.null(dir_name)) getwd() else dir_name
   dir.create(dir_name, recursive = TRUE, showWarnings = FALSE)

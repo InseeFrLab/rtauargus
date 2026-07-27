@@ -23,6 +23,7 @@ tab_multi_manager(
   split_tab = FALSE,
   nb_tab_option = "smart",
   limit = 14700,
+  keep_history = FALSE,
   ...
 )
 }
@@ -106,6 +107,18 @@ of their row count.}
 which variable to merge (if nb_tab_option = 'smart')
 and split table with a number of row above this limit in order to avoid
 tauargus failures}
+
+\item{keep_history}{logical, default \code{FALSE}. Controls whether intermediate
+suppression columns are retained in the output.
+\itemize{
+\item \code{FALSE}: a single column \verb{is_secret_<N>} (where N is the total number
+of iterations) is written in-place. Memory footprint is minimal and
+independent of the number of iterations. Recommended for production.
+\item \code{TRUE}: one column \code{is_secret_1}, \code{is_secret_2}, ..., \code{is_secret_N} is
+created at each iteration, preserving the full suppression history.
+Useful for debugging propagation across tables, at the cost of O(N_iter)
+additional columns
+}}
 
 \item{...}{other arguments of \code{tab_rtauargus2()}}
 }
