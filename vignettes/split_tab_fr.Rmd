@@ -4,7 +4,7 @@ subtitle: <h2>![logo rtauargus](../man/figures/rtauargus_logo_small.png)</h2>
 output:
   rmarkdown::html_vignette:
     toc: true
-    toc_depth: 2
+    toc_depth: 4
     number_section: true
     fig_caption: true
 vignette: >
@@ -23,7 +23,7 @@ vignette: >
 
 Les algorithmes de pose du secret secondaire tels qu'Optimal ou Modular implémentés
 dans `Tau-Argus` reposent sur un programme d'optimisation sous contraintes. Le
-nombre de ces constraintes devient très difficile à gérer - du moins dans un temps
+nombre de ces contraintes devient très difficile à gérer - du moins dans un temps
 raisonnable - pour `Tau-Argus`. La pose du secret
 sur un tableau à 5 dimensions directement avec `Tau-Argus` est impossible et les résultats
 fournis par le logiciel lors du traitement d'un tableau de 4 dimensions sont
@@ -42,7 +42,7 @@ la dimension d'un tableau de 4 ou 5 dimensions en construisant un certain nombre
 de tableaux liés de 3 dimensions chacun. Ces tableaux contiennent exactement les
 mêmes cellules que le tableau original. Puis, la fonction `tab_multi_manager` est
 appelée pour organiser la pose du secret sur l'ensemble de ces tableaux.
-`A la fin du processus, on récupère la table de départ - avec ses dimensions
+À la fin du processus, on récupère la table de départ - avec ses dimensions
 originales - augmentée des informations sur le secret secondaire.
 
 Ainsi, point important à retenir, la pose du secret secondaire est toujours
@@ -57,7 +57,7 @@ Pour utiliser cette fonctionnalité, il est nécessaire que l'utilisateur
 pose de lui-même le secret primaire en amont.
 
 
-### Comment la réduction d'un tableau à 4 ou 5 dimensions est-elle réalisée ?
+## Comment la réduction d'un tableau à 4 ou 5 dimensions est-elle réalisée ?
 
 Pour passer de 5 à 3 dimensions, on utilise deux fois de suite la méthode
 utilisée pour réduire un tableau en sous-tableaux ayant une dimension de moins.
@@ -109,51 +109,37 @@ présents dans la hiérarchie, comme indiqué dans la figure ci-dessous:
   <img src="GEO.png" alt="hierarchie" width="375" height="150">
 </div>
 
-### Pour aller plus loin
+## Pour aller plus loin
 
 - [Article présentant la méthode et des résultats de simulation](https://github.com/InseeFrLab/dims_reduction_tables_workshop_20231215)
 
 
-### Les principaux arguments ajoutés à `tab_rtauargus()` et `tab_multi_manager()`
+## Les principaux arguments ajoutés à `tab_rtauargus()` et `tab_multi_manager()`
 
-Pour activer le découpage des tableaux de dimension 4 ou 5 en sous-tableaux
-de 3 dimensions, l'utilisateur doit activer l'argument `split_tab` en le passant
-à `TRUE`. Cette valeur est sa valeur par défaut. Ainsi, l'utilisateur veillera
-à passer cet argument à `FALSE` s'il souhaite qu'un tableau à 4 dimensions soit
-traité directement par `Tau-Argus`.
+Pour activer le découpage des tableaux de dimension 4 ou 5 en sous-tableaux de 3 dimensions,
+l'utilisateur doit activer l'argument `split_tab = TRUE` (valeur par défaut).
+L'utilisateur veillera à passer cet argument à `FALSE` s'il souhaite qu'un tableau à
+4 dimensions soit traité directement par `Tau-Argus`.
 
-L'argument `nb_tab_option` permet de préciser la façon dont le tableau est découpé:
+L'argument `nb_tab_option` permet de préciser la façon dont le tableau est découpé :
 
-- L'option `"min"` consiste à construire le minimum de tables à 3 dimensions
-lors de la fusion. Ce sont donc des variables non hiérarchiques qui seront
-fusionnées en priorité.
-- L'option `"max"` au contraire construit le maximum de tables à 3 dimensions possible
-lors de la fusion. Ce sont donc des variables hiérarchiques qui seront
-fusionnées en priorité. Cette option est intéressante pour réduire la taille
-des sous-tableaux produits et donc augmenter les chances que `Tau-Argus` puisse
-les traiter. L'inconvénient de cette option est qu'elle peut générer un très
-grand nombre de tableaux, nombre dépendant du nombre de noeuds dans les hiérarchies.
-- L'option `"smart"` va chercher à construire le minimum de tables à 3 dimensions
-tout en cherchant à respecter une limite de taille (nombre de lignes) pour les
-sous-tableaux construits. Cette limite est fixée par l'argument `limit`. Par
-défaut, la valeur est fixée à `14 700` - choisie de par notre expérience. Si
-la limite n'est pas atteignable, un avertissement est affiché mais cela ne bloque
-pas la construction des tables et la pose du masque.
+- **`nb_tab_option = "smart"` (option recommandée et par défaut) :** Cherche à générer
+le minimum de sous-tableaux tout en cherchant à respecter une taille maximale de sous-tableau
+fixée par l'argument `limit` (par défaut `14 700` lignes).
 
-Par défaut, l'argument `nb_tab_option` est fixé à `"smart"`. Il est déconseillé
-de changer cette valeur dans un premier temps.
+- **`nb_tab_option = "min"` :** Construit le minimum absolu de sous-tableaux à 3 dimensions,
+sans contrainte sur la taille des sous-tableaux produits.
 
-- L'argument `nb_tab = "min"` est intéressant en termes de secret car c'est
-l'option qui génèrera le moins de sur-secret puisqu'elle construira le moins
-possible de sous-tableaux liés. Il peut être intéressant à utiliser si la table
-de départ contient un nombre de lignes raisonnables,
-c'est-à-dire si chaque dimension n'est pas trop ventilée.
-- L'argument `nb_tab = "max"` créant le plus de tableaux possibles engendrera
-nécessairement le plus de secret, mais elle pourra aussi convenir quand les
-tableaux d'origine sont très longs et nécessitent d'être beaucoup découpés pour
-que la pose du secret soit possible avec `Tau-Argus`.
+- **`nb_tab_option = "max"` (déconseillée) :** Tente de construire le maximum de
+sous-tableaux possible. Cette option génère un sur-secret important et est aujourd'hui
+déconseillée au profit de l'option `"smart"`.
 
-### Exemple
+> 💡 **Pour en savoir plus sur le fonctionnement détaillé de ces options,
+l'impact sur le temps de calcul et le choix de la valeur de `limit`, consultez la section
+[Comment choisir le nombre de tableaux à générer lors de la réduction de dimension ?](#choix-nb-tableaux)
+en fin de vignette.**
+
+## Exemple
 
 Comme tout est géré par la fonction `tab_rtauargus`, la pose du secret sur un tableau
 à 4 ou 5 dimensions n'ajoute pas de difficultés particulières pour l'utilisateur
@@ -161,17 +147,30 @@ en réalité.
 
 Nous présentons ici un exemple de pose de secret sur un tableau à 4 dimensions.
 
-#### Préparation des données
+> ⚠️ **Avertissement concernant les temps d'exécution**
+>
+> Des optimisations majeures ont été apportées à la fonction `tab_multi_manager()`
+(utilisée lors du traitement des tableaux issus de la réduction de dimension) avec
+la version 1.3.5 de rtauargus publié à l'été 2026.
+Ainsi, si vous avez utilisé cette fonctionnalité par le passé, les performances
+ressenties côté utilisateur peuvent radicalement changer.
+>
+> La méthode avec découpage est aujourd'hui **nettement plus rapide** que par le passé,
+et ce gain de performance est d'autant plus important que le nombre de sous-tableaux générés est grand.
+> Par exemple, sur une table test qui générait 60 sous-tables, le temps d'éxécution est passé
+de 5h à 3h. Les ressources en RAM ont également été optimisées.
+
+### Préparation des données
 
 
-```r
+``` r
 library(tictoc)
 library(dplyr)
 library(rtauargus)
 ```
 
 
-```r
+``` r
 options(
   rtauargus.tauargus_exe =
     "Y:/Logiciels/TauArgus/TauArgus4.2.3/TauArgus.exe"
@@ -180,7 +179,7 @@ options(
 
 
 
-```r
+``` r
 data("datatest1")
 str(datatest1)
 #> tibble [689 x 12] (S3: tbl_df/tbl/data.frame)
@@ -200,19 +199,20 @@ str(datatest1)
 ```
 
 
-#### Préparation des arguments pour `tab_rtauargus`
+### Préparation des arguments pour `tab_rtauargus`
 
 
-```r
+``` r
 
 totcode <- c(treff ="Total",cj ="Total", A10 = "Total", type_distrib ="Total")
 explanatory_vars<- names(totcode)
+
 ```
 
-#### Pose du secret primaire
+### Pose du secret primaire
 
 
-```r
+``` r
 datatest1_with_prim <- datatest1 %>%
     mutate(
       is_secret_freq = (nb_obs > 0 & nb_obs < 3),
@@ -225,7 +225,7 @@ datatest1_with_prim <- datatest1 %>%
     )
 ```
 
-#### Pose du secret secondaire avec `rtauargus`
+### Pose du secret secondaire avec `rtauargus`
 
 Pour poser le secret secondaire, on utilise la fonction `tab_rtauargus` avec
 l'argument `split_tab = TRUE`. Ainsi, `Tau-Argus` n'aura pas à traiter directement
@@ -235,7 +235,7 @@ comme des tables liées avec un appel sous-jacent à `tab_multi_manager`.
 
 
 
-```r
+``` r
 tictoc::tic()
 res_wi_split <- tab_rtauargus(
     tabular = datatest1_with_prim,
@@ -258,9 +258,19 @@ res_wi_split <- tab_rtauargus(
 #> Reducing from 4 to 3...
 #> tab has generated 2 tables in total
 #> 
+#>   Table size distribution :
+#>    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+#>   535.0   536.5   538.0   538.0   539.5   541.0 
+#> 
+#> 
 #> Spliting...
 #>  treff___cj 
 #> tab has generated 2 tables in total
+#> 
+#>   Table size distribution :
+#>    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+#>   535.0   536.5   538.0   538.0   539.5   541.0 
+#> 
 #> 
 #> --- Current table to treat:  tab1 ---
 #> --- Current table to treat:  tab2 ---
@@ -268,37 +278,33 @@ res_wi_split <- tab_rtauargus(
 #> --- Current table to treat:  tab2 ---
 #> --- Current table to treat:  tab1 ---
 tictoc::toc()
-#> 45.31 sec elapsed
+#> 61.01 sec elapsed
 ```
 
 La réduction de dimensions a conduit à construire deux sous-tableaux de 3
 dimensions à partir du tableau original.
 
 
-```r
+``` r
 str(res_wi_split)
-#> 'data.frame':	689 obs. of  17 variables:
-#>  $ treff         : chr  "Total" "tr1" "tr1" "tr1" ...
-#>  $ cj            : chr  "Total" "LL" "SP" "Total" ...
-#>  $ type_distrib  : chr  "1" "1" "1" "1" ...
-#>  $ A10           : chr  "AZ" "AZ" "AZ" "AZ" ...
-#>  $ nb_obs        : num  115 89 21 110 6 ...
-#>  $ pizzas_tot    : num  8447 769 1301 532 7915 ...
-#>  $ pizzas_max    : num  1471.2 13.8 96.4 96.4 1471.2 ...
+#> 'data.frame':	689 obs. of  13 variables:
+#>  $ treff         : chr  "tr1" "tr2" "tr3" "Total" ...
+#>  $ cj            : chr  "Total" "Total" "Total" "Total" ...
+#>  $ type_distrib  : chr  "Total" "Total" "Total" "2" ...
+#>  $ A10           : chr  "Total" "Total" "Total" "Total" ...
+#>  $ nb_obs        : num  227094 7804 228 77736 110405 ...
+#>  $ pizzas_tot    : num  5900938 6538420 6794859 6692768 9280934 ...
+#>  $ pizzas_max    : num  135444 267177 852749 852749 523505 ...
 #>  $ is_secret_freq: logi  FALSE FALSE FALSE FALSE FALSE FALSE ...
-#>  $ is_secret_dom : logi  FALSE TRUE FALSE FALSE FALSE FALSE ...
+#>  $ is_secret_dom : logi  FALSE FALSE FALSE FALSE FALSE FALSE ...
 #>  $ is_secret_prim: logi  FALSE FALSE FALSE FALSE FALSE FALSE ...
-#>  $ nb_obs_rnd    : num  115 89 21 110 6 ...
-#>  $ pizzas_tot_abs: num  8447 769 1301 532 7915 ...
-#>  $ is_secret_1   : logi  FALSE TRUE FALSE TRUE TRUE TRUE ...
-#>  $ is_secret_2   : logi  FALSE TRUE TRUE TRUE TRUE TRUE ...
-#>  $ is_secret_3   : logi  FALSE TRUE TRUE TRUE TRUE TRUE ...
-#>  $ is_secret_4   : logi  FALSE TRUE TRUE TRUE TRUE TRUE ...
-#>  $ is_secret_5   : logi  FALSE TRUE TRUE TRUE TRUE TRUE ...
+#>  $ nb_obs_rnd    : num  227094 7804 228 77736 110405 ...
+#>  $ pizzas_tot_abs: num  5900938 6538420 6794859 6692768 9280934 ...
+#>  $ is_secret_5   : logi  FALSE FALSE FALSE FALSE FALSE FALSE ...
 ```
 
 
-```r
+``` r
 stats_wi_split <- res_wi_split %>%
     rename_with( ~"final_suppress", last_col()) %>%
     mutate(
@@ -322,7 +328,7 @@ Avec l'option de découpage du tableau de départ, la pose du secret sur
 le tableau à 4 dimensions génère
 278 suppressions secondaires.
 
-#### Comparaison avec une pose du secret sans réduire la dimension de la table
+### Comparaison avec une pose du secret sans réduire la dimension de la table
 
 `Tau-Argus` est en capacité de poser le secret secondaire sur un tableau à 4
 dimensions avec `Modular`, mais, en plus d'émettre un avertissement sur le
@@ -331,7 +337,7 @@ il est aussi beaucoup plus long à poser le secret secondaire que lorsqu'il
 traite deux tables liées issues du tableau original.
 
 
-```r
+``` r
 tictoc::tic()
 res_wo_split <- tab_rtauargus(
     tabular = datatest1_with_prim,
@@ -352,17 +358,17 @@ res_wo_split <- tab_rtauargus(
 #> With split_tab = FALSE, tauargus treats the table in 4 or 5 dimensions.
 #> In this case, the secondary secret may not being optimal according to tauargus itself
 #> and the process may take longer.
-#> Start of batch procedure; file: Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\example_1\wo_split\datatest1.arb
-#> <OPENTABLEDATA> "Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\example_1\wo_split\datatest1.tab"
-#> <OPENMETADATA> "Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\example_1\wo_split\datatest1.rda"
+#> Start of batch procedure; file: Z:\rtauargus\vignettes\example_1\wo_split\datatest1.arb
+#> <OPENTABLEDATA> "Z:\rtauargus\vignettes\example_1\wo_split\datatest1.tab"
+#> <OPENMETADATA> "Z:\rtauargus\vignettes\example_1\wo_split\datatest1.rda"
 #> <SPECIFYTABLE> "treff""cj""A10""type_distrib"|"pizzas_tot"||
 #> <SAFETYRULE> MAN(10)
 #> <READTABLE> 1
 #> Tables have been read
-#> <APRIORI> "Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\example_1\wo_split\datatest1.hst",1,",",0,0
-#> Apriory file: Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\example_1\wo_split\datatest1.hst has been applied
+#> <APRIORI> "Z:\rtauargus\vignettes\example_1\wo_split\datatest1.hst",1,",",0,0
+#> Apriory file: Z:\rtauargus\vignettes\example_1\wo_split\datatest1.hst has been applied
 #>                    to table: treff x cj x A10 x type_distrib | pizzas_tot
-#> Apriori file Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\example_1\wo_split\datatest1.hst has been read
+#> Apriori file Z:\rtauargus\vignettes\example_1\wo_split\datatest1.hst has been read
 #> <SUPPRESS> MOD(1,5,1,0,0)
 #> Start of the modular protection for table treff x cj x A10 x type_distrib | pizzas_tot
 #> WARNING: The table has 4 dimensions.
@@ -370,20 +376,20 @@ res_wo_split <- tab_rtauargus(
 #>                    Please check the results carefully.
 #>                    
 #> End of modular protection. Time used 301 seconds
-#>                    Number of suppressions: 291
-#> <WRITETABLE> (1,4,,"Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\example_1\wo_split\datatest1.csv")
+#>                    Number of suppressions: 292
+#> <WRITETABLE> (1,4,,"Z:\rtauargus\vignettes\example_1\wo_split\datatest1.csv")
 #> Table: treff x cj x A10 x type_distrib | pizzas_tot has been written
-#>                    Output file name: Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\example_1\wo_split\datatest1.csv
+#>                    Output file name: Z:\rtauargus\vignettes\example_1\wo_split\datatest1.csv
 #> End of TauArgus run
 tictoc::toc()
-#> 306.34 sec elapsed
+#> 308.73 sec elapsed
 ```
 
 Avec seulement 689 lignes et aucune variable hiérarchique, la pose directe du
 secret prend environ 5 minutes à `Tau-Argus`.
 
 
-```r
+``` r
 stats_wo_split <- res_wo_split %>%
     mutate(
       flag = case_when(
@@ -397,12 +403,12 @@ stats_wo_split
 #>   flag   n
 #> 1    A  79
 #> 2    B  35
-#> 3    D 265
-#> 4    V 310
+#> 3    D 269
+#> 4    V 306
 ```
 
 La pose directe du secret sur le tableau à 4 dimensions génère
-265 suppressions secondaires.
+269 suppressions secondaires.
 
 
 On peut observer que le traitement de la table à 4 dimensions directement
@@ -413,16 +419,376 @@ Il est difficile d'anticiper cette différence puisqu'elle est très dépendante
 de la structuration des données, de la présence du secret primaire au sein du
 tableau original et de la façon dont les sous-tableaux vont être construits.
 
+## Choix avancé du nombre de tableaux et paramétrage de `limit`
+
+### Comment choisir le nombre de tableaux à générer lors de la réduction de dimension ? {#choix-nb-tableaux}
+
+Lors de la réduction de dimension, il est possible de choisir plusieurs valeurs
+pour l'argument `nb_tab_option`.
+
+De manière historique, les options `"min"` et `"max"` ont été créées pour générer
+respectivement le minimum ou le maximum de sous-tableaux via le choix des variables à fusionner.
+
+L'option `"smart"` a été développée par la suite et constitue **la valeur recommandée en pratique**.
+Elle calcule, pour chaque possibilité de variables à fusionner, le nombre de tableaux
+qui seront générés ainsi que leurs tailles. Elle s'utilise conjointement avec l'argument `limit`,
+qui fixe une taille maximale théorique par sous-tableau (par exemple `limit = 20000L`).
+
+L'option `"smart"` cherche à fusionner les variables de manière à **minimiser le nombre de tableaux générés**,
+sous la contrainte que chaque tableau ait une taille inférieure à `limit` (si possible) :
+
+- Si la valeur de `limit` n'est pas contraignante (par exemple si `limit` est supérieur au
+nombre de lignes du tableau initial), `"smart"` générera le moins de tables possible.
+
+- Contrairement à l'option `"min"`, si plusieurs choix de variables mènent au même nombre de tables,
+`"smart"` privilégiera le choix qui **minimise la taille des tables générées**
+(alors que `"min"` ne garantit que le nombre de tables, sans considération pour leur taille).
+En ce sens, `"smart"` inclut les avantages de `"min"` avec une meilleure qualité d'optimisation.
+
+- Concernant l'option `"max"`, elle cherche à maximiser le nombre de tables générées.
+En 4 dimensions, elle générera bien le nombre maximal de tables. Néanmoins, en 5 dimensions,
+elle ne maximise pas toujours le nombre total de sous-tableaux, car générer
+moins de tables au passage de 5 à 4 dimensions permet parfois d'en générer beaucoup
+plus lors du passage de 4 à 3 dimensions. En pratique, l'usage de `"max"`
+(ou d'un équivalent `"smart"` avec un `limit` très faible comme `1L`) est **fortement déconseillé**.
+
+---
+
+### Le compromis entre qualité du secret et temps d'exécution
+
+Le cas idéal pour la protection des données est de **générer le moins de tables possible**.
+Plus le nombre de tables augmente :
+
+1. **La qualité du secret diminue :** Chaque sous-tableau ne contenant qu'un morceau de l'information initiale,
+les solveurs (*Tau-Argus*) cherchent des solutions sur des sous-espaces simplifiés.
+Cela peut conduire à davantage de sur-secret secondaire que sur le tableau complet.
+
+2. **Le temps d'exécution évolue de façon non linéaire :** Au début, découper
+en sous-tableaux plus petits aide le solveur à converger plus vite. Mais dépassé un certain seuil,
+la multiplication du nombre de sous-tableaux fait exploser le temps de traitement global.
+
+Exemple concret (sur un **dataset de 5 dimensions et 475 000 lignes**) :
+
+- `limit = 100 000`\* (20 tables, de 63 000 à 95 000 lignes) : Temps total = 148 min.
+
+- `limit = 80 000` (24 tables, de 52 000 à 78 000 lignes) : Temps total = 143 min.
+
+- `limit = 50 000` (54 tables, de 20 000 à 41 000 lignes) : Temps total = 142 min.
+
+- `limit = 30 000` (120 tables, de 12 000 à 18 000 lignes) : Temps total = 200 min (explosion du temps).
+
+\* limit = 100 000 génère également le nombre minimal de sous-tables
+
+(Les temps d'éxecution peuvent varier de plus ou moins 10%, faire des comparaisons avec précaution)
+
+On observe ainsi que le temps d'exécution reste relativement stable (ou augmente très légèrement)
+lorsque l'on découpe avec parcimonie, puis **explose** si trop de tables sont générées :
+la faible taille des sous-tableaux ne compense plus leur sur-nombre.
+
+---
+
+### Démarche recommandée en pratique
+
+Il n'existe pas de valeur de `limit` universelle. Celle-ci dépend de la structure
+de votre table (nombre de lignes, nombre de variables, présence et profondeur des hiérarchies)
+ainsi que du solveur utilisé.
+
+La recherche de l'optimal se fait donc de manière **empirique** :
+
+1. **Commencer par la solution minimale :** Utiliser `nb_tab_option = "smart"`
+avec une valeur de `limit` supérieure ou égale au nombre de lignes du tableau initial.
+Dans la majorité des cas, cela suffit.
+
+2. **Ajuster en cas d'erreur du solveur :** Si *Tau-Argus* ou le solveur échoue
+(manque de mémoire ou non-convergence), ré-essayer avec `"smart"` en fixant `limit`
+à une valeur légèrement inférieure à la taille maximale observée lors de la tentative précédente.
+
+3. **Répéter de façon itérative** jusqu'à obtenir une exécution sans erreur.
+
+Pour prévisualiser le nombre et la taille des sous-tableaux générés selon différentes
+valeurs de `limit` sans lancer la pose du secret complète, vous pouvez utiliser la fonction `reduce_dims()`.
+
+Voici un exemple ci-dessous
+
+``` r
+library(rtauargus)
+
+load("../data/input_data_5d.RData") # dfs5_agg, tot5, hrc5
+
+dfs5_agg %>% colnames() %>% print()
+#> [1] "SEX"            "AGE"            "GEO"            "ACT"            "ECO"            "VALUE"         
+#> [7] "freq"           "is_secret_prim" "secret_no_pl"
+dfs5_agg %>% dplyr::tally() %>% print()
+#> # A tibble: 1 x 1
+#>        n
+#>    <int>
+#> 1 475200
+
+cat("
+======================================================================
+Détail des modalités par variable (Totaux inclus) :
+  - ACT : 25 modalités (1 Total + 4 groupes + 20 sous-niveaux)
+  - GEO : 36 modalités (1 Total + 5 régions + 30 sous-régions)
+  - SEX : 11 modalités (1 Total + 10 modalités fines)
+  - AGE : 16 modalités (1 Total + 15 modalités fines)
+  - ECO :  3 modalités (1 Total +  2 modalités fines)
+======================================================================
+\n")
+#> 
+#> ======================================================================
+#> Détail des modalités par variable (Totaux inclus) :
+#>   - ACT : 25 modalités (1 Total + 4 groupes + 20 sous-niveaux)
+#>   - GEO : 36 modalités (1 Total + 5 régions + 30 sous-régions)
+#>   - SEX : 11 modalités (1 Total + 10 modalités fines)
+#>   - AGE : 16 modalités (1 Total + 15 modalités fines)
+#>   - ECO :  3 modalités (1 Total +  2 modalités fines)
+#> ======================================================================
+
+# Pour "min" et "max", limit très grand = pas d'oversplit parasite
+# Pour "smart", limit change de fonction du scénario
+variants <- list(
+  list(label = "min",             nb_tab_option = "min",   limit = 1000000L),
+  list(label = "smart_100000", nb_tab_option = "smart", limit = 100000L),
+  list(label = "smart_80000",     nb_tab_option = "smart", limit = 80000L),
+  list(label = "smart_50000",     nb_tab_option = "smart", limit = 50000L),
+  list(label = "smart_30000",     nb_tab_option = "smart", limit = 30000L),
+  list(label = "smart_10000",     nb_tab_option = "smart", limit = 10000L),
+  list(label = "max",             nb_tab_option = "max",   limit = 1000000L)
+)
+
+for (v in variants) {
+
+  cat("\n======================================================================\n")
+  cat("  Variant :", v$label, "(nb_tab_option =", v$nb_tab_option,
+      "| limit =", v$limit, ")\n")
+  cat("======================================================================\n")
+
+  dir_count <- file.path(tempdir(), "count_hrc")
+  unlink(dir_count, recursive = TRUE)
+  dir.create(dir_count, recursive = TRUE, showWarnings = FALSE)
+
+  res_count <- reduce_dims(
+    dfs           = dfs5_agg,
+    dfs_name      = "tab_5d",
+    totcode       = tot5,
+    hrcfiles      = hrc5,
+    nb_tab_option = v$nb_tab_option,
+    limit         = v$limit,
+    over_split    = TRUE,
+    sep_dir       = TRUE,
+    hrc_dir       = dir_count,
+    verbose       = TRUE # affichera le nombre de tables générées ainsi que leur distribution
+  )
+  rm(res_count); gc()
+
+}
+#> 
+#> ======================================================================
+#>   Variant : min (nb_tab_option = min | limit = 1000000 )
+#> ======================================================================
+#> 
+#> Reducing from 5 to 4...
+#> tab_5d has generated 2 tables in total
+#> Reducing from 4 to 3...
+#> tab_5d has generated 20 tables in total
+#> 
+#>   Table size distribution :
+#>    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+#>   53820   67068   75348   80579   90396  101556 
+#> 
+#> 
+#> Spliting...
+#>  ECO___SEX 
+#>  AGE___ACT 
+#> tab_5d has generated 20 tables in total
+#> 
+#>   Table size distribution :
+#>    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+#>   53820   67068   75348   80579   90396  101556 
+#> 
+#> 
+#> 
+#> ======================================================================
+#>   Variant : smart_100000 (nb_tab_option = smart | limit = 100000 )
+#> ======================================================================
+#> Choosing variables...
+#> 
+#> Reducing from 5 to 4...
+#> tab_5d has generated 10 tables in total
+#> Reducing from 4 to 3...
+#> tab_5d has generated 20 tables in total
+#> 
+#>   Table size distribution :
+#>    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+#>   63756   75348   77688   82404   92736   95616 
+#> 
+#> 
+#> Spliting...
+#>  ECO___ACT 
+#>  AGE___SEX 
+#> tab_5d has generated 20 tables in total
+#> 
+#>   Table size distribution :
+#>    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+#>   63756   75348   77688   82404   92736   95616 
+#> 
+#> 
+#> 
+#> ======================================================================
+#>   Variant : smart_80000 (nb_tab_option = smart | limit = 80000 )
+#> ======================================================================
+#> Choosing variables...
+#> 
+#> Reducing from 5 to 4...
+#> tab_5d has generated 2 tables in total
+#> Reducing from 4 to 3...
+#> tab_5d has generated 24 tables in total
+#> 
+#>   Table size distribution :
+#>    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+#>   52325   60375   63325   67784   76475   78850 
+#> 
+#> 
+#> Spliting...
+#>  AGE___SEX 
+#>  ECO___GEO 
+#> tab_5d has generated 24 tables in total
+#> 
+#>   Table size distribution :
+#>    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+#>   52325   60375   63325   67784   76475   78850 
+#> 
+#> 
+#> 
+#> ======================================================================
+#>   Variant : smart_50000 (nb_tab_option = smart | limit = 50000 )
+#> ======================================================================
+#> Choosing variables...
+#> 
+#> Reducing from 5 to 4...
+#> tab_5d has generated 2 tables in total
+#> Reducing from 4 to 3...
+#> tab_5d has generated 54 tables in total
+#> 
+#>   Table size distribution :
+#>    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+#>   20700   20700   27900   28883   29700   41400 
+#> 
+#> 
+#> Spliting...
+#>  ECO___SEX___AGE 
+#> tab_5d has generated 54 tables in total
+#> 
+#>   Table size distribution :
+#>    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+#>   20700   20700   27900   28883   29700   41400 
+#> 
+#> 
+#> 
+#> ======================================================================
+#>   Variant : smart_30000 (nb_tab_option = smart | limit = 30000 )
+#> ======================================================================
+#> Choosing variables...
+#> 
+#> Reducing from 5 to 4...
+#> tab_5d has generated 60 tables in total
+#> Reducing from 4 to 3...
+#> tab_5d has generated 120 tables in total
+#> 
+#>   Table size distribution :
+#>    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+#>   12075   15438   17630   16832   17928   18426 
+#> 
+#> 
+#> Spliting...
+#>  ACT___GEO 
+#>  AGE___SEX 
+#> tab_5d has generated 120 tables in total
+#> 
+#>   Table size distribution :
+#>    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+#>   12075   15438   17630   16832   17928   18426 
+#> 
+#> 
+#> 
+#> ======================================================================
+#>   Variant : smart_10000 (nb_tab_option = smart | limit = 10000 )
+#> ======================================================================
+#> Choosing variables...
+#> 
+#> Reducing from 5 to 4...
+#> tab_5d has generated 2 tables in total
+#> Reducing from 4 to 3...
+#> tab_5d has generated 270 tables in total
+#> 
+#>   Table size distribution :
+#>    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+#>    4860    6048    6588    7257    8748    9828 
+#> 
+#> 
+#> Spliting...
+#>  ACT___SEX___AGE 
+#> tab_5d has generated 270 tables in total
+#> 
+#>   Table size distribution :
+#>    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+#>    4860    6048    6588    7257    8748    9828 
+#> 
+#> 
+#> 
+#> ======================================================================
+#>   Variant : max (nb_tab_option = max | limit = 1000000 )
+#> ======================================================================
+#> 
+#> Reducing from 5 to 4...
+#> tab_5d has generated 60 tables in total
+#> Reducing from 4 to 3...
+#> tab_5d has generated 758 tables in total
+#> 
+#>   Table size distribution :
+#>    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+#>    2145    2673    3003    2978    3201    3498 
+#> 
+#> 
+#> Spliting...
+#>  AGE___GEO___ACT 
+#> tab_5d has generated 758 tables in total
+#> 
+#>   Table size distribution :
+#>    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+#>    2145    2673    3003    2978    3201    3498
+```
+
+#### Synthèse comparative des performances selon la valeur de `limit`
+
+D'un point de vue méthodologique, on peut se demander quel est l'impact de `limit` sur le nombre de tables,
+le temps d'éxecution, ainsi que le secret généré. Ci-dessous une synthèse est proposée.
+
+En utilisant le jeu de données précédent, et l'option `suppress = "GH(1,100)"`
+(afin de réduire le temps d'éxécution du benchmark), on obtient les résultats suivants :
+
+| Variant | Nb tables | Taille max (lignes) | Temps d'exéc. | Mémoire max | Secret sec. (cellules) | Masque total (% val.) |
+| :--- | :---: | :---: | :---: | :---: | :---: | :---: |
+| **`min`** | 20 | 101 556 | 2h 28min<br>(8 888 s) | 769 MB | 164 024 | 35,11 % |
+| **`smart_100000`** | 20 | 95 616 | 2h 01min<br>(7 254 s) | 950 MB | 153 535 | 32,96 % |
+| **`smart_80000`** | 24 | 78 850 | 2h 23min<br>(8 605 s) | 1 081 MB | 153 647 | 32,97 % |
+| **`smart_50000`** | 54 | 41 400 | 2h 22min<br>(8 522 s) | 1 325 MB | 140 930 | 30,33 % |
+| **`smart_30000`** | 120 | 18 426 | 3h 22min<br>(12 118 s) | 2 377 MB | 174 481 | 36,95 % |
+
+On observe bien que la configuration `smart_100000` génère le même nombre de tableaux que `min`,
+mais de tailles différentes. Globalement, le temps d'éxecution est croissant avec le nombre de tables.
+Bien que la tendance générale montre une hausse du secret avec le nombre de sous-tableaux,
+la variante `smart_50000` fait exception ici en offrant le masque le plus restreint.
 
 ## Détail de la vignette
 
 - Authors: **<a> Wistan Pomel </a>** & **<a> Andre-Raymond Socard </a>** &
 **<a href="mailto:julien.jamme@insee.fr">Julien Jamme</a>** &
 **<a>Nathanael Rastout</a>**
-- Last update: **11/01/2024**
-- Version of rtauargus used: **1.2.0**
+- Last update: **28/07/2026**
+- Version of rtauargus used: **1.3.5**
 - Version of &tau;-Argus used : **TauArgus 4.2.3**
-- R version used :  **4.2.3**
+- R version used :  **4.5.3**
 
   <p style="text-align: right">
   <a href="#TOC" title="Back to summary">summary &uarr;</a>

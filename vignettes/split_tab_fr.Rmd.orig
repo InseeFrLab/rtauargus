@@ -4,7 +4,7 @@ subtitle: <h2>![logo rtauargus](../man/figures/rtauargus_logo_small.png)</h2>
 output:
   rmarkdown::html_vignette:
     toc: true
-    toc_depth: 2
+    toc_depth: 4
     number_section: true
     fig_caption: true
 vignette: >
@@ -31,7 +31,7 @@ knitr::opts_knit$set(root.dir = getwd())
 
 Les algorithmes de pose du secret secondaire tels qu'Optimal ou Modular implémentés
 dans `Tau-Argus` reposent sur un programme d'optimisation sous contraintes. Le
-nombre de ces constraintes devient très difficile à gérer - du moins dans un temps
+nombre de ces contraintes devient très difficile à gérer - du moins dans un temps
 raisonnable - pour `Tau-Argus`. La pose du secret
 sur un tableau à 5 dimensions directement avec `Tau-Argus` est impossible et les résultats
 fournis par le logiciel lors du traitement d'un tableau de 4 dimensions sont
@@ -50,7 +50,7 @@ la dimension d'un tableau de 4 ou 5 dimensions en construisant un certain nombre
 de tableaux liés de 3 dimensions chacun. Ces tableaux contiennent exactement les
 mêmes cellules que le tableau original. Puis, la fonction `tab_multi_manager` est
 appelée pour organiser la pose du secret sur l'ensemble de ces tableaux.
-A la fin du processus, on récupère la table de départ - avec ses dimensions
+À la fin du processus, on récupère la table de départ - avec ses dimensions
 originales - augmentée des informations sur le secret secondaire.
 
 Ainsi, point important à retenir, la pose du secret secondaire est toujours
@@ -65,7 +65,7 @@ Pour utiliser cette fonctionnalité, il est nécessaire que l'utilisateur
 pose de lui-même le secret primaire en amont.
 
 
-### Comment la réduction d'un tableau à 4 ou 5 dimensions est-elle réalisée ?
+## Comment la réduction d'un tableau à 4 ou 5 dimensions est-elle réalisée ?
 
 Pour passer de 5 à 3 dimensions, on utilise deux fois de suite la méthode
 utilisée pour réduire un tableau en sous-tableaux ayant une dimension de moins.
@@ -117,12 +117,12 @@ présents dans la hiérarchie, comme indiqué dans la figure ci-dessous:
   <img src="GEO.png" alt="hierarchie" width="375" height="150">
 </div>
 
-### Pour aller plus loin
+## Pour aller plus loin
 
 - [Article présentant la méthode et des résultats de simulation](https://github.com/InseeFrLab/dims_reduction_tables_workshop_20231215)
 
 
-### Les principaux arguments ajoutés à `tab_rtauargus()` et `tab_multi_manager()`
+## Les principaux arguments ajoutés à `tab_rtauargus()` et `tab_multi_manager()`
 
 Pour activer le découpage des tableaux de dimension 4 ou 5 en sous-tableaux de 3 dimensions,
 l'utilisateur doit activer l'argument `split_tab = TRUE` (valeur par défaut).
@@ -134,18 +134,20 @@ L'argument `nb_tab_option` permet de préciser la façon dont le tableau est dé
 - **`nb_tab_option = "smart"` (option recommandée et par défaut) :** Cherche à générer
 le minimum de sous-tableaux tout en cherchant à respecter une taille maximale de sous-tableau
 fixée par l'argument `limit` (par défaut `14 700` lignes).
+
 - **`nb_tab_option = "min"` :** Construit le minimum absolu de sous-tableaux à 3 dimensions,
 sans contrainte sur la taille des sous-tableaux produits.
+
 - **`nb_tab_option = "max"` (déconseillée) :** Tente de construire le maximum de
 sous-tableaux possible. Cette option génère un sur-secret important et est aujourd'hui
 déconseillée au profit de l'option `"smart"`.
 
 > 💡 **Pour en savoir plus sur le fonctionnement détaillé de ces options,
 l'impact sur le temps de calcul et le choix de la valeur de `limit`, consultez la section
-[Comment choisir le nombre de tableaux à générer lors de la réduction de dimension ?](#comment-choisir-le-nombre-de-tableaux-à-générer-lors-de-la-réduction-de-dimension-)
+[Comment choisir le nombre de tableaux à générer lors de la réduction de dimension ?](#choix-nb-tableaux)
 en fin de vignette.**
 
-### Exemple
+## Exemple
 
 Comme tout est géré par la fonction `tab_rtauargus`, la pose du secret sur un tableau
 à 4 ou 5 dimensions n'ajoute pas de difficultés particulières pour l'utilisateur
@@ -153,7 +155,20 @@ en réalité.
 
 Nous présentons ici un exemple de pose de secret sur un tableau à 4 dimensions.
 
-#### Préparation des données
+> ⚠️ **Avertissement concernant les temps d'exécution**
+>
+> Des optimisations majeures ont été apportées à la fonction `tab_multi_manager()`
+(utilisée lors du traitement des tableaux issus de la réduction de dimension) avec
+la version 1.3.5 de rtauargus publié à l'été 2026.
+Ainsi, si vous avez utilisé cette fonctionnalité par le passé, les performances
+ressenties côté utilisateur peuvent radicalement changer.
+>
+> La méthode avec découpage est aujourd'hui **nettement plus rapide** que par le passé,
+et ce gain de performance est d'autant plus important que le nombre de sous-tableaux générés est grand.
+> Par exemple, sur une table test qui générait 60 sous-tables, le temps d'éxécution est passé
+de 5h à 3h. Les ressources en RAM ont également été optimisées.
+
+### Préparation des données
 
 ```{r}
 library(tictoc)
@@ -175,7 +190,7 @@ str(datatest1)
 ```
 
 
-#### Préparation des arguments pour `tab_rtauargus`
+### Préparation des arguments pour `tab_rtauargus`
 
 ```{r}
 
@@ -184,7 +199,7 @@ explanatory_vars<- names(totcode)
 
 ```
 
-#### Pose du secret primaire
+### Pose du secret primaire
 
 ```{r}
 datatest1_with_prim <- datatest1 %>%
@@ -199,7 +214,7 @@ datatest1_with_prim <- datatest1 %>%
     )
 ```
 
-#### Pose du secret secondaire avec `rtauargus`
+### Pose du secret secondaire avec `rtauargus`
 
 Pour poser le secret secondaire, on utilise la fonction `tab_rtauargus` avec
 l'argument `split_tab = TRUE`. Ainsi, `Tau-Argus` n'aura pas à traiter directement
@@ -251,7 +266,7 @@ Avec l'option de découpage du tableau de départ, la pose du secret sur
 le tableau à 4 dimensions génère
 `r stats_wi_split %>% filter(flag == "D") %>% pull(n)` suppressions secondaires.
 
-#### Comparaison avec une pose du secret sans réduire la dimension de la table
+### Comparaison avec une pose du secret sans réduire la dimension de la table
 
 `Tau-Argus` est en capacité de poser le secret secondaire sur un tableau à 4
 dimensions avec `Modular`, mais, en plus d'émettre un avertissement sur le
@@ -304,9 +319,9 @@ Il est difficile d'anticiper cette différence puisqu'elle est très dépendante
 de la structuration des données, de la présence du secret primaire au sein du
 tableau original et de la façon dont les sous-tableaux vont être construits.
 
-### Choix avancé du nombre de tableaux et paramétrage de `limit`
+## Choix avancé du nombre de tableaux et paramétrage de `limit`
 
-#### Comment choisir le nombre de tableaux à générer lors de la réduction de dimension ?
+### Comment choisir le nombre de tableaux à générer lors de la réduction de dimension ? {#choix-nb-tableaux}
 
 Lors de la réduction de dimension, il est possible de choisir plusieurs valeurs
 pour l'argument `nb_tab_option`.
@@ -321,12 +336,15 @@ qui fixe une taille maximale théorique par sous-tableau (par exemple `limit = 2
 
 L'option `"smart"` cherche à fusionner les variables de manière à **minimiser le nombre de tableaux générés**,
 sous la contrainte que chaque tableau ait une taille inférieure à `limit` (si possible) :
+
 - Si la valeur de `limit` n'est pas contraignante (par exemple si `limit` est supérieur au
 nombre de lignes du tableau initial), `"smart"` générera le moins de tables possible.
+
 - Contrairement à l'option `"min"`, si plusieurs choix de variables mènent au même nombre de tables,
 `"smart"` privilégiera le choix qui **minimise la taille des tables générées**
 (alors que `"min"` ne garantit que le nombre de tables, sans considération pour leur taille).
 En ce sens, `"smart"` inclut les avantages de `"min"` avec une meilleure qualité d'optimisation.
+
 - Concernant l'option `"max"`, elle cherche à maximiser le nombre de tables générées.
 En 4 dimensions, elle générera bien le nombre maximal de tables. Néanmoins, en 5 dimensions,
 elle ne maximise pas toujours le nombre total de sous-tableaux, car générer
@@ -336,22 +354,32 @@ plus lors du passage de 4 à 3 dimensions. En pratique, l'usage de `"max"`
 
 ---
 
-#### Le compromis entre qualité du secret et temps d'exécution
+### Le compromis entre qualité du secret et temps d'exécution
 
 Le cas idéal pour la protection des données est de **générer le moins de tables possible**.
 Plus le nombre de tables augmente :
+
 1. **La qualité du secret diminue :** Chaque sous-tableau ne contenant qu'un morceau de l'information initiale,
 les solveurs (*Tau-Argus*) cherchent des solutions sur des sous-espaces simplifiés.
 Cela peut conduire à davantage de sur-secret secondaire que sur le tableau complet.
+
 2. **Le temps d'exécution évolue de façon non linéaire :** Au début, découper
 en sous-tableaux plus petits aide le solveur à converger plus vite. Mais dépassé un certain seuil,
 la multiplication du nombre de sous-tableaux fait exploser le temps de traitement global.
 
-**Exemple concret (sur un dataset de 5 dimensions et 475 000 lignes) :**
-- **Option minimale (20 tables, de 63 000 à 95 000 lignes) :** Temps total = **120 min**.
-- **`limit = 80 000` (24 tables, de 52 000 à 78 000 lignes) :** Temps total = **143 min**.
-- **`limit = 70 000` (54 tables, de 20 000 à 41 000 lignes) :** Temps total = **140 min**.
-- **`limit = 30 000` (120 tables, de 12 000 à 18 000 lignes) :** Temps total = **200 min** (explosion du temps).
+Exemple concret (sur un **dataset de 5 dimensions et 475 000 lignes**) :
+
+- `limit = 100 000`\* (20 tables, de 63 000 à 95 000 lignes) : Temps total = 148 min.
+
+- `limit = 80 000` (24 tables, de 52 000 à 78 000 lignes) : Temps total = 143 min.
+
+- `limit = 50 000` (54 tables, de 20 000 à 41 000 lignes) : Temps total = 142 min.
+
+- `limit = 30 000` (120 tables, de 12 000 à 18 000 lignes) : Temps total = 200 min (explosion du temps).
+
+\* limit = 100 000 génère également le nombre minimal de sous-tables
+
+(Les temps d'éxecution peuvent varier de plus ou moins 10%, faire des comparaisons avec précaution)
 
 On observe ainsi que le temps d'exécution reste relativement stable (ou augmente très légèrement)
 lorsque l'on découpe avec parcimonie, puis **explose** si trop de tables sont générées :
@@ -359,19 +387,22 @@ la faible taille des sous-tableaux ne compense plus leur sur-nombre.
 
 ---
 
-#### Démarche recommandée en pratique
+### Démarche recommandée en pratique
 
 Il n'existe pas de valeur de `limit` universelle. Celle-ci dépend de la structure
 de votre table (nombre de lignes, nombre de variables, présence et profondeur des hiérarchies)
 ainsi que du solveur utilisé.
 
 La recherche de l'optimal se fait donc de manière **empirique** :
+
 1. **Commencer par la solution minimale :** Utiliser `nb_tab_option = "smart"`
 avec une valeur de `limit` supérieure ou égale au nombre de lignes du tableau initial.
 Dans la majorité des cas, cela suffit.
+
 2. **Ajuster en cas d'erreur du solveur :** Si *Tau-Argus* ou le solveur échoue
 (manque de mémoire ou non-convergence), ré-essayer avec `"smart"` en fixant `limit`
 à une valeur légèrement inférieure à la taille maximale observée lors de la tentative précédente.
+
 3. **Répéter de façon itérative** jusqu'à obtenir une exécution sans erreur.
 
 Pour prévisualiser le nombre et la taille des sous-tableaux générés selon différentes
@@ -386,11 +417,22 @@ load("../data/input_data_5d.RData") # dfs5_agg, tot5, hrc5
 dfs5_agg %>% colnames() %>% print()
 dfs5_agg %>% dplyr::tally() %>% print()
 
+cat("
+======================================================================
+Détail des modalités par variable (Totaux inclus) :
+  - ACT : 25 modalités (1 Total + 4 groupes + 20 sous-niveaux)
+  - GEO : 36 modalités (1 Total + 5 régions + 30 sous-régions)
+  - SEX : 11 modalités (1 Total + 10 modalités fines)
+  - AGE : 16 modalités (1 Total + 15 modalités fines)
+  - ECO :  3 modalités (1 Total +  2 modalités fines)
+======================================================================
+\n")
+
 # Pour "min" et "max", limit très grand = pas d'oversplit parasite
 # Pour "smart", limit change de fonction du scénario
 variants <- list(
   list(label = "min",             nb_tab_option = "min",   limit = 1000000L),
-  list(label = "smart_false_min", nb_tab_option = "smart", limit = 500000L),
+  list(label = "smart_100000", nb_tab_option = "smart", limit = 100000L),
   list(label = "smart_80000",     nb_tab_option = "smart", limit = 80000L),
   list(label = "smart_50000",     nb_tab_option = "smart", limit = 50000L),
   list(label = "smart_30000",     nb_tab_option = "smart", limit = 30000L),
@@ -405,9 +447,6 @@ for (v in variants) {
       "| limit =", v$limit, ")\n")
   cat("======================================================================\n")
 
-  # --- Pré-mesure : nombre de sous-tables générées ---
-  # Appel isolé à reduce_dims pour capturer n_tables avant le run complet.
-  # Overhead ~5-10s, négligeable face au run complet.
   dir_count <- file.path(tempdir(), "count_hrc")
   unlink(dir_count, recursive = TRUE)
   dir.create(dir_count, recursive = TRUE, showWarnings = FALSE)
@@ -428,6 +467,27 @@ for (v in variants) {
 
 }
 ```
+
+#### Synthèse comparative des performances selon la valeur de `limit`
+
+D'un point de vue méthodologique, on peut se demander quel est l'impact de `limit` sur le nombre de tables,
+le temps d'éxecution, ainsi que le secret généré. Ci-dessous une synthèse est proposée.
+
+En utilisant le jeu de données précédent, et l'option `suppress = "GH(1,100)"`
+(afin de réduire le temps d'éxécution du benchmark), on obtient les résultats suivants :
+
+| Variant | Nb tables | Taille max (lignes) | Temps d'exéc. | Mémoire max | Secret sec. (cellules) | Masque total (% val.) |
+| :--- | :---: | :---: | :---: | :---: | :---: | :---: |
+| **`min`** | 20 | 101 556 | 2h 28min<br>(8 888 s) | 769 MB | 164 024 | 35,11 % |
+| **`smart_100000`** | 20 | 95 616 | 2h 01min<br>(7 254 s) | 950 MB | 153 535 | 32,96 % |
+| **`smart_80000`** | 24 | 78 850 | 2h 23min<br>(8 605 s) | 1 081 MB | 153 647 | 32,97 % |
+| **`smart_50000`** | 54 | 41 400 | 2h 22min<br>(8 522 s) | 1 325 MB | 140 930 | 30,33 % |
+| **`smart_30000`** | 120 | 18 426 | 3h 22min<br>(12 118 s) | 2 377 MB | 174 481 | 36,95 % |
+
+On observe bien que la configuration `smart_100000` génère le même nombre de tableaux que `min`,
+mais de tailles différentes. Globalement, le temps d'éxecution est croissant avec le nombre de tables.
+Bien que la tendance générale montre une hausse du secret avec le nombre de sous-tableaux,
+la variante `smart_50000` fait exception ici en offrant le masque le plus restreint.
 
 ## Détail de la vignette
 

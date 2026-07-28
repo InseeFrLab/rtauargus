@@ -48,8 +48,9 @@ overflow: visible;
 }
 </style>
 <style type="text/css" data-origin="pandoc">
+html { -webkit-text-size-adjust: 100%; }
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -60,7 +61,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
 { counter-reset: source-line 0; }
@@ -345,7 +346,38 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <div id="TOC">
 <ul>
-<li><a href="#détail-de-la-vignette" id="toc-détail-de-la-vignette"><span class="toc-section-number">1</span>
+<li><a href="#comment-la-r%C3%A9duction-dun-tableau-%C3%A0-4-ou-5-dimensions-est-elle-r%C3%A9alis%C3%A9e" id="toc-comment-la-réduction-dun-tableau-à-4-ou-5-dimensions-est-elle-réalisée"><span class="toc-section-number">1</span> Comment la réduction d’un tableau à
+4 ou 5 dimensions est-elle réalisée ?</a></li>
+<li><a href="#pour-aller-plus-loin" id="toc-pour-aller-plus-loin"><span class="toc-section-number">2</span> Pour aller plus loin</a></li>
+<li><a href="#les-principaux-arguments-ajout%C3%A9s-%C3%A0-tab_rtauargus-et-tab_multi_manager" id="toc-les-principaux-arguments-ajoutés-à-tab_rtauargus-et-tab_multi_manager"><span class="toc-section-number">3</span> Les principaux arguments ajoutés à
+<code>tab_rtauargus()</code> et
+<code>tab_multi_manager()</code></a></li>
+<li><a href="#exemple" id="toc-exemple"><span class="toc-section-number">4</span> Exemple</a>
+<ul>
+<li><a href="#pr%C3%A9paration-des-donn%C3%A9es" id="toc-préparation-des-données"><span class="toc-section-number">4.1</span> Préparation des données</a></li>
+<li><a href="#pr%C3%A9paration-des-arguments-pour-tab_rtauargus" id="toc-préparation-des-arguments-pour-tab_rtauargus"><span class="toc-section-number">4.2</span> Préparation des arguments pour
+<code>tab_rtauargus</code></a></li>
+<li><a href="#pose-du-secret-primaire" id="toc-pose-du-secret-primaire"><span class="toc-section-number">4.3</span> Pose du secret primaire</a></li>
+<li><a href="#pose-du-secret-secondaire-avec-rtauargus" id="toc-pose-du-secret-secondaire-avec-rtauargus"><span class="toc-section-number">4.4</span> Pose du secret secondaire avec
+<code>rtauargus</code></a></li>
+<li><a href="#comparaison-avec-une-pose-du-secret-sans-r%C3%A9duire-la-dimension-de-la-table" id="toc-comparaison-avec-une-pose-du-secret-sans-réduire-la-dimension-de-la-table"><span class="toc-section-number">4.5</span> Comparaison avec une pose du
+secret sans réduire la dimension de la table</a></li>
+</ul></li>
+<li><a href="#choix-avanc%C3%A9-du-nombre-de-tableaux-et-param%C3%A9trage-de-limit" id="toc-choix-avancé-du-nombre-de-tableaux-et-paramétrage-de-limit"><span class="toc-section-number">5</span> Choix avancé du nombre de tableaux
+et paramétrage de <code>limit</code></a>
+<ul>
+<li><a href="#choix-nb-tableaux" id="toc-choix-nb-tableaux"><span class="toc-section-number">5.1</span> Comment choisir le nombre de
+tableaux à générer lors de la réduction de dimension ?</a></li>
+<li><a href="#le-compromis-entre-qualit%C3%A9-du-secret-et-temps-dex%C3%A9cution" id="toc-le-compromis-entre-qualité-du-secret-et-temps-dexécution"><span class="toc-section-number">5.2</span> Le compromis entre qualité du
+secret et temps d’exécution</a></li>
+<li><a href="#d%C3%A9marche-recommand%C3%A9e-en-pratique" id="toc-démarche-recommandée-en-pratique"><span class="toc-section-number">5.3</span> Démarche recommandée en
+pratique</a>
+<ul>
+<li><a href="#synth%C3%A8se-comparative-des-performances-selon-la-valeur-de-limit" id="toc-synthèse-comparative-des-performances-selon-la-valeur-de-limit"><span class="toc-section-number">5.3.1</span> Synthèse comparative des
+performances selon la valeur de <code>limit</code></a></li>
+</ul></li>
+</ul></li>
+<li><a href="#d%C3%A9tail-de-la-vignette" id="toc-détail-de-la-vignette"><span class="toc-section-number">6</span>
 Détail de la vignette</a></li>
 </ul>
 </div>
@@ -357,7 +389,7 @@ Détail de la vignette</a></li>
 -->
 <p>Les algorithmes de pose du secret secondaire tels qu’Optimal ou
 Modular implémentés dans <code>Tau-Argus</code> reposent sur un
-programme d’optimisation sous contraintes. Le nombre de ces constraintes
+programme d’optimisation sous contraintes. Le nombre de ces contraintes
 devient très difficile à gérer - du moins dans un temps raisonnable -
 pour <code>Tau-Argus</code>. La pose du secret sur un tableau à 5
 dimensions directement avec <code>Tau-Argus</code> est impossible et les
@@ -378,7 +410,7 @@ avec l’argument <code>split_tab</code>. Quand il est renseigné à
 3 dimensions chacun. Ces tableaux contiennent exactement les mêmes
 cellules que le tableau original. Puis, la fonction
 <code>tab_multi_manager</code> est appelée pour organiser la pose du
-secret sur l’ensemble de ces tableaux. `A la fin du processus, on
+secret sur l’ensemble de ces tableaux. À la fin du processus, on
 récupère la table de départ - avec ses dimensions originales - augmentée
 des informations sur le secret secondaire.</p>
 <p>Ainsi, point important à retenir, la pose du secret secondaire est
@@ -391,9 +423,9 @@ attaque directe du problème. Mais celle-ci étant impossible dans les cas
 visés, c’est un moindre mal.</p>
 <p>Pour utiliser cette fonctionnalité, il est nécessaire que
 l’utilisateur pose de lui-même le secret primaire en amont.</p>
-<div id="comment-la-réduction-dun-tableau-à-4-ou-5-dimensions-est-elle-réalisée" class="section level3" number="0.1">
-<h3><span class="header-section-number">0.1</span> Comment la réduction
-d’un tableau à 4 ou 5 dimensions est-elle réalisée ?</h3>
+<div id="comment-la-réduction-dun-tableau-à-4-ou-5-dimensions-est-elle-réalisée" class="section level2" number="1">
+<h2><span class="header-section-number">1</span> Comment la réduction
+d’un tableau à 4 ou 5 dimensions est-elle réalisée ?</h2>
 <p>Pour passer de 5 à 3 dimensions, on utilise deux fois de suite la
 méthode utilisée pour réduire un tableau en sous-tableaux ayant une
 dimension de moins.</p>
@@ -441,73 +473,74 @@ ci-dessous:</p>
 <p><img role="img" aria-label="hierarchie" src="data:image/png;base64,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" alt="hierarchie" width="375" height="150"></p>
 </div>
 </div>
-<div id="pour-aller-plus-loin" class="section level3" number="0.2">
-<h3><span class="header-section-number">0.2</span> Pour aller plus
-loin</h3>
+<div id="pour-aller-plus-loin" class="section level2" number="2">
+<h2><span class="header-section-number">2</span> Pour aller plus
+loin</h2>
 <ul>
 <li><a href="https://github.com/InseeFrLab/dims_reduction_tables_workshop_20231215">Article
 présentant la méthode et des résultats de simulation</a></li>
 </ul>
 </div>
-<div id="les-principaux-arguments-ajoutés-à-tab_rtauargus-et-tab_multi_manager" class="section level3" number="0.3">
-<h3><span class="header-section-number">0.3</span> Les principaux
+<div id="les-principaux-arguments-ajoutés-à-tab_rtauargus-et-tab_multi_manager" class="section level2" number="3">
+<h2><span class="header-section-number">3</span> Les principaux
 arguments ajoutés à <code>tab_rtauargus()</code> et
-<code>tab_multi_manager()</code></h3>
+<code>tab_multi_manager()</code></h2>
 <p>Pour activer le découpage des tableaux de dimension 4 ou 5 en
 sous-tableaux de 3 dimensions, l’utilisateur doit activer l’argument
-<code>split_tab</code> en le passant à <code>TRUE</code>. Cette valeur
-est sa valeur par défaut. Ainsi, l’utilisateur veillera à passer cet
-argument à <code>FALSE</code> s’il souhaite qu’un tableau à 4 dimensions
-soit traité directement par <code>Tau-Argus</code>.</p>
+<code>split_tab = TRUE</code> (valeur par défaut). L’utilisateur
+veillera à passer cet argument à <code>FALSE</code> s’il souhaite qu’un
+tableau à 4 dimensions soit traité directement par
+<code>Tau-Argus</code>.</p>
 <p>L’argument <code>nb_tab_option</code> permet de préciser la façon
-dont le tableau est découpé:</p>
+dont le tableau est découpé :</p>
 <ul>
-<li>L’option <code>&quot;min&quot;</code> consiste à construire le minimum de
-tables à 3 dimensions lors de la fusion. Ce sont donc des variables non
-hiérarchiques qui seront fusionnées en priorité.</li>
-<li>L’option <code>&quot;max&quot;</code> au contraire construit le maximum de
-tables à 3 dimensions possible lors de la fusion. Ce sont donc des
-variables hiérarchiques qui seront fusionnées en priorité. Cette option
-est intéressante pour réduire la taille des sous-tableaux produits et
-donc augmenter les chances que <code>Tau-Argus</code> puisse les
-traiter. L’inconvénient de cette option est qu’elle peut générer un très
-grand nombre de tableaux, nombre dépendant du nombre de noeuds dans les
-hiérarchies.</li>
-<li>L’option <code>&quot;smart&quot;</code> va chercher à construire le minimum de
-tables à 3 dimensions tout en cherchant à respecter une limite de taille
-(nombre de lignes) pour les sous-tableaux construits. Cette limite est
-fixée par l’argument <code>limit</code>. Par défaut, la valeur est fixée
-à <code>14 700</code> - choisie de par notre expérience. Si la limite
-n’est pas atteignable, un avertissement est affiché mais cela ne bloque
-pas la construction des tables et la pose du masque.</li>
+<li><p><strong><code>nb_tab_option = &quot;smart&quot;</code> (option recommandée
+et par défaut) :</strong> Cherche à générer le minimum de sous-tableaux
+tout en cherchant à respecter une taille maximale de sous-tableau fixée
+par l’argument <code>limit</code> (par défaut <code>14 700</code>
+lignes).</p></li>
+<li><p><strong><code>nb_tab_option = &quot;min&quot;</code> :</strong> Construit
+le minimum absolu de sous-tableaux à 3 dimensions, sans contrainte sur
+la taille des sous-tableaux produits.</p></li>
+<li><p><strong><code>nb_tab_option = &quot;max&quot;</code> (déconseillée)
+:</strong> Tente de construire le maximum de sous-tableaux possible.
+Cette option génère un sur-secret important et est aujourd’hui
+déconseillée au profit de l’option <code>&quot;smart&quot;</code>.</p></li>
 </ul>
-<p>Par défaut, l’argument <code>nb_tab_option</code> est fixé à
-<code>&quot;smart&quot;</code>. Il est déconseillé de changer cette valeur dans un
-premier temps.</p>
-<ul>
-<li>L’argument <code>nb_tab = &quot;min&quot;</code> est intéressant en termes de
-secret car c’est l’option qui génèrera le moins de sur-secret
-puisqu’elle construira le moins possible de sous-tableaux liés. Il peut
-être intéressant à utiliser si la table de départ contient un nombre de
-lignes raisonnables, c’est-à-dire si chaque dimension n’est pas trop
-ventilée.</li>
-<li>L’argument <code>nb_tab = &quot;max&quot;</code> créant le plus de tableaux
-possibles engendrera nécessairement le plus de secret, mais elle pourra
-aussi convenir quand les tableaux d’origine sont très longs et
-nécessitent d’être beaucoup découpés pour que la pose du secret soit
-possible avec <code>Tau-Argus</code>.</li>
-</ul>
+<blockquote>
+<p>💡 <strong>Pour en savoir plus sur le fonctionnement détaillé de ces
+options, l’impact sur le temps de calcul et le choix de la valeur de
+<code>limit</code>, consultez la section <a href="#choix-nb-tableaux">Comment choisir le nombre de tableaux à
+générer lors de la réduction de dimension ?</a> en fin de
+vignette.</strong></p>
+</blockquote>
 </div>
-<div id="exemple" class="section level3" number="0.4">
-<h3><span class="header-section-number">0.4</span> Exemple</h3>
+<div id="exemple" class="section level2" number="4">
+<h2><span class="header-section-number">4</span> Exemple</h2>
 <p>Comme tout est géré par la fonction <code>tab_rtauargus</code>, la
 pose du secret sur un tableau à 4 ou 5 dimensions n’ajoute pas de
 difficultés particulières pour l’utilisateur en réalité.</p>
 <p>Nous présentons ici un exemple de pose de secret sur un tableau à 4
 dimensions.</p>
-<div id="préparation-des-données" class="section level4" number="0.4.1">
-<h4><span class="header-section-number">0.4.1</span> Préparation des
-données</h4>
+<blockquote>
+<p>⚠️ <strong>Avertissement concernant les temps
+d’exécution</strong></p>
+<p>Des optimisations majeures ont été apportées à la fonction
+<code>tab_multi_manager()</code> (utilisée lors du traitement des
+tableaux issus de la réduction de dimension) avec la version 1.3.5 de
+rtauargus publié à l’été 2026. Ainsi, si vous avez utilisé cette
+fonctionnalité par le passé, les performances ressenties côté
+utilisateur peuvent radicalement changer.</p>
+<p>La méthode avec découpage est aujourd’hui <strong>nettement plus
+rapide</strong> que par le passé, et ce gain de performance est d’autant
+plus important que le nombre de sous-tableaux générés est grand. Par
+exemple, sur une table test qui générait 60 sous-tables, le temps
+d’éxécution est passé de 5h à 3h. Les ressources en RAM ont également
+été optimisées.</p>
+</blockquote>
+<div id="préparation-des-données" class="section level3" number="4.1">
+<h3><span class="header-section-number">4.1</span> Préparation des
+données</h3>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="fu">library</span>(tictoc)</span>
 <span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
 <span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a><span class="fu">library</span>(rtauargus)</span></code></pre></div>
@@ -532,16 +565,16 @@ données</h4>
 <span id="cb5-15"><a href="#cb5-15" tabindex="-1"></a><span class="co">#&gt;  $ pizzas_tot_abs: num [1:689] 5900938 6538420 6794859 15128 10168928 ...</span></span>
 <span id="cb5-16"><a href="#cb5-16" tabindex="-1"></a><span class="co">#&gt;  - attr(*, &quot;.internal.selfref&quot;)=&lt;externalptr&gt;</span></span></code></pre></div>
 </div>
-<div id="préparation-des-arguments-pour-tab_rtauargus" class="section level4" number="0.4.2">
-<h4><span class="header-section-number">0.4.2</span> Préparation des
-arguments pour <code>tab_rtauargus</code></h4>
+<div id="préparation-des-arguments-pour-tab_rtauargus" class="section level3" number="4.2">
+<h3><span class="header-section-number">4.2</span> Préparation des
+arguments pour <code>tab_rtauargus</code></h3>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a></span>
 <span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a>totcode <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="at">treff =</span><span class="st">&quot;Total&quot;</span>,<span class="at">cj =</span><span class="st">&quot;Total&quot;</span>, <span class="at">A10 =</span> <span class="st">&quot;Total&quot;</span>, <span class="at">type_distrib =</span><span class="st">&quot;Total&quot;</span>)</span>
 <span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a>explanatory_vars<span class="ot">&lt;-</span> <span class="fu">names</span>(totcode)</span></code></pre></div>
 </div>
-<div id="pose-du-secret-primaire" class="section level4" number="0.4.3">
-<h4><span class="header-section-number">0.4.3</span> Pose du secret
-primaire</h4>
+<div id="pose-du-secret-primaire" class="section level3" number="4.3">
+<h3><span class="header-section-number">4.3</span> Pose du secret
+primaire</h3>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a>datatest1_with_prim <span class="ot">&lt;-</span> datatest1 <span class="sc">%&gt;%</span></span>
 <span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a>    <span class="fu">mutate</span>(</span>
 <span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a>      <span class="at">is_secret_freq =</span> (nb_obs <span class="sc">&gt;</span> <span class="dv">0</span> <span class="sc">&amp;</span> nb_obs <span class="sc">&lt;</span> <span class="dv">3</span>),</span>
@@ -553,9 +586,9 @@ primaire</h4>
 <span id="cb7-9"><a href="#cb7-9" tabindex="-1"></a>      <span class="at">nb_obs =</span> <span class="fu">ceiling</span>(nb_obs)</span>
 <span id="cb7-10"><a href="#cb7-10" tabindex="-1"></a>    )</span></code></pre></div>
 </div>
-<div id="pose-du-secret-secondaire-avec-rtauargus" class="section level4" number="0.4.4">
-<h4><span class="header-section-number">0.4.4</span> Pose du secret
-secondaire avec <code>rtauargus</code></h4>
+<div id="pose-du-secret-secondaire-avec-rtauargus" class="section level3" number="4.4">
+<h3><span class="header-section-number">4.4</span> Pose du secret
+secondaire avec <code>rtauargus</code></h3>
 <p>Pour poser le secret secondaire, on utilise la fonction
 <code>tab_rtauargus</code> avec l’argument
 <code>split_tab = TRUE</code>. Ainsi, <code>Tau-Argus</code> n’aura pas
@@ -585,38 +618,44 @@ appel sous-jacent à <code>tab_multi_manager</code>.</p>
 <span id="cb8-20"><a href="#cb8-20" tabindex="-1"></a><span class="co">#&gt; Reducing from 4 to 3...</span></span>
 <span id="cb8-21"><a href="#cb8-21" tabindex="-1"></a><span class="co">#&gt; tab has generated 2 tables in total</span></span>
 <span id="cb8-22"><a href="#cb8-22" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb8-23"><a href="#cb8-23" tabindex="-1"></a><span class="co">#&gt; Spliting...</span></span>
-<span id="cb8-24"><a href="#cb8-24" tabindex="-1"></a><span class="co">#&gt;  treff___cj </span></span>
-<span id="cb8-25"><a href="#cb8-25" tabindex="-1"></a><span class="co">#&gt; tab has generated 2 tables in total</span></span>
+<span id="cb8-23"><a href="#cb8-23" tabindex="-1"></a><span class="co">#&gt;   Table size distribution :</span></span>
+<span id="cb8-24"><a href="#cb8-24" tabindex="-1"></a><span class="co">#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span></span>
+<span id="cb8-25"><a href="#cb8-25" tabindex="-1"></a><span class="co">#&gt;   535.0   536.5   538.0   538.0   539.5   541.0 </span></span>
 <span id="cb8-26"><a href="#cb8-26" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb8-27"><a href="#cb8-27" tabindex="-1"></a><span class="co">#&gt; --- Current table to treat:  tab1 ---</span></span>
-<span id="cb8-28"><a href="#cb8-28" tabindex="-1"></a><span class="co">#&gt; --- Current table to treat:  tab2 ---</span></span>
-<span id="cb8-29"><a href="#cb8-29" tabindex="-1"></a><span class="co">#&gt; --- Current table to treat:  tab1 ---</span></span>
-<span id="cb8-30"><a href="#cb8-30" tabindex="-1"></a><span class="co">#&gt; --- Current table to treat:  tab2 ---</span></span>
-<span id="cb8-31"><a href="#cb8-31" tabindex="-1"></a><span class="co">#&gt; --- Current table to treat:  tab1 ---</span></span>
-<span id="cb8-32"><a href="#cb8-32" tabindex="-1"></a>tictoc<span class="sc">::</span><span class="fu">toc</span>()</span>
-<span id="cb8-33"><a href="#cb8-33" tabindex="-1"></a><span class="co">#&gt; 45.31 sec elapsed</span></span></code></pre></div>
+<span id="cb8-27"><a href="#cb8-27" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb8-28"><a href="#cb8-28" tabindex="-1"></a><span class="co">#&gt; Spliting...</span></span>
+<span id="cb8-29"><a href="#cb8-29" tabindex="-1"></a><span class="co">#&gt;  treff___cj </span></span>
+<span id="cb8-30"><a href="#cb8-30" tabindex="-1"></a><span class="co">#&gt; tab has generated 2 tables in total</span></span>
+<span id="cb8-31"><a href="#cb8-31" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb8-32"><a href="#cb8-32" tabindex="-1"></a><span class="co">#&gt;   Table size distribution :</span></span>
+<span id="cb8-33"><a href="#cb8-33" tabindex="-1"></a><span class="co">#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span></span>
+<span id="cb8-34"><a href="#cb8-34" tabindex="-1"></a><span class="co">#&gt;   535.0   536.5   538.0   538.0   539.5   541.0 </span></span>
+<span id="cb8-35"><a href="#cb8-35" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb8-36"><a href="#cb8-36" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb8-37"><a href="#cb8-37" tabindex="-1"></a><span class="co">#&gt; --- Current table to treat:  tab1 ---</span></span>
+<span id="cb8-38"><a href="#cb8-38" tabindex="-1"></a><span class="co">#&gt; --- Current table to treat:  tab2 ---</span></span>
+<span id="cb8-39"><a href="#cb8-39" tabindex="-1"></a><span class="co">#&gt; --- Current table to treat:  tab1 ---</span></span>
+<span id="cb8-40"><a href="#cb8-40" tabindex="-1"></a><span class="co">#&gt; --- Current table to treat:  tab2 ---</span></span>
+<span id="cb8-41"><a href="#cb8-41" tabindex="-1"></a><span class="co">#&gt; --- Current table to treat:  tab1 ---</span></span>
+<span id="cb8-42"><a href="#cb8-42" tabindex="-1"></a>tictoc<span class="sc">::</span><span class="fu">toc</span>()</span>
+<span id="cb8-43"><a href="#cb8-43" tabindex="-1"></a><span class="co">#&gt; 61.01 sec elapsed</span></span></code></pre></div>
 <p>La réduction de dimensions a conduit à construire deux sous-tableaux
 de 3 dimensions à partir du tableau original.</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a><span class="fu">str</span>(res_wi_split)</span>
-<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a><span class="co">#&gt; &#39;data.frame&#39;:    689 obs. of  17 variables:</span></span>
-<span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a><span class="co">#&gt;  $ treff         : chr  &quot;Total&quot; &quot;tr1&quot; &quot;tr1&quot; &quot;tr1&quot; ...</span></span>
-<span id="cb9-4"><a href="#cb9-4" tabindex="-1"></a><span class="co">#&gt;  $ cj            : chr  &quot;Total&quot; &quot;LL&quot; &quot;SP&quot; &quot;Total&quot; ...</span></span>
-<span id="cb9-5"><a href="#cb9-5" tabindex="-1"></a><span class="co">#&gt;  $ type_distrib  : chr  &quot;1&quot; &quot;1&quot; &quot;1&quot; &quot;1&quot; ...</span></span>
-<span id="cb9-6"><a href="#cb9-6" tabindex="-1"></a><span class="co">#&gt;  $ A10           : chr  &quot;AZ&quot; &quot;AZ&quot; &quot;AZ&quot; &quot;AZ&quot; ...</span></span>
-<span id="cb9-7"><a href="#cb9-7" tabindex="-1"></a><span class="co">#&gt;  $ nb_obs        : num  115 89 21 110 6 ...</span></span>
-<span id="cb9-8"><a href="#cb9-8" tabindex="-1"></a><span class="co">#&gt;  $ pizzas_tot    : num  8447 769 1301 532 7915 ...</span></span>
-<span id="cb9-9"><a href="#cb9-9" tabindex="-1"></a><span class="co">#&gt;  $ pizzas_max    : num  1471.2 13.8 96.4 96.4 1471.2 ...</span></span>
+<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a><span class="co">#&gt; &#39;data.frame&#39;:    689 obs. of  13 variables:</span></span>
+<span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a><span class="co">#&gt;  $ treff         : chr  &quot;tr1&quot; &quot;tr2&quot; &quot;tr3&quot; &quot;Total&quot; ...</span></span>
+<span id="cb9-4"><a href="#cb9-4" tabindex="-1"></a><span class="co">#&gt;  $ cj            : chr  &quot;Total&quot; &quot;Total&quot; &quot;Total&quot; &quot;Total&quot; ...</span></span>
+<span id="cb9-5"><a href="#cb9-5" tabindex="-1"></a><span class="co">#&gt;  $ type_distrib  : chr  &quot;Total&quot; &quot;Total&quot; &quot;Total&quot; &quot;2&quot; ...</span></span>
+<span id="cb9-6"><a href="#cb9-6" tabindex="-1"></a><span class="co">#&gt;  $ A10           : chr  &quot;Total&quot; &quot;Total&quot; &quot;Total&quot; &quot;Total&quot; ...</span></span>
+<span id="cb9-7"><a href="#cb9-7" tabindex="-1"></a><span class="co">#&gt;  $ nb_obs        : num  227094 7804 228 77736 110405 ...</span></span>
+<span id="cb9-8"><a href="#cb9-8" tabindex="-1"></a><span class="co">#&gt;  $ pizzas_tot    : num  5900938 6538420 6794859 6692768 9280934 ...</span></span>
+<span id="cb9-9"><a href="#cb9-9" tabindex="-1"></a><span class="co">#&gt;  $ pizzas_max    : num  135444 267177 852749 852749 523505 ...</span></span>
 <span id="cb9-10"><a href="#cb9-10" tabindex="-1"></a><span class="co">#&gt;  $ is_secret_freq: logi  FALSE FALSE FALSE FALSE FALSE FALSE ...</span></span>
-<span id="cb9-11"><a href="#cb9-11" tabindex="-1"></a><span class="co">#&gt;  $ is_secret_dom : logi  FALSE TRUE FALSE FALSE FALSE FALSE ...</span></span>
+<span id="cb9-11"><a href="#cb9-11" tabindex="-1"></a><span class="co">#&gt;  $ is_secret_dom : logi  FALSE FALSE FALSE FALSE FALSE FALSE ...</span></span>
 <span id="cb9-12"><a href="#cb9-12" tabindex="-1"></a><span class="co">#&gt;  $ is_secret_prim: logi  FALSE FALSE FALSE FALSE FALSE FALSE ...</span></span>
-<span id="cb9-13"><a href="#cb9-13" tabindex="-1"></a><span class="co">#&gt;  $ nb_obs_rnd    : num  115 89 21 110 6 ...</span></span>
-<span id="cb9-14"><a href="#cb9-14" tabindex="-1"></a><span class="co">#&gt;  $ pizzas_tot_abs: num  8447 769 1301 532 7915 ...</span></span>
-<span id="cb9-15"><a href="#cb9-15" tabindex="-1"></a><span class="co">#&gt;  $ is_secret_1   : logi  FALSE TRUE FALSE TRUE TRUE TRUE ...</span></span>
-<span id="cb9-16"><a href="#cb9-16" tabindex="-1"></a><span class="co">#&gt;  $ is_secret_2   : logi  FALSE TRUE TRUE TRUE TRUE TRUE ...</span></span>
-<span id="cb9-17"><a href="#cb9-17" tabindex="-1"></a><span class="co">#&gt;  $ is_secret_3   : logi  FALSE TRUE TRUE TRUE TRUE TRUE ...</span></span>
-<span id="cb9-18"><a href="#cb9-18" tabindex="-1"></a><span class="co">#&gt;  $ is_secret_4   : logi  FALSE TRUE TRUE TRUE TRUE TRUE ...</span></span>
-<span id="cb9-19"><a href="#cb9-19" tabindex="-1"></a><span class="co">#&gt;  $ is_secret_5   : logi  FALSE TRUE TRUE TRUE TRUE TRUE ...</span></span></code></pre></div>
+<span id="cb9-13"><a href="#cb9-13" tabindex="-1"></a><span class="co">#&gt;  $ nb_obs_rnd    : num  227094 7804 228 77736 110405 ...</span></span>
+<span id="cb9-14"><a href="#cb9-14" tabindex="-1"></a><span class="co">#&gt;  $ pizzas_tot_abs: num  5900938 6538420 6794859 6692768 9280934 ...</span></span>
+<span id="cb9-15"><a href="#cb9-15" tabindex="-1"></a><span class="co">#&gt;  $ is_secret_5   : logi  FALSE FALSE FALSE FALSE FALSE FALSE ...</span></span></code></pre></div>
 <div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a>stats_wi_split <span class="ot">&lt;-</span> res_wi_split <span class="sc">%&gt;%</span></span>
 <span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a>    <span class="fu">rename_with</span>( <span class="sc">~</span><span class="st">&quot;final_suppress&quot;</span>, <span class="fu">last_col</span>()) <span class="sc">%&gt;%</span></span>
 <span id="cb10-3"><a href="#cb10-3" tabindex="-1"></a>    <span class="fu">mutate</span>(</span>
@@ -637,9 +676,9 @@ de 3 dimensions à partir du tableau original.</p>
 <p>Avec l’option de découpage du tableau de départ, la pose du secret
 sur le tableau à 4 dimensions génère 278 suppressions secondaires.</p>
 </div>
-<div id="comparaison-avec-une-pose-du-secret-sans-réduire-la-dimension-de-la-table" class="section level4" number="0.4.5">
-<h4><span class="header-section-number">0.4.5</span> Comparaison avec
-une pose du secret sans réduire la dimension de la table</h4>
+<div id="comparaison-avec-une-pose-du-secret-sans-réduire-la-dimension-de-la-table" class="section level3" number="4.5">
+<h3><span class="header-section-number">4.5</span> Comparaison avec une
+pose du secret sans réduire la dimension de la table</h3>
 <p><code>Tau-Argus</code> est en capacité de poser le secret secondaire
 sur un tableau à 4 dimensions avec <code>Modular</code>, mais, en plus
 d’émettre un avertissement sur le fait qu’avec ce nombre de dimensions,
@@ -666,17 +705,17 @@ issues du tableau original.</p>
 <span id="cb11-18"><a href="#cb11-18" tabindex="-1"></a><span class="co">#&gt; With split_tab = FALSE, tauargus treats the table in 4 or 5 dimensions.</span></span>
 <span id="cb11-19"><a href="#cb11-19" tabindex="-1"></a><span class="co">#&gt; In this case, the secondary secret may not being optimal according to tauargus itself</span></span>
 <span id="cb11-20"><a href="#cb11-20" tabindex="-1"></a><span class="co">#&gt; and the process may take longer.</span></span>
-<span id="cb11-21"><a href="#cb11-21" tabindex="-1"></a><span class="co">#&gt; Start of batch procedure; file: Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\example_1\wo_split\datatest1.arb</span></span>
-<span id="cb11-22"><a href="#cb11-22" tabindex="-1"></a><span class="co">#&gt; &lt;OPENTABLEDATA&gt; &quot;Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\example_1\wo_split\datatest1.tab&quot;</span></span>
-<span id="cb11-23"><a href="#cb11-23" tabindex="-1"></a><span class="co">#&gt; &lt;OPENMETADATA&gt; &quot;Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\example_1\wo_split\datatest1.rda&quot;</span></span>
+<span id="cb11-21"><a href="#cb11-21" tabindex="-1"></a><span class="co">#&gt; Start of batch procedure; file: Z:\rtauargus\vignettes\example_1\wo_split\datatest1.arb</span></span>
+<span id="cb11-22"><a href="#cb11-22" tabindex="-1"></a><span class="co">#&gt; &lt;OPENTABLEDATA&gt; &quot;Z:\rtauargus\vignettes\example_1\wo_split\datatest1.tab&quot;</span></span>
+<span id="cb11-23"><a href="#cb11-23" tabindex="-1"></a><span class="co">#&gt; &lt;OPENMETADATA&gt; &quot;Z:\rtauargus\vignettes\example_1\wo_split\datatest1.rda&quot;</span></span>
 <span id="cb11-24"><a href="#cb11-24" tabindex="-1"></a><span class="co">#&gt; &lt;SPECIFYTABLE&gt; &quot;treff&quot;&quot;cj&quot;&quot;A10&quot;&quot;type_distrib&quot;|&quot;pizzas_tot&quot;||</span></span>
 <span id="cb11-25"><a href="#cb11-25" tabindex="-1"></a><span class="co">#&gt; &lt;SAFETYRULE&gt; MAN(10)</span></span>
 <span id="cb11-26"><a href="#cb11-26" tabindex="-1"></a><span class="co">#&gt; &lt;READTABLE&gt; 1</span></span>
 <span id="cb11-27"><a href="#cb11-27" tabindex="-1"></a><span class="co">#&gt; Tables have been read</span></span>
-<span id="cb11-28"><a href="#cb11-28" tabindex="-1"></a><span class="co">#&gt; &lt;APRIORI&gt; &quot;Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\example_1\wo_split\datatest1.hst&quot;,1,&quot;,&quot;,0,0</span></span>
-<span id="cb11-29"><a href="#cb11-29" tabindex="-1"></a><span class="co">#&gt; Apriory file: Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\example_1\wo_split\datatest1.hst has been applied</span></span>
+<span id="cb11-28"><a href="#cb11-28" tabindex="-1"></a><span class="co">#&gt; &lt;APRIORI&gt; &quot;Z:\rtauargus\vignettes\example_1\wo_split\datatest1.hst&quot;,1,&quot;,&quot;,0,0</span></span>
+<span id="cb11-29"><a href="#cb11-29" tabindex="-1"></a><span class="co">#&gt; Apriory file: Z:\rtauargus\vignettes\example_1\wo_split\datatest1.hst has been applied</span></span>
 <span id="cb11-30"><a href="#cb11-30" tabindex="-1"></a><span class="co">#&gt;                    to table: treff x cj x A10 x type_distrib | pizzas_tot</span></span>
-<span id="cb11-31"><a href="#cb11-31" tabindex="-1"></a><span class="co">#&gt; Apriori file Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\example_1\wo_split\datatest1.hst has been read</span></span>
+<span id="cb11-31"><a href="#cb11-31" tabindex="-1"></a><span class="co">#&gt; Apriori file Z:\rtauargus\vignettes\example_1\wo_split\datatest1.hst has been read</span></span>
 <span id="cb11-32"><a href="#cb11-32" tabindex="-1"></a><span class="co">#&gt; &lt;SUPPRESS&gt; MOD(1,5,1,0,0)</span></span>
 <span id="cb11-33"><a href="#cb11-33" tabindex="-1"></a><span class="co">#&gt; Start of the modular protection for table treff x cj x A10 x type_distrib | pizzas_tot</span></span>
 <span id="cb11-34"><a href="#cb11-34" tabindex="-1"></a><span class="co">#&gt; </span><span class="al">WARNING</span><span class="co">: The table has 4 dimensions.</span></span>
@@ -684,13 +723,13 @@ issues du tableau original.</p>
 <span id="cb11-36"><a href="#cb11-36" tabindex="-1"></a><span class="co">#&gt;                    Please check the results carefully.</span></span>
 <span id="cb11-37"><a href="#cb11-37" tabindex="-1"></a><span class="co">#&gt;                    </span></span>
 <span id="cb11-38"><a href="#cb11-38" tabindex="-1"></a><span class="co">#&gt; End of modular protection. Time used 301 seconds</span></span>
-<span id="cb11-39"><a href="#cb11-39" tabindex="-1"></a><span class="co">#&gt;                    Number of suppressions: 291</span></span>
-<span id="cb11-40"><a href="#cb11-40" tabindex="-1"></a><span class="co">#&gt; &lt;WRITETABLE&gt; (1,4,,&quot;Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\example_1\wo_split\datatest1.csv&quot;)</span></span>
+<span id="cb11-39"><a href="#cb11-39" tabindex="-1"></a><span class="co">#&gt;                    Number of suppressions: 292</span></span>
+<span id="cb11-40"><a href="#cb11-40" tabindex="-1"></a><span class="co">#&gt; &lt;WRITETABLE&gt; (1,4,,&quot;Z:\rtauargus\vignettes\example_1\wo_split\datatest1.csv&quot;)</span></span>
 <span id="cb11-41"><a href="#cb11-41" tabindex="-1"></a><span class="co">#&gt; Table: treff x cj x A10 x type_distrib | pizzas_tot has been written</span></span>
-<span id="cb11-42"><a href="#cb11-42" tabindex="-1"></a><span class="co">#&gt;                    Output file name: Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\example_1\wo_split\datatest1.csv</span></span>
+<span id="cb11-42"><a href="#cb11-42" tabindex="-1"></a><span class="co">#&gt;                    Output file name: Z:\rtauargus\vignettes\example_1\wo_split\datatest1.csv</span></span>
 <span id="cb11-43"><a href="#cb11-43" tabindex="-1"></a><span class="co">#&gt; End of TauArgus run</span></span>
 <span id="cb11-44"><a href="#cb11-44" tabindex="-1"></a>tictoc<span class="sc">::</span><span class="fu">toc</span>()</span>
-<span id="cb11-45"><a href="#cb11-45" tabindex="-1"></a><span class="co">#&gt; 306.34 sec elapsed</span></span></code></pre></div>
+<span id="cb11-45"><a href="#cb11-45" tabindex="-1"></a><span class="co">#&gt; 308.73 sec elapsed</span></span></code></pre></div>
 <p>Avec seulement 689 lignes et aucune variable hiérarchique, la pose
 directe du secret prend environ 5 minutes à <code>Tau-Argus</code>.</p>
 <div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a>stats_wo_split <span class="ot">&lt;-</span> res_wo_split <span class="sc">%&gt;%</span></span>
@@ -706,9 +745,9 @@ directe du secret prend environ 5 minutes à <code>Tau-Argus</code>.</p>
 <span id="cb12-11"><a href="#cb12-11" tabindex="-1"></a><span class="co">#&gt;   flag   n</span></span>
 <span id="cb12-12"><a href="#cb12-12" tabindex="-1"></a><span class="co">#&gt; 1    A  79</span></span>
 <span id="cb12-13"><a href="#cb12-13" tabindex="-1"></a><span class="co">#&gt; 2    B  35</span></span>
-<span id="cb12-14"><a href="#cb12-14" tabindex="-1"></a><span class="co">#&gt; 3    D 265</span></span>
-<span id="cb12-15"><a href="#cb12-15" tabindex="-1"></a><span class="co">#&gt; 4    V 310</span></span></code></pre></div>
-<p>La pose directe du secret sur le tableau à 4 dimensions génère 265
+<span id="cb12-14"><a href="#cb12-14" tabindex="-1"></a><span class="co">#&gt; 3    D 269</span></span>
+<span id="cb12-15"><a href="#cb12-15" tabindex="-1"></a><span class="co">#&gt; 4    V 306</span></span></code></pre></div>
+<p>La pose directe du secret sur le tableau à 4 dimensions génère 269
 suppressions secondaires.</p>
 <p>On peut observer que le traitement de la table à 4 dimensions
 directement génère un masque un peu moins chargé en secret: 266 cellules
@@ -719,19 +758,468 @@ primaire au sein du tableau original et de la façon dont les
 sous-tableaux vont être construits.</p>
 </div>
 </div>
-<div id="détail-de-la-vignette" class="section level2" number="1">
-<h2><span class="header-section-number">1</span> Détail de la
+<div id="choix-avancé-du-nombre-de-tableaux-et-paramétrage-de-limit" class="section level2" number="5">
+<h2><span class="header-section-number">5</span> Choix avancé du nombre
+de tableaux et paramétrage de <code>limit</code></h2>
+<div id="choix-nb-tableaux" class="section level3" number="5.1">
+<h3><span class="header-section-number">5.1</span> Comment choisir le
+nombre de tableaux à générer lors de la réduction de dimension ?</h3>
+<p>Lors de la réduction de dimension, il est possible de choisir
+plusieurs valeurs pour l’argument <code>nb_tab_option</code>.</p>
+<p>De manière historique, les options <code>&quot;min&quot;</code> et
+<code>&quot;max&quot;</code> ont été créées pour générer respectivement le minimum
+ou le maximum de sous-tableaux via le choix des variables à
+fusionner.</p>
+<p>L’option <code>&quot;smart&quot;</code> a été développée par la suite et
+constitue <strong>la valeur recommandée en pratique</strong>. Elle
+calcule, pour chaque possibilité de variables à fusionner, le nombre de
+tableaux qui seront générés ainsi que leurs tailles. Elle s’utilise
+conjointement avec l’argument <code>limit</code>, qui fixe une taille
+maximale théorique par sous-tableau (par exemple
+<code>limit = 20000L</code>).</p>
+<p>L’option <code>&quot;smart&quot;</code> cherche à fusionner les variables de
+manière à <strong>minimiser le nombre de tableaux générés</strong>, sous
+la contrainte que chaque tableau ait une taille inférieure à
+<code>limit</code> (si possible) :</p>
+<ul>
+<li><p>Si la valeur de <code>limit</code> n’est pas contraignante (par
+exemple si <code>limit</code> est supérieur au nombre de lignes du
+tableau initial), <code>&quot;smart&quot;</code> générera le moins de tables
+possible.</p></li>
+<li><p>Contrairement à l’option <code>&quot;min&quot;</code>, si plusieurs choix
+de variables mènent au même nombre de tables, <code>&quot;smart&quot;</code>
+privilégiera le choix qui <strong>minimise la taille des tables
+générées</strong> (alors que <code>&quot;min&quot;</code> ne garantit que le
+nombre de tables, sans considération pour leur taille). En ce sens,
+<code>&quot;smart&quot;</code> inclut les avantages de <code>&quot;min&quot;</code> avec une
+meilleure qualité d’optimisation.</p></li>
+<li><p>Concernant l’option <code>&quot;max&quot;</code>, elle cherche à maximiser
+le nombre de tables générées. En 4 dimensions, elle générera bien le
+nombre maximal de tables. Néanmoins, en 5 dimensions, elle ne maximise
+pas toujours le nombre total de sous-tableaux, car générer moins de
+tables au passage de 5 à 4 dimensions permet parfois d’en générer
+beaucoup plus lors du passage de 4 à 3 dimensions. En pratique, l’usage
+de <code>&quot;max&quot;</code> (ou d’un équivalent <code>&quot;smart&quot;</code> avec un
+<code>limit</code> très faible comme <code>1L</code>) est
+<strong>fortement déconseillé</strong>.</p></li>
+</ul>
+<hr />
+</div>
+<div id="le-compromis-entre-qualité-du-secret-et-temps-dexécution" class="section level3" number="5.2">
+<h3><span class="header-section-number">5.2</span> Le compromis entre
+qualité du secret et temps d’exécution</h3>
+<p>Le cas idéal pour la protection des données est de <strong>générer le
+moins de tables possible</strong>. Plus le nombre de tables augmente
+:</p>
+<ol style="list-style-type: decimal">
+<li><p><strong>La qualité du secret diminue :</strong> Chaque
+sous-tableau ne contenant qu’un morceau de l’information initiale, les
+solveurs (<em>Tau-Argus</em>) cherchent des solutions sur des
+sous-espaces simplifiés. Cela peut conduire à davantage de sur-secret
+secondaire que sur le tableau complet.</p></li>
+<li><p><strong>Le temps d’exécution évolue de façon non linéaire
+:</strong> Au début, découper en sous-tableaux plus petits aide le
+solveur à converger plus vite. Mais dépassé un certain seuil, la
+multiplication du nombre de sous-tableaux fait exploser le temps de
+traitement global.</p></li>
+</ol>
+<p>Exemple concret (sur un <strong>dataset de 5 dimensions et 475 000
+lignes</strong>) :</p>
+<ul>
+<li><p><code>limit = 100 000</code>* (20 tables, de 63 000 à 95 000
+lignes) : Temps total = 148 min.</p></li>
+<li><p><code>limit = 80 000</code> (24 tables, de 52 000 à 78 000
+lignes) : Temps total = 143 min.</p></li>
+<li><p><code>limit = 50 000</code> (54 tables, de 20 000 à 41 000
+lignes) : Temps total = 142 min.</p></li>
+<li><p><code>limit = 30 000</code> (120 tables, de 12 000 à 18 000
+lignes) : Temps total = 200 min (explosion du temps).</p></li>
+</ul>
+<p>* limit = 100 000 génère également le nombre minimal de
+sous-tables</p>
+<p>(Les temps d’éxecution peuvent varier de plus ou moins 10%, faire des
+comparaisons avec précaution)</p>
+<p>On observe ainsi que le temps d’exécution reste relativement stable
+(ou augmente très légèrement) lorsque l’on découpe avec parcimonie, puis
+<strong>explose</strong> si trop de tables sont générées : la faible
+taille des sous-tableaux ne compense plus leur sur-nombre.</p>
+<hr />
+</div>
+<div id="démarche-recommandée-en-pratique" class="section level3" number="5.3">
+<h3><span class="header-section-number">5.3</span> Démarche recommandée
+en pratique</h3>
+<p>Il n’existe pas de valeur de <code>limit</code> universelle. Celle-ci
+dépend de la structure de votre table (nombre de lignes, nombre de
+variables, présence et profondeur des hiérarchies) ainsi que du solveur
+utilisé.</p>
+<p>La recherche de l’optimal se fait donc de manière
+<strong>empirique</strong> :</p>
+<ol style="list-style-type: decimal">
+<li><p><strong>Commencer par la solution minimale :</strong> Utiliser
+<code>nb_tab_option = &quot;smart&quot;</code> avec une valeur de
+<code>limit</code> supérieure ou égale au nombre de lignes du tableau
+initial. Dans la majorité des cas, cela suffit.</p></li>
+<li><p><strong>Ajuster en cas d’erreur du solveur :</strong> Si
+<em>Tau-Argus</em> ou le solveur échoue (manque de mémoire ou
+non-convergence), ré-essayer avec <code>&quot;smart&quot;</code> en fixant
+<code>limit</code> à une valeur légèrement inférieure à la taille
+maximale observée lors de la tentative précédente.</p></li>
+<li><p><strong>Répéter de façon itérative</strong> jusqu’à obtenir une
+exécution sans erreur.</p></li>
+</ol>
+<p>Pour prévisualiser le nombre et la taille des sous-tableaux générés
+selon différentes valeurs de <code>limit</code> sans lancer la pose du
+secret complète, vous pouvez utiliser la fonction
+<code>reduce_dims()</code>.</p>
+<p>Voici un exemple ci-dessous</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a><span class="fu">library</span>(rtauargus)</span>
+<span id="cb13-2"><a href="#cb13-2" tabindex="-1"></a></span>
+<span id="cb13-3"><a href="#cb13-3" tabindex="-1"></a><span class="fu">load</span>(<span class="st">&quot;../data/input_data_5d.RData&quot;</span>) <span class="co"># dfs5_agg, tot5, hrc5</span></span>
+<span id="cb13-4"><a href="#cb13-4" tabindex="-1"></a></span>
+<span id="cb13-5"><a href="#cb13-5" tabindex="-1"></a>dfs5_agg <span class="sc">%&gt;%</span> <span class="fu">colnames</span>() <span class="sc">%&gt;%</span> <span class="fu">print</span>()</span>
+<span id="cb13-6"><a href="#cb13-6" tabindex="-1"></a><span class="co">#&gt; [1] &quot;SEX&quot;            &quot;AGE&quot;            &quot;GEO&quot;            &quot;ACT&quot;            &quot;ECO&quot;            &quot;VALUE&quot;         </span></span>
+<span id="cb13-7"><a href="#cb13-7" tabindex="-1"></a><span class="co">#&gt; [7] &quot;freq&quot;           &quot;is_secret_prim&quot; &quot;secret_no_pl&quot;</span></span>
+<span id="cb13-8"><a href="#cb13-8" tabindex="-1"></a>dfs5_agg <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">tally</span>() <span class="sc">%&gt;%</span> <span class="fu">print</span>()</span>
+<span id="cb13-9"><a href="#cb13-9" tabindex="-1"></a><span class="co">#&gt; # A tibble: 1 x 1</span></span>
+<span id="cb13-10"><a href="#cb13-10" tabindex="-1"></a><span class="co">#&gt;        n</span></span>
+<span id="cb13-11"><a href="#cb13-11" tabindex="-1"></a><span class="co">#&gt;    &lt;int&gt;</span></span>
+<span id="cb13-12"><a href="#cb13-12" tabindex="-1"></a><span class="co">#&gt; 1 475200</span></span>
+<span id="cb13-13"><a href="#cb13-13" tabindex="-1"></a></span>
+<span id="cb13-14"><a href="#cb13-14" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;</span></span>
+<span id="cb13-15"><a href="#cb13-15" tabindex="-1"></a><span class="st">======================================================================</span></span>
+<span id="cb13-16"><a href="#cb13-16" tabindex="-1"></a><span class="st">Détail des modalités par variable (Totaux inclus) :</span></span>
+<span id="cb13-17"><a href="#cb13-17" tabindex="-1"></a><span class="st">  - ACT : 25 modalités (1 Total + 4 groupes + 20 sous-niveaux)</span></span>
+<span id="cb13-18"><a href="#cb13-18" tabindex="-1"></a><span class="st">  - GEO : 36 modalités (1 Total + 5 régions + 30 sous-régions)</span></span>
+<span id="cb13-19"><a href="#cb13-19" tabindex="-1"></a><span class="st">  - SEX : 11 modalités (1 Total + 10 modalités fines)</span></span>
+<span id="cb13-20"><a href="#cb13-20" tabindex="-1"></a><span class="st">  - AGE : 16 modalités (1 Total + 15 modalités fines)</span></span>
+<span id="cb13-21"><a href="#cb13-21" tabindex="-1"></a><span class="st">  - ECO :  3 modalités (1 Total +  2 modalités fines)</span></span>
+<span id="cb13-22"><a href="#cb13-22" tabindex="-1"></a><span class="st">======================================================================</span></span>
+<span id="cb13-23"><a href="#cb13-23" tabindex="-1"></a><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb13-24"><a href="#cb13-24" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-25"><a href="#cb13-25" tabindex="-1"></a><span class="co">#&gt; ======================================================================</span></span>
+<span id="cb13-26"><a href="#cb13-26" tabindex="-1"></a><span class="co">#&gt; Détail des modalités par variable (Totaux inclus) :</span></span>
+<span id="cb13-27"><a href="#cb13-27" tabindex="-1"></a><span class="co">#&gt;   - ACT : 25 modalités (1 Total + 4 groupes + 20 sous-niveaux)</span></span>
+<span id="cb13-28"><a href="#cb13-28" tabindex="-1"></a><span class="co">#&gt;   - GEO : 36 modalités (1 Total + 5 régions + 30 sous-régions)</span></span>
+<span id="cb13-29"><a href="#cb13-29" tabindex="-1"></a><span class="co">#&gt;   - SEX : 11 modalités (1 Total + 10 modalités fines)</span></span>
+<span id="cb13-30"><a href="#cb13-30" tabindex="-1"></a><span class="co">#&gt;   - AGE : 16 modalités (1 Total + 15 modalités fines)</span></span>
+<span id="cb13-31"><a href="#cb13-31" tabindex="-1"></a><span class="co">#&gt;   - ECO :  3 modalités (1 Total +  2 modalités fines)</span></span>
+<span id="cb13-32"><a href="#cb13-32" tabindex="-1"></a><span class="co">#&gt; ======================================================================</span></span>
+<span id="cb13-33"><a href="#cb13-33" tabindex="-1"></a></span>
+<span id="cb13-34"><a href="#cb13-34" tabindex="-1"></a><span class="co"># Pour &quot;min&quot; et &quot;max&quot;, limit très grand = pas d&#39;oversplit parasite</span></span>
+<span id="cb13-35"><a href="#cb13-35" tabindex="-1"></a><span class="co"># Pour &quot;smart&quot;, limit change de fonction du scénario</span></span>
+<span id="cb13-36"><a href="#cb13-36" tabindex="-1"></a>variants <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb13-37"><a href="#cb13-37" tabindex="-1"></a>  <span class="fu">list</span>(<span class="at">label =</span> <span class="st">&quot;min&quot;</span>,             <span class="at">nb_tab_option =</span> <span class="st">&quot;min&quot;</span>,   <span class="at">limit =</span> <span class="dv">1000000</span><span class="dt">L</span>),</span>
+<span id="cb13-38"><a href="#cb13-38" tabindex="-1"></a>  <span class="fu">list</span>(<span class="at">label =</span> <span class="st">&quot;smart_100000&quot;</span>, <span class="at">nb_tab_option =</span> <span class="st">&quot;smart&quot;</span>, <span class="at">limit =</span> <span class="dv">100000</span><span class="dt">L</span>),</span>
+<span id="cb13-39"><a href="#cb13-39" tabindex="-1"></a>  <span class="fu">list</span>(<span class="at">label =</span> <span class="st">&quot;smart_80000&quot;</span>,     <span class="at">nb_tab_option =</span> <span class="st">&quot;smart&quot;</span>, <span class="at">limit =</span> <span class="dv">80000</span><span class="dt">L</span>),</span>
+<span id="cb13-40"><a href="#cb13-40" tabindex="-1"></a>  <span class="fu">list</span>(<span class="at">label =</span> <span class="st">&quot;smart_50000&quot;</span>,     <span class="at">nb_tab_option =</span> <span class="st">&quot;smart&quot;</span>, <span class="at">limit =</span> <span class="dv">50000</span><span class="dt">L</span>),</span>
+<span id="cb13-41"><a href="#cb13-41" tabindex="-1"></a>  <span class="fu">list</span>(<span class="at">label =</span> <span class="st">&quot;smart_30000&quot;</span>,     <span class="at">nb_tab_option =</span> <span class="st">&quot;smart&quot;</span>, <span class="at">limit =</span> <span class="dv">30000</span><span class="dt">L</span>),</span>
+<span id="cb13-42"><a href="#cb13-42" tabindex="-1"></a>  <span class="fu">list</span>(<span class="at">label =</span> <span class="st">&quot;smart_10000&quot;</span>,     <span class="at">nb_tab_option =</span> <span class="st">&quot;smart&quot;</span>, <span class="at">limit =</span> <span class="dv">10000</span><span class="dt">L</span>),</span>
+<span id="cb13-43"><a href="#cb13-43" tabindex="-1"></a>  <span class="fu">list</span>(<span class="at">label =</span> <span class="st">&quot;max&quot;</span>,             <span class="at">nb_tab_option =</span> <span class="st">&quot;max&quot;</span>,   <span class="at">limit =</span> <span class="dv">1000000</span><span class="dt">L</span>)</span>
+<span id="cb13-44"><a href="#cb13-44" tabindex="-1"></a>)</span>
+<span id="cb13-45"><a href="#cb13-45" tabindex="-1"></a></span>
+<span id="cb13-46"><a href="#cb13-46" tabindex="-1"></a><span class="cf">for</span> (v <span class="cf">in</span> variants) {</span>
+<span id="cb13-47"><a href="#cb13-47" tabindex="-1"></a></span>
+<span id="cb13-48"><a href="#cb13-48" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">&quot;</span><span class="sc">\n</span><span class="st">======================================================================</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb13-49"><a href="#cb13-49" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">&quot;  Variant :&quot;</span>, v<span class="sc">$</span>label, <span class="st">&quot;(nb_tab_option =&quot;</span>, v<span class="sc">$</span>nb_tab_option,</span>
+<span id="cb13-50"><a href="#cb13-50" tabindex="-1"></a>      <span class="st">&quot;| limit =&quot;</span>, v<span class="sc">$</span>limit, <span class="st">&quot;)</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb13-51"><a href="#cb13-51" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">&quot;======================================================================</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb13-52"><a href="#cb13-52" tabindex="-1"></a></span>
+<span id="cb13-53"><a href="#cb13-53" tabindex="-1"></a>  dir_count <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="fu">tempdir</span>(), <span class="st">&quot;count_hrc&quot;</span>)</span>
+<span id="cb13-54"><a href="#cb13-54" tabindex="-1"></a>  <span class="fu">unlink</span>(dir_count, <span class="at">recursive =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb13-55"><a href="#cb13-55" tabindex="-1"></a>  <span class="fu">dir.create</span>(dir_count, <span class="at">recursive =</span> <span class="cn">TRUE</span>, <span class="at">showWarnings =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb13-56"><a href="#cb13-56" tabindex="-1"></a></span>
+<span id="cb13-57"><a href="#cb13-57" tabindex="-1"></a>  res_count <span class="ot">&lt;-</span> <span class="fu">reduce_dims</span>(</span>
+<span id="cb13-58"><a href="#cb13-58" tabindex="-1"></a>    <span class="at">dfs           =</span> dfs5_agg,</span>
+<span id="cb13-59"><a href="#cb13-59" tabindex="-1"></a>    <span class="at">dfs_name      =</span> <span class="st">&quot;tab_5d&quot;</span>,</span>
+<span id="cb13-60"><a href="#cb13-60" tabindex="-1"></a>    <span class="at">totcode       =</span> tot5,</span>
+<span id="cb13-61"><a href="#cb13-61" tabindex="-1"></a>    <span class="at">hrcfiles      =</span> hrc5,</span>
+<span id="cb13-62"><a href="#cb13-62" tabindex="-1"></a>    <span class="at">nb_tab_option =</span> v<span class="sc">$</span>nb_tab_option,</span>
+<span id="cb13-63"><a href="#cb13-63" tabindex="-1"></a>    <span class="at">limit         =</span> v<span class="sc">$</span>limit,</span>
+<span id="cb13-64"><a href="#cb13-64" tabindex="-1"></a>    <span class="at">over_split    =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb13-65"><a href="#cb13-65" tabindex="-1"></a>    <span class="at">sep_dir       =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb13-66"><a href="#cb13-66" tabindex="-1"></a>    <span class="at">hrc_dir       =</span> dir_count,</span>
+<span id="cb13-67"><a href="#cb13-67" tabindex="-1"></a>    <span class="at">verbose       =</span> <span class="cn">TRUE</span> <span class="co"># affichera le nombre de tables générées ainsi que leur distribution</span></span>
+<span id="cb13-68"><a href="#cb13-68" tabindex="-1"></a>  )</span>
+<span id="cb13-69"><a href="#cb13-69" tabindex="-1"></a>  <span class="fu">rm</span>(res_count); <span class="fu">gc</span>()</span>
+<span id="cb13-70"><a href="#cb13-70" tabindex="-1"></a></span>
+<span id="cb13-71"><a href="#cb13-71" tabindex="-1"></a>}</span>
+<span id="cb13-72"><a href="#cb13-72" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-73"><a href="#cb13-73" tabindex="-1"></a><span class="co">#&gt; ======================================================================</span></span>
+<span id="cb13-74"><a href="#cb13-74" tabindex="-1"></a><span class="co">#&gt;   Variant : min (nb_tab_option = min | limit = 1000000 )</span></span>
+<span id="cb13-75"><a href="#cb13-75" tabindex="-1"></a><span class="co">#&gt; ======================================================================</span></span>
+<span id="cb13-76"><a href="#cb13-76" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-77"><a href="#cb13-77" tabindex="-1"></a><span class="co">#&gt; Reducing from 5 to 4...</span></span>
+<span id="cb13-78"><a href="#cb13-78" tabindex="-1"></a><span class="co">#&gt; tab_5d has generated 2 tables in total</span></span>
+<span id="cb13-79"><a href="#cb13-79" tabindex="-1"></a><span class="co">#&gt; Reducing from 4 to 3...</span></span>
+<span id="cb13-80"><a href="#cb13-80" tabindex="-1"></a><span class="co">#&gt; tab_5d has generated 20 tables in total</span></span>
+<span id="cb13-81"><a href="#cb13-81" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-82"><a href="#cb13-82" tabindex="-1"></a><span class="co">#&gt;   Table size distribution :</span></span>
+<span id="cb13-83"><a href="#cb13-83" tabindex="-1"></a><span class="co">#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span></span>
+<span id="cb13-84"><a href="#cb13-84" tabindex="-1"></a><span class="co">#&gt;   53820   67068   75348   80579   90396  101556 </span></span>
+<span id="cb13-85"><a href="#cb13-85" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-86"><a href="#cb13-86" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-87"><a href="#cb13-87" tabindex="-1"></a><span class="co">#&gt; Spliting...</span></span>
+<span id="cb13-88"><a href="#cb13-88" tabindex="-1"></a><span class="co">#&gt;  ECO___SEX </span></span>
+<span id="cb13-89"><a href="#cb13-89" tabindex="-1"></a><span class="co">#&gt;  AGE___ACT </span></span>
+<span id="cb13-90"><a href="#cb13-90" tabindex="-1"></a><span class="co">#&gt; tab_5d has generated 20 tables in total</span></span>
+<span id="cb13-91"><a href="#cb13-91" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-92"><a href="#cb13-92" tabindex="-1"></a><span class="co">#&gt;   Table size distribution :</span></span>
+<span id="cb13-93"><a href="#cb13-93" tabindex="-1"></a><span class="co">#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span></span>
+<span id="cb13-94"><a href="#cb13-94" tabindex="-1"></a><span class="co">#&gt;   53820   67068   75348   80579   90396  101556 </span></span>
+<span id="cb13-95"><a href="#cb13-95" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-96"><a href="#cb13-96" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-97"><a href="#cb13-97" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-98"><a href="#cb13-98" tabindex="-1"></a><span class="co">#&gt; ======================================================================</span></span>
+<span id="cb13-99"><a href="#cb13-99" tabindex="-1"></a><span class="co">#&gt;   Variant : smart_100000 (nb_tab_option = smart | limit = 100000 )</span></span>
+<span id="cb13-100"><a href="#cb13-100" tabindex="-1"></a><span class="co">#&gt; ======================================================================</span></span>
+<span id="cb13-101"><a href="#cb13-101" tabindex="-1"></a><span class="co">#&gt; Choosing variables...</span></span>
+<span id="cb13-102"><a href="#cb13-102" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-103"><a href="#cb13-103" tabindex="-1"></a><span class="co">#&gt; Reducing from 5 to 4...</span></span>
+<span id="cb13-104"><a href="#cb13-104" tabindex="-1"></a><span class="co">#&gt; tab_5d has generated 10 tables in total</span></span>
+<span id="cb13-105"><a href="#cb13-105" tabindex="-1"></a><span class="co">#&gt; Reducing from 4 to 3...</span></span>
+<span id="cb13-106"><a href="#cb13-106" tabindex="-1"></a><span class="co">#&gt; tab_5d has generated 20 tables in total</span></span>
+<span id="cb13-107"><a href="#cb13-107" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-108"><a href="#cb13-108" tabindex="-1"></a><span class="co">#&gt;   Table size distribution :</span></span>
+<span id="cb13-109"><a href="#cb13-109" tabindex="-1"></a><span class="co">#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span></span>
+<span id="cb13-110"><a href="#cb13-110" tabindex="-1"></a><span class="co">#&gt;   63756   75348   77688   82404   92736   95616 </span></span>
+<span id="cb13-111"><a href="#cb13-111" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-112"><a href="#cb13-112" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-113"><a href="#cb13-113" tabindex="-1"></a><span class="co">#&gt; Spliting...</span></span>
+<span id="cb13-114"><a href="#cb13-114" tabindex="-1"></a><span class="co">#&gt;  ECO___ACT </span></span>
+<span id="cb13-115"><a href="#cb13-115" tabindex="-1"></a><span class="co">#&gt;  AGE___SEX </span></span>
+<span id="cb13-116"><a href="#cb13-116" tabindex="-1"></a><span class="co">#&gt; tab_5d has generated 20 tables in total</span></span>
+<span id="cb13-117"><a href="#cb13-117" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-118"><a href="#cb13-118" tabindex="-1"></a><span class="co">#&gt;   Table size distribution :</span></span>
+<span id="cb13-119"><a href="#cb13-119" tabindex="-1"></a><span class="co">#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span></span>
+<span id="cb13-120"><a href="#cb13-120" tabindex="-1"></a><span class="co">#&gt;   63756   75348   77688   82404   92736   95616 </span></span>
+<span id="cb13-121"><a href="#cb13-121" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-122"><a href="#cb13-122" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-123"><a href="#cb13-123" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-124"><a href="#cb13-124" tabindex="-1"></a><span class="co">#&gt; ======================================================================</span></span>
+<span id="cb13-125"><a href="#cb13-125" tabindex="-1"></a><span class="co">#&gt;   Variant : smart_80000 (nb_tab_option = smart | limit = 80000 )</span></span>
+<span id="cb13-126"><a href="#cb13-126" tabindex="-1"></a><span class="co">#&gt; ======================================================================</span></span>
+<span id="cb13-127"><a href="#cb13-127" tabindex="-1"></a><span class="co">#&gt; Choosing variables...</span></span>
+<span id="cb13-128"><a href="#cb13-128" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-129"><a href="#cb13-129" tabindex="-1"></a><span class="co">#&gt; Reducing from 5 to 4...</span></span>
+<span id="cb13-130"><a href="#cb13-130" tabindex="-1"></a><span class="co">#&gt; tab_5d has generated 2 tables in total</span></span>
+<span id="cb13-131"><a href="#cb13-131" tabindex="-1"></a><span class="co">#&gt; Reducing from 4 to 3...</span></span>
+<span id="cb13-132"><a href="#cb13-132" tabindex="-1"></a><span class="co">#&gt; tab_5d has generated 24 tables in total</span></span>
+<span id="cb13-133"><a href="#cb13-133" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-134"><a href="#cb13-134" tabindex="-1"></a><span class="co">#&gt;   Table size distribution :</span></span>
+<span id="cb13-135"><a href="#cb13-135" tabindex="-1"></a><span class="co">#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span></span>
+<span id="cb13-136"><a href="#cb13-136" tabindex="-1"></a><span class="co">#&gt;   52325   60375   63325   67784   76475   78850 </span></span>
+<span id="cb13-137"><a href="#cb13-137" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-138"><a href="#cb13-138" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-139"><a href="#cb13-139" tabindex="-1"></a><span class="co">#&gt; Spliting...</span></span>
+<span id="cb13-140"><a href="#cb13-140" tabindex="-1"></a><span class="co">#&gt;  AGE___SEX </span></span>
+<span id="cb13-141"><a href="#cb13-141" tabindex="-1"></a><span class="co">#&gt;  ECO___GEO </span></span>
+<span id="cb13-142"><a href="#cb13-142" tabindex="-1"></a><span class="co">#&gt; tab_5d has generated 24 tables in total</span></span>
+<span id="cb13-143"><a href="#cb13-143" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-144"><a href="#cb13-144" tabindex="-1"></a><span class="co">#&gt;   Table size distribution :</span></span>
+<span id="cb13-145"><a href="#cb13-145" tabindex="-1"></a><span class="co">#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span></span>
+<span id="cb13-146"><a href="#cb13-146" tabindex="-1"></a><span class="co">#&gt;   52325   60375   63325   67784   76475   78850 </span></span>
+<span id="cb13-147"><a href="#cb13-147" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-148"><a href="#cb13-148" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-149"><a href="#cb13-149" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-150"><a href="#cb13-150" tabindex="-1"></a><span class="co">#&gt; ======================================================================</span></span>
+<span id="cb13-151"><a href="#cb13-151" tabindex="-1"></a><span class="co">#&gt;   Variant : smart_50000 (nb_tab_option = smart | limit = 50000 )</span></span>
+<span id="cb13-152"><a href="#cb13-152" tabindex="-1"></a><span class="co">#&gt; ======================================================================</span></span>
+<span id="cb13-153"><a href="#cb13-153" tabindex="-1"></a><span class="co">#&gt; Choosing variables...</span></span>
+<span id="cb13-154"><a href="#cb13-154" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-155"><a href="#cb13-155" tabindex="-1"></a><span class="co">#&gt; Reducing from 5 to 4...</span></span>
+<span id="cb13-156"><a href="#cb13-156" tabindex="-1"></a><span class="co">#&gt; tab_5d has generated 2 tables in total</span></span>
+<span id="cb13-157"><a href="#cb13-157" tabindex="-1"></a><span class="co">#&gt; Reducing from 4 to 3...</span></span>
+<span id="cb13-158"><a href="#cb13-158" tabindex="-1"></a><span class="co">#&gt; tab_5d has generated 54 tables in total</span></span>
+<span id="cb13-159"><a href="#cb13-159" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-160"><a href="#cb13-160" tabindex="-1"></a><span class="co">#&gt;   Table size distribution :</span></span>
+<span id="cb13-161"><a href="#cb13-161" tabindex="-1"></a><span class="co">#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span></span>
+<span id="cb13-162"><a href="#cb13-162" tabindex="-1"></a><span class="co">#&gt;   20700   20700   27900   28883   29700   41400 </span></span>
+<span id="cb13-163"><a href="#cb13-163" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-164"><a href="#cb13-164" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-165"><a href="#cb13-165" tabindex="-1"></a><span class="co">#&gt; Spliting...</span></span>
+<span id="cb13-166"><a href="#cb13-166" tabindex="-1"></a><span class="co">#&gt;  ECO___SEX___AGE </span></span>
+<span id="cb13-167"><a href="#cb13-167" tabindex="-1"></a><span class="co">#&gt; tab_5d has generated 54 tables in total</span></span>
+<span id="cb13-168"><a href="#cb13-168" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-169"><a href="#cb13-169" tabindex="-1"></a><span class="co">#&gt;   Table size distribution :</span></span>
+<span id="cb13-170"><a href="#cb13-170" tabindex="-1"></a><span class="co">#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span></span>
+<span id="cb13-171"><a href="#cb13-171" tabindex="-1"></a><span class="co">#&gt;   20700   20700   27900   28883   29700   41400 </span></span>
+<span id="cb13-172"><a href="#cb13-172" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-173"><a href="#cb13-173" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-174"><a href="#cb13-174" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-175"><a href="#cb13-175" tabindex="-1"></a><span class="co">#&gt; ======================================================================</span></span>
+<span id="cb13-176"><a href="#cb13-176" tabindex="-1"></a><span class="co">#&gt;   Variant : smart_30000 (nb_tab_option = smart | limit = 30000 )</span></span>
+<span id="cb13-177"><a href="#cb13-177" tabindex="-1"></a><span class="co">#&gt; ======================================================================</span></span>
+<span id="cb13-178"><a href="#cb13-178" tabindex="-1"></a><span class="co">#&gt; Choosing variables...</span></span>
+<span id="cb13-179"><a href="#cb13-179" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-180"><a href="#cb13-180" tabindex="-1"></a><span class="co">#&gt; Reducing from 5 to 4...</span></span>
+<span id="cb13-181"><a href="#cb13-181" tabindex="-1"></a><span class="co">#&gt; tab_5d has generated 60 tables in total</span></span>
+<span id="cb13-182"><a href="#cb13-182" tabindex="-1"></a><span class="co">#&gt; Reducing from 4 to 3...</span></span>
+<span id="cb13-183"><a href="#cb13-183" tabindex="-1"></a><span class="co">#&gt; tab_5d has generated 120 tables in total</span></span>
+<span id="cb13-184"><a href="#cb13-184" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-185"><a href="#cb13-185" tabindex="-1"></a><span class="co">#&gt;   Table size distribution :</span></span>
+<span id="cb13-186"><a href="#cb13-186" tabindex="-1"></a><span class="co">#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span></span>
+<span id="cb13-187"><a href="#cb13-187" tabindex="-1"></a><span class="co">#&gt;   12075   15438   17630   16832   17928   18426 </span></span>
+<span id="cb13-188"><a href="#cb13-188" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-189"><a href="#cb13-189" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-190"><a href="#cb13-190" tabindex="-1"></a><span class="co">#&gt; Spliting...</span></span>
+<span id="cb13-191"><a href="#cb13-191" tabindex="-1"></a><span class="co">#&gt;  ACT___GEO </span></span>
+<span id="cb13-192"><a href="#cb13-192" tabindex="-1"></a><span class="co">#&gt;  AGE___SEX </span></span>
+<span id="cb13-193"><a href="#cb13-193" tabindex="-1"></a><span class="co">#&gt; tab_5d has generated 120 tables in total</span></span>
+<span id="cb13-194"><a href="#cb13-194" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-195"><a href="#cb13-195" tabindex="-1"></a><span class="co">#&gt;   Table size distribution :</span></span>
+<span id="cb13-196"><a href="#cb13-196" tabindex="-1"></a><span class="co">#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span></span>
+<span id="cb13-197"><a href="#cb13-197" tabindex="-1"></a><span class="co">#&gt;   12075   15438   17630   16832   17928   18426 </span></span>
+<span id="cb13-198"><a href="#cb13-198" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-199"><a href="#cb13-199" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-200"><a href="#cb13-200" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-201"><a href="#cb13-201" tabindex="-1"></a><span class="co">#&gt; ======================================================================</span></span>
+<span id="cb13-202"><a href="#cb13-202" tabindex="-1"></a><span class="co">#&gt;   Variant : smart_10000 (nb_tab_option = smart | limit = 10000 )</span></span>
+<span id="cb13-203"><a href="#cb13-203" tabindex="-1"></a><span class="co">#&gt; ======================================================================</span></span>
+<span id="cb13-204"><a href="#cb13-204" tabindex="-1"></a><span class="co">#&gt; Choosing variables...</span></span>
+<span id="cb13-205"><a href="#cb13-205" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-206"><a href="#cb13-206" tabindex="-1"></a><span class="co">#&gt; Reducing from 5 to 4...</span></span>
+<span id="cb13-207"><a href="#cb13-207" tabindex="-1"></a><span class="co">#&gt; tab_5d has generated 2 tables in total</span></span>
+<span id="cb13-208"><a href="#cb13-208" tabindex="-1"></a><span class="co">#&gt; Reducing from 4 to 3...</span></span>
+<span id="cb13-209"><a href="#cb13-209" tabindex="-1"></a><span class="co">#&gt; tab_5d has generated 270 tables in total</span></span>
+<span id="cb13-210"><a href="#cb13-210" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-211"><a href="#cb13-211" tabindex="-1"></a><span class="co">#&gt;   Table size distribution :</span></span>
+<span id="cb13-212"><a href="#cb13-212" tabindex="-1"></a><span class="co">#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span></span>
+<span id="cb13-213"><a href="#cb13-213" tabindex="-1"></a><span class="co">#&gt;    4860    6048    6588    7257    8748    9828 </span></span>
+<span id="cb13-214"><a href="#cb13-214" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-215"><a href="#cb13-215" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-216"><a href="#cb13-216" tabindex="-1"></a><span class="co">#&gt; Spliting...</span></span>
+<span id="cb13-217"><a href="#cb13-217" tabindex="-1"></a><span class="co">#&gt;  ACT___SEX___AGE </span></span>
+<span id="cb13-218"><a href="#cb13-218" tabindex="-1"></a><span class="co">#&gt; tab_5d has generated 270 tables in total</span></span>
+<span id="cb13-219"><a href="#cb13-219" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-220"><a href="#cb13-220" tabindex="-1"></a><span class="co">#&gt;   Table size distribution :</span></span>
+<span id="cb13-221"><a href="#cb13-221" tabindex="-1"></a><span class="co">#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span></span>
+<span id="cb13-222"><a href="#cb13-222" tabindex="-1"></a><span class="co">#&gt;    4860    6048    6588    7257    8748    9828 </span></span>
+<span id="cb13-223"><a href="#cb13-223" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-224"><a href="#cb13-224" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-225"><a href="#cb13-225" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-226"><a href="#cb13-226" tabindex="-1"></a><span class="co">#&gt; ======================================================================</span></span>
+<span id="cb13-227"><a href="#cb13-227" tabindex="-1"></a><span class="co">#&gt;   Variant : max (nb_tab_option = max | limit = 1000000 )</span></span>
+<span id="cb13-228"><a href="#cb13-228" tabindex="-1"></a><span class="co">#&gt; ======================================================================</span></span>
+<span id="cb13-229"><a href="#cb13-229" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-230"><a href="#cb13-230" tabindex="-1"></a><span class="co">#&gt; Reducing from 5 to 4...</span></span>
+<span id="cb13-231"><a href="#cb13-231" tabindex="-1"></a><span class="co">#&gt; tab_5d has generated 60 tables in total</span></span>
+<span id="cb13-232"><a href="#cb13-232" tabindex="-1"></a><span class="co">#&gt; Reducing from 4 to 3...</span></span>
+<span id="cb13-233"><a href="#cb13-233" tabindex="-1"></a><span class="co">#&gt; tab_5d has generated 758 tables in total</span></span>
+<span id="cb13-234"><a href="#cb13-234" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-235"><a href="#cb13-235" tabindex="-1"></a><span class="co">#&gt;   Table size distribution :</span></span>
+<span id="cb13-236"><a href="#cb13-236" tabindex="-1"></a><span class="co">#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span></span>
+<span id="cb13-237"><a href="#cb13-237" tabindex="-1"></a><span class="co">#&gt;    2145    2673    3003    2978    3201    3498 </span></span>
+<span id="cb13-238"><a href="#cb13-238" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-239"><a href="#cb13-239" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-240"><a href="#cb13-240" tabindex="-1"></a><span class="co">#&gt; Spliting...</span></span>
+<span id="cb13-241"><a href="#cb13-241" tabindex="-1"></a><span class="co">#&gt;  AGE___GEO___ACT </span></span>
+<span id="cb13-242"><a href="#cb13-242" tabindex="-1"></a><span class="co">#&gt; tab_5d has generated 758 tables in total</span></span>
+<span id="cb13-243"><a href="#cb13-243" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-244"><a href="#cb13-244" tabindex="-1"></a><span class="co">#&gt;   Table size distribution :</span></span>
+<span id="cb13-245"><a href="#cb13-245" tabindex="-1"></a><span class="co">#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span></span>
+<span id="cb13-246"><a href="#cb13-246" tabindex="-1"></a><span class="co">#&gt;    2145    2673    3003    2978    3201    3498</span></span></code></pre></div>
+<div id="synthèse-comparative-des-performances-selon-la-valeur-de-limit" class="section level4" number="5.3.1">
+<h4><span class="header-section-number">5.3.1</span> Synthèse
+comparative des performances selon la valeur de <code>limit</code></h4>
+<p>D’un point de vue méthodologique, on peut se demander quel est
+l’impact de <code>limit</code> sur le nombre de tables, le temps
+d’éxecution, ainsi que le secret généré. Ci-dessous une synthèse est
+proposée.</p>
+<p>En utilisant le jeu de données précédent, et l’option
+<code>suppress = &quot;GH(1,100)&quot;</code> (afin de réduire le temps
+d’éxécution du benchmark), on obtient les résultats suivants :</p>
+<table>
+<colgroup>
+<col width="11%" />
+<col width="14%" />
+<col width="14%" />
+<col width="14%" />
+<col width="14%" />
+<col width="14%" />
+<col width="14%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">Variant</th>
+<th align="center">Nb tables</th>
+<th align="center">Taille max (lignes)</th>
+<th align="center">Temps d’exéc.</th>
+<th align="center">Mémoire max</th>
+<th align="center">Secret sec. (cellules)</th>
+<th align="center">Masque total (% val.)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><strong><code>min</code></strong></td>
+<td align="center">20</td>
+<td align="center">101 556</td>
+<td align="center">2h 28min<br>(8 888 s)</td>
+<td align="center">769 MB</td>
+<td align="center">164 024</td>
+<td align="center">35,11 %</td>
+</tr>
+<tr class="even">
+<td align="left"><strong><code>smart_100000</code></strong></td>
+<td align="center">20</td>
+<td align="center">95 616</td>
+<td align="center">2h 01min<br>(7 254 s)</td>
+<td align="center">950 MB</td>
+<td align="center">153 535</td>
+<td align="center">32,96 %</td>
+</tr>
+<tr class="odd">
+<td align="left"><strong><code>smart_80000</code></strong></td>
+<td align="center">24</td>
+<td align="center">78 850</td>
+<td align="center">2h 23min<br>(8 605 s)</td>
+<td align="center">1 081 MB</td>
+<td align="center">153 647</td>
+<td align="center">32,97 %</td>
+</tr>
+<tr class="even">
+<td align="left"><strong><code>smart_50000</code></strong></td>
+<td align="center">54</td>
+<td align="center">41 400</td>
+<td align="center">2h 22min<br>(8 522 s)</td>
+<td align="center">1 325 MB</td>
+<td align="center">140 930</td>
+<td align="center">30,33 %</td>
+</tr>
+<tr class="odd">
+<td align="left"><strong><code>smart_30000</code></strong></td>
+<td align="center">120</td>
+<td align="center">18 426</td>
+<td align="center">3h 22min<br>(12 118 s)</td>
+<td align="center">2 377 MB</td>
+<td align="center">174 481</td>
+<td align="center">36,95 %</td>
+</tr>
+</tbody>
+</table>
+<p>On observe bien que la configuration <code>smart_100000</code> génère
+le même nombre de tableaux que <code>min</code>, mais de tailles
+différentes. Globalement, le temps d’éxecution est croissant avec le
+nombre de tables. Bien que la tendance générale montre une hausse du
+secret avec le nombre de sous-tableaux, la variante
+<code>smart_50000</code> fait exception ici en offrant le masque le plus
+restreint.</p>
+</div>
+</div>
+</div>
+<div id="détail-de-la-vignette" class="section level2" number="6">
+<h2><span class="header-section-number">6</span> Détail de la
 vignette</h2>
 <ul>
 <li><p>Authors: <strong><a> Wistan Pomel </a></strong> &amp; <strong><a>
 Andre-Raymond Socard </a></strong> &amp;
 <strong><a href="mailto:julien.jamme@insee.fr">Julien Jamme</a></strong>
 &amp; <strong><a>Nathanael Rastout</a></strong></p></li>
-<li><p>Last update: <strong>11/01/2024</strong></p></li>
-<li><p>Version of rtauargus used: <strong>1.2.0</strong></p></li>
+<li><p>Last update: <strong>28/07/2026</strong></p></li>
+<li><p>Version of rtauargus used: <strong>1.3.5</strong></p></li>
 <li><p>Version of τ-Argus used : <strong>TauArgus
 4.2.3</strong></p></li>
-<li><p>R version used : <strong>4.2.3</strong></p>
+<li><p>R version used : <strong>4.5.3</strong></p>
 <p style="text-align: right">
 <p><a href="#TOC" title="Back to summary">summary ↑</a></p>
 </p></li>
