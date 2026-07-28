@@ -506,6 +506,12 @@ Reducing from 4 to 3...\n")
 
   if (verbose) {
     cat(paste(dfs_name,"has generated",length(res$tabs),"tables in total\n\n"))
+
+    table_sizes  <- sapply(res$tabs, nrow)
+    cat("  Table size distribution :\n")
+    print(summary(table_sizes))
+    cat("\n\n")
+
   }
 
   # Put a format usable by rtauargus
@@ -560,6 +566,11 @@ Reducing from 4 to 3...\n")
 
     if (verbose) {
       cat(paste(dfs_name,"has generated",length(res$tabs),"tables in total\n\n"))
+
+      table_sizes  <- sapply(res$tabs, nrow)
+      cat("  Table size distribution :\n")
+      print(summary(table_sizes))
+      cat("\n\n")
     }
 
     # The user specified a limit (smart or over_split case)
