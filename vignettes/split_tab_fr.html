@@ -629,7 +629,7 @@ appel sous-jacent à <code>tab_multi_manager</code>.</p>
 <span id="cb8-31"><a href="#cb8-31" tabindex="-1"></a><span class="co">#&gt; --- Current table to treat:  tab2 ---</span></span>
 <span id="cb8-32"><a href="#cb8-32" tabindex="-1"></a><span class="co">#&gt; --- Current table to treat:  tab1 ---</span></span>
 <span id="cb8-33"><a href="#cb8-33" tabindex="-1"></a>tictoc<span class="sc">::</span><span class="fu">toc</span>()</span>
-<span id="cb8-34"><a href="#cb8-34" tabindex="-1"></a><span class="co">#&gt; 57.33 sec elapsed</span></span></code></pre></div>
+<span id="cb8-34"><a href="#cb8-34" tabindex="-1"></a><span class="co">#&gt; 52.61 sec elapsed</span></span></code></pre></div>
 <p>La réduction de dimensions a conduit à construire deux sous-tableaux
 de 3 dimensions à partir du tableau original.</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a><span class="fu">str</span>(res_wi_split)</span>
@@ -662,10 +662,10 @@ de 3 dimensions à partir du tableau original.</p>
 <span id="cb10-13"><a href="#cb10-13" tabindex="-1"></a><span class="co">#&gt;   flag   n</span></span>
 <span id="cb10-14"><a href="#cb10-14" tabindex="-1"></a><span class="co">#&gt; 1    A  79</span></span>
 <span id="cb10-15"><a href="#cb10-15" tabindex="-1"></a><span class="co">#&gt; 2    B  35</span></span>
-<span id="cb10-16"><a href="#cb10-16" tabindex="-1"></a><span class="co">#&gt; 3    D 278</span></span>
-<span id="cb10-17"><a href="#cb10-17" tabindex="-1"></a><span class="co">#&gt; 4    V 297</span></span></code></pre></div>
+<span id="cb10-16"><a href="#cb10-16" tabindex="-1"></a><span class="co">#&gt; 3    D 280</span></span>
+<span id="cb10-17"><a href="#cb10-17" tabindex="-1"></a><span class="co">#&gt; 4    V 295</span></span></code></pre></div>
 <p>Avec l’option de découpage du tableau de départ, la pose du secret
-sur le tableau à 4 dimensions génère 278 suppressions secondaires.</p>
+sur le tableau à 4 dimensions génère 280 suppressions secondaires.</p>
 </div>
 <div id="comparaison-avec-une-pose-du-secret-sans-réduire-la-dimension-de-la-table" class="section level3" number="4.5">
 <h3><span class="header-section-number">4.5</span> Comparaison avec une
@@ -713,14 +713,14 @@ issues du tableau original.</p>
 <span id="cb11-35"><a href="#cb11-35" tabindex="-1"></a><span class="co">#&gt;                    Running Modular can take a lot of time and maybe it is difficult to obtain a correct result.</span></span>
 <span id="cb11-36"><a href="#cb11-36" tabindex="-1"></a><span class="co">#&gt;                    Please check the results carefully.</span></span>
 <span id="cb11-37"><a href="#cb11-37" tabindex="-1"></a><span class="co">#&gt;                    </span></span>
-<span id="cb11-38"><a href="#cb11-38" tabindex="-1"></a><span class="co">#&gt; End of modular protection. Time used 302 seconds</span></span>
-<span id="cb11-39"><a href="#cb11-39" tabindex="-1"></a><span class="co">#&gt;                    Number of suppressions: 283</span></span>
+<span id="cb11-38"><a href="#cb11-38" tabindex="-1"></a><span class="co">#&gt; End of modular protection. Time used 300 seconds</span></span>
+<span id="cb11-39"><a href="#cb11-39" tabindex="-1"></a><span class="co">#&gt;                    Number of suppressions: 297</span></span>
 <span id="cb11-40"><a href="#cb11-40" tabindex="-1"></a><span class="co">#&gt; &lt;WRITETABLE&gt; (1,4,,&quot;Z:\rtauargus\vignettes\example_1\wo_split\datatest1.csv&quot;)</span></span>
 <span id="cb11-41"><a href="#cb11-41" tabindex="-1"></a><span class="co">#&gt; Table: treff x cj x A10 x type_distrib | pizzas_tot has been written</span></span>
 <span id="cb11-42"><a href="#cb11-42" tabindex="-1"></a><span class="co">#&gt;                    Output file name: Z:\rtauargus\vignettes\example_1\wo_split\datatest1.csv</span></span>
 <span id="cb11-43"><a href="#cb11-43" tabindex="-1"></a><span class="co">#&gt; End of TauArgus run</span></span>
 <span id="cb11-44"><a href="#cb11-44" tabindex="-1"></a>tictoc<span class="sc">::</span><span class="fu">toc</span>()</span>
-<span id="cb11-45"><a href="#cb11-45" tabindex="-1"></a><span class="co">#&gt; 307.54 sec elapsed</span></span></code></pre></div>
+<span id="cb11-45"><a href="#cb11-45" tabindex="-1"></a><span class="co">#&gt; 307.1 sec elapsed</span></span></code></pre></div>
 <p>Avec seulement 689 lignes et aucune variable hiérarchique, la pose
 directe du secret prend environ 5 minutes à <code>Tau-Argus</code>.</p>
 <div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a>stats_wo_split <span class="ot">&lt;-</span> res_wo_split <span class="sc">%&gt;%</span></span>
@@ -736,13 +736,13 @@ directe du secret prend environ 5 minutes à <code>Tau-Argus</code>.</p>
 <span id="cb12-11"><a href="#cb12-11" tabindex="-1"></a><span class="co">#&gt;   flag   n</span></span>
 <span id="cb12-12"><a href="#cb12-12" tabindex="-1"></a><span class="co">#&gt; 1    A  79</span></span>
 <span id="cb12-13"><a href="#cb12-13" tabindex="-1"></a><span class="co">#&gt; 2    B  35</span></span>
-<span id="cb12-14"><a href="#cb12-14" tabindex="-1"></a><span class="co">#&gt; 3    D 258</span></span>
-<span id="cb12-15"><a href="#cb12-15" tabindex="-1"></a><span class="co">#&gt; 4    V 317</span></span></code></pre></div>
-<p>La pose directe du secret sur le tableau à 4 dimensions génère 258
+<span id="cb12-14"><a href="#cb12-14" tabindex="-1"></a><span class="co">#&gt; 3    D 274</span></span>
+<span id="cb12-15"><a href="#cb12-15" tabindex="-1"></a><span class="co">#&gt; 4    V 301</span></span></code></pre></div>
+<p>La pose directe du secret sur le tableau à 4 dimensions génère 274
 suppressions secondaires.</p>
 <p>On peut observer que le traitement de la table à 4 dimensions
-directement génère un masque un peu moins chargé en secret: 258 cellules
-en secret secondaire, contre 278 avec une réduction de dimensions.</p>
+directement génère un masque un peu moins chargé en secret: 274 cellules
+en secret secondaire, contre 280 avec une réduction de dimensions.</p>
 <p>Il est difficile d’anticiper cette différence puisqu’elle est très
 dépendante de la structuration des données, de la présence du secret
 primaire au sein du tableau original et de la façon dont les
@@ -1076,6 +1076,16 @@ d’éxécution du benchmark), on obtient les résultats suivants :</p>
 </thead>
 <tbody>
 <tr class="odd">
+<td align="left"><strong><code>no_split</code></strong> <em>(sans
+réduction)</em></td>
+<td align="center">1</td>
+<td align="center">475 200</td>
+<td align="center"><strong>Échec (Crash)</strong></td>
+<td align="center">N/A</td>
+<td align="center">N/A</td>
+<td align="center">N/A</td>
+</tr>
+<tr class="even">
 <td align="left"><strong><code>min</code></strong></td>
 <td align="center">20</td>
 <td align="center">101 556</td>
@@ -1084,7 +1094,7 @@ d’éxécution du benchmark), on obtient les résultats suivants :</p>
 <td align="center">164 024</td>
 <td align="center">35,11 %</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left"><strong><code>smart_100000</code></strong></td>
 <td align="center">20</td>
 <td align="center">95 616</td>
@@ -1093,7 +1103,7 @@ d’éxécution du benchmark), on obtient les résultats suivants :</p>
 <td align="center">153 535</td>
 <td align="center">32,96 %</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left"><strong><code>smart_80000</code></strong></td>
 <td align="center">24</td>
 <td align="center">78 850</td>
@@ -1102,7 +1112,7 @@ d’éxécution du benchmark), on obtient les résultats suivants :</p>
 <td align="center">153 647</td>
 <td align="center">32,97 %</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left"><strong><code>smart_50000</code></strong></td>
 <td align="center">54</td>
 <td align="center">41 400</td>
@@ -1111,7 +1121,7 @@ d’éxécution du benchmark), on obtient les résultats suivants :</p>
 <td align="center">140 930</td>
 <td align="center">30,33 %</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left"><strong><code>smart_30000</code></strong></td>
 <td align="center">120</td>
 <td align="center">18 426</td>
@@ -1122,9 +1132,32 @@ d’éxécution du benchmark), on obtient les résultats suivants :</p>
 </tr>
 </tbody>
 </table>
+<blockquote>
+<p><strong>Note sur le cas sans découpage
+(<code>split_tab = FALSE</code>) :</strong> L’exécution directe du
+traitement sans réduction de dimension sur le tableau global à 5
+dimensions (475 200 cellules) se solde par un <strong>échec natif de
+Tau-Argus</strong>, quelle que soit la méthode de suppression secondaire
+utilisée :</p>
+<ul>
+<li><p><strong>Hypercube (<code>GH</code>)</strong> échoue pendant la
+décomposition
+(<code>The hypercube could not be applied</code>).</p></li>
+<li><p><strong>Modular (<code>MOD</code>)</strong> refuse
+catégoriquement l’exécution
+(<code>The table has more than 4 dimensions. Running Modular is not possible</code>).</p></li>
+<li><p><strong>Optimal (<code>OPT</code>)</strong> refuse
+catégoriquement l’exécution
+(<code>The table has more than 4 dimensions. Running Optimal is not possible</code>).</p></li>
+</ul>
+<p>Ces échecs systématiques démontrent la nécessité méthodologique et
+technique absolue du mécanisme de réduction de dimension
+(<code>split_tab = TRUE</code>) proposé par <code>rtauargus</code> pour
+rendre possible le traitement des tableaux à 5 dimensions.</p>
+</blockquote>
 <p>On observe bien que la configuration <code>smart_100000</code> génère
 le même nombre de tableaux que <code>min</code>, mais de tailles
-différentes. Globalement, le temps d’éxecution est croissant avec le
+différentes. Globalement, le temps d’exécution est croissant avec le
 nombre de tables. Bien que la tendance générale montre une hausse du
 secret avec le nombre de sous-tableaux, la variante
 <code>smart_50000</code> fait exception ici en offrant le masque le plus

@@ -269,7 +269,7 @@ res_wi_split <- tab_rtauargus(
 #> --- Current table to treat:  tab2 ---
 #> --- Current table to treat:  tab1 ---
 tictoc::toc()
-#> 57.33 sec elapsed
+#> 52.61 sec elapsed
 ```
 
 La réduction de dimensions a conduit à construire deux sous-tableaux de 3
@@ -311,13 +311,13 @@ stats_wi_split
 #>   flag   n
 #> 1    A  79
 #> 2    B  35
-#> 3    D 278
-#> 4    V 297
+#> 3    D 280
+#> 4    V 295
 ```
 
 Avec l'option de découpage du tableau de départ, la pose du secret sur
 le tableau à 4 dimensions génère
-278 suppressions secondaires.
+280 suppressions secondaires.
 
 ### Comparaison avec une pose du secret sans réduire la dimension de la table
 
@@ -366,14 +366,14 @@ res_wo_split <- tab_rtauargus(
 #>                    Running Modular can take a lot of time and maybe it is difficult to obtain a correct result.
 #>                    Please check the results carefully.
 #>                    
-#> End of modular protection. Time used 302 seconds
-#>                    Number of suppressions: 283
+#> End of modular protection. Time used 300 seconds
+#>                    Number of suppressions: 297
 #> <WRITETABLE> (1,4,,"Z:\rtauargus\vignettes\example_1\wo_split\datatest1.csv")
 #> Table: treff x cj x A10 x type_distrib | pizzas_tot has been written
 #>                    Output file name: Z:\rtauargus\vignettes\example_1\wo_split\datatest1.csv
 #> End of TauArgus run
 tictoc::toc()
-#> 307.54 sec elapsed
+#> 307.1 sec elapsed
 ```
 
 Avec seulement 689 lignes et aucune variable hiérarchique, la pose directe du
@@ -394,17 +394,17 @@ stats_wo_split
 #>   flag   n
 #> 1    A  79
 #> 2    B  35
-#> 3    D 258
-#> 4    V 317
+#> 3    D 274
+#> 4    V 301
 ```
 
 La pose directe du secret sur le tableau à 4 dimensions génère
-258 suppressions secondaires.
+274 suppressions secondaires.
 
 
 On peut observer que le traitement de la table à 4 dimensions directement
-génère un masque un peu moins chargé en secret: 258 cellules en secret secondaire,
-contre 278 avec une réduction de dimensions.
+génère un masque un peu moins chargé en secret: 274 cellules en secret secondaire,
+contre 280 avec une réduction de dimensions.
 
 Il est difficile d'anticiper cette différence puisqu'elle est très dépendante
 de la structuration des données, de la présence du secret primaire au sein du
@@ -694,14 +694,31 @@ En utilisant le jeu de données précédent, et l'option `suppress = "GH(1,100)"
 
 | Variant | Nb tables | Taille max (lignes) | Temps d'exéc. | Mémoire max | Secret sec. (cellules) | Masque total (% val.) |
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: |
+| **`no_split`** *(sans réduction)* | 1 | 475 200 | **Échec (Crash)** | N/A | N/A | N/A |
 | **`min`** | 20 | 101 556 | 2h 28min<br>(8 888 s) | 769 MB | 164 024 | 35,11 % |
 | **`smart_100000`** | 20 | 95 616 | 2h 01min<br>(7 254 s) | 950 MB | 153 535 | 32,96 % |
 | **`smart_80000`** | 24 | 78 850 | 2h 23min<br>(8 605 s) | 1 081 MB | 153 647 | 32,97 % |
 | **`smart_50000`** | 54 | 41 400 | 2h 22min<br>(8 522 s) | 1 325 MB | 140 930 | 30,33 % |
 | **`smart_30000`** | 120 | 18 426 | 3h 22min<br>(12 118 s) | 2 377 MB | 174 481 | 36,95 % |
 
+> **Note sur le cas sans découpage (`split_tab = FALSE`) :**
+> L'exécution directe du traitement sans réduction de dimension sur le tableau global
+> à 5 dimensions (475 200 cellules) se solde par un **échec natif de Tau-Argus**, quelle
+que soit la méthode de suppression secondaire utilisée :
+>
+> - **Hypercube (`GH`)** échoue pendant la décomposition
+(`The hypercube could not be applied`).
+>
+> - **Modular (`MOD`)** refuse catégoriquement l'exécution
+> (`The table has more than 4 dimensions. Running Modular is not possible`).
+>
+> - **Optimal (`OPT`)** refuse catégoriquement l'exécution
+> (`The table has more than 4 dimensions. Running Optimal is not possible`).
+>
+> Ces échecs systématiques démontrent la nécessité méthodologique et technique absolue du mécanisme de réduction de dimension (`split_tab = TRUE`) proposé par `rtauargus` pour rendre possible le traitement des tableaux à 5 dimensions.
+
 On observe bien que la configuration `smart_100000` génère le même nombre de tableaux que `min`,
-mais de tailles différentes. Globalement, le temps d'éxecution est croissant avec le nombre de tables.
+mais de tailles différentes. Globalement, le temps d'exécution est croissant avec le nombre de tables.
 Bien que la tendance générale montre une hausse du secret avec le nombre de sous-tableaux,
 la variante `smart_50000` fait exception ici en offrant le masque le plus restreint.
 
