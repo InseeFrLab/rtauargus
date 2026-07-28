@@ -623,22 +623,13 @@ appel sous-jacent à <code>tab_multi_manager</code>.</p>
 <span id="cb8-25"><a href="#cb8-25" tabindex="-1"></a><span class="co">#&gt;   535.0   536.5   538.0   538.0   539.5   541.0 </span></span>
 <span id="cb8-26"><a href="#cb8-26" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb8-27"><a href="#cb8-27" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb8-28"><a href="#cb8-28" tabindex="-1"></a><span class="co">#&gt; Spliting...</span></span>
-<span id="cb8-29"><a href="#cb8-29" tabindex="-1"></a><span class="co">#&gt;  treff___cj </span></span>
-<span id="cb8-30"><a href="#cb8-30" tabindex="-1"></a><span class="co">#&gt; tab has generated 2 tables in total</span></span>
-<span id="cb8-31"><a href="#cb8-31" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb8-32"><a href="#cb8-32" tabindex="-1"></a><span class="co">#&gt;   Table size distribution :</span></span>
-<span id="cb8-33"><a href="#cb8-33" tabindex="-1"></a><span class="co">#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span></span>
-<span id="cb8-34"><a href="#cb8-34" tabindex="-1"></a><span class="co">#&gt;   535.0   536.5   538.0   538.0   539.5   541.0 </span></span>
-<span id="cb8-35"><a href="#cb8-35" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb8-36"><a href="#cb8-36" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb8-37"><a href="#cb8-37" tabindex="-1"></a><span class="co">#&gt; --- Current table to treat:  tab1 ---</span></span>
-<span id="cb8-38"><a href="#cb8-38" tabindex="-1"></a><span class="co">#&gt; --- Current table to treat:  tab2 ---</span></span>
-<span id="cb8-39"><a href="#cb8-39" tabindex="-1"></a><span class="co">#&gt; --- Current table to treat:  tab1 ---</span></span>
-<span id="cb8-40"><a href="#cb8-40" tabindex="-1"></a><span class="co">#&gt; --- Current table to treat:  tab2 ---</span></span>
-<span id="cb8-41"><a href="#cb8-41" tabindex="-1"></a><span class="co">#&gt; --- Current table to treat:  tab1 ---</span></span>
-<span id="cb8-42"><a href="#cb8-42" tabindex="-1"></a>tictoc<span class="sc">::</span><span class="fu">toc</span>()</span>
-<span id="cb8-43"><a href="#cb8-43" tabindex="-1"></a><span class="co">#&gt; 61.01 sec elapsed</span></span></code></pre></div>
+<span id="cb8-28"><a href="#cb8-28" tabindex="-1"></a><span class="co">#&gt; --- Current table to treat:  tab1 ---</span></span>
+<span id="cb8-29"><a href="#cb8-29" tabindex="-1"></a><span class="co">#&gt; --- Current table to treat:  tab2 ---</span></span>
+<span id="cb8-30"><a href="#cb8-30" tabindex="-1"></a><span class="co">#&gt; --- Current table to treat:  tab1 ---</span></span>
+<span id="cb8-31"><a href="#cb8-31" tabindex="-1"></a><span class="co">#&gt; --- Current table to treat:  tab2 ---</span></span>
+<span id="cb8-32"><a href="#cb8-32" tabindex="-1"></a><span class="co">#&gt; --- Current table to treat:  tab1 ---</span></span>
+<span id="cb8-33"><a href="#cb8-33" tabindex="-1"></a>tictoc<span class="sc">::</span><span class="fu">toc</span>()</span>
+<span id="cb8-34"><a href="#cb8-34" tabindex="-1"></a><span class="co">#&gt; 57.33 sec elapsed</span></span></code></pre></div>
 <p>La réduction de dimensions a conduit à construire deux sous-tableaux
 de 3 dimensions à partir du tableau original.</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a><span class="fu">str</span>(res_wi_split)</span>
@@ -722,14 +713,14 @@ issues du tableau original.</p>
 <span id="cb11-35"><a href="#cb11-35" tabindex="-1"></a><span class="co">#&gt;                    Running Modular can take a lot of time and maybe it is difficult to obtain a correct result.</span></span>
 <span id="cb11-36"><a href="#cb11-36" tabindex="-1"></a><span class="co">#&gt;                    Please check the results carefully.</span></span>
 <span id="cb11-37"><a href="#cb11-37" tabindex="-1"></a><span class="co">#&gt;                    </span></span>
-<span id="cb11-38"><a href="#cb11-38" tabindex="-1"></a><span class="co">#&gt; End of modular protection. Time used 301 seconds</span></span>
-<span id="cb11-39"><a href="#cb11-39" tabindex="-1"></a><span class="co">#&gt;                    Number of suppressions: 292</span></span>
+<span id="cb11-38"><a href="#cb11-38" tabindex="-1"></a><span class="co">#&gt; End of modular protection. Time used 302 seconds</span></span>
+<span id="cb11-39"><a href="#cb11-39" tabindex="-1"></a><span class="co">#&gt;                    Number of suppressions: 283</span></span>
 <span id="cb11-40"><a href="#cb11-40" tabindex="-1"></a><span class="co">#&gt; &lt;WRITETABLE&gt; (1,4,,&quot;Z:\rtauargus\vignettes\example_1\wo_split\datatest1.csv&quot;)</span></span>
 <span id="cb11-41"><a href="#cb11-41" tabindex="-1"></a><span class="co">#&gt; Table: treff x cj x A10 x type_distrib | pizzas_tot has been written</span></span>
 <span id="cb11-42"><a href="#cb11-42" tabindex="-1"></a><span class="co">#&gt;                    Output file name: Z:\rtauargus\vignettes\example_1\wo_split\datatest1.csv</span></span>
 <span id="cb11-43"><a href="#cb11-43" tabindex="-1"></a><span class="co">#&gt; End of TauArgus run</span></span>
 <span id="cb11-44"><a href="#cb11-44" tabindex="-1"></a>tictoc<span class="sc">::</span><span class="fu">toc</span>()</span>
-<span id="cb11-45"><a href="#cb11-45" tabindex="-1"></a><span class="co">#&gt; 308.73 sec elapsed</span></span></code></pre></div>
+<span id="cb11-45"><a href="#cb11-45" tabindex="-1"></a><span class="co">#&gt; 307.54 sec elapsed</span></span></code></pre></div>
 <p>Avec seulement 689 lignes et aucune variable hiérarchique, la pose
 directe du secret prend environ 5 minutes à <code>Tau-Argus</code>.</p>
 <div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a>stats_wo_split <span class="ot">&lt;-</span> res_wo_split <span class="sc">%&gt;%</span></span>
@@ -745,12 +736,12 @@ directe du secret prend environ 5 minutes à <code>Tau-Argus</code>.</p>
 <span id="cb12-11"><a href="#cb12-11" tabindex="-1"></a><span class="co">#&gt;   flag   n</span></span>
 <span id="cb12-12"><a href="#cb12-12" tabindex="-1"></a><span class="co">#&gt; 1    A  79</span></span>
 <span id="cb12-13"><a href="#cb12-13" tabindex="-1"></a><span class="co">#&gt; 2    B  35</span></span>
-<span id="cb12-14"><a href="#cb12-14" tabindex="-1"></a><span class="co">#&gt; 3    D 269</span></span>
-<span id="cb12-15"><a href="#cb12-15" tabindex="-1"></a><span class="co">#&gt; 4    V 306</span></span></code></pre></div>
-<p>La pose directe du secret sur le tableau à 4 dimensions génère 269
+<span id="cb12-14"><a href="#cb12-14" tabindex="-1"></a><span class="co">#&gt; 3    D 258</span></span>
+<span id="cb12-15"><a href="#cb12-15" tabindex="-1"></a><span class="co">#&gt; 4    V 317</span></span></code></pre></div>
+<p>La pose directe du secret sur le tableau à 4 dimensions génère 258
 suppressions secondaires.</p>
 <p>On peut observer que le traitement de la table à 4 dimensions
-directement génère un masque un peu moins chargé en secret: 266 cellules
+directement génère un masque un peu moins chargé en secret: 258 cellules
 en secret secondaire, contre 278 avec une réduction de dimensions.</p>
 <p>Il est difficile d’anticiper cette différence puisqu’elle est très
 dépendante de la structuration des données, de la présence du secret
@@ -877,247 +868,181 @@ secret complète, vous pouvez utiliser la fonction
 <span id="cb13-3"><a href="#cb13-3" tabindex="-1"></a><span class="fu">load</span>(<span class="st">&quot;../data/input_data_5d.RData&quot;</span>) <span class="co"># dfs5_agg, tot5, hrc5</span></span>
 <span id="cb13-4"><a href="#cb13-4" tabindex="-1"></a></span>
 <span id="cb13-5"><a href="#cb13-5" tabindex="-1"></a>dfs5_agg <span class="sc">%&gt;%</span> <span class="fu">colnames</span>() <span class="sc">%&gt;%</span> <span class="fu">print</span>()</span>
-<span id="cb13-6"><a href="#cb13-6" tabindex="-1"></a><span class="co">#&gt; [1] &quot;SEX&quot;            &quot;AGE&quot;            &quot;GEO&quot;            &quot;ACT&quot;            &quot;ECO&quot;            &quot;VALUE&quot;         </span></span>
-<span id="cb13-7"><a href="#cb13-7" tabindex="-1"></a><span class="co">#&gt; [7] &quot;freq&quot;           &quot;is_secret_prim&quot; &quot;secret_no_pl&quot;</span></span>
-<span id="cb13-8"><a href="#cb13-8" tabindex="-1"></a>dfs5_agg <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">tally</span>() <span class="sc">%&gt;%</span> <span class="fu">print</span>()</span>
-<span id="cb13-9"><a href="#cb13-9" tabindex="-1"></a><span class="co">#&gt; # A tibble: 1 x 1</span></span>
-<span id="cb13-10"><a href="#cb13-10" tabindex="-1"></a><span class="co">#&gt;        n</span></span>
-<span id="cb13-11"><a href="#cb13-11" tabindex="-1"></a><span class="co">#&gt;    &lt;int&gt;</span></span>
-<span id="cb13-12"><a href="#cb13-12" tabindex="-1"></a><span class="co">#&gt; 1 475200</span></span>
-<span id="cb13-13"><a href="#cb13-13" tabindex="-1"></a></span>
-<span id="cb13-14"><a href="#cb13-14" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;</span></span>
-<span id="cb13-15"><a href="#cb13-15" tabindex="-1"></a><span class="st">======================================================================</span></span>
-<span id="cb13-16"><a href="#cb13-16" tabindex="-1"></a><span class="st">Détail des modalités par variable (Totaux inclus) :</span></span>
-<span id="cb13-17"><a href="#cb13-17" tabindex="-1"></a><span class="st">  - ACT : 25 modalités (1 Total + 4 groupes + 20 sous-niveaux)</span></span>
-<span id="cb13-18"><a href="#cb13-18" tabindex="-1"></a><span class="st">  - GEO : 36 modalités (1 Total + 5 régions + 30 sous-régions)</span></span>
-<span id="cb13-19"><a href="#cb13-19" tabindex="-1"></a><span class="st">  - SEX : 11 modalités (1 Total + 10 modalités fines)</span></span>
-<span id="cb13-20"><a href="#cb13-20" tabindex="-1"></a><span class="st">  - AGE : 16 modalités (1 Total + 15 modalités fines)</span></span>
-<span id="cb13-21"><a href="#cb13-21" tabindex="-1"></a><span class="st">  - ECO :  3 modalités (1 Total +  2 modalités fines)</span></span>
-<span id="cb13-22"><a href="#cb13-22" tabindex="-1"></a><span class="st">======================================================================</span></span>
-<span id="cb13-23"><a href="#cb13-23" tabindex="-1"></a><span class="sc">\n</span><span class="st">&quot;</span>)</span>
-<span id="cb13-24"><a href="#cb13-24" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb13-25"><a href="#cb13-25" tabindex="-1"></a><span class="co">#&gt; ======================================================================</span></span>
-<span id="cb13-26"><a href="#cb13-26" tabindex="-1"></a><span class="co">#&gt; Détail des modalités par variable (Totaux inclus) :</span></span>
-<span id="cb13-27"><a href="#cb13-27" tabindex="-1"></a><span class="co">#&gt;   - ACT : 25 modalités (1 Total + 4 groupes + 20 sous-niveaux)</span></span>
-<span id="cb13-28"><a href="#cb13-28" tabindex="-1"></a><span class="co">#&gt;   - GEO : 36 modalités (1 Total + 5 régions + 30 sous-régions)</span></span>
-<span id="cb13-29"><a href="#cb13-29" tabindex="-1"></a><span class="co">#&gt;   - SEX : 11 modalités (1 Total + 10 modalités fines)</span></span>
-<span id="cb13-30"><a href="#cb13-30" tabindex="-1"></a><span class="co">#&gt;   - AGE : 16 modalités (1 Total + 15 modalités fines)</span></span>
-<span id="cb13-31"><a href="#cb13-31" tabindex="-1"></a><span class="co">#&gt;   - ECO :  3 modalités (1 Total +  2 modalités fines)</span></span>
-<span id="cb13-32"><a href="#cb13-32" tabindex="-1"></a><span class="co">#&gt; ======================================================================</span></span>
-<span id="cb13-33"><a href="#cb13-33" tabindex="-1"></a></span>
-<span id="cb13-34"><a href="#cb13-34" tabindex="-1"></a><span class="co"># Pour &quot;min&quot; et &quot;max&quot;, limit très grand = pas d&#39;oversplit parasite</span></span>
-<span id="cb13-35"><a href="#cb13-35" tabindex="-1"></a><span class="co"># Pour &quot;smart&quot;, limit change de fonction du scénario</span></span>
-<span id="cb13-36"><a href="#cb13-36" tabindex="-1"></a>variants <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
-<span id="cb13-37"><a href="#cb13-37" tabindex="-1"></a>  <span class="fu">list</span>(<span class="at">label =</span> <span class="st">&quot;min&quot;</span>,             <span class="at">nb_tab_option =</span> <span class="st">&quot;min&quot;</span>,   <span class="at">limit =</span> <span class="dv">1000000</span><span class="dt">L</span>),</span>
-<span id="cb13-38"><a href="#cb13-38" tabindex="-1"></a>  <span class="fu">list</span>(<span class="at">label =</span> <span class="st">&quot;smart_100000&quot;</span>, <span class="at">nb_tab_option =</span> <span class="st">&quot;smart&quot;</span>, <span class="at">limit =</span> <span class="dv">100000</span><span class="dt">L</span>),</span>
-<span id="cb13-39"><a href="#cb13-39" tabindex="-1"></a>  <span class="fu">list</span>(<span class="at">label =</span> <span class="st">&quot;smart_80000&quot;</span>,     <span class="at">nb_tab_option =</span> <span class="st">&quot;smart&quot;</span>, <span class="at">limit =</span> <span class="dv">80000</span><span class="dt">L</span>),</span>
-<span id="cb13-40"><a href="#cb13-40" tabindex="-1"></a>  <span class="fu">list</span>(<span class="at">label =</span> <span class="st">&quot;smart_50000&quot;</span>,     <span class="at">nb_tab_option =</span> <span class="st">&quot;smart&quot;</span>, <span class="at">limit =</span> <span class="dv">50000</span><span class="dt">L</span>),</span>
-<span id="cb13-41"><a href="#cb13-41" tabindex="-1"></a>  <span class="fu">list</span>(<span class="at">label =</span> <span class="st">&quot;smart_30000&quot;</span>,     <span class="at">nb_tab_option =</span> <span class="st">&quot;smart&quot;</span>, <span class="at">limit =</span> <span class="dv">30000</span><span class="dt">L</span>),</span>
-<span id="cb13-42"><a href="#cb13-42" tabindex="-1"></a>  <span class="fu">list</span>(<span class="at">label =</span> <span class="st">&quot;smart_10000&quot;</span>,     <span class="at">nb_tab_option =</span> <span class="st">&quot;smart&quot;</span>, <span class="at">limit =</span> <span class="dv">10000</span><span class="dt">L</span>),</span>
-<span id="cb13-43"><a href="#cb13-43" tabindex="-1"></a>  <span class="fu">list</span>(<span class="at">label =</span> <span class="st">&quot;max&quot;</span>,             <span class="at">nb_tab_option =</span> <span class="st">&quot;max&quot;</span>,   <span class="at">limit =</span> <span class="dv">1000000</span><span class="dt">L</span>)</span>
-<span id="cb13-44"><a href="#cb13-44" tabindex="-1"></a>)</span>
-<span id="cb13-45"><a href="#cb13-45" tabindex="-1"></a></span>
-<span id="cb13-46"><a href="#cb13-46" tabindex="-1"></a><span class="cf">for</span> (v <span class="cf">in</span> variants) {</span>
-<span id="cb13-47"><a href="#cb13-47" tabindex="-1"></a></span>
-<span id="cb13-48"><a href="#cb13-48" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">&quot;</span><span class="sc">\n</span><span class="st">======================================================================</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
-<span id="cb13-49"><a href="#cb13-49" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">&quot;  Variant :&quot;</span>, v<span class="sc">$</span>label, <span class="st">&quot;(nb_tab_option =&quot;</span>, v<span class="sc">$</span>nb_tab_option,</span>
-<span id="cb13-50"><a href="#cb13-50" tabindex="-1"></a>      <span class="st">&quot;| limit =&quot;</span>, v<span class="sc">$</span>limit, <span class="st">&quot;)</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
-<span id="cb13-51"><a href="#cb13-51" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">&quot;======================================================================</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
-<span id="cb13-52"><a href="#cb13-52" tabindex="-1"></a></span>
-<span id="cb13-53"><a href="#cb13-53" tabindex="-1"></a>  dir_count <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="fu">tempdir</span>(), <span class="st">&quot;count_hrc&quot;</span>)</span>
-<span id="cb13-54"><a href="#cb13-54" tabindex="-1"></a>  <span class="fu">unlink</span>(dir_count, <span class="at">recursive =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb13-55"><a href="#cb13-55" tabindex="-1"></a>  <span class="fu">dir.create</span>(dir_count, <span class="at">recursive =</span> <span class="cn">TRUE</span>, <span class="at">showWarnings =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb13-56"><a href="#cb13-56" tabindex="-1"></a></span>
-<span id="cb13-57"><a href="#cb13-57" tabindex="-1"></a>  res_count <span class="ot">&lt;-</span> <span class="fu">reduce_dims</span>(</span>
-<span id="cb13-58"><a href="#cb13-58" tabindex="-1"></a>    <span class="at">dfs           =</span> dfs5_agg,</span>
-<span id="cb13-59"><a href="#cb13-59" tabindex="-1"></a>    <span class="at">dfs_name      =</span> <span class="st">&quot;tab_5d&quot;</span>,</span>
-<span id="cb13-60"><a href="#cb13-60" tabindex="-1"></a>    <span class="at">totcode       =</span> tot5,</span>
-<span id="cb13-61"><a href="#cb13-61" tabindex="-1"></a>    <span class="at">hrcfiles      =</span> hrc5,</span>
-<span id="cb13-62"><a href="#cb13-62" tabindex="-1"></a>    <span class="at">nb_tab_option =</span> v<span class="sc">$</span>nb_tab_option,</span>
-<span id="cb13-63"><a href="#cb13-63" tabindex="-1"></a>    <span class="at">limit         =</span> v<span class="sc">$</span>limit,</span>
-<span id="cb13-64"><a href="#cb13-64" tabindex="-1"></a>    <span class="at">over_split    =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb13-65"><a href="#cb13-65" tabindex="-1"></a>    <span class="at">sep_dir       =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb13-66"><a href="#cb13-66" tabindex="-1"></a>    <span class="at">hrc_dir       =</span> dir_count,</span>
-<span id="cb13-67"><a href="#cb13-67" tabindex="-1"></a>    <span class="at">verbose       =</span> <span class="cn">TRUE</span> <span class="co"># affichera le nombre de tables générées ainsi que leur distribution</span></span>
-<span id="cb13-68"><a href="#cb13-68" tabindex="-1"></a>  )</span>
-<span id="cb13-69"><a href="#cb13-69" tabindex="-1"></a>  <span class="fu">rm</span>(res_count); <span class="fu">gc</span>()</span>
-<span id="cb13-70"><a href="#cb13-70" tabindex="-1"></a></span>
-<span id="cb13-71"><a href="#cb13-71" tabindex="-1"></a>}</span>
-<span id="cb13-72"><a href="#cb13-72" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb13-73"><a href="#cb13-73" tabindex="-1"></a><span class="co">#&gt; ======================================================================</span></span>
-<span id="cb13-74"><a href="#cb13-74" tabindex="-1"></a><span class="co">#&gt;   Variant : min (nb_tab_option = min | limit = 1000000 )</span></span>
-<span id="cb13-75"><a href="#cb13-75" tabindex="-1"></a><span class="co">#&gt; ======================================================================</span></span>
-<span id="cb13-76"><a href="#cb13-76" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb13-77"><a href="#cb13-77" tabindex="-1"></a><span class="co">#&gt; Reducing from 5 to 4...</span></span>
-<span id="cb13-78"><a href="#cb13-78" tabindex="-1"></a><span class="co">#&gt; tab_5d has generated 2 tables in total</span></span>
-<span id="cb13-79"><a href="#cb13-79" tabindex="-1"></a><span class="co">#&gt; Reducing from 4 to 3...</span></span>
-<span id="cb13-80"><a href="#cb13-80" tabindex="-1"></a><span class="co">#&gt; tab_5d has generated 20 tables in total</span></span>
-<span id="cb13-81"><a href="#cb13-81" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb13-82"><a href="#cb13-82" tabindex="-1"></a><span class="co">#&gt;   Table size distribution :</span></span>
-<span id="cb13-83"><a href="#cb13-83" tabindex="-1"></a><span class="co">#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span></span>
-<span id="cb13-84"><a href="#cb13-84" tabindex="-1"></a><span class="co">#&gt;   53820   67068   75348   80579   90396  101556 </span></span>
-<span id="cb13-85"><a href="#cb13-85" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-6"><a href="#cb13-6" tabindex="-1"></a><span class="co">#&gt; [1] &quot;SEX&quot;            &quot;AGE&quot;            &quot;GEO&quot;           </span></span>
+<span id="cb13-7"><a href="#cb13-7" tabindex="-1"></a><span class="co">#&gt; [4] &quot;ACT&quot;            &quot;ECO&quot;            &quot;VALUE&quot;         </span></span>
+<span id="cb13-8"><a href="#cb13-8" tabindex="-1"></a><span class="co">#&gt; [7] &quot;freq&quot;           &quot;is_secret_prim&quot; &quot;secret_no_pl&quot;</span></span>
+<span id="cb13-9"><a href="#cb13-9" tabindex="-1"></a>dfs5_agg <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">tally</span>() <span class="sc">%&gt;%</span> <span class="fu">print</span>()</span>
+<span id="cb13-10"><a href="#cb13-10" tabindex="-1"></a><span class="co">#&gt; # A tibble: 1 x 1</span></span>
+<span id="cb13-11"><a href="#cb13-11" tabindex="-1"></a><span class="co">#&gt;        n</span></span>
+<span id="cb13-12"><a href="#cb13-12" tabindex="-1"></a><span class="co">#&gt;    &lt;int&gt;</span></span>
+<span id="cb13-13"><a href="#cb13-13" tabindex="-1"></a><span class="co">#&gt; 1 475200</span></span>
+<span id="cb13-14"><a href="#cb13-14" tabindex="-1"></a></span>
+<span id="cb13-15"><a href="#cb13-15" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;</span></span>
+<span id="cb13-16"><a href="#cb13-16" tabindex="-1"></a><span class="st">======================================================================</span></span>
+<span id="cb13-17"><a href="#cb13-17" tabindex="-1"></a><span class="st">Détail des modalités par variable (Totaux inclus) :</span></span>
+<span id="cb13-18"><a href="#cb13-18" tabindex="-1"></a><span class="st">  - ACT : 25 modalités (1 Total + 4 groupes + 20 sous-niveaux)</span></span>
+<span id="cb13-19"><a href="#cb13-19" tabindex="-1"></a><span class="st">  - GEO : 36 modalités (1 Total + 5 régions + 30 sous-régions)</span></span>
+<span id="cb13-20"><a href="#cb13-20" tabindex="-1"></a><span class="st">  - SEX : 11 modalités (1 Total + 10 modalités fines)</span></span>
+<span id="cb13-21"><a href="#cb13-21" tabindex="-1"></a><span class="st">  - AGE : 16 modalités (1 Total + 15 modalités fines)</span></span>
+<span id="cb13-22"><a href="#cb13-22" tabindex="-1"></a><span class="st">  - ECO :  3 modalités (1 Total +  2 modalités fines)</span></span>
+<span id="cb13-23"><a href="#cb13-23" tabindex="-1"></a><span class="st">======================================================================</span></span>
+<span id="cb13-24"><a href="#cb13-24" tabindex="-1"></a><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb13-25"><a href="#cb13-25" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-26"><a href="#cb13-26" tabindex="-1"></a><span class="co">#&gt; ======================================================================</span></span>
+<span id="cb13-27"><a href="#cb13-27" tabindex="-1"></a><span class="co">#&gt; Détail des modalités par variable (Totaux inclus) :</span></span>
+<span id="cb13-28"><a href="#cb13-28" tabindex="-1"></a><span class="co">#&gt;   - ACT : 25 modalités (1 Total + 4 groupes + 20 sous-niveaux)</span></span>
+<span id="cb13-29"><a href="#cb13-29" tabindex="-1"></a><span class="co">#&gt;   - GEO : 36 modalités (1 Total + 5 régions + 30 sous-régions)</span></span>
+<span id="cb13-30"><a href="#cb13-30" tabindex="-1"></a><span class="co">#&gt;   - SEX : 11 modalités (1 Total + 10 modalités fines)</span></span>
+<span id="cb13-31"><a href="#cb13-31" tabindex="-1"></a><span class="co">#&gt;   - AGE : 16 modalités (1 Total + 15 modalités fines)</span></span>
+<span id="cb13-32"><a href="#cb13-32" tabindex="-1"></a><span class="co">#&gt;   - ECO :  3 modalités (1 Total +  2 modalités fines)</span></span>
+<span id="cb13-33"><a href="#cb13-33" tabindex="-1"></a><span class="co">#&gt; ======================================================================</span></span>
+<span id="cb13-34"><a href="#cb13-34" tabindex="-1"></a></span>
+<span id="cb13-35"><a href="#cb13-35" tabindex="-1"></a><span class="co"># Pour &quot;min&quot; et &quot;max&quot;, limit très grand = pas d&#39;oversplit parasite</span></span>
+<span id="cb13-36"><a href="#cb13-36" tabindex="-1"></a><span class="co"># Pour &quot;smart&quot;, limit change de fonction du scénario</span></span>
+<span id="cb13-37"><a href="#cb13-37" tabindex="-1"></a>variants <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb13-38"><a href="#cb13-38" tabindex="-1"></a>  <span class="fu">list</span>(<span class="at">label =</span> <span class="st">&quot;min&quot;</span>,             <span class="at">nb_tab_option =</span> <span class="st">&quot;min&quot;</span>,   <span class="at">limit =</span> <span class="dv">1000000</span><span class="dt">L</span>),</span>
+<span id="cb13-39"><a href="#cb13-39" tabindex="-1"></a>  <span class="fu">list</span>(<span class="at">label =</span> <span class="st">&quot;smart_100000&quot;</span>,    <span class="at">nb_tab_option =</span> <span class="st">&quot;smart&quot;</span>, <span class="at">limit =</span> <span class="dv">100000</span><span class="dt">L</span>),</span>
+<span id="cb13-40"><a href="#cb13-40" tabindex="-1"></a>  <span class="fu">list</span>(<span class="at">label =</span> <span class="st">&quot;smart_80000&quot;</span>,     <span class="at">nb_tab_option =</span> <span class="st">&quot;smart&quot;</span>, <span class="at">limit =</span> <span class="dv">80000</span><span class="dt">L</span>),</span>
+<span id="cb13-41"><a href="#cb13-41" tabindex="-1"></a>  <span class="fu">list</span>(<span class="at">label =</span> <span class="st">&quot;smart_50000&quot;</span>,     <span class="at">nb_tab_option =</span> <span class="st">&quot;smart&quot;</span>, <span class="at">limit =</span> <span class="dv">50000</span><span class="dt">L</span>),</span>
+<span id="cb13-42"><a href="#cb13-42" tabindex="-1"></a>  <span class="fu">list</span>(<span class="at">label =</span> <span class="st">&quot;smart_30000&quot;</span>,     <span class="at">nb_tab_option =</span> <span class="st">&quot;smart&quot;</span>, <span class="at">limit =</span> <span class="dv">30000</span><span class="dt">L</span>),</span>
+<span id="cb13-43"><a href="#cb13-43" tabindex="-1"></a>  <span class="fu">list</span>(<span class="at">label =</span> <span class="st">&quot;smart_10000&quot;</span>,     <span class="at">nb_tab_option =</span> <span class="st">&quot;smart&quot;</span>, <span class="at">limit =</span> <span class="dv">10000</span><span class="dt">L</span>),</span>
+<span id="cb13-44"><a href="#cb13-44" tabindex="-1"></a>  <span class="fu">list</span>(<span class="at">label =</span> <span class="st">&quot;max&quot;</span>,             <span class="at">nb_tab_option =</span> <span class="st">&quot;max&quot;</span>,   <span class="at">limit =</span> <span class="dv">1000000</span><span class="dt">L</span>)</span>
+<span id="cb13-45"><a href="#cb13-45" tabindex="-1"></a>)</span>
+<span id="cb13-46"><a href="#cb13-46" tabindex="-1"></a></span>
+<span id="cb13-47"><a href="#cb13-47" tabindex="-1"></a><span class="cf">for</span> (v <span class="cf">in</span> variants) {</span>
+<span id="cb13-48"><a href="#cb13-48" tabindex="-1"></a></span>
+<span id="cb13-49"><a href="#cb13-49" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">&quot;</span><span class="sc">\n</span><span class="st">======================================================================</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb13-50"><a href="#cb13-50" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">&quot;  Variant :&quot;</span>, v<span class="sc">$</span>label, <span class="st">&quot;(nb_tab_option =&quot;</span>, v<span class="sc">$</span>nb_tab_option,</span>
+<span id="cb13-51"><a href="#cb13-51" tabindex="-1"></a>      <span class="st">&quot;| limit =&quot;</span>, v<span class="sc">$</span>limit, <span class="st">&quot;)</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb13-52"><a href="#cb13-52" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">&quot;======================================================================</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb13-53"><a href="#cb13-53" tabindex="-1"></a></span>
+<span id="cb13-54"><a href="#cb13-54" tabindex="-1"></a>  dir_count <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="fu">tempdir</span>(), <span class="st">&quot;count_hrc&quot;</span>)</span>
+<span id="cb13-55"><a href="#cb13-55" tabindex="-1"></a>  <span class="fu">unlink</span>(dir_count, <span class="at">recursive =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb13-56"><a href="#cb13-56" tabindex="-1"></a>  <span class="fu">dir.create</span>(dir_count, <span class="at">recursive =</span> <span class="cn">TRUE</span>, <span class="at">showWarnings =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb13-57"><a href="#cb13-57" tabindex="-1"></a></span>
+<span id="cb13-58"><a href="#cb13-58" tabindex="-1"></a>  res_count <span class="ot">&lt;-</span> <span class="fu">reduce_dims</span>(</span>
+<span id="cb13-59"><a href="#cb13-59" tabindex="-1"></a>    <span class="at">dfs           =</span> dfs5_agg,</span>
+<span id="cb13-60"><a href="#cb13-60" tabindex="-1"></a>    <span class="at">dfs_name      =</span> <span class="st">&quot;tab_5d&quot;</span>,</span>
+<span id="cb13-61"><a href="#cb13-61" tabindex="-1"></a>    <span class="at">totcode       =</span> tot5,</span>
+<span id="cb13-62"><a href="#cb13-62" tabindex="-1"></a>    <span class="at">hrcfiles      =</span> hrc5,</span>
+<span id="cb13-63"><a href="#cb13-63" tabindex="-1"></a>    <span class="at">nb_tab_option =</span> v<span class="sc">$</span>nb_tab_option,</span>
+<span id="cb13-64"><a href="#cb13-64" tabindex="-1"></a>    <span class="at">limit         =</span> v<span class="sc">$</span>limit,</span>
+<span id="cb13-65"><a href="#cb13-65" tabindex="-1"></a>    <span class="at">over_split    =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb13-66"><a href="#cb13-66" tabindex="-1"></a>    <span class="at">sep_dir       =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb13-67"><a href="#cb13-67" tabindex="-1"></a>    <span class="at">hrc_dir       =</span> dir_count,</span>
+<span id="cb13-68"><a href="#cb13-68" tabindex="-1"></a>    <span class="at">verbose       =</span> <span class="cn">TRUE</span> <span class="co"># affichera le nombre de tables générées ainsi que leur distribution</span></span>
+<span id="cb13-69"><a href="#cb13-69" tabindex="-1"></a>  )</span>
+<span id="cb13-70"><a href="#cb13-70" tabindex="-1"></a>  <span class="fu">rm</span>(res_count); <span class="fu">gc</span>()</span>
+<span id="cb13-71"><a href="#cb13-71" tabindex="-1"></a></span>
+<span id="cb13-72"><a href="#cb13-72" tabindex="-1"></a>}</span>
+<span id="cb13-73"><a href="#cb13-73" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-74"><a href="#cb13-74" tabindex="-1"></a><span class="co">#&gt; ======================================================================</span></span>
+<span id="cb13-75"><a href="#cb13-75" tabindex="-1"></a><span class="co">#&gt;   Variant : min (nb_tab_option = min | limit = 1000000 )</span></span>
+<span id="cb13-76"><a href="#cb13-76" tabindex="-1"></a><span class="co">#&gt; ======================================================================</span></span>
+<span id="cb13-77"><a href="#cb13-77" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-78"><a href="#cb13-78" tabindex="-1"></a><span class="co">#&gt; Reducing from 5 to 4...</span></span>
+<span id="cb13-79"><a href="#cb13-79" tabindex="-1"></a><span class="co">#&gt; tab_5d has generated 2 tables in total</span></span>
+<span id="cb13-80"><a href="#cb13-80" tabindex="-1"></a><span class="co">#&gt; Reducing from 4 to 3...</span></span>
+<span id="cb13-81"><a href="#cb13-81" tabindex="-1"></a><span class="co">#&gt; tab_5d has generated 20 tables in total</span></span>
+<span id="cb13-82"><a href="#cb13-82" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-83"><a href="#cb13-83" tabindex="-1"></a><span class="co">#&gt;   Table size distribution :</span></span>
+<span id="cb13-84"><a href="#cb13-84" tabindex="-1"></a><span class="co">#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span></span>
+<span id="cb13-85"><a href="#cb13-85" tabindex="-1"></a><span class="co">#&gt;   53820   67068   75348   80579   90396  101556 </span></span>
 <span id="cb13-86"><a href="#cb13-86" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb13-87"><a href="#cb13-87" tabindex="-1"></a><span class="co">#&gt; Spliting...</span></span>
-<span id="cb13-88"><a href="#cb13-88" tabindex="-1"></a><span class="co">#&gt;  ECO___SEX </span></span>
-<span id="cb13-89"><a href="#cb13-89" tabindex="-1"></a><span class="co">#&gt;  AGE___ACT </span></span>
-<span id="cb13-90"><a href="#cb13-90" tabindex="-1"></a><span class="co">#&gt; tab_5d has generated 20 tables in total</span></span>
-<span id="cb13-91"><a href="#cb13-91" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb13-92"><a href="#cb13-92" tabindex="-1"></a><span class="co">#&gt;   Table size distribution :</span></span>
-<span id="cb13-93"><a href="#cb13-93" tabindex="-1"></a><span class="co">#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span></span>
-<span id="cb13-94"><a href="#cb13-94" tabindex="-1"></a><span class="co">#&gt;   53820   67068   75348   80579   90396  101556 </span></span>
-<span id="cb13-95"><a href="#cb13-95" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb13-96"><a href="#cb13-96" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb13-97"><a href="#cb13-97" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb13-98"><a href="#cb13-98" tabindex="-1"></a><span class="co">#&gt; ======================================================================</span></span>
-<span id="cb13-99"><a href="#cb13-99" tabindex="-1"></a><span class="co">#&gt;   Variant : smart_100000 (nb_tab_option = smart | limit = 100000 )</span></span>
-<span id="cb13-100"><a href="#cb13-100" tabindex="-1"></a><span class="co">#&gt; ======================================================================</span></span>
-<span id="cb13-101"><a href="#cb13-101" tabindex="-1"></a><span class="co">#&gt; Choosing variables...</span></span>
+<span id="cb13-87"><a href="#cb13-87" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-88"><a href="#cb13-88" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-89"><a href="#cb13-89" tabindex="-1"></a><span class="co">#&gt; ======================================================================</span></span>
+<span id="cb13-90"><a href="#cb13-90" tabindex="-1"></a><span class="co">#&gt;   Variant : smart_100000 (nb_tab_option = smart | limit = 100000 )</span></span>
+<span id="cb13-91"><a href="#cb13-91" tabindex="-1"></a><span class="co">#&gt; ======================================================================</span></span>
+<span id="cb13-92"><a href="#cb13-92" tabindex="-1"></a><span class="co">#&gt; Choosing variables...</span></span>
+<span id="cb13-93"><a href="#cb13-93" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-94"><a href="#cb13-94" tabindex="-1"></a><span class="co">#&gt; Reducing from 5 to 4...</span></span>
+<span id="cb13-95"><a href="#cb13-95" tabindex="-1"></a><span class="co">#&gt; tab_5d has generated 10 tables in total</span></span>
+<span id="cb13-96"><a href="#cb13-96" tabindex="-1"></a><span class="co">#&gt; Reducing from 4 to 3...</span></span>
+<span id="cb13-97"><a href="#cb13-97" tabindex="-1"></a><span class="co">#&gt; tab_5d has generated 20 tables in total</span></span>
+<span id="cb13-98"><a href="#cb13-98" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-99"><a href="#cb13-99" tabindex="-1"></a><span class="co">#&gt;   Table size distribution :</span></span>
+<span id="cb13-100"><a href="#cb13-100" tabindex="-1"></a><span class="co">#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span></span>
+<span id="cb13-101"><a href="#cb13-101" tabindex="-1"></a><span class="co">#&gt;   63756   75348   77688   82404   92736   95616 </span></span>
 <span id="cb13-102"><a href="#cb13-102" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb13-103"><a href="#cb13-103" tabindex="-1"></a><span class="co">#&gt; Reducing from 5 to 4...</span></span>
-<span id="cb13-104"><a href="#cb13-104" tabindex="-1"></a><span class="co">#&gt; tab_5d has generated 10 tables in total</span></span>
-<span id="cb13-105"><a href="#cb13-105" tabindex="-1"></a><span class="co">#&gt; Reducing from 4 to 3...</span></span>
-<span id="cb13-106"><a href="#cb13-106" tabindex="-1"></a><span class="co">#&gt; tab_5d has generated 20 tables in total</span></span>
-<span id="cb13-107"><a href="#cb13-107" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb13-108"><a href="#cb13-108" tabindex="-1"></a><span class="co">#&gt;   Table size distribution :</span></span>
-<span id="cb13-109"><a href="#cb13-109" tabindex="-1"></a><span class="co">#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span></span>
-<span id="cb13-110"><a href="#cb13-110" tabindex="-1"></a><span class="co">#&gt;   63756   75348   77688   82404   92736   95616 </span></span>
-<span id="cb13-111"><a href="#cb13-111" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb13-112"><a href="#cb13-112" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb13-113"><a href="#cb13-113" tabindex="-1"></a><span class="co">#&gt; Spliting...</span></span>
-<span id="cb13-114"><a href="#cb13-114" tabindex="-1"></a><span class="co">#&gt;  ECO___ACT </span></span>
-<span id="cb13-115"><a href="#cb13-115" tabindex="-1"></a><span class="co">#&gt;  AGE___SEX </span></span>
-<span id="cb13-116"><a href="#cb13-116" tabindex="-1"></a><span class="co">#&gt; tab_5d has generated 20 tables in total</span></span>
-<span id="cb13-117"><a href="#cb13-117" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb13-118"><a href="#cb13-118" tabindex="-1"></a><span class="co">#&gt;   Table size distribution :</span></span>
-<span id="cb13-119"><a href="#cb13-119" tabindex="-1"></a><span class="co">#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span></span>
-<span id="cb13-120"><a href="#cb13-120" tabindex="-1"></a><span class="co">#&gt;   63756   75348   77688   82404   92736   95616 </span></span>
-<span id="cb13-121"><a href="#cb13-121" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb13-122"><a href="#cb13-122" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb13-123"><a href="#cb13-123" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb13-124"><a href="#cb13-124" tabindex="-1"></a><span class="co">#&gt; ======================================================================</span></span>
-<span id="cb13-125"><a href="#cb13-125" tabindex="-1"></a><span class="co">#&gt;   Variant : smart_80000 (nb_tab_option = smart | limit = 80000 )</span></span>
-<span id="cb13-126"><a href="#cb13-126" tabindex="-1"></a><span class="co">#&gt; ======================================================================</span></span>
-<span id="cb13-127"><a href="#cb13-127" tabindex="-1"></a><span class="co">#&gt; Choosing variables...</span></span>
-<span id="cb13-128"><a href="#cb13-128" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb13-129"><a href="#cb13-129" tabindex="-1"></a><span class="co">#&gt; Reducing from 5 to 4...</span></span>
-<span id="cb13-130"><a href="#cb13-130" tabindex="-1"></a><span class="co">#&gt; tab_5d has generated 2 tables in total</span></span>
-<span id="cb13-131"><a href="#cb13-131" tabindex="-1"></a><span class="co">#&gt; Reducing from 4 to 3...</span></span>
-<span id="cb13-132"><a href="#cb13-132" tabindex="-1"></a><span class="co">#&gt; tab_5d has generated 24 tables in total</span></span>
-<span id="cb13-133"><a href="#cb13-133" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb13-134"><a href="#cb13-134" tabindex="-1"></a><span class="co">#&gt;   Table size distribution :</span></span>
-<span id="cb13-135"><a href="#cb13-135" tabindex="-1"></a><span class="co">#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span></span>
-<span id="cb13-136"><a href="#cb13-136" tabindex="-1"></a><span class="co">#&gt;   52325   60375   63325   67784   76475   78850 </span></span>
-<span id="cb13-137"><a href="#cb13-137" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb13-138"><a href="#cb13-138" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb13-139"><a href="#cb13-139" tabindex="-1"></a><span class="co">#&gt; Spliting...</span></span>
-<span id="cb13-140"><a href="#cb13-140" tabindex="-1"></a><span class="co">#&gt;  AGE___SEX </span></span>
-<span id="cb13-141"><a href="#cb13-141" tabindex="-1"></a><span class="co">#&gt;  ECO___GEO </span></span>
-<span id="cb13-142"><a href="#cb13-142" tabindex="-1"></a><span class="co">#&gt; tab_5d has generated 24 tables in total</span></span>
-<span id="cb13-143"><a href="#cb13-143" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb13-144"><a href="#cb13-144" tabindex="-1"></a><span class="co">#&gt;   Table size distribution :</span></span>
-<span id="cb13-145"><a href="#cb13-145" tabindex="-1"></a><span class="co">#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span></span>
-<span id="cb13-146"><a href="#cb13-146" tabindex="-1"></a><span class="co">#&gt;   52325   60375   63325   67784   76475   78850 </span></span>
-<span id="cb13-147"><a href="#cb13-147" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb13-148"><a href="#cb13-148" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb13-149"><a href="#cb13-149" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb13-150"><a href="#cb13-150" tabindex="-1"></a><span class="co">#&gt; ======================================================================</span></span>
-<span id="cb13-151"><a href="#cb13-151" tabindex="-1"></a><span class="co">#&gt;   Variant : smart_50000 (nb_tab_option = smart | limit = 50000 )</span></span>
-<span id="cb13-152"><a href="#cb13-152" tabindex="-1"></a><span class="co">#&gt; ======================================================================</span></span>
-<span id="cb13-153"><a href="#cb13-153" tabindex="-1"></a><span class="co">#&gt; Choosing variables...</span></span>
-<span id="cb13-154"><a href="#cb13-154" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb13-155"><a href="#cb13-155" tabindex="-1"></a><span class="co">#&gt; Reducing from 5 to 4...</span></span>
-<span id="cb13-156"><a href="#cb13-156" tabindex="-1"></a><span class="co">#&gt; tab_5d has generated 2 tables in total</span></span>
-<span id="cb13-157"><a href="#cb13-157" tabindex="-1"></a><span class="co">#&gt; Reducing from 4 to 3...</span></span>
-<span id="cb13-158"><a href="#cb13-158" tabindex="-1"></a><span class="co">#&gt; tab_5d has generated 54 tables in total</span></span>
-<span id="cb13-159"><a href="#cb13-159" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb13-160"><a href="#cb13-160" tabindex="-1"></a><span class="co">#&gt;   Table size distribution :</span></span>
-<span id="cb13-161"><a href="#cb13-161" tabindex="-1"></a><span class="co">#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span></span>
-<span id="cb13-162"><a href="#cb13-162" tabindex="-1"></a><span class="co">#&gt;   20700   20700   27900   28883   29700   41400 </span></span>
-<span id="cb13-163"><a href="#cb13-163" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb13-164"><a href="#cb13-164" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb13-165"><a href="#cb13-165" tabindex="-1"></a><span class="co">#&gt; Spliting...</span></span>
-<span id="cb13-166"><a href="#cb13-166" tabindex="-1"></a><span class="co">#&gt;  ECO___SEX___AGE </span></span>
-<span id="cb13-167"><a href="#cb13-167" tabindex="-1"></a><span class="co">#&gt; tab_5d has generated 54 tables in total</span></span>
+<span id="cb13-103"><a href="#cb13-103" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-104"><a href="#cb13-104" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-105"><a href="#cb13-105" tabindex="-1"></a><span class="co">#&gt; ======================================================================</span></span>
+<span id="cb13-106"><a href="#cb13-106" tabindex="-1"></a><span class="co">#&gt;   Variant : smart_80000 (nb_tab_option = smart | limit = 80000 )</span></span>
+<span id="cb13-107"><a href="#cb13-107" tabindex="-1"></a><span class="co">#&gt; ======================================================================</span></span>
+<span id="cb13-108"><a href="#cb13-108" tabindex="-1"></a><span class="co">#&gt; Choosing variables...</span></span>
+<span id="cb13-109"><a href="#cb13-109" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-110"><a href="#cb13-110" tabindex="-1"></a><span class="co">#&gt; Reducing from 5 to 4...</span></span>
+<span id="cb13-111"><a href="#cb13-111" tabindex="-1"></a><span class="co">#&gt; tab_5d has generated 2 tables in total</span></span>
+<span id="cb13-112"><a href="#cb13-112" tabindex="-1"></a><span class="co">#&gt; Reducing from 4 to 3...</span></span>
+<span id="cb13-113"><a href="#cb13-113" tabindex="-1"></a><span class="co">#&gt; tab_5d has generated 24 tables in total</span></span>
+<span id="cb13-114"><a href="#cb13-114" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-115"><a href="#cb13-115" tabindex="-1"></a><span class="co">#&gt;   Table size distribution :</span></span>
+<span id="cb13-116"><a href="#cb13-116" tabindex="-1"></a><span class="co">#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span></span>
+<span id="cb13-117"><a href="#cb13-117" tabindex="-1"></a><span class="co">#&gt;   52325   60375   63325   67784   76475   78850 </span></span>
+<span id="cb13-118"><a href="#cb13-118" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-119"><a href="#cb13-119" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-120"><a href="#cb13-120" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-121"><a href="#cb13-121" tabindex="-1"></a><span class="co">#&gt; ======================================================================</span></span>
+<span id="cb13-122"><a href="#cb13-122" tabindex="-1"></a><span class="co">#&gt;   Variant : smart_50000 (nb_tab_option = smart | limit = 50000 )</span></span>
+<span id="cb13-123"><a href="#cb13-123" tabindex="-1"></a><span class="co">#&gt; ======================================================================</span></span>
+<span id="cb13-124"><a href="#cb13-124" tabindex="-1"></a><span class="co">#&gt; Choosing variables...</span></span>
+<span id="cb13-125"><a href="#cb13-125" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-126"><a href="#cb13-126" tabindex="-1"></a><span class="co">#&gt; Reducing from 5 to 4...</span></span>
+<span id="cb13-127"><a href="#cb13-127" tabindex="-1"></a><span class="co">#&gt; tab_5d has generated 2 tables in total</span></span>
+<span id="cb13-128"><a href="#cb13-128" tabindex="-1"></a><span class="co">#&gt; Reducing from 4 to 3...</span></span>
+<span id="cb13-129"><a href="#cb13-129" tabindex="-1"></a><span class="co">#&gt; tab_5d has generated 54 tables in total</span></span>
+<span id="cb13-130"><a href="#cb13-130" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-131"><a href="#cb13-131" tabindex="-1"></a><span class="co">#&gt;   Table size distribution :</span></span>
+<span id="cb13-132"><a href="#cb13-132" tabindex="-1"></a><span class="co">#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span></span>
+<span id="cb13-133"><a href="#cb13-133" tabindex="-1"></a><span class="co">#&gt;   20700   20700   27900   28883   29700   41400 </span></span>
+<span id="cb13-134"><a href="#cb13-134" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-135"><a href="#cb13-135" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-136"><a href="#cb13-136" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-137"><a href="#cb13-137" tabindex="-1"></a><span class="co">#&gt; ======================================================================</span></span>
+<span id="cb13-138"><a href="#cb13-138" tabindex="-1"></a><span class="co">#&gt;   Variant : smart_30000 (nb_tab_option = smart | limit = 30000 )</span></span>
+<span id="cb13-139"><a href="#cb13-139" tabindex="-1"></a><span class="co">#&gt; ======================================================================</span></span>
+<span id="cb13-140"><a href="#cb13-140" tabindex="-1"></a><span class="co">#&gt; Choosing variables...</span></span>
+<span id="cb13-141"><a href="#cb13-141" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-142"><a href="#cb13-142" tabindex="-1"></a><span class="co">#&gt; Reducing from 5 to 4...</span></span>
+<span id="cb13-143"><a href="#cb13-143" tabindex="-1"></a><span class="co">#&gt; tab_5d has generated 60 tables in total</span></span>
+<span id="cb13-144"><a href="#cb13-144" tabindex="-1"></a><span class="co">#&gt; Reducing from 4 to 3...</span></span>
+<span id="cb13-145"><a href="#cb13-145" tabindex="-1"></a><span class="co">#&gt; tab_5d has generated 120 tables in total</span></span>
+<span id="cb13-146"><a href="#cb13-146" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-147"><a href="#cb13-147" tabindex="-1"></a><span class="co">#&gt;   Table size distribution :</span></span>
+<span id="cb13-148"><a href="#cb13-148" tabindex="-1"></a><span class="co">#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span></span>
+<span id="cb13-149"><a href="#cb13-149" tabindex="-1"></a><span class="co">#&gt;   12075   15438   17630   16832   17928   18426 </span></span>
+<span id="cb13-150"><a href="#cb13-150" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-151"><a href="#cb13-151" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-152"><a href="#cb13-152" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-153"><a href="#cb13-153" tabindex="-1"></a><span class="co">#&gt; ======================================================================</span></span>
+<span id="cb13-154"><a href="#cb13-154" tabindex="-1"></a><span class="co">#&gt;   Variant : smart_10000 (nb_tab_option = smart | limit = 10000 )</span></span>
+<span id="cb13-155"><a href="#cb13-155" tabindex="-1"></a><span class="co">#&gt; ======================================================================</span></span>
+<span id="cb13-156"><a href="#cb13-156" tabindex="-1"></a><span class="co">#&gt; Choosing variables...</span></span>
+<span id="cb13-157"><a href="#cb13-157" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-158"><a href="#cb13-158" tabindex="-1"></a><span class="co">#&gt; Reducing from 5 to 4...</span></span>
+<span id="cb13-159"><a href="#cb13-159" tabindex="-1"></a><span class="co">#&gt; tab_5d has generated 2 tables in total</span></span>
+<span id="cb13-160"><a href="#cb13-160" tabindex="-1"></a><span class="co">#&gt; Reducing from 4 to 3...</span></span>
+<span id="cb13-161"><a href="#cb13-161" tabindex="-1"></a><span class="co">#&gt; tab_5d has generated 270 tables in total</span></span>
+<span id="cb13-162"><a href="#cb13-162" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-163"><a href="#cb13-163" tabindex="-1"></a><span class="co">#&gt;   Table size distribution :</span></span>
+<span id="cb13-164"><a href="#cb13-164" tabindex="-1"></a><span class="co">#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span></span>
+<span id="cb13-165"><a href="#cb13-165" tabindex="-1"></a><span class="co">#&gt;    4860    6048    6588    7257    8748    9828 </span></span>
+<span id="cb13-166"><a href="#cb13-166" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-167"><a href="#cb13-167" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb13-168"><a href="#cb13-168" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb13-169"><a href="#cb13-169" tabindex="-1"></a><span class="co">#&gt;   Table size distribution :</span></span>
-<span id="cb13-170"><a href="#cb13-170" tabindex="-1"></a><span class="co">#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span></span>
-<span id="cb13-171"><a href="#cb13-171" tabindex="-1"></a><span class="co">#&gt;   20700   20700   27900   28883   29700   41400 </span></span>
+<span id="cb13-169"><a href="#cb13-169" tabindex="-1"></a><span class="co">#&gt; ======================================================================</span></span>
+<span id="cb13-170"><a href="#cb13-170" tabindex="-1"></a><span class="co">#&gt;   Variant : max (nb_tab_option = max | limit = 1000000 )</span></span>
+<span id="cb13-171"><a href="#cb13-171" tabindex="-1"></a><span class="co">#&gt; ======================================================================</span></span>
 <span id="cb13-172"><a href="#cb13-172" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb13-173"><a href="#cb13-173" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb13-174"><a href="#cb13-174" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb13-175"><a href="#cb13-175" tabindex="-1"></a><span class="co">#&gt; ======================================================================</span></span>
-<span id="cb13-176"><a href="#cb13-176" tabindex="-1"></a><span class="co">#&gt;   Variant : smart_30000 (nb_tab_option = smart | limit = 30000 )</span></span>
-<span id="cb13-177"><a href="#cb13-177" tabindex="-1"></a><span class="co">#&gt; ======================================================================</span></span>
-<span id="cb13-178"><a href="#cb13-178" tabindex="-1"></a><span class="co">#&gt; Choosing variables...</span></span>
-<span id="cb13-179"><a href="#cb13-179" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb13-180"><a href="#cb13-180" tabindex="-1"></a><span class="co">#&gt; Reducing from 5 to 4...</span></span>
-<span id="cb13-181"><a href="#cb13-181" tabindex="-1"></a><span class="co">#&gt; tab_5d has generated 60 tables in total</span></span>
-<span id="cb13-182"><a href="#cb13-182" tabindex="-1"></a><span class="co">#&gt; Reducing from 4 to 3...</span></span>
-<span id="cb13-183"><a href="#cb13-183" tabindex="-1"></a><span class="co">#&gt; tab_5d has generated 120 tables in total</span></span>
-<span id="cb13-184"><a href="#cb13-184" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb13-185"><a href="#cb13-185" tabindex="-1"></a><span class="co">#&gt;   Table size distribution :</span></span>
-<span id="cb13-186"><a href="#cb13-186" tabindex="-1"></a><span class="co">#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span></span>
-<span id="cb13-187"><a href="#cb13-187" tabindex="-1"></a><span class="co">#&gt;   12075   15438   17630   16832   17928   18426 </span></span>
-<span id="cb13-188"><a href="#cb13-188" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb13-189"><a href="#cb13-189" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb13-190"><a href="#cb13-190" tabindex="-1"></a><span class="co">#&gt; Spliting...</span></span>
-<span id="cb13-191"><a href="#cb13-191" tabindex="-1"></a><span class="co">#&gt;  ACT___GEO </span></span>
-<span id="cb13-192"><a href="#cb13-192" tabindex="-1"></a><span class="co">#&gt;  AGE___SEX </span></span>
-<span id="cb13-193"><a href="#cb13-193" tabindex="-1"></a><span class="co">#&gt; tab_5d has generated 120 tables in total</span></span>
-<span id="cb13-194"><a href="#cb13-194" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb13-195"><a href="#cb13-195" tabindex="-1"></a><span class="co">#&gt;   Table size distribution :</span></span>
-<span id="cb13-196"><a href="#cb13-196" tabindex="-1"></a><span class="co">#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span></span>
-<span id="cb13-197"><a href="#cb13-197" tabindex="-1"></a><span class="co">#&gt;   12075   15438   17630   16832   17928   18426 </span></span>
-<span id="cb13-198"><a href="#cb13-198" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb13-199"><a href="#cb13-199" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb13-200"><a href="#cb13-200" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb13-201"><a href="#cb13-201" tabindex="-1"></a><span class="co">#&gt; ======================================================================</span></span>
-<span id="cb13-202"><a href="#cb13-202" tabindex="-1"></a><span class="co">#&gt;   Variant : smart_10000 (nb_tab_option = smart | limit = 10000 )</span></span>
-<span id="cb13-203"><a href="#cb13-203" tabindex="-1"></a><span class="co">#&gt; ======================================================================</span></span>
-<span id="cb13-204"><a href="#cb13-204" tabindex="-1"></a><span class="co">#&gt; Choosing variables...</span></span>
-<span id="cb13-205"><a href="#cb13-205" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb13-206"><a href="#cb13-206" tabindex="-1"></a><span class="co">#&gt; Reducing from 5 to 4...</span></span>
-<span id="cb13-207"><a href="#cb13-207" tabindex="-1"></a><span class="co">#&gt; tab_5d has generated 2 tables in total</span></span>
-<span id="cb13-208"><a href="#cb13-208" tabindex="-1"></a><span class="co">#&gt; Reducing from 4 to 3...</span></span>
-<span id="cb13-209"><a href="#cb13-209" tabindex="-1"></a><span class="co">#&gt; tab_5d has generated 270 tables in total</span></span>
-<span id="cb13-210"><a href="#cb13-210" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb13-211"><a href="#cb13-211" tabindex="-1"></a><span class="co">#&gt;   Table size distribution :</span></span>
-<span id="cb13-212"><a href="#cb13-212" tabindex="-1"></a><span class="co">#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span></span>
-<span id="cb13-213"><a href="#cb13-213" tabindex="-1"></a><span class="co">#&gt;    4860    6048    6588    7257    8748    9828 </span></span>
-<span id="cb13-214"><a href="#cb13-214" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb13-215"><a href="#cb13-215" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb13-216"><a href="#cb13-216" tabindex="-1"></a><span class="co">#&gt; Spliting...</span></span>
-<span id="cb13-217"><a href="#cb13-217" tabindex="-1"></a><span class="co">#&gt;  ACT___SEX___AGE </span></span>
-<span id="cb13-218"><a href="#cb13-218" tabindex="-1"></a><span class="co">#&gt; tab_5d has generated 270 tables in total</span></span>
-<span id="cb13-219"><a href="#cb13-219" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb13-220"><a href="#cb13-220" tabindex="-1"></a><span class="co">#&gt;   Table size distribution :</span></span>
-<span id="cb13-221"><a href="#cb13-221" tabindex="-1"></a><span class="co">#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span></span>
-<span id="cb13-222"><a href="#cb13-222" tabindex="-1"></a><span class="co">#&gt;    4860    6048    6588    7257    8748    9828 </span></span>
-<span id="cb13-223"><a href="#cb13-223" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb13-224"><a href="#cb13-224" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb13-225"><a href="#cb13-225" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb13-226"><a href="#cb13-226" tabindex="-1"></a><span class="co">#&gt; ======================================================================</span></span>
-<span id="cb13-227"><a href="#cb13-227" tabindex="-1"></a><span class="co">#&gt;   Variant : max (nb_tab_option = max | limit = 1000000 )</span></span>
-<span id="cb13-228"><a href="#cb13-228" tabindex="-1"></a><span class="co">#&gt; ======================================================================</span></span>
-<span id="cb13-229"><a href="#cb13-229" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb13-230"><a href="#cb13-230" tabindex="-1"></a><span class="co">#&gt; Reducing from 5 to 4...</span></span>
-<span id="cb13-231"><a href="#cb13-231" tabindex="-1"></a><span class="co">#&gt; tab_5d has generated 60 tables in total</span></span>
-<span id="cb13-232"><a href="#cb13-232" tabindex="-1"></a><span class="co">#&gt; Reducing from 4 to 3...</span></span>
-<span id="cb13-233"><a href="#cb13-233" tabindex="-1"></a><span class="co">#&gt; tab_5d has generated 758 tables in total</span></span>
-<span id="cb13-234"><a href="#cb13-234" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb13-235"><a href="#cb13-235" tabindex="-1"></a><span class="co">#&gt;   Table size distribution :</span></span>
-<span id="cb13-236"><a href="#cb13-236" tabindex="-1"></a><span class="co">#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span></span>
-<span id="cb13-237"><a href="#cb13-237" tabindex="-1"></a><span class="co">#&gt;    2145    2673    3003    2978    3201    3498 </span></span>
-<span id="cb13-238"><a href="#cb13-238" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb13-239"><a href="#cb13-239" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb13-240"><a href="#cb13-240" tabindex="-1"></a><span class="co">#&gt; Spliting...</span></span>
-<span id="cb13-241"><a href="#cb13-241" tabindex="-1"></a><span class="co">#&gt;  AGE___GEO___ACT </span></span>
-<span id="cb13-242"><a href="#cb13-242" tabindex="-1"></a><span class="co">#&gt; tab_5d has generated 758 tables in total</span></span>
-<span id="cb13-243"><a href="#cb13-243" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb13-244"><a href="#cb13-244" tabindex="-1"></a><span class="co">#&gt;   Table size distribution :</span></span>
-<span id="cb13-245"><a href="#cb13-245" tabindex="-1"></a><span class="co">#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span></span>
-<span id="cb13-246"><a href="#cb13-246" tabindex="-1"></a><span class="co">#&gt;    2145    2673    3003    2978    3201    3498</span></span></code></pre></div>
+<span id="cb13-173"><a href="#cb13-173" tabindex="-1"></a><span class="co">#&gt; Reducing from 5 to 4...</span></span>
+<span id="cb13-174"><a href="#cb13-174" tabindex="-1"></a><span class="co">#&gt; tab_5d has generated 60 tables in total</span></span>
+<span id="cb13-175"><a href="#cb13-175" tabindex="-1"></a><span class="co">#&gt; Reducing from 4 to 3...</span></span>
+<span id="cb13-176"><a href="#cb13-176" tabindex="-1"></a><span class="co">#&gt; tab_5d has generated 758 tables in total</span></span>
+<span id="cb13-177"><a href="#cb13-177" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-178"><a href="#cb13-178" tabindex="-1"></a><span class="co">#&gt;   Table size distribution :</span></span>
+<span id="cb13-179"><a href="#cb13-179" tabindex="-1"></a><span class="co">#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span></span>
+<span id="cb13-180"><a href="#cb13-180" tabindex="-1"></a><span class="co">#&gt;    2145    2673    3003    2978    3201    3498</span></span></code></pre></div>
 <div id="synthèse-comparative-des-performances-selon-la-valeur-de-limit" class="section level4" number="5.3.1">
 <h4><span class="header-section-number">5.3.1</span> Synthèse
 comparative des performances selon la valeur de <code>limit</code></h4>

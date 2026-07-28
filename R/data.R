@@ -220,3 +220,42 @@
 #' }
 "metadata_pizza_lettuce"
 
+#' Aggregated 5-dimensional example dataset
+#'
+#' An example dataset containing a 5-dimensional cross-tabulated table,
+#' notably used in the \code{split_tab} vignette.
+#'
+#' The table includes the following categorical variables:
+#' \describe{
+#'   \item{ACT}{Activity (25 modalities: 1 Total + 4 groups + 20 sub-levels)}
+#'   \item{GEO}{Geography (36 modalities: 1 Total + 5 regions + 30 sub-regions)}
+#'   \item{SEX}{Sex / Category (11 modalities: 1 Total + 10 detailed categories)}
+#'   \item{AGE}{Age group (16 modalities: 1 Total + 15 detailed categories)}
+#'   \item{ECO}{Economic sector (3 modalities: 1 Total + 2 detailed categories)}
+#'   \item{N}{Number of observations / cell frequency}
+#' }
+#'
+#' @format A \code{data.frame} (or \code{data.table}) containing combinations of the 5 categorical variables and cell counts.
+#' @seealso \code{\link{tot5}}, \code{\link{hrc5}}
+#' @source Example dataset generated for package documentation and testing.
+"dfs5_agg"
+
+
+#' Total codes for the `dfs5_agg` dataset
+#'
+#' A named character vector specifying the code representing the Total for each
+#' of the 5 variables in the \code{\link{dfs5_agg}} dataset (\code{ACT}, \code{GEO}, \code{SEX}, \code{AGE}, \code{ECO}).
+#'
+#' @format A named character vector (e.g., \code{c(ACT = "Total", GEO = "Total", ...)}).
+#' @seealso \code{\link{dfs5_agg}}, \code{\link{hrc5}}
+"tot5"
+
+
+#' Hierarchies for the `dfs5_agg` dataset variables
+#'
+#' Specification of hierarchy files (\code{.hrc}) or structures associated
+#' with the hierarchical variables of the \code{\link{dfs5_agg}} table (notably \code{ACT} and \code{GEO}).
+#'
+#' @format A named vector or list specifying the hierarchy for each variable.
+#' @seealso \code{\link{dfs5_agg}}, \code{\link{tot5}}
+"hrc5"

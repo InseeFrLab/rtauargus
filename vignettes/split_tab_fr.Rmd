@@ -263,22 +263,13 @@ res_wi_split <- tab_rtauargus(
 #>   535.0   536.5   538.0   538.0   539.5   541.0 
 #> 
 #> 
-#> Spliting...
-#>  treff___cj 
-#> tab has generated 2 tables in total
-#> 
-#>   Table size distribution :
-#>    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-#>   535.0   536.5   538.0   538.0   539.5   541.0 
-#> 
-#> 
 #> --- Current table to treat:  tab1 ---
 #> --- Current table to treat:  tab2 ---
 #> --- Current table to treat:  tab1 ---
 #> --- Current table to treat:  tab2 ---
 #> --- Current table to treat:  tab1 ---
 tictoc::toc()
-#> 61.01 sec elapsed
+#> 57.33 sec elapsed
 ```
 
 La réduction de dimensions a conduit à construire deux sous-tableaux de 3
@@ -375,14 +366,14 @@ res_wo_split <- tab_rtauargus(
 #>                    Running Modular can take a lot of time and maybe it is difficult to obtain a correct result.
 #>                    Please check the results carefully.
 #>                    
-#> End of modular protection. Time used 301 seconds
-#>                    Number of suppressions: 292
+#> End of modular protection. Time used 302 seconds
+#>                    Number of suppressions: 283
 #> <WRITETABLE> (1,4,,"Z:\rtauargus\vignettes\example_1\wo_split\datatest1.csv")
 #> Table: treff x cj x A10 x type_distrib | pizzas_tot has been written
 #>                    Output file name: Z:\rtauargus\vignettes\example_1\wo_split\datatest1.csv
 #> End of TauArgus run
 tictoc::toc()
-#> 308.73 sec elapsed
+#> 307.54 sec elapsed
 ```
 
 Avec seulement 689 lignes et aucune variable hiérarchique, la pose directe du
@@ -403,16 +394,16 @@ stats_wo_split
 #>   flag   n
 #> 1    A  79
 #> 2    B  35
-#> 3    D 269
-#> 4    V 306
+#> 3    D 258
+#> 4    V 317
 ```
 
 La pose directe du secret sur le tableau à 4 dimensions génère
-269 suppressions secondaires.
+258 suppressions secondaires.
 
 
 On peut observer que le traitement de la table à 4 dimensions directement
-génère un masque un peu moins chargé en secret: 266 cellules en secret secondaire,
+génère un masque un peu moins chargé en secret: 258 cellules en secret secondaire,
 contre 278 avec une réduction de dimensions.
 
 Il est difficile d'anticiper cette différence puisqu'elle est très dépendante
@@ -516,7 +507,8 @@ library(rtauargus)
 load("../data/input_data_5d.RData") # dfs5_agg, tot5, hrc5
 
 dfs5_agg %>% colnames() %>% print()
-#> [1] "SEX"            "AGE"            "GEO"            "ACT"            "ECO"            "VALUE"         
+#> [1] "SEX"            "AGE"            "GEO"           
+#> [4] "ACT"            "ECO"            "VALUE"         
 #> [7] "freq"           "is_secret_prim" "secret_no_pl"
 dfs5_agg %>% dplyr::tally() %>% print()
 #> # A tibble: 1 x 1
@@ -548,7 +540,7 @@ Détail des modalités par variable (Totaux inclus) :
 # Pour "smart", limit change de fonction du scénario
 variants <- list(
   list(label = "min",             nb_tab_option = "min",   limit = 1000000L),
-  list(label = "smart_100000", nb_tab_option = "smart", limit = 100000L),
+  list(label = "smart_100000",    nb_tab_option = "smart", limit = 100000L),
   list(label = "smart_80000",     nb_tab_option = "smart", limit = 80000L),
   list(label = "smart_50000",     nb_tab_option = "smart", limit = 50000L),
   list(label = "smart_30000",     nb_tab_option = "smart", limit = 30000L),
@@ -597,16 +589,6 @@ for (v in variants) {
 #>   53820   67068   75348   80579   90396  101556 
 #> 
 #> 
-#> Spliting...
-#>  ECO___SEX 
-#>  AGE___ACT 
-#> tab_5d has generated 20 tables in total
-#> 
-#>   Table size distribution :
-#>    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-#>   53820   67068   75348   80579   90396  101556 
-#> 
-#> 
 #> 
 #> ======================================================================
 #>   Variant : smart_100000 (nb_tab_option = smart | limit = 100000 )
@@ -616,16 +598,6 @@ for (v in variants) {
 #> Reducing from 5 to 4...
 #> tab_5d has generated 10 tables in total
 #> Reducing from 4 to 3...
-#> tab_5d has generated 20 tables in total
-#> 
-#>   Table size distribution :
-#>    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-#>   63756   75348   77688   82404   92736   95616 
-#> 
-#> 
-#> Spliting...
-#>  ECO___ACT 
-#>  AGE___SEX 
 #> tab_5d has generated 20 tables in total
 #> 
 #>   Table size distribution :
@@ -649,16 +621,6 @@ for (v in variants) {
 #>   52325   60375   63325   67784   76475   78850 
 #> 
 #> 
-#> Spliting...
-#>  AGE___SEX 
-#>  ECO___GEO 
-#> tab_5d has generated 24 tables in total
-#> 
-#>   Table size distribution :
-#>    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-#>   52325   60375   63325   67784   76475   78850 
-#> 
-#> 
 #> 
 #> ======================================================================
 #>   Variant : smart_50000 (nb_tab_option = smart | limit = 50000 )
@@ -668,15 +630,6 @@ for (v in variants) {
 #> Reducing from 5 to 4...
 #> tab_5d has generated 2 tables in total
 #> Reducing from 4 to 3...
-#> tab_5d has generated 54 tables in total
-#> 
-#>   Table size distribution :
-#>    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-#>   20700   20700   27900   28883   29700   41400 
-#> 
-#> 
-#> Spliting...
-#>  ECO___SEX___AGE 
 #> tab_5d has generated 54 tables in total
 #> 
 #>   Table size distribution :
@@ -700,16 +653,6 @@ for (v in variants) {
 #>   12075   15438   17630   16832   17928   18426 
 #> 
 #> 
-#> Spliting...
-#>  ACT___GEO 
-#>  AGE___SEX 
-#> tab_5d has generated 120 tables in total
-#> 
-#>   Table size distribution :
-#>    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-#>   12075   15438   17630   16832   17928   18426 
-#> 
-#> 
 #> 
 #> ======================================================================
 #>   Variant : smart_10000 (nb_tab_option = smart | limit = 10000 )
@@ -726,15 +669,6 @@ for (v in variants) {
 #>    4860    6048    6588    7257    8748    9828 
 #> 
 #> 
-#> Spliting...
-#>  ACT___SEX___AGE 
-#> tab_5d has generated 270 tables in total
-#> 
-#>   Table size distribution :
-#>    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-#>    4860    6048    6588    7257    8748    9828 
-#> 
-#> 
 #> 
 #> ======================================================================
 #>   Variant : max (nb_tab_option = max | limit = 1000000 )
@@ -743,15 +677,6 @@ for (v in variants) {
 #> Reducing from 5 to 4...
 #> tab_5d has generated 60 tables in total
 #> Reducing from 4 to 3...
-#> tab_5d has generated 758 tables in total
-#> 
-#>   Table size distribution :
-#>    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-#>    2145    2673    3003    2978    3201    3498 
-#> 
-#> 
-#> Spliting...
-#>  AGE___GEO___ACT 
 #> tab_5d has generated 758 tables in total
 #> 
 #>   Table size distribution :

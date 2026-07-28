@@ -5,5 +5,7 @@ utils::globalVariables(
     "Group","table_eg","spanning","hrc_spanning","spanning_old","tab_inclus",
     "starts_with","spanning_name","hrc_spanning_name","eq_indicator","rhs","total","term_number",
     "eq_name","unit","var","n_total","total_alt","group",
-    ".")
+    ".",
+    "secret_no_pl", "is_secret_curr", "is_secret_prev",
+    "i.is_secret", "..other_tabs", "..all_expl_vars")
 )

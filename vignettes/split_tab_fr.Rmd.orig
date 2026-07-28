@@ -312,8 +312,8 @@ La pose directe du secret sur le tableau à 4 dimensions génère
 
 
 On peut observer que le traitement de la table à 4 dimensions directement
-génère un masque un peu moins chargé en secret: 266 cellules en secret secondaire,
-contre 278 avec une réduction de dimensions.
+génère un masque un peu moins chargé en secret: `r stats_wo_split %>% filter(flag == "D") %>% pull(n)` cellules en secret secondaire,
+contre `r stats_wi_split %>% filter(flag == "D") %>% pull(n)` avec une réduction de dimensions.
 
 Il est difficile d'anticiper cette différence puisqu'elle est très dépendante
 de la structuration des données, de la présence du secret primaire au sein du
@@ -432,7 +432,7 @@ Détail des modalités par variable (Totaux inclus) :
 # Pour "smart", limit change de fonction du scénario
 variants <- list(
   list(label = "min",             nb_tab_option = "min",   limit = 1000000L),
-  list(label = "smart_100000", nb_tab_option = "smart", limit = 100000L),
+  list(label = "smart_100000",    nb_tab_option = "smart", limit = 100000L),
   list(label = "smart_80000",     nb_tab_option = "smart", limit = 80000L),
   list(label = "smart_50000",     nb_tab_option = "smart", limit = 50000L),
   list(label = "smart_30000",     nb_tab_option = "smart", limit = 30000L),
