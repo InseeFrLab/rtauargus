@@ -293,7 +293,7 @@ reduce_dims <- function(
     stop("verbose must be a logical value.")
   }
 
-  # Check if verbose is a logical value
+  # Check if over_split is a logical value
   if (!is.logical(over_split)){
     stop("over_split must be a logical value.")
   }
@@ -410,10 +410,10 @@ The largest table has ",choice_3_var$max_row," rows.\n"))
           v3 <- choice_4_var$vars[[3]]
           v4 <- choice_4_var$vars[[4]]
 
-          if (choice_3_var$max_row > limit){
+          if (choice_4_var$max_row > limit){
             cat(c("Warning when choosing variables:
 The limit of ",limit," cannot be achieved.
-The largest table has ",choice_3_var$max_row," rows.\n"))
+The largest table has ",choice_4_var$max_row," rows.\n"))
           }
         }
 
@@ -521,8 +521,10 @@ Reducing from 4 to 3...\n")
                    totcode = totcode,
                    hrcfiles = hrcfiles)
 
-  # Split too big table
-  if (over_split) {
+  max_row <- max(sapply(res$tabs, nrow))
+
+  # Split too big table if we didn't achieve the target value of "limit"
+  if (over_split & max_row > limit) {
 
     if (verbose) {
       cat("Spliting...\n")
@@ -672,7 +674,7 @@ split_tab <- function(res, var_fus, limit) {
 
     # list of variables for the created tables
 
-    var <- replicate(n, list(res$vars[[1]]))
+    # var <- replicate(n, list(res$vars[[1]]))
     list_add <- replicate(n, list(res$vars[[1]]))
     names(list_add) <- new_names
 
@@ -739,14 +741,14 @@ chose_sep <- function(
 
   i = 0
   is_in_mod = TRUE
-  while (i <= n_sep & is_in_mod) {
+  while (i < n_sep & is_in_mod) {
     i <- i + 1
     sep <- liste_sep[i]
     is_in_mod = any(stringr::str_detect(liste_mod, stringr::fixed(sep)))
   }
 
   # We have a working separator!
-  if (i <= n_sep) {
+  if (!is_in_mod) {
     # Remove the "\" in front of the separator
     #sep <- stringr::str_sub(liste_sep[i], start = 2)
     sep <- liste_sep[i]
