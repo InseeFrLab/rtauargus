@@ -26,6 +26,10 @@ journal_add_line <- function(journal,...){
 #'     created at each iteration, preserving the full suppression history.
 #'     Useful for debugging propagation across tables, at the cost of O(N_iter)
 #'     additional columns
+#' @param minimal_verbose logical, default `FALSE`. Controls the console verbosity during processing:
+#'   - `FALSE`: prints a new line in the console at each iteration (`--- Current table to treat: <tab_name> ---`).
+#'   - `TRUE`: overwrites a single status line in-place (`--- Current table to treat: <tab_name> | loop iter : <N> ---`),
+#'     preventing console clutter during long processing loops.
 #' @param ... other arguments of `tab_rtauargus2()`
 #'
 #' @return original list of tables. Secret Results of each iteration is added to each table.
@@ -135,6 +139,7 @@ tab_multi_manager <- function(
     nb_tab_option = "smart",
     limit = 14700,
     keep_history = FALSE,
+    minimal_verbose = TRUE,
     ...
 ){
   start_time <- Sys.time()
@@ -409,8 +414,13 @@ tab_multi_manager <- function(
     num_tableau <- todolist[1]
 
     num_iter_par_tab[num_tableau] <- num_iter_par_tab[num_tableau] + 1
-    cat("--- Current table to treat: ", num_tableau, "---\n")
 
+    if (!minimal_verbose){
+      cat("--- Current table to treat: ", num_tableau, "---\n")
+    } else {
+      cat(sprintf("\r--- Current table to treat: %s | loop iter : %d ---            ", num_tableau, num_iter_all))
+      flush.console()
+    }
     # NEW: Initialisation de securite pour le journal
     common_modified_idx <- integer(0)
 
@@ -534,9 +544,11 @@ tab_multi_manager <- function(
       # Mode avec historique : creation d'une nouvelle colonne is_secret_N a chaque iteration
       table_majeure[, (var_secret) := get(var_secret_apriori)]
       table_majeure[res, (var_secret) := i.is_secret, on = all_expl_vars]
+      table_majeure[is.na(get(var_secret)), (var_secret) := get(var_secret_apriori)]
     } else {
       # Mode optimise : mise a jour direct in-place de la colonne unique is_secret_curr
       table_majeure[res, is_secret_curr := i.is_secret, on = all_expl_vars]
+      table_majeure[is.na(is_secret_curr), is_secret_curr := is_secret_prev]
     }
 
     # NEW: Mise a jour de secret_no_pl_iter
@@ -592,6 +604,7 @@ tab_multi_manager <- function(
       idx_changed <- table_majeure[["is_secret_prev"]][tableau_a_traiter] != table_majeure[["is_secret_curr"]][tableau_a_traiter]
     }
 
+    idx_changed[is.na(idx_changed)] <- FALSE
     lignes_modifs <- tableau_a_traiter[idx_changed]
 
     other_tabs <- setdiff(all_col_T, nom_col_identifiante)
@@ -649,6 +662,8 @@ tab_multi_manager <- function(
     journal_add_break_line(journal)
 
   }
+
+  if (minimal_verbose) cat("\n") # Permet de passer proprement à la ligne suivante à la fin de la boucle
 
   # NEW 4: Creation de la colonne finale unique apres la boucle pour compatibilite avec le BLOC 4
   if (!keep_history) {
