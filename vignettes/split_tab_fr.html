@@ -371,10 +371,24 @@ tableaux à générer lors de la réduction de dimension ?</a></li>
 <li><a href="#le-compromis-entre-qualit%C3%A9-du-secret-et-temps-dex%C3%A9cution" id="toc-le-compromis-entre-qualité-du-secret-et-temps-dexécution"><span class="toc-section-number">5.2</span> Le compromis entre qualité du
 secret et temps d’exécution</a></li>
 <li><a href="#d%C3%A9marche-recommand%C3%A9e-en-pratique" id="toc-démarche-recommandée-en-pratique"><span class="toc-section-number">5.3</span> Démarche recommandée en
-pratique</a>
+pratique</a></li>
+<li><a href="#synth%C3%A8se-comparative-des-performances-selon-la-valeur-de-limit" id="toc-synthèse-comparative-des-performances-selon-la-valeur-de-limit"><span class="toc-section-number">5.4</span> Synthèse comparative des
+performances selon la valeur de <code>limit</code></a>
 <ul>
-<li><a href="#synth%C3%A8se-comparative-des-performances-selon-la-valeur-de-limit" id="toc-synthèse-comparative-des-performances-selon-la-valeur-de-limit"><span class="toc-section-number">5.3.1</span> Synthèse comparative des
-performances selon la valeur de <code>limit</code></a></li>
+<li><a href="#table-initiale-et-r%C3%A9sultats-tau-argus" id="toc-table-initiale-et-résultats-tau-argus"><span class="toc-section-number">5.4.1</span> Table initiale et résultats
+Tau-Argus</a></li>
+</ul></li>
+<li><a href="#analyse-approfondie-et-enseignements-pour-le-cas-4-dimensions" id="toc-analyse-approfondie-et-enseignements-pour-le-cas-4-dimensions"><span class="toc-section-number">5.5</span> Analyse approfondie et
+enseignements pour le cas 4 dimensions</a>
+<ul>
+<li><a href="#d%C3%A9coupage-par-rtauargus-vs-d%C3%A9composition-interne-de-tau-argus" id="toc-découpage-par-rtauargus-vs-décomposition-interne-de-tau-argus"><span class="toc-section-number">5.5.1</span> 1. Découpage par
+<code>rtauargus</code> vs décomposition interne de
+<code>Tau-Argus</code></a></li>
+<li><a href="#convergence-du-solveur-et-r%C3%A9partition-du-secret-primaire" id="toc-convergence-du-solveur-et-répartition-du-secret-primaire"><span class="toc-section-number">5.5.2</span> 2. Convergence du solveur et
+répartition du secret primaire</a></li>
+<li><a href="#avertissement-attention-au-sur-d%C3%A9coupage" id="toc-avertissement-attention-au-sur-découpage"><span class="toc-section-number">5.5.3</span> 3. Avertissement : attention au
+sur-découpage</a></li>
+<li><a href="#synth%C3%A8se-comparative" id="toc-synthèse-comparative"><span class="toc-section-number">5.5.4</span> Synthèse comparative</a></li>
 </ul></li>
 </ul></li>
 <li><a href="#d%C3%A9tail-de-la-vignette" id="toc-détail-de-la-vignette"><span class="toc-section-number">6</span>
@@ -623,13 +637,14 @@ appel sous-jacent à <code>tab_multi_manager</code>.</p>
 <span id="cb8-25"><a href="#cb8-25" tabindex="-1"></a><span class="co">#&gt;   535.0   536.5   538.0   538.0   539.5   541.0 </span></span>
 <span id="cb8-26"><a href="#cb8-26" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb8-27"><a href="#cb8-27" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb8-28"><a href="#cb8-28" tabindex="-1"></a><span class="co">#&gt; --- Current table to treat:  tab1 ---</span></span>
-<span id="cb8-29"><a href="#cb8-29" tabindex="-1"></a><span class="co">#&gt; --- Current table to treat:  tab2 ---</span></span>
-<span id="cb8-30"><a href="#cb8-30" tabindex="-1"></a><span class="co">#&gt; --- Current table to treat:  tab1 ---</span></span>
-<span id="cb8-31"><a href="#cb8-31" tabindex="-1"></a><span class="co">#&gt; --- Current table to treat:  tab2 ---</span></span>
-<span id="cb8-32"><a href="#cb8-32" tabindex="-1"></a><span class="co">#&gt; --- Current table to treat:  tab1 ---</span></span>
-<span id="cb8-33"><a href="#cb8-33" tabindex="-1"></a>tictoc<span class="sc">::</span><span class="fu">toc</span>()</span>
-<span id="cb8-34"><a href="#cb8-34" tabindex="-1"></a><span class="co">#&gt; 52.61 sec elapsed</span></span></code></pre></div>
+<span id="cb8-28"><a href="#cb8-28" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb8-29"><a href="#cb8-29" tabindex="-1"></a><span class="sc">---</span> Current table to treat<span class="sc">:</span> tab1 <span class="sc">|</span> loop iter <span class="sc">:</span> <span class="dv">1</span> <span class="sc">---</span>            </span>
+<span id="cb8-30"><a href="#cb8-30" tabindex="-1"></a><span class="sc">---</span> Current table to treat<span class="sc">:</span> tab2 <span class="sc">|</span> loop iter <span class="sc">:</span> <span class="dv">2</span> <span class="sc">---</span>            </span>
+<span id="cb8-31"><a href="#cb8-31" tabindex="-1"></a><span class="sc">---</span> Current table to treat<span class="sc">:</span> tab1 <span class="sc">|</span> loop iter <span class="sc">:</span> <span class="dv">3</span> <span class="sc">---</span>            </span>
+<span id="cb8-32"><a href="#cb8-32" tabindex="-1"></a><span class="sc">---</span> Current table to treat<span class="sc">:</span> tab2 <span class="sc">|</span> loop iter <span class="sc">:</span> <span class="dv">4</span> <span class="sc">---</span>            </span>
+<span id="cb8-33"><a href="#cb8-33" tabindex="-1"></a><span class="sc">---</span> Current table to treat<span class="sc">:</span> tab1 <span class="sc">|</span> loop iter <span class="sc">:</span> <span class="dv">5</span> <span class="sc">---</span></span>
+<span id="cb8-34"><a href="#cb8-34" tabindex="-1"></a>tictoc<span class="sc">::</span><span class="fu">toc</span>()</span>
+<span id="cb8-35"><a href="#cb8-35" tabindex="-1"></a><span class="co">#&gt; 46.35 sec elapsed</span></span></code></pre></div>
 <p>La réduction de dimensions a conduit à construire deux sous-tableaux
 de 3 dimensions à partir du tableau original.</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a><span class="fu">str</span>(res_wi_split)</span>
@@ -714,13 +729,13 @@ issues du tableau original.</p>
 <span id="cb11-36"><a href="#cb11-36" tabindex="-1"></a><span class="co">#&gt;                    Please check the results carefully.</span></span>
 <span id="cb11-37"><a href="#cb11-37" tabindex="-1"></a><span class="co">#&gt;                    </span></span>
 <span id="cb11-38"><a href="#cb11-38" tabindex="-1"></a><span class="co">#&gt; End of modular protection. Time used 300 seconds</span></span>
-<span id="cb11-39"><a href="#cb11-39" tabindex="-1"></a><span class="co">#&gt;                    Number of suppressions: 297</span></span>
+<span id="cb11-39"><a href="#cb11-39" tabindex="-1"></a><span class="co">#&gt;                    Number of suppressions: 293</span></span>
 <span id="cb11-40"><a href="#cb11-40" tabindex="-1"></a><span class="co">#&gt; &lt;WRITETABLE&gt; (1,4,,&quot;Z:\rtauargus\vignettes\example_1\wo_split\datatest1.csv&quot;)</span></span>
 <span id="cb11-41"><a href="#cb11-41" tabindex="-1"></a><span class="co">#&gt; Table: treff x cj x A10 x type_distrib | pizzas_tot has been written</span></span>
 <span id="cb11-42"><a href="#cb11-42" tabindex="-1"></a><span class="co">#&gt;                    Output file name: Z:\rtauargus\vignettes\example_1\wo_split\datatest1.csv</span></span>
 <span id="cb11-43"><a href="#cb11-43" tabindex="-1"></a><span class="co">#&gt; End of TauArgus run</span></span>
 <span id="cb11-44"><a href="#cb11-44" tabindex="-1"></a>tictoc<span class="sc">::</span><span class="fu">toc</span>()</span>
-<span id="cb11-45"><a href="#cb11-45" tabindex="-1"></a><span class="co">#&gt; 307.1 sec elapsed</span></span></code></pre></div>
+<span id="cb11-45"><a href="#cb11-45" tabindex="-1"></a><span class="co">#&gt; 305.1 sec elapsed</span></span></code></pre></div>
 <p>Avec seulement 689 lignes et aucune variable hiérarchique, la pose
 directe du secret prend environ 5 minutes à <code>Tau-Argus</code>.</p>
 <div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a>stats_wo_split <span class="ot">&lt;-</span> res_wo_split <span class="sc">%&gt;%</span></span>
@@ -736,12 +751,12 @@ directe du secret prend environ 5 minutes à <code>Tau-Argus</code>.</p>
 <span id="cb12-11"><a href="#cb12-11" tabindex="-1"></a><span class="co">#&gt;   flag   n</span></span>
 <span id="cb12-12"><a href="#cb12-12" tabindex="-1"></a><span class="co">#&gt; 1    A  79</span></span>
 <span id="cb12-13"><a href="#cb12-13" tabindex="-1"></a><span class="co">#&gt; 2    B  35</span></span>
-<span id="cb12-14"><a href="#cb12-14" tabindex="-1"></a><span class="co">#&gt; 3    D 274</span></span>
-<span id="cb12-15"><a href="#cb12-15" tabindex="-1"></a><span class="co">#&gt; 4    V 301</span></span></code></pre></div>
-<p>La pose directe du secret sur le tableau à 4 dimensions génère 274
+<span id="cb12-14"><a href="#cb12-14" tabindex="-1"></a><span class="co">#&gt; 3    D 268</span></span>
+<span id="cb12-15"><a href="#cb12-15" tabindex="-1"></a><span class="co">#&gt; 4    V 307</span></span></code></pre></div>
+<p>La pose directe du secret sur le tableau à 4 dimensions génère 268
 suppressions secondaires.</p>
 <p>On peut observer que le traitement de la table à 4 dimensions
-directement génère un masque un peu moins chargé en secret: 274 cellules
+directement génère un masque un peu moins chargé en secret: 268 cellules
 en secret secondaire, contre 280 avec une réduction de dimensions.</p>
 <p>Il est difficile d’anticiper cette différence puisqu’elle est très
 dépendante de la structuration des données, de la présence du secret
@@ -799,260 +814,192 @@ de <code>&quot;max&quot;</code> (ou d’un équivalent <code>&quot;smart&quot;</
 <div id="le-compromis-entre-qualité-du-secret-et-temps-dexécution" class="section level3" number="5.2">
 <h3><span class="header-section-number">5.2</span> Le compromis entre
 qualité du secret et temps d’exécution</h3>
-<p>Le cas idéal pour la protection des données est de <strong>générer le
-moins de tables possible</strong>. Plus le nombre de tables augmente
-:</p>
+<p>Le choix de la valeur de <code>limit</code> et du nombre de
+sous-tables générées repose sur un compromis :</p>
 <ol style="list-style-type: decimal">
-<li><p><strong>La qualité du secret diminue :</strong> Chaque
-sous-tableau ne contenant qu’un morceau de l’information initiale, les
-solveurs (<em>Tau-Argus</em>) cherchent des solutions sur des
-sous-espaces simplifiés. Cela peut conduire à davantage de sur-secret
-secondaire que sur le tableau complet.</p></li>
-<li><p><strong>Le temps d’exécution évolue de façon non linéaire
-:</strong> Au début, découper en sous-tableaux plus petits aide le
-solveur à converger plus vite. Mais dépassé un certain seuil, la
-multiplication du nombre de sous-tableaux fait exploser le temps de
-traitement global.</p></li>
+<li><strong>Un découpage modéré améliore la vitesse et la qualité du
+secret :</strong></li>
 </ol>
-<p>Exemple concret (sur un <strong>dataset de 5 dimensions et 475 000
-lignes</strong>) :</p>
+<p>En réduisant la taille des tables et le nombre de variables
+hiérarchiques par sous-tableau, le solveur (<em>Tau-Argus</em>) converge
+plus facilement. Cela permet souvent d’accélérer le calcul (notamment en
+<em>Modular</em>) tout en <strong>réduisant le sur-masquage
+secondaire</strong>.</p>
+<ol start="2" style="list-style-type: decimal">
+<li><p><strong>Un sur-découpage devient contre-productif :</strong> Si
+le nombre de sous-tableaux devient trop grand (dépassant une centaine de
+tables) :</p>
 <ul>
-<li><p><code>limit = 100 000</code>* (20 tables, de 63 000 à 95 000
-lignes) : Temps total = 148 min.</p></li>
-<li><p><code>limit = 80 000</code> (24 tables, de 52 000 à 78 000
-lignes) : Temps total = 143 min.</p></li>
-<li><p><code>limit = 50 000</code> (54 tables, de 20 000 à 41 000
-lignes) : Temps total = 142 min.</p></li>
-<li><p><code>limit = 30 000</code> (120 tables, de 12 000 à 18 000
-lignes) : Temps total = 200 min (explosion du temps).</p></li>
-</ul>
-<p>* limit = 100 000 génère également le nombre minimal de
-sous-tables</p>
-<p>(Les temps d’éxecution peuvent varier de plus ou moins 10%, faire des
-comparaisons avec précaution)</p>
-<p>On observe ainsi que le temps d’exécution reste relativement stable
-(ou augmente très légèrement) lorsque l’on découpe avec parcimonie, puis
-<strong>explose</strong> si trop de tables sont générées : la faible
-taille des sous-tableaux ne compense plus leur sur-nombre.</p>
+<li><p><strong>Le temps d’exécution explose</strong> en raison du coût
+de gestion des fichiers (I/O) et des itérations de réconciliation entre
+tables (<code>tab_multi_manager</code>).</p></li>
+<li><p><strong>La qualité du secret peut se dégrader</strong> car la
+sur-fragmentation fait perdre la vision globale au traitement, pouvant
+imposer des masques redondants entre sous-tables.</p></li>
+</ul></li>
+</ol>
 <hr />
 </div>
 <div id="démarche-recommandée-en-pratique" class="section level3" number="5.3">
 <h3><span class="header-section-number">5.3</span> Démarche recommandée
 en pratique</h3>
-<p>Il n’existe pas de valeur de <code>limit</code> universelle. Celle-ci
-dépend de la structure de votre table (nombre de lignes, nombre de
-variables, présence et profondeur des hiérarchies) ainsi que du solveur
-utilisé.</p>
-<p>La recherche de l’optimal se fait donc de manière
-<strong>empirique</strong> :</p>
+<p>Les expérimentations sur les benchmarks 4D et 5D démontrent qu’il
+<strong>ne faut pas chercher à générer le minimum absolu de
+sous-tableaux</strong>. Au contraire, un découpage modéré apporte un
+gain de temps spectaculaire (particulièrement avec le solveur
+<em>Modular</em>, où le temps passe de plusieurs heures à quelques
+dizaines de minutes) tout en réduisant le sur-masquage secondaire.</p>
+<p>La démarche empirique recommandée s’articule ainsi :</p>
 <ol style="list-style-type: decimal">
-<li><p><strong>Commencer par la solution minimale :</strong> Utiliser
+<li><p><strong>Explorer les scénarios avec
+<code>explore_reduce_dims()</code> :</strong></p>
+<p>Avant d’exécuter la recherche du secret, utilisez la fonction
+<code>explore_reduce_dims()</code>. Sans générer de fichiers ni lancer
+<em>Tau-Argus</em>, elle calcule analytiquement l’ensemble des
+combinaisons de découpage possibles (6 combinaisons en 4D, 25 en 5D).
+Elle renvoie un tableau récapitulatif contenant :</p>
+<ul>
+<li><p><code>nb_tab</code> : le nombre de sous-tables générées.</p></li>
+<li><p><code>nb_hrc</code> : le nombre de variables hiérarchiques
+restant dans les sous-tables.</p></li>
+<li><p><code>min_size</code>, <code>med_size</code>,
+<code>max_size</code> : la taille minimale, médiane et maximale des
+sous-tables (en nombre de lignes).</p></li>
+</ul></li>
+<li><p><strong>Fixer la taille cible <code>limit</code> selon le solveur
+retenu :</strong></p>
+<p>En observant la colonne <code>max_size</code> renvoyée par
+<code>explore_reduce_dims()</code>, choisissez l’option
 <code>nb_tab_option = &quot;smart&quot;</code> avec une valeur de
-<code>limit</code> supérieure ou égale au nombre de lignes du tableau
-initial. Dans la majorité des cas, cela suffit.</p></li>
-<li><p><strong>Ajuster en cas d’erreur du solveur :</strong> Si
-<em>Tau-Argus</em> ou le solveur échoue (manque de mémoire ou
-non-convergence), ré-essayer avec <code>&quot;smart&quot;</code> en fixant
-<code>limit</code> à une valeur légèrement inférieure à la taille
-maximale observée lors de la tentative précédente.</p></li>
-<li><p><strong>Répéter de façon itérative</strong> jusqu’à obtenir une
-exécution sans erreur.</p></li>
+<code>limit</code> correspondant à la taille maximale de la
+configuration visée :</p>
+<ul>
+<li><p><strong>Avec Modular :</strong> Repérez les lignes réduisant
+<code>nb_hrc</code> à <strong>1 ou 2 variables hiérarchiques</strong>
+(généralement entre 15 et 30 tables de ~15 000 à 30 000 lignes) et fixez
+<code>limit</code> à cette valeur maximale. C’est la zone optimale pour
+faire chuter le temps de calcul tout en obtenant le masque le plus
+fin.</p></li>
+<li><p><strong>Avec Hypercube :</strong> Si la vitesse est votre
+contrainte principale, le traitement direct
+(<code>split_tab = FALSE</code>) ou la solution minimale restent très
+rapides. Un découpage intermédiaire permettra toutefois d’améliorer la
+qualité du masque.</p></li>
+</ul></li>
+<li><p><strong>Ajuster sans sur-découper :</strong></p>
+<ul>
+<li><p>Si le solveur échoue (manque de mémoire ou non-convergence),
+diminuez légèrement la valeur de <code>limit</code> pour passer au
+palier de découpage inférieur.</p></li>
+<li><p><strong>Attention au sur-découpage :</strong> Évitez de fixer un
+<code>limit</code> trop faible qui générerait plusieurs centaines de
+sous-tables (ex: &gt; 100 tables). La sur-fragmentation entraîne un coût
+élevé de gestion des fichiers (I/O) et d’itérations d’harmonisation
+(<code>tab_multi_manager</code>), devenant contre-productive.</p></li>
+</ul></li>
 </ol>
-<p>Pour prévisualiser le nombre et la taille des sous-tableaux générés
-selon différentes valeurs de <code>limit</code> sans lancer la pose du
-secret complète, vous pouvez utiliser la fonction
-<code>reduce_dims()</code>.</p>
+<blockquote>
+<p><strong>Remarque mathématique :</strong> Pour réduire un tableau de 4
+à 3 dimensions en fusionnant deux variables, il existe 6 combinaisons de
+fusions possibles (ce qui correspond au <a href="https://fr.wikipedia.org/wiki/Nombre_de_Stirling#Nombre_de_Stirling_de_seconde_esp%C3%A8ce">nombre
+de Stirling de seconde espèce</a> <em>S</em>(4, 3) = 6). Pour passer
+directement de 5 à 3 dimensions, ce nombre s’élève à <em>S</em>(5, 3) =
+25 combinaisons. La fonction <code>explore_reduce_dims()</code> évalue
+ces différentes possibilités pour retenir le découpage le plus judicieux
+selon l’option choisie.</p>
+</blockquote>
 <p>Voici un exemple ci-dessous</p>
 <div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a><span class="fu">library</span>(rtauargus)</span>
 <span id="cb13-2"><a href="#cb13-2" tabindex="-1"></a></span>
 <span id="cb13-3"><a href="#cb13-3" tabindex="-1"></a><span class="fu">load</span>(<span class="st">&quot;../data/input_data_5d.RData&quot;</span>) <span class="co"># dfs5_agg, tot5, hrc5</span></span>
 <span id="cb13-4"><a href="#cb13-4" tabindex="-1"></a></span>
 <span id="cb13-5"><a href="#cb13-5" tabindex="-1"></a>dfs5_agg <span class="sc">%&gt;%</span> <span class="fu">colnames</span>() <span class="sc">%&gt;%</span> <span class="fu">print</span>()</span>
-<span id="cb13-6"><a href="#cb13-6" tabindex="-1"></a><span class="co">#&gt; [1] &quot;SEX&quot;            &quot;AGE&quot;            &quot;GEO&quot;           </span></span>
-<span id="cb13-7"><a href="#cb13-7" tabindex="-1"></a><span class="co">#&gt; [4] &quot;ACT&quot;            &quot;ECO&quot;            &quot;VALUE&quot;         </span></span>
-<span id="cb13-8"><a href="#cb13-8" tabindex="-1"></a><span class="co">#&gt; [7] &quot;freq&quot;           &quot;is_secret_prim&quot; &quot;secret_no_pl&quot;</span></span>
-<span id="cb13-9"><a href="#cb13-9" tabindex="-1"></a>dfs5_agg <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">tally</span>() <span class="sc">%&gt;%</span> <span class="fu">print</span>()</span>
-<span id="cb13-10"><a href="#cb13-10" tabindex="-1"></a><span class="co">#&gt; # A tibble: 1 x 1</span></span>
-<span id="cb13-11"><a href="#cb13-11" tabindex="-1"></a><span class="co">#&gt;        n</span></span>
-<span id="cb13-12"><a href="#cb13-12" tabindex="-1"></a><span class="co">#&gt;    &lt;int&gt;</span></span>
-<span id="cb13-13"><a href="#cb13-13" tabindex="-1"></a><span class="co">#&gt; 1 475200</span></span>
-<span id="cb13-14"><a href="#cb13-14" tabindex="-1"></a></span>
-<span id="cb13-15"><a href="#cb13-15" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;</span></span>
-<span id="cb13-16"><a href="#cb13-16" tabindex="-1"></a><span class="st">======================================================================</span></span>
-<span id="cb13-17"><a href="#cb13-17" tabindex="-1"></a><span class="st">Détail des modalités par variable (Totaux inclus) :</span></span>
-<span id="cb13-18"><a href="#cb13-18" tabindex="-1"></a><span class="st">  - ACT : 25 modalités (1 Total + 4 groupes + 20 sous-niveaux)</span></span>
-<span id="cb13-19"><a href="#cb13-19" tabindex="-1"></a><span class="st">  - GEO : 36 modalités (1 Total + 5 régions + 30 sous-régions)</span></span>
-<span id="cb13-20"><a href="#cb13-20" tabindex="-1"></a><span class="st">  - SEX : 11 modalités (1 Total + 10 modalités fines)</span></span>
-<span id="cb13-21"><a href="#cb13-21" tabindex="-1"></a><span class="st">  - AGE : 16 modalités (1 Total + 15 modalités fines)</span></span>
-<span id="cb13-22"><a href="#cb13-22" tabindex="-1"></a><span class="st">  - ECO :  3 modalités (1 Total +  2 modalités fines)</span></span>
-<span id="cb13-23"><a href="#cb13-23" tabindex="-1"></a><span class="st">======================================================================</span></span>
-<span id="cb13-24"><a href="#cb13-24" tabindex="-1"></a><span class="sc">\n</span><span class="st">&quot;</span>)</span>
-<span id="cb13-25"><a href="#cb13-25" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb13-26"><a href="#cb13-26" tabindex="-1"></a><span class="co">#&gt; ======================================================================</span></span>
-<span id="cb13-27"><a href="#cb13-27" tabindex="-1"></a><span class="co">#&gt; Détail des modalités par variable (Totaux inclus) :</span></span>
-<span id="cb13-28"><a href="#cb13-28" tabindex="-1"></a><span class="co">#&gt;   - ACT : 25 modalités (1 Total + 4 groupes + 20 sous-niveaux)</span></span>
-<span id="cb13-29"><a href="#cb13-29" tabindex="-1"></a><span class="co">#&gt;   - GEO : 36 modalités (1 Total + 5 régions + 30 sous-régions)</span></span>
-<span id="cb13-30"><a href="#cb13-30" tabindex="-1"></a><span class="co">#&gt;   - SEX : 11 modalités (1 Total + 10 modalités fines)</span></span>
-<span id="cb13-31"><a href="#cb13-31" tabindex="-1"></a><span class="co">#&gt;   - AGE : 16 modalités (1 Total + 15 modalités fines)</span></span>
-<span id="cb13-32"><a href="#cb13-32" tabindex="-1"></a><span class="co">#&gt;   - ECO :  3 modalités (1 Total +  2 modalités fines)</span></span>
-<span id="cb13-33"><a href="#cb13-33" tabindex="-1"></a><span class="co">#&gt; ======================================================================</span></span>
-<span id="cb13-34"><a href="#cb13-34" tabindex="-1"></a></span>
-<span id="cb13-35"><a href="#cb13-35" tabindex="-1"></a><span class="co"># Pour &quot;min&quot; et &quot;max&quot;, limit très grand = pas d&#39;oversplit parasite</span></span>
-<span id="cb13-36"><a href="#cb13-36" tabindex="-1"></a><span class="co"># Pour &quot;smart&quot;, limit change de fonction du scénario</span></span>
-<span id="cb13-37"><a href="#cb13-37" tabindex="-1"></a>variants <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
-<span id="cb13-38"><a href="#cb13-38" tabindex="-1"></a>  <span class="fu">list</span>(<span class="at">label =</span> <span class="st">&quot;min&quot;</span>,             <span class="at">nb_tab_option =</span> <span class="st">&quot;min&quot;</span>,   <span class="at">limit =</span> <span class="dv">1000000</span><span class="dt">L</span>),</span>
-<span id="cb13-39"><a href="#cb13-39" tabindex="-1"></a>  <span class="fu">list</span>(<span class="at">label =</span> <span class="st">&quot;smart_100000&quot;</span>,    <span class="at">nb_tab_option =</span> <span class="st">&quot;smart&quot;</span>, <span class="at">limit =</span> <span class="dv">100000</span><span class="dt">L</span>),</span>
-<span id="cb13-40"><a href="#cb13-40" tabindex="-1"></a>  <span class="fu">list</span>(<span class="at">label =</span> <span class="st">&quot;smart_80000&quot;</span>,     <span class="at">nb_tab_option =</span> <span class="st">&quot;smart&quot;</span>, <span class="at">limit =</span> <span class="dv">80000</span><span class="dt">L</span>),</span>
-<span id="cb13-41"><a href="#cb13-41" tabindex="-1"></a>  <span class="fu">list</span>(<span class="at">label =</span> <span class="st">&quot;smart_50000&quot;</span>,     <span class="at">nb_tab_option =</span> <span class="st">&quot;smart&quot;</span>, <span class="at">limit =</span> <span class="dv">50000</span><span class="dt">L</span>),</span>
-<span id="cb13-42"><a href="#cb13-42" tabindex="-1"></a>  <span class="fu">list</span>(<span class="at">label =</span> <span class="st">&quot;smart_30000&quot;</span>,     <span class="at">nb_tab_option =</span> <span class="st">&quot;smart&quot;</span>, <span class="at">limit =</span> <span class="dv">30000</span><span class="dt">L</span>),</span>
-<span id="cb13-43"><a href="#cb13-43" tabindex="-1"></a>  <span class="fu">list</span>(<span class="at">label =</span> <span class="st">&quot;smart_10000&quot;</span>,     <span class="at">nb_tab_option =</span> <span class="st">&quot;smart&quot;</span>, <span class="at">limit =</span> <span class="dv">10000</span><span class="dt">L</span>),</span>
-<span id="cb13-44"><a href="#cb13-44" tabindex="-1"></a>  <span class="fu">list</span>(<span class="at">label =</span> <span class="st">&quot;max&quot;</span>,             <span class="at">nb_tab_option =</span> <span class="st">&quot;max&quot;</span>,   <span class="at">limit =</span> <span class="dv">1000000</span><span class="dt">L</span>)</span>
-<span id="cb13-45"><a href="#cb13-45" tabindex="-1"></a>)</span>
-<span id="cb13-46"><a href="#cb13-46" tabindex="-1"></a></span>
-<span id="cb13-47"><a href="#cb13-47" tabindex="-1"></a><span class="cf">for</span> (v <span class="cf">in</span> variants) {</span>
-<span id="cb13-48"><a href="#cb13-48" tabindex="-1"></a></span>
-<span id="cb13-49"><a href="#cb13-49" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">&quot;</span><span class="sc">\n</span><span class="st">======================================================================</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
-<span id="cb13-50"><a href="#cb13-50" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">&quot;  Variant :&quot;</span>, v<span class="sc">$</span>label, <span class="st">&quot;(nb_tab_option =&quot;</span>, v<span class="sc">$</span>nb_tab_option,</span>
-<span id="cb13-51"><a href="#cb13-51" tabindex="-1"></a>      <span class="st">&quot;| limit =&quot;</span>, v<span class="sc">$</span>limit, <span class="st">&quot;)</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
-<span id="cb13-52"><a href="#cb13-52" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">&quot;======================================================================</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
-<span id="cb13-53"><a href="#cb13-53" tabindex="-1"></a></span>
-<span id="cb13-54"><a href="#cb13-54" tabindex="-1"></a>  dir_count <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="fu">tempdir</span>(), <span class="st">&quot;count_hrc&quot;</span>)</span>
-<span id="cb13-55"><a href="#cb13-55" tabindex="-1"></a>  <span class="fu">unlink</span>(dir_count, <span class="at">recursive =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb13-56"><a href="#cb13-56" tabindex="-1"></a>  <span class="fu">dir.create</span>(dir_count, <span class="at">recursive =</span> <span class="cn">TRUE</span>, <span class="at">showWarnings =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb13-57"><a href="#cb13-57" tabindex="-1"></a></span>
-<span id="cb13-58"><a href="#cb13-58" tabindex="-1"></a>  res_count <span class="ot">&lt;-</span> <span class="fu">reduce_dims</span>(</span>
-<span id="cb13-59"><a href="#cb13-59" tabindex="-1"></a>    <span class="at">dfs           =</span> dfs5_agg,</span>
-<span id="cb13-60"><a href="#cb13-60" tabindex="-1"></a>    <span class="at">dfs_name      =</span> <span class="st">&quot;tab_5d&quot;</span>,</span>
-<span id="cb13-61"><a href="#cb13-61" tabindex="-1"></a>    <span class="at">totcode       =</span> tot5,</span>
-<span id="cb13-62"><a href="#cb13-62" tabindex="-1"></a>    <span class="at">hrcfiles      =</span> hrc5,</span>
-<span id="cb13-63"><a href="#cb13-63" tabindex="-1"></a>    <span class="at">nb_tab_option =</span> v<span class="sc">$</span>nb_tab_option,</span>
-<span id="cb13-64"><a href="#cb13-64" tabindex="-1"></a>    <span class="at">limit         =</span> v<span class="sc">$</span>limit,</span>
-<span id="cb13-65"><a href="#cb13-65" tabindex="-1"></a>    <span class="at">over_split    =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb13-66"><a href="#cb13-66" tabindex="-1"></a>    <span class="at">sep_dir       =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb13-67"><a href="#cb13-67" tabindex="-1"></a>    <span class="at">hrc_dir       =</span> dir_count,</span>
-<span id="cb13-68"><a href="#cb13-68" tabindex="-1"></a>    <span class="at">verbose       =</span> <span class="cn">TRUE</span> <span class="co"># affichera le nombre de tables générées ainsi que leur distribution</span></span>
-<span id="cb13-69"><a href="#cb13-69" tabindex="-1"></a>  )</span>
-<span id="cb13-70"><a href="#cb13-70" tabindex="-1"></a>  <span class="fu">rm</span>(res_count); <span class="fu">gc</span>()</span>
-<span id="cb13-71"><a href="#cb13-71" tabindex="-1"></a></span>
-<span id="cb13-72"><a href="#cb13-72" tabindex="-1"></a>}</span>
-<span id="cb13-73"><a href="#cb13-73" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb13-74"><a href="#cb13-74" tabindex="-1"></a><span class="co">#&gt; ======================================================================</span></span>
-<span id="cb13-75"><a href="#cb13-75" tabindex="-1"></a><span class="co">#&gt;   Variant : min (nb_tab_option = min | limit = 1000000 )</span></span>
-<span id="cb13-76"><a href="#cb13-76" tabindex="-1"></a><span class="co">#&gt; ======================================================================</span></span>
-<span id="cb13-77"><a href="#cb13-77" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb13-78"><a href="#cb13-78" tabindex="-1"></a><span class="co">#&gt; Reducing from 5 to 4...</span></span>
-<span id="cb13-79"><a href="#cb13-79" tabindex="-1"></a><span class="co">#&gt; tab_5d has generated 2 tables in total</span></span>
-<span id="cb13-80"><a href="#cb13-80" tabindex="-1"></a><span class="co">#&gt; Reducing from 4 to 3...</span></span>
-<span id="cb13-81"><a href="#cb13-81" tabindex="-1"></a><span class="co">#&gt; tab_5d has generated 20 tables in total</span></span>
-<span id="cb13-82"><a href="#cb13-82" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb13-83"><a href="#cb13-83" tabindex="-1"></a><span class="co">#&gt;   Table size distribution :</span></span>
-<span id="cb13-84"><a href="#cb13-84" tabindex="-1"></a><span class="co">#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span></span>
-<span id="cb13-85"><a href="#cb13-85" tabindex="-1"></a><span class="co">#&gt;   53820   67068   75348   80579   90396  101556 </span></span>
-<span id="cb13-86"><a href="#cb13-86" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb13-87"><a href="#cb13-87" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb13-88"><a href="#cb13-88" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb13-89"><a href="#cb13-89" tabindex="-1"></a><span class="co">#&gt; ======================================================================</span></span>
-<span id="cb13-90"><a href="#cb13-90" tabindex="-1"></a><span class="co">#&gt;   Variant : smart_100000 (nb_tab_option = smart | limit = 100000 )</span></span>
-<span id="cb13-91"><a href="#cb13-91" tabindex="-1"></a><span class="co">#&gt; ======================================================================</span></span>
-<span id="cb13-92"><a href="#cb13-92" tabindex="-1"></a><span class="co">#&gt; Choosing variables...</span></span>
-<span id="cb13-93"><a href="#cb13-93" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb13-94"><a href="#cb13-94" tabindex="-1"></a><span class="co">#&gt; Reducing from 5 to 4...</span></span>
-<span id="cb13-95"><a href="#cb13-95" tabindex="-1"></a><span class="co">#&gt; tab_5d has generated 10 tables in total</span></span>
-<span id="cb13-96"><a href="#cb13-96" tabindex="-1"></a><span class="co">#&gt; Reducing from 4 to 3...</span></span>
-<span id="cb13-97"><a href="#cb13-97" tabindex="-1"></a><span class="co">#&gt; tab_5d has generated 20 tables in total</span></span>
-<span id="cb13-98"><a href="#cb13-98" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb13-99"><a href="#cb13-99" tabindex="-1"></a><span class="co">#&gt;   Table size distribution :</span></span>
-<span id="cb13-100"><a href="#cb13-100" tabindex="-1"></a><span class="co">#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span></span>
-<span id="cb13-101"><a href="#cb13-101" tabindex="-1"></a><span class="co">#&gt;   63756   75348   77688   82404   92736   95616 </span></span>
-<span id="cb13-102"><a href="#cb13-102" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb13-103"><a href="#cb13-103" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb13-104"><a href="#cb13-104" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb13-105"><a href="#cb13-105" tabindex="-1"></a><span class="co">#&gt; ======================================================================</span></span>
-<span id="cb13-106"><a href="#cb13-106" tabindex="-1"></a><span class="co">#&gt;   Variant : smart_80000 (nb_tab_option = smart | limit = 80000 )</span></span>
-<span id="cb13-107"><a href="#cb13-107" tabindex="-1"></a><span class="co">#&gt; ======================================================================</span></span>
-<span id="cb13-108"><a href="#cb13-108" tabindex="-1"></a><span class="co">#&gt; Choosing variables...</span></span>
-<span id="cb13-109"><a href="#cb13-109" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb13-110"><a href="#cb13-110" tabindex="-1"></a><span class="co">#&gt; Reducing from 5 to 4...</span></span>
-<span id="cb13-111"><a href="#cb13-111" tabindex="-1"></a><span class="co">#&gt; tab_5d has generated 2 tables in total</span></span>
-<span id="cb13-112"><a href="#cb13-112" tabindex="-1"></a><span class="co">#&gt; Reducing from 4 to 3...</span></span>
-<span id="cb13-113"><a href="#cb13-113" tabindex="-1"></a><span class="co">#&gt; tab_5d has generated 24 tables in total</span></span>
-<span id="cb13-114"><a href="#cb13-114" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb13-115"><a href="#cb13-115" tabindex="-1"></a><span class="co">#&gt;   Table size distribution :</span></span>
-<span id="cb13-116"><a href="#cb13-116" tabindex="-1"></a><span class="co">#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span></span>
-<span id="cb13-117"><a href="#cb13-117" tabindex="-1"></a><span class="co">#&gt;   52325   60375   63325   67784   76475   78850 </span></span>
-<span id="cb13-118"><a href="#cb13-118" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb13-119"><a href="#cb13-119" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb13-120"><a href="#cb13-120" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb13-121"><a href="#cb13-121" tabindex="-1"></a><span class="co">#&gt; ======================================================================</span></span>
-<span id="cb13-122"><a href="#cb13-122" tabindex="-1"></a><span class="co">#&gt;   Variant : smart_50000 (nb_tab_option = smart | limit = 50000 )</span></span>
-<span id="cb13-123"><a href="#cb13-123" tabindex="-1"></a><span class="co">#&gt; ======================================================================</span></span>
-<span id="cb13-124"><a href="#cb13-124" tabindex="-1"></a><span class="co">#&gt; Choosing variables...</span></span>
-<span id="cb13-125"><a href="#cb13-125" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb13-126"><a href="#cb13-126" tabindex="-1"></a><span class="co">#&gt; Reducing from 5 to 4...</span></span>
-<span id="cb13-127"><a href="#cb13-127" tabindex="-1"></a><span class="co">#&gt; tab_5d has generated 2 tables in total</span></span>
-<span id="cb13-128"><a href="#cb13-128" tabindex="-1"></a><span class="co">#&gt; Reducing from 4 to 3...</span></span>
-<span id="cb13-129"><a href="#cb13-129" tabindex="-1"></a><span class="co">#&gt; tab_5d has generated 54 tables in total</span></span>
-<span id="cb13-130"><a href="#cb13-130" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb13-131"><a href="#cb13-131" tabindex="-1"></a><span class="co">#&gt;   Table size distribution :</span></span>
-<span id="cb13-132"><a href="#cb13-132" tabindex="-1"></a><span class="co">#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span></span>
-<span id="cb13-133"><a href="#cb13-133" tabindex="-1"></a><span class="co">#&gt;   20700   20700   27900   28883   29700   41400 </span></span>
-<span id="cb13-134"><a href="#cb13-134" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb13-135"><a href="#cb13-135" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb13-136"><a href="#cb13-136" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb13-137"><a href="#cb13-137" tabindex="-1"></a><span class="co">#&gt; ======================================================================</span></span>
-<span id="cb13-138"><a href="#cb13-138" tabindex="-1"></a><span class="co">#&gt;   Variant : smart_30000 (nb_tab_option = smart | limit = 30000 )</span></span>
-<span id="cb13-139"><a href="#cb13-139" tabindex="-1"></a><span class="co">#&gt; ======================================================================</span></span>
-<span id="cb13-140"><a href="#cb13-140" tabindex="-1"></a><span class="co">#&gt; Choosing variables...</span></span>
-<span id="cb13-141"><a href="#cb13-141" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb13-142"><a href="#cb13-142" tabindex="-1"></a><span class="co">#&gt; Reducing from 5 to 4...</span></span>
-<span id="cb13-143"><a href="#cb13-143" tabindex="-1"></a><span class="co">#&gt; tab_5d has generated 60 tables in total</span></span>
-<span id="cb13-144"><a href="#cb13-144" tabindex="-1"></a><span class="co">#&gt; Reducing from 4 to 3...</span></span>
-<span id="cb13-145"><a href="#cb13-145" tabindex="-1"></a><span class="co">#&gt; tab_5d has generated 120 tables in total</span></span>
-<span id="cb13-146"><a href="#cb13-146" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb13-147"><a href="#cb13-147" tabindex="-1"></a><span class="co">#&gt;   Table size distribution :</span></span>
-<span id="cb13-148"><a href="#cb13-148" tabindex="-1"></a><span class="co">#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span></span>
-<span id="cb13-149"><a href="#cb13-149" tabindex="-1"></a><span class="co">#&gt;   12075   15438   17630   16832   17928   18426 </span></span>
-<span id="cb13-150"><a href="#cb13-150" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb13-151"><a href="#cb13-151" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb13-152"><a href="#cb13-152" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb13-153"><a href="#cb13-153" tabindex="-1"></a><span class="co">#&gt; ======================================================================</span></span>
-<span id="cb13-154"><a href="#cb13-154" tabindex="-1"></a><span class="co">#&gt;   Variant : smart_10000 (nb_tab_option = smart | limit = 10000 )</span></span>
-<span id="cb13-155"><a href="#cb13-155" tabindex="-1"></a><span class="co">#&gt; ======================================================================</span></span>
-<span id="cb13-156"><a href="#cb13-156" tabindex="-1"></a><span class="co">#&gt; Choosing variables...</span></span>
-<span id="cb13-157"><a href="#cb13-157" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb13-158"><a href="#cb13-158" tabindex="-1"></a><span class="co">#&gt; Reducing from 5 to 4...</span></span>
-<span id="cb13-159"><a href="#cb13-159" tabindex="-1"></a><span class="co">#&gt; tab_5d has generated 2 tables in total</span></span>
-<span id="cb13-160"><a href="#cb13-160" tabindex="-1"></a><span class="co">#&gt; Reducing from 4 to 3...</span></span>
-<span id="cb13-161"><a href="#cb13-161" tabindex="-1"></a><span class="co">#&gt; tab_5d has generated 270 tables in total</span></span>
-<span id="cb13-162"><a href="#cb13-162" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb13-163"><a href="#cb13-163" tabindex="-1"></a><span class="co">#&gt;   Table size distribution :</span></span>
-<span id="cb13-164"><a href="#cb13-164" tabindex="-1"></a><span class="co">#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span></span>
-<span id="cb13-165"><a href="#cb13-165" tabindex="-1"></a><span class="co">#&gt;    4860    6048    6588    7257    8748    9828 </span></span>
-<span id="cb13-166"><a href="#cb13-166" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb13-167"><a href="#cb13-167" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb13-168"><a href="#cb13-168" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb13-169"><a href="#cb13-169" tabindex="-1"></a><span class="co">#&gt; ======================================================================</span></span>
-<span id="cb13-170"><a href="#cb13-170" tabindex="-1"></a><span class="co">#&gt;   Variant : max (nb_tab_option = max | limit = 1000000 )</span></span>
-<span id="cb13-171"><a href="#cb13-171" tabindex="-1"></a><span class="co">#&gt; ======================================================================</span></span>
-<span id="cb13-172"><a href="#cb13-172" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb13-173"><a href="#cb13-173" tabindex="-1"></a><span class="co">#&gt; Reducing from 5 to 4...</span></span>
-<span id="cb13-174"><a href="#cb13-174" tabindex="-1"></a><span class="co">#&gt; tab_5d has generated 60 tables in total</span></span>
-<span id="cb13-175"><a href="#cb13-175" tabindex="-1"></a><span class="co">#&gt; Reducing from 4 to 3...</span></span>
-<span id="cb13-176"><a href="#cb13-176" tabindex="-1"></a><span class="co">#&gt; tab_5d has generated 758 tables in total</span></span>
-<span id="cb13-177"><a href="#cb13-177" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb13-178"><a href="#cb13-178" tabindex="-1"></a><span class="co">#&gt;   Table size distribution :</span></span>
-<span id="cb13-179"><a href="#cb13-179" tabindex="-1"></a><span class="co">#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span></span>
-<span id="cb13-180"><a href="#cb13-180" tabindex="-1"></a><span class="co">#&gt;    2145    2673    3003    2978    3201    3498</span></span></code></pre></div>
-<div id="synthèse-comparative-des-performances-selon-la-valeur-de-limit" class="section level4" number="5.3.1">
-<h4><span class="header-section-number">5.3.1</span> Synthèse
-comparative des performances selon la valeur de <code>limit</code></h4>
+<span id="cb13-6"><a href="#cb13-6" tabindex="-1"></a><span class="co">#&gt; [1] &quot;SEX&quot;            &quot;AGE&quot;            &quot;GEO&quot;            &quot;ACT&quot;            &quot;ECO&quot;            &quot;VALUE&quot;         </span></span>
+<span id="cb13-7"><a href="#cb13-7" tabindex="-1"></a><span class="co">#&gt; [7] &quot;freq&quot;           &quot;is_secret_prim&quot; &quot;secret_no_pl&quot;</span></span>
+<span id="cb13-8"><a href="#cb13-8" tabindex="-1"></a>dfs5_agg <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">tally</span>() <span class="sc">%&gt;%</span> <span class="fu">print</span>()</span>
+<span id="cb13-9"><a href="#cb13-9" tabindex="-1"></a><span class="co">#&gt; # A tibble: 1 x 1</span></span>
+<span id="cb13-10"><a href="#cb13-10" tabindex="-1"></a><span class="co">#&gt;        n</span></span>
+<span id="cb13-11"><a href="#cb13-11" tabindex="-1"></a><span class="co">#&gt;    &lt;int&gt;</span></span>
+<span id="cb13-12"><a href="#cb13-12" tabindex="-1"></a><span class="co">#&gt; 1 475200</span></span>
+<span id="cb13-13"><a href="#cb13-13" tabindex="-1"></a></span>
+<span id="cb13-14"><a href="#cb13-14" tabindex="-1"></a><span class="co"># ======================================================================</span></span>
+<span id="cb13-15"><a href="#cb13-15" tabindex="-1"></a><span class="co"># Détail des modalités par variable (Totaux inclus) :</span></span>
+<span id="cb13-16"><a href="#cb13-16" tabindex="-1"></a><span class="co">#  - ACT : 25 modalités (1 Total + 4 groupes + 20 sous-niveaux)</span></span>
+<span id="cb13-17"><a href="#cb13-17" tabindex="-1"></a><span class="co">#  - GEO : 36 modalités (1 Total + 5 régions + 30 sous-régions)</span></span>
+<span id="cb13-18"><a href="#cb13-18" tabindex="-1"></a><span class="co">#  - SEX : 11 modalités (1 Total + 10 modalités fines)</span></span>
+<span id="cb13-19"><a href="#cb13-19" tabindex="-1"></a><span class="co">#  - AGE : 16 modalités (1 Total + 15 modalités fines)</span></span>
+<span id="cb13-20"><a href="#cb13-20" tabindex="-1"></a><span class="co">#  - ECO :  3 modalités (1 Total +  2 modalités fines)</span></span>
+<span id="cb13-21"><a href="#cb13-21" tabindex="-1"></a><span class="co"># ======================================================================</span></span>
+<span id="cb13-22"><a href="#cb13-22" tabindex="-1"></a></span>
+<span id="cb13-23"><a href="#cb13-23" tabindex="-1"></a><span class="fu">explore_reduce_dims</span>(<span class="at">dfs =</span> dfs5_agg,</span>
+<span id="cb13-24"><a href="#cb13-24" tabindex="-1"></a>                    <span class="at">totcode =</span> tot5,</span>
+<span id="cb13-25"><a href="#cb13-25" tabindex="-1"></a>                    <span class="at">hrcfiles =</span> hrc5)</span>
+<span id="cb13-26"><a href="#cb13-26" tabindex="-1"></a><span class="co">#&gt;    nb_tab nb_hrc min_size med_size max_size</span></span>
+<span id="cb13-27"><a href="#cb13-27" tabindex="-1"></a><span class="co">#&gt; 1      20      3    63756    77688    95616</span></span>
+<span id="cb13-28"><a href="#cb13-28" tabindex="-1"></a><span class="co">#&gt; 2      20      3    53460    73494   101016</span></span>
+<span id="cb13-29"><a href="#cb13-29" tabindex="-1"></a><span class="co">#&gt; 3      20      3    53820    75348   101556</span></span>
+<span id="cb13-30"><a href="#cb13-30" tabindex="-1"></a><span class="co">#&gt; 4      24      3    52325    63325    78850</span></span>
+<span id="cb13-31"><a href="#cb13-31" tabindex="-1"></a><span class="co">#&gt; 5      24      3    46200    61488    81650</span></span>
+<span id="cb13-32"><a href="#cb13-32" tabindex="-1"></a><span class="co">#&gt; 6      24      3    46575    61862    82150</span></span>
+<span id="cb13-33"><a href="#cb13-33" tabindex="-1"></a><span class="co">#&gt; 7      54      3    20700    27900    41400</span></span>
+<span id="cb13-34"><a href="#cb13-34" tabindex="-1"></a><span class="co">#&gt; 8     120      2     9856    14768    18176</span></span>
+<span id="cb13-35"><a href="#cb13-35" tabindex="-1"></a><span class="co">#&gt; 9     120      2     9200    13616    18352</span></span>
+<span id="cb13-36"><a href="#cb13-36" tabindex="-1"></a><span class="co">#&gt; 10    120      2    12075    17630    18426</span></span>
+<span id="cb13-37"><a href="#cb13-37" tabindex="-1"></a><span class="co">#&gt; 11    120      2     9360    14640    18544</span></span>
+<span id="cb13-38"><a href="#cb13-38" tabindex="-1"></a><span class="co">#&gt; 12    120      2     9801    15158    18656</span></span>
+<span id="cb13-39"><a href="#cb13-39" tabindex="-1"></a><span class="co">#&gt; 13    120      2     9075    13431    18722</span></span>
+<span id="cb13-40"><a href="#cb13-40" tabindex="-1"></a><span class="co">#&gt; 14    120      2     9295    15015    19019</span></span>
+<span id="cb13-41"><a href="#cb13-41" tabindex="-1"></a><span class="co">#&gt; 15    120      2    10920    16953    19383</span></span>
+<span id="cb13-42"><a href="#cb13-42" tabindex="-1"></a><span class="co">#&gt; 16    120      2    10935    17202    19398</span></span>
+<span id="cb13-43"><a href="#cb13-43" tabindex="-1"></a><span class="co">#&gt; 17    168      2     6336     9216    17856</span></span>
+<span id="cb13-44"><a href="#cb13-44" tabindex="-1"></a><span class="co">#&gt; 18    214      2     5200     7600    12400</span></span>
+<span id="cb13-45"><a href="#cb13-45" tabindex="-1"></a><span class="co">#&gt; 19    218      2     4356     6336    18216</span></span>
+<span id="cb13-46"><a href="#cb13-46" tabindex="-1"></a><span class="co">#&gt; 20    270      2     4860     6588     9828</span></span>
+<span id="cb13-47"><a href="#cb13-47" tabindex="-1"></a><span class="co">#&gt; 21    274      2     3575     5225    12650</span></span>
+<span id="cb13-48"><a href="#cb13-48" tabindex="-1"></a><span class="co">#&gt; 22    324      2     4200     5325     7950</span></span>
+<span id="cb13-49"><a href="#cb13-49" tabindex="-1"></a><span class="co">#&gt; 23    758      1     1936     2640     3344</span></span>
+<span id="cb13-50"><a href="#cb13-50" tabindex="-1"></a><span class="co">#&gt; 24   1070      1     1200     1776     2928</span></span>
+<span id="cb13-51"><a href="#cb13-51" tabindex="-1"></a><span class="co">#&gt; 25   1370      1      825     1221     3003</span></span></code></pre></div>
+<p>Par exemple, dans l’exemple ci-dessous, entre 20 et 54 tables, les
+sous-tables ont 3 variables hierarchiques ; entre 120 et 324 sous
+tables, 2 variables hierarchiques ; et de 758 à 1370 tables, 1 variable
+hierarchique.</p>
+<p>Dans un premier temps, on pourrait commencer par choisir de partir
+sur un split de 120 sous-tables. Cela semble un bon compromis. Les
+tables ne font que 18176 lignes maximum (en choissisant limit = 18200
+par exemple), ce qui devrait simplifier grandement la pose du secret par
+Tau-Argus. De plus, le passage de 54 tables à 120 tables à un enjeu
+double. Outre la réduction de la taille des lignes, (diminution de
+moitié), c’est principalement la diminution du nombre de variables
+hierarchiques qui pourrait aider grandement Tau-Argus.</p>
+<p>De manière empirique, on pourrait ensuite éventuellement tester
+d’autres configurations (par exemple 54 sous-tables, 168 et 270
+sous-tables) afin de voir si d’autres configuration peuvent nous
+apporter un meilleur secret, ou un temps d’éxécution plus
+raisonnable.</p>
+</div>
+<div id="synthèse-comparative-des-performances-selon-la-valeur-de-limit" class="section level3" number="5.4">
+<h3><span class="header-section-number">5.4</span> Synthèse comparative
+des performances selon la valeur de <code>limit</code></h3>
 <p>D’un point de vue méthodologique, on peut se demander quel est
 l’impact de <code>limit</code> sur le nombre de tables, le temps
-d’éxecution, ainsi que le secret généré. Ci-dessous une synthèse est
-proposée.</p>
-<p>En utilisant le jeu de données précédent, et l’option
-<code>suppress = &quot;GH(1,100)&quot;</code> (afin de réduire le temps
-d’éxécution du benchmark), on obtient les résultats suivants :</p>
+d’éxecution, ainsi que le secret généré. Ci-dessous une synthèse sur une
+table à 4 dimensions est proposée.</p>
+<div id="table-initiale-et-résultats-tau-argus" class="section level4" number="5.4.1">
+<h4><span class="header-section-number">5.4.1</span> Table initiale et
+résultats Tau-Argus</h4>
+<pre><code>======================================================================
+Nombre de lignes de la table : 124800
+Détail des modalités par variable (Totaux inclus) :
+  - ACT : 65 modalités (1 Total + 8 groupes + 8 * 7 sous-niveaux)
+  - GEO : 64 modalités (1 Total + 7 régions + 7 * 8 sous-régions)
+  - SEX : 6 modalités (1 Total + 5 modalités fines)
+  - AGE : 5 modalités (1 Total + 4 modalités fines)
+======================================================================</code></pre>
+<p>La table contient 9.8% de secret primaire.</p>
+<div id="résultats-avec-la-méthode-hypercube-gh1100" class="section level5" number="5.4.1.1">
+<h5><span class="header-section-number">5.4.1.1</span> 1. Résultats avec
+la méthode <strong>HYPERCUBE</strong> (<code>GH(1,100)</code>)</h5>
 <table>
 <colgroup>
 <col width="11%" />
@@ -1070,98 +1017,266 @@ d’éxécution du benchmark), on obtient les résultats suivants :</p>
 <th align="center">Taille max (lignes)</th>
 <th align="center">Temps d’exéc.</th>
 <th align="center">Mémoire max</th>
-<th align="center">Secret sec. (cellules)</th>
-<th align="center">Masque total (% val.)</th>
+<th align="center">% cellules masquées</th>
+<th align="center">% valeur masquée</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td align="left"><strong><code>no_split</code></strong> <em>(sans
+<td align="left"><strong><code>no_split</code></strong><br><em>(sans
 réduction)</em></td>
 <td align="center">1</td>
-<td align="center">475 200</td>
-<td align="center"><strong>Échec (Crash)</strong></td>
-<td align="center">N/A</td>
-<td align="center">N/A</td>
-<td align="center">N/A</td>
+<td align="center">124 800</td>
+<td align="center">2min 55s<br>(175 s)</td>
+<td align="center">NA</td>
+<td align="center">26,60 %</td>
+<td align="center">1,28 %</td>
 </tr>
 <tr class="even">
 <td align="left"><strong><code>min</code></strong></td>
-<td align="center">20</td>
-<td align="center">101 556</td>
-<td align="center">2h 28min<br>(8 888 s)</td>
-<td align="center">769 MB</td>
-<td align="center">164 024</td>
-<td align="center">35,11 %</td>
+<td align="center">2</td>
+<td align="center">108 160</td>
+<td align="center">10min 06s<br>(606 s)</td>
+<td align="center">521,8 MB</td>
+<td align="center">28,40 %</td>
+<td align="center">1,34 %</td>
 </tr>
 <tr class="odd">
-<td align="left"><strong><code>smart_100000</code></strong></td>
-<td align="center">20</td>
-<td align="center">95 616</td>
-<td align="center">2h 01min<br>(7 254 s)</td>
-<td align="center">950 MB</td>
-<td align="center">153 535</td>
-<td align="center">32,96 %</td>
+<td align="left"><strong><code>smart_108000</code></strong></td>
+<td align="center">16</td>
+<td align="center">15 925</td>
+<td align="center">12min 46s<br>(766 s)</td>
+<td align="center">451,6 MB</td>
+<td align="center">25,58 %</td>
+<td align="center">1,19 %</td>
 </tr>
 <tr class="even">
-<td align="left"><strong><code>smart_80000</code></strong></td>
-<td align="center">24</td>
-<td align="center">78 850</td>
-<td align="center">2h 23min<br>(8 605 s)</td>
-<td align="center">1 081 MB</td>
-<td align="center">153 647</td>
-<td align="center">32,97 %</td>
+<td align="left"><strong><code>smart_15800</code></strong></td>
+<td align="center">18</td>
+<td align="center">15 680</td>
+<td align="center">12min 22s<br>(742 s)</td>
+<td align="center">384,4 MB</td>
+<td align="center">25,84 %</td>
+<td align="center">1,20 %</td>
 </tr>
 <tr class="odd">
-<td align="left"><strong><code>smart_50000</code></strong></td>
-<td align="center">54</td>
-<td align="center">41 400</td>
-<td align="center">2h 22min<br>(8 522 s)</td>
-<td align="center">1 325 MB</td>
-<td align="center">140 930</td>
-<td align="center">30,33 %</td>
+<td align="left"><strong><code>smart_15600</code></strong></td>
+<td align="center">144</td>
+<td align="center">2 190</td>
+<td align="center">30min 37s<br>(1 837 s)</td>
+<td align="center">640,2 MB</td>
+<td align="center">24,14 %</td>
+<td align="center">1,11 %</td>
+</tr>
+</tbody>
+</table>
+<hr />
+</div>
+<div id="résultats-avec-la-méthode-modular-mod15100" class="section level5" number="5.4.1.2">
+<h5><span class="header-section-number">5.4.1.2</span> 2. Résultats avec
+la méthode <strong>MODULAR</strong> (<code>MOD(1,5,1,0,0)</code>)</h5>
+<table>
+<colgroup>
+<col width="11%" />
+<col width="14%" />
+<col width="14%" />
+<col width="14%" />
+<col width="14%" />
+<col width="14%" />
+<col width="14%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">Variant</th>
+<th align="center">Nb tables</th>
+<th align="center">Taille max (lignes)</th>
+<th align="center">Temps d’exéc.</th>
+<th align="center">Mémoire max</th>
+<th align="center">% cellules masquées</th>
+<th align="center">% valeur masquée</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><strong><code>no_split</code></strong><br><em>(sans
+réduction)</em></td>
+<td align="center">1</td>
+<td align="center">124 800</td>
+<td align="center">4h 42min 05s<br>(16 925 s)</td>
+<td align="center">NA</td>
+<td align="center">21,61 %</td>
+<td align="center">0,95 %</td>
 </tr>
 <tr class="even">
-<td align="left"><strong><code>smart_30000</code></strong></td>
-<td align="center">120</td>
-<td align="center">18 426</td>
-<td align="center">3h 22min<br>(12 118 s)</td>
-<td align="center">2 377 MB</td>
-<td align="center">174 481</td>
-<td align="center">36,95 %</td>
+<td align="left"><strong><code>min</code></strong></td>
+<td align="center">2</td>
+<td align="center">108 160</td>
+<td align="center">3h 28min 33s<br>(12 513 s)</td>
+<td align="center">602,1 MB</td>
+<td align="center">21,95 %</td>
+<td align="center">0,92 %</td>
+</tr>
+<tr class="odd">
+<td align="left"><strong><code>smart_108000</code></strong></td>
+<td align="center">16</td>
+<td align="center">15 925</td>
+<td align="center">17min 49s<br>(1 069 s)</td>
+<td align="center">381,9 MB</td>
+<td align="center">19,55 %</td>
+<td align="center">0,81 %</td>
+</tr>
+<tr class="even">
+<td align="left"><strong><code>smart_15800</code></strong></td>
+<td align="center">18</td>
+<td align="center">15 680</td>
+<td align="center">19min 21s<br>(1 161 s)</td>
+<td align="center">420,3 MB</td>
+<td align="center">19,83 %</td>
+<td align="center">0,82 %</td>
+</tr>
+<tr class="odd">
+<td align="left"><strong><code>smart_15600</code></strong></td>
+<td align="center">144</td>
+<td align="center">2 190</td>
+<td align="center">30min 12s<br>(1 812 s)</td>
+<td align="center">651,9 MB</td>
+<td align="center">18,07 %</td>
+<td align="center">0,74 %</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div id="analyse-approfondie-et-enseignements-pour-le-cas-4-dimensions" class="section level3" number="5.5">
+<h3><span class="header-section-number">5.5</span> Analyse approfondie
+et enseignements pour le cas 4 dimensions</h3>
+<p>L’analyse détaillée des résultats apporte des éclairages
+méthodologiques cruciaux sur le fonctionnement combiné de
+<code>rtauargus</code> et de <code>Tau-Argus</code> :</p>
+<div id="découpage-par-rtauargus-vs-décomposition-interne-de-tau-argus" class="section level4" number="5.5.1">
+<h4><span class="header-section-number">5.5.1</span> 1. Découpage par
+<code>rtauargus</code> vs décomposition interne de
+<code>Tau-Argus</code></h4>
+<p>En mode direct (<code>split_tab = FALSE</code>), la méthode
+<code>Modular</code> tente de décomposer la table 4D en sous-problèmes
+en interne dans <code>Tau-Argus</code>. Pour un tableau intégrant deux
+hiérarchies complexes, cette structuration interne est extrêmement
+lourde et demande un temps de calcul considérable (<strong>4h
+42min</strong>).</p>
+<p>À l’inverse, la réduction de dimension effectuée en amont par
+<code>rtauargus</code> (<code>reduce_dims</code>) est <strong>quasi
+instantanée (~5 secondes)</strong>. Elle soulage <code>Tau-Argus</code>
+en lui transmettant directement des sous-tables 3D indépendantes et
+liées.</p>
+</div>
+<div id="convergence-du-solveur-et-répartition-du-secret-primaire" class="section level4" number="5.5.2">
+<h4><span class="header-section-number">5.5.2</span> 2. Convergence du
+solveur et répartition du secret primaire</h4>
+<p>Deux mécanismes expliquent la baisse du temps de calcul et
+l’amélioration de la qualité du secret lors du découpage :</p>
+<ul>
+<li><p><strong>Convergence facilitée :</strong> Sur des sous-tables plus
+petites et comportant moins de variables (1 ou 2 variables
+hiérarchiques), le solveur de programmation linéaire convergera plus
+facilement et rapidement vers la solution optimale, réduisant ainsi le
+sur-masquage.</p></li>
+<li><p><strong>Isolement du secret primaire :</strong> Seule une
+fraction des sous-tables générées contient réellement des cellules en
+secret primaire (les sous-tables regroupant des grands totaux ou
+sous-totaux élevés en sont souvent exemptes). <code>Tau-Argus</code>
+traite les tables sans secret primaire de manière quasi immédiate.
+Ainsi, multiplier le nombre de tables n’accroît pas le temps de calcul
+de façon linéaire, et évite de propager du secret secondaire sur des
+sous-espaces de la table qui n’en ont pas besoin.</p></li>
+</ul>
+</div>
+<div id="avertissement-attention-au-sur-découpage" class="section level4" number="5.5.3">
+<h4><span class="header-section-number">5.5.3</span> 3. Avertissement :
+attention au sur-découpage</h4>
+<p>Dans ce benchmark, le cas à <strong>144 tables
+(<code>smart_15600</code>)</strong> donne de très bons résultats en
+terme de qualité du secret (18,07 % de masquage), car les sous-tables
+sont très petites et faciles à résoudre pour le solveur.</p>
+<p>⚠️ <strong>Il convient toutefois de rester raisonnable sur le nombre
+de sous-tableaux générés</strong> (viser de quelques dizaines à une
+centaine de tables maximum). Sur des jeux de données plus volumineux,
+passer par exemple de 100 à 1 000 sous-tables deviendrait
+<strong>contre-productif</strong> :</p>
+<ul>
+<li><p>Le solveur n’obtiendra plus de gain notable sur la résolution
+individuelle de chaque table.</p></li>
+<li><p>La phase de réconciliation inter-tables
+(<code>tab_multi_manager</code>) devra effectuer de très nombreuses
+itérations, entraînant une <strong>explosion du temps
+d’exécution</strong> (coût de gestion des fichiers I/O).</p></li>
+<li><p>La sur-fragmentation peut faire perdre la vision globale au
+traitement et conduire à une <strong>dégradation de la qualité du
+secret</strong> (masques redondants posés par précaution entre
+sous-tables).</p></li>
+</ul>
+<hr />
+</div>
+<div id="synthèse-comparative" class="section level4" number="5.5.4">
+<h4><span class="header-section-number">5.5.4</span> Synthèse
+comparative</h4>
+<table>
+<colgroup>
+<col width="22%" />
+<col width="27%" />
+<col width="27%" />
+<col width="22%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">Méthode &amp; Option</th>
+<th align="center">Temps d’exécution</th>
+<th align="center">Qualité du secret (% masqué)</th>
+<th align="left">Bilan méthodologique</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><strong><code>Hypercube</code> direct
+(<code>split_tab = FALSE</code>)</strong></td>
+<td align="center"><strong>Très rapide</strong></td>
+<td align="center">Faible à moyenne</td>
+<td align="left">Le moyen le plus rapide de poser le secret, mais avec
+un sur-masquage plus important.</td>
+</tr>
+<tr class="even">
+<td align="left"><strong><code>Modular</code> direct
+(<code>split_tab = FALSE</code>)</strong></td>
+<td align="center"><strong>Extrêmement long</strong></td>
+<td align="center">Bonne</td>
+<td align="left">Qualité supérieure à Hypercube, mais le temps de calcul
+explose en 4D direct.</td>
+</tr>
+<tr class="odd">
+<td align="left"><strong><code>Modular</code> avec réduction
+(<code>split_tab = TRUE</code>)</strong></td>
+<td align="center"><strong>Raisonnable</strong></td>
+<td align="center"><strong>Excellente</strong></td>
+<td align="left"><strong>Combinaison idéale</strong> : le temps chute
+fortement et la qualité du secret est la meilleure de tous les cas.</td>
 </tr>
 </tbody>
 </table>
 <blockquote>
-<p><strong>Note sur le cas sans découpage
-(<code>split_tab = FALSE</code>) :</strong> L’exécution directe du
-traitement sans réduction de dimension sur le tableau global à 5
-dimensions (475 200 cellules) se solde par un <strong>échec natif de
-Tau-Argus</strong>, quelle que soit la méthode de suppression secondaire
-utilisée :</p>
+<p>💡 <strong>Message à retenir pour l’utilisateur</strong></p>
 <ul>
-<li><p><strong>Hypercube (<code>GH</code>)</strong> échoue pendant la
-décomposition
-(<code>The hypercube could not be applied</code>).</p></li>
-<li><p><strong>Modular (<code>MOD</code>)</strong> refuse
-catégoriquement l’exécution
-(<code>The table has more than 4 dimensions. Running Modular is not possible</code>).</p></li>
-<li><p><strong>Optimal (<code>OPT</code>)</strong> refuse
-catégoriquement l’exécution
-(<code>The table has more than 4 dimensions. Running Optimal is not possible</code>).</p></li>
+<li><strong>Si la qualité du secret est primordiale :</strong>
+Privilégiez l’utilisation de <strong><code>Modular</code> avec
+<code>split_tab = TRUE</code></strong>. Le temps d’exécution s’abaisse à
+un niveau tout à fait raisonnable tout en offrant le meilleur masque de
+protection (perte d’information minimale).</li>
+<li><strong>Si le temps d’exécution est votre contrainte principale
+:</strong> Utilisez <strong><code>Hypercube</code> en direct
+(<code>split_tab = FALSE</code>)</strong>. C’est l’option la plus rapide
+pour obtenir un tableau protégé, au prix d’un sur-masquage un peu plus
+élevé.</li>
 </ul>
-<p>Ces échecs systématiques démontrent la nécessité méthodologique et
-technique absolue du mécanisme de réduction de dimension
-(<code>split_tab = TRUE</code>) proposé par <code>rtauargus</code> pour
-rendre possible le traitement des tableaux à 5 dimensions.</p>
 </blockquote>
-<p>On observe bien que la configuration <code>smart_100000</code> génère
-le même nombre de tableaux que <code>min</code>, mais de tailles
-différentes. Globalement, le temps d’exécution est croissant avec le
-nombre de tables. Bien que la tendance générale montre une hausse du
-secret avec le nombre de sous-tableaux, la variante
-<code>smart_50000</code> fait exception ici en offrant le masque le plus
-restreint.</p>
 </div>
 </div>
 </div>
@@ -1173,7 +1288,7 @@ vignette</h2>
 Andre-Raymond Socard </a></strong> &amp;
 <strong><a href="mailto:julien.jamme@insee.fr">Julien Jamme</a></strong>
 &amp; <strong><a>Nathanael Rastout</a></strong></p></li>
-<li><p>Last update: <strong>28/07/2026</strong></p></li>
+<li><p>Last update: <strong>30/07/2026</strong></p></li>
 <li><p>Version of rtauargus used: <strong>1.3.5</strong></p></li>
 <li><p>Version of τ-Argus used : <strong>TauArgus
 4.2.3</strong></p></li>
