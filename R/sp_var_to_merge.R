@@ -1183,3 +1183,76 @@ nb_tab_generated <- function(
              nb_nodes(hrcfiles = hrcfiles, v = v2, totcode = totcode))
   }
 }
+
+#' Analytically computes all possible table splits and summarizes their statistics.
+#'
+#' @param dfs data.frame containing 4 or 5 categorical variables
+#' @param totcode named vector of totals for categorical variables
+#' @param hrcfiles named vector of hrc files (optional)
+#'
+#' @return A deduplicated data.frame containing the following columns:
+#' \itemize{
+#'   \item `nb_tab`: number of generated tables
+#'   \item `min_size`: minimum table size (rows)
+#'   \item `med_size`: median table size (rows)
+#'   \item `max_size`: maximum table size (rows)
+#' }
+#' @export
+explore_reduce_dims <- function(dfs, totcode, hrcfiles = NULL) {
+
+  # Ensure dfs is a standard data.frame (handles data.table input)
+  dfs <- as.data.frame(dfs)
+
+  # 1. Check dimensions (4D or 5D)
+  num_dims <- length(totcode)
+  if (!num_dims %in% c(4, 5)) {
+    stop("Please provide a totcode object with 4 or 5 dimensions!")
+  }
+
+  # Precompute unique_mods to speed up computation (as in var_to_merge)
+  unique_mods <- lapply(dfs[names(totcode)], unique)
+
+  # 2. Generate possible variable combinations
+  if (num_dims == 4) {
+    # 4D: 6 combinations of 2 variables
+    result_comb <- generate_a_pair(totcode)
+  } else {
+    # 5D: 10 triplets (3-var merge) + 15 double pairs (4-var merge) = 25 cases
+    triplets  <- generate_a_triplet(totcode)
+    two_pairs <- generate_two_pairs(totcode)
+    result_comb <- c(triplets, two_pairs)
+  }
+
+  # 3. Analytically compute table lengths using length_tabs
+  results <- lapply(result_comb, function(x) {
+    # x contains 2, 3, or 4 variables.
+    # x[3] and x[4] return NA if the index exceeds length(x),
+    # which length_tabs() automatically converts to NULL.
+    tab_sizes <- unlist(
+      length_tabs(
+        dfs = dfs,
+        v1 = x[1],
+        v2 = x[2],
+        v3 = x[3],
+        v4 = x[4],
+        totcode = totcode,
+        hrcfiles = hrcfiles,
+        unique_mods = unique_mods
+      )
+    )
+
+    data.frame(
+      nb_tab   = length(tab_sizes),
+      min_size = min(tab_sizes),
+      med_size = as.integer(round(stats::median(tab_sizes))),
+      max_size = max(tab_sizes)
+    )
+  })
+
+  # 4. Combine, deduplicate (distinct), and sort by ascending nb_tab
+  res_df <- dplyr::bind_rows(results) %>%
+    dplyr::distinct() %>%
+    dplyr::arrange(nb_tab, desc(max_size), desc(min_size))
+
+  return(res_df)
+}

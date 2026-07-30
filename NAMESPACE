@@ -3,6 +3,7 @@
 export(analyse_metadata)
 export(create_edges)
 export(dataframe_result)
+export(explore_reduce_dims)
 export(format_template)
 export(from_4_to_3)
 export(from_4_to_3_case_0_hr)
