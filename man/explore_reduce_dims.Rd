@@ -17,8 +17,9 @@ explore_reduce_dims(dfs, totcode, hrcfiles = NULL)
 A deduplicated data.frame containing the following columns:
 \itemize{
 \item \code{nb_tab}: number of generated tables
+\item \code{nb_hrc}: number of remaining hierarchical variables
 \item \code{min_size}: minimum table size (rows)
-\item \code{med_size}: median table size (rows)
+\item \code{med_size}: median table size (rows, rounded to integer)
 \item \code{max_size}: maximum table size (rows)
 }
 }

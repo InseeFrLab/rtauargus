@@ -1193,8 +1193,9 @@ nb_tab_generated <- function(
 #' @return A deduplicated data.frame containing the following columns:
 #' \itemize{
 #'   \item `nb_tab`: number of generated tables
+#'   \item `nb_hrc`: number of remaining hierarchical variables
 #'   \item `min_size`: minimum table size (rows)
-#'   \item `med_size`: median table size (rows)
+#'   \item `med_size`: median table size (rows, rounded to integer)
 #'   \item `max_size`: maximum table size (rows)
 #' }
 #' @export
@@ -1208,6 +1209,10 @@ explore_reduce_dims <- function(dfs, totcode, hrcfiles = NULL) {
   if (!num_dims %in% c(4, 5)) {
     stop("Please provide a totcode object with 4 or 5 dimensions!")
   }
+
+  # Initial number of hierarchical variables
+  hrc_var_names <- intersect(names(hrcfiles), names(totcode))
+  nb_hrc_initial <- length(hrc_var_names)
 
   # Precompute unique_mods to speed up computation (as in var_to_merge)
   unique_mods <- lapply(dfs[names(totcode)], unique)
@@ -1241,18 +1246,25 @@ explore_reduce_dims <- function(dfs, totcode, hrcfiles = NULL) {
       )
     )
 
+    # Calculate remaining hierarchical variables
+    merged_vars <- x[!is.na(x)]
+    nb_hrc_merged <- sum(merged_vars %in% hrc_var_names)
+    nb_created <- if (length(x) == 4) 2L else 1L
+    nb_hrc_val <- as.integer(nb_hrc_initial - nb_hrc_merged + nb_created)
+
     data.frame(
-      nb_tab   = length(tab_sizes),
-      min_size = min(tab_sizes),
+      nb_tab   = as.integer(length(tab_sizes)),
+      nb_hrc   = nb_hrc_val,
+      min_size = as.integer(min(tab_sizes)),
       med_size = as.integer(round(stats::median(tab_sizes))),
-      max_size = max(tab_sizes)
+      max_size = as.integer(max(tab_sizes))
     )
   })
 
   # 4. Combine, deduplicate (distinct), and sort by ascending nb_tab
   res_df <- dplyr::bind_rows(results) %>%
     dplyr::distinct() %>%
-    dplyr::arrange(nb_tab, desc(max_size), desc(min_size))
+    dplyr::arrange(nb_tab, max_size, min_size)
 
   return(res_df)
 }
