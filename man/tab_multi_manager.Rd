@@ -24,6 +24,7 @@ tab_multi_manager(
   nb_tab_option = "smart",
   limit = 14700,
   keep_history = FALSE,
+  minimal_verbose = TRUE,
   ...
 )
 }
@@ -118,6 +119,13 @@ independent of the number of iterations. Recommended for production.
 created at each iteration, preserving the full suppression history.
 Useful for debugging propagation across tables, at the cost of O(N_iter)
 additional columns
+}}
+
+\item{minimal_verbose}{logical, default \code{FALSE}. Controls the console verbosity during processing:
+\itemize{
+\item \code{FALSE}: prints a new line in the console at each iteration (\verb{--- Current table to treat: <tab_name> ---}).
+\item \code{TRUE}: overwrites a single status line in-place (\verb{--- Current table to treat: <tab_name> | loop iter : <N> ---}),
+preventing console clutter during long processing loops.
 }}
 
 \item{...}{other arguments of \code{tab_rtauargus2()}}
