@@ -26,15 +26,17 @@ journal_add_line <- function(journal,...){
 #'     created at each iteration, preserving the full suppression history.
 #'     Useful for debugging propagation across tables, at the cost of O(N_iter)
 #'     additional columns
-#' @param minimal_verbose logical, default `FALSE`. Controls the console verbosity during processing:
+#' @param compact_progress logical, default `TRUE`. Controls the console verbosity during processing:
 #'   - `FALSE`: prints a new line in the console at each iteration (`--- Current table to treat: <tab_name> ---`).
 #'   - `TRUE`: overwrites a single status line in-place (`--- Current table to treat: <tab_name> | loop iter : <N> ---`),
 #'     preventing console clutter during long processing loops.
 #' @param ... other arguments of `tab_rtauargus2()`
 #'
-#' @return original list of tables. Secret Results of each iteration is added to each table.
-#' For example, the result of first iteration is called 'is_secret_1' in each table.
-#' It's a boolean variable, whether the cell has to be masked or not.
+#' @return Original list of tables with secret status column(s) added to each table:
+#'   - If `keep_history = FALSE` (default), a single boolean column `is_secret_<N>` (where N is the total number
+#'     of iterations) is added to each table, indicating whether each cell is masked in the final output.
+#'   - If `keep_history = TRUE`, boolean columns `is_secret_1`, `is_secret_2`, ..., `is_secret_N` are added
+#'     to each table, recording the intermediate secret status at each iteration.
 #'
 #' @seealso `tab_rtauargus2`
 #'
@@ -115,7 +117,6 @@ journal_add_line <- function(journal,...){
 #'
 #' }
 #'
-#' @importFrom rlang .data
 #'
 #' @export
 
@@ -139,7 +140,7 @@ tab_multi_manager <- function(
     nb_tab_option = "smart",
     limit = 14700,
     keep_history = FALSE,
-    minimal_verbose = TRUE,
+    compact_progress = TRUE,
     ...
 ){
   start_time <- Sys.time()
@@ -155,12 +156,11 @@ tab_multi_manager <- function(
   params$value = value
   params$freq = freq
   params$suppress = suppress
-  params$suppress = suppress
   params$split_tab = split_tab
   params$nb_tab_option = nb_tab_option
   params$limit = limit
 
-  n_tbx = length(list_tables) # nombre de tableaux
+  n_tbx = length(list_tables)
 
   if(n_tbx == 0){
     stop("Your list of tables is empty !")
@@ -246,12 +246,6 @@ tab_multi_manager <- function(
     }
   )
 
-  noms_vars_init <- c()
-  for (tab in list_tables){
-    noms_vars_init <- c(noms_vars_init, names(tab))
-  }
-  noms_vars_init <- noms_vars_init[!duplicated(noms_vars_init)]
-
   noms_col_T <- stats::setNames(paste0("T_", noms_tbx), noms_tbx)
 
   table_majeure <- purrr::imap(
@@ -288,40 +282,43 @@ tab_multi_manager <- function(
     }
   )
 
-  # by_vars = setdiff(unique(unlist(purrr::map(table_majeure, names))), noms_col_T)
-  by_vars = purrr::reduce(purrr::map(table_majeure, names), intersect)
-
   # ============================================================================
   # BLOC 1 : FUSION INITIALE DE TABLE_MAJEURE
   # ============================================================================
-  # OLD CODE (DISABLED):
-  # table_majeure <- purrr::reduce(
-  #   .x = table_majeure,
-  #   .f = merge,
-  #   by = by_vars,
-  #   all = TRUE
-  # )
-  #
-  # table_majeure$secret_no_pl_iter <- table_majeure$secret_no_pl
-  # secret_no_pl_iter <- "secret_no_pl_iter"
-  #
-  # purrr::walk(
-  #   noms_col_T,
-  #   function(col_T){
-  #     e_par <- rlang::env_parent()
-  #     e_par$table_majeure[[col_T]] <- ifelse(
-  #       is.na(e_par$table_majeure[[col_T]]),
-  #       FALSE,
-  #       e_par$table_majeure[[col_T]]
-  #     )
-  #   }
-  # )
-
-  # NEW: Empilement C O(N) ultra-rapide puis agregation par groupe de cellules uniques
   dt_list <- lapply(table_majeure, data.table::as.data.table)
   dt_all <- data.table::rbindlist(dt_list, use.names = TRUE, fill = TRUE)
-  table_majeure <- dt_all[, lapply(.SD, function(col) any(!is.na(col))), by = by_vars, .SDcols = noms_col_T]
-  data.table::setDT(table_majeure)
+
+  has_cost <- !is.null(cost_var) && (cost_var %in% names(dt_all))
+  sd_cols_all <- c(noms_col_T, secret_var, "secret_no_pl", value, freq)
+  if (has_cost) sd_cols_all <- c(sd_cols_all, cost_var)
+
+  # Verification de coherence des valeurs sans warning parasite sur NA
+  chk_diff <- dt_all[, .(
+    diff_val = if (.N > 1) {
+      vals <- stats::na.omit(get(value))
+      if (length(vals) > 1L) max(vals) - min(vals) else 0
+    } else 0
+  ), by = all_expl_vars]
+
+  if (any(chk_diff$diff_val > 1e-6, na.rm = TRUE)) {
+    warning(sprintf(
+      "Discrepancies in '%s' detected across tables for some common cells. The value from the first table defining each cell was retained.",
+      value
+    ))
+  }
+
+  # Agregation ultra-optimisee avec accesseurs .SD
+  table_majeure <- dt_all[, {
+    res_T <- lapply(.SD[, ..noms_col_T], function(col) any(col %in% TRUE))
+    res_T[[secret_var]] <- any(.SD[[secret_var]] %in% TRUE)
+    res_T[["secret_no_pl"]] <- any(.SD[["secret_no_pl"]] %in% TRUE)
+    res_T[[value]] <- stats::na.omit(.SD[[value]])[1L]
+    res_T[[freq]] <- stats::na.omit(.SD[[freq]])[1L]
+    if (has_cost) {
+      res_T[[cost_var]] <- stats::na.omit(.SD[[cost_var]])[1L]
+    }
+    res_T
+  }, by = all_expl_vars, .SDcols = sd_cols_all]
 
   table_majeure[, secret_no_pl_iter := secret_no_pl]
   secret_no_pl_iter <- "secret_no_pl_iter"
@@ -330,12 +327,6 @@ tab_multi_manager <- function(
     data.table::set(table_majeure, i = which(is.na(table_majeure[[col_T]])), j = col_T, value = FALSE)
   }
   # ============================================================================
-
-
-  # Uniformisation des libelles des variables explicatives
-  # res_unif <- uniformize_labels(table_majeure, all_expl_vars, hrc, list_totcode)
-  # table_majeure <- res_unif$data
-  # hrc_unif <- res_unif$hrc_unif
 
   list_hrc <- purrr::map(
     list_explanatory_vars,
@@ -375,9 +366,6 @@ tab_multi_manager <- function(
   num_iter_par_tab[!has_primary_secret] <- 1
   num_iter_all = 0
 
-  # common_cells_modified <- as.data.frame(matrix(ncol = length(all_expl_vars)+1))
-  # names(common_cells_modified) <- c(all_expl_vars, "iteration")
-
   n_common_cells_modified <- 0
 
   journal <- file.path(dir_name,"journal.txt")
@@ -397,10 +385,10 @@ tab_multi_manager <- function(
   journal_add_break_line(journal)
   journal_add_break_line(journal)
 
-  # NEW: Initialisation obligatoire de all_col_T (Evite l'erreur 'object all_col_T not found')
+  # Initialisation securisee de all_col_T
   all_col_T <- unname(noms_col_T)
 
-  # NEW 4: Initialisation de la colonne de travail in-place si keep_history = FALSE
+  # Initialisation in-place si keep_history = FALSE
   if (!keep_history) {
     if (!"is_secret_curr" %in% names(table_majeure)) {
       table_majeure[, is_secret_curr := get(secret_var)]
@@ -415,28 +403,22 @@ tab_multi_manager <- function(
 
     num_iter_par_tab[num_tableau] <- num_iter_par_tab[num_tableau] + 1
 
-    if (!minimal_verbose){
+    # Affichage console in-place compact
+    if (!compact_progress){
       cat("--- Current table to treat: ", num_tableau, "---\n")
     } else {
       cat(sprintf("\r--- Current table to treat: %s | loop iter : %d ---            ", num_tableau, num_iter_all))
       flush.console()
     }
-    # NEW: Initialisation de securite pour le journal
+
+    # Initialisation de securite pour le journal
     common_modified_idx <- integer(0)
 
     nom_col_identifiante <- paste0("T_", num_tableau)
     tableau_a_traiter <- which(table_majeure[[nom_col_identifiante]])
 
-    # OLD:
-    # if (num_iter_all == 1){
-    #   var_secret_apriori <- secret_var
-    # } else {
-    #   var_secret_apriori <- paste0("is_secret_", num_iter_all-1, collapse = "")
-    # }
-
-    # NEW 4: Gestion dynamique des variables selon keep_history
+    # Gestion dynamique des variables selon keep_history
     if (keep_history) {
-      # Mode historique classique (creation de multiples colonnes)
       if (num_iter_all == 1){
         var_secret_apriori <- secret_var
       } else {
@@ -444,20 +426,16 @@ tab_multi_manager <- function(
       }
       var_secret <- paste0("is_secret_", num_iter_all)
     } else {
-      # Mode optimise (1 seule colonne mise a jour in-place)
-      table_majeure[, is_secret_prev := is_secret_curr] # Sauvegarde de l'etat avant traitement
+      table_majeure[, is_secret_prev := is_secret_curr]
       var_secret_apriori <- "is_secret_curr"
       var_secret <- "is_secret_curr"
     }
 
     ex_var <- list_explanatory_vars[[num_tableau]]
 
-    # OLD:
-    # vrai_tableau <- table_majeure[tableau_a_traiter,]
-    # vrai_tableau <- vrai_tableau[,c(ex_var, value, freq,var_secret_apriori,secret_no_pl_iter, cost_var)]
-
-    # NEW: Extraction securisee des colonnes avec syntaxe data.table (with = FALSE)
-    cols_to_keep <- c(ex_var, value, freq, var_secret_apriori, secret_no_pl_iter, cost_var)
+    # Extraction securisee des colonnes existantes
+    cost_var_curr <- if(!is.null(cost_var) && cost_var %in% names(table_majeure)) cost_var else NULL
+    cols_to_keep <- c(ex_var, value, freq, var_secret_apriori, secret_no_pl_iter, cost_var_curr)
     vrai_tableau <- as.data.frame(table_majeure[tableau_a_traiter, cols_to_keep, with = FALSE])
 
     # Other settings of the function to make secret ----
@@ -482,7 +460,6 @@ tab_multi_manager <- function(
       suppress
     }
     params$ip = if(num_iter_par_tab[num_tableau] == 1) ip_start else ip_end
-    # params$safety_rules <- "MAN(0)"
 
     res <- do.call(func_to_call, params)
     res$is_secret <- res$Status != "V"
@@ -495,51 +472,35 @@ tab_multi_manager <- function(
 
     res <- subset(res, select = setdiff(names(res), "Status"))
 
-    # ADDITION : Conversion explicite de res en data.table
-    data.table::setDT(res)
-
-    # OLD: (cette ligne ecrasait var_secret meme en keep_history = FALSE)
-    # var_secret <- paste0("is_secret_", num_iter_all)
-
     # ============================================================================
     # BLOC 2 : MISE A JOUR DE TABLE_MAJEURE (TRAITEMENT ET PROPAGATION)
     # ============================================================================
-    # OLD CODE (DISABLED):
-    # table_majeure <- merge(table_majeure, res, all = TRUE)
-    # table_majeure[[var_secret]] <- table_majeure$is_secret
-    # table_majeure <- subset(
-    #   table_majeure,
-    #   select = setdiff(names(table_majeure), "is_secret")
-    # )
-    #
-    #
-    # table_majeure[[var_secret]] <- ifelse(
-    #   is.na(table_majeure[[var_secret]]),
-    #   table_majeure[[var_secret_apriori]],
-    #   table_majeure[[var_secret]]
-    # )
-    #
-    # table_majeure$secret_no_pl_iter <- ifelse(
-    #   table_majeure[[secret_var]],
-    #   table_majeure$secret_no_pl,
-    #   table_majeure[[var_secret]]
-    # ) #TODO A REVOIR PR CORRIGER LES PL
 
-    # NEW: Completer res avec les variables explicatives absentes de res (mode generique)
+    # Conversion explicite de res en data.table
+    data.table::setDT(res)
+
+    # Completer res avec les variables explicatives absentes
     missing_expl <- setdiff(all_expl_vars, names(res))
     for (v in missing_expl) {
       val_tot <- unname(purrr::keep(list_totcode, function(x) v %in% names(x))[[1]][v])
       data.table::set(res, j = v, value = as.character(val_tot))
     }
 
-    # OLD
-    # # NEW: Initialisation de la nouvelle colonne avec les statuts a priori
-    # table_majeure[, (var_secret) := get(var_secret_apriori)]
-    #
-    # # NEW: Mise a jour en place par reference sur all_expl_vars
-    # table_majeure[res, (var_secret) := i.is_secret, on = all_expl_vars]
+    # Alignement strict des types (factor, integer, numeric, character, is.ordered)
+    for (v in all_expl_vars) {
+      ref_col <- table_majeure[[v]]
+      if (is.factor(ref_col)) {
+        data.table::set(res, j = v, value = factor(res[[v]], levels = levels(ref_col), ordered = is.ordered(ref_col)))
+      } else if (is.integer(ref_col)) {
+        data.table::set(res, j = v, value = as.integer(res[[v]]))
+      } else if (is.numeric(ref_col)) {
+        data.table::set(res, j = v, value = as.numeric(res[[v]]))
+      } else if (is.character(ref_col)) {
+        data.table::set(res, j = v, value = as.character(res[[v]]))
+      }
+    }
 
-    # NEW 4: Mise a jour conditionnelle selon keep_history
+    # Mise a jour in-place de table_majeure
     if (keep_history) {
       # Mode avec historique : creation d'une nouvelle colonne is_secret_N a chaque iteration
       table_majeure[, (var_secret) := get(var_secret_apriori)]
@@ -551,7 +512,7 @@ tab_multi_manager <- function(
       table_majeure[is.na(is_secret_curr), is_secret_curr := is_secret_prev]
     }
 
-    # NEW: Mise a jour de secret_no_pl_iter
+    # Mise a jour de secret_no_pl_iter
     table_majeure[, secret_no_pl_iter := data.table::fifelse(get(secret_var), secret_no_pl, get(var_secret))]
     # ============================================================================
 
@@ -562,42 +523,8 @@ tab_multi_manager <- function(
     # ============================================================================
     # BLOC 3 : DETECTION DES CELLULES COMMUNES ET QUEUE
     # ============================================================================
-    # OLD CODE (DISABLED):
-    # lignes_modifs <- which(table_majeure[[var_secret_apriori]] != table_majeure[[var_secret]])
-    #
-    # cur_tab <- paste0("T_", num_tableau)
-    # other_tabs <- setdiff(noms_col_T, cur_tab)
-    # cur_cells <- rowSums(table_majeure[, cur_tab, drop=FALSE])
-    # other_cells <- rowSums(table_majeure[, other_tabs, drop=FALSE])
-    #
-    # common_cells_rows <- which(cur_cells == 1 & other_cells > 0)
-    # common_cells <- table_majeure[common_cells_rows, , drop=FALSE]
-    #
-    # # update of common cells that have been modified
-    # modified <- common_cells[common_cells[[var_secret_apriori]] != common_cells[[var_secret]],all_expl_vars, drop=FALSE]
-    # # modified <- if(sum(is.na(modified))>0) modified[1,][-1,] else modified
-    # if(nrow(modified) > 0){
-    #   modified <- cbind(modified, iteration = num_iter_all)
-    #   common_cells_modified <- if(n_common_cells_modified == 0) modified else rbind(common_cells_modified, modified)
-    #   n_common_cells_modified <- n_common_cells_modified + nrow(modified)
-    # }
-    #
-    # for(tab in noms_tbx){
-    #   nom_col_identifiante <- paste0("T_", tab)
-    #   if( !(tab %in% todolist)
-    #       & (any(table_majeure[[nom_col_identifiante]][lignes_modifs]))
-    #   ){
-    #     todolist <- append(todolist,tab)
-    #     remainlist <- remainlist[remainlist != tab]
-    #   }
-    # }
-    #
 
-    # OLD
-    # #  NEW: Restreindre la recherche aux seules lignes de la sous-table courante
-    # idx_changed <- table_majeure[[var_secret_apriori]][tableau_a_traiter] != table_majeure[[var_secret]][tableau_a_traiter]
-
-    # NEW 4: Detection des changements adaptee et corrigee
+    # Detection adaptee des changements selon keep_history
     if (keep_history) {
       idx_changed <- table_majeure[[var_secret_apriori]][tableau_a_traiter] != table_majeure[[var_secret]][tableau_a_traiter]
     } else {
@@ -611,7 +538,6 @@ tab_multi_manager <- function(
 
     if (length(lignes_modifs) > 0) {
       if (length(other_tabs) > 0) {
-        # rowSums uniquement sur le petit sous-ensemble de lignes modifiees
         is_common <- rowSums(as.matrix(table_majeure[lignes_modifs, ..other_tabs])) > 0
         common_modified_idx <- lignes_modifs[is_common]
       }
@@ -651,10 +577,8 @@ tab_multi_manager <- function(
     journal_add_line(journal, "- valid cells:", valid_stat, "(", round(valid_stat/denom_stat*100,1), "%)")
     journal_add_break_line(journal)
 
-    # OLD:
-    # journal_add_line(journal, "Nb of new common cells hit by the secret:", nrow(modified))
 
-    # NEW: Impression journal securisee si modified n'existe pas
+    # Ecriture journalisee securisee si aucune cellule modifiee
     nb_modified_count <- if (length(lignes_modifs) > 0 && length(common_modified_idx) > 0) length(common_modified_idx) else 0
     journal_add_line(journal, "Nb of new common cells hit by the secret:", nb_modified_count)
 
@@ -663,9 +587,9 @@ tab_multi_manager <- function(
 
   }
 
-  if (minimal_verbose) cat("\n") # Permet de passer proprement à la ligne suivante à la fin de la boucle
+  if (compact_progress) cat("\n") # Permet de passer proprement à la ligne suivante à la fin de la boucle
 
-  # NEW 4: Creation de la colonne finale unique apres la boucle pour compatibilite avec le BLOC 4
+  # Creation de la colonne finale unique apres la boucle si keep_history = FALSE
   if (!keep_history) {
     last_secret_col <- paste0("is_secret_", num_iter_all)
     table_majeure[, (last_secret_col) := is_secret_curr]
@@ -674,24 +598,7 @@ tab_multi_manager <- function(
   # ============================================================================
   # BLOC 4 : RECONSTRUCTION FINALE DES SOUS-TABLEAUX
   # ============================================================================
-  # OLD CODE (DISABLED):
-  # # Reconstruire la liste des tableaux d'entrée
-  # liste_tbx_res <- purrr::imap(
-  #   list_tables,
-  #   function(tab,nom){
-  #     expl_vars <- list_explanatory_vars[[nom]]
-  #     tab_rows <- table_majeure[[paste0("T_", nom)]]
-  #     secret_vars <- names(table_majeure)[grep("^is_secret_[1-9]", names(table_majeure))]
-  #     secret_vars <- secret_vars[order(as.integer(gsub("is_secret_", "", secret_vars)))]
-  #     res <- merge(
-  #       tab,
-  #       table_majeure[tab_rows, c(expl_vars, secret_vars)],
-  #       all.x = TRUE, all.y = FALSE, by = expl_vars
-  #     )
-  #   }
-  # )
-
-  # NEW: Reconstruire la liste des tableaux d'entree via data.table
+  # Reconstruire la liste des tableaux d'entree via data.table in-place
   secret_vars <- names(table_majeure)[grep("^is_secret_[1-9]", names(table_majeure))]
   secret_vars <- secret_vars[order(as.integer(gsub("is_secret_", "", secret_vars)))]
 
@@ -706,27 +613,27 @@ tab_multi_manager <- function(
       tab_is_dt <- data.table::is.data.table(tab)
       tab_dt <- if (tab_is_dt) data.table::copy(tab) else data.table::as.data.table(tab)
 
-      original_classes <- vapply(expl_vars, function(v) class(tab[[v]])[1], character(1))
-
+      # Mise a niveau des types dans sub_majeure avec support complet is.ordered()
       for (v in expl_vars) {
-        if (v %in% names(tab_dt)) data.table::set(tab_dt, j = v, value = as.character(tab_dt[[v]]))
-      }
-
-      res_dt <- merge(tab_dt, sub_majeure, by = expl_vars, all.x = TRUE, sort = FALSE)
-
-      for (v in expl_vars) {
-        cls <- original_classes[v]
-        if (cls == "factor") {
-          data.table::set(res_dt, j = v, value = factor(res_dt[[v]]))
-        } else if (cls == "integer") {
-          data.table::set(res_dt, j = v, value = as.integer(res_dt[[v]]))
+        ref_col <- tab_dt[[v]]
+        if (is.factor(ref_col)) {
+          data.table::set(sub_majeure, j = v, value = factor(sub_majeure[[v]], levels = levels(ref_col), ordered = is.ordered(ref_col)))
+        } else if (is.integer(ref_col)) {
+          data.table::set(sub_majeure, j = v, value = as.integer(sub_majeure[[v]]))
+        } else if (is.numeric(ref_col)) {
+          data.table::set(sub_majeure, j = v, value = as.numeric(sub_majeure[[v]]))
+        } else if (is.character(ref_col)) {
+          data.table::set(sub_majeure, j = v, value = as.character(sub_majeure[[v]]))
         }
       }
 
+      # Update join in-place O(1) : conserve l'ordre, les types et la structure exacte
+      tab_dt[sub_majeure, (secret_vars) := mget(paste0("i.", secret_vars)), on = expl_vars]
+
       if (!tab_is_dt) {
-        return(as.data.frame(res_dt))
+        return(as.data.frame(tab_dt))
       } else {
-        return(res_dt)
+        return(tab_dt)
       }
     }
   )
