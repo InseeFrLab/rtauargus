@@ -138,7 +138,7 @@ tab_multi_manager <- function(
     num_iter_max = 10,
     split_tab = FALSE,
     nb_tab_option = "smart",
-    limit = 14700,
+    limit = NULL,
     keep_history = FALSE,
     compact_progress = TRUE,
     ...

@@ -15,10 +15,10 @@
 #' @param split_tab `r lifecycle::badge("experimental")` boolean,
 #' whether to reduce dimension to 3 while treating a table of dimension 4 or 5
 #' (default to `FALSE`)
-#' @param limit `r lifecycle::badge("experimental")` numeric, used to choose
-#' which variable to merge (if nb_tab_option = 'smart')
-#' and split table with a number of row above this limit in order to avoid
-#' tauargus failures
+#' @param limit `r lifecycle::badge("experimental")` numeric or NULL, default `NULL`.
+#' Used to choose which variable to merge (if nb_tab_option = 'smart') and split
+#' table with a number of row above this limit in order to avoid tauargus failures.
+#' If `NULL`, an automatic limit is calculated using [auto_limit()].
 #' @param nb_tab_option `r lifecycle::badge("experimental")` strategy to follow
 #' to choose variables automatically while splitting:
 #' \itemize{
@@ -133,7 +133,7 @@ tab_rtauargus <- function(
     unif_labels = TRUE,
     split_tab = FALSE,
     nb_tab_option = "smart",
-    limit = 14700,
+    limit = NULL,
     ...
 ){
 
@@ -411,7 +411,7 @@ tab_rtauargus2 <- function(
     suppress = "MOD(1,5,1,0,0)",
     split_tab = TRUE,
     nb_tab_option = "smart",
-    limit = 14700,
+    limit = NULL,
     ...
 ){
 
