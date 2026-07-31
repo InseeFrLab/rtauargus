@@ -289,21 +289,30 @@ tab_multi_manager <- function(
   dt_all <- data.table::rbindlist(dt_list, use.names = TRUE, fill = TRUE)
 
   has_cost <- !is.null(cost_var) && (cost_var %in% names(dt_all))
-  sd_cols_all <- c(noms_col_T, secret_var, "secret_no_pl", value, freq)
+  cost_var_str <- if (has_cost) cost_var else ".dummy_cost" # FIX : évite l'erreur ..cost_var quand cost_var est NULL
+
+  col_T_vals  <- unname(noms_col_T)
+  sd_cols_all <- c(col_T_vals, secret_var, "secret_no_pl", value, freq)
+
   if (has_cost) sd_cols_all <- c(sd_cols_all, cost_var)
 
   # Agregation ultra-rapide en un seul scan (conflits + fusion)
   table_majeure <- dt_all[, {
-    vals <- stats::na.omit(.SD[[value]])
+    local_SD <- .SD  # ← Capture .SD comme variable R normale
+    #   avant tout appel dans une closure imbriquée
+
+    vals     <- stats::na.omit(local_SD[[..value]])
     has_disc <- length(vals) > 1L && (max(vals) - min(vals)) > 1e-6
 
-    res_T <- lapply(.SD[, ..noms_col_T], function(col) any(col %in% TRUE))
-    res_T[[secret_var]] <- any(.SD[[secret_var]] %in% TRUE)
-    res_T[["secret_no_pl"]] <- any(.SD[["secret_no_pl"]] %in% TRUE)
-    res_T[[value]] <- vals[1L]
-    res_T[[freq]] <- stats::na.omit(.SD[[freq]])[1L]
+    res_T        <- lapply(col_T_vals, function(cn) any(local_SD[[cn]] %in% TRUE))
+    names(res_T) <- col_T_vals
+
+    res_T[[..secret_var]]    <- any(local_SD[[..secret_var]] %in% TRUE)
+    res_T[["secret_no_pl"]]  <- any(local_SD[["secret_no_pl"]] %in% TRUE)
+    res_T[[..value]]         <- vals[1L]
+    res_T[[..freq]]          <- stats::na.omit(local_SD[[..freq]])[1L]  # ← FIX
     if (has_cost) {
-      res_T[[cost_var]] <- stats::na.omit(.SD[[cost_var]])[1L]
+      res_T[[..cost_var_str]] <- stats::na.omit(local_SD[[..cost_var_str]])[1L]
     }
     res_T[[".has_discrepancy"]] <- has_disc
     res_T
