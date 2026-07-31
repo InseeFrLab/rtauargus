@@ -292,33 +292,30 @@ tab_multi_manager <- function(
   sd_cols_all <- c(noms_col_T, secret_var, "secret_no_pl", value, freq)
   if (has_cost) sd_cols_all <- c(sd_cols_all, cost_var)
 
-  # Verification de coherence des valeurs sans warning parasite sur NA
-  chk_diff <- dt_all[, .(
-    diff_val = if (.N > 1) {
-      vals <- stats::na.omit(get(value))
-      if (length(vals) > 1L) max(vals) - min(vals) else 0
-    } else 0
-  ), by = all_expl_vars]
+  # Agregation ultra-rapide en un seul scan (conflits + fusion)
+  table_majeure <- dt_all[, {
+    vals <- stats::na.omit(.SD[[value]])
+    has_disc <- length(vals) > 1L && (max(vals) - min(vals)) > 1e-6
 
-  if (any(chk_diff$diff_val > 1e-6, na.rm = TRUE)) {
+    res_T <- lapply(.SD[, ..noms_col_T], function(col) any(col %in% TRUE))
+    res_T[[secret_var]] <- any(.SD[[secret_var]] %in% TRUE)
+    res_T[["secret_no_pl"]] <- any(.SD[["secret_no_pl"]] %in% TRUE)
+    res_T[[value]] <- vals[1L]
+    res_T[[freq]] <- stats::na.omit(.SD[[freq]])[1L]
+    if (has_cost) {
+      res_T[[cost_var]] <- stats::na.omit(.SD[[cost_var]])[1L]
+    }
+    res_T[[".has_discrepancy"]] <- has_disc
+    res_T
+  }, by = all_expl_vars, .SDcols = sd_cols_all]
+
+  if (any(table_majeure$.has_discrepancy, na.rm = TRUE)) {
     warning(sprintf(
       "Discrepancies in '%s' detected across tables for some common cells. The value from the first table defining each cell was retained.",
       value
     ))
   }
-
-  # Agregation ultra-optimisee avec accesseurs .SD
-  table_majeure <- dt_all[, {
-    res_T <- lapply(.SD[, ..noms_col_T], function(col) any(col %in% TRUE))
-    res_T[[secret_var]] <- any(.SD[[secret_var]] %in% TRUE)
-    res_T[["secret_no_pl"]] <- any(.SD[["secret_no_pl"]] %in% TRUE)
-    res_T[[value]] <- stats::na.omit(.SD[[value]])[1L]
-    res_T[[freq]] <- stats::na.omit(.SD[[freq]])[1L]
-    if (has_cost) {
-      res_T[[cost_var]] <- stats::na.omit(.SD[[cost_var]])[1L]
-    }
-    res_T
-  }, by = all_expl_vars, .SDcols = sd_cols_all]
+  table_majeure[, .has_discrepancy := NULL]
 
   table_majeure[, secret_no_pl_iter := secret_no_pl]
   secret_no_pl_iter <- "secret_no_pl_iter"
@@ -387,6 +384,20 @@ tab_multi_manager <- function(
 
   # Initialisation securisee de all_col_T
   all_col_T <- unname(noms_col_T)
+
+  # Pre-calcul des metadonnees de type pour alignement ultra-rapide
+  expl_var_meta <- lapply(stats::setNames(all_expl_vars, all_expl_vars), function(v) {
+    col <- table_majeure[[v]]
+    list(
+      type = if (is.factor(col)) "factor"
+      else if (is.integer(col)) "integer"
+      else if (is.numeric(col)) "numeric"
+      else if (is.logical(col)) "logical"
+      else "character",
+      levels = if (is.factor(col)) levels(col) else NULL,
+      ordered = is.ordered(col)
+    )
+  })
 
   # Initialisation in-place si keep_history = FALSE
   if (!keep_history) {
@@ -486,18 +497,18 @@ tab_multi_manager <- function(
       data.table::set(res, j = v, value = as.character(val_tot))
     }
 
-    # Alignement strict des types (factor, integer, numeric, character, is.ordered)
+    # Alignement des types via expl_var_meta
     for (v in all_expl_vars) {
-      ref_col <- table_majeure[[v]]
-      if (is.factor(ref_col)) {
-        data.table::set(res, j = v, value = factor(res[[v]], levels = levels(ref_col), ordered = is.ordered(ref_col)))
-      } else if (is.integer(ref_col)) {
-        data.table::set(res, j = v, value = as.integer(res[[v]]))
-      } else if (is.numeric(ref_col)) {
-        data.table::set(res, j = v, value = as.numeric(res[[v]]))
-      } else if (is.character(ref_col)) {
-        data.table::set(res, j = v, value = as.character(res[[v]]))
-      }
+      meta <- expl_var_meta[[v]]
+      val_v <- res[[v]]
+      converted <- switch(meta$type,
+                          factor    = factor(val_v, levels = meta$levels, ordered = meta$ordered),
+                          integer   = as.integer(val_v),
+                          numeric   = as.numeric(val_v),
+                          logical   = as.logical(val_v),
+                          as.character(val_v)
+      )
+      data.table::set(res, j = v, value = converted)
     }
 
     # Mise a jour in-place de table_majeure
@@ -515,9 +526,6 @@ tab_multi_manager <- function(
     # Mise a jour de secret_no_pl_iter
     table_majeure[, secret_no_pl_iter := data.table::fifelse(get(secret_var), secret_no_pl, get(var_secret))]
     # ============================================================================
-
-
-
 
 
     # ============================================================================
@@ -622,11 +630,12 @@ tab_multi_manager <- function(
           data.table::set(sub_majeure, j = v, value = as.integer(sub_majeure[[v]]))
         } else if (is.numeric(ref_col)) {
           data.table::set(sub_majeure, j = v, value = as.numeric(sub_majeure[[v]]))
+        } else if (is.logical(ref_col)) {
+          data.table::set(sub_majeure, j = v, value = as.logical(sub_majeure[[v]]))
         } else if (is.character(ref_col)) {
           data.table::set(sub_majeure, j = v, value = as.character(sub_majeure[[v]]))
         }
       }
-
       # Update join in-place O(1) : conserve l'ordre, les types et la structure exacte
       tab_dt[sub_majeure, (secret_vars) := mget(paste0("i.", secret_vars)), on = expl_vars]
 
