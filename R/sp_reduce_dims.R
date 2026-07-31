@@ -524,7 +524,7 @@ Reducing from 4 to 3...\n")
   max_row <- max(sapply(res$tabs, nrow))
 
   # Split too big table if we didn't achieve the target value of "limit"
-  if (over_split & max_row > limit) {
+  if (over_split && !is.null(limit) && max_row > limit) {
 
     if (verbose) {
       cat("Spliting...\n")
