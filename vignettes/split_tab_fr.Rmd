@@ -1,10 +1,10 @@
 ---
 title: "Comment poser du secret sur des tableaux à 4 ou 5 dimensions avec `rtauargus`?"
-subtitle: <h2>![logo rtauargus](../man/figures/rtauargus_logo_small.png)</h2>
+subtitle: "<h2>![logo rtauargus](../man/figures/rtauargus_logo_small.png)</h2>"
 output:
   rmarkdown::html_vignette:
     toc: true
-    toc_depth: 4
+    toc_depth: 2
     number_section: true
     fig_caption: true
 vignette: >
@@ -125,7 +125,8 @@ L'argument `nb_tab_option` permet de préciser la façon dont le tableau est dé
 
 - **`nb_tab_option = "smart"` (option recommandée et par défaut) :** Cherche à générer
 le minimum de sous-tableaux tout en cherchant à respecter une taille maximale de sous-tableau
-fixée par l'argument `limit` (par défaut `14 700` lignes).
+fixée par l'argument `limit`. Si `limit = NULL` (valeur par défaut), une limite intermédiaire
+est calculée automatiquement via la fonction `auto_limit()`.
 
 - **`nb_tab_option = "min"` :** Construit le minimum absolu de sous-tableaux à 3 dimensions,
 sans contrainte sur la taille des sous-tableaux produits.
@@ -265,7 +266,7 @@ res_wi_split <- tab_rtauargus(
 #> 
 #> --- Current table to treat: tab1 | loop iter : 1 ---            --- Current table to treat: tab2 | loop iter : 2 ---            --- Current table to treat: tab1 | loop iter : 3 ---            --- Current table to treat: tab2 | loop iter : 4 ---            --- Current table to treat: tab1 | loop iter : 5 ---
 tictoc::toc()
-#> 46.35 sec elapsed
+#> 61.37 sec elapsed
 ```
 
 La réduction de dimensions a conduit à construire deux sous-tableaux de 3
@@ -307,13 +308,13 @@ stats_wi_split
 #>   flag   n
 #> 1    A  79
 #> 2    B  35
-#> 3    D 280
-#> 4    V 295
+#> 3    D 278
+#> 4    V 297
 ```
 
 Avec l'option de découpage du tableau de départ, la pose du secret sur
 le tableau à 4 dimensions génère
-280 suppressions secondaires.
+278 suppressions secondaires.
 
 ### Comparaison avec une pose du secret sans réduire la dimension de la table
 
@@ -363,13 +364,13 @@ res_wo_split <- tab_rtauargus(
 #>                    Please check the results carefully.
 #>                    
 #> End of modular protection. Time used 300 seconds
-#>                    Number of suppressions: 293
+#>                    Number of suppressions: 289
 #> <WRITETABLE> (1,4,,"Z:\rtauargus\vignettes\example_1\wo_split\datatest1.csv")
 #> Table: treff x cj x A10 x type_distrib | pizzas_tot has been written
 #>                    Output file name: Z:\rtauargus\vignettes\example_1\wo_split\datatest1.csv
 #> End of TauArgus run
 tictoc::toc()
-#> 305.1 sec elapsed
+#> 307.9 sec elapsed
 ```
 
 Avec seulement 689 lignes et aucune variable hiérarchique, la pose directe du
@@ -390,17 +391,17 @@ stats_wo_split
 #>   flag   n
 #> 1    A  79
 #> 2    B  35
-#> 3    D 268
-#> 4    V 307
+#> 3    D 266
+#> 4    V 309
 ```
 
 La pose directe du secret sur le tableau à 4 dimensions génère
-268 suppressions secondaires.
+266 suppressions secondaires.
 
 
 On peut observer que le traitement de la table à 4 dimensions directement
-génère un masque un peu moins chargé en secret: 268 cellules en secret secondaire,
-contre 280 avec une réduction de dimensions.
+génère un masque un peu moins chargé en secret: 266 cellules en secret secondaire,
+contre 278 avec une réduction de dimensions.
 
 Il est difficile d'anticiper cette différence puisqu'elle est très dépendante
 de la structuration des données, de la présence du secret primaire au sein du
@@ -419,106 +420,27 @@ respectivement le minimum ou le maximum de sous-tableaux via le choix des variab
 L'option `"smart"` a été développée par la suite et constitue **la valeur recommandée en pratique**.
 Elle calcule, pour chaque possibilité de variables à fusionner, le nombre de tableaux
 qui seront générés ainsi que leurs tailles. Elle s'utilise conjointement avec l'argument `limit`,
-qui fixe une taille maximale théorique par sous-tableau (par exemple `limit = 20000L`).
+qui fixe une taille maximale théorique par sous-tableau. Par défaut (`limit = NULL`), `rtauargus`
+détermine automatiquement une valeur intermédiaire optimale grâce à `auto_limit()`. L'utilisateur
+peut également fixer manuellement cette limite s'il le souhaite (par exemple `limit = 20000L`).
 
 L'option `"smart"` cherche à fusionner les variables de manière à **minimiser le nombre de tableaux générés**,
-sous la contrainte que chaque tableau ait une taille inférieure à `limit` (si possible) :
-
-- Si la valeur de `limit` n'est pas contraignante (par exemple si `limit` est supérieur au
-nombre de lignes du tableau initial), `"smart"` générera le moins de tables possible.
-
-- Contrairement à l'option `"min"`, si plusieurs choix de variables mènent au même nombre de tables,
-`"smart"` privilégiera le choix qui **minimise la taille des tables générées**
-(alors que `"min"` ne garantit que le nombre de tables, sans considération pour leur taille).
-En ce sens, `"smart"` inclut les avantages de `"min"` avec une meilleure qualité d'optimisation.
-
-- Concernant l'option `"max"`, elle cherche à maximiser le nombre de tables générées.
-En 4 dimensions, elle générera bien le nombre maximal de tables. Néanmoins, en 5 dimensions,
-elle ne maximise pas toujours le nombre total de sous-tableaux, car générer
-moins de tables au passage de 5 à 4 dimensions permet parfois d'en générer beaucoup
-plus lors du passage de 4 à 3 dimensions. En pratique, l'usage de `"max"`
-(ou d'un équivalent `"smart"` avec un `limit` très faible comme `1L`) est **fortement déconseillé**.
+sous la contrainte que chaque tableau ait une taille inférieure à `limit` (si possible).
 
 ---
 
-### Le compromis entre qualité du secret et temps d'exécution
-
-Le choix de la valeur de `limit` et du nombre de sous-tables générées repose sur un compromis :
-
-1. **Un découpage modéré améliore la vitesse et la qualité du secret :**
-
-  En réduisant la taille des tables et le nombre de variables hiérarchiques par sous-tableau,
-  le solveur (*Tau-Argus*) converge plus facilement. Cela permet souvent d'accélérer
-  le calcul (notamment en *Modular*) tout en **réduisant le sur-masquage secondaire**.
-
-2. **Un sur-découpage devient contre-productif :** Si le nombre de sous-tableaux
-devient trop grand (dépassant une centaine de tables) :
-
-   - **Le temps d'exécution explose** en raison du coût de gestion des fichiers (I/O)
-   et des itérations de réconciliation entre tables (`tab_multi_manager`).
-
-   - **La qualité du secret peut se dégrader** car la sur-fragmentation fait perdre
-   la vision globale au traitement, pouvant imposer des masques redondants entre sous-tables.
-
----
-
-### Démarche recommandée en pratique
-
-Les expérimentations sur les benchmarks 4D et 5D démontrent qu'il
-**ne faut pas chercher à générer le minimum absolu de sous-tableaux**.
-Au contraire, un découpage modéré apporte un gain de temps spectaculaire
-(particulièrement avec le solveur *Modular*, où le temps passe de plusieurs
-heures à quelques dizaines de minutes) tout en réduisant le sur-masquage secondaire.
-
-La démarche empirique recommandée s'articule ainsi :
-
-1. **Explorer les scénarios avec `explore_reduce_dims()` :**
-
-   Avant d'exécuter la recherche du secret, utilisez la fonction `explore_reduce_dims()`.
-   Sans générer de fichiers ni lancer *Tau-Argus*, elle calcule analytiquement
-   l'ensemble des combinaisons de découpage possibles (6 combinaisons en 4D, 25 en 5D).
-   Elle renvoie un tableau récapitulatif contenant :
-
-   - `nb_tab` : le nombre de sous-tables générées.
-
-   - `nb_hrc` : le nombre de variables hiérarchiques restant dans les sous-tables.
-
-   - `min_size`, `med_size`, `max_size` : la taille minimale, médiane et maximale des sous-tables (en nombre de lignes).
-
-2. **Fixer la taille cible `limit` selon le solveur retenu :**
-
-   En observant la colonne `max_size` renvoyée par `explore_reduce_dims()`,
-   choisissez l'option `nb_tab_option = "smart"` avec une valeur de `limit`
-   correspondant à la taille maximale de la configuration visée :
-
-   - **Avec Modular :** Repérez les lignes réduisant `nb_hrc` à
-   **1 ou 2 variables hiérarchiques** (généralement entre 15 et 30 tables de ~15 000 à 30 000 lignes)
-   et fixez `limit` à cette valeur maximale. C'est la zone optimale pour
-   faire chuter le temps de calcul tout en obtenant le masque le plus fin.
-
-   - **Avec Hypercube :** Si la vitesse est votre contrainte principale,
-   le traitement direct (`split_tab = FALSE`) ou la solution minimale restent
-   très rapides. Un découpage intermédiaire permettra toutefois d'améliorer la qualité du masque.
-
-3. **Ajuster sans sur-découper :**
-   - Si le solveur échoue (manque de mémoire ou non-convergence),
-   diminuez légèrement la valeur de `limit` pour passer au palier de découpage inférieur.
-
-   - **Attention au sur-découpage :** Évitez de fixer un `limit` trop faible qui
-   générerait plusieurs centaines de sous-tables (ex: > 100 tables).
-   La sur-fragmentation entraîne un coût élevé de gestion des fichiers (I/O) et
-   d'itérations d'harmonisation (`tab_multi_manager`), devenant contre-productive.
+> 💡 **Remarque mathématique sur l'exploration des combinaisons :**
+>
+> Pour réduire un tableau de 4 à 3 dimensions en fusionnant deux variables, il existe 6 combinaisons de fusions possibles (ce qui correspond au [nombre de Stirling de seconde espèce](https://fr.wikipedia.org/wiki/Nombre_de_Stirling#Nombre_de_Stirling_de_seconde_esp%C3%A8ce) *S*(4, 3) = 6).
+>
+> Pour passer directement de 5 à 3 dimensions, ce nombre s'élève à  *S*(5, 3) = 25 combinaisons.
+>
+> La fonction `explore_reduce_dims()` évalue analytiquement l'ensemble de ces combinaisons (6 en 4D, 25 en 5D) sans générer de fichiers ni lancer *Tau-Argus*, afin de vous aider à retenir le découpage le plus judicieux.
 
 
-> **Remarque mathématique :** Pour réduire un tableau de 4 à 3 dimensions en fusionnant deux variables,
-> il existe 6 combinaisons de fusions possibles (ce qui correspond
-> au [nombre de Stirling de seconde espèce](https://fr.wikipedia.org/wiki/Nombre_de_Stirling#Nombre_de_Stirling_de_seconde_esp%C3%A8ce) *S*(4, 3) = 6).
-> Pour passer directement de 5 à 3 dimensions, ce nombre s'élève à *S*(5, 3) = 25 combinaisons.
-> La fonction `explore_reduce_dims()` évalue ces différentes possibilités pour retenir le découpage
-> le plus judicieux selon l'option choisie.
 
+#### Exemple d'exploration sur un tableau 5D
 
-Voici un exemple ci-dessous
 
 ``` r
 library(rtauargus)
@@ -526,12 +448,11 @@ library(rtauargus)
 load("../data/input_data_5d.RData") # dfs5_agg, tot5, hrc5
 
 dfs5_agg %>% colnames() %>% print()
-#> [1] "SEX"            "AGE"            "GEO"            "ACT"            "ECO"            "VALUE"         
-#> [7] "freq"           "is_secret_prim" "secret_no_pl"
+#> [1] "ACT"            "GEO"            "SEX"           
+#> [4] "AGE"            "ECO"            "VALUE"         
+#> [7] "is_secret_prim" "secret_no_pl"   "freq"
 dfs5_agg %>% dplyr::tally() %>% print()
-#> # A tibble: 1 x 1
 #>        n
-#>    <int>
 #> 1 475200
 
 # ======================================================================
@@ -577,22 +498,19 @@ explore_reduce_dims(dfs = dfs5_agg,
 Par exemple, dans l'exemple ci-dessous, entre 20 et 54 tables, les sous-tables ont 3 variables hierarchiques ;
 entre 120 et 324 sous tables, 2 variables hierarchiques ; et de 758 à 1370 tables, 1 variable hierarchique.
 
-Dans un premier temps, on pourrait commencer par choisir de partir sur un split de 120 sous-tables.
-Cela semble un bon compromis.
-Les tables ne font que 18176 lignes maximum (en choissisant limit = 18200 par exemple),
-ce qui devrait simplifier grandement la pose du secret par Tau-Argus.
-De plus, le passage de 54 tables à 120 tables à un enjeu double. Outre la réduction de la taille des lignes,
-(diminution de moitié), c'est principalement la diminution du nombre de variables hierarchiques qui pourrait aider grandement Tau-Argus.
+Intuitivement, au vu des tailles de tables, la configuration à 120 sous-tables peut sembler être un bon compromis initial pour réduire le nombre de variables hiérarchiques. Néanmoins, comme nous le verrons dans le benchmark ci-dessous, l'impact sur le secret secondaire et le temps de calcul varie fortement selon la dimension et le solveur retenu.
 
 De manière empirique, on pourrait ensuite éventuellement tester d'autres configurations (par exemple 54 sous-tables, 168 et 270 sous-tables)
 afin de voir si d'autres configuration peuvent nous apporter un meilleur secret, ou un temps d'éxécution plus raisonnable.
 
-### Synthèse comparative des performances selon la valeur de `limit`
+## Benchmarks de performance (4D et 5D)
+
+### Résultats sur un tableau à 4 dimensions
 
 D'un point de vue méthodologique, on peut se demander quel est l'impact de `limit` sur le nombre de tables,
 le temps d'éxecution, ainsi que le secret généré. Ci-dessous une synthèse sur une table à 4 dimensions est proposée.
 
-#### Table initiale et résultats Tau-Argus
+#### Table initiale 4D
 
 ```
 ======================================================================
@@ -607,7 +525,7 @@ Détail des modalités par variable (Totaux inclus) :
 
 La table contient 9.8% de secret primaire.
 
-##### 1. Résultats avec la méthode **HYPERCUBE** (`GH(1,100)`)
+#### Résultats avec la méthode **HYPERCUBE** (`GH(1,100)`)
 
 | Variant | Nb tables | Taille max (lignes) | Temps d'exéc. | Mémoire max | % cellules masquées | % valeur masquée |
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: |
@@ -620,7 +538,7 @@ La table contient 9.8% de secret primaire.
 
 ---
 
-##### 2. Résultats avec la méthode **MODULAR** (`MOD(1,5,1,0,0)`)
+#### Résultats avec la méthode **MODULAR** (`MOD(1,5,1,0,0)`)
 
 | Variant | Nb tables | Taille max (lignes) | Temps d'exéc. | Mémoire max | % cellules masquées | % valeur masquée |
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: |
@@ -630,11 +548,23 @@ La table contient 9.8% de secret primaire.
 | **`smart_15800`** | 18 | 15 680 | 19min 21s<br>(1 161 s) | 420,3 MB | 19,83 % | 0,82 % |
 | **`smart_15600`** | 144 | 2 190 | 30min 12s<br>(1 812 s) | 651,9 MB | 18,07 % | 0,74 % |
 
-### Analyse approfondie et enseignements pour le cas 4 dimensions
+> 💡 **Remarque sur le choix automatique du paramètre par défaut (`limit = NULL`) :**
+>
+> Sur ce tableau 4D, laisser `limit = NULL` amène la fonction `auto_limit()` à choisir automatiquement la valeur de **15 925 lignes**, ce qui correspond au scénario à **16 tableaux**.
+>
+> Ce choix automatique ne donne pas forcément le résultat optimal absolu (dans cet exemple, la variante à 144 tableaux permet de masquer environ 1,5 point de cellules en moins), mais il offre **un compromis intermédiaire très robuste** :
+>
+> - **Il évite un nombre insuffisant de tableaux** (scénarios 1 ou 2 tables) qui ferait s'éterniser le calcul dans Tau-Argus (3h30 à 4h40) voire bloquerait le solveur ;
+>
+> - **Il évite à l'inverse le sur-découpage** (plusieurs centaines de tables) qui deviendrait lourd en gestion de fichiers I/O et itérations de réconciliation ;
+>
+> - **Il garantit une exécution rapide** (~17 minutes) et fiable, sans nécessiter de réglage manuel préalable de la part de l'utilisateur.
+
+#### Enseignements pour le cas 4 dimensions
 
 L'analyse détaillée des résultats apporte des éclairages méthodologiques cruciaux sur le fonctionnement combiné de `rtauargus` et de `Tau-Argus` :
 
-#### 1. Découpage par `rtauargus` vs décomposition interne de `Tau-Argus`
+##### Découpage par `rtauargus` vs décomposition interne de `Tau-Argus`
 
 En mode direct (`split_tab = FALSE`), la méthode `Modular` tente de décomposer la
 table 4D en sous-problèmes en interne dans `Tau-Argus`. Pour un tableau intégrant
@@ -645,7 +575,7 @@ demande un temps de calcul considérable (**4h 42min**).
 est **quasi instantanée (~5 secondes)**. Elle soulage `Tau-Argus` en lui transmettant
 directement des sous-tables 3D indépendantes et liées.
 
-#### 2. Convergence du solveur et répartition du secret primaire
+##### Convergence du solveur et répartition du secret primaire
 
 Deux mécanismes expliquent la baisse du temps de calcul et l'amélioration de la
 qualité du secret lors du découpage :
@@ -661,7 +591,7 @@ des grands totaux ou sous-totaux élevés en sont souvent exemptes).
 Ainsi, multiplier le nombre de tables n'accroît pas le temps de calcul de façon
 linéaire, et évite de propager du secret secondaire sur des sous-espaces de la table qui n'en ont pas besoin.
 
-#### 3. Avertissement : attention au sur-découpage
+##### Avertissement : attention au sur-découpage
 
 Dans ce benchmark, le cas à **144 tables (`smart_15600`)** donne de très bons
 résultats en terme de qualité du secret (18,07 % de masquage), car les sous-tables
@@ -681,7 +611,7 @@ de très nombreuses itérations, entraînant une **explosion du temps d'exécuti
 
 ---
 
-#### Synthèse comparative
+##### Synthèse comparative
 
 | Méthode & Option | Temps d'exécution | Qualité du secret (% masqué) | Bilan méthodologique |
 | :--- | :---: | :---: | :--- |
@@ -698,12 +628,139 @@ de très nombreuses itérations, entraînant une **explosion du temps d'exécuti
 > en direct (`split_tab = FALSE`)**. C'est l'option la plus rapide pour obtenir un tableau protégé,
 > au prix d'un sur-masquage un peu plus élevé.
 
+
+### Résultats sur un tableau à 5 dimensions
+
+> ⚠️ **`split_tab = TRUE` : Une fonctionnalité indispensable en 5 dimensions**
+>
+> Alors qu'un tableau à 4 dimensions peut encore être soumis (très lentement) directement à *Tau-Argus*, **la résolution directe d'un tableau à 5 dimensions est catégoriquement refusée par le logiciel**.
+>
+> L'utilisation de `split_tab = TRUE` ne constitue donc pas seulement une optimisation du temps de calcul : c'est la **seule et unique solution** permettant à `rtauargus` de protéger des tableaux de dimension 5.
+
+#### Table initiale 5D
+
+```
+======================================================================
+Nombre de lignes de la table : 496 800
+Détail des modalités par variable (Totaux inclus) :
+  - ACT : 25 modalités (1 Total + 4 groupes + 4 * 5 sous-niveaux)
+  - GEO : 36 modalités (1 Total + 5 régions + 5 * 6 sous-régions)
+  - SEX : 11 modalités (1 Total + 10 modalités fines)
+  - AGE : 16 modalités (1 Total + 15 modalités fines)
+  - ECO :  3 modalités (1 Total +  2 modalités fines)
+======================================================================
+```
+
+La table contient 9.5% de secret primaire.
+
+---
+
+#### Résultats avec la méthode **HYPERCUBE** (`GH(1,100)`)
+
+| Variant | Nb tables | Taille max (lignes) | Temps d'exéc. | Mémoire max (RAM) | % cellules masquées | % valeur masquée |
+| :--- | :---: | :---: | :---: | :---: | :---: | :---: |
+| **`smart_100000`** | 20 | 95 616 | 1h 01min 56s<br>*(3 716 s)* | 785,4 MB | 35,69 % | 1,40 % |
+| **`smart_45000`** | 54 | 41 400 | 56min 27s<br>*(3 387 s)* | 1 181,8 MB | 34,02 % | 1,32 % |
+| **`smart_20000`** | 120 | 18 426 | 1h 29min 54s<br>*(5 394 s)* | 2 057,7 MB | 30,77 % | 1,18 % |
+| **`smart_18000`** | 168 | 17 856 | 1h 26min 01s<br>*(5 161 s)* | 2 520,8 MB | 34,49 % | 1,36 % |
+| **`smart_13000`** | 214 | 12 400 | 1h 29min 03s<br>*(5 343 s)* | 3 085,4 MB | 34,00 % | 1,34 % |
+
+---
+
+#### Résultats avec la méthode **MODULAR** (`MOD(1,5,1,0,0)`)
+
+| Variant | Nb tables | Taille max (lignes) | Temps d'exéc. | Mémoire max (RAM) | % cellules masquées | % valeur masquée |
+| :--- | :---: | :---: | :---: | :---: | :---: | :---: |
+| **`smart_100000`** | 20 | 95 616 | 1h 04min 37s<br>*(3 877 s)* | 795,7 MB | 17,11 % | 0,49 % |
+| **`smart_45000`** | 54 | 41 400 | 1h 55min 28s<br>*(6 928 s)* | 1 285,3 MB | 24,17 % | 0,81 % |
+| **`smart_20000`** | 120 | 18 426 | 1h 40min 46s<br>*(6 046 s)* | 2 091,0 MB | 24,40 % | 0,83 % |
+| **`smart_18000`** | 168 | 17 856 | 1h 43min 18s<br>*(6 198 s)* | 2 570,1 MB | 24,49 % | 0,82 % |
+| **`smart_13000`** | 214 | 12 400 | 2h 06min 56s<br>*(7 616 s)* | 3 135,6 MB | 24,51 % | 0,82 % |
+
+---
+
+## Synthèse et démarche recommandée (4D & 5D)
+
+### Pourquoi il n'existe pas de « recette miracle »
+
+L'observation croisée des benchmarks 4D et 5D révèle un comportement en apparence contradictoire :
+
+- **Sur le tableau 4D :** La variante à **144 sous-tables** (`smart_15600`) offre le masque le plus fin en *Modular* (18,07 % de masquage contre 21,61 % sans découpage).
+
+- **Sur le tableau 5D :** C'est à l'inverse la variante à seulement **20 sous-tables** (`smart_100000`) qui l'emporte nettement (17,11 % de masquage contre 24,51 % avec 214 sous-tables), tout en s'exécutant deux fois plus vite.
+
+### Le compromis fondamental : Complexité locale vs Effet cascade inter-tables
+
+Ce phénomène s'explique par l'arbitrage entre deux forces opposées :
+
+- **La complexité du solveur local (*Tau-Argus*) :** Plus les sous-tables sont petites, plus les programmes d'optimisation linéaire sont simples à résoudre individuellement pour *Tau-Argus*. C'est ce qui rend le découpage fin très efficace dans le cas du tableau 4D.
+
+- **L'effet cascade lors de la réconciliation (`tab_multi_manager`) :** En 5D, le passage de 5 à 3 dimensions tisse un réseau très dense de sous-tables interconnectées. Lorsqu'on découpe excessivement (ex: 214 tables), un secret posé dans une sous-table force la pose de masques secondaires dans d'autres sous-tables par ricochet lors de la phase de réconciliation. Cette propagation par cascade crée du **sur-masquage artificiel** (+7,4 points de secret) et multiplie les temps d'I/O et de traitement.
+
+### Comportement du choix automatique (`limit = NULL`)
+
+L'argument `limit = NULL` fait appel à la fonction `auto_limit()`, qui calcule une valeur **médiane** intermédiaire :
+
+- En 4D, cette médiane (16 tables) était plus conservatrice que l'optimum empirique (144 tables).
+
+- En 5D, cette médiane (120 tables) entraînait à l'inverse un sur-découpage par rapport à l'optimum empirique (20 tables).
+
+> ⚠️ **Prudence méthodologique : Ne pas faire de généralités**
+>
+> Ces tests reposent sur deux tableaux d'évaluation particuliers. **Il n'existe pas de paramètre universel ni de taille de table idéale valable pour tous les cas de figure.**
+>
+> La densité du secret primaire, la structure des hiérarchies et le nombre de dimensions modifient profondément l'équilibre entre la vitesse du solveur local et le coût de réconciliation inter-tables.
+
+---
+
+### Démarche recommandée en pratique
+
+Les expérimentations menées sur nos tableaux de test 4D et 5D démontrent qu'il **ne faut pas chercher systématiquement à générer le minimum absolu de sous-tableaux, ni tomber dans le sur-découpage**.
+
+Le choix de la stratégie repose sur un compromis entre le solveur utilisé, la dimension du tableau et l'arbitrage entre vitesse et qualité du secret :
+
+#### Choix du solveur et de l'approche (`split_tab`)
+
+- **Si la qualité du secret est primordiale :** Privilégiez **`Modular` avec `split_tab = TRUE`**.
+  - En **4D**, le découpage permet généralement de réduire très nettement les temps de calcul par rapport au traitement direct sur les grands tableaux complexes, tout en préservant une excellente qualité de masque.
+  - En **5D**, le découpage (`split_tab = TRUE`) est **obligatoire**, *Tau-Argus* refusant le traitement direct. Sur nos benchmarks, Modular s'est révélé particulièrement performant pour limiter le sur-masquage secondaire.
+
+- **Si la vitesse absolue est votre seule contrainte :** Vous pouvez envisager **`Hypercube`**.
+  - En **4D direct (`split_tab = FALSE`)**, c'est l'option la plus rapide pour obtenir un tableau protégé, mais elle s'accompagne en contrepartie d'un sur-masquage secondaire plus important.
+  - En **5D**, l'utilisation d'Hypercube avec découpage reste très rapide, mais a tendance à générer davantage de secret secondaire que Modular.
+
+---
+
+#### Choix de la taille de sous-tableaux (`limit`) et pièges à éviter
+
+Le réglage du paramètre `limit` (qui fixe la taille maximale des sous-tables) doit être adapté selon le contexte :
+
+- **En 4D :** Un découpage intermédiaire ou fin (réduisant les sous-tables à 1 ou 2 variables hiérarchiques) facilite la convergence du solveur local et permet souvent d'affiner le masque de secret.
+- **En 5D :** La recherche du nombre optimal de sous-tables **n'est pas triviale** et dépend de la structure de vos données. Attention au sur-découpage massif (plusieurs centaines de tables) : lors de la phase de réconciliation inter-tables (`tab_multi_manager`), une fragmentation excessive peut provoquer une **propagation du secret par effet cascade**, augmentant le sur-masquage tout en alourdissant le temps de calcul et l'empreinte mémoire.
+
+---
+
+#### Déroulé pas à pas pour l'utilisateur
+
+Pour traiter vos tableaux en pratique :
+
+1. **Explorer en amont avec `explore_reduce_dims()` (quasi instantané) :**
+   Avant tout lancement de *Tau-Argus*, utilisez cette fonction pour visualiser les combinaisons de découpage analytiques. Observez le tableau récapitulatif (`nb_tab`, `nb_hrc`, `max_size`).
+
+2. **Fixer le paramètre `limit` selon votre stratégie :**
+   - **Mode automatique (`limit = NULL`) :** Recommandé pour une première exécution. La fonction `auto_limit()` sélectionne un compromis intermédiaire robuste sans réglage manuel.
+   - **Mode manuel avec Modular :** Repérez dans les résultats d'exploration le palier qui offre un bon équilibre :
+     - Évitez les sous-tables trop géantes (comportant plusieurs hiérarchies complexes et un grand nombre de lignes) qui pourraient faire peiner le solveur local.
+     - Évitez la sur-fragmentation en plusieurs centaines de sous-tables pour prévenir l'effet cascade.
+
+3. **Exécuter la protection avec `tab_rtauargus(split_tab = TRUE, limit = ...)`**.
+
 ## Détail de la vignette
 
 - Authors: **<a> Wistan Pomel </a>** & **<a> Andre-Raymond Socard </a>** &
 **<a href="mailto:julien.jamme@insee.fr">Julien Jamme</a>** &
 **<a>Nathanael Rastout</a>**
-- Last update: **30/07/2026**
+- Last update: **31/07/2026**
 - Version of rtauargus used: **1.3.5**
 - Version of &tau;-Argus used : **TauArgus 4.2.3**
 - R version used :  **4.5.3**
