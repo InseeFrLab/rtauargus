@@ -1,3 +1,36 @@
+
+#' Automatically computes an intermediate size limit for table reduction
+#'
+#' @description
+#' Uses `explore_reduce_dims()` to find the median configuration in terms of
+#' generated tables, and returns the minimum `max_size` among the configurations
+#' having that number of tables.
+#'
+#' @inheritParams explore_reduce_dims
+#'
+#' @return An integer representing the computed row limit.
+#' @export
+auto_limit <- function(dfs, totcode, hrcfiles = NULL) {
+
+  exp_df <- explore_reduce_dims(dfs = dfs, totcode = totcode, hrcfiles = hrcfiles)
+
+  if (nrow(exp_df) == 0) {
+    stop("`explore_reduce_dims` returned an empty data frame.")
+  }
+
+  # 1. Obtenir l'index de la ligne mediane
+  mid_idx <- ceiling(nrow(exp_df) / 2)
+
+  # 2. Obtenir le nombre de tables correspondant à cette ligne mediane
+  target_nb_tab <- exp_df$nb_tab[mid_idx]
+
+  # 3. Filtrer sur ce nb_tab et recuperer le minimum de max_size
+  sub_df <- exp_df[exp_df$nb_tab == target_nb_tab, ]
+  calculated_limit <- min(sub_df$max_size)
+
+  return(as.integer(calculated_limit))
+}
+
 #' Call Tau-Argus to protect a 4 or 5 dimensions table by splitting it
 #' in several 3 dimensions table.
 #'
@@ -9,7 +42,7 @@
 #' @param limit numeric or NULL, default `NULL`. Used to choose which variable
 #'   to merge (if nb_tab_option = 'smart') and split table with a number of row
 #'   above this limit in order to avoid tauargus failures.
-#'   If `NULL`, an automatic limit is calculated using [auto_limit()].
+#'   If `NULL`, an automatic limit is calculated using \code{\link{auto_limit}}.
 #' @param nb_tab_option strategy to follow for choosing variables automatically:
 #' \itemize{
 #'   \item `'min'`: minimize the number of tables;
@@ -132,7 +165,7 @@ tab_rtauargus4 <- function(
       limit <- auto_limit(dfs = tabular, totcode = totcode, hrcfiles = hrc)
 
       if (isTRUE(.dots[["verbose"]])) {
-        cat("Limite calculée automatiquement :", limit, "\n\n")
+        cat("Limite calcul\u00e9e automatiquement :", limit, "\n\n") # \u00e9 pour &
       }
     }
 
@@ -195,34 +228,3 @@ tab_rtauargus4 <- function(
   }
 }
 
-#' Automatically computes an intermediate size limit for table reduction
-#'
-#' @description
-#' Uses `explore_reduce_dims()` to find the median configuration in terms of
-#' generated tables, and returns the minimum `max_size` among the configurations
-#' having that number of tables.
-#'
-#' @inheritParams explore_reduce_dims
-#'
-#' @return An integer representing the computed row limit.
-#' @export
-auto_limit <- function(dfs, totcode, hrcfiles = NULL) {
-
-  exp_df <- explore_reduce_dims(dfs = dfs, totcode = totcode, hrcfiles = hrcfiles)
-
-  if (nrow(exp_df) == 0) {
-    stop("`explore_reduce_dims` returned an empty data frame.")
-  }
-
-  # 1. Obtenir l'index de la ligne médiane
-  mid_idx <- ceiling(nrow(exp_df) / 2)
-
-  # 2. Obtenir le nombre de tables correspondant à cette ligne médiane
-  target_nb_tab <- exp_df$nb_tab[mid_idx]
-
-  # 3. Filtrer sur ce nb_tab et récupérer le minimum de max_size
-  sub_df <- exp_df[exp_df$nb_tab == target_nb_tab, ]
-  calculated_limit <- min(sub_df$max_size)
-
-  return(as.integer(calculated_limit))
-}

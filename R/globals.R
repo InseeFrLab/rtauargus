@@ -7,5 +7,13 @@ utils::globalVariables(
     "eq_name","unit","var","n_total","total_alt","group",
     ".",
     "secret_no_pl", "is_secret_curr", "is_secret_prev",
-    "i.is_secret", "..other_tabs", "..all_expl_vars")
+    "i.is_secret", "..other_tabs", "..all_expl_vars",
+    "nb_tab",
+    "max_size",
+    "min_size",
+    "..value",
+    "..secret_var",
+    "..freq",
+    "..cost_var_str",
+    ".has_discrepancy")
 )

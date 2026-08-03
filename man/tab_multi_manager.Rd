@@ -22,9 +22,9 @@ tab_multi_manager(
   num_iter_max = 10,
   split_tab = FALSE,
   nb_tab_option = "smart",
-  limit = 14700,
+  limit = NULL,
   keep_history = FALSE,
-  minimal_verbose = TRUE,
+  compact_progress = TRUE,
   ...
 )
 }
@@ -104,10 +104,10 @@ to choose variables automatically while splitting:
 of their row count.}
 }}
 
-\item{limit}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}} numeric, used to choose
-which variable to merge (if nb_tab_option = 'smart')
-and split table with a number of row above this limit in order to avoid
-tauargus failures}
+\item{limit}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}} numeric or NULL, default \code{NULL}.
+Used to choose which variable to merge (if nb_tab_option = 'smart') and split
+table with a number of row above this limit in order to avoid tauargus failures.
+If \code{NULL}, an automatic limit is calculated using \code{\link{auto_limit}}.}
 
 \item{keep_history}{logical, default \code{FALSE}. Controls whether intermediate
 suppression columns are retained in the output.
@@ -121,7 +121,7 @@ Useful for debugging propagation across tables, at the cost of O(N_iter)
 additional columns
 }}
 
-\item{minimal_verbose}{logical, default \code{FALSE}. Controls the console verbosity during processing:
+\item{compact_progress}{logical, default \code{TRUE}. Controls the console verbosity during processing:
 \itemize{
 \item \code{FALSE}: prints a new line in the console at each iteration (\verb{--- Current table to treat: <tab_name> ---}).
 \item \code{TRUE}: overwrites a single status line in-place (\verb{--- Current table to treat: <tab_name> | loop iter : <N> ---}),
@@ -131,9 +131,13 @@ preventing console clutter during long processing loops.
 \item{...}{other arguments of \code{tab_rtauargus2()}}
 }
 \value{
-original list of tables. Secret Results of each iteration is added to each table.
-For example, the result of first iteration is called 'is_secret_1' in each table.
-It's a boolean variable, whether the cell has to be masked or not.
+Original list of tables with secret status column(s) added to each table:
+\itemize{
+\item If \code{keep_history = FALSE} (default), a single boolean column \verb{is_secret_<N>} (where N is the total number
+of iterations) is added to each table, indicating whether each cell is masked in the final output.
+\item If \code{keep_history = TRUE}, boolean columns \code{is_secret_1}, \code{is_secret_2}, ..., \code{is_secret_N} are added
+to each table, recording the intermediate secret status at each iteration.
+}
 }
 \description{
 Manages the secondary secret of a list of tables
@@ -214,6 +218,7 @@ res <- tab_multi_manager(
 )
 
 }
+
 
 }
 \seealso{

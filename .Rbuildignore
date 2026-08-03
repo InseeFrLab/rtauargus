@@ -28,3 +28,4 @@ tauargus_files/*
 ^hrc_temp$
 ^^bench_\.*\\.R$$
 ^bench$
+^benchmark_options_5D$

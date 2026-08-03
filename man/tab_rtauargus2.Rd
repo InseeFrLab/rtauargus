@@ -20,7 +20,7 @@ tab_rtauargus2(
   suppress = "MOD(1,5,1,0,0)",
   split_tab = TRUE,
   nb_tab_option = "smart",
-  limit = 14700,
+  limit = NULL,
   ...
 )
 }
@@ -108,10 +108,10 @@ to choose variables automatically while splitting:
 of their row count.}
 }}
 
-\item{limit}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}} numeric, used to choose
-which variable to merge (if nb_tab_option = 'smart')
-and split table with a number of row above this limit in order to avoid
-tauargus failures}
+\item{limit}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}} numeric or NULL, default \code{NULL}.
+Used to choose which variable to merge (if nb_tab_option = 'smart') and split
+table with a number of row above this limit in order to avoid tauargus failures.
+If \code{NULL}, an automatic limit is calculated using \code{\link{auto_limit}}.}
 
 \item{...}{Other arguments of \code{tab_rtauargus} function}
 }

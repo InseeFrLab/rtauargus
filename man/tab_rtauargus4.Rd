@@ -21,7 +21,7 @@ tab_rtauargus4(
   suppress = "MOD(1,5,1,0,0)",
   safety_rules = paste0("MAN(", ip, ")"),
   nb_tab_option = "smart",
-  limit = 14700L,
+  limit = NULL,
   dfs_name = "tab",
   keep_history = FALSE,
   sort_table = NULL,
@@ -115,9 +115,10 @@ a été traité dans un fichier d'apriori : utiliser "MAN(10)")}
 of their row count.
 }}
 
-\item{limit}{numeric, used to choose which variable to merge (if nb_tab_option = 'smart')
-and split table with a number of row above this limit in order to avoid
-tauargus failures}
+\item{limit}{numeric or NULL, default \code{NULL}. Used to choose which variable
+to merge (if nb_tab_option = 'smart') and split table with a number of row
+above this limit in order to avoid tauargus failures.
+If \code{NULL}, an automatic limit is calculated using \code{\link{auto_limit}}.}
 
 \item{dfs_name}{name used to write hrc files when reducing dims}
 

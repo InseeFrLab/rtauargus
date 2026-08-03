@@ -58,11 +58,15 @@ knitr::knit(
   encoding = "UTF-8"
 )
 
-knitr::knit(
-  "vignettes/split_tab_fr.Rmd.orig",
-  "vignettes/split_tab_fr.Rmd",
-  encoding = "UTF-8"
-)
+# Actuellement, la vignette necessite d'avoir crée des fichiers hrc sur son ordinateur
+# il s'agit du jeu de données au début du bench 4D
+# je mets donc en commentaire pour éviter de le lancer par erreur :
+# le knit fonctionnerait, mais l'output ne seraitn pas le bon (bug silencieux)
+# knitr::knit(
+#   "vignettes/split_tab_fr.Rmd.orig",
+#   "vignettes/split_tab_fr.Rmd",
+#   encoding = "UTF-8"
+# )
 
 knitr::knit(
   "vignettes/auto_metadata_fr.Rmd.orig",

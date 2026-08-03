@@ -18,7 +18,7 @@
 #' @param limit `r lifecycle::badge("experimental")` numeric or NULL, default `NULL`.
 #' Used to choose which variable to merge (if nb_tab_option = 'smart') and split
 #' table with a number of row above this limit in order to avoid tauargus failures.
-#' If `NULL`, an automatic limit is calculated using [auto_limit()].
+#' If `NULL`, an automatic limit is calculated using \code{\link{auto_limit}}.
 #' @param nb_tab_option `r lifecycle::badge("experimental")` strategy to follow
 #' to choose variables automatically while splitting:
 #' \itemize{

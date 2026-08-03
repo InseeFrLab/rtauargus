@@ -144,7 +144,7 @@ create_big_4D <- function(
 # Génère données 5D pour le benchmark min/smart/max
 # =============================================================================
 
-BENCH_DIR <- "benchmark_options_5D"
+BENCH_DIR <- "Z:/rtauargus/benchmark_options_5D"
 dir.create(file.path(BENCH_DIR, "hrc"), recursive = TRUE, showWarnings = FALSE)
 
 library(data.table); library(dplyr); library(sdcHierarchies)
@@ -516,7 +516,7 @@ ntables_list_mod <- list()
 # BOUCLE PRINCIPALE
 # =============================================================================
 
-for (v in variants) {
+for (v in variants[1]) {
 
   cat("\n======================================================================\n")
   cat("  Variant :", v$label, "(nb_tab_option =", v$nb_tab_option,
@@ -606,10 +606,10 @@ for (v in variants) {
   cat("----------------------------------------------------------------------\n")
 
   cat("⏱️  [Timing] :\n")
-  print(gc_list_mod[[v$label]])
+  print(timings_list_mod[[v$label]])
 
   cat("\n🔒 [Statistiques de secret] :\n")
-  print(timings_list_mod[[v$label]])
+  print(stats_list_mod[[v$label]])
 
   cat("\n💾 [Mémoire (Vcells)] :\n")
   print(gc_list_mod[[v$label]] %>% filter(type == "Vcells"))
