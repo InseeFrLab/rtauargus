@@ -594,139 +594,105 @@ The largest table has ",max_row," rows.\n\n"))
 # it creates smaller tabs with a hier variable less
 #' @importFrom stats setNames
 split_tab <- function(res, var_fus, limit) {
-  # table to split because they are too big
+  # todo: actuellement split_tab est plutôt lent
+  # en effet, sur une réduction complète avec splitage d'environ 51s,
+  # 50s sont dûes à split_tab à la fin de la réduction
 
-  res$to_split <- sapply(res$tabs, function(x) nrow(x) > limit)
-  table_to_split <-names(res$to_split[res$to_split == TRUE])
+  # cela est dûe à import_hierarchy qui fail sur le cache
+  # car on utilise les sous totaux intermédiaire
 
-  # data to stock
+  # il faudrait donc maj import_hierarchy pour ajouter cette fonctionnalité
+  # Ce n'est pas la priorité cependant : split_tab n'est pas utilisé courament
+  # il faut que over_split = TRUE (TRUE mpar défaut)
+  # + que la limite soit très basse (très rare en pratique)
+  # Et même dans ce cas, split_tab sera négligeable devant tab_multimanager
+  # Ce n'est donc pas une priorité
 
-  # Instead of initializing flat lists that we grow iteratively using append() (which triggers expensive
-  # O(N^2) memory reallocation on every iteration), we temporarily accumulate nested lists here.
-  # Assigning sublists directly to indices (e.g., list[[t]] <- sublist) is an O(1) pointer assignment in R.
-  tabs_split         <- list()
-  alt_totcode_split  <- list()
-  vars_split         <- list()
-  hrcs_split         <- list()
+  # 1. Calcul rapide des tailles de tableaux et détection précoce
+  tab_sizes <- vapply(res$tabs, nrow, FUN.VALUE = integer(1L))
+  to_split  <- tab_sizes > limit
 
-  # loop for table to treat
+  if (!any(to_split)) return(res)
 
-  for (t in table_to_split) {
+  table_to_split <- names(res$tabs)[to_split]
+  table_keep     <- names(res$tabs)[!to_split]
+  n_to_split     <- length(table_to_split)
 
-    # Create of how to split
+  # 2. Pré-allocation des listes
+  tabs_split        <- vector("list", n_to_split)
+  alt_totcode_split <- vector("list", n_to_split)
+  vars_split        <- vector("list", n_to_split)
+  hrcs_split        <- vector("list", n_to_split)
 
-    hrc <- res$alt_hrc[[t]][[var_fus]]
-    total <- res$alt_totcode[[t]][[var_fus]]
-    other_total <-res$alt_totcode[[t]][names(res$alt_totcode[[t]]) != (var_fus)]
+  # 3. Boucle sur les tableaux à découper
+  for (i in seq_len(n_to_split)) {
+    t     <- table_to_split[i]
+    df_t  <- res$tabs[[t]]
+    v_col <- df_t[[var_fus]]
 
-    # res_sdc <-sdcHierarchies::hier_import(inp = hrc, from = "hrc",root = total) %>%
-    #   sdcHierarchies::hier_convert(as = "sdc")
-    #
-    # codes_split <- lapply(res_sdc$dims,names)
-    codes_split <- import_hierarchy(hrc, total)  # same, but using cache for faster calculation
+    # Import spécifique à chaque table t (car total varie selon le sous-tableau)
+    hrc         <- res$alt_hrc[[t]][[var_fus]]
+    total       <- res$alt_totcode[[t]][[var_fus]]
+    codes_split <- import_hierarchy(hrc, total)
+    n           <- length(codes_split)
 
-    n <- length(codes_split)
+    new_names <- paste0(t, "_", seq_len(n))
 
-    # Names use for tauargus
-    new_names <- lapply(1:n, function(i) paste(t, i, sep = "_"))
-
-    # -----------------------------------------------------------------------------
-    # OPTIMIZATION: Fast integer indexing for secondary table splitting.
-    #
-    # Goal:
-    #   Split a table into sub-tables when its size exceeds the specified row limit.
-    #
-    # Baseline implementation:
-    #   Filtered the target table's var_fus column with %in% inside lapply:
-    #   lapply(codes_split, function(codes) df_t[df_t[[var_fus]] %in% codes, , drop = FALSE])
-    #
-    # Why the new implementation is faster:
-    #   Grouping row indices by var_fus using split() transforms subsequent table
-    #   slicing into a direct integer lookup. This avoids repeated evaluation
-    #   of the var_fus character vectors on tables being split.
-    #
-    # Why it yields the exact same result:
-    #   Applying sort() on the gathered indices matches the original record order.
-    # -----------------------------------------------------------------------------
-    df_t <- res$tabs[[t]]
-    row_indices <- split(seq_len(nrow(df_t)), df_t[[var_fus]])
-
+    # OPTIMISATION MAJEURE : Filtrage C direct %in% (remplace split + unlist + sort.int)
     tabs <- lapply(codes_split, function(codes) {
-      idx <- sort(unlist(row_indices[codes], use.names = FALSE))
-      df_t[idx, , drop = FALSE]
+      df_t[v_col %in% codes, , drop = FALSE]
     })
-
     names(tabs) <- new_names
+    tabs_split[[i]] <- tabs
 
-    # Store nested lists instead of iteratively flattening with append() inside the loop.
-    tabs_split[[t]] <- tabs
+    # alt_totcode
+    alt_tot_t   <- res$alt_totcode[[t]]
+    other_total <- alt_tot_t[names(alt_tot_t) != var_fus]
+    first_codes <- lapply(codes_split, `[[`, 1L)
 
-    # alt_totcode for tauargus
+    liste_alt_tot <- setNames(lapply(first_codes, function(code_1) {
+      c(setNames(list(code_1), var_fus), other_total)
+    }), new_names)
+    alt_totcode_split[[i]] <- liste_alt_tot
 
-    liste_alt_tot <- setNames(lapply(1:n, function(i) {
-      totali <- c(codes_split[[i]][1])
-      totali <- setNames(list(totali), var_fus)
-      totali <- c(totali, other_total)
-      return(totali) }), new_names)
+    # vars
+    var_t <- res$vars[[t]]
+    if (is.null(var_t)) var_t <- res$vars[[1L]]
+    vars_split[[i]] <- setNames(rep(list(var_t), n), new_names)
 
-    # Store nested lists instead of iteratively flattening with append() inside the loop.
-    alt_totcode_split[[t]] <- liste_alt_tot
-
-    # list of variables for the created tables
-
-    # var <- replicate(n, list(res$vars[[1]]))
-    list_add <- replicate(n, list(res$vars[[1]]))
-    names(list_add) <- new_names
-
-    # Store nested lists instead of iteratively flattening with append() inside the loop.
-    vars_split[[t]] <- list_add
-
-    # remove hierarchies from the variable we split and naming it
-
+    # hrcs
     res$alt_hrc[[t]][[var_fus]] <- NULL
-
-    if (length(res$alt_hrc[[t]]) != 0) {
-
-      hrc_e <- list(res$alt_hrc[[t]])
+    if (length(res$alt_hrc[[t]]) != 0L) {
+      hrc_e        <- list(res$alt_hrc[[t]])
       names(hrc_e) <- names(res$alt_hrc[[t]])
-
-      alt_hrcs <- replicate(n, hrc_e)
-      names(alt_hrcs) <- new_names
-
-      # Store nested lists instead of iteratively flattening with append() inside the loop.
-      hrcs_split[[t]] <- alt_hrcs
+      hrcs_split[[i]] <- setNames(rep(list(hrc_e), n), new_names)
     }
   }
 
-  # Flatten the nested lists into the original variable names in a single step after the loop.
-  # Using do.call(c, ...) instantly reconstructs a flat list and keeps internal names intact,
-  # completely bypassing the quadratic memory allocation cost of loop-level append() calls.
-  tabs2         <- if (length(tabs_split) > 0) do.call(c, tabs_split) else list()
-  all_tot_stock <- if (length(alt_totcode_split) > 0) do.call(c, alt_totcode_split) else list()
-  list_vars     <- if (length(vars_split) > 0) do.call(c, vars_split) else list()
-  list_alt_hrcs <- if (length(hrcs_split) > 0) do.call(c, hrcs_split) else list()
+  # 4. Fusion des résultats
+  tabs2         <- do.call(c, unname(tabs_split))
+  all_tot_stock <- do.call(c, unname(alt_totcode_split))
+  list_vars     <- do.call(c, unname(vars_split))
 
-  # adding the names tables we created to the already existing tables
+  has_hrcs      <- any(vapply(hrcs_split, function(x) !is.null(x), logical(1L)))
+  list_alt_hrcs <- if (has_hrcs) do.call(c, unname(hrcs_split)) else list()
 
-  table <- names(res$tabs[!(names(res$tabs) %in% table_to_split)])
-  tabs_tot <- append(res$tabs[table], tabs2)
-  alt_totcode <- append(res$alt_totcode[table],all_tot_stock)
-  vars <- append(res$vars[table], list_vars)
-  hrcs <- append( res$alt_hrc[table],list_alt_hrcs)
-  if (length(hrcs) == 0) { hrcs <- NULL }
+  tabs_tot    <- c(res$tabs[table_keep], tabs2)
+  alt_totcode <- c(res$alt_totcode[table_keep], all_tot_stock)
+  vars        <- c(res$vars[table_keep], list_vars)
+  hrcs        <- c(res$alt_hrc[table_keep], list_alt_hrcs)
+  if (length(hrcs) == 0L) hrcs <- NULL
 
-
-  res = list(
-    tabs = tabs_tot,
-    vars = vars,
-    sep = res$sep,
-    alt_hrc = hrcs,
-    totcode = res$totcode,
+  return(list(
+    tabs        = tabs_tot,
+    vars        = vars,
+    sep         = res$sep,
+    alt_hrc     = hrcs,
+    totcode     = res$totcode,
     alt_totcode = alt_totcode,
-    hrc = res$hrc,
-    fus_vars = res$fus_vars
-  )
-  return(res)
+    hrc         = res$hrc,
+    fus_vars    = res$fus_vars
+  ))
 }
 
 chose_sep <- function(
