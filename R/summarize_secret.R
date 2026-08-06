@@ -564,42 +564,37 @@ tab_multi_manager_cb <- function(
   journal_add_break_line(journal)
 
   if(summarise_secret){
-    summary <- purrr::imap_dfr(
-      liste_tbx_res,
-      function(tab,name){
-        inner_cells <- tab %>%
-          rename_with(~"is_secret_final", last_col()) |>
-          mutate(status = case_when(
-            is_secret_prim ~ "primary",
+    combined_tab <- purrr::imap_dfr(liste_tbx_res, function(tab, name) {
+      tab |>
+        rename_with(~"is_secret_final", last_col()) |>
+        mutate(
+          status = case_when(
+            is_secret_prim  ~ "primary",
             is_secret_final ~ "suppressed",
-            TRUE ~ "published"
-          )) |>
-          mutate(status = factor(status, levels = c("primary", "suppressed", "published"))) |>
-          group_by(status) %>%
-          dplyr::summarise(
-            nb_cells = n(),
-            value = sum(.data[[params$value]], na.rm = TRUE),
-            .groups = "drop"
-          ) %>%
-          mutate(
-            pourc_cells = round(nb_cells / sum(nb_cells) * 100, 2),
-            pourc_value = round(value / sum(value) * 100, 2),
-            table = name
-          )
-
-        total <- inner_cells %>%
-          dplyr::summarise(
-            status = "total",
-            nb_cells = sum(nb_cells),
-            value = sum(value),
-            pourc_cells = 100,
-            pourc_value = 100,
-            table = name
-          )
-
-        dplyr::bind_rows(inner_cells, total) %>% dplyr::relocate(table)
-      }
-    )
+            TRUE            ~ "published"
+          ))
+    })
+    inner_cells <- combined_tab %>%
+      mutate(status = factor(status, levels = c("primary", "suppressed", "published"))) %>%
+      group_by(status) %>%
+      dplyr::summarise(
+        nb_cells = n(),
+        value = sum(.data[[params$value]], na.rm = TRUE),
+        .groups = "drop"
+      ) %>%
+      mutate(
+        pourc_cells = round(nb_cells / sum(nb_cells) * 100, 2),
+        pourc_value = round(value / sum(value) * 100, 2)
+      )
+    total <- inner_cells %>%
+      dplyr::summarise(
+        status = "total",
+        nb_cells = sum(nb_cells),
+        value = sum(value),
+        pourc_cells = 100,
+        pourc_value = 100
+      )
+    summary <- dplyr::bind_rows(inner_cells, total)
     liste_tbx_res_and_summary <- c(liste_tbx_res, list(secret_summary = summary))
     return(liste_tbx_res_and_summary)
   }
