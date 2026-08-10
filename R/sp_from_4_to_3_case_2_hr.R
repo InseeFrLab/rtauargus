@@ -1,69 +1,17 @@
 #' Transition from 4 to 3 variables via the merging of two hierarchical variables
 #'
-#' @param dfs data.frame with 4 categorical variables (n >= 2 in the general case)
-#' @param dfs_name name of the data.frame in the list provided by the user
-#' @param v1 hierarchical categorical variable
-#' @param v2 hierarchical categorical variable
+#' @param dfs data.frame with 4 categorical variables
+#' @param dfs_name name of the data.frame in the user list
+#' @param v1,v2 hierarchical categorical variables to merge
 #' @param totcode named vector of totals for categorical variables
-#' @param hrcfiles named vector indicating the hrc files of hierarchical variables
-#' among the categorical variables of dfs
-#' @param dir_name folder where to write the hrc files
-#' if no folder is specified in hrcfiles
-#' @param sep separator used during the concatenation of variables
+#' @param hrcfiles named vector of hrc file paths
+#' @param dir_name directory where to write generated hrc files
+#' @param sep separator used for merging variables
 #'
-#' @return A list containing the following components:
-#' \itemize{
-#'   \item `tabs`: named list of 3-dimensional dataframes
-#'   (n-1 dimensions in the general case) with nested hierarchies
-#'   \item `hrcs`: named list of hrc specific to the variable
-#'   created via the merge
-#'   \item `alt_tot`: named list of totals
-#'   \item `vars`: named list of vectors representing the merged variables
-#'   during the two stages of dimension reduction
-#' }
+#' @return A list with `tabs`, `hrcs`, `alt_tot` and `vars`.
 #'
-#' @examples
-#' library(dplyr)
-#' data <- expand.grid(
-#'   ACT = c("Total", "A", "B", "A1", "A2", "B1", "B2"),
-#'   SEX = c("Total", "F", "M","F1","F2","M1","M2"),
-#'   AGE = c("Total", "AGE1", "AGE2", "AGE11", "AGE12", "AGE21", "AGE22"),
-#'   ECO = c("PIB","Ménages","Entreprises"),
-#'   stringsAsFactors = FALSE,
-#'   KEEP.OUT.ATTRS = FALSE
-#' ) %>%
-#'   as.data.frame()
-#'
-#' data <- data %>% mutate(VALUE = 1:n())
-#'
-#' hrc_act <- "hrc_ACT.hrc"
-#' sdcHierarchies::hier_create(root = "Total", nodes = c("A","B")) %>%
-#'   sdcHierarchies::hier_add(root = "A", nodes = c("A1","A2")) %>%
-#'   sdcHierarchies::hier_convert(as = "argus") %>%
-#'   slice(-1) %>%
-#'   mutate(levels = substring(paste0(level,name),3)) %>%
-#'   select(levels) %>%
-#'   write.table(file = hrc_act, row.names = FALSE, col.names = FALSE, quote = FALSE)
-#'
-#' hrc_sex <- "hrc_SEX.hrc"
-#' sdcHierarchies::hier_create(root = "Total", nodes = c("F","M")) %>%
-#'   sdcHierarchies::hier_add(root = "F", nodes = c("F1","F2")) %>%
-#'   sdcHierarchies::hier_add(root = "M", nodes = c("M1","M2")) %>%
-#'   sdcHierarchies::hier_convert(as = "argus") %>%
-#'   slice(-1) %>%
-#'   mutate(levels = substring(paste0(level,name),3)) %>%
-#'   select(levels) %>%
-#'   write.table(file = hrc_sex, row.names = FALSE, col.names = FALSE, quote = FALSE)
-#'
-#' res <- from_4_to_3_case_2_hr(dfs = data,
-#'                                 dfs_name = "dfs_name",
-#'                                 v1 = "ACT",v2 = "SEX",
-#'                                 totcode = c(ACT = "Total",SEX = "Total",
-#'                                             AGE = "Total",ECO = "PIB"),
-#'                                 hrcfiles = c(ACT = hrc_act, SEX = hrc_sex),
-#'                                 dir_name = "output")
 #' @keywords internal
-#' @export
+#' @noRd
 from_4_to_3_case_2_hr <- function(
   dfs,
   dfs_name,
@@ -73,46 +21,24 @@ from_4_to_3_case_2_hr <- function(
   hrcfiles,
   dir_name,
   sep = "_"){
-  #############################
-  ## Creating code_split ##
-  #############################
+
+  # ----------------------------------------------------------------------------
+  # STRATEGY (2 Hierarchical Variables -> 1 Hierarchical Variable):
+  # 1. Split 'dfs' into sub-tables corresponding to each node/level of 'v1'.
+  # 2. Within each sub-table, 'v1' becomes fixed to its local total, leaving only
+  #    'v2' as hierarchical.
+  # 3. Delegate each sub-table to 'from_4_to_3_case_1_hr' (the 1-HR solver).
+  # 4. Combine generated 3D tables, HRC files, and alt_tot metadata.
+  # ----------------------------------------------------------------------------
+
   hrc1 <- hrcfiles[[v1]]
   total1 <- totcode[[v1]]
 
-  # # Creating the table providing the hierarchy levels
-  # res_sdc <- sdcHierarchies::hier_import(inp = hrc1, from = "hrc", root = total1) %>%
-  #   sdcHierarchies::hier_convert(as = "sdc")
-  #
-  # codes_split_1 <- lapply(
-  #   res_sdc$dims,
-  #   names
-  # )
-  codes_split_1 <- import_hierarchy(hrc1, total1)  # same, but using cache for faster calculation
+  # Retrieve vector of code groupings defining the hierarchy levels of v1
+  codes_split_1 <- import_hierarchy(hrc1, total1)
 
-  ###########################
-  # Hierarchy Reduction #
-  ###########################
-
-  # -----------------------------------------------------------------------------
-  # OPTIMIZATION: Index-based pre-grouping with physical row-order sorting.
-  #
-  # Goal:
-  #   Extract sub-dataframes for overlapping hierarchy nodes of variable v1.
-  #
-  # Baseline implementation:
-  #   Originally, it scanned the v1 column iteratively inside a lapply loop:
-  #   lapply(codes_split_1, function(codes) dfs[dfs[[v1]] %in% codes, , drop = FALSE])
-  #   This performed redundant character matching operations over large datasets.
-  #
-  # Why the new implementation is faster:
-  #   Pre-indexing physical coordinates for unique v1 keys via split() keeps
-  #   the subsequent lookups entirely in integer space. Iteratively assembling
-  #   and indexing integer vectors is processed at the C level, saving CPU cycles.
-  #
-  # Why it yields the exact same result:
-  #   Applying sort() on combined indices restores the original row sequence,
-  #   ensuring complete alignment with the baseline's row sequence.
-  # -----------------------------------------------------------------------------
+  # Pre-index physical row positions by 'v1' value to perform lookup in integer space.
+  # 'sort()' guarantees that row ordering within sub-dataframes matches the original 'dfs'.
   row_indices <- split(seq_len(nrow(dfs)), dfs[[v1]])
 
   liste_df_4_var_1_hr <- lapply(codes_split_1, function(codes) {
@@ -120,11 +46,9 @@ from_4_to_3_case_2_hr <- function(
     dfs[idx, , drop = FALSE]
   })
 
-  # ----- Remove empty data frames to avoid downstream errors -----
-  # Some hierarchy nodes may produce empty subsets when the data is sparse.
-  # Passing an empty data frame to `from_4_to_3_case_1_hr` eventually causes
-  # `write_hrc2` to fail because it cannot build a valid hierarchy from 0 rows.
-  # We filter them out here, keeping only non-empty tables.
+  # Sparse hierarchies may produce empty sub-tables. Filter them out to avoid:
+  # 1. Failure in 'write_hrc2' (cannot construct hierarchy from 0 rows).
+  # 2. Mismatch between 'codes_split_1' and 'liste_df_4_var_1_hr' indices.
   is_empty <- vapply(liste_df_4_var_1_hr, function(df) nrow(df) == 0, logical(1))
   valid_idx <- which(!is_empty)
 
@@ -140,13 +64,11 @@ from_4_to_3_case_2_hr <- function(
 
   # Keep only non-empty tables and corresponding hierarchy nodes
   liste_df_4_var_1_hr <- liste_df_4_var_1_hr[valid_idx]
-  codes_split_1 <- codes_split_1[valid_idx]   # important for correct indexing inside call_4_to_3_1_hr
-  # -----------------------------------------------------------------
+  codes_split_1 <- codes_split_1[valid_idx]
 
-  # We now have data.frames with 1 hierarchical variables (v1)
-  # therefore we can apply the dedicated method
 
-  # Update arguments then call the function from_4_to_3_case_1_hr
+  # Helper: Update 'totcode' and table name for sub-domain i of 'v1',
+  # then delegate to the 1-hierarchical variable solver ('case_1_hr').
   call_4_to_3_1_hr <- function(dfs, i){
 
     if (i <= length(codes_split_1)) {
@@ -168,7 +90,7 @@ from_4_to_3_case_2_hr <- function(
     }
   }
 
-  # We transform all our 4-var tables into 3-var tables
+  # Process all sub-tables and aggregate results
   res <- lapply(seq_along(liste_df_4_var_1_hr), function(i) {
     call_4_to_3_1_hr(liste_df_4_var_1_hr[[i]], i)
   })

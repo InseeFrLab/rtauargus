@@ -1,4 +1,3 @@
-
 #' Automatically computes an intermediate size limit for table reduction
 #'
 #' @description
@@ -12,19 +11,18 @@
 #' @export
 auto_limit <- function(dfs, totcode, hrcfiles = NULL) {
 
+  # 1. Explore candidate configurations for table reduction
   exp_df <- explore_reduce_dims(dfs = dfs, totcode = totcode, hrcfiles = hrcfiles)
 
   if (nrow(exp_df) == 0) {
     stop("`explore_reduce_dims` returned an empty data frame.")
   }
 
-  # 1. Obtenir l'index de la ligne mediane
+  # 2. Pick the median configuration index in terms of generated table count
   mid_idx <- ceiling(nrow(exp_df) / 2)
-
-  # 2. Obtenir le nombre de tables correspondant à cette ligne mediane
   target_nb_tab <- exp_df$nb_tab[mid_idx]
 
-  # 3. Filtrer sur ce nb_tab et recuperer le minimum de max_size
+  # 3. Filter candidates matching this table count and select the minimum max_size
   sub_df <- exp_df[exp_df$nb_tab == target_nb_tab, ]
   calculated_limit <- min(sub_df$max_size)
 
@@ -116,6 +114,8 @@ auto_limit <- function(dfs, totcode, hrcfiles = NULL) {
 #' )
 #' }
 #' @importFrom stats setNames
+#' @importFrom dplyr select filter mutate
+#' @importFrom sdcHierarchies hier_import hier_convert
 #' @export
 tab_rtauargus4 <- function(
     tabular,

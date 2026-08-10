@@ -1,6 +1,6 @@
-# Small functions for use in from_4_to_3()
+# Small helper functions for variable selection in from_4_to_3()
 
-# Returns the hierarchical variable with the fewest nodes (= subtotals)
+# Return the hierarchical variable with the fewest nodes/subtotals
 smallest_hrc <- function(hrcfiles, totcode) {
   v <- list()
   for (i in seq_along(hrcfiles)) {
@@ -11,6 +11,7 @@ smallest_hrc <- function(hrcfiles, totcode) {
   return(name_smaller_hrc)
 }
 
+# Return the hierarchical variable with the most nodes/subtotals
 bigger_hrc <- function(hrcfiles, totcode) {
   v <- list()
   for (i in seq_along(hrcfiles)) {
@@ -21,9 +22,20 @@ bigger_hrc <- function(hrcfiles, totcode) {
   return(name_bigger_hrc)
 }
 
-# Choose a categorical variable
-# Preferably the non-hierarchical one with the fewest modalities
-# If not available, the hierarchical variable with the fewest nodes
+# Return the categorical variable with the fewest unique modalities
+smallest_mod <- function(dfs) {
+  v <- sapply(dfs, function(col) length(unique(col)))
+  names(which.min(v))
+}
+
+# Return the categorical variable with the most unique modalities
+bigger_mod <- function(dfs) {
+  v <- sapply(dfs, function(col) length(unique(col)))
+  names(which.max(v))
+}
+
+# Priority 1: Pick non-hierarchical variable with fewest modalities (fewest tables created).
+# Priority 2: If no flat variable, pick hierarchical variable with fewest nodes.
 choose_var_priority_non_hierarchical <- function(dfs,totcode,hrcfiles){
   # The categorical variables without hierarchy
   cat_vars <- names(totcode)
@@ -52,21 +64,8 @@ choose_var_priority_non_hierarchical <- function(dfs,totcode,hrcfiles){
   }
 }
 
-# Returns the variable with the fewest modalities
-smallest_mod <- function(dfs) {
-  v <- sapply(dfs, function(col) length(unique(col)))
-  names(which.min(v))
-}
-
-# Returns the variable with the most modalities
-bigger_mod <- function(dfs) {
-  v <- sapply(dfs, function(col) length(unique(col)))
-  names(which.max(v))
-}
-
-# Choose a categorical variable
-# Preferably the hierarchical one with the most nodes
-# If not available, the non-hierarchical variable with the most modalities
+# Priority 1: Pick hierarchical variable with most nodes (smaller sub-tables created).
+# Priority 2: If no hierarchical variable, pick flat variable with most modalities.
 choose_var_priority_hierarchical <- function(dfs, totcode, hrcfiles) {
   # Principle: preferably choose hierarchical variables
 
@@ -79,6 +78,7 @@ choose_var_priority_hierarchical <- function(dfs, totcode, hrcfiles) {
   }
 }
 
+# Heuristic selector for merging variables according to 'maximize_nb_tabs'
 chose_var_to_merge <- function(dfs, totcode, hrcfiles, maximize_nb_tabs = FALSE) {
   if(maximize_nb_tabs){
     return(choose_var_priority_hierarchical(dfs, totcode, hrcfiles))
@@ -87,83 +87,23 @@ chose_var_to_merge <- function(dfs, totcode, hrcfiles, maximize_nb_tabs = FALSE)
   }
 }
 
-#' Function reducing from 4 to 3 categorical variables
+#' Transition from 4 to 3 categorical variables
 #'
-#' @param dfs data.frame with 4 categorical variables (n >= 2 in the general case)
-#' @param dfs_name name of the dataframe
+#' @param dfs data.frame with 4 categorical variables
+#' @param dfs_name name of the data.frame
 #' @param totcode named vector of totals for categorical variables
-#' @param hrcfiles named vector indicating the hrc files of hierarchical variables
-#' among the categorical variables of dfs
-#' @param sep_dir allows forcing the writing of hrc into a separate folder,
-#' default is FALSE
-#' @param hrc_dir folder to write hrc files if writing to a new folder is forced
-#' or if no folder is specified in hrcfiles
-#' @param v1 allows forcing the value of the first variable to merge,
-#' not specified by default (NULL)
-#' @param v2 allows forcing the value of the second variable to merge,
-#' not specified by default (NULL)
-#' @param sep separator used during concatenation of variables
-#' @param maximize_nb_tabs specifies whether to prefer selecting hierarchical variables with
-#' the most nodes in priority (TRUE), generating more tables but with smaller sizes,
-#' or non-hierarchical variables with the fewest modalities (FALSE) to create fewer tables
+#' @param hrcfiles named vector of hrc file paths
+#' @param sep_dir logical, if TRUE forces writing hrc files into hrc_dir
+#' @param hrc_dir folder to write hrc files
+#' @param v1 optional first variable to merge
+#' @param v2 optional second variable to merge
+#' @param sep separator used during variable concatenation
+#' @param maximize_nb_tabs logical, whether to prefer selecting hierarchical variables
 #'
-#' @return A list containing the following components:
-#' \itemize{
-#'   \item `tabs`: named list of 3-dimensional dataframes
-#'   (n-1 dimensions in the general case) with nested hierarchies
-#'   \item `hrc`: named list of hrc specific to the variable created
-#'   through merging
-#'   \item `alt_tot`: named list of totals
-#'   \item `vars`: named list of vectors representing the merged variables
-#'   during the two stages of dimension reduction
-#' }
+#' @return A list with `tabs`, `hrcs`, `alt_tot` and `vars`.
 #'
-#' @examples
-#' library(dplyr)
-#' data <- expand.grid(
-#'   ACT = c("Total", "A", "B", "A1", "A2", "B1", "B2"),
-#'   GEO = c("Total", "G1", "G2"),
-#'   SEX = c("Total", "F", "M"),
-#'   AGE = c("Total", "AGE1", "AGE2"),
-#'   stringsAsFactors = FALSE
-#' ) %>%
-#'   as.data.frame()
-#'
-#' data <- data %>% mutate(VALUE = 1)
-#'
-#' hrc_act <- "hrc_ACT.hrc"
-#'
-#' sdcHierarchies::hier_create(root = "Total", nodes = c("A","B")) %>%
-#'   sdcHierarchies::hier_add(root = "A", nodes = c("A1","A2")) %>%
-#'   sdcHierarchies::hier_add(root = "B", nodes = c("B1","B2")) %>%
-#'   sdcHierarchies::hier_convert(as = "argus") %>%
-#'   slice(-1) %>%
-#'   mutate(levels = substring(paste0(level,name),3)) %>%
-#'   select(levels) %>%
-#'   write.table(file = hrc_act, row.names = FALSE, col.names = FALSE, quote = FALSE)
-#'
-#' # Results of the function
-#' res1 <- from_4_to_3(
-#'   dfs = data,
-#'   dfs_name = "tab",
-#'   totcode = c(SEX = "Total", AGE = "Total", GEO = "Total", ACT = "Total"),
-#'   hrcfiles = c(ACT = hrc_act),
-#'   sep_dir = TRUE,
-#'   hrc_dir = "output"
-#' )
-#'
-#' # Maximize the number of tables
-#' res2 <- from_4_to_3(
-#'   dfs = data,
-#'   dfs_name = "tab",
-#'   totcode = c(SEX = "Total", AGE = "Total", GEO = "Total", ACT = "Total"),
-#'   hrcfiles = c(ACT = hrc_act),
-#'   sep_dir = TRUE,
-#'   hrc_dir = "output",
-#'   maximize_nb_tabs = TRUE
-#' )
 #' @keywords internal
-#' @export
+#' @noRd
 from_4_to_3 <- function(
   dfs,
   dfs_name,
@@ -176,6 +116,17 @@ from_4_to_3 <- function(
   sep = "_",
   maximize_nb_tabs = FALSE)
 {
+
+  # ----------------------------------------------------------------------------
+  # ROUTER: 4D -> 3D transition
+  # 1. Determine target directory for generated .hrc files.
+  # 2. Select / validate candidate variables v1 and v2 to merge.
+  # 3. Route execution to dedicated sub-method based on count of flat variables:
+  #      - 2 flat vars -> from_4_to_3_case_0_hr
+  #      - 1 flat + 1 HR var -> from_4_to_3_case_1_hr (forces v1=flat, v2=HR)
+  #      - 2 HR vars -> from_4_to_3_case_2_hr
+  # ----------------------------------------------------------------------------
+
   # Update the output directory containing the hierarchies
   if( (length(hrcfiles) != 0) & !sep_dir){
     dir_name <- dirname(hrcfiles[[1]])
