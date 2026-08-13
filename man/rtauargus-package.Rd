@@ -23,6 +23,7 @@ Useful links:
 
 Authors:
 \itemize{
+  \item Julien Jamme \email{julien.jamme@insee.fr}
   \item Pierre-Yves Berrard \email{pierre-yves.berrard@insee.fr}
   \item Nathanaël Rastout \email{nathanael.rastout@insee.fr}
   \item Jeanne Pointet

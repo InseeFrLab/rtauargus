@@ -48,6 +48,12 @@
 #' summarize_secret(res, "TOT")
 #' summarize_secret(res)
 #' }
+#' @importFrom dplyr case_when
+#' @importFrom dplyr last_col
+#' @importFrom dplyr tibble
+#' @importFrom dplyr rename_with
+#' @importFrom dplyr n
+#' @importFrom purrr list_c
 summarize_secret <- function(res_tau, var = NULL, secret_var = "is_secret_prim"){
 
   if( is.data.frame(res_tau) ) {
@@ -65,16 +71,16 @@ summarize_secret <- function(res_tau, var = NULL, secret_var = "is_secret_prim")
     }
 
     tab_mod <- res_tau %>%
-      {if( ! is.null(var) ) rename_with(., ~"VALUE", all_of(var)) else .} |>
-      rename_with(~"final_status_ta", last_col()) |>
-      rename_with(~"is_secret_prim", all_of(secret_var)) |>
-      mutate(
+      {if( ! is.null(var) ) dplyr::rename_with(., ~"VALUE", all_of(var)) else .} |>
+      dplyr::rename_with(~"final_status_ta", last_col()) |>
+      dplyr::rename_with(~"is_secret_prim", all_of(secret_var)) |>
+      dplyr::mutate(
         status = case_when(
           is_secret_prim  ~ "primary suppr.",
           final_status_ta != "V" ~ "secondary suppr.",
           TRUE ~ "published"
         )) |>
-      mutate(status = factor(
+      dplyr::mutate(status = factor(
         status,
         levels = c("primary suppr.", "secondary suppr.", "published", "total"),
         ordered = TRUE)
@@ -82,15 +88,15 @@ summarize_secret <- function(res_tau, var = NULL, secret_var = "is_secret_prim")
 
     stats <- tab_mod |>
       group_by(status) %>%
-      {if( ! is.null(var) ) summarise(., nb_cells = n(), value = sum(VALUE) ) else summarise(., nb_cells = n()) } |>
-      bind_rows(
-        tibble(
+      {if( ! is.null(var) ) dplyr::summarise(., nb_cells = n(), value = sum(VALUE) ) else dplyr::summarise(., nb_cells = n()) } |>
+      dplyr::bind_rows(
+        dplyr::tibble(
           status = "total",
-          tab_mod %>% {if( ! is.null(var) ) summarise(., nb_cells = n(), value = sum(VALUE)) else summarise(., nb_cells = n()) }
+          tab_mod %>% {if( ! is.null(var) ) dplyr::summarise(., nb_cells = n(), value = sum(VALUE)) else dplyr::summarise(., nb_cells = n()) }
         )
       ) |>
       mutate(pourc_cells = round( nb_cells/nb_cells[status == "total"]*100, 2 ) ) %>%
-      {if( ! is.null(var) ) mutate(., round( pourc_value = value/value[status == "total"]*100, 2 ) ) else . }
+      {if( ! is.null(var) ) dplyr::mutate(., round( pourc_value = value/value[status == "total"]*100, 2 ) ) else . }
 
     return(stats)
 

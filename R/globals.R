@@ -4,6 +4,7 @@ utils::globalVariables(
     "n_unique","column","unique_modalities","from.eg","to.eg","from","to","mutual_full",
     "Group","table_eg","spanning","hrc_spanning","spanning_old","tab_inclus",
     "starts_with","spanning_name","hrc_spanning_name","eq_indicator","rhs","total","term_number",
-    "eq_name","unit","var","n_total","total_alt","group",
+    "eq_name","unit","var","n_total","total_alt","group", "VALUE", "status", "nb_cells",
+    "value",
     ".")
 )
