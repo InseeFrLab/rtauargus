@@ -127,6 +127,7 @@ tab_rtauargus <- function(
     maxscore = NULL,
     suppress = "MOD(1,5,1,0,0)",
     safety_rules = paste0("MAN(",ip,")"),
+    summary_secret = FALSE,
     show_batch_console = FALSE,
     output_type = 4,
     output_options = "",
@@ -316,8 +317,16 @@ and the process may take longer.")
       row.names = FALSE
     )
 
-    return(mask)
-
+    if(summary_secret){
+      return(
+        list(
+          mask = mask,
+          stats = summarize_secret(mask, var = value, secret_var = secret_var)
+        )
+      )
+    }else{
+      return(mask)
+    }
   }
 
 }
