@@ -1,17 +1,4 @@
-# 
-
-|                                              |
-|----------------------------------------------|
-| title: “Analyse automatique des métadonnées” |
-| subtitle:                                    |
-| output:                                      |
-| rmarkdown::html_vignette:                    |
-| toc: true                                    |
-| toc_depth: 3                                 |
-| vignette: \>                                 |
-| %                                            |
-| %                                            |
-| %                                            |
+# Analyse automatique des métadonnées
 
 ``` r
 
@@ -183,16 +170,16 @@ pour la pose du secret.
 cluster_id_dataframe
 ```
 
-    ##                               cluster  table_name                   field indicator spanning_1 spanning_2    spanning_3 hrc_spanning_1
-    ## 1 france_entreprises_2023.hrc_lettuce  T10.T12.T8 france_entreprises_2023   LETTUCE    HRC_NAF         cj HRC_LETTUCE^h        hrc_naf
-    ## 2 france_entreprises_2023.hrc_lettuce   T11.T7.T9 france_entreprises_2023   LETTUCE    HRC_NAF       size HRC_LETTUCE^h        hrc_naf
-    ## 3    france_entreprises_2023.to_pizza       T1.T2 france_entreprises_2023  to_pizza   HRC_NUTS       size          <NA>       hrc_nuts
-    ## 4    france_entreprises_2023.to_pizza T3.T4.T5.T6 france_entreprises_2023  to_pizza    HRC_NAF   HRC_NUTS          <NA>        hrc_naf
-    ##   hrc_spanning_2 hrc_spanning_3
-    ## 1           <NA>    hrc_lettuce
-    ## 2           <NA>    hrc_lettuce
-    ## 3           <NA>           <NA>
-    ## 4       hrc_nuts           <NA>
+    ##                               cluster  table_name                   field indicator spanning_1 spanning_2    spanning_3 hrc_spanning_1 hrc_spanning_2
+    ## 1 france_entreprises_2023.hrc_lettuce  T10.T12.T8 france_entreprises_2023   LETTUCE    HRC_NAF         cj HRC_LETTUCE^h        hrc_naf           <NA>
+    ## 2 france_entreprises_2023.hrc_lettuce   T11.T7.T9 france_entreprises_2023   LETTUCE    HRC_NAF       size HRC_LETTUCE^h        hrc_naf           <NA>
+    ## 3    france_entreprises_2023.to_pizza       T1.T2 france_entreprises_2023  to_pizza   HRC_NUTS       size          <NA>       hrc_nuts           <NA>
+    ## 4    france_entreprises_2023.to_pizza T3.T4.T5.T6 france_entreprises_2023  to_pizza    HRC_NAF   HRC_NUTS          <NA>        hrc_naf       hrc_nuts
+    ##   hrc_spanning_3
+    ## 1    hrc_lettuce
+    ## 2    hrc_lettuce
+    ## 3           <NA>
+    ## 4           <NA>
 
 Pour les 12 tableaux à publier il suffit de protéger 4 tableaux. Ces
 tableaux sont repartis dans deux clusters différents. Il faudra donc
@@ -291,19 +278,20 @@ décès).
 
 # cas où il n'y a aucune hiérarchie sur les indicateurs
 metadata_template <- template_formatted$metadata %>%
-  mutate(hrc_indicator = NA) %>%
+  mutate(hrc_field = NA,
+         hrc_indicator = NA) %>%
   select(table_name,field,indicator,hrc_indicator, everything())
 
 metadata_template
 ```
 
-    ##             table_name field indicator hrc_indicator spanning_1  spanning_2   hrc_spanning_1    hrc_spanning_2
-    ## 1 table_2021_SAL_DTH_1  2021   SAL_DTH            NA   ACTIVITY  LEGAL_FORM hrc_activity_131  hrc_legal_form_3
-    ## 2 table_2021_SAL_DTH_2  2021   SAL_DTH            NA   ACTIVITY NUMBER_EMPL hrc_activity_131 hrc_number_empl_4
-    ## 3     table_2022_SAL_1  2022       SAL            NA   ACTIVITY  LEGAL_FORM hrc_activity_131  hrc_legal_form_3
-    ## 4     table_2022_SAL_2  2022       SAL            NA   ACTIVITY NUMBER_EMPL hrc_activity_131 hrc_number_empl_4
-    ## 5 table_2022_SAL_DTH_1  2022   SAL_DTH            NA   ACTIVITY  LEGAL_FORM hrc_activity_131  hrc_legal_form_3
-    ## 6 table_2022_SAL_DTH_2  2022   SAL_DTH            NA   ACTIVITY NUMBER_EMPL hrc_activity_131 hrc_number_empl_4
+    ##             table_name field indicator hrc_indicator spanning_1  spanning_2   hrc_spanning_1    hrc_spanning_2 hrc_field
+    ## 1 table_2021_SAL_DTH_1  2021   SAL_DTH            NA   ACTIVITY  LEGAL_FORM hrc_activity_131  hrc_legal_form_3        NA
+    ## 2 table_2021_SAL_DTH_2  2021   SAL_DTH            NA   ACTIVITY NUMBER_EMPL hrc_activity_131 hrc_number_empl_4        NA
+    ## 3     table_2022_SAL_1  2022       SAL            NA   ACTIVITY  LEGAL_FORM hrc_activity_131  hrc_legal_form_3        NA
+    ## 4     table_2022_SAL_2  2022       SAL            NA   ACTIVITY NUMBER_EMPL hrc_activity_131 hrc_number_empl_4        NA
+    ## 5 table_2022_SAL_DTH_1  2022   SAL_DTH            NA   ACTIVITY  LEGAL_FORM hrc_activity_131  hrc_legal_form_3        NA
+    ## 6 table_2022_SAL_DTH_2  2022   SAL_DTH            NA   ACTIVITY NUMBER_EMPL hrc_activity_131 hrc_number_empl_4        NA
 
 Ensuite, on utilise ce dataframe en input de la fonction d’analyse.
 
@@ -311,34 +299,21 @@ Ensuite, on utilise ce dataframe en input de la fonction d’analyse.
 
 # Analyse complète, avec les étapes
 detailed_analysis <- analyse_metadata(metadata_template, verbose = TRUE)
-```
-
-    ## Error in check_column_names(df_metadata): Error: The dataframe is missing one or more required columns: table_name, field, hrc_field, indicator, hrc_indicator.
-
-``` r
 
 # Output simplifié, uniquement le dataframe avec l'indicatrice de cluster
 cluster_id_dataframe <- analyse_metadata(metadata_template, verbose = FALSE)
-```
-
-    ## Error in check_column_names(df_metadata): Error: The dataframe is missing one or more required columns: table_name, field, hrc_field, indicator, hrc_indicator.
-
-``` r
 
 # visualisation du résultat de l'analyse
 cluster_id_dataframe
 ```
 
-    ##                               cluster  table_name                   field indicator spanning_1 spanning_2    spanning_3 hrc_spanning_1
-    ## 1 france_entreprises_2023.hrc_lettuce  T10.T12.T8 france_entreprises_2023   LETTUCE    HRC_NAF         cj HRC_LETTUCE^h        hrc_naf
-    ## 2 france_entreprises_2023.hrc_lettuce   T11.T7.T9 france_entreprises_2023   LETTUCE    HRC_NAF       size HRC_LETTUCE^h        hrc_naf
-    ## 3    france_entreprises_2023.to_pizza       T1.T2 france_entreprises_2023  to_pizza   HRC_NUTS       size          <NA>       hrc_nuts
-    ## 4    france_entreprises_2023.to_pizza T3.T4.T5.T6 france_entreprises_2023  to_pizza    HRC_NAF   HRC_NUTS          <NA>        hrc_naf
-    ##   hrc_spanning_2 hrc_spanning_3
-    ## 1           <NA>    hrc_lettuce
-    ## 2           <NA>    hrc_lettuce
-    ## 3           <NA>           <NA>
-    ## 4       hrc_nuts           <NA>
+    ##        cluster           table_name field indicator       spanning_1        spanning_2   hrc_spanning_1    hrc_spanning_2
+    ## 1 2021.SAL_DTH table_2021_SAL_DTH_1  2021   SAL_DTH HRC_ACTIVITY_131  HRC_LEGAL_FORM_3 hrc_activity_131  hrc_legal_form_3
+    ## 2 2021.SAL_DTH table_2021_SAL_DTH_2  2021   SAL_DTH HRC_ACTIVITY_131 HRC_NUMBER_EMPL_4 hrc_activity_131 hrc_number_empl_4
+    ## 3     2022.SAL     table_2022_SAL_1  2022       SAL HRC_ACTIVITY_131  HRC_LEGAL_FORM_3 hrc_activity_131  hrc_legal_form_3
+    ## 4     2022.SAL     table_2022_SAL_2  2022       SAL HRC_ACTIVITY_131 HRC_NUMBER_EMPL_4 hrc_activity_131 hrc_number_empl_4
+    ## 5 2022.SAL_DTH table_2022_SAL_DTH_1  2022   SAL_DTH HRC_ACTIVITY_131  HRC_LEGAL_FORM_3 hrc_activity_131  hrc_legal_form_3
+    ## 6 2022.SAL_DTH table_2022_SAL_DTH_2  2022   SAL_DTH HRC_ACTIVITY_131 HRC_NUMBER_EMPL_4 hrc_activity_131 hrc_number_empl_4
 
 Finalement, il y a 6 tableaux à traiter dans 3 clusters différents.
 Autrement dit, il faudra faire trois fois appel à
@@ -392,8 +367,6 @@ detailed_analysis <- analyse_metadata(metadata_pizza_lettuce,
     ## Warning in analyse_metadata(metadata_pizza_lettuce, df_eq_indicator = liens_eq, : For the variables part of equations specified in df_eq_indicator,
     ##     the hrc_indicator column will be ignored.
 
-    ## Error in components(g_full): impossible de trouver la fonction "components"
-
 ``` r
 
 # Output simplifié, uniquement le dataframe avec l'indicatrice de cluster
@@ -413,47 +386,28 @@ tableaux pour la pose du secret que dans le premier exemple.
 cluster_id_dataframe
 ```
 
-    ##                               cluster  table_name                   field indicator spanning_1 spanning_2    spanning_3 hrc_spanning_1
-    ## 1 france_entreprises_2023.hrc_lettuce  T10.T12.T8 france_entreprises_2023   LETTUCE    HRC_NAF         cj HRC_LETTUCE^h        hrc_naf
-    ## 2 france_entreprises_2023.hrc_lettuce   T11.T7.T9 france_entreprises_2023   LETTUCE    HRC_NAF       size HRC_LETTUCE^h        hrc_naf
-    ## 3    france_entreprises_2023.to_pizza       T1.T2 france_entreprises_2023  to_pizza   HRC_NUTS       size          <NA>       hrc_nuts
-    ## 4    france_entreprises_2023.to_pizza T3.T4.T5.T6 france_entreprises_2023  to_pizza    HRC_NAF   HRC_NUTS          <NA>        hrc_naf
-    ##   hrc_spanning_2 hrc_spanning_3
-    ## 1           <NA>    hrc_lettuce
-    ## 2           <NA>    hrc_lettuce
-    ## 3           <NA>           <NA>
-    ## 4       hrc_nuts           <NA>
+    ##                               cluster  table_name                   field indicator spanning_1 spanning_2    spanning_3 hrc_spanning_1 hrc_spanning_2
+    ## 1 france_entreprises_2023.hrc_lettuce  T10.T12.T8 france_entreprises_2023   LETTUCE    HRC_NAF         cj HRC_LETTUCE^h        hrc_naf           <NA>
+    ## 2 france_entreprises_2023.hrc_lettuce   T11.T7.T9 france_entreprises_2023   LETTUCE    HRC_NAF       size HRC_LETTUCE^h        hrc_naf           <NA>
+    ## 3    france_entreprises_2023.to_pizza       T1.T2 france_entreprises_2023  to_pizza   HRC_NUTS       size          <NA>       hrc_nuts           <NA>
+    ## 4    france_entreprises_2023.to_pizza T3.T4.T5.T6 france_entreprises_2023  to_pizza    HRC_NAF   HRC_NUTS          <NA>        hrc_naf       hrc_nuts
+    ##   hrc_spanning_3
+    ## 1    hrc_lettuce
+    ## 2    hrc_lettuce
+    ## 3           <NA>
+    ## 4           <NA>
 
 ## Pour aller plus loin : visualiser les inclusions
 
 L’étape `create_edges` de l’analyse des métadonnées identifie les
-tableaux inclus dans d’autres tableaux. Par exemple, XXXXX est inclus
-dans XXXXX. Le code suivant permet de visualiser ces inclusions à l’aide
+tableaux inclus dans d’autres tableaux. Par exemple, `T1` est inclus
+dans `T2`. Le code suivant permet de visualiser ces inclusions à l’aide
 de graphes afin de mieux comprendre la procédure d’analyse.
 
 ``` r
 
 library(rtauargus)
 library(igraph)
-```
-
-    ## 
-    ## Attachement du package : 'igraph'
-
-    ## Les objets suivants sont masqués depuis 'package:dplyr':
-    ## 
-    ##     as_data_frame, groups, union
-
-    ## Les objets suivants sont masqués depuis 'package:stats':
-    ## 
-    ##     decompose, spectrum
-
-    ## L'objet suivant est masqué depuis 'package:base':
-    ## 
-    ##     union
-
-``` r
-
 library(visNetwork)
 
 graph_links_tab <- function(list_desc_links){

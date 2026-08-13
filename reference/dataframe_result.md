@@ -7,7 +7,7 @@ column, `cluster`, to identify the cluster each table belongs to.
 ## Usage
 
 ``` r
-dataframe_result(list_independent_tables)
+dataframe_result(list_independent_tables, list_hrc_identified)
 ```
 
 ## Arguments
@@ -20,6 +20,19 @@ dataframe_result(list_independent_tables)
   [`tab_to_treat()`](https://inseefrlab.github.io/rtauargus/reference/tab_to_treat.md).
   Each tibble contains metadata for tables grouped within a specific
   cluster.
+
+- list_hrc_identified:
+
+  A list returned by the `identify_hrc` function. The first element of
+  the list must be a data frame containing the variables:
+
+  - `field`: A grouping variable.
+
+  - `hrc_field`: The hierarchical counterpart of `field`.
+
+  - `indicator`: A variable used to link tables.
+
+  - `hrc_indicator`: The hierarchical counterpart of `indicator`.
 
 ## Value
 

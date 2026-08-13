@@ -21,8 +21,8 @@
 
 - [Automatic analysis of
   metadata](https://inseefrlab.github.io/rtauargus/articles/auto_metadata.md):
-- [UNKNOWN
-  TITLE](https://inseefrlab.github.io/rtauargus/articles/auto_metadata_fr.md):
+- [Analyse automatique des
+  métadonnées](https://inseefrlab.github.io/rtauargus/articles/auto_metadata_fr.md):
 
 ### Work with microdata data (old version)
 

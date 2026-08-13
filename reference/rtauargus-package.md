@@ -20,6 +20,8 @@ Useful links:
 
 Authors:
 
+- Julien Jamme <julien.jamme@insee.fr>
+
 - Pierre-Yves Berrard <pierre-yves.berrard@insee.fr>
 
 - Nathanaël Rastout <nathanael.rastout@insee.fr>
