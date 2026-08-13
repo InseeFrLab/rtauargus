@@ -82,15 +82,15 @@ summarize_secret <- function(res_tau, var = NULL, secret_var = "is_secret_prim")
 
     stats <- tab_mod |>
       group_by(status) %>%
-      {if( ! is.null(var) ) summarise(., nb_cells = n(), value = sum(VALUE)) else summarise(., nb_cells = n()) } |>
+      {if( ! is.null(var) ) summarise(., nb_cells = n(), value = sum(VALUE) ) else summarise(., nb_cells = n()) } |>
       bind_rows(
         tibble(
           status = "total",
           tab_mod %>% {if( ! is.null(var) ) summarise(., nb_cells = n(), value = sum(VALUE)) else summarise(., nb_cells = n()) }
         )
       ) |>
-      mutate(pourc_cells = nb_cells/nb_cells[status == "total"]*100) %>%
-      {if( ! is.null(var) ) mutate(., pourc_value = value/value[status == "total"]*100 ) else . }
+      mutate(pourc_cells = round( nb_cells/nb_cells[status == "total"]*100, 2 ) ) %>%
+      {if( ! is.null(var) ) mutate(., round( pourc_value = value/value[status == "total"]*100, 2 ) ) else . }
 
     return(stats)
 
