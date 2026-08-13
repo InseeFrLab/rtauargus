@@ -443,6 +443,7 @@ tab_rtauargus2 <- function(
   params$dir_name = if(params$split_tab) file.path(dir_name, files_name) else dir_name
   params$nb_tab_option = nb_tab_option
   params$limit = limit
+  params$summary_secret = FALSE
   params$show_batch_console = FALSE
   params$output_type = 4
   params$output_options = ""
