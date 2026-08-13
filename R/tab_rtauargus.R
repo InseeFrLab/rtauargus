@@ -289,7 +289,7 @@ and the process may take longer.")
   param_run$show_batch_console <- show_batch_console
 
   # appel
-  res <- do.call(run_arb, param_run)
+  invisible( do.call(run_arb, param_run) )
 
   # RESULTAT .............................
   if(output_type == 4){
@@ -318,14 +318,6 @@ and the process may take longer.")
 
     return(mask)
 
-  }else{
-    if(unif_labels){
-      res <- cbind.data.frame(
-        apply(res[,explanatory_vars,drop=FALSE], 2, rev_var_pour_tau_argus),
-        res[, !names(res) %in% explanatory_vars]
-      )
-    }
-    return(res)
   }
 
 }
