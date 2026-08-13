@@ -5,7 +5,7 @@
 #' @param var the quantitative variable name to use for values stats of suppression
 #' (default to `NULL` that is the stats are only computed depending on the number of cells )
 #' @param secret_var the name of the variable indicating the primary suppressed cells
-#' @returns
+#' @returns data.frame or list of data.frames
 #' @export
 #'
 #' @examples
