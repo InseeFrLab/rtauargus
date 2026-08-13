@@ -6,17 +6,17 @@ output:
     toc: true
     toc_depth: 3
 vignette: >
-%\VignetteIndexEntry{Analyse automatique des métadonnées}
+  %\VignetteIndexEntry{Automatic analysis of metadata}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
-  ---
+---
 
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-```{r message = FALSE}
+```{r message = FALSE, warning = FALSE}
 library(rtauargus)
 library(dplyr)
 ```
@@ -149,7 +149,8 @@ Ici, il n'y a pas de lien hiérarchique entre `SAL` (effectifs salariés des ent
 ```{r}
 # cas où il n'y a aucune hiérarchie sur les indicateurs
 metadata_template <- template_formatted$metadata %>%
-  mutate(hrc_indicator = NA) %>%
+  mutate(hrc_field = NA,
+         hrc_indicator = NA) %>%
   select(table_name,field,indicator,hrc_indicator, everything())
 
 metadata_template
@@ -212,9 +213,9 @@ cluster_id_dataframe
 ```
 
 # Pour aller plus loin : visualiser les inclusions
-L'étape `create_edges` de l'analyse des métadonnées identifie les tableaux inclus dans d'autres tableaux. Par exemple, XXXXX est inclus dans XXXXX. Le code suivant permet de visualiser ces inclusions à l'aide de graphes afin de mieux comprendre la procédure d'analyse.
+L'étape `create_edges` de l'analyse des métadonnées identifie les tableaux inclus dans d'autres tableaux. Par exemple, `T1` est inclus dans `T2`. Le code suivant permet de visualiser ces inclusions à l'aide de graphes afin de mieux comprendre la procédure d'analyse.
 
-```{r}
+```{r message = FALSE, warning = FALSE}
 library(rtauargus)
 library(igraph)
 library(visNetwork)

@@ -117,7 +117,7 @@ analyse_metadata <- function(df_metadata,df_eq_indicator = NULL,verbose = FALSE)
   list_independent_tables <- grp_tab_in_cluster(list_split = list_split,
                                                 list_translation_tables = list_translation_tables)
   list_cluster_treat <- tab_to_treat(list_independent_tables)
-  dataframe_cluster_id <- dataframe_result(list_cluster_treat)
+  dataframe_cluster_id <- dataframe_result(list_cluster_treat,list_hrc_identified)
   if(verbose){
     return(list(
       identify_hrc = list_hrc_identified[[1]],

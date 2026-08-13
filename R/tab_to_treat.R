@@ -50,28 +50,46 @@
 #' @importFrom tidyr unnest_wider
 #' @importFrom dplyr distinct
 tab_to_treat <- function(list_independent_tables) {
-  # Process each tibble in the list
   list_independent_tables %>% purrr::map(function(big_tibble) {
-    # Remove duplicate rows within each nested `data` field
     big_tibble <- big_tibble %>%
       mutate(data = map(data, ~ dplyr::distinct(.x)))
 
-    # Extract key fields and indicators, ensuring consistent values across rows
-    big_tibble <- big_tibble %>%
-      mutate(
-        field = map(data, function(data) { data$field[[1]] }),
-        indicator = map(data, function(data) { data$indicator[[1]] }),
-        hrc_spanning = map(data, function(data) { data$hrc_spanning })
-      )
+    has_initial_indicator <- any(purrr::map_lgl(
+      big_tibble$data, ~ "initial_indicator" %in% names(.x)
+    ))
 
-    # Select and unnest the data into a flat structure
-    big_tibble %>%
-      select(-c(data, tab_inclus)) %>%
-      tidyr::unnest(c(field, indicator)) %>%
-      select(table_name, field, indicator, spanning, hrc_spanning) %>%
-      tidyr::unnest_wider(spanning, names_sep = "_") %>%
-      tidyr::unnest_wider(hrc_spanning, names_sep = "_") %>%
-      arrange(table_name)
+    if (has_initial_indicator) {
+      big_tibble <- big_tibble %>%
+        mutate(
+          field = map(data, ~ .x$field[[1]]),
+          indicator = map(data, ~ .x$indicator[[1]]),
+          hrc_spanning = map(data, ~ .x$hrc_spanning),
+          initial_indicator = map(data, ~ .x$initial_indicator[[1]])
+        )
+
+      big_tibble %>%
+        select(-c(data, tab_inclus)) %>%
+        tidyr::unnest(c(field, indicator, initial_indicator)) %>%
+        select(table_name, field, indicator, spanning, hrc_spanning, initial_indicator) %>%
+        tidyr::unnest_wider(spanning, names_sep = "_") %>%
+        tidyr::unnest_wider(hrc_spanning, names_sep = "_") %>%
+        arrange(table_name)
+    } else {
+      big_tibble <- big_tibble %>%
+        mutate(
+          field = map(data, ~ .x$field[[1]]),
+          indicator = map(data, ~ .x$indicator[[1]]),
+          hrc_spanning = map(data, ~ .x$hrc_spanning)
+        )
+
+      big_tibble %>%
+        select(-c(data, tab_inclus)) %>%
+        tidyr::unnest(c(field, indicator)) %>%
+        select(table_name, field, indicator, spanning, hrc_spanning) %>%
+        tidyr::unnest_wider(spanning, names_sep = "_") %>%
+        tidyr::unnest_wider(hrc_spanning, names_sep = "_") %>%
+        arrange(table_name)
+    }
   })
 }
 
@@ -85,6 +103,12 @@ tab_to_treat <- function(list_independent_tables) {
 #' @param list_independent_tables A list of tibbles, typically the output of
 #'   `grp_tab_in_cluster()` or `tab_to_treat()`. Each tibble contains metadata
 #'   for tables grouped within a specific cluster.
+#' @param list_hrc_identified A list returned by the `identify_hrc` function. The first
+#'   element of the list must be a data frame containing the variables:
+#'   - `field`: A grouping variable.
+#'   - `hrc_field`: The hierarchical counterpart of `field`.
+#'   - `indicator`: A variable used to link tables.
+#'   - `hrc_indicator`: The hierarchical counterpart of `indicator`.
 #'
 #' @return A single dataframe (`dfMetadata_to_treat`) with the following structure:
 #'   - `cluster`: Identifier for the cluster each table belongs to.
@@ -130,24 +154,44 @@ tab_to_treat <- function(list_independent_tables) {
 #' }
 #'
 #' @importFrom purrr imap_dfr
-dataframe_result <- function(list_independent_tables) {
-  # TODO modifier car il y a une erreur (column field doesn't exist)
-  # Combine the list of tibbles into a single dataframe with cluster identifiers
+dataframe_result <- function(list_independent_tables, list_hrc_identified) {
   dataframe_metadata <- purrr::imap_dfr(list_independent_tables, function(tibble, tibble_name) {
     tibble %>% mutate(cluster = tibble_name)
-  }) %>%
+  })
+
+  # If the initial_indicator column exists in list_hrc_identified,
+  # replace indicator with initial_indicator whenever initial_indicator is not NA
+  if ("initial_indicator" %in% names(list_hrc_identified[[1]])) {
+    hrc_indicator_map <- list_hrc_identified %>%
+      purrr::map_dfr(identity) %>%
+      filter(!is.na(initial_indicator)) %>%
+      select(table_name, field, indicator) %>%
+      distinct()
+
+    dataframe_metadata <- dataframe_metadata %>%
+      left_join(hrc_indicator_map, by = c("table_name", "field", "indicator")) %>%
+      mutate(indicator = dplyr::if_else(!is.na(initial_indicator), initial_indicator, indicator)) %>%
+      select(-initial_indicator)
+  }
+
+  dataframe_metadata <- dataframe_metadata %>%
+    mutate(table_name = gsub("_group_[0-9]+", "", table_name)) %>%
     select(
       cluster,
       table_name,
       field,
       indicator,
-      # Dynamically order columns spanning_xxx by their numeric suffix
       all_of(names(.)[grepl("^spanning_\\d+$", names(.))] %>%
                .[order(as.numeric(sub("spanning_", "", .)))]),
-      # Dynamically order columns hrc_spanning_xxx by their numeric suffix
       all_of(names(.)[grepl("^hrc_spanning_\\d+$", names(.))] %>%
                .[order(as.numeric(sub("hrc_spanning_", "", .)))])
-    ) %>% as.data.frame()
+    ) %>%
+    as.data.frame() %>%
+    unique() # TODO come back to this, why where there duplicates in the first place
+
+  return(dataframe_metadata)
 }
+
+
 
 
