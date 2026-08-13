@@ -122,6 +122,7 @@ tab_multi_manager <- function(
     ip_start = 10,
     ip_end = 0,
     num_iter_max = 10,
+    summary_secret = FALSE,
     split_tab = FALSE,
     nb_tab_option = "smart",
     limit = 14700,
@@ -506,24 +507,10 @@ tab_multi_manager <- function(
       )
     }
   )
-  last_secret <- paste0("is_secret_", num_iter_all)
 
-  stats <- purrr::imap_dfr(
-    liste_tbx_res,
-    function(tab, name){
-      tab$primary_secret <- tab[[secret_var]]
-      tab$total_secret <- tab[[last_secret]]
-      tab$secondary_secret <- tab$total_secret & !tab$primary_secret
-      tab$valid_cells <- !tab$total_secret
-      res <- data.frame(
-        tab_name = name,
-        primary_secret = sum(tab$primary_secret),
-        secondary_secret = sum(tab$secondary_secret),
-        total_secret = sum(tab$total_secret),
-        valid_cells = sum(tab$valid_cells)
-      )
-    }
-  )
+  stats_out <- summarize_secret(liste_tbx_res, var = value, secret_var = secret_var)
+
+  last_secret <- paste0("is_secret_", num_iter_all)
 
   purrr::iwalk(
     num_iter_par_tab,
@@ -539,15 +526,15 @@ tab_multi_manager <- function(
   journal_add_break_line(journal)
   journal_add_line(journal, "Secreted cells counts per table")
   journal_add_break_line(journal)
-  purrr::walk(
-    noms_tbx,
-    function(tab){
+  purrr::iwalk(
+    stats_out,
+    function(tab_stats, tab_name){
       journal_add_line(
         journal,
-        "---TAB ", tab, " ---"
+        "---TAB ", tab_name, " ---"
       )
-      df <- t(stats[stats$tab_name == tab,-1,drop=FALSE])
-      suppressWarnings(gdata::write.fwf(df, rownames = TRUE, colnames = FALSE, file = journal, append = TRUE))
+      # df <- t(stats[stats$tab_name == tab,-1,drop=FALSE])
+      suppressWarnings(gdata::write.fwf(tab_stats, rownames = TRUE, colnames = TRUE, file = journal, append = TRUE))
       journal_add_break_line(journal)
     }
   )
@@ -560,5 +547,14 @@ tab_multi_manager <- function(
   journal_add_line(journal, "End time: ", format(Sys.time(), "%Y-%m-%d  %H:%M:%S"))
   journal_add_break_line(journal)
 
-  return(liste_tbx_res)
+
+  if(summary_secret){
+
+    return( append(liste_tbx_res, list(stats = stats_out)) )
+
+  }else{
+
+    return(liste_tbx_res)
+  }
+
 }
