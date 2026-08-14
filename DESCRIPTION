@@ -74,4 +74,4 @@ URL: https://inseefrlab.github.io/rtauargus,
 BugReports: https://github.com/inseefrlab/rtauargus/issues
 Roxygen: list(markdown = TRUE)
 StagedInstall: no
-Config/roxygen2/version: 8.0.0
+Config/roxygen2/version: 8.1.0

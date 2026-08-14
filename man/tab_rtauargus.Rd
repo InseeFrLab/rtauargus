@@ -20,6 +20,7 @@ tab_rtauargus(
   maxscore = NULL,
   suppress = "MOD(1,5,1,0,0)",
   safety_rules = paste0("MAN(", ip, ")"),
+  summary_secret = FALSE,
   show_batch_console = FALSE,
   output_type = 4,
   output_options = "",
@@ -114,6 +115,8 @@ for example.\cr
 Chaîne de caractères en syntaxe batch Tau-Argus. Si le secret primaire
 a été traité dans un fichier d'apriori : utiliser "MAN(10)")}
 
+\item{summary_secret}{If \code{TRUE}, a statistical summary of the suppression is provided along with the masked data.}
+
 \item{show_batch_console}{to display the batch progress in the
 console. \cr
 (pour afficher le déroulement du batch dans la
@@ -156,11 +159,15 @@ tauargus failures}
 for the treatment of tabular.}
 }
 \value{
-If output_type equals to 4 and split_tab = FALSE,
+If output_type equals to 4 and summary_secret = FALSE and split_tab = FALSE,
 then the original tabular is returned with a new
 column called Status, indicating the status of the cell coming from Tau-Argus :
 "A" for a primary secret due to frequency rule, "B" for a primary secret due
 to dominance rule, "D" for secondary secret and "V" for no secret cell.
+
+If summary_secret = TRUE,
+then the function returns a list of two data.frames,
+including the masked data (\code{mask}) and the stats data (\code{stats}).
 
 If split_tab = TRUE,
 then the original tabular is returned with some new columns which are boolean
@@ -170,7 +177,8 @@ denotes a cell that have to be suppressed. The last column is then the
 final status of the suppression process of the original table.
 
 If \code{split_tab = FALSE} and  \code{output_type} doesn't equal to \code{4},
-then the raw result from tau-argus is returned.
+then the raw result from tau-argus is written as a csv file in \code{dir_name}
+directory and \code{NULL} is returned to R.
 }
 \description{
 The function prepares all the files needed by Tau-Argus and launches the

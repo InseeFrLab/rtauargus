@@ -20,6 +20,7 @@ tab_multi_manager(
   ip_start = 10,
   ip_end = 0,
   num_iter_max = 10,
+  summary_secret = FALSE,
   split_tab = FALSE,
   nb_tab_option = "smart",
   limit = 14700,
@@ -88,6 +89,8 @@ parameters for it.\cr
 \item{ip_end}{integer: Interval protection level to apply at other treatments}
 
 \item{num_iter_max}{integer: Maximum of treatments to do on each table (default to 10)}
+
+\item{summary_secret}{If \code{TRUE}, a statistical summary of the suppression is provided along with the masked data.}
 
 \item{split_tab}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}} boolean,
 whether to reduce dimension to 3 while treating a table of dimension 4 or 5
