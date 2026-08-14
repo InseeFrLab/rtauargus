@@ -96,7 +96,7 @@ summarize_secret <- function(res_tau, var = NULL, secret_var = "is_secret_prim")
         )
       ) |>
       mutate(pourc_cells = round( nb_cells/nb_cells[status == "total"]*100, 2 ) ) %>%
-      {if( ! is.null(var) ) dplyr::mutate(., round( pourc_value = value/value[status == "total"]*100, 2 ) ) else . }
+      {if( ! is.null(var) ) dplyr::mutate(., pourc_value = round( value/value[status == "total"]*100, 2 ) ) else . }
 
     return(stats)
 
