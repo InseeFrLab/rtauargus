@@ -253,8 +253,11 @@ astral <- data.frame(
     "telluric", "gasgiant", "bluestar", "whitedwarf",
     "reddwarf", "blackhole", "pulsar")
 )
+if (FALSE) { # \dontrun{
 path <- write_hrc2(astral)
-if (FALSE) read.table(path) # \dontrun{}
+read.table(path)
+} # }
+
 # Note that line order was changed ('other' comes before 'planet'), to no
 # consequence whatsoever for Tau-Argus.
 # Remarque : l'ordre des lignes a été modifié ('other' arrive avant 'planet'),
@@ -268,18 +271,21 @@ astral_inv <- data.frame(
     "reddwarf", "blackhole", "pulsar"),
     type = c("planet", "planet", "star", "star", "star", "other", "other")
 )
+if (FALSE) { # \dontrun{
 path <- write_hrc2(astral_inv)
-#> Warning: There are duplicates in the expectedly most detailed level
-#>     (last column). Please be sure columns are rightfully ordered.
-if (FALSE) read.table(path) # \dontrun{}
+read.table(path)
+} # }
+
 # Because of the inverted order, everything is written backwards : planet is a
 # subtype of gasgiant, etc.
 # À cause de l'inversion des colonnes, tout est écrit à l'envers : planet est
 # devenu une sous-catégorie de gasgiant, par exemple.
 
 # Correction :
+if (FALSE) { # \dontrun{
 path <- write_hrc2(astral_inv, rev = TRUE)
-if (FALSE) read.table(path) # \dontrun{}
+read.table(path)
+} # }
 
 # 2.1 Sparse case
 # Cas creux
@@ -292,10 +298,10 @@ astral_sparse <- data.frame(
 # NAs in general are risky, but, in this case, the function works well.
 # Les valeurs manquantes causent un risque, mais, dans ce genre de cas,
 # la fonction a le comportement attendu.
+if (FALSE) { # \dontrun{
 path <- write_hrc2(astral_sparse)
-#> Warning: Missing values in correspondence table will be filled in (see documentation).
-#>             If unintended, this can cause errors when using the .hrc file with tau-Argus.
-if (FALSE) read.table(path) # \dontrun{}
+read.table(path)
+} # }
 
 # 2.2 Non-uniform depth
 # Hiérarchie non-uniforme
@@ -315,6 +321,8 @@ astral_nu_fill <- data.frame(
   details  = c("telluric", "gasgiant", "star", "blackhole", "pulsar")
 )
 # The following code will work
+if (FALSE) { # \dontrun{
 path <- write_hrc2(astral_nu_fill)
-if (FALSE) read.table(path) # \dontrun{}
+read.table(path)
+} # }
 ```

@@ -1,0 +1,74 @@
+# Provide the summary of the suppression pattern from a rtauargus result
+
+Provide the summary of the suppression pattern from a rtauargus result
+
+## Usage
+
+``` r
+summarize_secret(res_tau, var = NULL, secret_var = "is_secret_prim")
+```
+
+## Arguments
+
+- res_tau:
+
+  either the data.frame resulting from tab_rtauargus run or the list of
+  data.frame resulting from tab_multimanager run
+
+- var:
+
+  the quantitative variable name to use for values stats of suppression
+  (default to `NULL` that is the stats are only computed depending on
+  the number of cells )
+
+- secret_var:
+
+  the name of the variable indicating the primary suppressed cells
+
+## Value
+
+data.frame or list of data.frames
+
+## Examples
+
+``` r
+if (FALSE) { # \dontrun{
+library(dplyr)
+data(turnover_act_size)
+
+# Prepare data with primary secret ----
+turnover_act_size <- turnover_act_size %>%
+  mutate(
+    is_secret_freq = N_OBS > 0 & N_OBS < 3,
+    is_secret_dom = ifelse(MAX == 0, FALSE, MAX/TOT>0.85),
+    is_secret_prim = is_secret_freq | is_secret_dom
+  )
+
+# Make hrc file of business sectors ----
+data(activity_corr_table)
+hrc_file_activity <- activity_corr_table %>%
+  write_hrc2(file_name = "hrc/activity")
+
+# Compute the secondary secret ----
+options(
+  rtauargus.tauargus_exe =
+    "Y:/Logiciels/TauArgus/TauArgus4.2.3/TauArgus.exe"
+)
+
+res <- tab_rtauargus(
+  tabular = turnover_act_size,
+  files_name = "turn_act_size",
+  dir_name = "tauargus_files",
+  explanatory_vars = c("ACTIVITY", "SIZE"),
+  hrc = c(ACTIVITY = hrc_file_activity),
+  totcode = c(ACTIVITY = "Total", SIZE = "Total"),
+  secret_var = "is_secret_prim",
+  value = "TOT",
+  freq = "N_OBS",
+  verbose = FALSE
+)
+
+summarize_secret(res, "TOT")
+summarize_secret(res)
+} # }
+```

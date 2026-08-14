@@ -27,6 +27,10 @@ data or from a set of linked tables.
   : tabulate grouped data with all margins, handling hierarchical
   variables
 
+- [`summarize_secret()`](https://inseefrlab.github.io/rtauargus/reference/summarize_secret.md)
+  : Provide the summary of the suppression pattern from a rtauargus
+  result
+
 ## Proceed to an automatic analysis
 
 Functions to help the links analysis between tables from a metadata

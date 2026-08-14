@@ -21,6 +21,7 @@ tab_multi_manager(
   ip_start = 10,
   ip_end = 0,
   num_iter_max = 10,
+  summary_secret = FALSE,
   split_tab = FALSE,
   nb_tab_option = "smart",
   limit = 14700,
@@ -125,6 +126,11 @@ tab_multi_manager(
 - num_iter_max:
 
   integer: Maximum of treatments to do on each table (default to 10)
+
+- summary_secret:
+
+  If `TRUE`, a statistical summary of the suppression is provided along
+  with the masked data.
 
 - split_tab:
 

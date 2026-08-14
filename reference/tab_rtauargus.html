@@ -77,6 +77,7 @@ software with the good settings and gets back the result.</p>
 <span>  maxscore <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  suppress <span class="op">=</span> <span class="st">"MOD(1,5,1,0,0)"</span>,</span>
 <span>  safety_rules <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"MAN("</span>, <span class="va">ip</span>, <span class="st">")"</span><span class="op">)</span>,</span>
+<span>  summary_secret <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  show_batch_console <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  output_type <span class="op">=</span> <span class="fl">4</span>,</span>
 <span>  output_options <span class="op">=</span> <span class="st">""</span>,</span>
@@ -205,6 +206,10 @@ Chaîne de caractères en syntaxe batch Tau-Argus. Si le secret primaire
 a été traité dans un fichier d'apriori : utiliser "MAN(10)")</p></dd>
 
 
+<dt id="arg-summary-secret">summary_secret<a class="anchor" aria-label="anchor" href="#arg-summary-secret"></a></dt>
+<dd><p>If <code>TRUE</code>, a statistical summary of the suppression is provided along with the masked data.</p></dd>
+
+
 <dt id="arg-show-batch-console">show_batch_console<a class="anchor" aria-label="anchor" href="#arg-show-batch-console"></a></dt>
 <dd><p>to display the batch progress in the
 console. <br>
@@ -262,11 +267,14 @@ for the treatment of tabular.</p></dd>
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>If output_type equals to 4 and split_tab = FALSE,
+    <p>If output_type equals to 4 and summary_secret = FALSE and split_tab = FALSE,
 then the original tabular is returned with a new
 column called Status, indicating the status of the cell coming from Tau-Argus :
 "A" for a primary secret due to frequency rule, "B" for a primary secret due
 to dominance rule, "D" for secondary secret and "V" for no secret cell.</p>
+<p>If summary_secret = TRUE,
+then the function returns a list of two data.frames,
+including the masked data (<code>mask</code>) and the stats data (<code>stats</code>).</p>
 <p>If split_tab = TRUE,
 then the original tabular is returned with some new columns which are boolean
 variables indicating the status of a cell at each iteration of the protection
@@ -274,7 +282,8 @@ process as we get with <code><a href="tab_multi_manager.html">tab_multi_manager(
 denotes a cell that have to be suppressed. The last column is then the
 final status of the suppression process of the original table.</p>
 <p>If <code>split_tab = FALSE</code> and  <code>output_type</code> doesn't equal to <code>4</code>,
-then the raw result from tau-argus is returned.</p>
+then the raw result from tau-argus is written as a csv file in <code>dir_name</code>
+directory and <code>NULL</code> is returned to R.</p>
     </div>
     <div class="section level2">
     <h2 id="standardization-of-explanatory-variables-and-hierarchies">Standardization of explanatory variables and hierarchies<a class="anchor" aria-label="anchor" href="#standardization-of-explanatory-variables-and-hierarchies"></a></h2>

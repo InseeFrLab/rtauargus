@@ -237,8 +237,11 @@ If relevant, you could fill in with the value of the previous column</em></p>
 <span class="r-in"><span>    <span class="st">"telluric"</span>, <span class="st">"gasgiant"</span>, <span class="st">"bluestar"</span>, <span class="st">"whitedwarf"</span>,</span></span>
 <span class="r-in"><span>    <span class="st">"reddwarf"</span>, <span class="st">"blackhole"</span>, <span class="st">"pulsar"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
 <span class="r-in"><span><span class="va">path</span> <span class="op">&lt;-</span> <span class="fu">write_hrc2</span><span class="op">(</span><span class="va">astral</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.table</a></span><span class="op">(</span><span class="va">path</span><span class="op">)</span> <span class="co"># \dontrun{}</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.table</a></span><span class="op">(</span><span class="va">path</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Note that line order was changed ('other' comes before 'planet'), to no</span></span></span>
 <span class="r-in"><span><span class="co"># consequence whatsoever for Tau-Argus.</span></span></span>
 <span class="r-in"><span><span class="co"># Remarque : l'ordre des lignes a été modifié ('other' arrive avant 'planet'),</span></span></span>
@@ -252,18 +255,21 @@ If relevant, you could fill in with the value of the previous column</em></p>
 <span class="r-in"><span>    <span class="st">"reddwarf"</span>, <span class="st">"blackhole"</span>, <span class="st">"pulsar"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>    type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"planet"</span>, <span class="st">"planet"</span>, <span class="st">"star"</span>, <span class="st">"star"</span>, <span class="st">"star"</span>, <span class="st">"other"</span>, <span class="st">"other"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
 <span class="r-in"><span><span class="va">path</span> <span class="op">&lt;-</span> <span class="fu">write_hrc2</span><span class="op">(</span><span class="va">astral_inv</span><span class="op">)</span></span></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>There are duplicates in the expectedly most detailed level</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span>     (last column). Please be sure columns are rightfully ordered.</span>
-<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.table</a></span><span class="op">(</span><span class="va">path</span><span class="op">)</span> <span class="co"># \dontrun{}</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.table</a></span><span class="op">(</span><span class="va">path</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Because of the inverted order, everything is written backwards : planet is a</span></span></span>
 <span class="r-in"><span><span class="co"># subtype of gasgiant, etc.</span></span></span>
 <span class="r-in"><span><span class="co"># À cause de l'inversion des colonnes, tout est écrit à l'envers : planet est</span></span></span>
 <span class="r-in"><span><span class="co"># devenu une sous-catégorie de gasgiant, par exemple.</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Correction :</span></span></span>
+<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
 <span class="r-in"><span><span class="va">path</span> <span class="op">&lt;-</span> <span class="fu">write_hrc2</span><span class="op">(</span><span class="va">astral_inv</span>, rev <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.table</a></span><span class="op">(</span><span class="va">path</span><span class="op">)</span> <span class="co"># \dontrun{}</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.table</a></span><span class="op">(</span><span class="va">path</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># 2.1 Sparse case</span></span></span>
 <span class="r-in"><span><span class="co"># Cas creux</span></span></span>
@@ -276,10 +282,10 @@ If relevant, you could fill in with the value of the previous column</em></p>
 <span class="r-in"><span><span class="co"># NAs in general are risky, but, in this case, the function works well.</span></span></span>
 <span class="r-in"><span><span class="co"># Les valeurs manquantes causent un risque, mais, dans ce genre de cas,</span></span></span>
 <span class="r-in"><span><span class="co"># la fonction a le comportement attendu.</span></span></span>
+<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
 <span class="r-in"><span><span class="va">path</span> <span class="op">&lt;-</span> <span class="fu">write_hrc2</span><span class="op">(</span><span class="va">astral_sparse</span><span class="op">)</span></span></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Missing values in correspondence table will be filled in (see documentation).</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span>             If unintended, this can cause errors when using the .hrc file with tau-Argus.</span>
-<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.table</a></span><span class="op">(</span><span class="va">path</span><span class="op">)</span> <span class="co"># \dontrun{}</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.table</a></span><span class="op">(</span><span class="va">path</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># 2.2 Non-uniform depth</span></span></span>
 <span class="r-in"><span><span class="co"># Hiérarchie non-uniforme</span></span></span>
@@ -299,8 +305,10 @@ If relevant, you could fill in with the value of the previous column</em></p>
 <span class="r-in"><span>  details  <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"telluric"</span>, <span class="st">"gasgiant"</span>, <span class="st">"star"</span>, <span class="st">"blackhole"</span>, <span class="st">"pulsar"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="co"># The following code will work</span></span></span>
+<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
 <span class="r-in"><span><span class="va">path</span> <span class="op">&lt;-</span> <span class="fu">write_hrc2</span><span class="op">(</span><span class="va">astral_nu_fill</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.table</a></span><span class="op">(</span><span class="va">path</span><span class="op">)</span> <span class="co"># \dontrun{}</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.table</a></span><span class="op">(</span><span class="va">path</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
