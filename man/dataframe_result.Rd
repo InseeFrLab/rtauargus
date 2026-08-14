@@ -4,12 +4,21 @@
 \alias{dataframe_result}
 \title{Combine List of Dataframes into a Single Dataframe with Cluster Identification}
 \usage{
-dataframe_result(list_independent_tables)
+dataframe_result(list_independent_tables, list_hrc_identified)
 }
 \arguments{
 \item{list_independent_tables}{A list of tibbles, typically the output of
 \code{grp_tab_in_cluster()} or \code{tab_to_treat()}. Each tibble contains metadata
 for tables grouped within a specific cluster.}
+
+\item{list_hrc_identified}{A list returned by the \code{identify_hrc} function. The first
+element of the list must be a data frame containing the variables:
+\itemize{
+\item \code{field}: A grouping variable.
+\item \code{hrc_field}: The hierarchical counterpart of \code{field}.
+\item \code{indicator}: A variable used to link tables.
+\item \code{hrc_indicator}: The hierarchical counterpart of \code{indicator}.
+}}
 }
 \value{
 A single dataframe (\code{dfMetadata_to_treat}) with the following structure:
