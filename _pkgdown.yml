@@ -24,6 +24,7 @@ reference:
     - tab_rtauargus2
     - tab_rtauargus4
     - tabulate_micro_data
+    - summarize_secret
   - title: Proceed to an automatic analysis
     desc: >
       Functions to help the links analysis between tables from a metadata file.
