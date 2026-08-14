@@ -1,5 +1,14 @@
 # Changelog
 
+## rtauargus 1.3.5
+
+\[08/2026\]
+
+Feature added to `tab_rtauargus` and
+[`tab_multi_manager()`](https://inseefrlab.github.io/rtauargus/reference/tab_multi_manager.md)
+letting user get a summary of the suppression process. Use the
+`summary_secret = TRUE` to activate it.
+
 ## rtauargus 1.3.4
 
 \[06/2026\]
