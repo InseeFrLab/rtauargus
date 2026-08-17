@@ -1,115 +1,65 @@
-#' General function to choose variables to merge,
-#' limiting the number of generated tables while ensuring not to generate
-#' tables that are too large.
+# Cache environment to store imported sdcHierarchies levels and prevent redundant disk parsing.
+.hrc_cache <- new.env(parent = emptyenv())
+
+#' Count the number of nodes in a hierarchical file
+#'
+#' @param hrcfiles named vector of hrc files
+#' @param v variable name
+#' @param hrc_name logical, if TRUE v is a name in hrcfiles
+#' @param totcode named vector of totals
+#' @param total total code if totcode is NULL
+#'
+#' @return integer number of nodes
+#' @keywords internal
+#' @noRd
+nb_nodes <- function(hrcfiles = NULL, v = NULL, hrc_name = TRUE,
+                     totcode = NULL, total = NULL) {
+  if (hrc_name && !is.null(hrcfiles) && v %in% names(hrcfiles)) {
+    # Fallback to "Total" if totcode is NULL or if v is not present in totcode
+    total_val <- if (!is.null(totcode) && v %in% names(totcode)) totcode[[v]] else "Total"
+    return(length(import_hierarchy(hrcfiles[[v]], total_val)))
+  } else if (!hrc_name && !is.null(hrcfiles)) {
+    # Fallback to "Total" if total is NULL
+    total_val <- if (!is.null(total)) total else "Total"
+    return(length(import_hierarchy(hrcfiles, total_val)))
+  } else {
+    return(1)
+  }
+}
+
+#' Import a hierarchy and cache its levels
+#'
+#' @param hrcfile character path to a .hrc file
+#' @param total character, the root total for the hierarchy
+#'
+#' @return A list of character vectors representing hierarchy nodes.
+#' @keywords internal
+#' @noRd
+import_hierarchy <- function(hrcfile, total) {
+  # Cache key combines filepath and root total code
+  cache_key <- paste0(hrcfile, "|||", total)
+  if (exists(cache_key, envir = .hrc_cache)) {
+    return(get(cache_key, envir = .hrc_cache))
+  }
+  res_sdc <- sdcHierarchies::hier_import(inp = hrcfile, from = "hrc", root = total) %>%
+    sdcHierarchies::hier_convert(as = "sdc")
+  levels <- lapply(res_sdc$dims, names)
+  assign(cache_key, levels, envir = .hrc_cache)
+  return(levels)
+}
+
+#' General function to choose variables to merge
 #'
 #' @param dfs data.frame
 #' @param totcode named vector of totals for categorical variables
-#' @param hrcfiles named vector of hrc files for categorical variables
+#' @param hrcfiles named vector of hrc files
 #' @param nb_var number of variables to merge
-#' @param nb_tab_option strategy to follow for choosing variables automatically:
-#' \itemize{
-#'   \item `'min'`: minimize the number of tables;
-#'   \item `'max'`: maximize the number of tables;
-#'   \item `'smart'`: minimize the number of tables under the constraint of their row count.
-#' }
+#' @param nb_tab_option strategy: 'min', 'max', or 'smart'
 #' @param limit maximum allowed row count in the 'smart' case
 #'
-#' @return A list of vectors representing the chosen variables to merge
-#'
-#' @examples
-#' library(dplyr)
-#' data <- expand.grid(
-#'   ACT = c("Total", "A", "B", "A1", "A2", "B1", "B2"),
-#'   GEO = c("Total", "GA", "GB", "GA1", "GA2"),
-#'   SEX = c("Total", "F", "M"),
-#'   AGE = c("Total", "AGE1", "AGE2"),
-#'   stringsAsFactors = FALSE,
-#'   KEEP.OUT.ATTRS = FALSE
-#' ) %>%
-#'   as.data.frame()
-#'
-#' data <- data %>% mutate(VALUE = 1:n())
-#'
-#' hrc_act <- "hrc_ACT.hrc"
-#' sdcHierarchies::hier_create(root = "Total", nodes = c("A","B")) %>%
-#'   sdcHierarchies::hier_add(root = "A", nodes = c("A1","A2")) %>%
-#'   sdcHierarchies::hier_add(root = "B", nodes = c("B1","B2")) %>%
-#'   sdcHierarchies::hier_convert(as = "argus") %>%
-#'   slice(-1) %>%
-#'   mutate(levels = substring(paste0(level,name),3)) %>%
-#'   select(levels) %>%
-#'   write.table(file = hrc_act, row.names = FALSE, col.names = FALSE, quote = FALSE)
-#'
-#' hrc_geo <- "hrc_GEO.hrc"
-#' sdcHierarchies::hier_create(root = "Total", nodes = c("GA","GB")) %>%
-#'   sdcHierarchies::hier_add(root = "GA", nodes = c("GA1","GA2")) %>%
-#'   sdcHierarchies::hier_convert(as = "argus") %>%
-#'   slice(-1) %>%
-#'   mutate(levels = substring(paste0(level,name),3)) %>%
-#'   select(levels) %>%
-#'   write.table(file = hrc_geo, row.names = FALSE, col.names = FALSE, quote = FALSE)
-#'
-#' totcode <- c(SEX="Total",AGE="Total", GEO="Total", ACT="Total")
-#'
-#' hrcfiles <- c(ACT = hrc_act, GEO = hrc_geo)
-#'
-#' # Consistent: choose two hierarchical variables
-#' res1 <- var_to_merge(dfs = data,
-#'                                         totcode = totcode,
-#'                                         hrcfiles = hrcfiles,
-#'                                         nb_var = 2,
-#'                                         nb_tab_option = 'max')
-#' res1
-#' max(unlist(length_tabs(dfs = data,
-#'                        hrcfiles = hrcfiles,
-#'                        totcode = totcode,
-#'                        v1 = res1$vars[1], v2 = res1$vars[2])))
-#'
-#' # Consistent: choose two non-hierarchical variables
-#' res2 <- var_to_merge(dfs = data,
-#'                                 totcode = totcode,
-#'                                 hrcfiles = hrcfiles,
-#'                                 nb_var = 2,
-#'                                 nb_tab_option = 'min')
-#' res2
-#' max(unlist(length_tabs(dfs = data,
-#'                        hrcfiles = hrcfiles,
-#'                        totcode = totcode,
-#'                        v1 = res2$vars[1], v2 = res2$vars[2])))
-#'
-#' res3 <- var_to_merge(dfs = data,
-#'                                 totcode = totcode,
-#'                                 hrcfiles = hrcfiles,
-#'                                 limit = 200,
-#'                                 nb_var = 2,
-#'                                 nb_tab_option = 'smart')
-#' res3
-#' max(unlist(length_tabs(dfs = data,
-#'                        hrcfiles = hrcfiles,
-#'                        totcode = totcode,
-#'                        v1 = res3$vars[1], v2 = res3$vars[2])))
-#'
-#' # Obtains 147, which is well below 200
-#'
-#' res4 <- var_to_merge(dfs = data,
-#'                                 totcode = totcode,
-#'                                 hrcfiles = hrcfiles,
-#'                                 limit = 5,
-#'                                 nb_var = 2,
-#'                                 nb_tab_option = 'smart')
-#' res4
-#' max(unlist(length_tabs(dfs = data,
-#'                        hrcfiles = hrcfiles,
-#'                        totcode = totcode,
-#'                        v1 = res4$vars[1], v2 = res4$vars[2])))
-#'
-#' # Receives a warning: unable to reach the announced value
-#' # There are 63 rows (equivalent to the max
-#' # -> this is what reduces the table size)
-#' # And the warning announces 63 rows, which is consistent with the output
-#'
+#' @return A list with `vars`, `max_row`, and `nb_tab`.
 #' @keywords internal
-#' @export
+#' @noRd
 var_to_merge <- function(
     dfs,
     totcode,
@@ -118,36 +68,54 @@ var_to_merge <- function(
     nb_tab_option = "min",
     limit = 150)
 {
-  # Case of 2 pairs in dimension 5
+
+  # Precompute unique values across all categorical columns once (O(N) cost)
+  # to avoid repeating expensive unique() calls inside evaluation loops.
+  unique_mods <- lapply(dfs[names(totcode)], unique)
+
+  # Generate candidate combinations based on target dimension reduction
   if (nb_var == 4){
-    result_comb <- generate_two_pairs(totcode)
+    result_comb <- generate_two_pairs(totcode) # 5D -> 3D (2 pairs merged)
 
     # Case of a triplet in dimension 5
   } else if (nb_var == 3){
-    result_comb <- generate_a_triplet(totcode)
+    result_comb <- generate_a_triplet(totcode) # 5D -> 3D (1 triplet merged)
 
     # Case of dimension 4
   } else {
-    result_comb <- generate_a_pair(totcode)
+    result_comb <- generate_a_pair(totcode) # 4D -> 3D (1 pair merged)
   }
 
   return(var_to_merge_fragment(dfs = dfs,
-                                 result_comb = result_comb,
-                                 totcode = totcode,
-                                 hrcfiles = hrcfiles,
-                                 limit = limit,
-                                 nb_tab_option = nb_tab_option))
+                               result_comb = result_comb,
+                               totcode = totcode,
+                               hrcfiles = hrcfiles,
+                               limit = limit,
+                               nb_tab_option = nb_tab_option,
+                               unique_mods = unique_mods)
+         )
 }
 
+#' Evaluate combinations and select optimal variable merge strategy
+#'
+#' @keywords internal
+#' @noRd
 var_to_merge_fragment <- function(
     dfs,
     result_comb,
     totcode,
     hrcfiles = NULL,
     limit = 150,
-    nb_tab_option = "smart")
+    nb_tab_option = "smart",
+    unique_mods = NULL)
 {
-  # Calculate the number of tables and maximum rows for each combination of variables
+
+  # Fallback initialization for unique_mods if called directly without precomputed list.
+  if (is.null(unique_mods)) {
+    unique_mods <- lapply(dfs[names(totcode)], unique)
+  }
+
+  # Simulate generated table sizes and counts for each candidate combination
   res_func <- lapply(result_comb, function(x) length_tabs(
     dfs = dfs,
     v1 = x[1],
@@ -155,7 +123,8 @@ var_to_merge_fragment <- function(
     v3 = x[3],
     v4 = x[4],
     totcode = totcode,
-    hrcfiles = hrcfiles))
+    hrcfiles = hrcfiles,
+    unique_mods = unique_mods))
 
   # Get the maximum rows and number of created tables
   res_max <- sapply(res_func, function(x) max(unlist(x)))
@@ -167,8 +136,9 @@ var_to_merge_fragment <- function(
   # Save the row number by adding a column
   df$original_index <- seq(nrow(df))
 
-  # Case: minimize the number of tables
+  # Selection logic according to 'nb_tab_option'
   if (nb_tab_option == "min"){
+    # Minimize number of tables, break ties with smallest max table size
     min_nb_tab <-  min(df$res_len)
     filtered_df <- df[df$res_len == min_nb_tab, ]
 
@@ -182,8 +152,8 @@ var_to_merge_fragment <- function(
                 nb_tab = filtered_df$res_len[min_index])
            )
 
-    # Case: maximize the number of tables
   } else if (nb_tab_option == "max"){
+    # Maximize number of tables, break ties with smallest max table size
     max_nb_tab <-  max(df$res_len)
     filtered_df <- df[df$res_len == max_nb_tab, ]
 
@@ -197,8 +167,9 @@ var_to_merge_fragment <- function(
                 nb_tab = filtered_df$res_len[min_index])
     )
 
-    # Case: 'smart' - maximize under the constraint of the size limit
   } else {
+    # 'smart' option: Minimize table count under constraint max_row < limit
+
     # Filter based on the maximum rows condition
     filtered_df <- df[df$res_max < limit, ]
 
@@ -216,21 +187,13 @@ var_to_merge_fragment <- function(
       )
 
     } else {
-      # Return the result with the fewest tables among those
-      # with the shortest tables
+      # Fallback: If no combination is under limit, pick candidate with smallest max size
+
       min_res_max <- min(df$res_max)
-
-      # Silence warning since it is only display at the end...
-      # warning(c("
-      # The limit of ",limit," cannot be achieved.
-      # The largest table has ",min_res_max," rows."))
-
       filtered_df <- df[df$res_max == min_res_max, ]
 
       # Get the index of the filtered table
       min_index <- which.min(filtered_df$res_len)
-
-      # Print the original index
       i <- filtered_df$original_index[min_index]
 
       return(list(vars = result_comb[[i]],
@@ -241,6 +204,9 @@ var_to_merge_fragment <- function(
   }
 }
 
+#' Generate all candidate pairs of variables
+#' @keywords internal
+#' @noRd
 #' @importFrom utils combn
 generate_a_pair <- function(totcode) {
   # Retrieve the categorical variables from the dataframe
@@ -255,6 +221,9 @@ generate_a_pair <- function(totcode) {
   return(result)
 }
 
+#' Generate candidate disjoint double pairs of variables
+#' @keywords internal
+#' @noRd
 #' @importFrom utils combn
 generate_two_pairs <- function(totcode) {
   # Retrieve the categorical variables from the dataframe
@@ -299,6 +268,9 @@ generate_two_pairs <- function(totcode) {
   return(result)
 }
 
+#' Generate all candidate triplets of variables
+#' @keywords internal
+#' @noRd
 #' @importFrom utils combn
 generate_a_triplet <- function(totcode) {
   # Retrieve the categorical variables from the dataframe
@@ -313,111 +285,18 @@ generate_a_triplet <- function(totcode) {
   return(result)
 }
 
-#' Calculation of the table sizes generated a priori during the reduction of dimension
-#' from 4 or 5 dimensions to 3 dimensions
+#' Simulate generated table sizes for dimension reduction
 #'
-#' @param dfs a data.frame
+#' @param dfs data.frame
+#' @param v1,v2 primary pair of variables
+#' @param v3,v4 optional 3rd and 4th variables for 5D cases
+#' @param totcode named vector of totals
+#' @param hrcfiles named vector of hrc files
+#' @param unique_mods precomputed unique modalities
 #'
-#' Variable in the 5->4 or 4->3 step
-#' @param v1 the first merged variable
-#' @param v2 the second merged variable
-#'
-#' Variable in the case of 4->3 passage in the 4->3 process
-#' do not specify v1_v2 if three variables are merged into one
-#' @param v3 the third original variable to be merged
-#' @param v4 the fourth original variable to be merged
-#' @param totcode character named vector
-#' @param hrcfiles named vector of hrc files related to the variables
-#'
-#' @return a list of the lengths of the tables created during the dimension reduction
-#'
-#' @examples
-#' # Dimension 4
-#' library(dplyr)
-#' data <- expand.grid(
-#'   ACT = c("Total", "A", "B", "A1", "A2","A3", "B1", "B2","B3","B4","C",
-#'           "name_non_changed_vars","E","F","G","B5"),
-#'   GEO = c("Total", "G1", "G2"),
-#'   SEX = c("Total", "F", "M"),
-#'   AGE = c("Total", "AGE1", "AGE2"),
-#'   stringsAsFactors = FALSE
-#' ) %>%
-#'   as.data.frame()
-#'
-#' data <- data %>% mutate(VALUE = 1)
-#'
-#'
-#' hrc_act <- "hrc_ACT.hrc"
-#'
-#' sdcHierarchies::hier_create(
-#'   root = "Total",
-#'   nodes = c("A","B","C","name_non_changed_vars","E","F","G")
-#' ) %>%
-#'   sdcHierarchies::hier_add(root = "A", nodes = c("A1","A2","A3")) %>%
-#'   sdcHierarchies::hier_add(root = "B", nodes = c("B1","B2","B3","B4","B5")) %>%
-#'   sdcHierarchies::hier_convert(as = "argus") %>%
-#'   slice(-1) %>%
-#'   mutate(levels = substring(paste0(level,name),3)) %>%
-#'   select(levels) %>%
-#'   write.table(file = hrc_act, row.names = FALSE, col.names = FALSE, quote = FALSE)
-#'
-#' # Function results
-#'
-#' res1 <- length_tabs(dfs = data,
-#'                     hrcfiles = c(ACT = hrc_act),
-#'                     totcode = c(SEX="Total",AGE="Total", GEO="Total", ACT="Total"),
-#'                     v1 = "ACT",
-#'                     v2 = "GEO")
-#'
-#' # Dimension 5
-#' data <- expand.grid(
-#'   ACT = c("Total_A", paste0("A", seq(1,5),"_"),
-#'           paste0("A1_", seq(1,7)),paste0("A2_", seq(1,9))),
-#'   GEO = c("Total_G", "GA", "GB", "GA1", "GA2", "GB1", "GB2","GA3","GB3","GB4"),
-#'   SEX = c("Total_S", "F", "M","F1","F2","M1","M2"),
-#'   AGE = c("Ensemble", "AGE1", "AGE2", "AGE11", "AGE12", "AGE21", "AGE22"),
-#'   ECO = c("PIB","Ménages","Entreprises"),
-#'   stringsAsFactors = FALSE,
-#'   KEEP.OUT.ATTRS = FALSE
-#' ) %>%
-#'   as.data.frame()
-#'
-#' data <- data %>% mutate(VALUE = 1:n())
-#'
-#' hrc_act <- "hrc_ACT.hrc"
-#' sdcHierarchies::hier_create(root = "Total_A", nodes = paste0("A", seq(1,5),"_")) %>%
-#'   sdcHierarchies::hier_add(root = "A1_", nodes = paste0("A1_", seq(1,7))) %>%
-#'   sdcHierarchies::hier_add(root = "A2_", nodes = paste0("A2_", seq(1,9))) %>%
-#'   sdcHierarchies::hier_convert(as = "argus") %>%
-#'   slice(-1) %>%
-#'   mutate(levels = substring(paste0(level,name),3)) %>%
-#'   select(levels) %>%
-#'   write.table(file = hrc_act, row.names = FALSE, col.names = FALSE, quote = FALSE)
-#'
-#' hrc_geo <- "hrc_GEO.hrc"
-#' sdcHierarchies::hier_create(root = "Total_G", nodes = c("GA","GB")) %>%
-#'   sdcHierarchies::hier_add(root = "GA", nodes = c("GA1","GA2","GA3")) %>%
-#'   sdcHierarchies::hier_add(root = "GB", nodes = c("GB1","GB2","GB3","GB4")) %>%
-#'   sdcHierarchies::hier_convert(as = "argus") %>%
-#'   slice(-1) %>%
-#'   mutate(levels = substring(paste0(level,name),3)) %>%
-#'   select(levels) %>%
-#'   write.table(file = hrc_geo, row.names = FALSE, col.names = FALSE, quote = FALSE)
-#'
-#' res2 <- length_tabs(dfs = data,
-#'                     hrcfiles = c(ACT = hrc_act, GEO = hrc_geo),
-#'                     totcode = c(SEX="Total_S",AGE="Ensemble", GEO="Total_G",
-#'                                 ACT="Total_A", ECO = "PIB"),
-#'                     v1 = "ACT",v2 = "AGE",
-#'                     v3 = "GEO",v4 = "SEX")
-#'
-#' res3 <- length_tabs(dfs = data,
-#'                     hrcfiles = c(ACT = hrc_act, GEO = hrc_geo),
-#'                     totcode = c(SEX="Total_S",AGE="Ensemble", GEO="Total_G",
-#'                                 ACT="Total_A", ECO = "PIB"),
-#'                     v1 = "ACT",v2 = "AGE",v3 = "GEO")
+#' @return A list of expected row counts.
 #' @keywords internal
-#' @export
+#' @noRd
 length_tabs <- function(
   dfs,
   v1,
@@ -425,412 +304,421 @@ length_tabs <- function(
   v3 = NULL,
   v4 = NULL,
   totcode,
-  hrcfiles = NULL)
+  hrcfiles = NULL,
+  unique_mods = NULL)
 {
 
   # To generalize the function to handle NA for an external function
   v3 <- if (!is.null(v3) && is.na(v3)) NULL else v3
   v4 <- if (!is.null(v4) && is.na(v4)) NULL else v4
 
-  # If 4 variables are specified -> 5 dimensions case, 2 couples are created
+  # Security in case the function is called outside var_to_merge
+  if (is.null(unique_mods)) {
+    unique_mods <- lapply(dfs[names(totcode)], unique)
+  }
+
   if (!is.null(v4)) {
+    # 5D -> 3D (2 pairs)
     return(length_tabs_5_4_var(dfs = dfs,
                                hrcfiles = hrcfiles,
                                v1 = v1, v2 = v2,
                                v3 = v3, v4 = v4,
-                               totcode = totcode))
-
-    # If 3 variables are specified -> 5 dimensions case, a trio is merged
+                               totcode = totcode,
+                               unique_mods = unique_mods))
   } else if (!is.null(v3)) {
+    # 5D -> 3D (1 triplet)
     return(length_tabs_5_3_var(dfs = dfs,
                                hrcfiles = hrcfiles,
                                v1 = v1, v2 = v2, v3 = v3,
-                               totcode = totcode))
-
-    # If 2 variables are specified -> 4 dimensions case
+                               totcode = totcode,
+                               unique_mods = unique_mods))
   } else {
+    # 4D -> 3D (1 pair)
     return(length_tabs_4(dfs = dfs,
                          hrcfiles = hrcfiles,
                          v1 = v1, v2 = v2,
-                         totcode = totcode))
+                         totcode = totcode,
+                         unique_mods = unique_mods))
   }
 }
 
-# case : 4 dimensions
-length_tabs_4 <- function(dfs,v1,v2,totcode,hrcfiles=NULL){
+# Simulate table sizes for 4D -> 3D transition
+length_tabs_4 <- function(dfs, v1, v2, totcode, hrcfiles = NULL, unique_mods = NULL){
 
-  # Retrieval of groupings {nodes + branch}
-  # based on whether the variable is hierarchical or not
+  if (v1 %in% names(hrcfiles)) {
+    level_v1 <- import_hierarchy(hrcfiles[[v1]], totcode[[v1]])
+  } else {
+    level_v1 <- list(unique_mods[[v1]])
+  }
 
-  # We need to list and then unlist
-  # otherwise the ifelse returns the first element of import_hierarchy (big total)
-  # instead of returning all the nodes
-  level_v1 <- unlist(ifelse(v1 %in% names(hrcfiles),
-                            list(import_hierarchy(hrcfiles[[v1]])),
-                            list(list(unique(dfs[[v1]])))),
-                     recursive = FALSE)
+  if (v2 %in% names(hrcfiles)) {
+    level_v2 <- import_hierarchy(hrcfiles[[v2]], totcode[[v2]])
+  } else {
+    level_v2 <- list(unique_mods[[v2]])
+  }
 
-  level_v2 <- unlist(ifelse(v2 %in% names(hrcfiles),
-                            list(import_hierarchy(hrcfiles[[v2]])),
-                            list(list(unique(dfs[[v2]])))),
-                     recursive = FALSE)
-
-  # If case 1 non hrc (not hierarchical) and v2 in hrcfiles, then we need to reorder
+  # Ensure flat variable is first if only one of {v1, v2} is hierarchical
   if (!(v2 %in% names(hrcfiles)) & (v1 %in% names(hrcfiles))) {
     tmp <- level_v1
     level_v1 <- level_v2
     level_v2 <- tmp
   }
 
-  # We do all possible combinations between v1 and v2
-  # which represents the tables created during the creation of v1_v2 in the 5->4 step
+  # Vectorized calculation of sub-table row counts for each node pair (i, j)
+  len1 <- sapply(level_v1, length)
+  len2 <- sapply(level_v2, length)
 
-  # For each of these tables, there are two possible hierarchies
-  # one with the totals of v1, and the other with the totals of v2
-  # thus, for one of the modalities, we do not make any combination with its total
-  # hence the -1
-  # and finally, we add the grand total, hence the +1
-  nb_rows <- lapply(1:length(level_v1), function(i) {
-    lapply(1:length(level_v2), function(j) {
-      c((length(level_v1[[i]]) - 1) * length(level_v2[[j]]) + 1,
-        length(level_v1[[i]]) * (length(level_v2[[j]]) - 1) + 1)
-    })
-  })
+  L1 <- length(len1)
+  L2 <- length(len2)
 
-  # Now we need to multiply by the modalities of the non-merged variables
+  len1_grid <- rep(len1, each = L2)
+  len2_grid <- rep(len2, times = L1)
 
+  val1 <- (len1_grid - 1) * len2_grid + 1
+  val2 <- len1_grid * (len2_grid - 1) + 1
+
+  nb_rows <- as.vector(rbind(val1, val2))
+
+  # Multiply by number of modalities of non-merged variables
   list_non_merged_vars <- names(totcode[!(names(totcode) %in% c(v1, v2))])
 
-  mod_non_merged_vars <- lapply(list_non_merged_vars,
-                                function(x)  length(unique(dfs[[x]])))
+  # Get the number of non-merged modalities using unique_mods lengths (much faster than lapply on unique).
+  mod_non_merged_vars <- sapply(list_non_merged_vars,
+                                function(x) length(unique_mods[[x]]))
 
   prod_numbers <- prod(unlist(mod_non_merged_vars))
 
-  nb_rows_tot <- lapply(unlist(nb_rows), function(x) x * prod_numbers)
+  # Direct vector multiplication and conversion to a list for optimization.
+  nb_rows_tot <- as.list(nb_rows * prod_numbers)
 
   return(nb_rows_tot)
 }
 
-# case : 5 dimensions, two pairs of merged variables
-length_tabs_5_4_var <- function(dfs, v1, v2, v3, v4, totcode, hrcfiles = NULL) {
+# Simulate table sizes for 5D -> 3D transition with 2 merged pairs
+length_tabs_5_4_var <- function(dfs, v1, v2, v3, v4, totcode, hrcfiles = NULL, unique_mods = NULL){
 
-  # Retrieve groupings {nodes + branches} based on whether the variable is hierarchical or not, transitioning from 5 dimensions to 4 dimensions.
+  if (is.null(unique_mods)) {
+    unique_mods <- lapply(dfs[names(totcode)], unique)
+  }
 
-  # List and then unlist the results; ifelse returns all nodes instead of just the first one.
-  level_v1 <- unlist(ifelse(v1 %in% names(hrcfiles),
-                            list(import_hierarchy(hrcfiles[[v1]])),
-                            list(list(unique(dfs[[v1]])))),
-                     recursive = FALSE)
+  if (v1 %in% names(hrcfiles)) {
+    level_v1 <- import_hierarchy(hrcfiles[[v1]], totcode[[v1]])
+  } else {
+    level_v1 <- list(unique_mods[[v1]])
+  }
 
-  level_v2 <- unlist(ifelse(v2 %in% names(hrcfiles),
-                            list(import_hierarchy(hrcfiles[[v2]])),
-                            list(list(unique(dfs[[v2]])))),
-                     recursive = FALSE)
+  if (v2 %in% names(hrcfiles)) {
+    level_v2 <- import_hierarchy(hrcfiles[[v2]], totcode[[v2]])
+  } else {
+    level_v2 <- list(unique_mods[[v2]])
+  }
 
-  # Swap level_v1 and level_v2 in case v2 is not hierarchical but v1 is (to maintain order).
+  # Swap hierarchy levels so the flat variable comes first (convention for 4D -> 3D steps).
+  # Variable name strings themselves (v1/v2, v3/v4) are not swapped because c(v1,v2,v3,v4)
+  # is used as an unordered set downstream.
   if (!(v2 %in% names(hrcfiles)) & (v1 %in% names(hrcfiles))) {
     tmp <- level_v1
     level_v1 <- level_v2
     level_v2 <- tmp
   }
 
-  level_v3 <- unlist(ifelse(v3 %in% names(hrcfiles),
-                            list(import_hierarchy(hrcfiles[[v3]])),
-                            list(list(unique(dfs[[v3]])))),
-                     recursive = FALSE)
+  if (v3 %in% names(hrcfiles)) {
+    level_v3 <- import_hierarchy(hrcfiles[[v3]], totcode[[v3]])
+  } else {
+    level_v3 <- list(unique_mods[[v3]])
+  }
 
-  level_v4 <- unlist(ifelse(v4 %in% names(hrcfiles),
-                            list(import_hierarchy(hrcfiles[[v4]])),
-                            list(list(unique(dfs[[v4]])))),
-                     recursive = FALSE)
+  if (v4 %in% names(hrcfiles)) {
+    level_v4 <- import_hierarchy(hrcfiles[[v4]], totcode[[v4]])
+  } else {
+    level_v4 <- list(unique_mods[[v4]])
+  }
 
-  # Swap level_v3 and level_v4 in case v4 is not hierarchical but v3 is (to maintain order).
   if (!(v4 %in% names(hrcfiles)) & (v3 %in% names(hrcfiles))) {
     tmp <- level_v3
     level_v3 <- level_v4
     level_v4 <- tmp
-
-    tmp <- v3
-    v3 <- v4
-    v4 <- tmp
   }
 
-  # Calculate the length of resulting 4-dimensional datasets for each combination of variables.
+  # Fully vectorized 5D -> 4D row count computation across all combinations
+  len1 <- sapply(level_v1, length)
+  len2 <- sapply(level_v2, length)
+  len3 <- sapply(level_v3, length)
+  len4 <- sapply(level_v4, length)
 
-  nb_rows <- lapply(1:length(level_v1), function(i) {
-    lapply(1:length(level_v2), function(j) {
+  L1 <- length(len1)
+  L2 <- length(len2)
+  L3 <- length(len3)
+  L4 <- length(len4)
 
-      c(
-        lapply(1:length(level_v3), function(k) {
-          lapply(1:length(level_v4), function(l) {
+  len1_ij <- rep(len1, each = L2)
+  len2_ij <- rep(len2, times = L1)
+  A_ij <- (len1_ij - 1) * len2_ij + 1
+  B_ij <- len1_ij * (len2_ij - 1) + 1
 
-            # A formula to calculate the length of the arrays.
-            c( ((length(level_v1[[i]]) - 1) * length(level_v2[[j]]) + 1) *
-                 ((length(level_v3[[k]]) - 1) * length(level_v4[[l]]) + 1),
+  len3_kl <- rep(len3, each = L4)
+  len4_kl <- rep(len4, times = L3)
+  C_kl <- (len3_kl - 1) * len4_kl + 1
+  D_kl <- len3_kl * (len4_kl - 1) + 1
 
-               ((length(level_v1[[i]]) - 1) * length(level_v2[[j]]) + 1) *
-                 (length(level_v3[[k]]) * (length(level_v4[[l]]) - 1) + 1)
-            )
-          })
-        }),
+  CD_woven <- as.vector(rbind(C_kl, D_kl))
+  AB_woven <- as.vector(rbind(A_ij, B_ij))
 
-        lapply(1:length(level_v3), function(k) {
-          lapply(1:length(level_v4), function(l) {
+  multipliers <- rep(AB_woven, each = length(CD_woven))
+  nb_rows <- multipliers * rep(CD_woven, times = 2 * L1 * L2)
 
-            c( (length(level_v1[[i]]) * (length(level_v2[[j]]) - 1) + 1) *
-                 ((length(level_v3[[k]]) - 1) * length(level_v4[[l]]) + 1),
-
-               (length(level_v1[[i]]) * (length(level_v2[[j]]) - 1) + 1) *
-                 (length(level_v3[[k]]) * (length(level_v4[[l]]) - 1) + 1)
-            )
-          })
-        })
-      )
-
-    })
-  })
 
   # Calculate the total number of rows by multiplying with the unique modalities of non-merged variables.
 
   list_non_fused_vars <- names(totcode[!(names(totcode) %in% c(v1, v2, v3, v4))])
 
-  non_fused_vars_mod <- lapply(list_non_fused_vars,
-                                   function(x)  length(unique(dfs[[x]])))
+  # Get the number of non-merged modalities using unique_mods lengths (much faster than lapply on unique).
+  non_fused_vars_mod <- sapply(list_non_fused_vars,
+                               function(x) length(unique_mods[[x]]))
 
   prod_numbers <- prod(unlist(non_fused_vars_mod))
 
-  nb_rows_tot <- lapply(unlist(nb_rows), function(x) x * prod_numbers)
+  nb_rows_tot <- as.list(nb_rows * prod_numbers)
+
 
   return(nb_rows_tot)
 }
 
-# case : 5 dimensions, three variables merged into one
-length_tabs_5_3_var <- function(dfs, v1, v2, v3, totcode, hrcfiles = NULL) {
+# Simulate table sizes for 5D -> 3D transition with a merged triplet
+length_tabs_5_3_var <- function(dfs, v1, v2, v3, totcode, hrcfiles = NULL, unique_mods = NULL) {
 
-  # Case of at least one hierarchical variable
+  # Fallback security in case unique_mods is not provided.
+  if (is.null(unique_mods)) {
+    unique_mods <- lapply(dfs[names(totcode)], unique)
+  }
+
+  # Case: At least 1 variable in triplet is hierarchical
   if (length(setdiff(names(hrcfiles), c(v1, v2, v3))) != length(hrcfiles)) {
 
-    # WARNING
-    # This case is a work in progress (WIP)
-    # Only the different lengths of modalities are calculated
-    # But we do not know specifically the length of table i, for example
-    # However, this is not currently critical
-    # All modalities appear the correct number of times, but not in the correct order
+    if (v1 %in% names(hrcfiles)) {
+      level_v1 <- import_hierarchy(hrcfiles[[v1]], totcode[[v1]])
+    } else {
+      level_v1 <- list(unique_mods[[v1]])
+    }
 
-    # Transition from 5 dimensions to 4 dimensions
+    if (v2 %in% names(hrcfiles)) {
+      level_v2 <- import_hierarchy(hrcfiles[[v2]], totcode[[v2]])
+    } else {
+      level_v2 <- list(unique_mods[[v2]])
+    }
 
-    # List and then unlist the results; ifelse returns all nodes instead of just the first one.
-    level_v1 <- unlist(ifelse(v1 %in% names(hrcfiles),
-                              list(import_hierarchy(hrcfiles[[v1]])),
-                              list(list(unique(dfs[[v1]])))),
-                       recursive = FALSE)
-
-    level_v2 <- unlist(ifelse(v2 %in% names(hrcfiles),
-                              list(import_hierarchy(hrcfiles[[v2]])),
-                              list(list(unique(dfs[[v2]])))),
-                       recursive = FALSE)
-
-    # Swap level_v1 and level_v2 if v2 is not hierarchical but v1 is (to maintain order).
+    # Ensure v1 is non-hierarchical if only one of {v1, v2} has a hierarchy.
+    # The merging algorithm always places the non-hierarchical variable first
+    # for the 4‑D to 3‑D step, so we swap if necessary.
     if (!(v2 %in% names(hrcfiles)) & (v1 %in% names(hrcfiles))) {
       tmp <- level_v1
       level_v1 <- level_v2
       level_v2 <- tmp
     }
 
-    # Transition from 4 dimensions to 3 dimensions
+    if (v3 %in% names(hrcfiles)) {
+      level_v3 <- import_hierarchy(hrcfiles[[v3]], totcode[[v3]])
+    } else {
+      level_v3 <- list(unique_mods[[v3]])
+    }
 
-    # List and then unlist the results; ifelse returns all nodes instead of just the first one.
-    level_v3 <- unlist(ifelse(v3 %in% names(hrcfiles),
-                              list(import_hierarchy(hrcfiles[[v3]])),
-                              list(list(unique(dfs[[v3]])))),
-                       recursive = FALSE)
+    # Number of modalities within each hierarchy node
+    len1 <- sapply(level_v1, length)
+    len2 <- sapply(level_v2, length)
+    len3 <- sapply(level_v3, length)
+    L1 <- length(len1)
+    L2 <- length(len2)
+    L3 <- length(len3)
 
 
-    nb_rows <- lapply(1:length(level_v1), function(i) {
+    # --- Build all (i, j) pairs ---
+    # Each pair corresponds to a combination of a node from level_v1 (i)
+    # and a node from level_v2 (j). These represent the tables created during
+    # the 5‑D to 4‑D merging step.
+    grid_ij <- expand.grid(i = seq_len(L1), j = seq_len(L2))
+    i <- grid_ij$i
+    j <- grid_ij$j
 
-      lapply(1:length(level_v3), function(k) {
+    len1_i <- len1[i]   # len1 for each pair
+    len2_j <- len2[j]   # len2 for each pair
 
-        c( (length(level_v1[[i]]) - 1) * length(level_v3[[k]]) + 1,
-           length(level_v1[[i]]) * (length(level_v3[[k]]) - 1) + 1
-        )
-      })
+    # --- Calculate the four pattern matrices ---
+    # These formulas come from the original nested lapply structure:
+    #   For a given (i, j, k), the original code generates four numbers:
+    #     (len2_j - 1) * len3[k] + 1
+    #     len2_j * (len3[k] - 1) + 1
+    #     (len1_i - 1) * len3[k] + 1
+    #     len1_i * (len3[k] - 1) + 1
+    # We compute them all at once for every (i, j) and every k using
+    # matrix multiplication (%*%) to obtain matrices of size (n_pairs, L3).
+    n_pairs <- length(i)
 
-      lapply(1:length(level_v2), function(j) {
-        lapply(1:length(level_v3), function(k) {
+    # Pattern A: based on v2 & v3
+    A1 <- (len2_j - 1) %*% t(len3) + 1      # (n_pairs x L3)
+    A2 <-  len2_j      %*% t(len3 - 1) + 1  # (n_pairs x L3)
 
-          c(
-            rep(c((length(level_v2[[j]]) - 1) * length(level_v3[[k]]) + 1,
-                  length(level_v2[[j]]) * (length(level_v3[[k]]) - 1) + 1
-            ),
-            times = length(level_v1[[i]])
-            ),
+    # Pattern B: based on v1 & v3
+    B1 <- (len1_i - 1) %*% t(len3) + 1
+    B2 <-  len1_i      %*% t(len3 - 1) + 1
 
-            rep(c((length(level_v1[[i]]) - 1) * length(level_v3[[k]]) + 1,
-                  length(level_v1[[i]]) * (length(level_v3[[k]]) - 1) + 1
-            ),
-            times = length(level_v2[[j]])
-            )
-          )
-        })
-      })
-    })
+    # --- Replicate rows according to the original repetition logic ---
+    # In the original algorithm, for a given (i, j):
+    #   - A1 and A2 are repeated len1_i times (once for each element of the v1 node)
+    #   - B1 and B2 are repeated len2_j times (once for each element of the v2 node)
+    # They are then interleaved column‑wise (i.e., by k) in the order:
+    #   A1, A2, B1, B2, A1, A2, B1, B2, ... (for each k)
+    # Here we stack all repetitions row‑wise first, then interleave by rows.
 
-    # Case of 3 non-hierarchical variables: exact result (the length of table i is known)
+    # Indices to repeat each pair's row in A1/A2 len1_i times
+    idx_A <- rep(seq_len(n_pairs), times = len1_i)
+    # Indices to repeat each pair's row in B1/B2 len2_j times
+    idx_B <- rep(seq_len(n_pairs), times = len2_j)
+
+    # Stack the matrices with the appropriate row repetitions
+    stack_A1 <- A1[idx_A, , drop = FALSE]
+    stack_A2 <- A2[idx_A, , drop = FALSE]
+    stack_B1 <- B1[idx_B, , drop = FALSE]
+    stack_B2 <- B2[idx_B, , drop = FALSE]
+
+    # --- Interleave the stacked rows in the correct order ---
+    # For each pair (i, j), we must place:
+    #   len1_i rows of A1, len1_i rows of A2, len2_j rows of B1, len2_j rows of B2.
+    # This small loop iterates only over n_pairs, not over the data size,
+    # so it remains negligible while keeping the code readable.
+    total_rows <- nrow(stack_A1) + nrow(stack_A2) + nrow(stack_B1) + nrow(stack_B2)
+    res_mat <- matrix(0, nrow = total_rows, ncol = L3)
+
+    pos <- 1
+    start_A <- 1   # current position in stack_A1 / stack_A2
+    start_B <- 1   # current position in stack_B1 / stack_B2
+    for (k in seq_len(n_pairs)) {
+      rA <- len1_i[k]   # number of rows for this pair from A1/A2
+      rB <- len2_j[k]   # number of rows for this pair from B1/B2
+
+      # Copy the rA rows of A1, then rA rows of A2
+      res_mat[pos:(pos + rA - 1), ] <- stack_A1[start_A:(start_A + rA - 1), ]
+      pos <- pos + rA
+      res_mat[pos:(pos + rA - 1), ] <- stack_A2[start_A:(start_A + rA - 1), ]
+      pos <- pos + rA
+
+      # Copy the rB rows of B1, then rB rows of B2
+      res_mat[pos:(pos + rB - 1), ] <- stack_B1[start_B:(start_B + rB - 1), ]
+      pos <- pos + rB
+      res_mat[pos:(pos + rB - 1), ] <- stack_B2[start_B:(start_B + rB - 1), ]
+      pos <- pos + rB
+
+      start_A <- start_A + rA
+      start_B <- start_B + rB
+    }
+
+    # Flatten the matrix column‑wise (by k) to obtain the final vector of sizes
+    nb_rows <- as.vector(t(res_mat))
   } else {
+    # -------------------------------------------------------------------
+    # 3 non‑hierarchical variables: exact result (the length of table i is known)
+    # The formulas below come from the analytical derivation for flat variables.
+    # They are already fully vectorized and correctly predict every table size.
+    # -------------------------------------------------------------------
 
-    n_mod_v1 <- length(unique(dfs[[v1]]))
-    n_mod_v2 <- length(unique(dfs[[v2]]))
-    n_mod_v3 <- length(unique(dfs[[v3]]))
+    # Fetch unique modality counts directly from unique_mods list rather than executing raw unique() calls.
+    n_mod_v1 <- length(unique_mods[[v1]])
+    n_mod_v2 <- length(unique_mods[[v2]])
+    n_mod_v3 <- length(unique_mods[[v3]])
 
+    # RATIONALE FOR THE 14-TABLE FORMULA (e.g., n_mod_v1=3, n_mod_v2=4, n_mod_v3=3):
+    # Merging 3 flat variables v1, v2, v3 in a 5D-to-3D reduction is a nested process:
+    #
+    # Step 1: Merges v1 and v2, generating 2 intermediate 4D tables (tab1 and tab2).
+    #   - tab1: v1 is the primary split variable. Its custom hierarchy has:
+    #           * 1 Root Split (total "Total_Total" cut into v1 level 1 children)
+    #           * (n_mod_v1 - 1) Intermediate Splits (v1 node cut into v2 children)
+    #   - tab2: v2 is the primary split variable. Its custom hierarchy has:
+    #           * 1 Root Split (total "Total_Total" cut into v2 level 1 children)
+    #           * (n_mod_v2 - 1) Intermediate Splits (v2 node cut into v1 children)
+    #
+    # Step 2: Merges the newly hierarchical V1_V2 with v3 using 'from_4_to_3_case_1_hr'.
+    # Every single split from Step 1 (both Root and Intermediate splits) is further
+    # split and crossed with v3, generating TWO 3D tables per split.
+    #
+    # Summing all generated tables:
+    #   - From tab1:
+    #     * 1 pair from the Root Split (sizes based on v1 and v3)
+    #     * (n_mod_v1 - 1) pairs from the Intermediate Splits (sizes based on v2 and v3)
+    #   - From tab2:
+    #     * 1 pair from the Root Split (sizes based on v2 and v3)
+    #     * (n_mod_v2 - 1) pairs from the Intermediate Splits (sizes based on v1 and v3)
+    #
+    # Grouping these symmetrically (which yields the original package's formula):
+    #   - Root Split of tab1 + Intermediate Splits of tab2 (both based on v1 & v3)
+    #     Total splits = 1 + (n_mod_v2 - 1) = n_mod_v2 splits (2 * n_mod_v2 tables).
+    #   - Root Split of tab2 + Intermediate Splits of tab1 (both based on v2 & v3)
+    #     Total splits = 1 + (n_mod_v1 - 1) = n_mod_v1 splits (2 * n_mod_v1 tables).
     nb_rows <- c(
+      # Standalone: 1 pair of tables from tab1's Root Split (sizes based on v1 and v3)
       1 + (n_mod_v3 - 1) * n_mod_v1,
       1 + n_mod_v3 * (n_mod_v1 - 1),
 
+      # Rep 1: n_mod_v1 pairs of tables representing:
+      #   - (n_mod_v1 - 1) Intermediate Splits from tab1
+      #   - 1 Root Split from tab2
+      # (All of these have sizes based on v2 and v3)
       rep(c(1 + (n_mod_v3 - 1) * n_mod_v2,
-            1 + n_mod_v3 * (n_mod_v2 - 1))
-          , n_mod_v1),
+            1 + n_mod_v3 * (n_mod_v2 - 1)),
+          times = n_mod_v1),
 
+      # Rep 2: (n_mod_v2 - 1) pairs of tables representing:
+      #   - (n_mod_v2 - 1) Intermediate Splits from tab2
+      # (All of these have sizes based on v1 and v3)
       rep(c(1 + (n_mod_v3 - 1) * n_mod_v1,
-            1 + n_mod_v3 * (n_mod_v1 - 1))
-          , n_mod_v2 - 1)
+            1 + n_mod_v3 * (n_mod_v1 - 1)),
+          times = n_mod_v2 - 1)
     )
+
   }
 
   # Calculate the total number of rows by multiplying with the unique modalities of non-merged variables.
 
   list_non_fused_vars <- names(totcode[!(names(totcode) %in% c(v1, v2, v3))])
 
-  non_fused_vars_mod <- lapply(list_non_fused_vars,
-                                   function(x)  length(unique(dfs[[x]])))
+  # Get the number of non-merged modalities using unique_mods lengths (much faster than lapply on unique).
+  non_fused_vars_mod <- sapply(list_non_fused_vars,
+                               function(x) length(unique_mods[[x]]))
 
   prod_numbers <- prod(unlist(non_fused_vars_mod))
 
-  nb_rows_tot <- lapply(unlist(nb_rows), function(x) x * prod_numbers)
+  nb_rows_tot <- as.list(nb_rows * prod_numbers)
 
   return(nb_rows_tot)
 }
 
-# Function to manage the import of the hierarchy
-import_hierarchy <- function(hrcfile) {
-  total <- "BIG_Total"
-  res_sdc <- sdcHierarchies::hier_import(inp = hrcfile, from = "hrc", root = total) %>%
-    sdcHierarchies::hier_convert(as = "sdc")
-  # Store all sets of parent + direct child
-  levels <- lapply(res_sdc$dims, names)
-  return(levels)
-}
-
-#' Calculate the number of tables generated when merging 3 variables
-#' in the transition from 5 to 3 dimensions
+#' Calculate total count of generated tables
 #'
-#' @param v1 first variable to be merged
-#' @param v2 second variable to be merged
-#' @param v3 third variable to be merged (
-#' variable that will be merged with v1 and v2 if v4 is not specified)
-#' @param v4 fourth variable to be merged (with v3)
-#' @param hrcfiles named list of hrc files
-#' @param data data.frame (used only in the case where a trio is formed)
-#'
-#' @return an integer representing the number of tables generated
-#'
-#' @examples
-#' # Dimension 4
-#' library(dplyr)
-#' data <- expand.grid(
-#'   ACT = c("Total", "A", "B", "A1", "A2", "B1", "B2"),
-#'   GEO = c("Total", "G1", "G2"),
-#'   SEX = c("Total", "F", "M"),
-#'   AGE = c("Total", "AGE1", "AGE2"),
-#'   stringsAsFactors = FALSE
-#' ) %>%
-#'   as.data.frame()
-#'
-#' data <- data %>% mutate(VALUE = 1)
-#'
-#' hrc_act <- "hrc_ACT.hrc"
-#'
-#' sdcHierarchies::hier_create(root = "Total", nodes = c("A", "B")) %>%
-#'   sdcHierarchies::hier_add(root = "A", nodes = c("A1", "A2")) %>%
-#'   sdcHierarchies::hier_add(root = "B", nodes = c("B1", "B2")) %>%
-#'   sdcHierarchies::hier_convert(as = "argus") %>%
-#'   slice(-1) %>%
-#'   mutate(levels = substring(paste0(level, name), 3)) %>%
-#'   select(levels) %>%
-#'   write.table(file = hrc_act, row.names = FALSE, col.names = FALSE, quote = FALSE)
-#'
-#' # 1 pair created
-#' nb_tab_generated(v1 = "ACT", v2 = "GEO",
-#'                 hrcfiles = c(ACT = hrc_act))
-#'
-#' # Dimension 5
-#' data <- expand.grid(
-#'   ACT = c("Total", "A", "B", "A1", "A2", "B1", "B2"),
-#'   GEO = c("Total", "GA", "GB", "GA1", "GA2", "GB1", "GB2"),
-#'   SEX = c("Total", "F", "M", "F1", "F2", "M1", "M2"),
-#'   AGE = c("Total", "AGE1", "AGE2", "AGE11", "AGE12", "AGE21", "AGE22"),
-#'   ECO = c("PIB", "Ménages", "Entreprises"),
-#'   stringsAsFactors = FALSE,
-#'   KEEP.OUT.ATTRS = FALSE
-#' ) %>%
-#'   as.data.frame()
-#'
-#' data <- data %>% mutate(VALUE = 1:n())
-#'
-#' hrc_act <- "hrc_ACT.hrc"
-#' sdcHierarchies::hier_create(root = "Total", nodes = c("A", "B")) %>%
-#'   sdcHierarchies::hier_add(root = "A", nodes = c("A1", "A2")) %>%
-#'   sdcHierarchies::hier_convert(as = "argus") %>%
-#'   slice(-1) %>%
-#'   mutate(levels = substring(paste0(level, name), 3)) %>%
-#'   select(levels) %>%
-#'   write.table(file = hrc_act, row.names = FALSE, col.names = FALSE, quote = FALSE)
-#'
-#' hrc_geo <- "hrc_GEO.hrc"
-#' sdcHierarchies::hier_create(root = "Total", nodes = c("GA", "GB")) %>%
-#'   sdcHierarchies::hier_add(root = "GA", nodes = c("GA1", "GA2")) %>%
-#'   sdcHierarchies::hier_add(root = "GB", nodes = c("GB1", "GB2")) %>%
-#'   sdcHierarchies::hier_convert(as = "argus") %>%
-#'   slice(-1) %>%
-#'   mutate(levels = substring(paste0(level, name), 3)) %>%
-#'   select(levels) %>%
-#'   write.table(file = hrc_geo, row.names = FALSE, col.names = FALSE, quote = FALSE)
-#'
-#' hrc_sex <- "hrc_SEX.hrc"
-#' sdcHierarchies::hier_create(root = "Total", nodes = c("F", "M")) %>%
-#'   sdcHierarchies::hier_add(root = "F", nodes = c("F1", "F2")) %>%
-#'   sdcHierarchies::hier_add(root = "M", nodes = c("M1", "M2")) %>%
-#'   sdcHierarchies::hier_convert(as = "argus") %>%
-#'   slice(-1) %>%
-#'   mutate(levels = substring(paste0(level, name), 3)) %>%
-#'   select(levels) %>%
-#'   write.table(file = hrc_sex, row.names = FALSE, col.names = FALSE, quote = FALSE)
-#'
-#' # Trio merged
-#' nb_tab_generated(data = data,
-#'                 v1 = "ACT", v2 = "GEO", v3 = "SEX",
-#'                 hrcfiles = c(ACT = hrc_act, GEO = hrc_geo, SEX = hrc_sex))
-#'
-#' # 2 pairs created
-#' nb_tab_generated(v1 = "ACT", v2 = "GEO",
-#'                 v3 = "SEX", v4 = "EXO",
-#'                 hrcfiles = c(ACT = hrc_act, GEO = hrc_geo, SEX = hrc_sex))
 #' @keywords internal
-#' @export
+#' @noRd
 nb_tab_generated <- function(
   v1,
   v2,
   v3 = NULL,
   v4 = NULL,
   hrcfiles = NULL,
-  data = NULL)
+  totcode = NULL,
+  data = NULL,
+  unique_mods = NULL)
 {
+
+  # Fallback setup to minimize duplicate calculations in nb_tab_generated
+  if (is.null(unique_mods) && !is.null(data)) {
+    needed_vars <- c(v1, v2, v3, v4)
+    needed_vars <- needed_vars[!is.null(needed_vars) & !is.na(needed_vars)]
+    unique_mods <- lapply(data[needed_vars], unique)
+  }
 
   # Case dimension 5: 2 couples created
   if (!is.null(v4)) {
-    return(4 * nb_nodes(hrcfiles = hrcfiles, v = v1) *
-             nb_nodes(hrcfiles = hrcfiles, v = v2) *
-             nb_nodes(hrcfiles = hrcfiles, v = v3) *
-             nb_nodes(hrcfiles = hrcfiles, v = v4))
+    return(4 * nb_nodes(hrcfiles = hrcfiles, v = v1, totcode = totcode) *
+             nb_nodes(hrcfiles = hrcfiles, v = v2, totcode = totcode) *
+             nb_nodes(hrcfiles = hrcfiles, v = v3, totcode = totcode) *
+             nb_nodes(hrcfiles = hrcfiles, v = v4, totcode = totcode))
 
     # Case dimension 5: one triplet merged
   } else if (!is.null(v3)) {
@@ -839,21 +727,20 @@ nb_tab_generated <- function(
     if (!is.null(hrcfiles) & v1 %in% names(hrcfiles) & v2 %in% names(hrcfiles)) {
 
       # The hierarchy of each variable
-      level_v1 <- import_hierarchy(hrcfiles[[v1]])
-      level_v2 <- import_hierarchy(hrcfiles[[v2]])
+      level_v1 <- import_hierarchy(hrcfiles[[v1]], totcode[[v1]])
+      level_v2 <- import_hierarchy(hrcfiles[[v2]], totcode[[v2]])
 
-      # Store the sum of nodes of v1_v2 for each table
-      # We consider all possible combinations between v1 and v2
-      # => represents the tables created during the creation of v1_v2 in the 5->4 step
+      # ALGEBRAIC SIMPLIFICATION JUSTIFICATION:
+      # The original nested sapply loops computed:
+      #   sum_{i=1}^{L1} [ sum_{j=1}^{L2} ( length(level_v1[[i]]) + length(level_v2[[j]]) ) ]
+      # By linearity of summation, this can be distributed as:
+      #   L2 * sum_{i=1}^{L1} length(level_v1[[i]]) + L1 * sum_{j=1}^{L2} length(level_v2[[j]])
+      # Where L1 = length(level_v1) and L2 = length(level_v2).
+      # This removes all nested loops and executes instantaneously.
+      len1 <- sapply(level_v1, length)
+      len2 <- sapply(level_v2, length)
 
-      # For each of these tables, there are two possible hierarchies
-      # one with the totals of v1, and the other with the totals of v2
-      # the number of nodes is equal to their number of modalities
-      nb_noeuds_var <- sum(sapply(1:length(level_v1), function(i) {
-        sum(sapply(1:length(level_v2), function(j) {
-          length(level_v1[[i]]) + length(level_v2[[j]])
-        }))
-      }))
+      nb_noeuds_var <- length(level_v2) * sum(len1) + length(level_v1) * sum(len2)
 
       # 2 non-hierarchical variables merged
     } else if (is.null(hrcfiles) | !(v1 %in% names(hrcfiles)) & !(v2 %in% names(hrcfiles))) {
@@ -861,27 +748,27 @@ nb_tab_generated <- function(
       # which can have two hierarchies
       # totals on v1, or totals on v2
       # the number of nodes is equivalent to the number of modalities
-      nb_noeuds_var <- length(unique(data[[v1]])) + length(unique(data[[v2]]))
+      nb_noeuds_var <- length(unique_mods[[v1]]) + length(unique_mods[[v2]])
 
       # 1 hierarchical variable and 1 non-hierarchical variable merged
     } else {
       var_hier <- ifelse(v1 %in% names(hrcfiles), v1, v2)
       mod_var_non_hier <- ifelse(var_hier == v1,
-                                 length(unique(data[[v2]])),
-                                 length(unique(data[[v1]])))
+                                 length(unique_mods[[v2]]),
+                                 length(unique_mods[[v1]]))
 
       # Analysis of the hierarchy of var_hier
-      level_var_hier <- import_hierarchy(hrcfiles[[var_hier]])
+      level_var_hier <- import_hierarchy(hrcfiles[[var_hier]], totcode[[var_hier]])
 
-      # We consider all possible combinations between v1 and v2
-      # => represents the tables created during the creation of v1_v2 in the 5->4 step
+      # ALGEBRAIC SIMPLIFICATION JUSTIFICATION:
+      # The original single sapply computed:
+      #   sum_{i=1}^{L_hier} ( length(level_var_hier[[i]]) + mod_var_non_hier )
+      # Since mod_var_non_hier is a constant across all iterations, this is equivalent to:
+      #   sum_{i=1}^{L_hier} length(level_var_hier[[i]]) + L_hier * mod_var_non_hier
+      # Where L_hier = length(level_var_hier).
+      len_hier <- sapply(level_var_hier, length)
 
-      # For each of these tables, there are two possible hierarchies
-      # one with the totals of v1, and the other with the totals of v2
-      # the number of nodes is equal to their number of modalities
-      nb_noeuds_var <- sum(sapply(1:length(level_var_hier), function(i) {
-        length(level_var_hier[[i]]) + mod_var_non_hier
-      }))
+      nb_noeuds_var <- sum(len_hier) + length(level_var_hier) * mod_var_non_hier
     }
 
     # nb_nodes corresponds to the number of tables that need to be created
@@ -890,11 +777,96 @@ nb_tab_generated <- function(
     # and we create as many tables as its hierarchy has nodes
     # finally, for each created table, two hierarchies are possible
     # totals on v1_v2 and totals on v3
-    return(2 * nb_noeuds_var * nb_nodes(hrcfiles, v = v3))
+    return(2 * nb_noeuds_var * nb_nodes(hrcfiles, v = v3, totcode = totcode))
 
     # Case dimension 4
   } else {
-    return(2 * nb_nodes(hrcfiles = hrcfiles, v = v1) *
-             nb_nodes(hrcfiles = hrcfiles, v = v2))
+    return(2 * nb_nodes(hrcfiles = hrcfiles, v = v1, totcode = totcode) *
+             nb_nodes(hrcfiles = hrcfiles, v = v2, totcode = totcode))
   }
+}
+
+#' Analytically computes all possible table splits and summarizes their statistics.
+#'
+#' @param dfs data.frame containing 4 or 5 categorical variables
+#' @param totcode named vector of totals for categorical variables
+#' @param hrcfiles named vector of hrc files (optional)
+#'
+#' @return A deduplicated data.frame containing the following columns:
+#' \itemize{
+#'   \item `nb_tab`: number of generated tables
+#'   \item `nb_hrc`: number of remaining hierarchical variables
+#'   \item `min_size`: minimum table size (rows)
+#'   \item `med_size`: median table size (rows, rounded to integer)
+#'   \item `max_size`: maximum table size (rows)
+#' }
+#' @export
+explore_reduce_dims <- function(dfs, totcode, hrcfiles = NULL) {
+
+  # Ensure dfs is a standard data.frame (handles data.table input)
+  dfs <- as.data.frame(dfs)
+
+  # 1. Check dimensions (4D or 5D)
+  num_dims <- length(totcode)
+  if (!num_dims %in% c(4, 5)) {
+    stop("Please provide a totcode object with 4 or 5 dimensions!")
+  }
+
+  # Initial number of hierarchical variables
+  hrc_var_names <- intersect(names(hrcfiles), names(totcode))
+  nb_hrc_initial <- length(hrc_var_names)
+
+  # Precompute unique_mods to speed up computation (as in var_to_merge)
+  unique_mods <- lapply(dfs[names(totcode)], unique)
+
+  # 2. Generate possible variable combinations
+  if (num_dims == 4) {
+    # 4D: 6 combinations of 2 variables
+    result_comb <- generate_a_pair(totcode)
+  } else {
+    # 5D: 10 triplets (3-var merge) + 15 double pairs (4-var merge) = 25 cases
+    triplets  <- generate_a_triplet(totcode)
+    two_pairs <- generate_two_pairs(totcode)
+    result_comb <- c(triplets, two_pairs)
+  }
+
+  # 3. Analytically compute table lengths using length_tabs
+  results <- lapply(result_comb, function(x) {
+    # x contains 2, 3, or 4 variables.
+    # x[3] and x[4] return NA if the index exceeds length(x),
+    # which length_tabs() automatically converts to NULL.
+    tab_sizes <- unlist(
+      length_tabs(
+        dfs = dfs,
+        v1 = x[1],
+        v2 = x[2],
+        v3 = x[3],
+        v4 = x[4],
+        totcode = totcode,
+        hrcfiles = hrcfiles,
+        unique_mods = unique_mods
+      )
+    )
+
+    # Calculate remaining hierarchical variables
+    merged_vars <- x[!is.na(x)]
+    nb_hrc_merged <- sum(merged_vars %in% hrc_var_names)
+    nb_created <- if (length(x) == 4) 2L else 1L
+    nb_hrc_val <- as.integer(nb_hrc_initial - nb_hrc_merged + nb_created)
+
+    data.frame(
+      nb_tab   = as.integer(length(tab_sizes)),
+      nb_hrc   = nb_hrc_val,
+      min_size = as.integer(min(tab_sizes)),
+      med_size = as.integer(round(stats::median(tab_sizes))),
+      max_size = as.integer(max(tab_sizes))
+    )
+  })
+
+  # 4. Combine, deduplicate (distinct), and sort by ascending nb_tab
+  res_df <- dplyr::bind_rows(results) %>%
+    dplyr::distinct() %>%
+    dplyr::arrange(nb_tab, max_size, min_size)
+
+  return(res_df)
 }
