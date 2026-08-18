@@ -368,7 +368,11 @@ tab_multi_manager <- function(
     num_iter_all <- num_iter_all + 1
     num_tableau <- todolist[1]
     num_iter_par_tab[num_tableau] <- num_iter_par_tab[num_tableau] + 1
-    cat("--- Current table to treat: ", num_tableau, "---\n")
+
+    # cat("--- Current table to treat: ", num_tableau, "---\n")
+    cat(sprintf("\r--- Current table to treat: %s | loop iter : %d ---            ",
+                num_tableau, num_iter_all))
+    flush.console()
 
     nom_col_identifiante <- paste0("T_", num_tableau)
     tableau_a_traiter <- which(table_majeure[[nom_col_identifiante]])
@@ -491,6 +495,8 @@ tab_multi_manager <- function(
     journal_add_break_line(journal)
 
   }
+
+  cat("\n")
 
   # Reconstruire la liste des tableaux d'entrée
   liste_tbx_res <- purrr::imap(
