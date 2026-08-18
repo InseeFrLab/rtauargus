@@ -19,8 +19,7 @@ tab_rtauargus2(
   ip = 10,
   suppress = "MOD(1,5,1,0,0)",
   split_tab = TRUE,
-  nb_tab_option = "smart",
-  limit = 14700,
+  split_limit = NULL,
   ...
 )
 }
@@ -99,19 +98,10 @@ parameters for it.\cr
 whether to reduce dimension to 3 while treating a table of dimension 4 or 5
 (default to \code{FALSE})}
 
-\item{nb_tab_option}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}} strategy to follow
-to choose variables automatically while splitting:
-\itemize{
-\item{\code{"min"}: minimize the number of tables;}
-\item{\code{"max"}: maximize the number of tables;}
-\item{\code{"smart"}: minimize the number of tables under the constraint
-of their row count.}
-}}
-
-\item{limit}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}} numeric, used to choose
-which variable to merge (if nb_tab_option = 'smart')
-and split table with a number of row above this limit in order to avoid
-tauargus failures}
+\item{split_limit}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}} NULL or numeric, default \code{NULL}.
+Only used when \code{split_tab = TRUE}: maximum number of rows tolerated in a
+sub-table. If \code{NULL} (recommended), it is computed automatically via
+\code{auto_limit()}.}
 
 \item{...}{Other arguments of \code{tab_rtauargus} function}
 }

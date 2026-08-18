@@ -47,7 +47,7 @@ auto_limit <- function(dfs, totcode, hrcfiles = NULL) {
 #' @param limit numeric or NULL, default `NULL`. Used to choose which variable
 #'   to merge (if nb_tab_option = 'smart') and split table with a number of row
 #'   above this limit in order to avoid tauargus failures.
-#'   If `NULL`, an automatic limit is calculated using \code{\link{auto_limit}}.
+#'   If `NULL`, an automatic limit is calculated using \code{auto_limit}.
 #' @param nb_tab_option `r lifecycle::badge("superseded")` character, default `"smart"`.
 #'   Strategy used for dimension reduction. **Note:** Only `"smart"` is recommended.
 #'   Historical options (`"min"` and `"max"`) are legacy heuristics kept for backward
@@ -160,7 +160,7 @@ tab_rtauargus4 <- function(
   if (length(explanatory_vars) %in% c(4, 5)) {
 
     # Calcul automatique de la limite si limit = NULL
-    if (is.null(limit)) {
+    if (is.null(limit) && nb_tab_option == "smart") {
       if (isTRUE(.dots[["verbose"]])) {
         cat("`limit` est NULL, calcul automatique en cours via `auto_limit()`...\n")
       }
@@ -181,7 +181,7 @@ tab_rtauargus4 <- function(
       hrc_dir = hrc_path,
       nb_tab_option = nb_tab_option,
       limit = limit,
-      over_split = TRUE,
+      over_split = FALSE,
       verbose = TRUE, # to generalize later
       sep_dir = TRUE
     )

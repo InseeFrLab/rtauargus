@@ -124,8 +124,7 @@ tab_multi_manager <- function(
     num_iter_max = 10,
     summary_secret = FALSE,
     split_tab = FALSE,
-    nb_tab_option = "smart",
-    limit = 14700,
+    split_limit = NULL,
     ...
 ){
   start_time <- Sys.time()
@@ -143,8 +142,9 @@ tab_multi_manager <- function(
   params$suppress = suppress
   params$suppress = suppress
   params$split_tab = split_tab
-  params$nb_tab_option = nb_tab_option
-  params$limit = limit
+
+  params$nb_tab_option = if (!is.null(.dots$nb_tab_option)) .dots$nb_tab_option else "smart"
+  params$split_limit = split_limit
 
   n_tbx = length(list_tables) # nombre de tableaux
 
