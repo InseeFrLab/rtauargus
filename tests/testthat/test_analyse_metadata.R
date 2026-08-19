@@ -394,3 +394,50 @@ test_that("pas_meme_var_crois_2", {
 }
 )
 
+# Two equations linked by one indicator ----------------------------------------
+meta <- metadata_pizza_lettuce |>
+  filter(hrc_indicator == "hrc_lettuce")
+
+meta <- bind_rows(
+  meta,
+  meta |>
+    dplyr::slice(1:2) |>
+    mutate(indicator = c("to_bat1", "to_bat2"),
+           table_name = c("T1", "T2"))
+) |>
+  mutate(hrc_indicator = NA_character_)
+
+df_eq_lettuce_included <- data.frame(
+  eq_name = c("eq1","eq2"),
+  eq_indicator = c("to_lettuce = to_batavia + to_arugula",
+                   "to_batavia = to_bat1 + to_bat2"),
+  unit = c("EUR","EUR"),
+  stringsAsFactors = FALSE
+)
+
+answer <- data.frame(
+  cluster = rep("france_entreprises_2023.EUR"),
+  table_name = c("T1.T11.T7.T9","T10.T12.T2.T8"),
+  field = rep("france_entreprises_2023"),
+  indicator = c("to_batavia","to_batavia"),
+  spanning_1 = c("HRC_NAF","HRC_NAF"),
+  spanning_2 = c("size","cj"),
+  spanning_3 = c("EQ1_EQ2^h","EQ1_EQ2^h"),
+  hrc_spanning_1 = c("hrc_naf","hrc_naf"),
+  hrc_spanning_2 = NA_character_,
+  hrc_spanning_3 = c("hrc_EQ1_EQ2.totcode.to_batavia","hrc_EQ1_EQ2.totcode.to_batavia")
+)
+
+test_that("eqs_linked_by_one_indicator", {
+  expect_warning(
+    expect_equal(
+      analyse_metadata(df_metadata = meta,df_eq_indicator = df_eq_lettuce_included),
+      answer
+    ),
+    "hrc_indicator column will be ignored"
+  )
+
+}
+)
+
+

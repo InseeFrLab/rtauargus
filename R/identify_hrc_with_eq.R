@@ -399,7 +399,7 @@ regroup_tables <- function(df_group, spanning_combination_group) {
     df_group |>
       filter(table_name %in% tables_complete) |>
       left_join(spanning_by_table |> select(table_name, spanning_key), by = "table_name") |>
-      group_by(across(-c(table_name, side, var_mapped, indicator))) |>
+      group_by(across(-c(table_name, side, var_mapped, indicator, eq_name))) |>
       summarise(
         table_name = paste(sort(unique(table_name)), collapse = "."),
         indicator = last(unit),
