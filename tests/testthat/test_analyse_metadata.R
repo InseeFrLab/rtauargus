@@ -94,6 +94,35 @@ test_that("hierarchies on indicators", {
 }
 )
 
+# check that the hierarchies on fields are handled properly --------------------
+answer <- data.frame(
+  cluster = "hrc_geo.to_pizza",
+  table_name = "T1.T2.T3",
+  field = "france_entreprises_2023",
+  indicator = "to_pizza",
+  spanning_1 = "size",
+  spanning_2 = "HRC_GEO^h",
+  hrc_spanning_1 = NA_character_,
+  hrc_spanning_2 = NA_character_
+)
+
+test_that("hierarchies on fields", {
+
+  meta <- data.frame(
+    table_name = paste0("T", 1:3),
+    field = c("france_entreprises_2023","metro_entreprises_2023","dom_entreprises_2023"),
+    hrc_field = "hrc_geo",
+    indicator = "to_pizza",
+    hrc_indicator = NA_character_,
+    spanning_1 = "size",
+    hrc_spanning_1 = NA_character_
+  )
+
+  expect_equal(analyse_metadata(meta),answer)
+}
+)
+
+
 ############################################################### TABLE INCLUSIONS
 # two tables included in each other
 answer <- data.frame(
