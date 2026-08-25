@@ -469,4 +469,37 @@ test_that("eqs_linked_by_one_indicator", {
 }
 )
 
+# the hrc on fields are handled properly ---------------------------------------
+answer <- data.frame(
+  cluster = "hrc_geo.EUR",
+  table_name = "T1.T2.T3",
+  field = "hrc_geo",
+  indicator = "to_lettuce",
+  spanning_1 = "HRC_GEOh",
+  spanning_2 = "size",
+  spanning_3 = "EQ1^h",
+  hrc_spanning_1 = NA_character_,
+  hrc_spanning_2 = NA_character_,
+  hrc_spanning_3 = "hrc_EQ1.totcode.to_lettuce"
+)
+
+test_that("hierarchies on fields with eq on indicators", {
+
+  meta <- data.frame(
+    table_name = paste0("T", 1:3),
+    field = c("france_entreprises_2023","metro_entreprises_2023","dom_entreprises_2023"),
+    hrc_field = "hrc_geo",
+    indicator = c("to_lettuce","to_batavia","to_arugula"),
+    hrc_indicator = NA_character_,
+    spanning_1 = "size",
+    hrc_spanning_1 = NA_character_
+  )
+  expect_warning(
+    expect_equal(analyse_metadata(meta,df_eq_lettuce_1),answer),
+    "hrc_indicator column will be ignored"
+  )
+}
+)
+
+
 

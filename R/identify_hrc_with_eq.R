@@ -100,7 +100,7 @@ identify_hrc_with_eq <- function(df_metadata_long,df_eq_indicator){
     dplyr::filter(!is.na(rhs)) %>%
     dplyr::mutate(
       total = trimws(as.character(total)),
-      rhs   = trimws(as.character(rhs))
+      rhs = trimws(as.character(rhs))
     ) %>%
     dplyr::distinct() %>%
     left_join(alt_map, by = c("eq_name", "total")) %>%
@@ -151,6 +151,27 @@ identify_hrc_with_eq <- function(df_metadata_long,df_eq_indicator){
                          toupper(sub("hrc_", "", hrc_indicator)), indicator),
       hrc_indicator = ifelse(indicator %in% unique(equations_long$var), NA, hrc_indicator)
     )
+
+  if (any(!is.na(df_spannings$hrc_field))) {
+    df_spannings <- df_spannings %>%
+      mutate(
+        field = ifelse(is.na(hrc_field), field, toupper(hrc_field)))
+
+    spanning_field_rows <- df_spannings %>%
+      filter(!is.na(hrc_field)) %>%
+      group_by(table_name) %>%
+      summarise(
+        field = last(hrc_field),
+        hrc_field = last(hrc_field),
+        spanning = paste0(toupper(last(hrc_field)), "^h"),
+        hrc_spanning = last(hrc_spanning),
+        indicator = last(indicator),
+        hrc_indicator = last(hrc_indicator)
+      )
+
+    df_spannings <- bind_rows(df_spannings, spanning_field_rows) %>%
+      arrange(table_name)
+  }
 
   df_spannings_eq <- df_spannings %>%
     mutate(across(dplyr::where(is.character), ~ gsub("[^[:alnum:]_]", "", .))) %>%
