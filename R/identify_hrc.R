@@ -76,7 +76,7 @@ identify_hrc <- function(df_metadata_long){
         field = last(hrc_field),
         hrc_field = last(hrc_field),
         spanning = paste0(toupper(last(hrc_field)), "^h"),
-        hrc_spanning = last(hrc_spanning),
+        hrc_spanning = last(hrc_field),
         indicator = last(indicator),
         hrc_indicator = last(hrc_indicator)
       ) %>%

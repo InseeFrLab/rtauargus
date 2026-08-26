@@ -122,6 +122,38 @@ test_that("hierarchies on fields", {
 }
 )
 
+# check that the hierarchies on fields and on indicators -----------------------
+answer <- data.frame(
+  cluster = "hrc_geo.hrc_salades",
+  table_name = "T1.T2.T3",
+  field = "france_entreprises_2023",
+  indicator = "SALADES",
+  spanning_1 = "size",
+  spanning_2 = "HRC_SALADES^h",
+  spanning_3 = "HRC_GEO^h",
+  hrc_spanning_1 = NA_character_,
+  hrc_spanning_2 = "hrc_salades",
+  hrc_spanning_3 = "hrc_geo"
+)
+
+test_that("hierarchies on fields", {
+
+  meta <- data.frame(
+    table_name = paste0("T", 1:3),
+    field = c("france_entreprises_2023","metro_entreprises_2023","dom_entreprises_2023"),
+    hrc_field = "hrc_geo",
+    indicator = c("to_batavia","to_arugula","to_lettuce"),
+    hrc_indicator = "hrc_salades",
+    spanning_1 = "size",
+    hrc_spanning_1 = NA_character_
+  )
+
+  expect_equal(analyse_metadata(meta),answer)
+}
+)
+
+
+
 
 ############################################################### TABLE INCLUSIONS
 # two tables included in each other
