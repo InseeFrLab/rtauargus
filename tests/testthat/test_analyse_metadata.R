@@ -103,7 +103,7 @@ answer <- data.frame(
   spanning_1 = "size",
   spanning_2 = "HRC_GEO^h",
   hrc_spanning_1 = NA_character_,
-  hrc_spanning_2 = NA_character_
+  hrc_spanning_2 = "hrc_geo"
 )
 
 test_that("hierarchies on fields", {
@@ -136,7 +136,7 @@ answer <- data.frame(
   hrc_spanning_3 = "hrc_geo"
 )
 
-test_that("hierarchies on fields", {
+test_that("hierarchies on fields and indicators", {
 
   meta <- data.frame(
     table_name = paste0("T", 1:3),
@@ -151,8 +151,6 @@ test_that("hierarchies on fields", {
   expect_equal(analyse_metadata(meta),answer)
 }
 )
-
-
 
 
 ############################################################### TABLE INCLUSIONS
