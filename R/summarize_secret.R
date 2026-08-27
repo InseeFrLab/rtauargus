@@ -1,7 +1,7 @@
 #' Provide the summary of the suppression pattern from a rtauargus result
 #'
 #' @param res_tau either the data.frame resulting from tab_rtauargus run or
-#' the list of data.frame resulting from tab_multimanager run
+#' the list of data.frame resulting from tab_multi_manager run
 #' @param var the quantitative variable name to use for values stats of suppression
 #' (default to `NULL` that is the stats are only computed depending on the number of cells )
 #' @param secret_var the name of the variable indicating the primary suppressed cells
@@ -77,8 +77,8 @@ summarize_secret <- function(res_tau, var = NULL, secret_var = "is_secret_prim")
       dplyr::mutate(
         status = case_when(
           is_secret_prim  ~ "primary suppr.",
-          final_status_ta != "V" ~ "secondary suppr.",
-          TRUE ~ "published"
+          (final_status_ta == "V") | (final_status_ta == FALSE) ~ "published",
+          TRUE ~ "secondary suppr."
         )) |>
       dplyr::mutate(status = factor(
         status,
