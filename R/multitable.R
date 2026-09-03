@@ -145,6 +145,8 @@ tab_multi_manager <- function(
 
   params$nb_tab_option = if (!is.null(.dots$nb_tab_option)) .dots$nb_tab_option else "smart"
   params$split_limit = split_limit
+  # Enabled by default for multi-table manager calls
+  params$compact_verbose <- if (!is.null(.dots[["compact_verbose"]])) .dots[["compact_verbose"]] else TRUE
 
   n_tbx = length(list_tables) # nombre de tableaux
 

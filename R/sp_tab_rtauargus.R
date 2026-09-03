@@ -66,6 +66,9 @@ auto_limit <- function(dfs, totcode, hrcfiles = NULL) {
 #'   (smallest first); if `"DESC"`, in descending order.
 #'   `NULL` preserves the default order produced by `reduce_dims()`.
 #'   *Note: this parameter is experimental and may be modified or removed in future versions.*
+#' @param compact_verbose logical, default `FALSE`.
+#'   Whether to display a compact single-line summary for dimension reduction
+#'   instead of detailed progress logs (recommended for multi-table workflows).
 #' @param ... additional parameters
 #'
 #' @return The original tabular is returned with additional variables indicating
@@ -139,6 +142,7 @@ tab_rtauargus4 <- function(
     limit = NULL,
     dfs_name = 'tab',
     sort_table = NULL,
+    compact_verbose = FALSE,
     ...
 ){
 
@@ -159,6 +163,15 @@ tab_rtauargus4 <- function(
   # Reduce dims for 4 or 5 dimensions table
   if (length(explanatory_vars) %in% c(4, 5)) {
 
+    # Clean name for display (e.g. 'd1', 'd2' or 'tab')
+    name_clean <- if (!is.null(files_name) && files_name != "targus_file") files_name else dfs_name
+
+    # Prefix sub-tables with parent name when called from tab_multi_manager (e.g. 'd1_1', 'd2_1')
+    name_display <- if (!is.null(files_name) && files_name != "targus_file") files_name else dfs_name
+    if (!is.null(files_name) && files_name != "targus_file" && dfs_name == 'tab') {
+      dfs_name <- paste0(files_name, "_")
+    }
+
     # Calcul automatique de la limite si limit = NULL
     if (is.null(limit) && nb_tab_option == "smart") {
       if (isTRUE(.dots[["verbose"]])) {
@@ -171,7 +184,9 @@ tab_rtauargus4 <- function(
       }
     }
 
-    cat("\nReducing dims...\n",dfs_name,"\n\n")
+    if (!compact_verbose) {
+      cat("\nReducing dims...\n", name_clean, "\n\n")
+    }
 
     # Standardize secret column to 'is_secret_prim'.
     # Note: Standalone tab_rtauargus() / tab_rtauargus4() work as intended, but under
@@ -180,6 +195,15 @@ tab_rtauargus4 <- function(
     # 1) Name collisions in inner tab_multi_manager (which overwrite cells with NAs).
     # 2) Missing column errors in summarize_secret(), which expects 'is_secret_prim'.
     tabular$is_secret_prim <- tabular[[secret_var]]
+
+    # Default to verbose = TRUE for standalone detailed logging when compact_verbose is FALSE
+    verbose_reduce <- if (compact_verbose) {
+      FALSE
+    } else if (!is.null(.dots[["verbose"]])) {
+      isTRUE(.dots[["verbose"]])
+    } else {
+      TRUE
+    }
 
     list_tables <- reduce_dims(
       dfs = tabular,
@@ -190,9 +214,17 @@ tab_rtauargus4 <- function(
       nb_tab_option = nb_tab_option,
       limit = limit,
       over_split = FALSE,
-      verbose = TRUE, # to generalize later
+      verbose = verbose_reduce,
       sep_dir = TRUE
     )
+
+    # Print a single clean summary line when compact_verbose is TRUE
+    if (compact_verbose) {
+      tab_sizes <- sapply(list_tables$tabs, nrow)
+      cat(sprintf("\n  \u21b3 [%s] Split %dD -> 3D : %d sub-tables (%d to %d rows)\n",
+                  name_clean, length(explanatory_vars), length(list_tables$tabs),
+                  min(tab_sizes), max(tab_sizes)))
+    }
 
     # Tri des sous-tables par somme de la colonne value
     if (!is.null(sort_table)) {
@@ -231,6 +263,10 @@ tab_rtauargus4 <- function(
 
     masq_list <- do.call("tab_multi_manager", params_multi)
 
+    # Clean line break after inner multi-table progress output
+    if (compact_verbose) {
+      cat("\n")
+    }
 
     result <- restore_format(masq_list, list_tables)
 

@@ -210,6 +210,7 @@ tab_rtauargus <- function(
       params_rt4$dir_name <- dir_name
       params_rt4$files_name <- files_name
       params_rt4$limit <- split_limit
+      params_rt4$compact_verbose <- if (!is.null(.dots[["compact_verbose"]])) .dots[["compact_verbose"]] else FALSE
 
       return(do.call("tab_rtauargus4", params_rt4))
 
@@ -442,6 +443,8 @@ tab_rtauargus2 <- function(
 
   params$nb_tab_option = if (!is.null(.dots$nb_tab_option)) .dots$nb_tab_option else "smart"
   params$split_limit = split_limit
+  # Enabled by default for multi-table manager calls
+  params$compact_verbose <- if (!is.null(.dots[["compact_verbose"]])) .dots[["compact_verbose"]] else TRUE
 
   params$summary_secret = FALSE
   params$show_batch_console = FALSE
