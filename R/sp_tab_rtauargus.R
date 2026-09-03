@@ -173,6 +173,14 @@ tab_rtauargus4 <- function(
 
     cat("\nReducing dims...\n",dfs_name,"\n\n")
 
+    # Standardize secret column to 'is_secret_prim'.
+    # Note: Standalone tab_rtauargus() / tab_rtauargus4() work as intended, but under
+    # tab_multi_manager(split_tab = TRUE), outer iterations >= 2 pass dynamic names
+    # (e.g. 'is_secret_1'). This alias prevents:
+    # 1) Name collisions in inner tab_multi_manager (which overwrite cells with NAs).
+    # 2) Missing column errors in summarize_secret(), which expects 'is_secret_prim'.
+    tabular$is_secret_prim <- tabular[[secret_var]]
+
     list_tables <- reduce_dims(
       dfs = tabular,
       dfs_name = dfs_name,
@@ -218,10 +226,21 @@ tab_rtauargus4 <- function(
     params_multi$alt_hrc = list_tables$alt_hrc
     params_multi$alt_totcode = list_tables$alt_totcode
 
+    # Force inner tab_multi_manager to use 'is_secret_prim' as its initial secret
+    params_multi$secret_var <- "is_secret_prim"
+
     masq_list <- do.call("tab_multi_manager", params_multi)
 
 
     result <- restore_format(masq_list, list_tables)
+
+    # Restore input secret_var name so tab_rtauargus2() can compute cell Status
+    result[[secret_var]] <- result$is_secret_prim
+
+    # Clean up temporary alias to prevent column pollution and merge duplication
+    if (secret_var != "is_secret_prim") {
+      result$is_secret_prim <- NULL
+    }
 
     return(result)
   } else {
