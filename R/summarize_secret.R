@@ -118,7 +118,7 @@ summarize_secret <- function(res_tau, var = NULL, secret_var = "is_secret_prim")
 
     }
 
-    return( purrr::map(res_tau, summarize_secret, var = var) )
+    return( purrr::map(res_tau, summarize_secret, var = var, secret_var = secret_var) )
 
   }
 
