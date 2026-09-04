@@ -8,7 +8,7 @@ summarize_secret(res_tau, var = NULL, secret_var = "is_secret_prim")
 }
 \arguments{
 \item{res_tau}{either the data.frame resulting from tab_rtauargus run or
-the list of data.frame resulting from tab_multimanager run}
+the list of data.frame resulting from tab_multi_manager run}
 
 \item{var}{the quantitative variable name to use for values stats of suppression
 (default to \code{NULL} that is the stats are only computed depending on the number of cells )}
