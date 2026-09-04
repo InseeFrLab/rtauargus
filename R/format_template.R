@@ -215,6 +215,7 @@ format_template <- function(data,indicator_column,spanning_var_tot,field_columns
           FALSE
         }
       })
+
       spanning_description <- purrr::imap_dfr(
         tables_crossing_variables,
         ~ {
@@ -223,12 +224,13 @@ format_template <- function(data,indicator_column,spanning_var_tot,field_columns
             paste0("hrc_", tolower(names(.x)), "_", sapply(.x, function(col) length(unique(col)))),
             names(.x)
           )
-          # Extract variable names and formatted counts
-          variable_names <- names(formatted_counts) # Spanning variables
-          hrc_values <- formatted_counts            # Corresponding hrc values
+
+          nb_modalities <- sapply(.x, function(col) length(unique(col)))
+          variable_names <- paste0(names(nb_modalities),"_",nb_modalities) # Spanning variables
+          hrc_values <- paste0("hrc_", tolower(names(.x))) # Corresponding hrc values
           unique_modalities <- setNames(
             sapply(.x, function(col) unique(col), simplify = FALSE),
-            formatted_counts
+            hrc_values
           )
           # Create a dynamic data frame
           data.frame(

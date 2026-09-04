@@ -30,6 +30,7 @@
 #'
 wide_to_long <- function(df_metadata){
   df_metadata_long <- df_metadata %>%
+    mutate(across(where(is.character), ~dplyr::na_if(.x, ""))) %>%
     pivot_longer(cols = starts_with("spanning"),
                  names_to = "spanning_name",
                  values_to = "spanning") %>%
