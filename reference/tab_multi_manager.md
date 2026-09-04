@@ -23,8 +23,7 @@ tab_multi_manager(
   num_iter_max = 10,
   summary_secret = FALSE,
   split_tab = FALSE,
-  nb_tab_option = "smart",
-  limit = 14700,
+  split_limit = NULL,
   ...
 )
 ```
@@ -137,23 +136,12 @@ tab_multi_manager(
   **\[experimental\]** boolean, whether to reduce dimension to 3 while
   treating a table of dimension 4 or 5 (default to `FALSE`)
 
-- nb_tab_option:
+- split_limit:
 
-  **\[experimental\]** strategy to follow to choose variables
-  automatically while splitting:
-
-  - `"min"`: minimize the number of tables;
-
-  - `"max"`: maximize the number of tables;
-
-  - `"smart"`: minimize the number of tables under the constraint of
-    their row count.
-
-- limit:
-
-  **\[experimental\]** numeric, used to choose which variable to merge
-  (if nb_tab_option = 'smart') and split table with a number of row
-  above this limit in order to avoid tauargus failures
+  **\[experimental\]** NULL or numeric, default `NULL`. Only used when
+  `split_tab = TRUE`: maximum number of rows tolerated in a sub-table.
+  If `NULL` (recommended), it is computed automatically via
+  `auto_limit()`.
 
 - ...:
 
@@ -176,6 +164,14 @@ has to be masked or not.
 ``` r
 library(rtauargus)
 library(dplyr)
+#> 
+#> Attaching package: ‘dplyr’
+#> The following objects are masked from ‘package:stats’:
+#> 
+#>     filter, lag
+#> The following objects are masked from ‘package:base’:
+#> 
+#>     intersect, setdiff, setequal, union
 data(turnover_act_size)
 data(turnover_act_cj)
 data(activity_corr_table)

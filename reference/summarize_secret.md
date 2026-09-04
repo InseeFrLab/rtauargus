@@ -13,7 +13,7 @@ summarize_secret(res_tau, var = NULL, secret_var = "is_secret_prim")
 - res_tau:
 
   either the data.frame resulting from tab_rtauargus run or the list of
-  data.frame resulting from tab_multimanager run
+  data.frame resulting from tab_multi_manager run
 
 - var:
 

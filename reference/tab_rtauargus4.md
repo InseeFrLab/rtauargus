@@ -21,8 +21,10 @@ tab_rtauargus4(
   suppress = "MOD(1,5,1,0,0)",
   safety_rules = paste0("MAN(", ip, ")"),
   nb_tab_option = "smart",
-  limit = 14700L,
+  limit = NULL,
   dfs_name = "tab",
+  sort_table = NULL,
+  compact_verbose = FALSE,
   ...
 )
 ```
@@ -137,28 +139,48 @@ tab_rtauargus4(
 
 - nb_tab_option:
 
-  strategy to follow for choosing variables automatically:
+  **\[superseded\]** character, default `"smart"`. Strategy used for
+  dimension reduction. **Note:** Only `"smart"` is recommended.
+  Historical options (`"min"` and `"max"`) are legacy heuristics kept
+  for backward compatibility:
 
-  - `'min'`: minimize the number of tables;
+  - `'smart'` *(default & recommended)*: minimizes the number of tables
+    under the constraint of their row count;
 
-  - `'max'`: maximize the number of tables;
+  - `'min'` *(legacy)*: minimizes the number of tables;
 
-  - `'smart'`: minimize the number of tables under the constraint of
-    their row count.
+  - `'max'` *(legacy)*: maximizes the number of tables.
 
 - limit:
 
-  numeric, used to choose which variable to merge (if nb_tab_option =
-  'smart') and split table with a number of row above this limit in
-  order to avoid tauargus failures
+  numeric or NULL, default `NULL`. Used to choose which variable to
+  merge (if nb_tab_option = 'smart') and split table with a number of
+  row above this limit in order to avoid tauargus failures. If `NULL`,
+  an automatic limit is calculated using `auto_limit`.
 
 - dfs_name:
 
   name used to write hrc files when reducing dims
 
+- sort_table:
+
+  character or NULL, default `NULL`. *(Exploratory / Experimental)* Used
+  to assess the impact of table ordering on secondary secret selection
+  when cells are shared across sub-tables. If `"ASC"`, sub-tables are
+  processed in ascending order of their total cell value (smallest
+  first); if `"DESC"`, in descending order. `NULL` preserves the default
+  order produced by `reduce_dims()`. *Note: this parameter is
+  experimental and may be modified or removed in future versions.*
+
+- compact_verbose:
+
+  logical, default `FALSE`. Whether to display a compact single-line
+  summary for dimension reduction instead of detailed progress logs
+  (recommended for multi-table workflows).
+
 - ...:
 
-  additional parameters#'
+  additional parameters
 
 ## Value
 

@@ -147,3 +147,6 @@ Mostly internal functions
   : Unnest Data Frames to Create a Usable Flat Format
 - [`wide_to_long()`](https://inseefrlab.github.io/rtauargus/reference/wide_to_long.md)
   : Convert Metadata from Wide to Long Format
+- [`explore_reduce_dims()`](https://inseefrlab.github.io/rtauargus/reference/explore_reduce_dims.md)
+  : Analytically computes all possible table splits and summarizes their
+  statistics.

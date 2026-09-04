@@ -28,8 +28,7 @@ tab_rtauargus(
   output_options = "",
   unif_labels = TRUE,
   split_tab = FALSE,
-  nb_tab_option = "smart",
-  limit = 14700,
+  split_limit = NULL,
   ...
 )
 ```
@@ -184,28 +183,19 @@ tab_rtauargus(
   **\[experimental\]** boolean, whether to reduce dimension to 3 while
   treating a table of dimension 4 or 5 (default to `FALSE`)
 
-- nb_tab_option:
+- split_limit:
 
-  **\[experimental\]** strategy to follow to choose variables
-  automatically while splitting:
-
-  - `"min"`: minimize the number of tables;
-
-  - `"max"`: maximize the number of tables;
-
-  - `"smart"`: minimize the number of tables under the constraint of
-    their row count.
-
-- limit:
-
-  **\[experimental\]** numeric, used to choose which variable to merge
-  (if nb_tab_option = 'smart') and split table with a number of row
-  above this limit in order to avoid tauargus failures
+  **\[experimental\]** NULL or numeric, default `NULL`. Only used when
+  `split_tab = TRUE`: maximum number of rows tolerated in a sub-table.
+  If `NULL` (recommended), it is computed automatically via
+  `auto_limit()`.
 
 - ...:
 
   any parameter of the tab_rda, tab_arb or run_arb functions, relevant
-  for the treatment of tabular.
+  for the treatment of tabular. When `split_tab = TRUE`, can also be
+  used to pass `nb_tab_option` (advanced, default `"smart"`, see
+  `tab_rtauargus4`).
 
 ## Value
 
