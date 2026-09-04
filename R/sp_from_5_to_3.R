@@ -1,138 +1,21 @@
-# Count the number of nodes in a hierarchical file
-# Expects 2 arguments:
-# - Either a named list and a variable,
-# - Or an hrc (hierarchical file) and hrc_name = FALSE
-nb_nodes <- function(hrcfiles, v = NULL, hrc_name = TRUE) {
-  # Check if the variable has an associated hrc file or if hrc_name == FALSE
-  if (hrc_name && !(v %in% names(hrcfiles)) || (!hrc_name && is.null(hrcfiles))) {
-    # Non-hierarchical variable or hrcfiles == NULL
-    return(1)
-  }
-
-  # Take the specified file if hrc_name = TRUE, otherwise take the hrc directly provided
-  hrc <- ifelse(hrc_name, hrcfiles[[v]], hrcfiles)
-
-  # Unimportant value for the following steps
-  total <- "This_Is_My_Total"
-
-  # Convert to hierarchy
-  res_sdc <- sdcHierarchies::hier_import(inp = hrc, from = "hrc", root = total) %>%
-    sdcHierarchies::hier_convert(as = "sdc")
-
-  # Return the number of nodes
-  return(length(res_sdc$dims))
-}
-
 #' Function reducing from 5 to 3 categorical variables
 #'
-#' @param dfs data.frame with 5 categorical variables (n >= 3 in the general case)
+#' @param dfs data.frame with 5 categorical variables
 #' @param dfs_name name of the data.frame in the list provided by the user
 #' @param totcode named vector of totals for categorical variables
-#' @param hrcfiles named vector indicating the hrc files of hierarchical variables
-#' among the categorical variables of dfs
-#' @param sep_dir allows forcing the writing of hrc files in a separate folder
-#' defaulted to FALSE
-#' @param hrc_dir folder where to write the hrc files if forcing the writing
-#' in a new folder or if no folder is specified in hrcfiles
-#' @param v1 allows forcing the value of the first variable to merge
-#' when reducing from 5 to 4 dimensions, not specified by default (NULL)
-#' @param v2 allows forcing the value of the second variable to merge
-#' when reducing from 5 to 4 dimensions, not specified by default (NULL)
-#' @param v3 allows forcing the value of the first variable to merge
-#' when reducing from 4 to 3 dimensions, not specified by default (NULL)
-#' @param v4 allows forcing the value of the second variable to merge
-#' when reducing from 4 to 3 dimensions, not specified by default (NULL)
+#' @param hrcfiles named vector of hrc file paths
+#' @param sep_dir logical, if TRUE forces writing hrc files into hrc_dir
+#' @param hrc_dir folder where to write hrc files
+#' @param v1,v2 optional variables to merge when reducing from 5 to 4 dimensions
+#' @param v3,v4 optional variables to merge when reducing from 4 to 3 dimensions
 #' @param sep separator used during concatenation of variables
-#' @param maximize_nb_tabs specifies whether to prefer selecting hierarchical variables with
-#' the most nodes as a priority (TRUE), which generates more tables
-#' but of smaller size, or non-hierarchical variables with the least modality (FALSE)
-#' to create fewer tables
-#' @param verbose prints the different steps of the function to notify
-#' the user of the progress, mainly for the general function gen_tabs_5_4_to_3()
+#' @param maximize_nb_tabs logical, whether to prefer selecting hierarchical variables
+#' @param verbose logical, print progress steps
 #'
-#' @return a list containing the following components:
-#' \itemize{
-#'   \item `tabs`: named list of dataframes with 3 dimensions
-#'   (n-2 dimensions in the general case) endowed with nested hierarchies
-#'   \item `hrcs5_4`: named list of hrc specific to the variable created
-#'   via the merge when reducing from 5 to 4 dimensions
-#'   \item `hrcs4_3`: named list of hrc specific to the variable created
-#'   via the merge when reducing from 4 to 3 dimensions
-#'   \item `alt_tot5_4`: named list of totals when reducing from 5 to 4 dimensions
-#'   \item `alt_tot4_3`: named list of totals when reducing from 4 to 3 dimensions
-#'   \item `vars`: named list of vectors representing the merged variables
-#'   during the two steps of dimension reduction
-#' }
+#' @return A list containing `tabs`, `hrcs5_4`, `hrcs4_3`, `alt_tot5_4`, `alt_tot4_3`, and `vars`.
 #'
-#' @examples
-#' library(dplyr)
-#' data <- expand.grid(
-#'   ACT = c("Total", "A", "B", "A1", "A2", "B1", "B2"),
-#'   GEO = c("Total", "GA", "GB", "GA1", "GA2", "GB1", "GB2"),
-#'   SEX = c("Total", "F", "M","F1","F2","M1","M2"),
-#'   AGE = c("Total", "AGE1", "AGE2", "AGE11", "AGE12", "AGE21", "AGE22"),
-#'   ECO = c("PIB","Ménages","Entreprises"),
-#'   stringsAsFactors = FALSE,
-#'   KEEP.OUT.ATTRS = FALSE
-#' ) %>%
-#'   as.data.frame()
-#'
-#' data <- data %>% mutate(VALUE = 1:n())
-#'
-#' hrc_act <- "hrc_ACT.hrc"
-#' sdcHierarchies::hier_create(root = "Total", nodes = c("A","B")) %>%
-#'   sdcHierarchies::hier_add(root = "A", nodes = c("A1","A2")) %>%
-#'   sdcHierarchies::hier_convert(as = "argus") %>%
-#'   slice(-1) %>%
-#'   mutate(levels = substring(paste0(level,name),3)) %>%
-#'   select(levels) %>%
-#'   write.table(file = hrc_act, row.names = FALSE, col.names = FALSE, quote = FALSE)
-#'
-#' hrc_geo <- "hrc_GEO.hrc"
-#' sdcHierarchies::hier_create(root = "Total", nodes = c("GA","GB")) %>%
-#'   sdcHierarchies::hier_add(root = "GA", nodes = c("GA1","GA2")) %>%
-#'   sdcHierarchies::hier_add(root = "GB", nodes = c("GB1","GB2")) %>%
-#'   sdcHierarchies::hier_convert(as = "argus") %>%
-#'   slice(-1) %>%
-#'   mutate(levels = substring(paste0(level,name),3)) %>%
-#'   select(levels) %>%
-#'   write.table(file = hrc_geo, row.names = FALSE, col.names = FALSE, quote = FALSE)
-#'
-#' hrc_sex <- "hrc_SEX.hrc"
-#' sdcHierarchies::hier_create(root = "Total", nodes = c("F","M")) %>%
-#'   sdcHierarchies::hier_add(root = "F", nodes = c("F1","F2")) %>%
-#'   sdcHierarchies::hier_add(root = "M", nodes = c("M1","M2")) %>%
-#'   sdcHierarchies::hier_convert(as = "argus") %>%
-#'   slice(-1) %>%
-#'   mutate(levels = substring(paste0(level,name),3)) %>%
-#'   select(levels) %>%
-#'   write.table(file = hrc_sex, row.names = FALSE, col.names = FALSE, quote = FALSE)
-#'
-#' # Results of the function
-#' res1 <- from_5_to_3(
-#'   dfs = data,
-#'   dfs_name = "tab",
-#'   totcode = c(SEX="Total",AGE="Total", GEO="Total", ACT="Total", ECO = "PIB"),
-#'   hrcfiles = c(ACT = hrc_act, GEO = hrc_geo, SEX = hrc_sex),
-#'   sep_dir = TRUE,
-#'   hrc_dir = "output",
-#'   v1 = "ACT",
-#'   v2 = "AGE",
-#'   v3 = "SEX",
-#'   v4 = "ECO"
-#' )
-#'
-#' res2 <- from_5_to_3(
-#'   dfs = data,
-#'   dfs_name = "tab",
-#'   totcode = c(SEX="Total",AGE="Total", GEO="Total", ACT="Total", ECO = "PIB"),
-#'   hrcfiles = c(ACT = hrc_act, GEO = hrc_geo, SEX = hrc_sex),
-#'   sep_dir = TRUE,
-#'   hrc_dir = "output",
-#'   verbose = TRUE
-#' )
 #' @keywords internal
-#' @export
+#' @noRd
 from_5_to_3 <- function(
     dfs,
     dfs_name,
@@ -148,6 +31,18 @@ from_5_to_3 <- function(
     maximize_nb_tabs = FALSE,
     verbose = FALSE)
 {
+
+  # ----------------------------------------------------------------------------
+  # STRATEGY (5D -> 3D Two-Step Transition):
+  # Step 1: Reduce 5D -> 4D using 'from_4_to_3()' on pair (v1, v2).
+  #         This generates intermediate 4D tables and a new merged variable 'new_var'.
+  # Step 2: Select pair (v3, v4) for the 4D -> 3D step, ensuring a uniform choice
+  #         across all generated 4D sub-tables.
+  # Step 3: Call 'from_4_to_3()' on each 4D sub-table to reach 3D tables.
+  # Step 4: Replicate 5D->4D metadata (HRCs and totals) to match final 3D tables,
+  #         enabling 'restore_format()' to reconstruct the full 5D dataset.
+  # ----------------------------------------------------------------------------
+
   # Update the output folder containing the hierarchies
   if( (length(hrcfiles) != 0) & !sep_dir){
     dir_name <- dirname(hrcfiles[[1]])
@@ -303,11 +198,10 @@ from_5_to_3 <- function(
 
     # Calculate the value of nb_nodes once for each res_5_4$hrcs[[x]]
     # to avoid calculating the same quantity twice
-    results <- lapply(1:length(res_5_4$hrcs), function(x) {
-      nb_node_value <- 2 * nb_nodes(res_5_4$hrcs[[x]], hrc_name = FALSE) *
-                           nb_nodes(hrcfiles2, non_fused_var)
-
-      # Use the calculated value for hrcs5_4 and alt_tot5_4
+    results <- lapply(seq_along(res_5_4$hrcs), function(x) {
+      nb_node_value <- 2 * nb_nodes(res_5_4$hrcs[[x]], hrc_name = FALSE,
+                                    total = res_5_4$alt_tot[[x]]) *
+        nb_nodes(hrcfiles2, non_fused_var, totcode = totcode2)
       list(
         hrcs = rep(res_5_4$hrcs[[x]], nb_node_value),
         alt_tot = rep(res_5_4$alt_tot[[x]], nb_node_value)

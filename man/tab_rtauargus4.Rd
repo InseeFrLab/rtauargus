@@ -21,8 +21,9 @@ tab_rtauargus4(
   suppress = "MOD(1,5,1,0,0)",
   safety_rules = paste0("MAN(", ip, ")"),
   nb_tab_option = "smart",
-  limit = 14700L,
+  limit = NULL,
   dfs_name = "tab",
+  sort_table = NULL,
   ...
 )
 }
@@ -105,21 +106,33 @@ for example.\cr
 Chaîne de caractères en syntaxe batch Tau-Argus. Si le secret primaire
 a été traité dans un fichier d'apriori : utiliser "MAN(10)")}
 
-\item{nb_tab_option}{strategy to follow for choosing variables automatically:
+\item{nb_tab_option}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#superseded}{\figure{lifecycle-superseded.svg}{options: alt='[Superseded]'}}}{\strong{[Superseded]}} character, default \code{"smart"}.
+Strategy used for dimension reduction. \strong{Note:} Only \code{"smart"} is recommended.
+Historical options (\code{"min"} and \code{"max"}) are legacy heuristics kept for backward
+compatibility:
 \itemize{
-\item \code{'min'}: minimize the number of tables;
-\item \code{'max'}: maximize the number of tables;
-\item \code{'smart'}: minimize the number of tables under the constraint
-of their row count.
+\item \code{'smart'} \emph{(default & recommended)}: minimizes the number of tables under
+the constraint of their row count;
+\item \code{'min'} \emph{(legacy)}: minimizes the number of tables;
+\item \code{'max'} \emph{(legacy)}: maximizes the number of tables.
 }}
 
-\item{limit}{numeric, used to choose which variable to merge (if nb_tab_option = 'smart')
-and split table with a number of row above this limit in order to avoid
-tauargus failures}
+\item{limit}{numeric or NULL, default \code{NULL}. Used to choose which variable
+to merge (if nb_tab_option = 'smart') and split table with a number of row
+above this limit in order to avoid tauargus failures.
+If \code{NULL}, an automatic limit is calculated using \code{auto_limit}.}
 
 \item{dfs_name}{name used to write hrc files when reducing dims}
 
-\item{...}{additional parameters#'}
+\item{sort_table}{character or NULL, default \code{NULL}.
+\emph{(Exploratory / Experimental)} Used to assess the impact of table ordering on
+secondary secret selection when cells are shared across sub-tables.
+If \code{"ASC"}, sub-tables are processed in ascending order of their total cell value
+(smallest first); if \code{"DESC"}, in descending order.
+\code{NULL} preserves the default order produced by \code{reduce_dims()}.
+\emph{Note: this parameter is experimental and may be modified or removed in future versions.}}
+
+\item{...}{additional parameters}
 }
 \value{
 The original tabular is returned with additional variables indicating

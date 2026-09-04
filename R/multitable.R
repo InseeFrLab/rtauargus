@@ -124,8 +124,7 @@ tab_multi_manager <- function(
     num_iter_max = 10,
     summary_secret = FALSE,
     split_tab = FALSE,
-    nb_tab_option = "smart",
-    limit = 14700,
+    split_limit = NULL,
     ...
 ){
   start_time <- Sys.time()
@@ -143,8 +142,11 @@ tab_multi_manager <- function(
   params$suppress = suppress
   params$suppress = suppress
   params$split_tab = split_tab
-  params$nb_tab_option = nb_tab_option
-  params$limit = limit
+
+  params$nb_tab_option = if (!is.null(.dots$nb_tab_option)) .dots$nb_tab_option else "smart"
+  params$split_limit = split_limit
+  # Enabled by default for multi-table manager calls
+  params$compact_verbose <- if (!is.null(.dots[["compact_verbose"]])) .dots[["compact_verbose"]] else TRUE
 
   n_tbx = length(list_tables) # nombre de tableaux
 
@@ -368,7 +370,11 @@ tab_multi_manager <- function(
     num_iter_all <- num_iter_all + 1
     num_tableau <- todolist[1]
     num_iter_par_tab[num_tableau] <- num_iter_par_tab[num_tableau] + 1
-    cat("--- Current table to treat: ", num_tableau, "---\n")
+
+    # cat("--- Current table to treat: ", num_tableau, "---\n")
+    cat(sprintf("\r--- Current table to treat: %s | loop iter : %d ---            ",
+                num_tableau, num_iter_all))
+    flush.console()
 
     nom_col_identifiante <- paste0("T_", num_tableau)
     tableau_a_traiter <- which(table_majeure[[nom_col_identifiante]])
@@ -491,6 +497,8 @@ tab_multi_manager <- function(
     journal_add_break_line(journal)
 
   }
+
+  cat("\n")
 
   # Reconstruire la liste des tableaux d'entrée
   liste_tbx_res <- purrr::imap(

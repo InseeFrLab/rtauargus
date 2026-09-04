@@ -16,20 +16,13 @@
 #' @param split_tab `r lifecycle::badge("experimental")` boolean,
 #' whether to reduce dimension to 3 while treating a table of dimension 4 or 5
 #' (default to `FALSE`)
-#' @param limit `r lifecycle::badge("experimental")` numeric, used to choose
-#' which variable to merge (if nb_tab_option = 'smart')
-#' and split table with a number of row above this limit in order to avoid
-#' tauargus failures
-#' @param nb_tab_option `r lifecycle::badge("experimental")` strategy to follow
-#' to choose variables automatically while splitting:
-#' \itemize{
-#'   \item{`"min"`: minimize the number of tables;}
-#'   \item{`"max"`: maximize the number of tables;}
-#'   \item{`"smart"`: minimize the number of tables under the constraint
-#'   of their row count.}
-#' }
+#' @param split_limit `r lifecycle::badge("experimental")` NULL or numeric, default `NULL`.
+#' Only used when `split_tab = TRUE`: maximum number of rows tolerated in a
+#' sub-table. If `NULL` (recommended), it is computed automatically via
+#' `auto_limit()`.
 #' @param ... any parameter of the tab_rda, tab_arb or run_arb functions, relevant
-#' for the treatment of tabular.
+#' for the treatment of tabular. When `split_tab = TRUE`, can also be used to
+#' pass `nb_tab_option` (advanced, default `"smart"`, see `tab_rtauargus4`).
 #'
 #' @return
 #' If output_type equals to 4 and summary_secret = FALSE and split_tab = FALSE,
@@ -139,8 +132,7 @@ tab_rtauargus <- function(
     output_options = "",
     unif_labels = TRUE,
     split_tab = FALSE,
-    nb_tab_option = "smart",
-    limit = 14700,
+    split_limit = NULL,
     ...
 ){
 
@@ -217,6 +209,8 @@ tab_rtauargus <- function(
       params_rt4$totcode <- totcode
       params_rt4$dir_name <- dir_name
       params_rt4$files_name <- files_name
+      params_rt4$limit <- split_limit
+      params_rt4$compact_verbose <- if (!is.null(.dots[["compact_verbose"]])) .dots[["compact_verbose"]] else FALSE
 
       return(do.call("tab_rtauargus4", params_rt4))
 
@@ -417,8 +411,7 @@ tab_rtauargus2 <- function(
     ip = 10,
     suppress = "MOD(1,5,1,0,0)",
     split_tab = TRUE,
-    nb_tab_option = "smart",
-    limit = 14700,
+    split_limit = NULL,
     ...
 ){
 
@@ -447,8 +440,12 @@ tab_rtauargus2 <- function(
   params$suppress = suppress
   params$split_tab = if(length(explanatory_vars) > 3) split_tab else FALSE
   params$dir_name = if(params$split_tab) file.path(dir_name, files_name) else dir_name
-  params$nb_tab_option = nb_tab_option
-  params$limit = limit
+
+  params$nb_tab_option = if (!is.null(.dots$nb_tab_option)) .dots$nb_tab_option else "smart"
+  params$split_limit = split_limit
+  # Enabled by default for multi-table manager calls
+  params$compact_verbose <- if (!is.null(.dots[["compact_verbose"]])) .dots[["compact_verbose"]] else TRUE
+
   params$summary_secret = FALSE
   params$show_batch_console = FALSE
   params$output_type = 4
