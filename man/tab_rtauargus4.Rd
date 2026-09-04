@@ -24,6 +24,7 @@ tab_rtauargus4(
   limit = NULL,
   dfs_name = "tab",
   sort_table = NULL,
+  compact_verbose = FALSE,
   ...
 )
 }
@@ -131,6 +132,10 @@ If \code{"ASC"}, sub-tables are processed in ascending order of their total cell
 (smallest first); if \code{"DESC"}, in descending order.
 \code{NULL} preserves the default order produced by \code{reduce_dims()}.
 \emph{Note: this parameter is experimental and may be modified or removed in future versions.}}
+
+\item{compact_verbose}{logical, default \code{FALSE}.
+Whether to display a compact single-line summary for dimension reduction
+instead of detailed progress logs (recommended for multi-table workflows).}
 
 \item{...}{additional parameters}
 }
