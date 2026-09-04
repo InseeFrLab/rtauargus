@@ -1,216 +1,27 @@
-#' General function that selects the appropriate separator and applies dimension reduction.
+# Utility function to clear hrc cache
+clear_hrc_cache <- function() {
+  rm(list = ls(envir = .hrc_cache, all.names = TRUE), envir = .hrc_cache)
+}
+
+#' General function that selects the appropriate separator and applies dimension reduction
 #'
 #' @param dfs data.frame with 4 or 5 categorical variables
-#' @param dfs_name name of the data.frame in the list provided by the user
+#' @param dfs_name name of the data.frame
 #' @param totcode named vector of totals for categorical variables
-#' @param hrcfiles named vector indicating the hrc files of hierarchical variables
-#' among the categorical variables of dfs
-#' @param sep_dir allows forcing the writing of hrc into a separate folder,
-#' default is FALSE
-#' @param hrc_dir folder to write hrc files if writing to a new folder is forced
-#' or if no folder is specified in hrcfiles
-#' @param vars_to_merge NULL or vector of variables to be merged:
-#' 2 in dimension 4; 3 or 4 in dimension 5
-#' @param nb_tab_option strategy to follow for choosing variables automatically:
-#' \itemize{
-#'   \item `'min'`: minimize the number of tables;
-#'   \item `'max'`: maximize the number of tables;
-#'   \item `'smart'`: minimize the number of tables under the constraint
-#'   of their row count.
-#' }
-#' @param limit maximum allowed number of rows in the smart or over_split = TRUE case
-#' @param over_split indicates if we split in several tables the tables bigger than
-#' limit at the end of the reduction process ; it decreases the number
-#' of hierarchy of these tables
-#' @param vec_sep vector of candidate separators to use
-#' @param verbose print the different steps of the function to inform the user
-#' of progress
+#' @param hrcfiles named vector of hrc file paths
+#' @param sep_dir logical, if TRUE forces writing hrc into hrc_dir
+#' @param hrc_dir folder to write hrc files
+#' @param vars_to_merge NULL or vector of variables to be merged
+#' @param nb_tab_option strategy: 'min', 'max', or 'smart'
+#' @param limit maximum allowed number of rows
+#' @param over_split logical, whether to split tables exceeding limit
+#' @param vec_sep vector of candidate separators
+#' @param verbose logical, print progress steps
 #'
-#' @return A list containing:
-#' \itemize{
-#'   \item `tabs`: named list of 3-dimensional dataframes
-#'   with nested hierarchies
-#'   \item `alt_hrc`: named list of hrc specific to the variables created
-#'   during merging to go to dimension 3
-#'   \item `alt_totcode`: named list of totals specific to the variables
-#'   created during merging to go to dimension 3
-#'   \item `vars`: categorical variables of the output dataframes
-#'   \item `sep`: separator used to link the variables
-#'   \item `totcode`: named vector of totals for all categorical variables
-#'   \item `hrcfiles`: named vector of hrc for categorical variables
-#'   (except the merged one)
-#'   \item `fus_vars`: named vector of vectors representing the merged
-#'   variables during dimension reduction
-#' }
+#' @return A list formatted for tab_multi_manager compatibility.
 #'
-#' @importFrom sdcHierarchies hier_import hier_convert
-#' @importFrom stringr str_detect
-#' @importFrom dplyr select mutate filter
-#'
-#' @examples
-#' \dontrun{
-#' library(dplyr)
-#' # Examples for dimension 4
-#'
-#' data <- expand.grid(
-#'   ACT = c("Total", "A", "B", "A1", "A2","A3", "B1",
-#'   "B2","B3","B4","C","D","E","F","G","B5"),
-#'   GEO = c("Total", "G1", "G2"),
-#'   SEX = c("Total", "F", "M"),
-#'   AGE = c("Total", "AGE1", "AGE2"),
-#'   stringsAsFactors = FALSE
-#' ) %>%
-#'   as.data.frame() %>%
-#'   mutate(VALUE = 1)
-#'
-#' if(!dir.exists("hrc")) dir.create("hrc")
-#' hrc_act <- "hrc/hrc_ACT4.hrc"
-#'
-#' sdcHierarchies::hier_create(
-#'   root = "Total",
-#'   nodes = c("A","B","C","D","E","F","G")
-#' ) %>%
-#'   sdcHierarchies::hier_add(root = "A", nodes = c("A1","A2","A3")) %>%
-#'   sdcHierarchies::hier_add(root = "B", nodes = c("B1","B2","B3","B4","B5")) %>%
-#'   sdcHierarchies::hier_convert(as = "argus") %>%
-#'   slice(-1) %>%
-#'   mutate(levels = substring(paste0(level,name),3)) %>%
-#'   select(levels) %>%
-#'   write.table(
-#'     file = hrc_act, row.names = FALSE, col.names = FALSE, quote = FALSE
-#'   )
-#'
-#' # Reduce dim by forcing variables to be merged
-#' res1 <- reduce_dims(
-#'   dfs = data,
-#'   dfs_name = "tab",
-#'   totcode = c(SEX = "Total", AGE = "Total", GEO = "Total", ACT = "Total"),
-#'   hrcfiles = c(ACT = hrc_act),
-#'   sep_dir = TRUE,
-#'   vars_to_merge = c("ACT", "GEO"),
-#'   hrc_dir = "output",
-#'   verbose = TRUE
-#' )
-#'
-#' # Split the output in order to be under the limit & forcing variables to be merged
-#' res1b <- reduce_dims(
-#'   dfs = data,
-#'   dfs_name = "tab",
-#'   totcode = c(SEX = "Total", AGE = "Total", GEO = "Total", ACT = "Total"),
-#'   hrcfiles = c(ACT = hrc_act),
-#'   sep_dir = TRUE,
-#'   hrc_dir = "output",
-#'   nb_tab_option = 'smart',
-#'   over_split = TRUE,
-#'   verbose = TRUE,
-#'   limit = 100
-#' )
-#'
-#' # Result of the function (minimizes the number of created tables by default)
-#' res2 <- reduce_dims(
-#'   dfs = data,
-#'   dfs_name = "tab",
-#'   totcode = c(SEX = "Total", AGE = "Total", GEO = "Total", ACT = "Total"),
-#'   hrcfiles = c(ACT = hrc_act),
-#'   sep_dir = TRUE,
-#'   hrc_dir = "output",
-#'   verbose = TRUE
-#' )
-#'
-#' # Result of the function (maximize the number of created tables)
-#' res3 <- reduce_dims(
-#'   dfs = data,
-#'   dfs_name = "tab",
-#'   totcode = c(SEX = "Total", AGE = "Total", GEO = "Total", ACT = "Total"),
-#'   hrcfiles = c(ACT = hrc_act),
-#'   sep_dir = TRUE,
-#'   hrc_dir = "output",
-#'   nb_tab_option = "max",
-#'   verbose = TRUE
-#' )
-#'
-#' # Example for dimension 5
-#'
-#' data <- expand.grid(
-#'   ACT = c("Total_A", paste0("A", seq(1,5),"_"),paste0("A1_", seq(1,7)),paste0("A2_", seq(1,9))),
-#'   GEO = c("Total_G", "GA", "GB", "GA1", "GA2", "GB1", "GB2","GA3","GB3","GB4"),
-#'   SEX = c("Total_S", "F", "M","F1","F2","M1","M2"),
-#'   AGE = c("Ensemble", "AGE1", "AGE2", "AGE11", "AGE12", "AGE21", "AGE22"),
-#'   ECO = c("PIB","Ménages","Entreprises"),
-#'   stringsAsFactors = FALSE,
-#'   KEEP.OUT.ATTRS = FALSE
-#' ) %>%
-#'   as.data.frame() %>%
-#'   mutate(VALUE = 1:n())
-#'
-#' hrc_act <- "hrc/hrc_ACT5.hrc"
-#' sdcHierarchies::hier_create(root = "Total_A", nodes = paste0("A", seq(1,5),"_")) %>%
-#'   sdcHierarchies::hier_add(root = "A1_", nodes = paste0("A1_", seq(1,7))) %>%
-#'   sdcHierarchies::hier_add(root = "A2_", nodes = paste0("A2_", seq(1,9))) %>%
-#'   sdcHierarchies::hier_convert(as = "argus") %>%
-#'   slice(-1) %>%
-#'   mutate(levels = substring(paste0(level,name),3)) %>%
-#'   select(levels) %>%
-#'   write.table(file = hrc_act, row.names = FALSE, col.names = FALSE, quote = FALSE)
-#'
-#' hrc_age <- "hrc/hrc_AGE5.hrc"
-#' sdcHierarchies::hier_create(root = "Ensemble", nodes = c("AGE1", "AGE2")) %>%
-#'   sdcHierarchies::hier_add(root = "AGE1", nodes = c("AGE11", "AGE12")) %>%
-#'   sdcHierarchies::hier_add(root = "AGE2", nodes = c("AGE21", "AGE22")) %>%
-#'   sdcHierarchies::hier_convert(as = "argus") %>%
-#'   slice(-1) %>%
-#'   mutate(levels = substring(paste0(level,name),3)) %>%
-#'   select(levels) %>%
-#'   write.table(file = hrc_age, row.names = FALSE, col.names = FALSE, quote = FALSE)
-#'
-#' hrc_geo <- "hrc/hrc_GEO5.hrc"
-#' sdcHierarchies::hier_create(root = "Total_G", nodes = c("GA","GB")) %>%
-#'   sdcHierarchies::hier_add(root = "GA", nodes = c("GA1","GA2","GA3")) %>%
-#'   sdcHierarchies::hier_add(root = "GB", nodes = c("GB1","GB2","GB3","GB4")) %>%
-#'   sdcHierarchies::hier_convert(as = "argus") %>%
-#'   slice(-1) %>%
-#'   mutate(levels = substring(paste0(level,name),3)) %>%
-#'   select(levels) %>%
-#'   write.table(file = hrc_geo, row.names = FALSE, col.names = FALSE, quote = FALSE)
-#'
-#' # Results of the function
-#' res4 <- reduce_dims(
-#'   dfs = data,
-#'   dfs_name = "tab",
-#'   totcode = c(SEX = "Total_S", AGE = "Ensemble", GEO = "Total_G", ACT = "Total_A", ECO = "PIB"),
-#'   hrcfiles = c(ACT = hrc_act, GEO = hrc_geo, AGE = hrc_age),
-#'   sep_dir = TRUE,
-#'   hrc_dir = "output",
-#'   verbose = TRUE
-#' )
-#'
-#' res5 <- reduce_dims(
-#'   dfs = data,
-#'   dfs_name = "tab",
-#'   totcode = c(SEX = "Total_S", AGE = "Ensemble", GEO = "Total_G", ACT = "Total_A", ECO = "PIB"),
-#'   hrcfiles = c(ACT = hrc_act, GEO = hrc_geo),
-#'   sep_dir = TRUE,
-#'   hrc_dir = "output",
-#'   nb_tab_option = 'smart',
-#'   limit = 1300,
-#'   verbose = TRUE
-#' )
-#'
-#' res6 <- reduce_dims(
-#'   dfs = data,
-#'   dfs_name = "tab",
-#'   totcode = c(SEX = "Total_S", AGE = "Ensemble", GEO = "Total_G", ACT = "Total_A", ECO = "PIB"),
-#'   hrcfiles = c(ACT = hrc_act, GEO = hrc_geo),
-#'   sep_dir = TRUE,
-#'   hrc_dir = "output",
-#'   nb_tab_option = 'min',
-#'   verbose = TRUE,
-#'   limit = 4470,
-#'   over_split = TRUE
-#' )
-#' }
 #' @keywords internal
-#' @export
+#' @noRd
 reduce_dims <- function(
     dfs,
     dfs_name,
@@ -226,10 +37,18 @@ reduce_dims <- function(
     verbose = FALSE
 ){
 
-  # TODO OR NOT:
-  # to save time: parallelize the lapply for variable selection
-  #                                     lapply for reducing from 4 to 3 dimensions
-  #                                    in the case of dimension 5
+  # ----------------------------------------------------------------------------
+  # MAIN ENTRY POINT: Dimension Reduction Pipeline
+  # 1. Validate inputs and dimensions (4D or 5D).
+  # 2. Clear hierarchy cache and select a collision-free separator.
+  # 3. Determine merge variables (enforced by user or computed via 'var_to_merge').
+  # 4. Delegate dimension reduction to 'from_4_to_3' or 'from_5_to_3'.
+  # 5. Format metadata via 'sp_format()' for compatibility with 'tab_multi_manager'.
+  # 6. Fallback safety: Split oversized tables if 'over_split = TRUE' and max_row > limit.
+  # ----------------------------------------------------------------------------
+
+  # Rq for later: using data.table may speed up the process in from_4_to_3_case_*
+  # for merging / filtering etc ?
 
   dfs <- as.data.frame(dfs)
 
@@ -291,7 +110,7 @@ reduce_dims <- function(
     stop("verbose must be a logical value.")
   }
 
-  # Check if verbose is a logical value
+  # Check if over_split is a logical value
   if (!is.logical(over_split)){
     stop("over_split must be a logical value.")
   }
@@ -312,7 +131,14 @@ reduce_dims <- function(
     }
   }
 
+  # ============================================================================
+  # Safety initialization to prevent the latent undefined variable bug
+  # in 'smart' modes or when merge variables are enforced.
+  # ============================================================================
+  maximize_nb_tabs <- FALSE
 
+  # clear the hierarchy cache at the very beginning of the dimension reduction process
+  clear_hrc_cache()
 
   # Choose the separator
   data_var_cat <- dfs[names(dfs) %in% names(totcode)]
@@ -324,7 +150,16 @@ reduce_dims <- function(
       v1 <- vars_to_merge[[1]]
       v2 <- vars_to_merge[[2]]
       v3 <- vars_to_merge[[3]]
-      v4 <- paste(v1, v2, sep = sep)
+
+      # Predict the actual merged variable name, accounting for possible swap
+      # in from_4_to_3 (non-hierarchical variable always comes first).
+      non_hier_vars <- setdiff(names(totcode), names(hrcfiles))
+      if (v1 %in% names(hrcfiles) && v2 %in% non_hier_vars) {
+        # v2 is non-hierarchical, v1 is hierarchical => swap
+        v4 <- paste(v2, v1, sep = sep)
+      } else {
+        v4 <- paste(v1, v2, sep = sep)
+      }
 
     } else if (length(vars_to_merge) == 4) {
       v1 <- vars_to_merge[[1]]
@@ -371,7 +206,14 @@ reduce_dims <- function(
           v1 <- choice_3_var$vars[[1]]
           v2 <- choice_3_var$vars[[2]]
           v3 <- choice_3_var$vars[[3]]
-          v4 <- paste(v1, v2, sep = sep)
+
+          # Correct the swap prediction (non-hierarchical must come first)
+          non_hier_vars <- setdiff(names(totcode), names(hrcfiles))
+          if (v1 %in% names(hrcfiles) && v2 %in% non_hier_vars) {
+            v4 <- paste(v2, v1, sep = sep)
+          } else {
+            v4 <- paste(v1, v2, sep = sep)
+          }
 
           if (choice_3_var$max_row > limit){
             cat(c("Warning when choosing variables:
@@ -385,10 +227,10 @@ The largest table has ",choice_3_var$max_row," rows.\n"))
           v3 <- choice_4_var$vars[[3]]
           v4 <- choice_4_var$vars[[4]]
 
-          if (choice_3_var$max_row > limit){
+          if (choice_4_var$max_row > limit){
             cat(c("Warning when choosing variables:
 The limit of ",limit," cannot be achieved.
-The largest table has ",choice_3_var$max_row," rows.\n"))
+The largest table has ",choice_4_var$max_row," rows.\n"))
           }
         }
 
@@ -481,6 +323,12 @@ Reducing from 4 to 3...\n")
 
   if (verbose) {
     cat(paste(dfs_name,"has generated",length(res$tabs),"tables in total\n\n"))
+
+    table_sizes  <- sapply(res$tabs, nrow)
+    cat("  Table size distribution :\n")
+    print(summary(table_sizes))
+    cat("\n\n")
+
   }
 
   # Put a format usable by rtauargus
@@ -490,8 +338,10 @@ Reducing from 4 to 3...\n")
                    totcode = totcode,
                    hrcfiles = hrcfiles)
 
-  # Split too big table
-  if (over_split) {
+  max_row <- max(sapply(res$tabs, nrow))
+
+  # Split too big table if we didn't achieve the target value of "limit"
+  if (over_split && !is.null(limit) && max_row > limit) {
 
     if (verbose) {
       cat("Spliting...\n")
@@ -535,6 +385,11 @@ Reducing from 4 to 3...\n")
 
     if (verbose) {
       cat(paste(dfs_name,"has generated",length(res$tabs),"tables in total\n\n"))
+
+      table_sizes  <- sapply(res$tabs, nrow)
+      cat("  Table size distribution :\n")
+      print(summary(table_sizes))
+      cat("\n\n")
     }
 
     # The user specified a limit (smart or over_split case)
@@ -552,106 +407,111 @@ The largest table has ",max_row," rows.\n\n"))
   return(res)
 }
 
-# split tables according to var_fuse if the nb of row exceed limit
-# it creates smaller tabs with a hier variable less
+# Split oversized tables exceeding 'limit' by decomposing the merged hierarchical variable 'var_fus'
 #' @importFrom stats setNames
 split_tab <- function(res, var_fus, limit) {
-  # table to split because they are too big
+  # todo: actuellement split_tab est plutôt lent
+  # en effet, sur une réduction complète avec splitage d'environ 51s,
+  # 50s sont dûes à split_tab à la fin de la réduction
 
-  res$to_split <- sapply(res$tabs, function(x) nrow(x) > limit)
-  table_to_split <-names(res$to_split[res$to_split == TRUE])
+  # cela est dûe à import_hierarchy qui fail sur le cache
+  # car on utilise les sous totaux intermédiaire
 
-  # data to stock
+  # il faudrait donc maj import_hierarchy pour ajouter cette fonctionnalité
+  # Ce n'est pas la priorité cependant : split_tab n'est pas utilisé courament
+  # il faut que over_split = TRUE (TRUE mpar défaut)
+  # + que la limite soit très basse (très rare en pratique)
+  # Et même dans ce cas, split_tab sera négligeable devant tab_multimanager
+  # Ce n'est donc pas une priorité
 
-  all_tot_stock <- list()
-  tabs2 <- list()
-  list_vars <- list()
-  list_alt_hrcs <- list()
+  # 1. Calcul rapide des tailles de tableaux et détection précoce
+  tab_sizes <- vapply(res$tabs, nrow, FUN.VALUE = integer(1L))
+  to_split  <- tab_sizes > limit
 
-  # loop for table to treat
+  if (!any(to_split)) return(res)
 
-  for (t in table_to_split) {
+  table_to_split <- names(res$tabs)[to_split]
+  table_keep     <- names(res$tabs)[!to_split]
+  n_to_split     <- length(table_to_split)
 
-    # Create of how to split
+  # 2. Pré-allocation des listes
+  tabs_split        <- vector("list", n_to_split)
+  alt_totcode_split <- vector("list", n_to_split)
+  vars_split        <- vector("list", n_to_split)
+  hrcs_split        <- vector("list", n_to_split)
 
-    hrc <- res$alt_hrc[[t]][[var_fus]]
-    total <- res$alt_totcode[[t]][[var_fus]]
-    other_total <-res$alt_totcode[[t]][names(res$alt_totcode[[t]]) != (var_fus)]
+  # 3. Boucle sur les tableaux à découper
+  for (i in seq_len(n_to_split)) {
+    t     <- table_to_split[i]
+    df_t  <- res$tabs[[t]]
+    v_col <- df_t[[var_fus]]
 
-    res_sdc <-sdcHierarchies::hier_import(inp = hrc, from = "hrc",root = total) %>%
-      sdcHierarchies::hier_convert(as = "sdc")
+    # Import spécifique à chaque table t (car total varie selon le sous-tableau)
+    hrc         <- res$alt_hrc[[t]][[var_fus]]
+    total       <- res$alt_totcode[[t]][[var_fus]]
+    codes_split <- import_hierarchy(hrc, total)
+    n           <- length(codes_split)
 
-    codes_split <- lapply(res_sdc$dims,names)
-    n <- length(codes_split)
+    new_names <- paste0(t, "_", seq_len(n))
 
-    # Names use for tauargus
-    new_names <- lapply(1:n, function(i) paste(t, i, sep = "_"))
-
-    # Create tabs by filtering
-    tabs <- lapply(codes_split,
-                   function(codes) {
-                     res <- res$tabs[[t]] %>%
-                       filter(res$tabs[[t]][[var_fus]] %in% codes)
-                   })
-
+    # OPTIMISATION MAJEURE : Filtrage C direct %in% (remplace split + unlist + sort.int)
+    tabs <- lapply(codes_split, function(codes) {
+      df_t[v_col %in% codes, , drop = FALSE]
+    })
     names(tabs) <- new_names
-    tabs2 <- append(tabs2, tabs)
+    tabs_split[[i]] <- tabs
 
-    # alt_totcode for tauargus
+    # alt_totcode
+    alt_tot_t   <- res$alt_totcode[[t]]
+    other_total <- alt_tot_t[names(alt_tot_t) != var_fus]
+    first_codes <- lapply(codes_split, `[[`, 1L)
 
-    liste_alt_tot <- setNames(lapply(1:n, function(i) {
-      totali <- c(codes_split[[i]][1])
-      totali <- setNames(list(totali), var_fus)
-      totali <- c(totali, other_total)
-      return(totali) }), new_names)
-    all_tot_stock <- append(all_tot_stock, liste_alt_tot)
+    liste_alt_tot <- setNames(lapply(first_codes, function(code_1) {
+      c(setNames(list(code_1), var_fus), other_total)
+    }), new_names)
+    alt_totcode_split[[i]] <- liste_alt_tot
 
-    # list of variables for the created tables
+    # vars
+    var_t <- res$vars[[t]]
+    if (is.null(var_t)) var_t <- res$vars[[1L]]
+    vars_split[[i]] <- setNames(rep(list(var_t), n), new_names)
 
-    var <- replicate(n, list(res$vars[[1]]))
-    list_add <- replicate(n, list(res$vars[[1]]))
-    names(list_add) <- new_names
-    list_vars <- append(list_vars, list_add)
-
-    # remove hierarchies from the variable we split and naming it
-
+    # hrcs
     res$alt_hrc[[t]][[var_fus]] <- NULL
-
-    if (length(res$alt_hrc[[t]]) != 0) {
-
-      hrc_e <- list(res$alt_hrc[[t]])
+    if (length(res$alt_hrc[[t]]) != 0L) {
+      hrc_e        <- list(res$alt_hrc[[t]])
       names(hrc_e) <- names(res$alt_hrc[[t]])
-
-      alt_hrcs <- replicate(n, hrc_e)
-      names(alt_hrcs) <- new_names
-
-      list_alt_hrcs <- append(list_alt_hrcs, alt_hrcs)
+      hrcs_split[[i]] <- setNames(rep(list(hrc_e), n), new_names)
     }
   }
 
-  # adding the names tables we created to the already existing tables
+  # 4. Fusion des résultats
+  tabs2         <- do.call(c, unname(tabs_split))
+  all_tot_stock <- do.call(c, unname(alt_totcode_split))
+  list_vars     <- do.call(c, unname(vars_split))
 
-  table <- names(res$tabs[!(names(res$tabs) %in% table_to_split)])
-  tabs_tot <- append(res$tabs[table], tabs2)
-  alt_totcode <- append(res$alt_totcode[table],all_tot_stock)
-  vars <- append(res$vars[table], list_vars)
-  hrcs <- append( res$alt_hrc[table],list_alt_hrcs)
-  if (length(hrcs) == 0) { hrcs <- NULL }
+  has_hrcs      <- any(vapply(hrcs_split, function(x) !is.null(x), logical(1L)))
+  list_alt_hrcs <- if (has_hrcs) do.call(c, unname(hrcs_split)) else list()
 
+  tabs_tot    <- c(res$tabs[table_keep], tabs2)
+  alt_totcode <- c(res$alt_totcode[table_keep], all_tot_stock)
+  vars        <- c(res$vars[table_keep], list_vars)
+  hrcs        <- c(res$alt_hrc[table_keep], list_alt_hrcs)
+  if (length(hrcs) == 0L) hrcs <- NULL
 
-  res = list(
-    tabs = tabs_tot,
-    vars = vars,
-    sep = res$sep,
-    alt_hrc = hrcs,
-    totcode = res$totcode,
+  return(list(
+    tabs        = tabs_tot,
+    vars        = vars,
+    sep         = res$sep,
+    alt_hrc     = hrcs,
+    totcode     = res$totcode,
     alt_totcode = alt_totcode,
-    hrc = res$hrc,
-    fus_vars = res$fus_vars
-  )
-  return(res)
+    hrc         = res$hrc,
+    fus_vars    = res$fus_vars
+  ))
 }
 
+# Select an unused separator guaranteed not to collide with modalities or column names
 chose_sep <- function(
     data,
     liste_sep)
@@ -664,14 +524,14 @@ chose_sep <- function(
 
   i = 0
   is_in_mod = TRUE
-  while (i <= n_sep & is_in_mod) {
+  while (i < n_sep & is_in_mod) {
     i <- i + 1
     sep <- liste_sep[i]
-    is_in_mod = sum(unlist(lapply(liste_mod, function(x) stringr::str_detect(x, sep)))) > 0
+    is_in_mod = any(stringr::str_detect(liste_mod, stringr::fixed(sep)))
   }
 
   # We have a working separator!
-  if (i <= n_sep) {
+  if (!is_in_mod) {
     # Remove the "\" in front of the separator
     #sep <- stringr::str_sub(liste_sep[i], start = 2)
     sep <- liste_sep[i]
@@ -686,78 +546,17 @@ chose_sep <- function(
   }
 }
 
-#' Change the result of dimension reduction to be directly usable
-#' in rtauargus
+#' Format dimension reduction outputs for tab_multi_manager compatibility
 #'
-#' @param res result of variable merging composed of name_non_changed_vars, a list of lists of tables,
-#' a list of hierarchical files, a list of subtotals associated with these files,
-#' and a list of vectors of variables or a vector of variables depending on the base size
-#' of the dataframes
-#' @param dfs_name the name of the entered dataframes
-#' @param sep character
-#' @param totcode character named vector
-#' @param hrcfiles character named vector
+#' @param res result from dimension reduction
+#' @param dfs_name name of input dataframes
+#' @param sep separator string
+#' @param totcode named vector of totals
+#' @param hrcfiles named vector of hrc file paths
 #'
-#' @return A list containing:
-#' \itemize{
-#'   \item `tabs`: named list of 3-dimensional dataframes
-#'   with nested hierarchies
-#'   \item `alt_hrc`: named list of hrc specific to the variables
-#'   created during merging to go to dimension 3
-#'   \item `alt_totcode`: named list of totals specific to the variables
-#'   created during merging to go to dimension 3
-#'   \item `vars`: categorical variables of the output dataframes
-#'   \item `sep`: separator used to link the variables
-#'   \item `totcode`: named vector of totals for all categorical variables
-#'   \item `hrcfiles`: named vector of hrc for categorical variables
-#'   (except the merged one)
-#'   \item `fus_vars`: named vector of vectors representing the merged
-#'   variables during dimension reduction
-#' }
-#' @importFrom stats setNames
-#' @examples
-#' library(dplyr)
-#' data <- expand.grid(
-#'   ACT = c("Total", "A", "B", "A1", "A2", "B1", "B2"),
-#'   GEO = c("Total", "G1", "G2"),
-#'   SEX = c("Total", "F", "M"),
-#'   AGE = c("Total", "AGE1", "AGE2"),
-#'   stringsAsFactors = FALSE
-#' ) %>%
-#'   as.data.frame()
-#'
-#' data <- data %>% mutate(VALUE = 1)
-#'
-#' hrc_act <- "hrc_ACT.hrc"
-#'
-#' sdcHierarchies::hier_create(root = "Total", nodes = c("A","B")) %>%
-#'   sdcHierarchies::hier_add(root = "A", nodes = c("A1","A2")) %>%
-#'   sdcHierarchies::hier_add(root = "B", nodes = c("B1","B2")) %>%
-#'   sdcHierarchies::hier_convert(as = "argus") %>%
-#'   slice(-1) %>%
-#'   mutate(levels = substring(paste0(level,name),3)) %>%
-#'   select(levels) %>%
-#'   write.table(file = hrc_act, row.names = FALSE, col.names = FALSE, quote = FALSE)
-#'
-#' # Results of the function
-#' res1 <- from_4_to_3(
-#'   dfs = data,
-#'   dfs_name = "tab",
-#'   totcode = c(SEX = "Total", AGE = "Total", GEO = "Total", ACT = "Total"),
-#'   hrcfiles = c(ACT = hrc_act),
-#'   sep_dir = TRUE,
-#'   hrc_dir = "output"
-#' )
-#'
-#' res <- sp_format(res1,
-#'         dfs_name = "tab",
-#'         sep = "_",
-#'         totcode = c(SEX="Total",AGE="Total",
-#'                    GEO="Total", ACT="Total"),
-#'        hrcfiles = c(ACT = hrc_act)
-#'        )
+#' @return Formatted list compatible with tab_multi_manager.
 #' @keywords internal
-#' @export
+#' @noRd
 sp_format <- function(
     res,
     dfs_name,
@@ -773,7 +572,8 @@ sp_format <- function(
   }
 }
 
-# Format for tables with 4 variables
+# Format outputs for 4D -> 3D transition
+#' @importFrom stats setNames
 format4 <- function(res, dfs_name, sep, totcode, hrcfiles) {
   # Data
 
@@ -840,7 +640,7 @@ format4 <- function(res, dfs_name, sep, totcode, hrcfiles) {
   )
 }
 
-# Format for tables with 5 variables
+# Format outputs for 5D -> 3D transition
 #' @importFrom stats setNames
 format5 <- function(res, dfs_name, sep, totcode, hrcfiles) {
   if (is.list(res$vars)) {

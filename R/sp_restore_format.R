@@ -1,116 +1,28 @@
 #' Function to reverse the process of dimension reduction
-#' @param masq a list of data.frames on which the secret has been applied
-#' @param res the result of the dimension reduction function (to retrieve
-#' the merged variables) and the separator (sep).
 #'
-#' @return the original dataframe with 4 or 5 dimensions
+#' @param masq a list of data.frames on which secret/suppression has been applied
+#' @param res result of dimension reduction (contains merged variables and separator)
 #'
-#' @examples
-#' # Examples with dimension 4
-#' library(dplyr)
-#' data <- expand.grid(
-#'   ACT = c("Total", "A", "B", "A1", "A2","A3", "B1", "B2","B3","B4","C",
-#'           "name_non_changed_vars","E","F","G","B5"),
-#'   GEO = c("Total", "G1", "G2"),
-#'   SEX = c("Total", "F", "M"),
-#'   AGE = c("Total", "AGE1", "AGE2"),
-#'   stringsAsFactors = FALSE
-#' ) %>%
-#'   as.data.frame()
+#' @return The original data.frame restored to 4 or 5 dimensions.
 #'
-#' data <- data %>% mutate(VALUE = 1)
-#'
-#' hrc_act <- "hrc_ACT.hrc"
-#'
-#' sdcHierarchies::hier_create(
-#'   root = "Total",
-#'   nodes = c("A","B","C","name_non_changed_vars","E","F","G")
-#' ) %>%
-#'   sdcHierarchies::hier_add(root = "A", nodes = c("A1","A2","A3")) %>%
-#'   sdcHierarchies::hier_add(root = "B", nodes = c("B1","B2","B3","B4","B5")) %>%
-#'   sdcHierarchies::hier_convert(as = "argus") %>%
-#'   slice(-1) %>%
-#'   mutate(levels = substring(paste0(level,name),3)) %>%
-#'   select(levels) %>%
-#'   write.table(file = hrc_act, row.names = FALSE, col.names = FALSE, quote = FALSE)
-#'
-#' # Result of the function by forcing some variables to be merged
-#' res_red_dim <- reduce_dims(
-#'   dfs = data,
-#'   dfs_name = "tab",
-#'   totcode = c(SEX="Total",AGE="Total", GEO="Total", ACT="Total"),
-#'   hrcfiles = c(ACT = hrc_act),
-#'   sep_dir = TRUE,
-#'   hrc_dir = "output",
-#'   vars_to_merge = c("ACT","GEO")
-#' )
-#'
-#' res1 <- restore_format(masq = res_red_dim$tabs, res = res_red_dim)
-#' dim(setdiff(res1,data))[1] == 0
-#'
-#' # return TRUE
-#' # We have exactly the sames cases in the datatable after splitting and unsplitting data
-#'
-#' # Exemple dimension 5
-#'
-#' data <- expand.grid(
-#'   ACT = c("Total_A", paste0("A", seq(1,5),"_"),paste0("A1_", seq(1,7)),
-#'           paste0("A2_", seq(1,9))),
-#'   GEO = c("Total_G", "GA", "GB", "GA1", "GA2", "GB1", "GB2","GA3","GB3","GB4"),
-#'   SEX = c("Total_S", "F", "M","F1","F2","M1","M2"),
-#'   AGE = c("Ensemble", "AGE1", "AGE2", "AGE11", "AGE12", "AGE21", "AGE22"),
-#'   ECO = c("PIB","Ménages","Entreprises"),
-#'   stringsAsFactors = FALSE,
-#'   KEEP.OUT.ATTRS = FALSE
-#' ) %>%
-#'   as.data.frame()
-#'
-#' data <- data %>% mutate(VALUE = 1:n())
-#'
-#' hrc_act <- "hrc_ACT.hrc"
-#' sdcHierarchies::hier_create(root = "Total_A", nodes = paste0("A", seq(1,5),"_")) %>%
-#'   sdcHierarchies::hier_add(root = "A1_", nodes = paste0("A1_", seq(1,7))) %>%
-#'   sdcHierarchies::hier_add(root = "A2_", nodes = paste0("A2_", seq(1,9))) %>%
-#'   sdcHierarchies::hier_convert(as = "argus") %>%
-#'   slice(-1) %>%
-#'   mutate(levels = substring(paste0(level,name),3)) %>%
-#'   select(levels) %>%
-#'   write.table(file = hrc_act, row.names = FALSE, col.names = FALSE, quote = FALSE)
-#'
-#' hrc_geo <- "hrc_GEO.hrc"
-#' sdcHierarchies::hier_create(root = "Total_G", nodes = c("GA","GB")) %>%
-#'   sdcHierarchies::hier_add(root = "GA", nodes = c("GA1","GA2","GA3")) %>%
-#'   sdcHierarchies::hier_add(root = "GB", nodes = c("GB1","GB2","GB3","GB4")) %>%
-#'   sdcHierarchies::hier_convert(as = "argus") %>%
-#'   slice(-1) %>%
-#'   mutate(levels = substring(paste0(level,name),3)) %>%
-#'   select(levels) %>%
-#'   write.table(file = hrc_geo, row.names = FALSE, col.names = FALSE, quote = FALSE)
-#'
-#' # function's result
-#'
-#' res_red_dim <- reduce_dims(
-#'   dfs = data,
-#'   dfs_name = "tab",
-#'   totcode = c(SEX="Total_S",AGE="Ensemble", GEO="Total_G", ACT="Total_A", ECO = "PIB"),
-#'   hrcfiles = c(ACT = hrc_act, GEO = hrc_geo),
-#'   sep_dir = TRUE,
-#'   hrc_dir = "output"
-#' )
-#'
-#' res2 <- restore_format(masq = res_red_dim$tabs, res = res_red_dim)
 #' @keywords internal
-#' @export
+#' @noRd
 restore_format <- function(masq, res) {
 
+  # ----------------------------------------------------------------------------
+  # STRATEGY (Reverse Dimension Reduction):
+  # 1. Recombine all processed sub-tables 'masq' into a single dataframe using
+  #    bind_rows() and deduplicate identical records via distinct().
+  # 2. Check reduction metadata:
+  #    - 4D case: Call 'separer4_3()' once to split composite var into (v1, v2).
+  #    - 5D case (2 pairs): Call 'separer4_3()' twice (v1_v2 then v3_v4).
+  #    - 5D case (1 triplet): Call 'separer5_3()' once to split into (v1, v2, v3).
+  # ----------------------------------------------------------------------------
+
   sep <- res$sep
-  sep_regex <- gsub("([+])", "\\\\\\1", sep)
 
-
-
-  # Unique values from 'masq' (a list) are concatenated into a data frame
-
-  masq_liste_empilee <- unique(do.call("rbind",  unname(masq)))
+  # Combine processed sub-tables and keep unique records
+  masq_liste_empilee <- dplyr::distinct(dplyr::bind_rows(masq))
 
   if (is.character(res$fus_vars)) {
     # Case with 4 categorical variables
@@ -121,7 +33,7 @@ restore_format <- function(masq, res) {
 
     v1_v2 <- paste(v1, v2, sep = sep)
 
-    result <- separer4_3(masq_liste_empilee, v1, v2,v1_v2, sep_regex)
+    result <- separer4_3(masq_liste_empilee, v1, v2,v1_v2, sep)
     return(result)
   }
 
@@ -138,9 +50,9 @@ restore_format <- function(masq, res) {
     # Case of fusion between 3 different variables
     v3_v4 <- paste(v3, v4, sep = sep)
     # Split based on 'v1', 'v2', and 'v1_v2' using 'separer4_3' function
-    split1 <- separer4_3(masq_liste_empilee, v1, v2, v1_v2, sep_regex)
+    split1 <- separer4_3(masq_liste_empilee, v1, v2, v1_v2, sep)
     # Further split based on 'v3', 'v4', and 'v3_v4'
-    result <- separer4_3(split1, v3, v4, v3_v4, sep_regex)
+    result <- separer4_3(split1, v3, v4, v3_v4, sep)
 
   } else {
     # Case of fusion with an already fused variable
@@ -148,10 +60,10 @@ restore_format <- function(masq, res) {
 
     if(v1_v2 == v3){
       # Split based on 'v1', 'v2', and 'v4' using 'separer5_3' function
-      result<-separer5_3(masq_liste_empilee, v1,v2, v4, v3_v4, sep_regex)
+      result<-separer5_3(masq_liste_empilee, v1,v2, v4, v3_v4, sep)
     }else{
       # Split based on 'v1', 'v2', and 'v3' using 'separer5_3' function
-      result<-separer5_3(masq_liste_empilee, v1,v2,v3, v3_v4, sep_regex)
+      result<-separer5_3(masq_liste_empilee, v1,v2,v3, v3_v4, sep)
 
     }
 
@@ -162,15 +74,21 @@ restore_format <- function(masq, res) {
 
 
 
-# Function for splitting the merged variable v1_v2_v3 into v1, v2, and v3
-separer5_3 <- function(df, v1, v2, v3,v3_v4, sep_regex) {
-  splits <- strsplit(df[[v3_v4]], split = sep_regex)
-  df[[v3]] <- sapply(splits, `[`, 1)
-  df[[v1]] <- sapply(splits, `[`, 2)
-  df[[v2]] <- sapply(splits, `[`, 3)
+# Extract 3 original variables (v3, v1, v2) from composite variable 'v3_v4'
+separer5_3 <- function(df, v1, v2, v3,v3_v4, sep) {
+
+  # 'fixed = TRUE' bypasses the regex engine for fast C-level string splitting
+  splits <- strsplit(df[[v3_v4]], split = sep, fixed = TRUE)
+
+  # Unlist splits directly into a 3-column C matrix (bypasses R sapply loop overhead)
+  mat <- matrix(unlist(splits, use.names = FALSE), ncol = 3, byrow = TRUE)
+
+  df[[v3]] <- mat[, 1]
+  df[[v1]] <- mat[, 2]
+  df[[v2]] <- mat[, 3]
   df[[v3_v4]] <- NULL
 
-  # Réorganiser les colonnes
+  # Reorder columns to place restored variables first
   new_order <- c(v3, v1, v2, setdiff(names(df), c(v3, v1, v2)))
   df <- df[, new_order]
 
@@ -178,14 +96,20 @@ separer5_3 <- function(df, v1, v2, v3,v3_v4, sep_regex) {
 }
 
 
-# Function for splitting the merged variable v1_v2 into v1 and v2
-separer4_3 <- function(df, v1, v2, v1_v2, sep_regex) {
-  splits <- strsplit(df[[v1_v2]], split = sep_regex)
-  df[[v1]] <- sapply(splits, `[`, 1)
-  df[[v2]] <- sapply(splits, `[`, 2)
+# Extract 2 original variables (v1, v2) from composite variable 'v1_v2'
+separer4_3 <- function(df, v1, v2, v1_v2, sep) {
+  # splits <- strsplit(df[[v1_v2]], split = sep_regex)
+
+  splits <- strsplit(df[[v1_v2]], split = sep, fixed = TRUE)
+
+  # Unlist splits directly into a 2-column C matrix (bypasses R sapply loop overhead)
+  mat <- matrix(unlist(splits, use.names = FALSE), ncol = 2, byrow = TRUE)
+
+  df[[v1]] <- mat[, 1]
+  df[[v2]] <- mat[, 2]
   df[[v1_v2]] <- NULL
 
-  # Réorganiser les colonnes
+  # Reorder columns to place restored variables first
   new_order <- c(v1, v2, setdiff(names(df), c(v1, v2)))
   df <- df[, new_order]
   df

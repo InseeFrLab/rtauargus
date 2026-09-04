@@ -1,65 +1,17 @@
 #' Transition from 4 to 3 variables by merging two non-hierarchical variables
 #'
-#' @param dfs data.frame with 4 categorical variables (n >= 2 in the general case)
-#' @param dfs_name name of the data.frame in the list provided by the user
+#' @param dfs data.frame with 4 categorical variables
+#' @param dfs_name name of the data.frame in the user list
 #' @param v1 non-hierarchical categorical variable
 #' @param v2 non-hierarchical categorical variable
 #' @param totcode named vector of totals for categorical variables
-#' @param dir_name folder where to write the hrc files
-#' if no folder is specified in hrcfiles
+#' @param dir_name folder where to write generated hrc files
 #' @param sep separator used when concatenating variables
 #'
-#' @return A list containing:
-#' \itemize{
-#'   \item `tabs`: named list of 3-dimensional dataframes
-#'   (n-1 dimensions in the general case) with nested hierarchies
-#'   \item `hrc`: named list of hrc specific to the variable created via merging
-#'   \item `alt_tot`: named list of totals
-#'   \item `vars`: named list of vectors representing the merged variables
-#'   during the two steps of dimension reduction
-#' }
+#' @return A list with `tabs`, `hrcs`, `alt_tot` and `vars`.
 #'
-#' @examples
-#' library(dplyr)
-#' data <- expand.grid(
-#'   ACT = c("Total", "A", "B", "A1", "A2", "B1", "B2"),
-#'   SEX = c("Total", "F", "M","F1","F2","M1","M2"),
-#'   AGE = c("Total", "AGE1", "AGE2", "AGE11", "AGE12", "AGE21", "AGE22"),
-#'   ECO = c("PIB","Households","Companies"),
-#'   stringsAsFactors = FALSE,
-#'   KEEP.OUT.ATTRS = FALSE
-#' ) %>%
-#'   as.data.frame()
-#'
-#' data <- data %>% mutate(VALUE = 1:n())
-#'
-#' hrc_act <- "hrc_ACT.hrc"
-#' sdcHierarchies::hier_create(root = "Total", nodes = c("A","B")) %>%
-#'   sdcHierarchies::hier_add(root = "A", nodes = c("A1","A2")) %>%
-#'   sdcHierarchies::hier_convert(as = "argus") %>%
-#'   slice(-1) %>%
-#'   mutate(levels = substring(paste0(level,name),3)) %>%
-#'   select(levels) %>%
-#'   write.table(file = hrc_act, row.names = FALSE, col.names = FALSE, quote = FALSE)
-#'
-#' hrc_sex <- "hrc_SEX.hrc"
-#' sdcHierarchies::hier_create(root = "Total", nodes = c("F","M")) %>%
-#'   sdcHierarchies::hier_add(root = "F", nodes = c("F1","F2")) %>%
-#'   sdcHierarchies::hier_add(root = "M", nodes = c("M1","M2")) %>%
-#'   sdcHierarchies::hier_convert(as = "argus") %>%
-#'   slice(-1) %>%
-#'   mutate(levels = substring(paste0(level,name),3)) %>%
-#'   select(levels) %>%
-#'   write.table(file = hrc_sex, row.names = FALSE, col.names = FALSE, quote = FALSE)
-#'
-#' res1 <- from_4_to_3_case_0_hr(dfs = data,
-#'                                 dfs_name = "dfs_name",
-#'                                 v1 = "ECO",v2 = "AGE",
-#'                                 totcode = c(ACT = "Total",SEX = "Total",
-#'                                             AGE = "Total",ECO = "PIB"),
-#'                                 dir_name = "output")
 #' @keywords internal
-#' @export
+#' @noRd
 from_4_to_3_case_0_hr <- function(
     dfs,
     dfs_name,
@@ -69,7 +21,16 @@ from_4_to_3_case_0_hr <- function(
     dir_name,
     sep = "_")
 {
-  # the different totals
+  # ----------------------------------------------------------------------------
+  # STRATEGY (0 Hierarchical Variables / 2 Flat Variables v1 & v2):
+  # Merging two flat variables creates a synthetic 2-level hierarchy for Tau-Argus.
+  # We construct two symmetric options:
+  #   - Option 1 (tab1): Group by v1 first (Level 1: v1 x Total_v2; Level 2: v1 x v2).
+  #   - Option 2 (tab2): Group by v2 first (Level 1: Total_v1 x v2; Level 2: v1 x v2).
+  # 'write_hrc2' builds the corresponding .hrc tree files from the 2-level correspondence.
+  # ----------------------------------------------------------------------------
+
+  # Totals for each variable
   var1_total <- totcode[v1]
   var2_total <- totcode[v2]
 
@@ -80,9 +41,9 @@ from_4_to_3_case_0_hr <- function(
   var1_mods_except_total <- mods1[mods1 != var1_total]
   var2_mods_except_total <- mods2[mods2 != var2_total]
 
-  # Traitement ad hoc des feuilles uniques (pour Julien)
-  # Add a fake modality if there is only one modality except total
-  # to avoid error with rtauargus::write_hrc2
+  # EDGE CASE: If a variable has only 1 non-total modality, 'write_hrc2' fails
+  # because a hierarchy node requires at least 2 children.
+  # We append a dummy modality ("...ZZZ") to satisfy the 2-children constraint.
   if (length(var1_mods_except_total)==1){
     var1_mods_except_total<-c(var1_mods_except_total,paste(var1_mods_except_total,
                                                            "ZZZ", sep = ""))
@@ -93,11 +54,10 @@ from_4_to_3_case_0_hr <- function(
                                                            "ZZZ", sep = ""))
   }
 
-  # number of modality for each var
   var1_mods_n <- length(var1_mods_except_total)
   var2_mods_n <- length(var2_mods_except_total)
 
-  # generalization creation of the tables with merged variables
+  # Helper to construct merged dataframe and 2-level hierarchy correspondence table
   table_and_hierarchy_creator <- function(var_i_total,
                                    var_j_total,
                                    var_i_mods_except_total,
@@ -115,7 +75,7 @@ from_4_to_3_case_0_hr <- function(
       j <- 1
     }
 
-    # Construction of the levels for the correspondence table
+    # Level 1 (Parent): Grouping by primary variable (vi x Total_vj)
     tabi_lvl1 <- expand.grid(
       v1 = sort(rep(var_i_mods_except_total, var_j_mods_n)),
       v2 = var_j_total,
@@ -127,7 +87,7 @@ from_4_to_3_case_0_hr <- function(
 
     tabi_lvl1$v3 <- paste(tabi_lvl1[[v_i]], tabi_lvl1[[v_j]], sep = sep)
 
-    # Creation of the level 2 hierarchy
+    # Level 2 (Children): Detailed cross-modalities (vi x vj)
     tabi_lvl2 <- expand.grid(
       v1 = var_i_mods_except_total,
       v2 = var_j_mods_except_total,
@@ -138,13 +98,14 @@ from_4_to_3_case_0_hr <- function(
 
     tabi_lvl2$v3 <- paste(tabi_lvl2[[v_i]], tabi_lvl2[[v_j]], sep = sep)
 
-    # Creation of the correspondence table
+    # Correspondence table mapping parent (Lvl1) to child (Lvl2)
     tabi_corresp <- data.frame(
       Lvl1 = tabi_lvl1$v3,
       Lvl2 = tabi_lvl2$v3,
       stringsAsFactors = FALSE
     )
 
+    # Filter data and concatenate v1 and v2 into new single column
     tabi <- dfs[(dfs[[vi]] != var_i_total) |
                   (dfs[[vi]] == var_i_total & dfs[[vj]] == var_j_total), ]
     tabi[[paste(v1, v2, sep = sep)]]<- paste(tabi[[v1]],tabi[[v2]],sep = sep)
@@ -155,7 +116,7 @@ from_4_to_3_case_0_hr <- function(
     return(list(tabi,tabi_corresp))
   }
 
-  # We apply the function for "i=1, j=2" then for "i=2,j=1"
+  # Build Option 1 (Group by v1 first)
   res1 <-  table_and_hierarchy_creator(var1_total,
                                 var2_total,
                                 var1_mods_except_total,
@@ -165,6 +126,7 @@ from_4_to_3_case_0_hr <- function(
   tab1 <- res1[[1]]
   tab1_corresp <- res1[[2]]
 
+  # Build Option 2 (Group by v2 first)
   res2 <- table_and_hierarchy_creator(var2_total,
                                var1_total,
                                var2_mods_except_total,
@@ -174,11 +136,7 @@ from_4_to_3_case_0_hr <- function(
   tab2 <- res2[[1]]
   tab2_corresp <- res2[[2]]
 
-  # Construction of hierarchies
-  # to do :
-  # use file.path()?
-  # do not write if the file already exists?
-
+  # Write HRC hierarchy files for both options
   hrc_tab1 <- rtauargus::write_hrc2(tab1_corresp,
                                     file_name = paste(dir_name,"/",
                                                       paste("hrc",dfs_name,

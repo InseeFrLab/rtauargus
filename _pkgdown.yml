@@ -83,6 +83,7 @@ reference:
     - split_in_clusters
     - tab_to_treat
     - wide_to_long
+    - explore_reduce_dims
 articles:
   - title: Work with tabular data (Advised)
     navbar: tabular-wise

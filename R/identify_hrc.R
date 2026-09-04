@@ -48,24 +48,43 @@ identify_hrc <- function(df_metadata_long){
     table_name = df_spannings$table_name
   ) %>% unique()
   df_spannings <- df_spannings %>% select(-spanning_old)
-  if(all(is.na(df_spannings$hrc_indicator))){ # condition for hierarchies on indicators
-    df_indicators <- df_spannings
-    return(list(df_indicators,df_variable_info))
-  } else {
-    df_indicators <- df_spannings %>%
+
+  # Hierachies on indicators
+  if (any(!is.na(df_spannings$hrc_indicator))) {
+    df_hrc_indicator <- df_spannings %>%
       filter(!is.na(hrc_indicator)) %>%
-      dplyr::group_by(table_name) %>%
+      group_by(table_name) %>%
       summarise(
         field = last(field),
         hrc_field = last(hrc_field),
-        spanning = paste0(toupper(last(hrc_indicator)),"^h"),
+        spanning = paste0(toupper(last(hrc_indicator)), "^h"),
         hrc_spanning = last(hrc_indicator),
         indicator = last(indicator),
         hrc_indicator = last(hrc_indicator)
       ) %>%
       bind_rows(df_spannings, .) %>%
       arrange(table_name)
-    list_hrc_identified = list(df_indicators,df_variable_info)
-    return(list_hrc_identified)
+  } else {
+    df_hrc_indicator <- df_spannings
   }
+  # Hierarchies on fields
+  if (any(!is.na(df_spannings$hrc_field))) {
+    df_hrc_field <- df_hrc_indicator %>%
+      filter(!is.na(hrc_field)) %>%
+      group_by(table_name) %>%
+      summarise(
+        field = last(hrc_field),
+        hrc_field = last(hrc_field),
+        spanning = paste0(toupper(last(hrc_field)), "^h"),
+        hrc_spanning = last(hrc_field),
+        indicator = last(indicator),
+        hrc_indicator = last(hrc_indicator)
+      ) %>%
+      bind_rows(df_hrc_indicator, .) %>%
+      arrange(table_name)
+  } else {
+    df_hrc_field <- df_hrc_indicator
+  }
+
+  list(df_hrc_field,df_variable_info)
 }
