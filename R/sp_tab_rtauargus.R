@@ -271,12 +271,19 @@ tab_rtauargus4 <- function(
     result <- restore_format(masq_list, list_tables)
 
     # Restore input secret_var name so tab_rtauargus2() can compute cell Status
-    result[[secret_var]] <- result$is_secret_prim
+    sec_cols <- grep("^is_secret_\\d+$", names(result), value = TRUE)
+    if (length(sec_cols) > 0) {
+      col_finale <- tail(sec_cols, 1)
+      result[[secret_var]] <- result[[col_finale]]
+    } else {
+      result[[secret_var]] <- result$is_secret_prim
+    }
 
     # Clean up temporary alias to prevent column pollution and merge duplication
-    if (secret_var != "is_secret_prim") {
-      result$is_secret_prim <- NULL
-    }
+    cols_to_delete <- setdiff(c("is_secret_prim", sec_cols), secret_var)
+    result <- result[, !(names(result) %in% cols_to_delete), drop = FALSE]
+
+    # todo : keep original table lines order ?
 
     return(result)
   } else {
