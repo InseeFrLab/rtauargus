@@ -1,5 +1,17 @@
 # Changelog
 
+## rtauargus 1.3.6
+
+\[09/2026\]
+
+Fix several bugs in the v1.3.5:
+
+- summary in `tab_multi_manager`.
+
+- split 5-dims tables in `tab_multi_manager`
+
+- some outputs of automatic analysis functions.
+
 ## rtauargus 1.3.5
 
 \[08/2026\]
