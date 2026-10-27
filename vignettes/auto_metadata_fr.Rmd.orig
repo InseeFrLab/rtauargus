@@ -24,9 +24,9 @@ library(dplyr)
 
 # Introduction
 
-Avant de faire appel aux fonctions permettant la pose du secret il est nécessaire d'analyser les tableaux que l'on souhaite protéger. En effet,les tableaux diffusés sont différents des tableaux à protéger. Cela est expliqué en détail au chapitre 3 du [Manuel de protection des tableaux](https://inseefrlab.github.io/manuel-protection-tableaux/03_analyser_une_demande.html). Cette phase d'analyse des marges communes entre les différents tableaux peut s'avérer complexe. Ainsi, des fonctions ont été développées dans `rtauargus` pour faciliter ce travail.
+Avant de faire appel aux fonctions permettant la pose du secret il est nécessaire d'analyser les tableaux que l'on souhaite protéger. En effet, les tableaux diffusés sont différents des tableaux à protéger. Cela est expliqué en détail au chapitre 3 du [Manuel de protection des tableaux](https://inseefrlab.github.io/manuel-protection-tableaux/03_analyser_une_demande.html). Cette phase d'analyse des marges communes entre les différents tableaux peut s'avérer complexe. Ainsi, des fonctions ont été développées dans `rtauargus` pour faciliter ce travail.
 
-# Comment fonctionne l'analyse automatique automatique des métadonnées ?
+# Comment fonctionne l'analyse automatique des métadonnées ?
 ## Création des métadonnées \label{sec:crea_meta}
 
 Les métadonnées doivent respecter un format spécifique. Une ligne représente un tableau et pour chaque tableau il faut préciser :
@@ -106,7 +106,7 @@ On obtient un dataframe nous présentant la façon de traiter les tableaux pour 
 cluster_id_dataframe
 ```
 
-Pour les 12 tableaux à publier il suffit de protéger 4 tableaux. Ces tableaux sont repartis dans deux clusters différents. Il faudra donc faire appel deux fois à `tab_multi_manager()`.
+Pour les 12 tableaux à publier il suffit de protéger 4 tableaux. Ces tableaux sont répartis dans deux clusters différents. Il faudra donc faire appel deux fois à `tab_multi_manager()`.
 On remarque une nouvelle variable de croisement `HRC_LETTUCE^h`. Il s'agit d'une variable qui prend pour modalités `batavia` et `arugula` et a pour total `lettuce`. L'indicateur `LETTUCE` renvoie ici au "turnover" (to) ou "chiffre d'affaires" de la vente de salades. Par exemple, le tableau `T10.T12.T8` présente le chiffre d'affaires de la vente de salades en fonction de l'activité et de la catégorie de l'entreprise ainsi que du type de salade.
 
 Si l'on souhaite avoir plus d'informations sur l'analyse de la demande, on peut spécifier l'argument `verbose = TRUE`. Ainsi, l'objet renvoyé par la fonction est une liste des différentes étapes de l'analyse.

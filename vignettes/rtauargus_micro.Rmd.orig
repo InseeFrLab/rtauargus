@@ -49,7 +49,7 @@ in a modular way. They allow the integration of tasks performed by
 
 The syntax of some of the arguments closely matches the _batch_ syntax of
 &tau;-Argus. This allows you to use a large number of features without
-multiply the arguments of the functions. The package can also be adapted to
+multiplying the arguments of the functions. The package can also be adapted to
 more easily to possible modifications of the software (new
 available methods, additional options...). Syntax rules for
 the batch writing are in the reference manual of &tau;-Argus.
@@ -466,7 +466,7 @@ also available:
 - `tauargus_exe` : to change the executable (override the
   `rtauargus.tauargus_exe` the time of the function) ;
 - `logbook` : location and name of the file containing the error log;
-- show_batch_on_console` : to display or not the batch progress in the
+- `show_batch_on_console` : to display or not the batch progress in the
   console ;
 - `import` : if disabled, the function only generates text files
   without importing them into R (see next section for details).

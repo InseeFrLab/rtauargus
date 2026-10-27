@@ -146,7 +146,7 @@ write_rda_tab <- function(info_vars) {
 #' (Variable indiquant le secret primaire de type booléen:
 #' prend la valeur "TRUE" quand les cellules du tableau doivent être masquées
 #' par le secret primaire, "FALSE" sinon. Permet de créer un fichier d'apriori)
-#' @param secret_var Nae of the boolean variable which specifies the secret, primary or not :
+#' @param secret_var Name of the boolean variable which specifies the secret, primary or not :
 #'  equal to "TRUE" if a cell is concerned by the secret,"FALSE" otherwise.
 #' will  be exported in the apriori file. \cr
 #' (Variable indiquant le secret  de type booléen:
@@ -265,7 +265,7 @@ write_rda_tab <- function(info_vars) {
 #'   `<TOTCODE> "global"` pour toutes les variables catégorielles
 #'   sauf  `size` and `income`} qui se verront affecter
 #'   le total : `<TOTCODE> "total"`
-#'   Par defaut : `<TOTCODE> "Total"`
+#'   Par défaut : `<TOTCODE> "Total"`
 #' }
 #'
 #'
@@ -297,7 +297,7 @@ write_rda_tab <- function(info_vars) {
 #' Les éléments du vecteur en paramètre doivent nommés (avec le nom de la variable),
 #' même s'il n'y a qu'un seul élément.
 #'
-#'*Exemple :*`c(category="category.hrc")`)
+#' *Exemple :* `c(category="category.hrc")`
 #'
 #'
 #' @section Number of decimals:
