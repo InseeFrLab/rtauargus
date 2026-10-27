@@ -33,7 +33,7 @@ The most common rules are :
 - The dominance rule **NK(n,k)** with :
   - n the size of the coalition
   - k the max percentage
-- The treshold rule **Freq(n,p)** with :
+- The threshold rule **Freq(n,p)** with :
   - n the minimum frequency allowed
   - p the Frequency Safety Range
 - The p percent rule **P(p,n)** with :
@@ -47,7 +47,7 @@ The other ones :
 - The request rule **REQ(p1,p2,SafetyMargin)**
 - The zero safety range parameter **ZERO(p)**
 - The status of missing codes **MIS(b)** with :
-  - b = 0 (default) cells with a missing code is unsafe if the safety rules ares are violated
+  - b = 0 (default) cells with a missing code is unsafe if the safety rules are violated
   - b = 1 these cells are always safe
 
 Some rules can appear multiple times **(P,NK)**

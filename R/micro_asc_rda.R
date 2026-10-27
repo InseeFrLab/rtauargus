@@ -67,7 +67,7 @@ write_rda <- function(info_vars) {
 #' protection problems.
 #'
 #' See more details in `vignette("rtauargus")` or in
-#' `vignette("protect_multi_tables)`.
+#' `vignette("protect_multi_tables")`.
 #'
 #' Creates a fixed length text file (asc) and a metadata file
 #' (rda) from microdata and additional information. \cr
@@ -89,11 +89,11 @@ write_rda <- function(info_vars) {
 #' @param holding_var nom de la variable de holding.
 #' (name of the holding variable.) \cr
 #' @param decimals minimum number of decimals to display (see section 'Number of
-#' of decimals').
+#' decimals').
 #' (nombre minimal de décimales à afficher (voir section 'Number of
 #' of decimals').)
 #' @param hrc information about the hierarchical variables (see section
-#' section 'Hierarchical variables'). \cr
+#' 'Hierarchical variables'). \cr
 #' (informations sur les variables hiérarchiques (voir section
 #' 'Hierarchical variables').)
 #' @param hierleadstring character which, repeated n times, indicates that the value is
@@ -120,8 +120,8 @@ write_rda <- function(info_vars) {
 #'
 #' @return
 #' Returns the names of the asc and rda files as a list (invisibly).
-#' invisibly). Empty columns (filled with `NA` or empty strings) are not
-#' strings) will not be exported to the asc file. A
+#' Empty columns (filled with `NA` or empty strings) will not be
+#' exported to the asc file. A
 #' warning message will list the affected columns. \cr
 #' (Renvoie les noms des fichiers asc et rda sous forme de liste (de
 #'   manière invisible). Les colonnes vides (remplies de `NA` ou de chaînes
@@ -136,7 +136,7 @@ write_rda <- function(info_vars) {
 #'
 #' The names of the elements of the vector give the variable concerned, the elements
 #' of the vector give the value of the parameter for Tau-Argus. An unnamed element
-#' element will be the default value, which will be assigned to all
+#' will be the default value, which will be assigned to all
 #' variables that can take this parameter.
 #'
 #' For example :
@@ -173,7 +173,7 @@ write_rda <- function(info_vars) {
 #' hierarchical variables.
 #'
 #' To define a hierarchy based on the positions of characters
-#' (**hierierlevels**), pass a sequence of integers separated by
+#' (**hierlevels**), pass a sequence of integers separated by
 #' spaces.
 #'
 #' *Example :* `c(CODECOM = "2 3 0 0 0")`
@@ -182,7 +182,7 @@ write_rda <- function(info_vars) {
 #' (**hiercodelist**), the function expects the location of this file (and
 #' a possible `hiercodelist` if it differs from the default option of the
 #' package). In this case, you can write explicitly the path to an existing file
-#' file (`c(A38 = "a38.hrc")`), but also make a call to
+#' (`c(A38 = "a38.hrc")`), but also make a call to
 #' `write_hrc()` which will generate an hrc file from microdata.
 #'
 #' *Example :* `c(A38 = write_hrc(microdata, c("A38", "A21", "A10")))`
@@ -238,7 +238,7 @@ write_rda <- function(info_vars) {
 #'
 #' @section Number of decimals:
 #'
-#' The parameter `decimals` indicates the minimum number of decimals to be
+#' The parameter `decimals` indicates the minimum number of decimals to
 #' appear in the output file (whatever the number of decimals
 #' actually present in `microdata`). It applies to all
 #' real variables (double) but not to integer variables (integer). For

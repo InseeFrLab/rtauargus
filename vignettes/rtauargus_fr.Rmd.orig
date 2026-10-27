@@ -49,7 +49,7 @@ La syntaxe de certains des arguments correspond étroitement à la syntaxe _batc
 multiplier les arguments des fonctions. Le package pourra également s'adapter
 plus facilement aux éventuelles modifications du logiciel (nouveaux
 algorithmes disponibles, options supplémentaires...).
-Les règles de syntaxes d'écriture du batch sont détaillés dans le manuel de référence de &tau;-Argus et sont égalements précisées dans la vignette *options_safety_rules*.
+Les règles de syntaxes d'écriture du batch sont détaillées dans le manuel de référence de &tau;-Argus et sont également précisées dans la vignette *options_safety_rules*.
 
 > Le package a été développé sur la base de versions open source de &tau;-Argus (versions 4.2 et supérieures), en particulier la dernière version disponible au moment du développement (4.2.3).
 >
@@ -315,7 +315,7 @@ ex2 %>%
 ```
 
 
-### Protéger plusieurs tableaux en même temps, avec la fonction `tab_muli_manager()`.
+### Protéger plusieurs tableaux en même temps, avec la fonction `tab_multi_manager()`.
 
 La fonction `tab_multi_manager()` permet de traiter un ensemble de tableaux (liés ou non).
 C'est un processus itératif, qui effectue la pose de secret secondaire d'un tableau à la fois et qui s'assure que les cellules communes ont le même statut. Lorsqu'une cellule commune est concernée par le secret secondaire, elle répercute le secret sur chaque tableau qui partage cette cellule commune. Le processus se termine lorsque le secret secondaire est cohérent pour tous les tableaux. Voir plus de détails dans les vignettes *Gérer la protection des tableaux liés*.

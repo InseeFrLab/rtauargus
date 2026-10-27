@@ -40,12 +40,12 @@ un fichier temporaire.)}
 (name of the holding variable.) \cr}
 
 \item{decimals}{minimum number of decimals to display (see section 'Number of
-of decimals').
+decimals').
 (nombre minimal de décimales à afficher (voir section 'Number of
 of decimals').)}
 
 \item{hrc}{information about the hierarchical variables (see section
-section 'Hierarchical variables'). \cr
+'Hierarchical variables'). \cr
 (informations sur les variables hiérarchiques (voir section
 'Hierarchical variables').)}
 
@@ -77,8 +77,8 @@ attribuer la valeur de \code{rtauargus.totcode}.)}
 }
 \value{
 Returns the names of the asc and rda files as a list (invisibly).
-invisibly). Empty columns (filled with \code{NA} or empty strings) are not
-strings) will not be exported to the asc file. A
+Empty columns (filled with \code{NA} or empty strings) will not be
+exported to the asc file. A
 warning message will list the affected columns. \cr
 (Renvoie les noms des fichiers asc et rda sous forme de liste (de
 manière invisible). Les colonnes vides (remplies de \code{NA} ou de chaînes
@@ -94,7 +94,7 @@ or \code{tab_multi_manager()}, which offer a lot more features for your
 protection problems.
 
 See more details in \code{vignette("rtauargus")} or in
-\verb{vignette("protect_multi_tables)}.
+\code{vignette("protect_multi_tables")}.
 
 Creates a fixed length text file (asc) and a metadata file
 (rda) from microdata and additional information. \cr
@@ -110,7 +110,7 @@ for each variable.
 
 The names of the elements of the vector give the variable concerned, the elements
 of the vector give the value of the parameter for Tau-Argus. An unnamed element
-element will be the default value, which will be assigned to all
+will be the default value, which will be assigned to all
 variables that can take this parameter.
 
 For example :
@@ -149,7 +149,7 @@ to accept several ways of specifying the values associated with the
 hierarchical variables.
 
 To define a hierarchy based on the positions of characters
-(\strong{hierierlevels}), pass a sequence of integers separated by
+(\strong{hierlevels}), pass a sequence of integers separated by
 spaces.
 
 \emph{Example :} \code{c(CODECOM = "2 3 0 0 0")}
@@ -158,7 +158,7 @@ If the hierarchy is defined in a separate hrc file
 (\strong{hiercodelist}), the function expects the location of this file (and
 a possible \code{hiercodelist} if it differs from the default option of the
 package). In this case, you can write explicitly the path to an existing file
-file (\code{c(A38 = "a38.hrc")}), but also make a call to
+(\code{c(A38 = "a38.hrc")}), but also make a call to
 \code{write_hrc()} which will generate an hrc file from microdata.
 
 \emph{Example :} \code{c(A38 = write_hrc(microdata, c("A38", "A21", "A10")))}
@@ -216,7 +216,7 @@ soient nommés (avec le nom de la variable), même s'il n'y a qu'un seul
 \section{Number of decimals}{
 
 
-The parameter \code{decimals} indicates the minimum number of decimals to be
+The parameter \code{decimals} indicates the minimum number of decimals to
 appear in the output file (whatever the number of decimals
 actually present in \code{microdata}). It applies to all
 real variables (double) but not to integer variables (integer). For

@@ -150,7 +150,7 @@ apriori_batch <- function(ntab, hst_names, sep = ',', ignore_err = 0 , exp_triv 
 #' protection problems.
 #'
 #' See more details in `vignette("rtauargus")` or in
-#' `vignette("protect_multi_tables)`.
+#' `vignette("protect_multi_tables")`.
 #'
 #' Creates a batch file for microdata, executable by Tau-Argus in
 #' command line. \cr
@@ -196,7 +196,7 @@ apriori_batch <- function(ntab, hst_names, sep = ',', ignore_err = 0 , exp_triv 
 #' @section Table identifiers:
 #' If the list `explanatory_vars` has names, these will be
 #' used in the batch to give an identifier to the table, in the form of
-#' of a comment line (`// <TABLE_ID> "..."`). They will be
+#' a comment line (`// <TABLE_ID> "..."`). They will be
 #' reused by the `import` function to name the R format arrays
 #' tables in output.
 #'
@@ -289,7 +289,7 @@ apriori_batch <- function(ntab, hst_names, sep = ',', ignore_err = 0 , exp_triv 
 #' renuméroté automatiquement (voir la section 'Syntax').)
 #' @param linked to process the secondary secret jointly on all
 #' tabs. Only one delete command is allowed in this case (applied to all
-#' all tables). \cr
+#' tables). \cr
 #' (pour traiter le secret secondaire conjointement sur toutes les
 #' tabulations. Une seule commande suppress autorisée dans ce cas (appliquée à
 #' tous les tableaux).)

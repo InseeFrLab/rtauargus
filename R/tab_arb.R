@@ -87,7 +87,7 @@ tab_apriori_batch <- function(hst_names, sep, ignore_err = 0 , exp_triv = 0) {
 #'
 #' @section Syntaxe:
 #'
-#' For tabular data, this function secures only one table at a time#'
+#' For tabular data, this function secures only one table at a time.
 #' Unless specific details, use syntax from Tau-Argus manual \cr
 #' Sauf mention contraire, utiliser la syntaxe mentionnée dans la documentation
 #' de Tau-Argus.
@@ -149,7 +149,7 @@ tab_apriori_batch <- function(hst_names, sep, ignore_err = 0 , exp_triv = 0) {
 #' Chaîne de caractères en syntaxe batch Tau-Argus. Si le secret primaire
 #' a été traité dans un fichier d'apriori : utiliser "MAN(10)")
 #' @param suppress
-#' Algortihm for secondary suppression (Tau-Argus batch syntax), and the
+#' Algorithm for secondary suppression (Tau-Argus batch syntax), and the
 #' parameters for it.\cr
 #' ( Algorithme de gestion du secret secondaire
 #' (syntaxe batch de Tau-Argus), ainsi que les potentiels paramètres associés)
@@ -161,7 +161,7 @@ tab_apriori_batch <- function(hst_names, sep, ignore_err = 0 , exp_triv = 0) {
 #' (Format des fichiers en sortie (codification Tau-Argus).
 #' Valeur par défaut du package : `"2"` (csv for pivot-table).
 #' Pour le format SBS utiliser `"4"`)
-#' @param output_options Additionnal parameter for the output,
+#' @param output_options Additional parameter for the output,
 #' by default : \code{"AS+"} (print Status). To specify no options : `""`.\cr
 #' (Options supplémentaires des fichiers en sortie. Valeur
 #'   par défaut du package : `"AS+"` (affichage du statut). Pour ne
@@ -169,10 +169,10 @@ tab_apriori_batch <- function(hst_names, sep, ignore_err = 0 , exp_triv = 0) {
 #' @param gointeractive Boolean, if TRUE will open a Tau-Argus window and launch
 #' the batch in it (`FALSE` by default). \cr
 #' (Possibilité de lancer le batch depuis le menu de Tau-Argus
-#'  (`FALSE` par défaut).)
+#'  (`FALSE` par défaut).
 #'
 #' @return A list containing two elements :
-#'  the arb file name and the output name (usefull if the name is generated randomly) \cr
+#'  the arb file name and the output name (useful if the name is generated randomly) \cr
 #'  (Une liste de deux éléments : le nom du fichier arb, le nom
 #'   fichiers en sortie (utile pour récupérer les noms générés aléatoirement).)
 #'

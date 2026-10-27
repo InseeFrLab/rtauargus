@@ -91,7 +91,7 @@ renuméroté automatiquement (voir la section 'Syntax').)}
 
 \item{linked}{to process the secondary secret jointly on all
 tabs. Only one delete command is allowed in this case (applied to all
-all tables). \cr
+tables). \cr
 (pour traiter le secret secondaire conjointement sur toutes les
 tabulations. Une seule commande suppress autorisée dans ce cas (appliquée à
 tous les tableaux).)}
@@ -141,7 +141,7 @@ or \code{tab_multi_manager()}, which offer a lot more features for your
 protection problems.
 
 See more details in \code{vignette("rtauargus")} or in
-\verb{vignette("protect_multi_tables)}.
+\code{vignette("protect_multi_tables")}.
 
 Creates a batch file for microdata, executable by Tau-Argus in
 command line. \cr
@@ -190,7 +190,7 @@ tabulation, en 2 pour la deuxième tabulation, etc.)
 
 If the list \code{explanatory_vars} has names, these will be
 used in the batch to give an identifier to the table, in the form of
-of a comment line (\verb{// <TABLE_ID> "..."}). They will be
+a comment line (\verb{// <TABLE_ID> "..."}). They will be
 reused by the \code{import} function to name the R format arrays
 tables in output.
 

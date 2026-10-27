@@ -70,7 +70,7 @@ The following setup should be made before the first use (and no longer afterward
 
 ### &tau;-Argus
 
-_rtauargus_ fonctions using &tau;-Argus requires that the software can be used from the workstation.
+_rtauargus_ fonctions using &tau;-Argus require that the software can be used from the workstation.
 The github repository of &tau;-Argus is here: [https://github.com/sdcTools/tauargus](https://github.com/sdcTools/tauargus).
 The latest releases can be downloaded here: [https://github.com/sdcTools/tauargus/releases](https://github.com/sdcTools/tauargus/releases).
 
@@ -80,16 +80,16 @@ The latest releases can be downloaded here: [https://github.com/sdcTools/tauargu
 
 
 ```
-• purrr (>= 0.2)
-• dplyr (>= 0.7)
-• tidyr
-• data.table
+• purrr (>= 0.2),
+• dplyr (>= 0.7),
+• tidyr,
+• data.table,
 • gdata,
-• stringr
-• rlang
-• zoo
-• sdcHierarchies
-• igraph
+• stringr,
+• rlang,
+• zoo,
+• sdcHierarchies,
+• igraph,
 • lifecycle
 ```
 The package _rtauargus_ can be installed now.
@@ -197,9 +197,9 @@ ex1 <- tab_rtauargus(
   maxscore = "MAX",
   totcode = c(ACTIVITY="Total",SIZE="Total")
 )
-#> Start of batch procedure; file: Z:\rtauargus\vignettes\tauargus_files\ex1\ex1.arb
-#> <OPENTABLEDATA> "Z:\rtauargus\vignettes\tauargus_files\ex1\ex1.tab"
-#> <OPENMETADATA> "Z:\rtauargus\vignettes\tauargus_files\ex1\ex1.rda"
+#> Start of batch procedure; file: Z:\confidentialite\rtauargus\vignettes\tauargus_files\ex1\ex1.arb
+#> <OPENTABLEDATA> "Z:\confidentialite\rtauargus\vignettes\tauargus_files\ex1\ex1.tab"
+#> <OPENMETADATA> "Z:\confidentialite\rtauargus\vignettes\tauargus_files\ex1\ex1.rda"
 #> <SPECIFYTABLE> "ACTIVITY""SIZE"|"VAL"||
 #> <SAFETYRULE> FREQ(3,10)|NK(1,85)
 #> <READTABLE> 1
@@ -208,9 +208,9 @@ ex1 <- tab_rtauargus(
 #> Start of the modular protection for table ACTIVITY x SIZE | VAL
 #> End of modular protection. Time used 0 seconds
 #>                    Number of suppressions: 2
-#> <WRITETABLE> (1,4,,"Z:\rtauargus\vignettes\tauargus_files\ex1\ex1.csv")
+#> <WRITETABLE> (1,4,,"Z:\confidentialite\rtauargus\vignettes\tauargus_files\ex1\ex1.csv")
 #> Table: ACTIVITY x SIZE | VAL has been written
-#>                    Output file name: Z:\rtauargus\vignettes\tauargus_files\ex1\ex1.csv
+#>                    Output file name: Z:\confidentialite\rtauargus\vignettes\tauargus_files\ex1\ex1.csv
 #> End of TauArgus run
 ```
 
@@ -410,7 +410,7 @@ ex2 %>%
 ```
 
 
-### Protecting several tables at the same time, with `tab_muli_manager()` function
+### Protecting several tables at the same time, with `tab_multi_manager()` function
 
 The function `tab_multi_manager()` can deal with a whole set of (linked or not) tables.
 It is an iterating process, performing secondary suppression with one table at a time and it ensures that the common cells have the same status. When a common cell is concerned by secondary suppression, it reverberates the secret on each table that shares this common cell. The process ends when the secondary secret is consistent in every tables. See more details in vignettes *Manage the protection of linked tables*
@@ -483,9 +483,7 @@ ex3 <- tab_multi_manager(
   secret_var = "is_secret_prim",
   totcode =  "Total"
 )
-#> --- Current table to treat:  act_size ---
-#> --- Current table to treat:  act_cj ---
-#> --- Current table to treat:  act_size ---
+#> --- Current table to treat: act_size | loop iter : 1 ---            --- Current table to treat: act_cj | loop iter : 2 ---            --- Current table to treat: act_size | loop iter : 3 ---
 ```
 
 By default, the function uses a wrapper of `tab_rtauargus()` function, called `tab_rtauargus2()`, to apply secondary secret with &tau;-Argus. Many default parameters are set. In particular:
@@ -502,10 +500,10 @@ of `tab_multi_manager()` function.
 #### About this vignette
 
 - Authors: **<a href="mailto:julien.jamme@insee.fr">Julien Jamme</a>** & **<a href="mailto:nathanael.rastout@insee.fr">Nathanael Rastout</a>**
-- Last update: **17/02/2025**
-- Version of rtauargus used: **1.2.999**
+- Last update: **27/10/2026**
+- Version of rtauargus used: **1.3.6**
 - Version of &tau;-Argus used : **TauArgus 4.2.3**
-- R version used :  **4.3.3**
+- R version used :  **4.5.3**
 
 <p style="text-align: right">
   <a href="#TOC" title="Back to summary">summary &uarr;</a>

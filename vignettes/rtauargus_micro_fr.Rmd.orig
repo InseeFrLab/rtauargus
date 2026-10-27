@@ -251,7 +251,7 @@ caractéristiques.
 On voudrait par exemple ne générer que les fichiers asc et rda, puis lancer
 plusieurs batch utilisant ces mêmes fichiers. Ce n'était pas le cas dans les
 exemples vus jusqu'à maintenant, où tous les fichiers intermédiaires étaient
-systématiquement regénérés, même si leur contenu était identique.
+systématiquement régénérés, même si leur contenu était identique.
 
 Pour cela, on peut utiliser les fonctions appelées successivement par la
 fonction `rtauargus`, à savoir :
@@ -634,7 +634,7 @@ perdurera plus ou moins longtemps :
     à un utilisateur de garder en mémoire ses préréglages d'une session sur
     l'autre.
 
-_Le deuxième façon de procéder est **à déconseiller si la chaîne de
+_La deuxième façon de procéder est **déconseillée si la chaîne de
 traitement se veut reproductible**. En effet, un script identique
 exécuté sur deux machines différentes pourrait produire deux résultats
 différents._

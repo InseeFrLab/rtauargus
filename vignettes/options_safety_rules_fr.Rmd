@@ -22,7 +22,7 @@ Si vous voulez définir des règles pour la suppression primaire, la syntaxe est
 - *"règle_numéro1|règle_numéro2|règle_numéro3|... "*.
 Au moins une règle de sécurité est requise.
 
-Voci toutes les règles possibles selon le manuel de &tau;-Argus.
+Voici toutes les règles possibles selon le manuel de &tau;-Argus.
 
 Les règles les plus courantes sont :
 
@@ -94,10 +94,10 @@ Plus de détails sont disponibles dans le manuel de &tau;-Argus, notamment dans 
 #### About this vignette
 
 - Authors: **<a href="mailto:nathanael.rastout@insee.fr">Nathanael Rastout</a>**
-- Last update: **17/02/2025**
-- Version of rtauargus used: **1.2.999**
+- Last update: **27/10/2026**
+- Version of rtauargus used: **1.3.6**
 - Version of &tau;-Argus used : **TauArgus 4.2.3**
-- R version used :  **4.3.3**
+- R version used :  **4.5.3**
 
 <p style="text-align: right">
   <a href="#TOC" title="Back to summary">summary &uarr;</a>

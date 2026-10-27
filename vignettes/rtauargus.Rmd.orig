@@ -76,7 +76,7 @@ The following setup should be made before the first use (and no longer afterward
 
 ### &tau;-Argus
 
-_rtauargus_ fonctions using &tau;-Argus requires that the software can be used from the workstation.
+_rtauargus_ fonctions using &tau;-Argus require that the software can be used from the workstation.
 The github repository of &tau;-Argus is here: [https://github.com/sdcTools/tauargus](https://github.com/sdcTools/tauargus).
 The latest releases can be downloaded here: [https://github.com/sdcTools/tauargus/releases](https://github.com/sdcTools/tauargus/releases).
 
@@ -318,7 +318,7 @@ ex2 %>%
 ```
 
 
-### Protecting several tables at the same time, with `tab_muli_manager()` function
+### Protecting several tables at the same time, with `tab_multi_manager()` function
 
 The function `tab_multi_manager()` can deal with a whole set of (linked or not) tables.
 It is an iterating process, performing secondary suppression with one table at a time and it ensures that the common cells have the same status. When a common cell is concerned by secondary suppression, it reverberates the secret on each table that shares this common cell. The process ends when the secondary secret is consistent in every tables. See more details in vignettes *Manage the protection of linked tables*
