@@ -20,6 +20,11 @@ used). If it still cannot be found, `run_arb()` opens a file chooser in
 interactive sessions to select TauArgus.exe, and offers to save it in
 `.Renviron`.
 
+- The location of Tau-Argus is validated: `set_tauargus_exe()` stops if the
+file does not exist or is a folder (`check = FALSE` to store it anyway), and
+if `TAUARGUS_EXE` points to a missing file, the automatic search is used
+instead, with a message.
+
 ## rtauargus 1.3.6
 
 [09/2026]

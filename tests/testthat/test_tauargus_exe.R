@@ -70,48 +70,119 @@ test_that("detect_tauargus_exe returns '' when nothing is found", {
 
 # priority order -------------------------------------------------------------
 
+slash <- function(p) gsub("\\\\", "/", p)
+
 test_that("environment variable, then .Renviron, then detection", {
   testthat::local_edition(3)
   renv <- local_clean_tauargus_env()
-  local_mocked_bindings(detect_tauargus_exe = function(...) "C:/detected/TauArgus.exe")
+  root <- tempfile("roots")
+  on.exit(unlink(root, recursive = TRUE), add = TRUE)
+  detected <- slash(fake_exe(root, "detected/TauArgus.exe"))
+  from_renv <- slash(fake_exe(root, "renviron/TauArgus.exe"))
+  from_env <- slash(fake_exe(root, "env/TauArgus.exe"))
+  local_mocked_bindings(detect_tauargus_exe = function(...) detected)
 
   loc <- locate_tauargus_exe()
-  expect_equal(as.character(loc), "C:/detected/TauArgus.exe")
+  expect_equal(as.character(loc), detected)
   expect_equal(attr(loc, "source"), "detected")
+  expect_null(attr(loc, "stale"))
   expect_equal(get_tauargus_exe(detect = FALSE), "")
 
-  writeLines('TAUARGUS_EXE="C:/renviron/TauArgus.exe"', renv)
+  writeLines(paste0('TAUARGUS_EXE="', from_renv, '"'), renv)
   loc <- locate_tauargus_exe()
-  expect_equal(as.character(loc), "C:/renviron/TauArgus.exe")
+  expect_equal(as.character(loc), from_renv)
   expect_equal(attr(loc, "source"), "renviron")
 
-  Sys.setenv(TAUARGUS_EXE = "C:/env/TauArgus.exe")
-  expect_equal(get_tauargus_exe(), "C:/env/TauArgus.exe")
+  Sys.setenv(TAUARGUS_EXE = from_env)
+  expect_equal(get_tauargus_exe(), from_env)
+})
+
+# invalid stored location -------------------------------------------------------
+
+test_that("a stored path to a missing file falls back to detection", {
+  testthat::local_edition(3)
+  local_clean_tauargus_env()
+  root <- tempfile("roots")
+  on.exit(unlink(root, recursive = TRUE), add = TRUE)
+  detected <- slash(fake_exe(root, "TauArgus/TauArgus.exe"))
+  local_mocked_bindings(detect_tauargus_exe = function(...) detected)
+
+  Sys.setenv(TAUARGUS_EXE = "C:/old/TauArgus4.2.3/TauArgus.exe")
+
+  loc <- locate_tauargus_exe()
+  expect_equal(as.character(loc), detected)
+  expect_equal(attr(loc, "stale"), "C:/old/TauArgus4.2.3/TauArgus.exe")
+  expect_message(
+    res <- get_tauargus_exe(),
+    "does not exist.*auto-detected"
+  )
+  expect_equal(res, detected)
+})
+
+test_that("a stored path to a missing file is kept if nothing is detected", {
+  testthat::local_edition(3)
+  local_clean_tauargus_env()
+  local_mocked_bindings(detect_tauargus_exe = function(...) "")
+
+  Sys.setenv(TAUARGUS_EXE = "C:/old/TauArgus.exe")
+  expect_message(res <- get_tauargus_exe(), "does not exist")
+  expect_equal(res, "C:/old/TauArgus.exe")
+})
+
+test_that("a stored folder is not accepted as TauArgus.exe", {
+  testthat::local_edition(3)
+  local_clean_tauargus_env()
+  folder <- tempfile("TauArgus")
+  dir.create(folder)
+  on.exit(unlink(folder, recursive = TRUE), add = TRUE)
+  local_mocked_bindings(detect_tauargus_exe = function(...) "")
+
+  expect_false(is_valid_tauargus_exe(folder))
+  expect_match(tauargus_exe_problem(folder), "is a folder")
+
+  Sys.setenv(TAUARGUS_EXE = folder)
+  expect_message(get_tauargus_exe(), "is a folder")
 })
 
 # set_tauargus_exe -------------------------------------------------------------
 
 test_that("set_tauargus_exe writes .Renviron only when asked", {
   renv <- local_clean_tauargus_env()
+  root <- tempfile("roots")
+  on.exit(unlink(root, recursive = TRUE), add = TRUE)
+  a <- slash(fake_exe(root, "a/TauArgus.exe"))
+  b <- slash(fake_exe(root, "b/TauArgus.exe"))
 
-  suppressWarnings(set_tauargus_exe("C:/a/TauArgus.exe"))
-  expect_equal(Sys.getenv("TAUARGUS_EXE"), "C:/a/TauArgus.exe")
-  expect_equal(getOption("rtauargus.tauargus_exe"), "C:/a/TauArgus.exe")
+  set_tauargus_exe(a)
+  expect_equal(Sys.getenv("TAUARGUS_EXE"), a)
+  expect_equal(getOption("rtauargus.tauargus_exe"), a)
   expect_false(file.exists(renv))
 
-  suppressWarnings(suppressMessages(
-    set_tauargus_exe("C:/a/TauArgus.exe", install = TRUE)
-  ))
-  expect_equal(readLines(renv), 'TAUARGUS_EXE="C:/a/TauArgus.exe"')
+  suppressMessages(set_tauargus_exe(a, install = TRUE))
+  expect_equal(readLines(renv), paste0('TAUARGUS_EXE="', a, '"'))
 
-  expect_error(
-    suppressWarnings(set_tauargus_exe("C:/b/TauArgus.exe", install = TRUE)),
-    "overwrite"
+  expect_error(set_tauargus_exe(b, install = TRUE), "overwrite")
+  suppressMessages(set_tauargus_exe(b, install = TRUE, overwrite = TRUE))
+  expect_equal(readLines(renv), paste0('TAUARGUS_EXE="', b, '"'))
+})
+
+test_that("set_tauargus_exe rejects missing files and folders", {
+  renv <- local_clean_tauargus_env()
+  folder <- tempfile("TauArgus")
+  dir.create(folder)
+  on.exit(unlink(folder, recursive = TRUE), add = TRUE)
+
+  expect_error(set_tauargus_exe("C:/nowhere/TauArgus.exe"), "does not exist")
+  expect_error(set_tauargus_exe(folder), "is a folder")
+  expect_equal(Sys.getenv("TAUARGUS_EXE"), "")
+  expect_false(file.exists(renv))
+
+  # check = FALSE: stored anyway, with a warning
+  expect_warning(
+    set_tauargus_exe("Z:/network/TauArgus.exe", check = FALSE),
+    "stored anyway"
   )
-  suppressWarnings(suppressMessages(
-    set_tauargus_exe("C:/b/TauArgus.exe", install = TRUE, overwrite = TRUE)
-  ))
-  expect_equal(readLines(renv), 'TAUARGUS_EXE="C:/b/TauArgus.exe"')
+  expect_equal(Sys.getenv("TAUARGUS_EXE"), "Z:/network/TauArgus.exe")
 })
 
 # interactive prompt -------------------------------------------------------------
@@ -149,5 +220,19 @@ test_that("run_arb prompts for TauArgus.exe when it cannot be found", {
   expect_error(
     run_arb("missing.arb", tauargus_exe = ""),
     "location of Tau-Argus is not set"
+  )
+})
+
+test_that("run_arb rejects a folder given as tauargus_exe", {
+  testthat::local_edition(3)
+  local_clean_tauargus_env()
+  folder <- tempfile("TauArgus")
+  dir.create(folder)
+  on.exit(unlink(folder, recursive = TRUE), add = TRUE)
+  local_mocked_bindings(choose_tauargus_exe = function() "")
+
+  expect_error(
+    run_arb("missing.arb", tauargus_exe = folder),
+    "is a folder"
   )
 })

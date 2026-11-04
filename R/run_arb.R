@@ -288,7 +288,7 @@ run_arb <- function(
   # présence TauArgus.exe ......................................
 
   # not found: in an interactive session, let the user pick the file
-  if (!nzchar(tauargus_exe) || !file.exists(tauargus_exe)){
+  if (!is_valid_tauargus_exe(tauargus_exe)){
     chosen <- choose_tauargus_exe()
     if (nzchar(chosen)) tauargus_exe <- chosen
   }
@@ -302,10 +302,11 @@ run_arb <- function(
     )
   }
 
-  if (!file.exists(tauargus_exe)){
+  problem <- tauargus_exe_problem(tauargus_exe)
+  if (!is.null(problem)){
     stop(
-      "Tau-Argus cannot be found (", tauargus_exe, ")\n  ",
-      "please check the TAUARGUS_EXE environment variable (.Renviron), ",
+      "Tau-Argus cannot be found. ", problem, "\n  ",
+      "Please check the TAUARGUS_EXE environment variable (.Renviron), ",
       "the option rtauargus.tauargus_exe or the parameter tauargus_exe"
     )
   }

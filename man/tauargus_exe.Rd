@@ -5,7 +5,7 @@
 \alias{get_tauargus_exe}
 \title{Set or get the location of Tau-Argus}
 \usage{
-set_tauargus_exe(path, install = FALSE, overwrite = FALSE)
+set_tauargus_exe(path, install = FALSE, overwrite = FALSE, check = TRUE)
 
 get_tauargus_exe(detect = TRUE)
 }
@@ -25,6 +25,14 @@ que pour la session en cours.)}
 (si \code{TRUE}, remplace une entrée \code{TAUARGUS_EXE} déjà présente dans
 \code{.Renviron}.)}
 
+\item{check}{if \code{TRUE} (default), stops when \code{path} is not an existing
+file (for instance a missing file or a folder). Use \code{check = FALSE} to
+store a path that is not reachable yet (e.g. a network drive that is not
+connected). \cr
+(si \code{TRUE} (défaut), erreur si \code{path} n'est pas un fichier existant (fichier
+absent ou dossier). \code{check = FALSE} permet d'enregistrer un chemin non
+accessible pour le moment, par exemple un lecteur réseau non connecté.)}
+
 \item{detect}{if \code{TRUE} (default), searches for Tau-Argus in the usual
 install locations when it is not set. \cr
 (si \code{TRUE} (défaut), recherche Tau-Argus dans les emplacements
@@ -33,6 +41,10 @@ d'installation usuels s'il n'est pas défini.)}
 \value{
 \code{set_tauargus_exe()} invisibly returns the normalized path.
 \code{get_tauargus_exe()} returns the path, or \code{""} if none is found.
+
+If the stored location (\code{TAUARGUS_EXE}) points to a file that no longer
+exists, \code{get_tauargus_exe()} falls back to the automatic search and says
+so. If nothing is found, the stored (invalid) path is returned.
 }
 \description{
 \code{set_tauargus_exe()} stores the path to TauArgus.exe in the \code{TAUARGUS_EXE}

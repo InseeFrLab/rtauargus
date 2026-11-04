@@ -44,9 +44,20 @@
 #' `.Renviron`. \cr
 #' (si `TRUE`, remplace une entrée `TAUARGUS_EXE` déjà présente dans
 #' `.Renviron`.)
+#' @param check if `TRUE` (default), stops when `path` is not an existing
+#' file (for instance a missing file or a folder). Use `check = FALSE` to
+#' store a path that is not reachable yet (e.g. a network drive that is not
+#' connected). \cr
+#' (si `TRUE` (défaut), erreur si `path` n'est pas un fichier existant (fichier
+#' absent ou dossier). `check = FALSE` permet d'enregistrer un chemin non
+#' accessible pour le moment, par exemple un lecteur réseau non connecté.)
 #'
 #' @return `set_tauargus_exe()` invisibly returns the normalized path.
 #' `get_tauargus_exe()` returns the path, or `""` if none is found.
+#'
+#' If the stored location (`TAUARGUS_EXE`) points to a file that no longer
+#' exists, `get_tauargus_exe()` falls back to the automatic search and says
+#' so. If nothing is found, the stored (invalid) path is returned.
 #'
 #' @examples
 #' \dontrun{
@@ -62,7 +73,8 @@
 #' @export
 #' @rdname tauargus_exe
 
-set_tauargus_exe <- function(path, install = FALSE, overwrite = FALSE) {
+set_tauargus_exe <- function(path, install = FALSE, overwrite = FALSE,
+                             check = TRUE) {
 
   if (!is.character(path) || length(path) != 1 || is.na(path) || !nzchar(path)) {
     stop("`path` must be a single, non-empty character string.")
@@ -70,8 +82,12 @@ set_tauargus_exe <- function(path, install = FALSE, overwrite = FALSE) {
 
   path <- gsub("\\\\", "/", path.expand(path))
 
-  if (!file.exists(path)) {
-    warning("The file '", path, "' does not exist (yet). It is stored anyway.")
+  problem <- tauargus_exe_problem(path)
+  if (!is.null(problem)) {
+    if (check) {
+      stop(problem, "\n  Use `check = FALSE` to store this path anyway.")
+    }
+    warning(problem, " It is stored anyway.")
   }
 
   if (install) {
@@ -119,29 +135,78 @@ set_tauargus_exe <- function(path, install = FALSE, overwrite = FALSE) {
 #' @rdname tauargus_exe
 
 get_tauargus_exe <- function(detect = TRUE) {
-  as.character(locate_tauargus_exe(detect = detect))
+  loc <- locate_tauargus_exe(detect = detect)
+  msg <- stale_tauargus_message(loc)
+  if (!is.null(msg)) message(msg)
+  as.character(loc)
 }
 
-# Same as get_tauargus_exe(), but the result carries a "source" attribute:
-# "env", "renviron", "detected" or "none"
+# Same as get_tauargus_exe(), but the result carries attributes:
+# - "source": "env", "renviron", "detected" or "none"
+# - "stale": the stored path when it points to a missing file (else NULL)
 locate_tauargus_exe <- function(detect = TRUE) {
 
-  found <- function(path, source) structure(path, source = source)
+  found <- function(path, source, stale = NULL) {
+    structure(path, source = source, stale = stale)
+  }
 
-  exe <- Sys.getenv("TAUARGUS_EXE", unset = "")
-  if (nzchar(exe)) return(found(exe, "env"))
+  stored <- c(
+    env = Sys.getenv("TAUARGUS_EXE", unset = ""),
+    renviron = read_renviron_tauargus_exe()
+  )
+  stored <- stored[nzchar(stored)]
 
-  exe <- read_renviron_tauargus_exe()
-  if (nzchar(exe)) return(found(exe, "renviron"))
+  # first stored location that is a valid file
+  for (src in names(stored)) {
+    if (is_valid_tauargus_exe(stored[[src]])) return(found(stored[[src]], src))
+  }
+
+  # stored location(s) invalid or absent: automatic search
+  stale <- if (length(stored)) stored[[1]] else NULL
 
   if (detect) {
     exe <- detect_tauargus_exe()
-    if (nzchar(exe)) return(found(exe, "detected"))
+    if (nzchar(exe)) return(found(exe, "detected", stale))
   }
+
+  # nothing better: keep the stored (invalid) path so that errors show it
+  if (length(stored)) return(found(stored[[1]], names(stored)[1], stale))
 
   found("", "none")
 
 }
+
+# Message explaining that the stored location is invalid (NULL if it is fine)
+stale_tauargus_message <- function(loc, show_used = TRUE) {
+  stale <- attr(loc, "stale")
+  if (is.null(stale)) return(NULL)
+  paste0(
+    "TAUARGUS_EXE is not usable: ", tauargus_exe_problem(stale),
+    if (show_used && identical(attr(loc, "source"), "detected")) {
+      paste0("\n  Using the auto-detected Tau-Argus instead: \"", loc, "\"")
+    },
+    "\n  Update it with set_tauargus_exe(\"path/to/TauArgus.exe\", ",
+    "install = TRUE, overwrite = TRUE)"
+  )
+}
+
+# NULL if `path` is an existing file, otherwise a message describing why not
+tauargus_exe_problem <- function(path) {
+  if (length(path) != 1 || is.na(path) || !nzchar(path)) {
+    "The location of Tau-Argus is empty."
+  } else if (dir.exists(path)) {
+    paste0(
+      "'", path, "' is a folder, not the TauArgus.exe file ",
+      "(e.g. '", file.path(sub("/+$", "", path), "TauArgus.exe"), "')."
+    )
+  } else if (!file.exists(path)) {
+    paste0("The file '", path, "' does not exist.")
+  } else {
+    NULL
+  }
+}
+
+is_valid_tauargus_exe <- function(path) is.null(tauargus_exe_problem(path))
 
 # TAUARGUS_EXE entry of the user .Renviron file ("" if none)
 read_renviron_tauargus_exe <- function() {
