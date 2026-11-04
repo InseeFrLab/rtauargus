@@ -115,16 +115,17 @@ Lors du chargement du package, la console affiche quelques informations :
 library(rtauargus)
 ```
 
-En particulier, un emplacement plausible pour le logiciel &tau;-Argus est
-prédéfini. Celui-ci peut être modifié pour la durée de la session R, comme suit :
-
-
+En particulier, elle indique l'emplacement du logiciel &tau;-Argus, lu dans la
+variable d'environnement `TAUARGUS_EXE`. Pour le définir une fois pour toutes (il
+est enregistré dans le fichier `.Renviron` et utilisé dans toutes les sessions R
+futures) :
 
 ``` r
-loc_tauargus <- "Y:/Logiciels/TauArgus/TauArgus4.2.3/TauArgus.exe"
-
-options(rtauargus.tauargus_exe = loc_tauargus)
+set_tauargus_exe("C:/path/to/TauArgus/TauArgus.exe", install = TRUE)
 ```
+
+Pour le définir uniquement pour la session R en cours, omettre `install = TRUE`.
+`get_tauargus_exe()` renvoie l'emplacement actuellement utilisé.
 
 
 Une fois ce petit ajustement effectué, le package est prêt à être utilisé.

@@ -75,8 +75,9 @@ necessary information is present in this file.
 This is the only function in the package that runs Tau-Argus. It
 therefore requires the software to be accessible from the workstation.
 
-The location of the TauArgus.exe program is defined globally when the
-loading the package. In fact, the argument \code{tauargus_exe} will not
+The location of the TauArgus.exe program is defined globally when
+loading the package, from the \code{TAUARGUS_EXE} environment variable (see
+\code{\link[=set_tauargus_exe]{set_tauargus_exe()}}) or the \code{rtauargus.tauargus_exe} option. In fact, the argument \code{tauargus_exe} will not
 normally not have to be specified (except to override the global option the
 time of the execution of the function).
 
@@ -91,7 +92,9 @@ Il s'agit de la seule fonction du package qui exécute Tau-Argus. Elle
 nécessite donc que le logiciel soit accessible depuis le poste de travail.
 
 L'emplacement du programme TauArgus.exe est défini de manière globale au
-chargement du package. De fait, l'argument \code{tauargus_exe} n'aura
+chargement du package, à partir de la variable d'environnement
+\code{TAUARGUS_EXE} (voir \code{\link[=set_tauargus_exe]{set_tauargus_exe()}}) ou de l'option
+\code{rtauargus.tauargus_exe}. De fait, l'argument \code{tauargus_exe} n'aura
 normalement pas à être spécifié (sauf pour surcharger l'option globale le
 temps de l'exécution de la fonction).
 

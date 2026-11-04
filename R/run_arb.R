@@ -182,8 +182,9 @@ unquote <- function(s) sub("^[\"'](.+)[\"']$", "\\1", s)
 #' This is the only function in the package that runs Tau-Argus. It
 #' therefore requires the software to be accessible from the workstation.
 #'
-#' The location of the TauArgus.exe program is defined globally when the
-#' loading the package. In fact, the argument `tauargus_exe` will not
+#' The location of the TauArgus.exe program is defined globally when
+#' loading the package, from the `TAUARGUS_EXE` environment variable (see
+#' [set_tauargus_exe()]) or the `rtauargus.tauargus_exe` option. In fact, the argument `tauargus_exe` will not
 #' normally not have to be specified (except to override the global option the
 #' time of the execution of the function).
 #'
@@ -198,7 +199,9 @@ unquote <- function(s) sub("^[\"'](.+)[\"']$", "\\1", s)
 #' nécessite donc que le logiciel soit accessible depuis le poste de travail.
 #'
 #' L'emplacement du programme TauArgus.exe est défini de manière globale au
-#' chargement du package. De fait, l'argument `tauargus_exe` n'aura
+#' chargement du package, à partir de la variable d'environnement
+#' `TAUARGUS_EXE` (voir [set_tauargus_exe()]) ou de l'option
+#' `rtauargus.tauargus_exe`. De fait, l'argument `tauargus_exe` n'aura
 #' normalement pas à être spécifié (sauf pour surcharger l'option globale le
 #' temps de l'exécution de la fonction).
 #'
@@ -273,7 +276,9 @@ run_arb <- function(
   # valeur par défaut du package si option vide ................
 
   if(is.null(missing_dir)) missing_dir <- op.rtauargus$rtauargus.missing_dir
-  if(is.null(tauargus_exe)) tauargus_exe <- op.rtauargus$rtauargus.tauargus_exe
+  if(is.null(tauargus_exe) || !nzchar(tauargus_exe)){
+    tauargus_exe <- default_tauargus_exe()
+  }
   if(is.null(logbook)) logbook <- "logbook.txt"
   if(is.null(show_batch_console)){
     show_batch_console <- op.rtauargus$rtauargus.show_batch_console
@@ -282,10 +287,26 @@ run_arb <- function(
 
   # présence TauArgus.exe ......................................
 
+  # not found: in an interactive session, let the user pick the file
+  if (!nzchar(tauargus_exe) || !file.exists(tauargus_exe)){
+    chosen <- choose_tauargus_exe()
+    if (nzchar(chosen)) tauargus_exe <- chosen
+  }
+
+  if (!nzchar(tauargus_exe)){
+    stop(
+      "The location of Tau-Argus is not set.\n  ",
+      "Use set_tauargus_exe(\"path/to/TauArgus.exe\", install = TRUE) ",
+      "to save it in your .Renviron,\n  ",
+      "or pass the parameter tauargus_exe."
+    )
+  }
+
   if (!file.exists(tauargus_exe)){
     stop(
       "Tau-Argus cannot be found (", tauargus_exe, ")\n  ",
-      "please specify the parammeter tauargus_exe or the option rtauargus.tauargus_exe"
+      "please check the TAUARGUS_EXE environment variable (.Renviron), ",
+      "the option rtauargus.tauargus_exe or the parameter tauargus_exe"
     )
   }
 

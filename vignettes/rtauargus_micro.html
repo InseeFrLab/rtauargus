@@ -48,8 +48,9 @@ overflow: visible;
 }
 </style>
 <style type="text/css" data-origin="pandoc">
+html { -webkit-text-size-adjust: 100%; }
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -60,7 +61,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
 { counter-reset: source-line 0; }
@@ -352,14 +353,13 @@ package</a></li>
 </ul></li>
 <li><a href="#installation" id="toc-installation">Installation</a>
 <ul>
-<li><a href="#τ-argus" id="toc-τ-argus">τ-Argus</a></li>
+<li><a href="#%CF%84-argus" id="toc-τ-argus">τ-Argus</a></li>
 <li><a href="#dependencies" id="toc-dependencies">Dependencies</a></li>
 <li><a href="#package" id="toc-package">Package</a></li>
 </ul></li>
 <li><a href="#quick-start" id="toc-quick-start">Quick start</a>
 <ul>
-<li><a href="#location-of-τ-argus" id="toc-location-of-τ-argus">Location
-of τ-Argus</a></li>
+<li><a href="#location-of-%CF%84-argus" id="toc-location-of-τ-argus">Location of τ-Argus</a></li>
 <li><a href="#function-rtauargus." id="toc-function-rtauargus.">Function
 <code>rtauargus</code>.</a></li>
 </ul></li>
@@ -504,13 +504,14 @@ instruction.</p>
 <p>When the package is loaded, the console displays some
 information:</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="fu">library</span>(rtauargus)</span></code></pre></div>
-<p>In particular, a plausible location for the τ-Argus software is
-predefined. It is possible to change it for the duration of the R
-session. A message indicates that this location is unknown, so we modify
-it:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>loc_tauargus <span class="ot">&lt;-</span> <span class="st">&quot;Y:/Logiciels/TauArgus/TauArgus4.2.3/TauArgus.exe&quot;</span></span>
-<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a></span>
-<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a><span class="fu">options</span>(<span class="at">rtauargus.tauargus_exe =</span> loc_tauargus)</span></code></pre></div>
+<p>In particular, it shows the location of the τ-Argus software, which
+is read from the <code>TAUARGUS_EXE</code> environment variable. To set
+it once and for all (it is saved in your <code>.Renviron</code> file and
+used in every future R session):</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="fu">set_tauargus_exe</span>(<span class="st">&quot;C:/path/to/TauArgus/TauArgus.exe&quot;</span>, <span class="at">install =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<p>To set it for the current R session only, omit
+<code>install = TRUE</code>. <code>get_tauargus_exe()</code> returns the
+location currently in use.</p>
 <p>After this small adjustment, the package is ready to be used.</p>
 <blockquote>
 <p>For a more customized configuration, see the section
@@ -1100,7 +1101,7 @@ user keep their values.</p>
 </tr>
 <tr class="even">
 <td align="left">rtauargus.tauargus_exe</td>
-<td align="left">“Y:/Logiciels/TauArgus/TauArgus.exe”</td>
+<td align="left">“”</td>
 <td align="left">character</td>
 <td align="right">run_arb</td>
 </tr>
@@ -1165,7 +1166,7 @@ user keep their values.</p>
 <span id="cb25-36"><a href="#cb25-36" tabindex="-1"></a><span class="co">#&gt; [1] FALSE</span></span>
 <span id="cb25-37"><a href="#cb25-37" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb25-38"><a href="#cb25-38" tabindex="-1"></a><span class="co">#&gt; $rtauargus.tauargus_exe</span></span>
-<span id="cb25-39"><a href="#cb25-39" tabindex="-1"></a><span class="co">#&gt; [1] &quot;Y:/Logiciels/TauArgus/TauArgus4.2.3/TauArgus.exe&quot;</span></span>
+<span id="cb25-39"><a href="#cb25-39" tabindex="-1"></a><span class="co">#&gt; [1] &quot;C:/path/to/TauArgus/TauArgus.exe&quot;</span></span>
 <span id="cb25-40"><a href="#cb25-40" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb25-41"><a href="#cb25-41" tabindex="-1"></a><span class="co">#&gt; $rtauargus.totcode</span></span>
 <span id="cb25-42"><a href="#cb25-42" tabindex="-1"></a><span class="co">#&gt; [1] &quot;Total&quot;</span></span>
@@ -1204,7 +1205,7 @@ above) than the one used to modify the location of τ-Argus) :</p>
 <span id="cb26-19"><a href="#cb26-19" tabindex="-1"></a><span class="co">#&gt;  $ rtauargus.response_var      : chr &quot;VAL&quot;</span></span>
 <span id="cb26-20"><a href="#cb26-20" tabindex="-1"></a><span class="co">#&gt;  $ rtauargus.separator         : chr &quot;,&quot;</span></span>
 <span id="cb26-21"><a href="#cb26-21" tabindex="-1"></a><span class="co">#&gt;  $ rtauargus.show_batch_console: logi FALSE</span></span>
-<span id="cb26-22"><a href="#cb26-22" tabindex="-1"></a><span class="co">#&gt;  $ rtauargus.tauargus_exe      : chr &quot;Y:/Logiciels/TauArgus/TauArgus4.2.3/TauArgus.exe&quot;</span></span>
+<span id="cb26-22"><a href="#cb26-22" tabindex="-1"></a><span class="co">#&gt;  $ rtauargus.tauargus_exe      : chr &quot;C:/path/to/TauArgus/TauArgus.exe&quot;</span></span>
 <span id="cb26-23"><a href="#cb26-23" tabindex="-1"></a><span class="co">#&gt;  $ rtauargus.totcode           : chr &quot;Total&quot;</span></span>
 <span id="cb26-24"><a href="#cb26-24" tabindex="-1"></a><span class="co">#&gt;  $ rtauargus.weighted          : logi FALSE</span></span></code></pre></div>
 <p>To reset certain options:</p>
@@ -1228,7 +1229,7 @@ above) than the one used to modify the location of τ-Argus) :</p>
 <span id="cb27-18"><a href="#cb27-18" tabindex="-1"></a><span class="co">#&gt;  $ rtauargus.response_var      : chr &quot;&lt;freq&gt;&quot;</span></span>
 <span id="cb27-19"><a href="#cb27-19" tabindex="-1"></a><span class="co">#&gt;  $ rtauargus.separator         : chr &quot;,&quot;</span></span>
 <span id="cb27-20"><a href="#cb27-20" tabindex="-1"></a><span class="co">#&gt;  $ rtauargus.show_batch_console: logi FALSE</span></span>
-<span id="cb27-21"><a href="#cb27-21" tabindex="-1"></a><span class="co">#&gt;  $ rtauargus.tauargus_exe      : chr &quot;Y:/Logiciels/TauArgus/TauArgus4.2.3/TauArgus.exe&quot;</span></span>
+<span id="cb27-21"><a href="#cb27-21" tabindex="-1"></a><span class="co">#&gt;  $ rtauargus.tauargus_exe      : chr &quot;C:/path/to/TauArgus/TauArgus.exe&quot;</span></span>
 <span id="cb27-22"><a href="#cb27-22" tabindex="-1"></a><span class="co">#&gt;  $ rtauargus.totcode           : chr &quot;Total&quot;</span></span>
 <span id="cb27-23"><a href="#cb27-23" tabindex="-1"></a><span class="co">#&gt;  $ rtauargus.weighted          : logi FALSE</span></span></code></pre></div>
 <p>To reset all values to default (including the path to τ-Argus

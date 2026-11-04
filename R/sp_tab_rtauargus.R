@@ -77,10 +77,7 @@ auto_limit <- function(dfs, totcode, hrcfiles = NULL) {
 #' @examples
 #'\dontrun{
 #' #Please don't forget to specify the localisation of Tau-Argus in your computer
-#' options(
-#'   rtauargus.tauargus_exe =
-#'     "Y:/Logiciels/TauArgus/TauArgus4.2.3/TauArgus.exe"
-#' )
+#' set_tauargus_exe("C:/path/to/TauArgus/TauArgus.exe")
 #'
 #' data(datatest1)
 #' expl_vars <- c("A10", "treff","type_distrib","cj")

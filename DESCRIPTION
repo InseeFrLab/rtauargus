@@ -20,7 +20,9 @@ Suggests:
     testthat,
     knitr,
     rmarkdown,
-    visNetwork
+    rstudioapi,
+    visNetwork,
+    withr
 Authors@R: c(
     person(
       "Pierre-Yves", "Berrard",

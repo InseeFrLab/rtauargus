@@ -4,6 +4,22 @@ subtitle: History of changes / Historique des modifications
 output: rmarkdown::html_vignette
 ---
 
+## rtauargus (development version)
+
+- The location of Tau-Argus no longer defaults to a hard-coded `Y:/` path.
+It is now read from the `TAUARGUS_EXE` environment variable (e.g. defined in
+`.Renviron`).
+
+- New `set_tauargus_exe()` to set the location for the session or save it in
+`.Renviron` (`install = TRUE`), and `get_tauargus_exe()` to retrieve it
+(from the session environment, or else from `.Renviron`).
+
+- If `TAUARGUS_EXE` is not set, Tau-Argus is searched for automatically
+(on the `PATH` and in the usual install locations; the most recent version is
+used). If it still cannot be found, `run_arb()` opens a file chooser in
+interactive sessions to select TauArgus.exe, and offers to save it in
+`.Renviron`.
+
 ## rtauargus 1.3.6
 
 [09/2026]
