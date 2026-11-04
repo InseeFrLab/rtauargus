@@ -49,6 +49,15 @@ fonctions.
 If the user inadvertently removes some options, the functions will use
 the default values of the package. \cr
 
+The location of Tau-Argus (\code{rtauargus.tauargus_exe}) has no hard-coded
+default: it is read from the \code{TAUARGUS_EXE} environment variable. The
+recommended way to set it once and for all is
+\code{set_tauargus_exe("C:/path/to/TauArgus.exe", install = TRUE)}, which writes
+it to your \code{.Renviron} file. \cr
+(L'emplacement de Tau-Argus n'a pas de valeur par défaut codée en dur : il
+est lu dans la variable d'environnement \code{TAUARGUS_EXE}, idéalement définie
+dans le fichier \code{.Renviron} via \code{set_tauargus_exe(..., install = TRUE)}.) \cr
+
 (Ces options sont utilisées si un argument obligatoire d’une fonction n’est
 pas renseigné. Elles permettent de ne pas répéter systématiquement le même
 paramètre à chaque appel d'une fonction. Le nom de l’option est le nom de
@@ -88,7 +97,7 @@ rtauargus.output_type            \tab "\Sexpr{rtauargus:::op.rtauargus$rtauargus
 rtauargus.output_options         \tab "\Sexpr{rtauargus:::op.rtauargus$rtauargus.output_options}"    \tab                     \cr
 \verb{------------------------}  \tab  \verb{---------------------------------}                      \tab \verb{-------------}\cr
 rtauargus.missing_dir            \tab "\Sexpr{rtauargus:::op.rtauargus$rtauargus.missing_dir}"       \tab \code{run_arb()}      \cr
-rtauargus.tauargus_exe           \tab "\Sexpr{rtauargus:::op.rtauargus$rtauargus.tauargus_exe}"      \tab                     \cr
+rtauargus.tauargus_exe           \tab \code{Sys.getenv("TAUARGUS_EXE")}                          \tab                     \cr
 rtauargus.show_batch_console     \tab  \Sexpr{rtauargus:::op.rtauargus$rtauargus.show_batch_console} \tab                     \cr
 rtauargus.import                 \tab  \Sexpr{rtauargus:::op.rtauargus$rtauargus.import}             \tab
 }

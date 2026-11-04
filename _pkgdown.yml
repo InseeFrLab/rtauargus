@@ -66,6 +66,7 @@ reference:
   - title: Others
     contents:
     - rtauargus_options
+    - set_tauargus_exe
     - write_hrc
     - rtauargus-package
     - contains_non_total

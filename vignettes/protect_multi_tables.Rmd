@@ -172,14 +172,13 @@ default : 10
 
 # Some examples
 
-Let's specify the location of the TauArgus.exe file in our computer:
+If not already done (for instance in your `.Renviron` file, see
+`?set_tauargus_exe`), let's specify the location of the TauArgus.exe file on
+our computer:
 
 
 ``` r
-options(
-  rtauargus.tauargus_exe =
-    "Y:/Logiciels/TauArgus/TauArgus4.2.3/TauArgus.exe"
-)
+set_tauargus_exe("C:/path/to/TauArgus/TauArgus.exe")
 ```
 
 ## About protecting 4 linked tables at once

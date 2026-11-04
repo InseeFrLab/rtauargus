@@ -48,8 +48,9 @@ overflow: visible;
 }
 </style>
 <style type="text/css" data-origin="pandoc">
+html { -webkit-text-size-adjust: 100%; }
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -60,7 +61,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
 { counter-reset: source-line 0; }
@@ -505,12 +506,10 @@ the fact that the function will stop. default : 10</p></li>
 </div>
 <div id="some-examples" class="section level1" number="2">
 <h1><span class="header-section-number">2</span> Some examples</h1>
-<p>Let’s specify the location of the TauArgus.exe file in our
-computer:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">options</span>(</span>
-<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>  <span class="at">rtauargus.tauargus_exe =</span></span>
-<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>    <span class="st">&quot;Y:/Logiciels/TauArgus/TauArgus4.2.3/TauArgus.exe&quot;</span></span>
-<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a>)</span></code></pre></div>
+<p>If not already done (for instance in your <code>.Renviron</code>
+file, see <code>?set_tauargus_exe</code>), let’s specify the location of
+the TauArgus.exe file on our computer:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">set_tauargus_exe</span>(<span class="st">&quot;C:/path/to/TauArgus/TauArgus.exe&quot;</span>)</span></code></pre></div>
 <div id="about-protecting-4-linked-tables-at-once" class="section level2" number="2.1">
 <h2><span class="header-section-number">2.1</span> About protecting 4
 linked tables at once</h2>

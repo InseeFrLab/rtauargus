@@ -154,16 +154,16 @@ When the package is loaded, the console displays some information:
 library(rtauargus)
 ```
 
-In particular, a plausible location for the &tau;-Argus software is
-predefined. It is possible to change it for the duration of the R session. A
-message indicates that this location is unknown, so we modify it:
-
+In particular, it shows the location of the &tau;-Argus software, which is read
+from the `TAUARGUS_EXE` environment variable. To set it once and for all (it is
+saved in your `.Renviron` file and used in every future R session):
 
 ``` r
-loc_tauargus <- "Y:/Logiciels/TauArgus/TauArgus4.2.3/TauArgus.exe"
-
-options(rtauargus.tauargus_exe = loc_tauargus)
+set_tauargus_exe("C:/path/to/TauArgus/TauArgus.exe", install = TRUE)
 ```
+
+To set it for the current R session only, omit `install = TRUE`.
+`get_tauargus_exe()` returns the location currently in use.
 
 After this small adjustment, the package is ready to be used.
 
@@ -747,7 +747,7 @@ below:
 |rtauargus.output_options     |""                                   |character |          micro_arb|
 |rtauargus.output_options     |""                                   |character |            tab_arb|
 |rtauargus.missing_dir        |"stop"                               |character |            run_arb|
-|rtauargus.tauargus_exe       |"Y:/Logiciels/TauArgus/TauArgus.exe" |character |            run_arb|
+|rtauargus.tauargus_exe       |""                                   |character |            run_arb|
 |rtauargus.show_batch_console |FALSE                                |logical   |            run_arb|
 |rtauargus.import             |FALSE                                |logical   |            run_arb|
 |rtauargus.is_tabular         |TRUE                                 |logical   |            run_arb|
@@ -798,7 +798,7 @@ rtauargus_options()
 #> [1] FALSE
 #> 
 #> $rtauargus.tauargus_exe
-#> [1] "Y:/Logiciels/TauArgus/TauArgus4.2.3/TauArgus.exe"
+#> [1] "C:/path/to/TauArgus/TauArgus.exe"
 #> 
 #> $rtauargus.totcode
 #> [1] "Total"
@@ -843,7 +843,7 @@ str(rtauargus_options())
 #>  $ rtauargus.response_var      : chr "VAL"
 #>  $ rtauargus.separator         : chr ","
 #>  $ rtauargus.show_batch_console: logi FALSE
-#>  $ rtauargus.tauargus_exe      : chr "Y:/Logiciels/TauArgus/TauArgus4.2.3/TauArgus.exe"
+#>  $ rtauargus.tauargus_exe      : chr "C:/path/to/TauArgus/TauArgus.exe"
 #>  $ rtauargus.totcode           : chr "Total"
 #>  $ rtauargus.weighted          : logi FALSE
 ```
@@ -872,7 +872,7 @@ str(rtauargus_options())
 #>  $ rtauargus.response_var      : chr "<freq>"
 #>  $ rtauargus.separator         : chr ","
 #>  $ rtauargus.show_batch_console: logi FALSE
-#>  $ rtauargus.tauargus_exe      : chr "Y:/Logiciels/TauArgus/TauArgus4.2.3/TauArgus.exe"
+#>  $ rtauargus.tauargus_exe      : chr "C:/path/to/TauArgus/TauArgus.exe"
 #>  $ rtauargus.totcode           : chr "Total"
 #>  $ rtauargus.weighted          : logi FALSE
 ```

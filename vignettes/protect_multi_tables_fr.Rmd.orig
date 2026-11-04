@@ -187,13 +187,12 @@ par défaut : 10
 
 # Quelques exemples
 
-Spécifions l'emplacement du fichier TauArgus.exe sur notre ordinateur :
+Si ce n'est pas déjà fait (par exemple dans le fichier `.Renviron`, voir
+`?set_tauargus_exe`), spécifions l'emplacement du fichier TauArgus.exe sur
+notre ordinateur :
 
-``{r version}
-options(
-  rtauargus.tauargus_exe =
-    "Y:/Logiciels/TauArgus/TauArgus4.2.3/TauArgus.exe"
-)
+```{r version, eval = FALSE}
+set_tauargus_exe("C:/path/to/TauArgus/TauArgus.exe")
 ```
 
 ## Comment protéger 4 tableaux liés en même temps
