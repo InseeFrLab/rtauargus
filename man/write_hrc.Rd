@@ -38,7 +38,7 @@ filled, a temporary file.\cr
 immediately above}
 \item{\code{"down"} : hierarchical variable of the level immediately
 lower}
-}\cr
+}
 (remplissage d'éventuelles valeurs manquantes, à l'aide d'une
 autre variable :\itemize{
 \item{\code{"up"} (défaut) : variable hiérarchique de niveau

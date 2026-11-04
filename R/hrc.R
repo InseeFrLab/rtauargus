@@ -67,7 +67,7 @@
 #' immediately above}
 #' \item{`"down"` : hierarchical variable of the level immediately
 #' lower}
-#' }\cr
+#' }
 #' (remplissage d'éventuelles valeurs manquantes, à l'aide d'une
 #'   autre variable :\itemize{
 #'     \item{`"up"` (défaut) : variable hiérarchique de niveau
