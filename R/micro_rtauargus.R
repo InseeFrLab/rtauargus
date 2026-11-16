@@ -9,7 +9,7 @@
 #' protection problems.
 #'
 #' See more details in `vignette("rtauargus")` or in
-#' `vignette("protect_multi_tables)`.
+#' `vignette("protect_multi_tables")`.
 #'
 #' Protects tables built from microdata and specifications of the crossings.
 #' The function allows to perform the complete process, namely the creation of
@@ -32,7 +32,7 @@
 #' Intermediate files without a name entered (`asc_filename`...)
 #' will be created in a temporary folder, with randomly generated names.
 #' This mechanism allows the user to abstract from the preparation of
-#' preparation of the data and to maintain the entire chain of
+#' the data and to maintain the entire chain of
 #' processing in R. \cr
 #'
 #' (La fonction exécute séquentiellement les fonctions : \itemize{
@@ -64,7 +64,7 @@
 #' @inheritSection micro_arb Syntax
 #'
 #' @section Microdata already as text files:
-#' To use existing asc and rda files already existing, it is possible to
+#' To use existing asc and rda files, it is possible to
 #' provide, instead of the data.frame, a character vector indicating
 #' the path of these files. The first element of this vector is the asc file,
 #' the second element the rda file. The rda file can be omitted if it has the

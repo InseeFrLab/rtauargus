@@ -63,7 +63,7 @@
 #' (nom et emplacement du fichier hrc produit. Si non renseigné, un fichier temporaire.)
 #' @param fill_na fill in any missing values, using an other variable :
 #' \itemize{
-#' \item{`"up"` (default) : hierarchical variable of the level level
+#' \item{`"up"` (default) : hierarchical variable of the level
 #' immediately above}
 #' \item{`"down"` : hierarchical variable of the level immediately
 #' lower}

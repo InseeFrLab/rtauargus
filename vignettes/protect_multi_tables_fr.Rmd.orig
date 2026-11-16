@@ -41,7 +41,7 @@ de la fonction à traiter la plupart des cas. Nous sommes intéressés par les c
 vous pourriez rencontrer et que la fonction ne peut pas traiter.
 
 Un lien entre deux (ou plusieurs) tableaux décrit les cellules communes des tableaux,
-c'est-à-dire les cellules qui sont présentent dans ces derniers.
+c'est-à-dire les cellules qui sont présentes dans ces derniers.
 La fonction peut gérer tous les types de liens entre tableaux :
 
 - les marges communes : lorsque deux tableaux partagent une (ou plusieurs)
@@ -132,7 +132,7 @@ sont pas emboitées. Dans ce cas, nous écrivons les deux arguments comme suit :
 Le code du total pour chaque variable explicative. Il est recommandé d'utiliser le même
 même code de total pour chaque variable. Si par exemple le code est "Total" pour
 toutes les variables.
-La syntaxe qsuivante est autorisée : totcode = "Total"
+La syntaxe suivante est autorisée : totcode = "Total"
 
 Sinon, l'input attendue est une liste spécifiant le code total pour chaque variable
 explicative.
@@ -222,7 +222,7 @@ str(turnover_nuts_cj)
 ```
 
 La première étape consiste à créer une liste contenant nos quatre tableaux, il est
-conseillé de de donner un nom à chaque table. En faisant cela, il sera plus facile
+conseillé de donner un nom à chaque table. En faisant cela, il sera plus facile
 de suivre le déroulement de la pose du secret secondaire.
 
 ```{r}
@@ -280,7 +280,7 @@ Les noms de la liste doivent être identiques aux noms des tableaux présent dan
 
 Les modalités utilisées pour mentionner le total de chaque variable doivent être
 déclarées par l'utilisateur, dans une liste nominative. Toutefois, lorsque toutes
-les variables ont la même modalité pour pour le total, l'information peut être
+les variables ont la même modalité pour le total, l'information peut être
 spécifiée de la manière suivante :
 
 ```{r totcodes}
@@ -289,8 +289,8 @@ total_codes <- "Total"
 
 ### Préparation des fichiers hiérarchiques
 
-`ACTIVITY` et `NUTS` sont duex variables hiérarchiques.On utilise une table de
-correspondance pour chacunes d'entre  elles pour créer le fichier .hrc dont &tau;-Argus
+`ACTIVITY` et `NUTS` sont deux variables hiérarchiques. On utilise une table de
+correspondance pour chacune d'entre  elles pour créer le fichier .hrc dont &tau;-Argus
 a besoin.
 
 ```{r corr_tables}

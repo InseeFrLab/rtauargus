@@ -43,7 +43,7 @@ La syntaxe de certains des arguments correspond étroitement à la syntaxe _batc
 multiplier les arguments des fonctions. Le package pourra également s'adapter
 plus facilement aux éventuelles modifications du logiciel (nouveaux
 algorithmes disponibles, options supplémentaires...).
-Les règles de syntaxes d'écriture du batch sont détaillés dans le manuel de référence de &tau;-Argus et sont égalements précisées dans la vignette *options_safety_rules*.
+Les règles de syntaxes d'écriture du batch sont détaillées dans le manuel de référence de &tau;-Argus et sont également précisées dans la vignette *options_safety_rules*.
 
 > Le package a été développé sur la base de versions open source de &tau;-Argus (versions 4.2 et supérieures), en particulier la dernière version disponible au moment du développement (4.2.3).
 >
@@ -80,16 +80,16 @@ _rtauargus_ nécessite quelques autres packages R. Voici les dépendances à ins
 
 
 ```
-• purrr (>= 0.2)
-• dplyr (>= 0.7)
-• tidyr
-• data.table
+• purrr (>= 0.2),
+• dplyr (>= 0.7),
+• tidyr,
+• data.table,
 • gdata,
-• stringr
-• rlang
-• zoo
-• sdcHierarchies
-• igraph
+• stringr,
+• rlang,
+• zoo,
+• sdcHierarchies,
+• igraph,
 • lifecycle
 ```
 Le package _rtauargus_ peut être installé maintenant.
@@ -199,9 +199,9 @@ ex1 <- tab_rtauargus(
   maxscore = "MAX",
   totcode = c(ACTIVITY="Total",SIZE="Total")
 )
-#> Start of batch procedure; file: Z:\rtauargus\vignettes\tauargus_files\ex1\ex1.arb
-#> <OPENTABLEDATA> "Z:\rtauargus\vignettes\tauargus_files\ex1\ex1.tab"
-#> <OPENMETADATA> "Z:\rtauargus\vignettes\tauargus_files\ex1\ex1.rda"
+#> Start of batch procedure; file: Z:\confidentialite\rtauargus\vignettes\tauargus_files\ex1\ex1.arb
+#> <OPENTABLEDATA> "Z:\confidentialite\rtauargus\vignettes\tauargus_files\ex1\ex1.tab"
+#> <OPENMETADATA> "Z:\confidentialite\rtauargus\vignettes\tauargus_files\ex1\ex1.rda"
 #> <SPECIFYTABLE> "ACTIVITY""SIZE"|"VAL"||
 #> <SAFETYRULE> FREQ(3,10)|NK(1,85)
 #> <READTABLE> 1
@@ -210,9 +210,9 @@ ex1 <- tab_rtauargus(
 #> Start of the modular protection for table ACTIVITY x SIZE | VAL
 #> End of modular protection. Time used 0 seconds
 #>                    Number of suppressions: 2
-#> <WRITETABLE> (1,4,,"Z:\rtauargus\vignettes\tauargus_files\ex1\ex1.csv")
+#> <WRITETABLE> (1,4,,"Z:\confidentialite\rtauargus\vignettes\tauargus_files\ex1\ex1.csv")
 #> Table: ACTIVITY x SIZE | VAL has been written
-#>                    Output file name: Z:\rtauargus\vignettes\tauargus_files\ex1\ex1.csv
+#>                    Output file name: Z:\confidentialite\rtauargus\vignettes\tauargus_files\ex1\ex1.csv
 #> End of TauArgus run
 ```
 
@@ -407,7 +407,7 @@ ex2 %>%
 ```
 
 
-### Protéger plusieurs tableaux en même temps, avec la fonction `tab_muli_manager()`.
+### Protéger plusieurs tableaux en même temps, avec la fonction `tab_multi_manager()`.
 
 La fonction `tab_multi_manager()` permet de traiter un ensemble de tableaux (liés ou non).
 C'est un processus itératif, qui effectue la pose de secret secondaire d'un tableau à la fois et qui s'assure que les cellules communes ont le même statut. Lorsqu'une cellule commune est concernée par le secret secondaire, elle répercute le secret sur chaque tableau qui partage cette cellule commune. Le processus se termine lorsque le secret secondaire est cohérent pour tous les tableaux. Voir plus de détails dans les vignettes *Gérer la protection des tableaux liés*.
@@ -483,9 +483,7 @@ ex3 <- tab_multi_manager(
   secret_var = "is_secret_prim",
   totcode =  "Total"
 )
-#> --- Current table to treat:  act_size ---
-#> --- Current table to treat:  act_cj ---
-#> --- Current table to treat:  act_size ---
+#> --- Current table to treat: act_size | loop iter : 1 ---            --- Current table to treat: act_cj | loop iter : 2 ---            --- Current table to treat: act_size | loop iter : 3 ---
 ```
 
 Par défaut, la fonction utilise un wrapper de la fonction `tab_rtauargus()`, appelé `tab_rtauargus2()`, pour appliquer le secret secondaire avec &tau;-Argus. De nombreux paramètres par défaut sont définis. En particulier :
@@ -502,10 +500,10 @@ de la fonction `tab_multi_manager()`.
 #### Détail de la vignette
 
 - Authors: **<a href="mailto:julien.jamme@insee.fr">Julien Jamme</a>** & **<a href="mailto:nathanael.rastout@insee.fr">Nathanael Rastout</a>**
-- Last update: **17/02/2025**
-- Version of rtauargus used: **1.2.999**
+- Last update: **27/10/2026**
+- Version of rtauargus used: **1.3.6**
 - Version of &tau;-Argus used : **TauArgus 4.2.3**
-- R version used :  **4.3.3**
+- R version used :  **4.5.3**
 
 <p style="text-align: right">
   <a href="#TOC" title="Back to summary">summary &uarr;</a>

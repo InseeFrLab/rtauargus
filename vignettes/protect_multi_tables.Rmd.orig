@@ -55,7 +55,7 @@ the user is to properly define the set of the tables. Once the set is correctly
 defined, the function takes care of everything.
 
 Firstly, the vignette will present how the function works, secondly, the parameters
-are quickly described. In the third part, some examples are developped to show how
+are quickly described. In the third part, some examples are developed to show how
 to use it in diverse situations.
 
 
@@ -77,7 +77,7 @@ works with two lists:
 Both lists are initialized as follows:
 
 - `todolist` = first table in the original list;
-- `remainlist` = all the original tables except the firs one.
+- `remainlist` = all the original tables except the first one.
 
 Then, the algorithm proceeds as shown in the following figure:
 
@@ -98,7 +98,7 @@ At the end, only the last process for each table is available in the chosen dire
 A journal (`journal.txt`) is also provided. It describes each step of the suppression
 process: Which table is being protected, how many new common cells have been hit by
 secondary suppression. At the end of the process, it provides a description of
-all common cells that have been hit, mentionning the iteration of when each has been hit.
+all common cells that have been hit, mentioning the iteration of when each has been hit.
 
 
 ## Some details on the parameters of `tab_multi_manager()`
@@ -112,7 +112,7 @@ A named vector specifying the path to the hrc file for each hierarchical variabl
 example : c(ACTIVITY = "path_to_file/act.hrc", NUTS = "path_to_file/nuts.hrc" )
 
 - **alt_hrc**
-A named list useful for dealing with non-nested hierachies. The names of the list
+A named list useful for dealing with non-nested hierarchies. The names of the list
 are the names of the tables when alternative (non-nested in general) hierarchies.
 example : If T1 and T2 have one explanatory variable, called ACTIVITY, and the
 same response variable, but the `ACTIVITY` variable has not the same hierarchy in
@@ -125,7 +125,7 @@ nested. In that case, we write the two arguments as follows:
   the alternative hierarchy will be used.
 
 - **totcode**
-The code for total for each explanatory variables. It is recommanded to use the
+The code for total for each explanatory variables. It is recommended to use the
 same totcode for each variables. If for example the code is "Total" for all variables.
 This syntax is allowed : totcode = "Total"
 
@@ -270,7 +270,7 @@ The names of the list have to be the names of the corresponding tables in the
 
 The labels used to mention the total for each variable have to declared by the user,
 in a named list. However, when all of the variables have the same label to refer
-to the total, the information can be mentionned as follows:
+to the total, the information can be mentioned as follows:
 
 ```{r totcodes}
 total_codes <- "Total"
@@ -362,7 +362,7 @@ list_with_status %>%
 Let's assume that we'd like to protect the two tables crossing `ACTIVITY` and
 `SIZE` in one hand and `ACTIVITY` and `CJ` in the other hand. The `ACTIVITY` variable is a hierarchical one. Moreover, in that case, we'd like to release a subtotal, called `D_TO_M`, in addition to those in the `activity_corr_table`. This subtotal is the sum of the `D` to `M` labels of the `A21` level. As this subtotal can't be inserted in the main hierarchy, this leads us to a case of non-nested hierarchies.
 
-To confirm the non-nesting of the two hierachies, let's display an extract of both.
+To confirm the non-nesting of the two hierarchies, let's display an extract of both.
 
 Extract of the main hierarchy:
 
@@ -441,7 +441,7 @@ list_data_3_tabs_nn <- list(
 
 The `hrc` and `alt_hrc` arguments are used to mention both hierarchies of the `ACTIVITY` variable:
 
-- `hrc` is used as int the previous example (a named vector where names are the different hierarchical variables appearingin the tables and values are the files names). Hence, the hierarchy file will be taken in this vector by default.
+- `hrc` is used as in the previous example (a named vector where names are the different hierarchical variables appearing in the tables and values are the files names). Hence, the hierarchy file will be taken in this vector by default.
 - `alt_hrc` is only used to mention the alternative hierarchies. This argument is a named list where names are the tables where the alternative hierarchies have to be applied.
 
 The same rationale is used to fill the `alt_totcode` argument.

@@ -34,7 +34,7 @@ filled, a temporary file.\cr
 
 \item{fill_na}{fill in any missing values, using an other variable :
 \itemize{
-\item{\code{"up"} (default) : hierarchical variable of the level level
+\item{\code{"up"} (default) : hierarchical variable of the level
 immediately above}
 \item{\code{"down"} : hierarchical variable of the level immediately
 lower}

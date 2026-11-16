@@ -92,7 +92,7 @@ df_op.rtauargus <- function(html = FALSE) {
 #' user.*
 #'
 #' On loading the package, all the rtauargus options, that are not already
-#' been set by the user, are set with their default values (see table below).
+#' set by the user, are set with their default values (see table below).
 #' The already defined options keep the values set by the user.
 #'
 #' The options can be set during a session with the following instruction

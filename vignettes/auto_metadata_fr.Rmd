@@ -23,9 +23,9 @@ library(dplyr)
 
 # Introduction
 
-Avant de faire appel aux fonctions permettant la pose du secret il est nécessaire d'analyser les tableaux que l'on souhaite protéger. En effet,les tableaux diffusés sont différents des tableaux à protéger. Cela est expliqué en détail au chapitre 3 du [Manuel de protection des tableaux](https://inseefrlab.github.io/manuel-protection-tableaux/03_analyser_une_demande.html). Cette phase d'analyse des marges communes entre les différents tableaux peut s'avérer complexe. Ainsi, des fonctions ont été développées dans `rtauargus` pour faciliter ce travail.
+Avant de faire appel aux fonctions permettant la pose du secret il est nécessaire d'analyser les tableaux que l'on souhaite protéger. En effet, les tableaux diffusés sont différents des tableaux à protéger. Cela est expliqué en détail au chapitre 3 du [Manuel de protection des tableaux](https://inseefrlab.github.io/manuel-protection-tableaux/03_analyser_une_demande.html). Cette phase d'analyse des marges communes entre les différents tableaux peut s'avérer complexe. Ainsi, des fonctions ont été développées dans `rtauargus` pour faciliter ce travail.
 
-# Comment fonctionne l'analyse automatique automatique des métadonnées ?
+# Comment fonctionne l'analyse automatique des métadonnées ?
 ## Création des métadonnées \label{sec:crea_meta}
 
 Les métadonnées doivent respecter un format spécifique. Une ligne représente un tableau et pour chaque tableau il faut préciser :
@@ -124,7 +124,14 @@ Exemple de code :
 library(rtauargus)
 
 data(metadata_pizza_lettuce)
+```
 
+```
+## Error in `load()`:
+## ! fichier d'entrée vide (0 octets)
+```
+
+``` r
 # Analyse complète, avec les étapes
 detailed_analysis <- analyse_metadata(metadata_pizza_lettuce, verbose = TRUE)
 
@@ -140,19 +147,19 @@ cluster_id_dataframe
 ```
 
 ```
-##                               cluster  table_name                   field indicator spanning_1 spanning_2    spanning_3 hrc_spanning_1 hrc_spanning_2
-## 1 france_entreprises_2023.hrc_lettuce  T10.T12.T8 france_entreprises_2023   LETTUCE    HRC_NAF         cj HRC_LETTUCE^h        hrc_naf           <NA>
-## 2 france_entreprises_2023.hrc_lettuce   T11.T7.T9 france_entreprises_2023   LETTUCE    HRC_NAF       size HRC_LETTUCE^h        hrc_naf           <NA>
-## 3    france_entreprises_2023.to_pizza       T1.T2 france_entreprises_2023  to_pizza   HRC_NUTS       size          <NA>       hrc_nuts           <NA>
-## 4    france_entreprises_2023.to_pizza T3.T4.T5.T6 france_entreprises_2023  to_pizza    HRC_NAF   HRC_NUTS          <NA>        hrc_naf       hrc_nuts
-##   hrc_spanning_3
-## 1    hrc_lettuce
-## 2    hrc_lettuce
-## 3           <NA>
-## 4           <NA>
+##                               cluster  table_name                   field indicator spanning_1 spanning_2    spanning_3
+## 1 france_entreprises_2023.hrc_lettuce  T10.T12.T8 france_entreprises_2023   LETTUCE    HRC_NAF         cj HRC_LETTUCE^h
+## 2 france_entreprises_2023.hrc_lettuce   T11.T7.T9 france_entreprises_2023   LETTUCE    HRC_NAF       size HRC_LETTUCE^h
+## 3    france_entreprises_2023.to_pizza       T1.T2 france_entreprises_2023  to_pizza   HRC_NUTS       size          <NA>
+## 4    france_entreprises_2023.to_pizza T3.T4.T5.T6 france_entreprises_2023  to_pizza    HRC_NAF   HRC_NUTS          <NA>
+##   hrc_spanning_1 hrc_spanning_2 hrc_spanning_3
+## 1        hrc_naf           <NA>    hrc_lettuce
+## 2        hrc_naf           <NA>    hrc_lettuce
+## 3       hrc_nuts           <NA>           <NA>
+## 4        hrc_naf       hrc_nuts           <NA>
 ```
 
-Pour les 12 tableaux à publier il suffit de protéger 4 tableaux. Ces tableaux sont repartis dans deux clusters différents. Il faudra donc faire appel deux fois à `tab_multi_manager()`.
+Pour les 12 tableaux à publier il suffit de protéger 4 tableaux. Ces tableaux sont répartis dans deux clusters différents. Il faudra donc faire appel deux fois à `tab_multi_manager()`.
 On remarque une nouvelle variable de croisement `HRC_LETTUCE^h`. Il s'agit d'une variable qui prend pour modalités `batavia` et `arugula` et a pour total `lettuce`. L'indicateur `LETTUCE` renvoie ici au "turnover" (to) ou "chiffre d'affaires" de la vente de salades. Par exemple, le tableau `T10.T12.T8` présente le chiffre d'affaires de la vente de salades en fonction de l'activité et de la catégorie de l'entreprise ainsi que du type de salade.
 
 Si l'on souhaite avoir plus d'informations sur l'analyse de la demande, on peut spécifier l'argument `verbose = TRUE`. Ainsi, l'objet renvoyé par la fonction est une liste des différentes étapes de l'analyse.
@@ -163,8 +170,8 @@ names(detailed_analysis)
 ```
 
 ```
-## [1] "identify_hrc"        "info_var"            "split_in_clusters"   "create_edges"        "grp_tab_names"       "grp_tab_in_clusters"
-## [7] "tab_to_treat"        "df_tab_to_treat"
+## [1] "identify_hrc"        "info_var"            "split_in_clusters"   "create_edges"        "grp_tab_names"      
+## [6] "grp_tab_in_clusters" "tab_to_treat"        "df_tab_to_treat"
 ```
 
 On retrouve le dataframe avec l'indicatrice du cluster `df_tab_to_treat`. On a le même résultat mais en format liste : chaque élément de la sous-liste `tab_to_treat` est un cluster indépendant. Les autres éléments de la liste sont les étapes de l'analyse.
@@ -212,13 +219,13 @@ template_formatted$metadata
 ```
 
 ```
-##             table_name field indicator spanning_1  spanning_2   hrc_spanning_1    hrc_spanning_2
-## 1 table_2021_SAL_DTH_1  2021   SAL_DTH   ACTIVITY  LEGAL_FORM hrc_activity_131  hrc_legal_form_3
-## 2 table_2021_SAL_DTH_2  2021   SAL_DTH   ACTIVITY NUMBER_EMPL hrc_activity_131 hrc_number_empl_4
-## 3     table_2022_SAL_1  2022       SAL   ACTIVITY  LEGAL_FORM hrc_activity_131  hrc_legal_form_3
-## 4     table_2022_SAL_2  2022       SAL   ACTIVITY NUMBER_EMPL hrc_activity_131 hrc_number_empl_4
-## 5 table_2022_SAL_DTH_1  2022   SAL_DTH   ACTIVITY  LEGAL_FORM hrc_activity_131  hrc_legal_form_3
-## 6 table_2022_SAL_DTH_2  2022   SAL_DTH   ACTIVITY NUMBER_EMPL hrc_activity_131 hrc_number_empl_4
+##             table_name field indicator   spanning_1    spanning_2 hrc_spanning_1  hrc_spanning_2
+## 1 table_2021_SAL_DTH_1  2021   SAL_DTH ACTIVITY_131  LEGAL_FORM_3   hrc_activity  hrc_legal_form
+## 2 table_2021_SAL_DTH_2  2021   SAL_DTH ACTIVITY_131 NUMBER_EMPL_4   hrc_activity hrc_number_empl
+## 3     table_2022_SAL_1  2022       SAL ACTIVITY_131  LEGAL_FORM_3   hrc_activity  hrc_legal_form
+## 4     table_2022_SAL_2  2022       SAL ACTIVITY_131 NUMBER_EMPL_4   hrc_activity hrc_number_empl
+## 5 table_2022_SAL_DTH_1  2022   SAL_DTH ACTIVITY_131  LEGAL_FORM_3   hrc_activity  hrc_legal_form
+## 6 table_2022_SAL_DTH_2  2022   SAL_DTH ACTIVITY_131 NUMBER_EMPL_4   hrc_activity hrc_number_empl
 ```
 
 On voit qu'il y a 6 tableaux à publier.
@@ -239,13 +246,13 @@ metadata_template
 ```
 
 ```
-##             table_name field indicator hrc_indicator spanning_1  spanning_2   hrc_spanning_1    hrc_spanning_2 hrc_field
-## 1 table_2021_SAL_DTH_1  2021   SAL_DTH            NA   ACTIVITY  LEGAL_FORM hrc_activity_131  hrc_legal_form_3        NA
-## 2 table_2021_SAL_DTH_2  2021   SAL_DTH            NA   ACTIVITY NUMBER_EMPL hrc_activity_131 hrc_number_empl_4        NA
-## 3     table_2022_SAL_1  2022       SAL            NA   ACTIVITY  LEGAL_FORM hrc_activity_131  hrc_legal_form_3        NA
-## 4     table_2022_SAL_2  2022       SAL            NA   ACTIVITY NUMBER_EMPL hrc_activity_131 hrc_number_empl_4        NA
-## 5 table_2022_SAL_DTH_1  2022   SAL_DTH            NA   ACTIVITY  LEGAL_FORM hrc_activity_131  hrc_legal_form_3        NA
-## 6 table_2022_SAL_DTH_2  2022   SAL_DTH            NA   ACTIVITY NUMBER_EMPL hrc_activity_131 hrc_number_empl_4        NA
+##             table_name field indicator hrc_indicator   spanning_1    spanning_2 hrc_spanning_1  hrc_spanning_2 hrc_field
+## 1 table_2021_SAL_DTH_1  2021   SAL_DTH            NA ACTIVITY_131  LEGAL_FORM_3   hrc_activity  hrc_legal_form        NA
+## 2 table_2021_SAL_DTH_2  2021   SAL_DTH            NA ACTIVITY_131 NUMBER_EMPL_4   hrc_activity hrc_number_empl        NA
+## 3     table_2022_SAL_1  2022       SAL            NA ACTIVITY_131  LEGAL_FORM_3   hrc_activity  hrc_legal_form        NA
+## 4     table_2022_SAL_2  2022       SAL            NA ACTIVITY_131 NUMBER_EMPL_4   hrc_activity hrc_number_empl        NA
+## 5 table_2022_SAL_DTH_1  2022   SAL_DTH            NA ACTIVITY_131  LEGAL_FORM_3   hrc_activity  hrc_legal_form        NA
+## 6 table_2022_SAL_DTH_2  2022   SAL_DTH            NA ACTIVITY_131 NUMBER_EMPL_4   hrc_activity hrc_number_empl        NA
 ```
 
 Ensuite, on utilise ce dataframe en input de la fonction d'analyse.
@@ -263,13 +270,13 @@ cluster_id_dataframe
 ```
 
 ```
-##        cluster           table_name field indicator       spanning_1        spanning_2   hrc_spanning_1    hrc_spanning_2
-## 1 2021.SAL_DTH table_2021_SAL_DTH_1  2021   SAL_DTH HRC_ACTIVITY_131  HRC_LEGAL_FORM_3 hrc_activity_131  hrc_legal_form_3
-## 2 2021.SAL_DTH table_2021_SAL_DTH_2  2021   SAL_DTH HRC_ACTIVITY_131 HRC_NUMBER_EMPL_4 hrc_activity_131 hrc_number_empl_4
-## 3     2022.SAL     table_2022_SAL_1  2022       SAL HRC_ACTIVITY_131  HRC_LEGAL_FORM_3 hrc_activity_131  hrc_legal_form_3
-## 4     2022.SAL     table_2022_SAL_2  2022       SAL HRC_ACTIVITY_131 HRC_NUMBER_EMPL_4 hrc_activity_131 hrc_number_empl_4
-## 5 2022.SAL_DTH table_2022_SAL_DTH_1  2022   SAL_DTH HRC_ACTIVITY_131  HRC_LEGAL_FORM_3 hrc_activity_131  hrc_legal_form_3
-## 6 2022.SAL_DTH table_2022_SAL_DTH_2  2022   SAL_DTH HRC_ACTIVITY_131 HRC_NUMBER_EMPL_4 hrc_activity_131 hrc_number_empl_4
+##        cluster           table_name field indicator   spanning_1      spanning_2 hrc_spanning_1  hrc_spanning_2
+## 1 2021.SAL_DTH table_2021_SAL_DTH_1  2021   SAL_DTH HRC_ACTIVITY  HRC_LEGAL_FORM   hrc_activity  hrc_legal_form
+## 2 2021.SAL_DTH table_2021_SAL_DTH_2  2021   SAL_DTH HRC_ACTIVITY HRC_NUMBER_EMPL   hrc_activity hrc_number_empl
+## 3     2022.SAL     table_2022_SAL_1  2022       SAL HRC_ACTIVITY  HRC_LEGAL_FORM   hrc_activity  hrc_legal_form
+## 4     2022.SAL     table_2022_SAL_2  2022       SAL HRC_ACTIVITY HRC_NUMBER_EMPL   hrc_activity hrc_number_empl
+## 5 2022.SAL_DTH table_2022_SAL_DTH_1  2022   SAL_DTH HRC_ACTIVITY  HRC_LEGAL_FORM   hrc_activity  hrc_legal_form
+## 6 2022.SAL_DTH table_2022_SAL_DTH_2  2022   SAL_DTH HRC_ACTIVITY HRC_NUMBER_EMPL   hrc_activity hrc_number_empl
 ```
 
 Finalement, il y a 6 tableaux à traiter dans 3 clusters différents. Autrement dit, il faudra faire trois fois appel à `tab_multi_manager()`.
@@ -322,6 +329,12 @@ detailed_analysis <- analyse_metadata(metadata_pizza_lettuce,
 ##     the hrc_indicator column will be ignored.
 ```
 
+```
+## Warning in identify_hrc_with_eq(df_metadata_long, df_eq_indicator): Check the coherence of `df_eq_indicator` and `df_metadata`.
+##     There is no table description in `df_metadata` with an indicator that is part of one of the equations provided in `df_eq_indicator`.
+##     `df_eq_indicator` is useless here and will be ignored.
+```
+
 ``` r
 # Output simplifié, uniquement le dataframe avec l'indicatrice de cluster
 cluster_id_dataframe <- analyse_metadata(metadata_pizza_lettuce, verbose = FALSE)
@@ -340,16 +353,16 @@ cluster_id_dataframe
 ```
 
 ```
-##                               cluster  table_name                   field indicator spanning_1 spanning_2    spanning_3 hrc_spanning_1 hrc_spanning_2
-## 1 france_entreprises_2023.hrc_lettuce  T10.T12.T8 france_entreprises_2023   LETTUCE    HRC_NAF         cj HRC_LETTUCE^h        hrc_naf           <NA>
-## 2 france_entreprises_2023.hrc_lettuce   T11.T7.T9 france_entreprises_2023   LETTUCE    HRC_NAF       size HRC_LETTUCE^h        hrc_naf           <NA>
-## 3    france_entreprises_2023.to_pizza       T1.T2 france_entreprises_2023  to_pizza   HRC_NUTS       size          <NA>       hrc_nuts           <NA>
-## 4    france_entreprises_2023.to_pizza T3.T4.T5.T6 france_entreprises_2023  to_pizza    HRC_NAF   HRC_NUTS          <NA>        hrc_naf       hrc_nuts
-##   hrc_spanning_3
-## 1    hrc_lettuce
-## 2    hrc_lettuce
-## 3           <NA>
-## 4           <NA>
+##                               cluster  table_name                   field indicator spanning_1 spanning_2    spanning_3
+## 1 france_entreprises_2023.hrc_lettuce  T10.T12.T8 france_entreprises_2023   LETTUCE    HRC_NAF         cj HRC_LETTUCE^h
+## 2 france_entreprises_2023.hrc_lettuce   T11.T7.T9 france_entreprises_2023   LETTUCE    HRC_NAF       size HRC_LETTUCE^h
+## 3    france_entreprises_2023.to_pizza       T1.T2 france_entreprises_2023  to_pizza   HRC_NUTS       size          <NA>
+## 4    france_entreprises_2023.to_pizza T3.T4.T5.T6 france_entreprises_2023  to_pizza    HRC_NAF   HRC_NUTS          <NA>
+##   hrc_spanning_1 hrc_spanning_2 hrc_spanning_3
+## 1        hrc_naf           <NA>    hrc_lettuce
+## 2        hrc_naf           <NA>    hrc_lettuce
+## 3       hrc_nuts           <NA>           <NA>
+## 4        hrc_naf       hrc_nuts           <NA>
 ```
 
 # Pour aller plus loin : visualiser les inclusions
