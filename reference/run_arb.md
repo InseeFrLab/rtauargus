@@ -93,14 +93,14 @@ This is the only function in the package that runs Tau-Argus. It
 therefore requires the software to be accessible from the workstation.
 
 The location of the TauArgus.exe program is defined globally when the
-loading the package. In fact, the argument `tauargus_exe` will not
-normally not have to be specified (except to override the global option
-the time of the execution of the function).
+loading the package. In fact, the argument `tauargus_exe` will normally
+not have to be specified (except to override the global option the time
+of the execution of the function).
 
 Checks are made before the actual launching of Tau-Argus: existence of
 the software on the computer, of the asc and rda files, of the folders
 where write the results, the variables to be used (crossings, response
-variable) in the response variable) in the metadata (rda file).  
+variable) in the metadata (rda file).  
 
 (Seul l’argument `arb_filename` est obligatoire, car toutes les
 informations nécessaires sont présentes dans ce fichier. Il s'agit de la

@@ -13,7 +13,7 @@ syntaxe est la suivante : -
 *“règle_numéro1\|règle_numéro2\|règle_numéro3\|…”*. Au moins une règle
 de sécurité est requise.
 
-Voci toutes les règles possibles selon le manuel de τ-Argus.
+Voici toutes les règles possibles selon le manuel de τ-Argus.
 
 Les règles les plus courantes sont :
 
@@ -87,9 +87,9 @@ dans la section **4.2.3**.
 #### About this vignette
 
 - Authors: **[Nathanael Rastout](mailto:nathanael.rastout@insee.fr)**
-- Last update: **17/02/2025**
-- Version of rtauargus used: **1.2.999**
+- Last update: **27/10/2026**
+- Version of rtauargus used: **1.3.6**
 - Version of τ-Argus used : **TauArgus 4.2.3**
-- R version used : **4.3.3**
+- R version used : **4.5.3**
 
 [summary ↑](#TOC "Back to summary")

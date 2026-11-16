@@ -89,30 +89,29 @@ A list of data.frames (secret arrays).
 ## Details
 
 In interactive mode, Tau-Argus can process up to 10 tabs simultaneously
-for the same microdata set. In batch mode, a larger number of of
-crossings can be specified. However, doing so can be particularly time
-consuming, as Tau-Argus takes a lot of time to read large text files of
-microdata.
+for the same microdata set. In batch mode, a larger number of crossings
+can be specified. However, doing so can be particularly time consuming,
+as Tau-Argus takes a lot of time to read large text files of microdata.
 
 `rtauargus_plus` helps to improve the speed of execution. The function
 splits the list of tabs into groups of size `grp_size` and makes a call
 to
 [`micro_rtauargus()`](https://inseefrlab.github.io/rtauargus/reference/micro_rtauargus.md)
 for each group. It writes an asc file restricted to the only variables
-actually used within a of a group.
+actually used within a group.
 
 The results are then aggregated into a single list, as if Tau-Argus had
 been called only once.
 
 Modifying `grp_size` will not change the result, only the time execution
 time. A value around 5 (default) seems to be a good compromise between
-reading too large asc files and calling Tau-Argus too often. Tau-Argus
-too much. It can be adjusted according to the number of common variables
-within each tab group. (En mode interactif, Tau-Argus peut traiter
-jusqu'à 10 tabulations simultanément pour un même jeu de microdonnées.
-En mode batch, un nombre plus important de croisements peut être
-spécifié. Cependant, procéder de la sorte peut être particulièrement
-long, car Tau-Argus prend beaucoup de temps pour lire des fichiers texte
+reading too large asc files and calling Tau-Argus too often. It can be
+adjusted according to the number of common variables within each tab
+group. (En mode interactif, Tau-Argus peut traiter jusqu'à 10
+tabulations simultanément pour un même jeu de microdonnées. En mode
+batch, un nombre plus important de croisements peut être spécifié.
+Cependant, procéder de la sorte peut être particulièrement long, car
+Tau-Argus prend beaucoup de temps pour lire des fichiers texte
 volumineux de microdonnées.
 
 `rtauargus_plus` permet d'améliorer la vitesse d'exécution. La fonction
@@ -136,9 +135,8 @@ tabulations.)
 
 In return for the speed of execution, the crossings must have the same
 characteristics (same primary secret rules, same secondary secret
-method, same secondary secret, same weighting variable, etc.). The
-parameters `safety_rules`, `supress`, ..., must therefore contain a
-unique value.
+method, same weighting variable, etc.). The parameters `safety_rules`,
+`supress`, ..., must therefore contain a unique value.
 
 Moreover, it is not possible to specify `asc_filename`, `rda_filename`,
 `arb_filename` or `output_names` to retrieve the intermediate files.

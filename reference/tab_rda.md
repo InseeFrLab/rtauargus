@@ -66,8 +66,8 @@ tab_rda(
 
 - secret_var:
 
-  Nae of the boolean variable which specifies the secret, primary or not
-  : equal to "TRUE" if a cell is concerned by the secret,"FALSE"
+  Name of the boolean variable which specifies the secret, primary or
+  not : equal to "TRUE" if a cell is concerned by the secret,"FALSE"
   otherwise. will be exported in the apriori file.  
   (Variable indiquant le secret de type booléen: prend la valeur "TRUE"
   quand les cellules du tableau doivent être masquées "FALSE" sinon.
@@ -232,7 +232,7 @@ For example :
 - `totcode = c("global", size="total", income="total")` :
   `<TOTCODE> "global"` pour toutes les variables catégorielles sauf
   `size` and `income` qui se verront affecter le total :
-  `<TOTCODE> "total"` Par defaut : `<TOTCODE> "Total"`
+  `<TOTCODE> "total"` Par défaut : `<TOTCODE> "Total"`
 
 ## Hierarchical variables
 
@@ -263,7 +263,7 @@ chemin vers le fichier existant est explicitement donné. Les éléments du
 vecteur en paramètre doivent nommés (avec le nom de la variable), même
 s'il n'y a qu'un seul élément.
 
-*Exemple :*`c(category="category.hrc")`)
+*Exemple :* `c(category="category.hrc")`
 
 ## Number of decimals
 

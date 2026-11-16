@@ -11,7 +11,8 @@ which offer a lot more features for your protection problems.
 
 See more details in
 [`vignette("rtauargus")`](https://inseefrlab.github.io/rtauargus/articles/rtauargus.md)
-or in `vignette("protect_multi_tables)`.
+or in
+[`vignette("protect_multi_tables")`](https://inseefrlab.github.io/rtauargus/articles/protect_multi_tables.md).
 
 Creates a fixed length text file (asc) and a metadata file (rda) from
 microdata and additional information.  
@@ -70,13 +71,13 @@ micro_asc_rda(
 
 - decimals:
 
-  minimum number of decimals to display (see section 'Number of of
+  minimum number of decimals to display (see section 'Number of
   decimals'). (nombre minimal de décimales à afficher (voir section
   'Number of of decimals').)
 
 - hrc:
 
-  information about the hierarchical variables (see section section
+  information about the hierarchical variables (see section
   'Hierarchical variables').  
   (informations sur les variables hiérarchiques (voir section
   'Hierarchical variables').)
@@ -119,10 +120,9 @@ micro_asc_rda(
 
 ## Value
 
-Returns the names of the asc and rda files as a list (invisibly).
-invisibly). Empty columns (filled with `NA` or empty strings) are not
-strings) will not be exported to the asc file. A warning message will
-list the affected columns.  
+Returns the names of the asc and rda files as a list (invisibly). Empty
+columns (filled with `NA` or empty strings) will not be exported to the
+asc file. A warning message will list the affected columns.  
 (Renvoie les noms des fichiers asc et rda sous forme de liste (de
 manière invisible). Les colonnes vides (remplies de `NA` ou de chaînes
 de caractères vides) ne seront pas exportées dans le fichier asc. Un
@@ -135,8 +135,8 @@ as a vector indicating the value to take for each variable.
 
 The names of the elements of the vector give the variable concerned, the
 elements of the vector give the value of the parameter for Tau-Argus. An
-unnamed element element will be the default value, which will be
-assigned to all variables that can take this parameter.
+unnamed element will be the default value, which will be assigned to all
+variables that can take this parameter.
 
 For example :
 
@@ -174,14 +174,14 @@ accept several ways of specifying the values associated with the
 hierarchical variables.
 
 To define a hierarchy based on the positions of characters
-(**hierierlevels**), pass a sequence of integers separated by spaces.
+(**hierlevels**), pass a sequence of integers separated by spaces.
 
 *Example :* `c(CODECOM = "2 3 0 0 0")`
 
 If the hierarchy is defined in a separate hrc file (**hiercodelist**),
 the function expects the location of this file (and a possible
 `hiercodelist` if it differs from the default option of the package). In
-this case, you can write explicitly the path to an existing file file
+this case, you can write explicitly the path to an existing file
 (`c(A38 = "a38.hrc")`), but also make a call to
 [`write_hrc()`](https://inseefrlab.github.io/rtauargus/reference/write_hrc.md)
 which will generate an hrc file from microdata.
@@ -243,7 +243,7 @@ soient nommés (avec le nom de la variable), même s'il n'y a qu'un seul
 
 ## Number of decimals
 
-The parameter `decimals` indicates the minimum number of decimals to be
+The parameter `decimals` indicates the minimum number of decimals to
 appear in the output file (whatever the number of decimals actually
 present in `microdata`). It applies to all real variables (double) but
 not to integer variables (integer). For add zeros to an integer

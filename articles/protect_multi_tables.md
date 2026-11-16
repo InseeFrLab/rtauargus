@@ -28,7 +28,7 @@ the set is correctly defined, the function takes care of everything.
 
 Firstly, the vignette will present how the function works, secondly, the
 parameters are quickly described. In the third part, some examples are
-developped to show how to use it in diverse situations.
+developed to show how to use it in diverse situations.
 
 ### How does `tab_multi_manager()` handle the protection of a set of linked tables ?
 
@@ -50,7 +50,7 @@ the implemented algorithm works with two lists:
 Both lists are initialized as follows:
 
 - `todolist` = first table in the original list;
-- `remainlist` = all the original tables except the firs one.
+- `remainlist` = all the original tables except the first one.
 
 Then, the algorithm proceeds as shown in the following figure:
 
@@ -72,7 +72,7 @@ in the chosen directory. A journal (`journal.txt`) is also provided. It
 describes each step of the suppression process: Which table is being
 protected, how many new common cells have been hit by secondary
 suppression. At the end of the process, it provides a description of all
-common cells that have been hit, mentionning the iteration of when each
+common cells that have been hit, mentioning the iteration of when each
 has been hit.
 
 ### Some details on the parameters of `tab_multi_manager()`
@@ -85,7 +85,7 @@ has been hit.
   NUTS = “path_to_file/nuts.hrc” )
 
 - **alt_hrc** A named list useful for dealing with non-nested
-  hierachies. The names of the list are the names of the tables when
+  hierarchies. The names of the list are the names of the tables when
   alternative (non-nested in general) hierarchies. example : If T1 and
   T2 have one explanatory variable, called ACTIVITY, and the same
   response variable, but the `ACTIVITY` variable has not the same
@@ -99,7 +99,7 @@ has been hit.
     table T2, the alternative hierarchy will be used.
 
 - **totcode** The code for total for each explanatory variables. It is
-  recommanded to use the same totcode for each variables. If for example
+  recommended to use the same totcode for each variables. If for example
   the code is “Total” for all variables. This syntax is allowed :
   totcode = “Total”
 
@@ -181,10 +181,6 @@ str(turnover_act_size)
 #>  $ N_OBS   : int [1:414] 405 12878 28043 62053 8135 8140 11961 41359 26686 25108 ...
 #>  $ TOT     : num [1:414] 44475 24827613 8907311 26962063 8584917 ...
 #>  $ MAX     : num [1:414] 6212 1442029 1065833 3084242 3957364 ...
-```
-
-``` r
-
 str(turnover_nuts_cj)
 #> tibble [452 x 5] (S3: tbl_df/tbl/data.frame)
 #>  $ NUTS : chr [1:452] "FR10" "FR21" "FR22" "FR23" ...
@@ -330,7 +326,7 @@ in the `list_tables` argument.
 
 The labels used to mention the total for each variable have to declared
 by the user, in a named list. However, when all of the variables have
-the same label to refer to the total, the information can be mentionned
+the same label to refer to the total, the information can be mentioned
 as follows:
 
 ``` r
@@ -379,7 +375,6 @@ hierarchical variables.
 #### Running the protection of all the tables at once
 
 ``` r
-
 res <- tab_multi_manager(
     list_tables = list_data_4_tabs,
     list_explanatory_vars = nom_var_list,
@@ -390,11 +385,12 @@ res <- tab_multi_manager(
     freq = "N_OBS",
     secret_var = "is_secret_prim"
 )
-#> --- Current table to treat:  act_size ---
-#> --- Current table to treat:  act_cj ---
-#> --- Current table to treat:  act_size ---
-#> --- Current table to treat:  nuts_size ---
-#> --- Current table to treat:  nuts_cj ---
+#> 
+--- Current table to treat: act_size | loop iter : 1 ---            
+--- Current table to treat: act_cj | loop iter : 2 ---            
+--- Current table to treat: act_size | loop iter : 3 ---            
+--- Current table to treat: nuts_size | loop iter : 4 ---            
+--- Current table to treat: nuts_cj | loop iter : 5 ---
 ```
 
 #### Results
@@ -471,7 +467,7 @@ those in the `activity_corr_table`. This subtotal is the sum of the `D`
 to `M` labels of the `A21` level. As this subtotal can’t be inserted in
 the main hierarchy, this leads us to a case of non-nested hierarchies.
 
-To confirm the non-nesting of the two hierachies, let’s display an
+To confirm the non-nesting of the two hierarchies, let’s display an
 extract of both.
 
 Extract of the main hierarchy:
@@ -505,17 +501,8 @@ sdcHierarchies::hier_create(
   nodes = activity_corr_table_D_TO_M$A21
 ) %>%
   sdcHierarchies::hier_display()
-#> D_TO_M
-#> +-D
-#> +-E
-#> +-F
-#> +-G
-#> +-H
-#> +-I
-#> +-J
-#> +-K
-#> +-L
-#> \-M
+#> Error:
+#> ! objet 'activity_corr_table_D_TO_M' introuvable
 ```
 
 To handle this case, the preferred approach is to create a third table
@@ -586,8 +573,8 @@ list_data_3_tabs_nn <- list(
 The `hrc` and `alt_hrc` arguments are used to mention both hierarchies
 of the `ACTIVITY` variable:
 
-- `hrc` is used as int the previous example (a named vector where names
-  are the different hierarchical variables appearingin the tables and
+- `hrc` is used as in the previous example (a named vector where names
+  are the different hierarchical variables appearing in the tables and
   values are the files names). Hence, the hierarchy file will be taken
   in this vector by default.
 - `alt_hrc` is only used to mention the alternative hierarchies. This
@@ -597,7 +584,6 @@ of the `ACTIVITY` variable:
 The same rationale is used to fill the `alt_totcode` argument.
 
 ``` r
-
 res <- tab_multi_manager(
   list_tables = list_data_3_tabs_nn,
   list_explanatory_vars = list(
@@ -618,22 +604,23 @@ res <- tab_multi_manager(
     act_size_D_TO_M = c(ACTIVITY = "D_TO_M")
   )
 )
-#> --- Current table to treat:  act_size ---
-#> --- Current table to treat:  act_size_D_TO_M ---
-#> --- Current table to treat:  act_cj ---
-#> --- Current table to treat:  act_size ---
-#> --- Current table to treat:  act_size_D_TO_M ---
-#> --- Current table to treat:  act_size ---
-#> --- Current table to treat:  act_cj ---
+#> 
+--- Current table to treat: act_size | loop iter : 1 ---            
+--- Current table to treat: act_size_D_TO_M | loop iter : 2 ---            
+--- Current table to treat: act_cj | loop iter : 3 ---            
+--- Current table to treat: act_size | loop iter : 4 ---            
+--- Current table to treat: act_size_D_TO_M | loop iter : 5 ---            
+--- Current table to treat: act_size | loop iter : 6 ---            
+--- Current table to treat: act_cj | loop iter : 7 ---
 ```
 
 ##### About this vignette
 
 - Authors: **[Julien Jamme](mailto:julien.jamme@insee.fr)** &
   **[Nathanael Rastout](mailto:nathanael.rastout@insee.fr)**
-- Last update: **17/02/2025**
-- Version of rtauargus used: **1.2.999**
+- Last update: **27/10/2026**
+- Version of rtauargus used: **1.3.6**
 - Version of τ-Argus used : **TauArgus 4.2.3**
-- R version used : **4.3.3**
+- R version used : **4.5.3**
 
 [summary ↑](#TOC "Back to summary")

@@ -49,8 +49,8 @@ write_hrc2(
 - hier_lead_string:
 
   character. (Single) character indicating the hierarchy depth in the
-  .hrc file. By default, the value is set to the current value
-  mentionned in the package options (i.e. "@" at the package startup).  
+  .hrc file. By default, the value is set to the current value mentioned
+  in the package options (i.e. "@" at the package startup).  
   Caractère unique repérant le niveau de profondeur dans le .hrc
 
 - adjust_unique_roots:
@@ -72,7 +72,7 @@ write_hrc2(
   character Si adjust_unique_roots est TRUE add_char est l'élément qui
   sera utilisé afin de créer des feuilles fictives, il faut être sur que
   cela ne crée pas de doublons dans la hiérarchie.La chaine de caractère
-  sera ajouté au début d'une feuille unique. Par defaut :"ZZZ"
+  sera ajouté au début d'une feuille unique. Par défaut : "ZZZ"
 
 ## Value
 
@@ -86,7 +86,7 @@ table fully describing it. By default, lines are sorted alphabetically
 so as to regroup identical levels.
 
 Ecrit un fichier de hiérarchie .hrc lisible par tau-Argus à partir d'une
-table de corrrespondance la décrivant complètement. Par défaut, les
+table de correspondance la décrivant complètement. Par défaut, les
 lignes du tableau seront triées afin de regrouper les niveaux de
 hiérarchie identiques.
 

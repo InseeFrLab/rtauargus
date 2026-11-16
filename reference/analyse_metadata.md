@@ -16,7 +16,7 @@ analyse_metadata(df_metadata, df_eq_indicator = NULL, verbose = FALSE)
 
 - df_eq_indicator:
 
-  A datadframe containing the indicators equations if needed.
+  A dataframe containing the indicators equations if needed.
 
 - verbose:
 

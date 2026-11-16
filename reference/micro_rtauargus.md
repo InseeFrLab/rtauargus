@@ -11,7 +11,8 @@ which offer a lot more features for your protection problems.
 
 See more details in
 [`vignette("rtauargus")`](https://inseefrlab.github.io/rtauargus/articles/rtauargus.md)
-or in `vignette("protect_multi_tables)`.
+or in
+[`vignette("protect_multi_tables")`](https://inseefrlab.github.io/rtauargus/articles/protect_multi_tables.md).
 
 Protects tables built from microdata and specifications of the
 crossings. The function allows to perform the complete process, namely
@@ -34,9 +35,8 @@ The function executes sequentially the functions:
 
 Intermediate files without a name entered (`asc_filename`...) will be
 created in a temporary folder, with randomly generated names. This
-mechanism allows the user to abstract from the preparation of
-preparation of the data and to maintain the entire chain of processing
-in R.  
+mechanism allows the user to abstract from the preparation of the data
+and to maintain the entire chain of processing in R.  
 
 (La fonction exécute séquentiellement les fonctions :
 
@@ -128,14 +128,14 @@ otherwise.
 
 ## Microdata already as text files
 
-To use existing asc and rda files already existing, it is possible to
-provide, instead of the data.frame, a character vector indicating the
-path of these files. The first element of this vector is the asc file,
-the second element the rda file. The rda file can be omitted if it has
-the same name as the asc file (except for the extension). Use this
-option to start the whole process without the generation of the text
-data. Do not specify `asc_filename` or `rda_filename` (used to name the
-text files to be created, which is irrelevant here).  
+To use existing asc and rda files, it is possible to provide, instead of
+the data.frame, a character vector indicating the path of these files.
+The first element of this vector is the asc file, the second element the
+rda file. The rda file can be omitted if it has the same name as the asc
+file (except for the extension). Use this option to start the whole
+process without the generation of the text data. Do not specify
+`asc_filename` or `rda_filename` (used to name the text files to be
+created, which is irrelevant here).  
 
 Pour utiliser des fichiers asc et rda existant déjà, il est possible de
 fournir à la place du data.frame un vecteur caractère indiquant le

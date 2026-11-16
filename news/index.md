@@ -70,6 +70,35 @@ Previously, a list of 1-dimensional tables with no common cells hit by
 secondary suppression would have produced an error during the call of
 [`tab_multi_manager()`](https://inseefrlab.github.io/rtauargus/reference/tab_multi_manager.md).
 
+## rtauargus 1.3.0
+
+\[06/2025\]
+
+The new version comes with new functions to help the metadata analysis :
+
+- [`analyse_metadata()`](https://inseefrlab.github.io/rtauargus/reference/analyse_metadata.md)
+  that automatically analyses metadata
+
+> The input is a dataframe describing all the tables that will be
+> published. The function returns an other dataframe that describes the
+> tables to protect and indicates which tables should be treated
+> together (i.e. using
+> [`tab_multi_manager()`](https://inseefrlab.github.io/rtauargus/reference/tab_multi_manager.md)).
+
+- [`format_template()`](https://inseefrlab.github.io/rtauargus/reference/format_template.md)
+  (Eurostat template)
+
+> The input is an extract of the Eurostat template (only the relevant
+> columns). It goes through all the cells described by the template and
+> returns the metadata of the underlying tables. This metadata is stored
+> in a dataframe in the right format to be the input of the
+> [`analyse_metadata()`](https://inseefrlab.github.io/rtauargus/reference/analyse_metadata.md)
+> function.
+
+> A poster presenting those functions has been presented at the NTTS
+> conference in 2025, it is available here:
+> [https://github.com/InseeFrLab/automatic_analysis_poster_NTTS2025](https://inseefrlab.github.io/rtauargus/news/).
+
 ## rtauargus 1.2.999-dev
 
 \[02/2025\]

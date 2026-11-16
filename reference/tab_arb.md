@@ -76,7 +76,7 @@ tab_arb(
 
 - suppress:
 
-  Algortihm for secondary suppression (Tau-Argus batch syntax), and the
+  Algorithm for secondary suppression (Tau-Argus batch syntax), and the
   parameters for it.  
   ( Algorithme de gestion du secret secondaire (syntaxe batch de
   Tau-Argus), ainsi que les potentiels paramètres associés)
@@ -101,7 +101,7 @@ tab_arb(
 
 - output_options:
 
-  Additionnal parameter for the output, by default : `"AS+"` (print
+  Additional parameter for the output, by default : `"AS+"` (print
   Status). To specify no options : `""`.  
   (Options supplémentaires des fichiers en sortie. Valeur par défaut du
   package : `"AS+"` (affichage du statut). Pour ne spécifier aucune
@@ -112,19 +112,19 @@ tab_arb(
   Boolean, if TRUE will open a Tau-Argus window and launch the batch in
   it (`FALSE` by default).  
   (Possibilité de lancer le batch depuis le menu de Tau-Argus (`FALSE`
-  par défaut).)
+  par défaut).
 
 ## Value
 
 A list containing two elements : the arb file name and the output name
-(usefull if the name is generated randomly)  
+(useful if the name is generated randomly)  
 (Une liste de deux éléments : le nom du fichier arb, le nom fichiers en
 sortie (utile pour récupérer les noms générés aléatoirement).)
 
 ## Syntaxe
 
-For tabular data, this function secures only one table at a time#'
-Unless specific details, use syntax from Tau-Argus manual  
+For tabular data, this function secures only one table at a time. Unless
+specific details, use syntax from Tau-Argus manual  
 Sauf mention contraire, utiliser la syntaxe mentionnée dans la
 documentation de Tau-Argus.
 

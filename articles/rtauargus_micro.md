@@ -19,10 +19,10 @@ a processing chain written in R.
 
 The syntax of some of the arguments closely matches the *batch* syntax
 of τ-Argus. This allows you to use a large number of features without
-multiply the arguments of the functions. The package can also be adapted
-to more easily to possible modifications of the software (new available
-methods, additional options…). Syntax rules for the batch writing are in
-the reference manual of τ-Argus.
+multiplying the arguments of the functions. The package can also be
+adapted to more easily to possible modifications of the software (new
+available methods, additional options…). Syntax rules for the batch
+writing are in the reference manual of τ-Argus.
 
 > The package was developed on the basis of open source versions of τ
 > Argus (versions 4.1 and higher), especially the latest version
@@ -87,16 +87,16 @@ having it on your computer is not a problem.
 To work, *rtauargus* depends on other R packages. These have to be
 installed beforehand (in brackets the minimum versions required).
 
-    - purrr (>= 0.2)
-    - dplyr (>= 0.7)
-    - tidyr
-    - data.table
+    - purrr (>= 0.2),
+    - dplyr (>= 0.7),
+    - tidyr,
+    - data.table,
     - gdata,
-    - stringr
-    - rlang
-    - zoo
-    - sdcHierarchies
-    - igraph
+    - stringr,
+    - rlang,
+    - zoo,
+    - sdcHierarchies,
+    - igraph,
     - lifecycle
 
 ### Package
@@ -166,13 +166,13 @@ micro_rtauargus(
   safety_rules = "FREQ(3,10)",
   suppress = "GH(1,100)"
 )
-#> Start of batch procedure; file: C:\Users\KQCFFL\AppData\Local\Temp\Rtmpm05wlj\RTA_13aa85f527816.arb
-#> <OPENMICRODATA> "C:\Users\KQCFFL\AppData\Local\Temp\Rtmpm05wlj\RTA_13aa866f06f26.asc"
-#> <OPENMETADATA> "C:\Users\KQCFFL\AppData\Local\Temp\Rtmpm05wlj\RTA_13aa866f06f26.rda"
+#> Start of batch procedure; file: C:\Users\YR4UKQ\AppData\Local\Temp\RtmpKSzpVY\RTA_110e87f223e1a.arb
+#> <OPENMICRODATA> "C:\Users\YR4UKQ\AppData\Local\Temp\RtmpKSzpVY\RTA_110e872ba4592.asc"
+#> <OPENMETADATA> "C:\Users\YR4UKQ\AppData\Local\Temp\RtmpKSzpVY\RTA_110e872ba4592.rda"
 #> <SPECIFYTABLE> "V1"|"<freq>"||
 #> <SAFETYRULE> FREQ(3,10)
 #> <READMICRODATA>
-#> Start explore file: C:\Users\KQCFFL\AppData\Local\Temp\Rtmpm05wlj\RTA_13aa866f06f26.asc
+#> Start explore file: C:\Users\YR4UKQ\AppData\Local\Temp\RtmpKSzpVY\RTA_110e872ba4592.asc
 #> Start computing tables
 #> Table: V1 | <freq> has been specified
 #> Tables have been computed
@@ -184,9 +184,9 @@ micro_rtauargus(
 #>                    Number of suppressions: 1
 #> The hypercube procedure has been applied
 #>                    1 cells have been suppressed
-#> <WRITETABLE> (1,4,AS+SE+,"C:\Users\KQCFFL\AppData\Local\Temp\Rtmpm05wlj\RTA_13aa826e25069.sbs")
+#> <WRITETABLE> (1,4,,"C:\Users\YR4UKQ\AppData\Local\Temp\RtmpKSzpVY\RTA_110e87868754c.sbs")
 #> Table: V1 | <freq> has been written
-#>                    Output file name: C:\Users\KQCFFL\AppData\Local\Temp\Rtmpm05wlj\RTA_13aa826e25069.sbs
+#>                    Output file name: C:\Users\YR4UKQ\AppData\Local\Temp\RtmpKSzpVY\RTA_110e87868754c.sbs
 #> End of TauArgus run
 #> NULL
 ```
@@ -218,15 +218,15 @@ secret1 <-
     output_options = c("", "AS+"), # no status for the 1st array
     show_batch_console = FALSE # to hide the log
   )
-#> Start of batch procedure; file: C:\Users\KQCFFL\AppData\Local\Temp\Rtmpm05wlj\RTA_13aa821eb5b19.arb
-#> <OPENMICRODATA> "C:\Users\KQCFFL\AppData\Local\Temp\Rtmpm05wlj\RTA_13aa85d87423f.asc"
-#> <OPENMETADATA> "C:\Users\KQCFFL\AppData\Local\Temp\Rtmpm05wlj\RTA_13aa85d87423f.rda"
+#> Start of batch procedure; file: C:\Users\YR4UKQ\AppData\Local\Temp\RtmpKSzpVY\RTA_110e87b4b16fb.arb
+#> <OPENMICRODATA> "C:\Users\YR4UKQ\AppData\Local\Temp\RtmpKSzpVY\RTA_110e86746587e.asc"
+#> <OPENMETADATA> "C:\Users\YR4UKQ\AppData\Local\Temp\RtmpKSzpVY\RTA_110e86746587e.rda"
 #> <SPECIFYTABLE> "V1"|"<freq>"||
 #> <SAFETYRULE> FREQ(3,10)
 #> <SPECIFYTABLE> "V1""V2"|"<freq>"||
 #> <SAFETYRULE> FREQ(3,10)
 #> <READMICRODATA>
-#> Start explore file: C:\Users\KQCFFL\AppData\Local\Temp\Rtmpm05wlj\RTA_13aa85d87423f.asc
+#> Start explore file: C:\Users\YR4UKQ\AppData\Local\Temp\RtmpKSzpVY\RTA_110e86746587e.asc
 #> Start computing tables
 #> Table: V1 | <freq> has been specified
 #> Table: V1 x V2 | <freq> has been specified
@@ -239,23 +239,19 @@ secret1 <-
 #>                    Number of suppressions: 1
 #> The hypercube procedure has been applied
 #>                    1 cells have been suppressed
-#> <WRITETABLE> (1,4,,"C:\Users\KQCFFL\AppData\Local\Temp\Rtmpm05wlj\RTA_13aa861ea459a.sbs")
+#> <WRITETABLE> (1,4,,"C:\Users\YR4UKQ\AppData\Local\Temp\RtmpKSzpVY\RTA_110e841576cef.sbs")
 #> Table: V1 | <freq> has been written
-#>                    Output file name: C:\Users\KQCFFL\AppData\Local\Temp\Rtmpm05wlj\RTA_13aa861ea459a.sbs
+#>                    Output file name: C:\Users\YR4UKQ\AppData\Local\Temp\RtmpKSzpVY\RTA_110e841576cef.sbs
 #> <SUPPRESS> GH(2,100)
 #> Start of the hypercube protection for table V1 x V2 | <freq>
 #> End of hypercube protection. Time used 1 seconds
 #>                    Number of suppressions: 2
 #> The hypercube procedure has been applied
 #>                    2 cells have been suppressed
-#> <WRITETABLE> (2,4,AS+,"C:\Users\KQCFFL\AppData\Local\Temp\Rtmpm05wlj\RTA_13aa844945238.sbs")
+#> <WRITETABLE> (2,4,AS+,"C:\Users\YR4UKQ\AppData\Local\Temp\RtmpKSzpVY\RTA_110e841517919.sbs")
 #> Table: V1 x V2 | <freq> has been written
-#>                    Output file name: C:\Users\KQCFFL\AppData\Local\Temp\Rtmpm05wlj\RTA_13aa844945238.sbs
+#>                    Output file name: C:\Users\YR4UKQ\AppData\Local\Temp\RtmpKSzpVY\RTA_110e841517919.sbs
 #> End of TauArgus run
-```
-
-``` r
-
 
 secret1
 #> NULL
@@ -407,10 +403,10 @@ and name (random) of these files in the return value of the function.
 names_asc_rda <- micro_asc_rda(microdata)
 names_asc_rda
 #> $asc_filename
-#> [1] "C:\\Users\\KQCFFL\\AppData\\Local\\Temp\\Rtmpm05wlj\\RTA_13aa875d56ea.asc"
+#> [1] "C:\\Users\\YR4UKQ\\AppData\\Local\\Temp\\RtmpKSzpVY\\RTA_110e8b894422.asc"
 #> 
 #> $rda_filename
-#> [1] "C:\\Users\\KQCFFL\\AppData\\Local\\Temp\\Rtmpm05wlj\\RTA_13aa875d56ea.rda"
+#> [1] "C:\\Users\\YR4UKQ\\AppData\\Local\\Temp\\RtmpKSzpVY\\RTA_110e8b894422.rda"
 ```
 
 [summary ↑](#TOC "Back to summary")
@@ -455,14 +451,14 @@ file.show("Z:/microdata.arb", pager = "internal")
 ```
 
     // Batch generated by package *rtauargus*
-    // (2025-02-17 12:14:22 CET)
+    // (2026-10-27 15:41:15 CET)
     <OPENMICRODATA> "Z:\microdata.asc"
     <OPENMETADATA> "Z:\microdata.rda"
     <SPECIFYTABLE> "V1"|"<freq>"||
     <SAFETYRULE> FREQ(3,10)
     <READMICRODATA>
     <SUPPRESS> GH(1,100)
-    <WRITETABLE> (1,4,AS+SE+,"Z:\results\secretV1.csv")
+    <WRITETABLE> (1,4,,"Z:\results\secretV1.csv")
 
 #### Elaborate example
 
@@ -490,14 +486,14 @@ response_var = “VAL”, safety_rules = c(“FREQ(3,10)”,
     file.show("Z:/microdata.arb", pager = "internal")
 
     // Batch generated by package *rtauargus*
-    // (2025-02-17 12:14:22 CET)
+    // (2026-10-27 15:41:15 CET)
     <OPENMICRODATA> "Z:\microdata.asc"
     <OPENMETADATA> "Z:\microdata.rda"
     <SPECIFYTABLE> "V1"|"<freq>"||
     <SAFETYRULE> FREQ(3,10)
     <READMICRODATA>
     <SUPPRESS> GH(1,100)
-    <WRITETABLE> (1,4,AS+SE+,"Z:\results\secretV1.csv")
+    <WRITETABLE> (1,4,,"Z:\results\secretV1.csv")
 
 #### Temporary files
 
@@ -518,11 +514,11 @@ infos_arb <-
   )
 infos_arb
 #> $arb_filename
-#> [1] "C:\\Users\\KQCFFL\\AppData\\Local\\Temp\\Rtmpm05wlj\\RTA_13aa83d136448.arb"
+#> [1] "C:\\Users\\YR4UKQ\\AppData\\Local\\Temp\\RtmpKSzpVY\\RTA_110e8da69be.arb"
 #> 
 #> $output_names
-#> [1] "C:\\Users\\KQCFFL\\AppData\\Local\\Temp\\Rtmpm05wlj\\RTA_13aa81a11772c.sbs"
-#> [2] "C:\\Users\\KQCFFL\\AppData\\Local\\Temp\\Rtmpm05wlj\\RTA_13aa822675f41.sbs"
+#> [1] "C:\\Users\\YR4UKQ\\AppData\\Local\\Temp\\RtmpKSzpVY\\RTA_110e81af67592.sbs"
+#> [2] "C:\\Users\\YR4UKQ\\AppData\\Local\\Temp\\RtmpKSzpVY\\RTA_110e8452079c1.sbs"
 ```
 
 [summary ↑](#TOC "Back to summary")
@@ -553,14 +549,10 @@ secret2 <- run_arb("Z:/microdata.arb", missing_dir = "create")
 #>                    Number of suppressions: 1
 #> The hypercube procedure has been applied
 #>                    1 cells have been suppressed
-#> <WRITETABLE> (1,4,AS+SE+,"Z:\results\secretV1.csv")
+#> <WRITETABLE> (1,4,,"Z:\results\secretV1.csv")
 #> Table: V1 | <freq> has been written
 #>                    Output file name: Z:\results\secretV1.csv
 #> End of TauArgus run
-```
-
-``` r
-
 
 secret2
 #> NULL
@@ -578,7 +570,7 @@ available:
 - `tauargus_exe` : to change the executable (override the
   `rtauargus.tauargus_exe` the time of the function) ;
 - `logbook` : location and name of the file containing the error log;
-- show_batch_on_console\` : to display or not the batch progress in the
+- `show_batch_on_console` : to display or not the batch progress in the
   console ;
 - `import` : if disabled, the function only generates text files without
   importing them into R (see next section for details).
@@ -711,7 +703,7 @@ rtauargus_options()
 #> [1] "stop"
 #> 
 #> $rtauargus.output_options
-#> [1] "AS+SE+"
+#> [1] ""
 #> 
 #> $rtauargus.output_type
 #> [1] "4"
@@ -872,9 +864,9 @@ link](https://gitlab.insee.fr/outilsconfidentialite/rtauargus/-/issues)
 
 - Author: **[Pierre-Yves Berrard](mailto:pierre-yves.berrard@insee.fr)**
 - Updated by: **[Julien Jamme](mailto:julien.jamme@insee.fr)**
-- Last update: **17/02/2025**
-- Version of rtauargus used: **1.2.999**
+- Last update: **27/10/2026**
+- Version of rtauargus used: **1.3.6**
 - Version of τ-Argus used : **TauArgus 4.2.3**
-- R version used : **4.3.3**
+- R version used : **4.5.3**
 
 [summary ↑](#TOC "Back to summary")

@@ -20,7 +20,7 @@ The most common rules are :
 - The dominance rule **NK(n,k)** with :
   - n the size of the coalition
   - k the max percentage
-- The treshold rule **Freq(n,p)** with :
+- The threshold rule **Freq(n,p)** with :
   - n the minimum frequency allowed
   - p the Frequency Safety Range
 - The p percent rule **P(p,n)** with :
@@ -35,7 +35,7 @@ The other ones :
 - The zero safety range parameter **ZERO(p)**
 - The status of missing codes **MIS(b)** with :
   - b = 0 (default) cells with a missing code is unsafe if the safety
-    rules ares are violated
+    rules are violated
   - b = 1 these cells are always safe
 
 Some rules can appear multiple times **(P,NK)**
@@ -83,9 +83,9 @@ section **4.2.3**
 #### About this vignette
 
 - Authors: **[Nathanael Rastout](mailto:nathanael.rastout@insee.fr)**
-- Last update: **17/02/2025**
-- Version of rtauargus used: **1.2.999**
+- Last update: **27/10/2026**
+- Version of rtauargus used: **1.3.6**
 - Version of τ-Argus used : **TauArgus 4.2.3**
-- R version used : **4.3.3**
+- R version used : **4.5.3**
 
 [summary ↑](#TOC "Back to summary")

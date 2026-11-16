@@ -48,7 +48,7 @@ afterwards)
 
 ### τ-Argus
 
-*rtauargus* fonctions using τ-Argus requires that the software can be
+*rtauargus* fonctions using τ-Argus require that the software can be
 used from the workstation. The github repository of τ-Argus is here:
 <https://github.com/sdcTools/tauargus>. The latest releases can be
 downloaded here: <https://github.com/sdcTools/tauargus/releases>.
@@ -58,16 +58,16 @@ downloaded here: <https://github.com/sdcTools/tauargus/releases>.
 *rtauargus* requires some other R packages.Those are the dependencies to
 install.
 
-    • purrr (>= 0.2)
-    • dplyr (>= 0.7)
-    • tidyr
-    • data.table
+    • purrr (>= 0.2),
+    • dplyr (>= 0.7),
+    • tidyr,
+    • data.table,
     • gdata,
-    • stringr
-    • rlang
-    • zoo
-    • sdcHierarchies
-    • igraph
+    • stringr,
+    • rlang,
+    • zoo,
+    • sdcHierarchies,
+    • igraph,
     • lifecycle
 
 The package *rtauargus* can be installed now.
@@ -182,9 +182,9 @@ ex1 <- tab_rtauargus(
   maxscore = "MAX",
   totcode = c(ACTIVITY="Total",SIZE="Total")
 )
-#> Start of batch procedure; file: Z:\rtauargus\vignettes\tauargus_files\ex1\ex1.arb
-#> <OPENTABLEDATA> "Z:\rtauargus\vignettes\tauargus_files\ex1\ex1.tab"
-#> <OPENMETADATA> "Z:\rtauargus\vignettes\tauargus_files\ex1\ex1.rda"
+#> Start of batch procedure; file: Z:\confidentialite\rtauargus\vignettes\tauargus_files\ex1\ex1.arb
+#> <OPENTABLEDATA> "Z:\confidentialite\rtauargus\vignettes\tauargus_files\ex1\ex1.tab"
+#> <OPENMETADATA> "Z:\confidentialite\rtauargus\vignettes\tauargus_files\ex1\ex1.rda"
 #> <SPECIFYTABLE> "ACTIVITY""SIZE"|"VAL"||
 #> <SAFETYRULE> FREQ(3,10)|NK(1,85)
 #> <READTABLE> 1
@@ -193,9 +193,9 @@ ex1 <- tab_rtauargus(
 #> Start of the modular protection for table ACTIVITY x SIZE | VAL
 #> End of modular protection. Time used 0 seconds
 #>                    Number of suppressions: 2
-#> <WRITETABLE> (1,4,,"Z:\rtauargus\vignettes\tauargus_files\ex1\ex1.csv")
+#> <WRITETABLE> (1,4,,"Z:\confidentialite\rtauargus\vignettes\tauargus_files\ex1\ex1.csv")
 #> Table: ACTIVITY x SIZE | VAL has been written
-#>                    Output file name: Z:\rtauargus\vignettes\tauargus_files\ex1\ex1.csv
+#>                    Output file name: Z:\confidentialite\rtauargus\vignettes\tauargus_files\ex1\ex1.csv
 #> End of TauArgus run
 ```
 
@@ -405,7 +405,7 @@ ex2 %>%
 #> 4      V 273
 ```
 
-### Protecting several tables at the same time, with `tab_muli_manager()` function
+### Protecting several tables at the same time, with `tab_multi_manager()` function
 
 The function
 [`tab_multi_manager()`](https://inseefrlab.github.io/rtauargus/reference/tab_multi_manager.md)
@@ -474,7 +474,6 @@ Now that the primary secret has been specified for both tables, we can
 run the process.
 
 ``` r
-
 ex3 <- tab_multi_manager(
   list_tables = list_data_2_tabs,
   list_explanatory_vars = list(
@@ -488,9 +487,10 @@ ex3 <- tab_multi_manager(
   secret_var = "is_secret_prim",
   totcode =  "Total"
 )
-#> --- Current table to treat:  act_size ---
-#> --- Current table to treat:  act_cj ---
-#> --- Current table to treat:  act_size ---
+#> 
+--- Current table to treat: act_size | loop iter : 1 ---            
+--- Current table to treat: act_cj | loop iter : 2 ---            
+--- Current table to treat: act_size | loop iter : 3 ---
 ```
 
 By default, the function uses a wrapper of
@@ -516,9 +516,9 @@ function.
 
 - Authors: **[Julien Jamme](mailto:julien.jamme@insee.fr)** &
   **[Nathanael Rastout](mailto:nathanael.rastout@insee.fr)**
-- Last update: **17/02/2025**
-- Version of rtauargus used: **1.2.999**
+- Last update: **27/10/2026**
+- Version of rtauargus used: **1.3.6**
 - Version of τ-Argus used : **TauArgus 4.2.3**
-- R version used : **4.3.3**
+- R version used : **4.5.3**
 
 [summary ↑](#TOC "Back to summary")

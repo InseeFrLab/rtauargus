@@ -40,8 +40,8 @@ name of the function prefixed by `rtauargus.` :
 function is not set by the user.*
 
 On loading the package, all the rtauargus options, that are not already
-been set by the user, are set with their default values (see table
-below). The already defined options keep the values set by the user.
+set by the user, are set with their default values (see table below).
+The already defined options keep the values set by the user.
 
 The options can be set during a session with the following instruction
 `options(rtauargus.`...`=`...`)`, or with a configuration file where the

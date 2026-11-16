@@ -51,8 +51,8 @@ write_hrc(
 
   fill in any missing values, using an other variable :
 
-  - `"up"` (default) : hierarchical variable of the level level
-    immediately above
+  - `"up"` (default) : hierarchical variable of the level immediately
+    above
 
   - `"down"` : hierarchical variable of the level immediately lower
 
