@@ -56,7 +56,6 @@ write_hrc(
 
   - `"down"` : hierarchical variable of the level immediately lower
 
-    
   (remplissage d'éventuelles valeurs manquantes, à l'aide d'une autre
   variable :
 
