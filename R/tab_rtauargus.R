@@ -77,10 +77,7 @@
 #'   write_hrc2(file_name = "hrc/activity")
 #'
 #' # Compute the secondary secret ----
-#' options(
-#'   rtauargus.tauargus_exe =
-#'     "Y:/Logiciels/TauArgus/TauArgus4.2.3/TauArgus.exe"
-#' )
+#' set_tauargus_exe("C:/path/to/TauArgus/TauArgus.exe")
 #'
 #' res <- tab_rtauargus(
 #'   tabular = turnover_act_size,
@@ -366,10 +363,7 @@ and the process may take longer.")
 #'   write_hrc2(file_name = "hrc/activity")
 #'
 #' # Compute the secondary secret ----
-#' options(
-#'   rtauargus.tauargus_exe =
-#'     "Y:/Logiciels/TauArgus/TauArgus4.2.3/TauArgus.exe"
-#' )
+#' set_tauargus_exe("C:/path/to/TauArgus/TauArgus.exe")
 #'
 #' res <- tab_rtauargus2(
 #'   tabular = turnover_act_size,

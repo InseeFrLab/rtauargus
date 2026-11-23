@@ -18,11 +18,26 @@ op.rtauargus <- list(
   rtauargus.output_options     = "",
   # run_arb ----------------------------------------------------- #
   rtauargus.missing_dir        = "stop",
-  rtauargus.tauargus_exe       = "Y:/Logiciels/TauArgus/TauArgus.exe",
+  # no hard-coded location: taken from the TAUARGUS_EXE environment variable
+  # (e.g. set in .Renviron, see set_tauargus_exe())
+  rtauargus.tauargus_exe       = "",
   rtauargus.show_batch_console = FALSE,
   rtauargus.import             = FALSE,
   rtauargus.is_tabular         = TRUE
 )
+
+# Default location of TauArgus.exe: TAUARGUS_EXE environment variable or
+# .Renviron entry (see get_tauargus_exe()). Returns "" if not found.
+default_tauargus_exe <- function() {
+  get_tauargus_exe()
+}
+
+# Package defaults, with values depending on the user's environment resolved
+op_rtauargus_defaults <- function() {
+  op <- op.rtauargus
+  op[["rtauargus.tauargus_exe"]] <- default_tauargus_exe()
+  op
+}
 
 df_op.rtauargus <- function(html = FALSE) {
 
@@ -105,6 +120,15 @@ df_op.rtauargus <- function(html = FALSE) {
 #' If the user inadvertently removes some options, the functions will use
 #' the default values of the package. \cr
 #'
+#' The location of Tau-Argus (`rtauargus.tauargus_exe`) has no hard-coded
+#' default: it is read from the `TAUARGUS_EXE` environment variable. The
+#' recommended way to set it once and for all is
+#' `set_tauargus_exe("C:/path/to/TauArgus.exe", install = TRUE)`, which writes
+#' it to your `.Renviron` file. \cr
+#' (L'emplacement de Tau-Argus n'a pas de valeur par défaut codée en dur : il
+#' est lu dans la variable d'environnement `TAUARGUS_EXE`, idéalement définie
+#' dans le fichier `.Renviron` via `set_tauargus_exe(..., install = TRUE)`.) \cr
+#'
 #' (Ces options sont utilisées si un argument obligatoire d’une fonction n’est
 #' pas renseigné. Elles permettent de ne pas répéter systématiquement le même
 #' paramètre à chaque appel d'une fonction. Le nom de l’option est le nom de
@@ -150,7 +174,7 @@ df_op.rtauargus <- function(html = FALSE) {
 #'  rtauargus.output_options         \tab "\Sexpr{rtauargus:::op.rtauargus$rtauargus.output_options}"    \tab                     \cr
 #'  `------------------------`  \tab  `---------------------------------`                      \tab `-------------`\cr
 #'  rtauargus.missing_dir            \tab "\Sexpr{rtauargus:::op.rtauargus$rtauargus.missing_dir}"       \tab `run_arb()`      \cr
-#'  rtauargus.tauargus_exe           \tab "\Sexpr{rtauargus:::op.rtauargus$rtauargus.tauargus_exe}"      \tab                     \cr
+#'  rtauargus.tauargus_exe           \tab `Sys.getenv("TAUARGUS_EXE")`                          \tab                     \cr
 #'  rtauargus.show_batch_console     \tab  \Sexpr{rtauargus:::op.rtauargus$rtauargus.show_batch_console} \tab                     \cr
 #'  rtauargus.import                 \tab  \Sexpr{rtauargus:::op.rtauargus$rtauargus.import}             \tab
 #' }
@@ -221,7 +245,7 @@ reset_rtauargus_options <- function(...) {
 
   }
 
-  options(op.rtauargus[modif])
+  options(op_rtauargus_defaults()[modif])
 
   invisible(rtauargus_options())
 
