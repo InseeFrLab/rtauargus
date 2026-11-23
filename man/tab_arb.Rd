@@ -54,7 +54,7 @@ for example.\cr
 Chaîne de caractères en syntaxe batch Tau-Argus. Si le secret primaire
 a été traité dans un fichier d'apriori : utiliser "MAN(10)")}
 
-\item{suppress}{Algortihm for secondary suppression (Tau-Argus batch syntax), and the
+\item{suppress}{Algorithm for secondary suppression (Tau-Argus batch syntax), and the
 parameters for it.\cr
 ( Algorithme de gestion du secret secondaire
 (syntaxe batch de Tau-Argus), ainsi que les potentiels paramètres associés)}
@@ -72,7 +72,7 @@ For SBS files use \code{"4"}\cr
 Valeur par défaut du package : \code{"2"} (csv for pivot-table).
 Pour le format SBS utiliser \code{"4"})}
 
-\item{output_options}{Additionnal parameter for the output,
+\item{output_options}{Additional parameter for the output,
 by default : \code{"AS+"} (print Status). To specify no options : \code{""}.\cr
 (Options supplémentaires des fichiers en sortie. Valeur
 par défaut du package : \code{"AS+"} (affichage du statut). Pour ne
@@ -81,11 +81,11 @@ spécifier aucune option, \code{""}.)}
 \item{gointeractive}{Boolean, if TRUE will open a Tau-Argus window and launch
 the batch in it (\code{FALSE} by default). \cr
 (Possibilité de lancer le batch depuis le menu de Tau-Argus
-(\code{FALSE} par défaut).)}
+(\code{FALSE} par défaut).}
 }
 \value{
 A list containing two elements :
-the arb file name and the output name (usefull if the name is generated randomly) \cr
+the arb file name and the output name (useful if the name is generated randomly) \cr
 (Une liste de deux éléments : le nom du fichier arb, le nom
 fichiers en sortie (utile pour récupérer les noms générés aléatoirement).)
 }
@@ -98,7 +98,7 @@ si les fichiers asc et rda existent.)
 \section{Syntaxe}{
 
 
-For tabular data, this function secures only one table at a time#'
+For tabular data, this function secures only one table at a time.
 Unless specific details, use syntax from Tau-Argus manual \cr
 Sauf mention contraire, utiliser la syntaxe mentionnée dans la documentation
 de Tau-Argus.

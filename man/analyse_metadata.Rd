@@ -9,7 +9,7 @@ analyse_metadata(df_metadata, df_eq_indicator = NULL, verbose = FALSE)
 \arguments{
 \item{df_metadata}{A dataframe containing metadata in wide format.}
 
-\item{df_eq_indicator}{A datadframe containing the indicators equations if needed.}
+\item{df_eq_indicator}{A dataframe containing the indicators equations if needed.}
 
 \item{verbose}{Logical. If \code{TRUE}, returns a detailed list of intermediate results
 from each processing step. If \code{FALSE}, returns only the cluster assignments. Defaults to \code{FALSE}.}

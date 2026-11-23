@@ -6,7 +6,7 @@
 #' creating a structured output for further processing.
 #'
 #' @param df_metadata A dataframe containing metadata in wide format.
-#' @param df_eq_indicator A datadframe containing the indicators equations if needed.
+#' @param df_eq_indicator A dataframe containing the indicators equations if needed.
 #' @param verbose Logical. If `TRUE`, returns a detailed list of intermediate results
 #' from each processing step. If `FALSE`, returns only the cluster assignments. Defaults to `FALSE`.
 #'
