@@ -153,21 +153,13 @@ dimensions.
 ``` r
 
 library(tictoc)
-#> 
-#> Attachement du package : 'tictoc'
-#> L'objet suivant est masqué depuis 'package:rtauargus':
-#> 
-#>     shift
 library(dplyr)
 library(rtauargus)
 ```
 
 ``` r
 
-options(
-  rtauargus.tauargus_exe =
-    "Y:/Logiciels/TauArgus/TauArgus4.2.3/TauArgus.exe"
-)
+set_tauargus_exe("C:/path/to/TauArgus/TauArgus.exe")
 ```
 
 ``` r
@@ -225,6 +217,7 @@ tables qui seront protégées comme des tables liées avec un appel
 sous-jacent à `tab_multi_manager`.
 
 ``` r
+
 tictoc::tic()
 res_wi_split <- tab_rtauargus(
     tabular = datatest1_with_prim,
@@ -240,26 +233,24 @@ res_wi_split <- tab_rtauargus(
 )
 #> 
 #> Reducing dims...
-#>  datatest1 
+#>  tab 
 #> 
 #> Choosing variables...
 #> 
 #> Reducing from 4 to 3...
-#> datatest1_ has generated 2 tables in total
+#> tab has generated 2 tables in total
 #> 
-#>   Table size distribution :
-#>    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-#>   535.0   536.5   538.0   538.0   539.5   541.0 
+#> Spliting...
+#>  treff___cj 
+#> tab has generated 2 tables in total
 #> 
-#> 
-#> 
---- Current table to treat: datatest1_1 | loop iter : 1 ---            
---- Current table to treat: datatest1_2 | loop iter : 2 ---            
---- Current table to treat: datatest1_1 | loop iter : 3 ---            
---- Current table to treat: datatest1_2 | loop iter : 4 ---            
---- Current table to treat: datatest1_1 | loop iter : 5 ---
+#> --- Current table to treat:  tab1 ---
+#> --- Current table to treat:  tab2 ---
+#> --- Current table to treat:  tab1 ---
+#> --- Current table to treat:  tab2 ---
+#> --- Current table to treat:  tab1 ---
 tictoc::toc()
-#> 43.21 sec elapsed
+#> 45.31 sec elapsed
 ```
 
 La réduction de dimensions a conduit à construire deux sous-tableaux de
@@ -281,7 +272,7 @@ str(res_wi_split)
 #>  $ is_secret_prim: logi  FALSE FALSE FALSE FALSE FALSE FALSE ...
 #>  $ nb_obs_rnd    : num  115 89 21 110 6 ...
 #>  $ pizzas_tot_abs: num  8447 769 1301 532 7915 ...
-#>  $ is_secret_1   : logi  FALSE TRUE TRUE TRUE TRUE TRUE ...
+#>  $ is_secret_1   : logi  FALSE TRUE FALSE TRUE TRUE TRUE ...
 #>  $ is_secret_2   : logi  FALSE TRUE TRUE TRUE TRUE TRUE ...
 #>  $ is_secret_3   : logi  FALSE TRUE TRUE TRUE TRUE TRUE ...
 #>  $ is_secret_4   : logi  FALSE TRUE TRUE TRUE TRUE TRUE ...
@@ -305,12 +296,12 @@ stats_wi_split
 #>   flag   n
 #> 1    A  79
 #> 2    B  35
-#> 3    D 280
-#> 4    V 295
+#> 3    D 278
+#> 4    V 297
 ```
 
 Avec l’option de découpage du tableau de départ, la pose du secret sur
-le tableau à 4 dimensions génère 280 suppressions secondaires.
+le tableau à 4 dimensions génère 278 suppressions secondaires.
 
 #### Comparaison avec une pose du secret sans réduire la dimension de la table
 
@@ -343,31 +334,31 @@ res_wo_split <- tab_rtauargus(
 #> With split_tab = FALSE, tauargus treats the table in 4 or 5 dimensions.
 #> In this case, the secondary secret may not being optimal according to tauargus itself
 #> and the process may take longer.
-#> Start of batch procedure; file: Z:\confidentialite\rtauargus\vignettes\example_1\wo_split\datatest1.arb
-#> <OPENTABLEDATA> "Z:\confidentialite\rtauargus\vignettes\example_1\wo_split\datatest1.tab"
-#> <OPENMETADATA> "Z:\confidentialite\rtauargus\vignettes\example_1\wo_split\datatest1.rda"
+#> Start of batch procedure; file: Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\example_1\wo_split\datatest1.arb
+#> <OPENTABLEDATA> "Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\example_1\wo_split\datatest1.tab"
+#> <OPENMETADATA> "Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\example_1\wo_split\datatest1.rda"
 #> <SPECIFYTABLE> "treff""cj""A10""type_distrib"|"pizzas_tot"||
 #> <SAFETYRULE> MAN(10)
 #> <READTABLE> 1
 #> Tables have been read
-#> <APRIORI> "Z:\confidentialite\rtauargus\vignettes\example_1\wo_split\datatest1.hst",1,",",0,0
-#> Apriory file: Z:\confidentialite\rtauargus\vignettes\example_1\wo_split\datatest1.hst has been applied
+#> <APRIORI> "Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\example_1\wo_split\datatest1.hst",1,",",0,0
+#> Apriory file: Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\example_1\wo_split\datatest1.hst has been applied
 #>                    to table: treff x cj x A10 x type_distrib | pizzas_tot
-#> Apriori file Z:\confidentialite\rtauargus\vignettes\example_1\wo_split\datatest1.hst has been read
+#> Apriori file Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\example_1\wo_split\datatest1.hst has been read
 #> <SUPPRESS> MOD(1,5,1,0,0)
 #> Start of the modular protection for table treff x cj x A10 x type_distrib | pizzas_tot
 #> WARNING: The table has 4 dimensions.
 #>                    Running Modular can take a lot of time and maybe it is difficult to obtain a correct result.
 #>                    Please check the results carefully.
 #>                    
-#> End of modular protection. Time used 305 seconds
-#>                    Number of suppressions: 292
-#> <WRITETABLE> (1,4,,"Z:\confidentialite\rtauargus\vignettes\example_1\wo_split\datatest1.csv")
+#> End of modular protection. Time used 301 seconds
+#>                    Number of suppressions: 291
+#> <WRITETABLE> (1,4,,"Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\example_1\wo_split\datatest1.csv")
 #> Table: treff x cj x A10 x type_distrib | pizzas_tot has been written
-#>                    Output file name: Z:\confidentialite\rtauargus\vignettes\example_1\wo_split\datatest1.csv
+#>                    Output file name: Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\example_1\wo_split\datatest1.csv
 #> End of TauArgus run
 tictoc::toc()
-#> 309.53 sec elapsed
+#> 306.34 sec elapsed
 ```
 
 Avec seulement 689 lignes et aucune variable hiérarchique, la pose
@@ -388,11 +379,11 @@ stats_wo_split
 #>   flag   n
 #> 1    A  79
 #> 2    B  35
-#> 3    D 266
-#> 4    V 309
+#> 3    D 265
+#> 4    V 310
 ```
 
-La pose directe du secret sur le tableau à 4 dimensions génère 266
+La pose directe du secret sur le tableau à 4 dimensions génère 265
 suppressions secondaires.
 
 On peut observer que le traitement de la table à 4 dimensions
@@ -409,12 +400,12 @@ sous-tableaux vont être construits.
 - Authors: **Wistan Pomel** & **Andre-Raymond Socard** & **[Julien
   Jamme](mailto:julien.jamme@insee.fr)** & **Nathanael Rastout**
 
-- Last update: **27/10/2026**
+- Last update: **11/01/2024**
 
-- Version of rtauargus used: **1.3.6**
+- Version of rtauargus used: **1.2.0**
 
 - Version of τ-Argus used : **TauArgus 4.2.3**
 
-- R version used : **4.5.3**
+- R version used : **4.2.3**
 
   [summary ↑](#TOC "Back to summary")

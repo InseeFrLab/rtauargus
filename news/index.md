@@ -1,5 +1,32 @@
 # Changelog
 
+## rtauargus (development version)
+
+- The location of Tau-Argus no longer defaults to a hard-coded `Y:/`
+  path. It is now read from the `TAUARGUS_EXE` environment variable
+  (e.g. defined in `.Renviron`).
+
+- New
+  [`set_tauargus_exe()`](https://inseefrlab.github.io/rtauargus/reference/tauargus_exe.md)
+  to set the location for the session or save it in `.Renviron`
+  (`install = TRUE`), and
+  [`get_tauargus_exe()`](https://inseefrlab.github.io/rtauargus/reference/tauargus_exe.md)
+  to retrieve it (from the session environment, or else from
+  `.Renviron`).
+
+- If `TAUARGUS_EXE` is not set, Tau-Argus is searched for automatically
+  (on the `PATH` and in the usual install locations; the most recent
+  version is used). If it still cannot be found,
+  [`run_arb()`](https://inseefrlab.github.io/rtauargus/reference/run_arb.md)
+  opens a file chooser in interactive sessions to select TauArgus.exe,
+  and offers to save it in `.Renviron`.
+
+- The location of Tau-Argus is validated:
+  [`set_tauargus_exe()`](https://inseefrlab.github.io/rtauargus/reference/tauargus_exe.md)
+  stops if the file does not exist or is a folder (`check = FALSE` to
+  store it anyway), and if `TAUARGUS_EXE` points to a missing file, the
+  automatic search is used instead, with a message.
+
 ## rtauargus 1.3.6
 
 \[09/2026\]

@@ -125,17 +125,20 @@ Au chargement du package, la console affiche quelques informations :
 library(rtauargus)
 ```
 
-En particulier, un emplacement plausible pour le logiciel τ-Argus est
-prédéfini. Il est possible de le changer pour toute la durée de la
-session R. Un message indique que cet emplacement est inconnu, on le
-modifie donc :
+En particulier, elle indique l’emplacement du logiciel τ-Argus, lu dans
+la variable d’environnement `TAUARGUS_EXE`. Pour le définir une fois
+pour toutes (il est enregistré dans le fichier `.Renviron` et utilisé
+dans toutes les sessions R futures) :
 
 ``` r
 
-loc_tauargus <- "Y:/Logiciels/TauArgus/TauArgus4.2.3/TauArgus.exe"
-
-options(rtauargus.tauargus_exe = loc_tauargus)
+set_tauargus_exe("C:/path/to/TauArgus/TauArgus.exe", install = TRUE)
 ```
+
+Pour le définir uniquement pour la session R en cours, omettre
+`install = TRUE`.
+[`get_tauargus_exe()`](https://inseefrlab.github.io/rtauargus/reference/tauargus_exe.md)
+renvoie l’emplacement actuellement utilisé.
 
 Ce petit réglage effectué, le package est prêt à être utilisé.
 
@@ -645,29 +648,29 @@ définies par l’utilisateur gardent leurs valeurs.
 Les options disponibles ainsi que leurs valeurs par défaut sont listées
 ci-dessous :
 
-| Option | Valeur par défaut | Type | Fonction concernée |
-|:---|:---|:---|---:|
-| rtauargus.decimals | 0 | integer | tab_rda |
-| rtauargus.decimals | 0 | integer | micro_asc_rda |
-| rtauargus.totcode | “Total” | character | tab_rda |
-| rtauargus.totcode | “Total” | character | micro_asc_rda |
-| rtauargus.missing | “” | character | micro_asc_rda |
-| rtauargus.hierleadstring | “@” | character | micro_asc_rda |
-| rtauargus.hierleadstring | “@” | character | tab_rda |
-| rtauargus.separator | “,” | character | tab_arb |
-| rtauargus.separator | “,” | character | tab_rda |
-| rtauargus.response_var | “\<freq\>” | character | micro_arb |
-| rtauargus.weighted | FALSE | logical | micro_arb |
-| rtauargus.linked | FALSE | logical | micro_arb |
-| rtauargus.output_type | “4” | character | tab_arb |
-| rtauargus.output_type | “4” | character | micro_arb |
-| rtauargus.output_options | “” | character | micro_arb |
-| rtauargus.output_options | “” | character | tab_arb |
-| rtauargus.missing_dir | “stop” | character | run_arb |
-| rtauargus.tauargus_exe | “Y:/Logiciels/TauArgus/TauArgus.exe” | character | run_arb |
-| rtauargus.show_batch_console | FALSE | logical | run_arb |
-| rtauargus.import | FALSE | logical | run_arb |
-| rtauargus.is_tabular | TRUE | logical | run_arb |
+| Option                       | Valeur par défaut | Type      | Fonction concernée |
+|:-----------------------------|:------------------|:----------|-------------------:|
+| rtauargus.decimals           | 0                 | integer   |            tab_rda |
+| rtauargus.decimals           | 0                 | integer   |      micro_asc_rda |
+| rtauargus.totcode            | “Total”           | character |            tab_rda |
+| rtauargus.totcode            | “Total”           | character |      micro_asc_rda |
+| rtauargus.missing            | “”                | character |      micro_asc_rda |
+| rtauargus.hierleadstring     | “@”               | character |      micro_asc_rda |
+| rtauargus.hierleadstring     | “@”               | character |            tab_rda |
+| rtauargus.separator          | “,”               | character |            tab_arb |
+| rtauargus.separator          | “,”               | character |            tab_rda |
+| rtauargus.response_var       | “\<freq\>”        | character |          micro_arb |
+| rtauargus.weighted           | FALSE             | logical   |          micro_arb |
+| rtauargus.linked             | FALSE             | logical   |          micro_arb |
+| rtauargus.output_type        | “4”               | character |            tab_arb |
+| rtauargus.output_type        | “4”               | character |          micro_arb |
+| rtauargus.output_options     | “”                | character |          micro_arb |
+| rtauargus.output_options     | “”                | character |            tab_arb |
+| rtauargus.missing_dir        | “stop”            | character |            run_arb |
+| rtauargus.tauargus_exe       | “”                | character |            run_arb |
+| rtauargus.show_batch_console | FALSE             | logical   |            run_arb |
+| rtauargus.import             | FALSE             | logical   |            run_arb |
+| rtauargus.is_tabular         | TRUE              | logical   |            run_arb |
 
 ### Affichage
 
@@ -713,7 +716,7 @@ rtauargus_options()
 #> [1] FALSE
 #> 
 #> $rtauargus.tauargus_exe
-#> [1] "Y:/Logiciels/TauArgus/TauArgus4.2.3/TauArgus.exe"
+#> [1] "C:/path/to/TauArgus/TauArgus.exe"
 #> 
 #> $rtauargus.totcode
 #> [1] "Total"
@@ -756,7 +759,7 @@ str(rtauargus_options())
 #>  $ rtauargus.response_var      : chr "VAL"
 #>  $ rtauargus.separator         : chr ","
 #>  $ rtauargus.show_batch_console: logi FALSE
-#>  $ rtauargus.tauargus_exe      : chr "Y:/Logiciels/TauArgus/TauArgus4.2.3/TauArgus.exe"
+#>  $ rtauargus.tauargus_exe      : chr "C:/path/to/TauArgus/TauArgus.exe"
 #>  $ rtauargus.totcode           : chr "Total"
 #>  $ rtauargus.weighted          : logi FALSE
 ```
@@ -785,7 +788,7 @@ str(rtauargus_options())
 #>  $ rtauargus.response_var      : chr "<freq>"
 #>  $ rtauargus.separator         : chr ","
 #>  $ rtauargus.show_batch_console: logi FALSE
-#>  $ rtauargus.tauargus_exe      : chr "Y:/Logiciels/TauArgus/TauArgus4.2.3/TauArgus.exe"
+#>  $ rtauargus.tauargus_exe      : chr "C:/path/to/TauArgus/TauArgus.exe"
 #>  $ rtauargus.totcode           : chr "Total"
 #>  $ rtauargus.weighted          : logi FALSE
 ```

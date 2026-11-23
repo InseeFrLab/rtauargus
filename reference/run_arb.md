@@ -92,10 +92,12 @@ information is present in this file.
 This is the only function in the package that runs Tau-Argus. It
 therefore requires the software to be accessible from the workstation.
 
-The location of the TauArgus.exe program is defined globally when the
-loading the package. In fact, the argument `tauargus_exe` will normally
-not have to be specified (except to override the global option the time
-of the execution of the function).
+The location of the TauArgus.exe program is defined globally when
+loading the package, from the `TAUARGUS_EXE` environment variable (see
+[`set_tauargus_exe()`](https://inseefrlab.github.io/rtauargus/reference/tauargus_exe.md))
+or the `rtauargus.tauargus_exe` option. In fact, the argument
+`tauargus_exe` will not normally not have to be specified (except to
+override the global option the time of the execution of the function).
 
 Checks are made before the actual launching of Tau-Argus: existence of
 the software on the computer, of the asc and rda files, of the folders
@@ -108,9 +110,12 @@ seule fonction du package qui exécute Tau-Argus. Elle nécessite donc que
 le logiciel soit accessible depuis le poste de travail.
 
 L'emplacement du programme TauArgus.exe est défini de manière globale au
-chargement du package. De fait, l'argument `tauargus_exe` n'aura
-normalement pas à être spécifié (sauf pour surcharger l'option globale
-le temps de l'exécution de la fonction).
+chargement du package, à partir de la variable d'environnement
+`TAUARGUS_EXE` (voir
+[`set_tauargus_exe()`](https://inseefrlab.github.io/rtauargus/reference/tauargus_exe.md))
+ou de l'option `rtauargus.tauargus_exe`. De fait, l'argument
+`tauargus_exe` n'aura normalement pas à être spécifié (sauf pour
+surcharger l'option globale le temps de l'exécution de la fonction).
 
 Des vérifications sont effectuées avant le lancement effectif de
 Tau-Argus : existence du logiciel sur le poste, des fichiers asc et rda,

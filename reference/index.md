@@ -111,6 +111,9 @@ Mostly internal functions
 - [`rtauargus_options()`](https://inseefrlab.github.io/rtauargus/reference/rtauargus_options.md)
   [`reset_rtauargus_options()`](https://inseefrlab.github.io/rtauargus/reference/rtauargus_options.md)
   : Manages options of rtauargus package
+- [`set_tauargus_exe()`](https://inseefrlab.github.io/rtauargus/reference/tauargus_exe.md)
+  [`get_tauargus_exe()`](https://inseefrlab.github.io/rtauargus/reference/tauargus_exe.md)
+  : Set or get the location of Tau-Argus
 - [`write_hrc()`](https://inseefrlab.github.io/rtauargus/reference/write_hrc.md)
   : Creates a hrc file from microdata
 - [`rtauargus`](https://inseefrlab.github.io/rtauargus/reference/rtauargus-package.md)

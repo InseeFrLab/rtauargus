@@ -15,7 +15,7 @@ Nous sommes intéressés par les cas que vous pourriez rencontrer et que
 la fonction ne peut pas traiter.
 
 Un lien entre deux (ou plusieurs) tableaux décrit les cellules communes
-des tableaux, c’est-à-dire les cellules qui sont présentes dans ces
+des tableaux, c’est-à-dire les cellules qui sont présentent dans ces
 derniers. La fonction peut gérer tous les types de liens entre tableaux
 :
 
@@ -108,7 +108,7 @@ l’itération à laquelle chacune a été masquée.
 - **totcode** Le code du total pour chaque variable explicative. Il est
   recommandé d’utiliser le même même code de total pour chaque variable.
   Si par exemple le code est “Total” pour toutes les variables. La
-  syntaxe suivante est autorisée : totcode = “Total”
+  syntaxe qsuivante est autorisée : totcode = “Total”
 
 Sinon, l’input attendue est une liste spécifiant le code total pour
 chaque variable explicative. Par exemple : totcode = list(ACTIVITY =
@@ -152,25 +152,30 @@ primaire. Il est donc nécessaire de les fournir dans la table de départ.
 
 ## Quelques exemples
 
-Spécifions l’emplacement du fichier TauArgus.exe sur notre ordinateur :
+Si ce n’est pas déjà fait (par exemple dans le fichier `.Renviron`, voir
+[`?set_tauargus_exe`](https://inseefrlab.github.io/rtauargus/reference/tauargus_exe.md)),
+spécifions l’emplacement du fichier TauArgus.exe sur notre ordinateur :
 
-\`\`{r version} options( rtauargus.tauargus_exe =
-“Y:/Logiciels/TauArgus/TauArgus4.2.3/TauArgus.exe” )
+``` r
 
+set_tauargus_exe("C:/path/to/TauArgus/TauArgus.exe")
+```
 
-    ## Comment protéger 4 tableaux liés en même temps
+### Comment protéger 4 tableaux liés en même temps
 
-    Dans l'exemple suivant, nous allons protéger un ensemble de 4 tableaux liés partageant
-    la même variable de réponse, à savoir le chiffre d'affaires.
+Dans l’exemple suivant, nous allons protéger un ensemble de 4 tableaux
+liés partageant la même variable de réponse, à savoir le chiffre
+d’affaires.
 
-    ### Préparation des données
+#### Préparation des données
 
+``` r
 
-    ``` r
-    data("turnover_act_size")
-    data("turnover_act_cj")
-    data ("turnover_nuts_size")
-    data("turnover_nuts_cj")
+data("turnover_act_size")
+data("turnover_act_cj")
+data ("turnover_nuts_size")
+data("turnover_nuts_cj")
+```
 
 ACTIVITY X SIZE nommé turnover_act_size ACTIVITY X CJ nommé
 turnover_act_cj NUTS X SIZE nommé turnover_nuts_size NUTS X CJ nommé
@@ -185,6 +190,10 @@ str(turnover_act_size)
 #>  $ N_OBS   : int [1:414] 405 12878 28043 62053 8135 8140 11961 41359 26686 25108 ...
 #>  $ TOT     : num [1:414] 44475 24827613 8907311 26962063 8584917 ...
 #>  $ MAX     : num [1:414] 6212 1442029 1065833 3084242 3957364 ...
+```
+
+``` r
+
 str(turnover_nuts_cj)
 #> tibble [452 x 5] (S3: tbl_df/tbl/data.frame)
 #>  $ NUTS : chr [1:452] "FR10" "FR21" "FR22" "FR23" ...
@@ -195,9 +204,9 @@ str(turnover_nuts_cj)
 ```
 
 La première étape consiste à créer une liste contenant nos quatre
-tableaux, il est conseillé de donner un nom à chaque table. En faisant
-cela, il sera plus facile de suivre le déroulement de la pose du secret
-secondaire.
+tableaux, il est conseillé de de donner un nom à chaque table. En
+faisant cela, il sera plus facile de suivre le déroulement de la pose du
+secret secondaire.
 
 ``` r
 
@@ -331,8 +340,8 @@ présent dans le paramètre `list_tables`.
 
 Les modalités utilisées pour mentionner le total de chaque variable
 doivent être déclarées par l’utilisateur, dans une liste nominative.
-Toutefois, lorsque toutes les variables ont la même modalité pour le
-total, l’information peut être spécifiée de la manière suivante :
+Toutefois, lorsque toutes les variables ont la même modalité pour pour
+le total, l’information peut être spécifiée de la manière suivante :
 
 ``` r
 
@@ -341,9 +350,9 @@ total_codes <- "Total"
 
 #### Préparation des fichiers hiérarchiques
 
-`ACTIVITY` et `NUTS` sont deux variables hiérarchiques. On utilise une
-table de correspondance pour chacune d’entre elles pour créer le fichier
-.hrc dont τ-Argus a besoin.
+`ACTIVITY` et `NUTS` sont duex variables hiérarchiques.On utilise une
+table de correspondance pour chacunes d’entre elles pour créer le
+fichier .hrc dont τ-Argus a besoin.
 
 ``` r
 
@@ -380,6 +389,7 @@ hiérarchiques présentes dans la table
 #### Protéger tous les tableaux en un seul appel
 
 ``` r
+
 res <- tab_multi_manager(
     list_tables = list_data_4_tabs,
     list_explanatory_vars = nom_var_list,
@@ -390,12 +400,11 @@ res <- tab_multi_manager(
     freq = "N_OBS",
     secret_var = "is_secret_prim"
 )
-#> 
---- Current table to treat: act_size | loop iter : 1 ---            
---- Current table to treat: act_cj | loop iter : 2 ---            
---- Current table to treat: act_size | loop iter : 3 ---            
---- Current table to treat: nuts_size | loop iter : 4 ---            
---- Current table to treat: nuts_cj | loop iter : 5 ---
+#> --- Current table to treat:  act_size ---
+#> --- Current table to treat:  act_cj ---
+#> --- Current table to treat:  act_size ---
+#> --- Current table to treat:  nuts_size ---
+#> --- Current table to treat:  nuts_cj ---
 ```
 
 #### Résultats
@@ -599,6 +608,7 @@ hiérarchies de la variable `ACTIVITY` :
 Le même raisonnement est utilisé pour remplir l’argument `alt_totcode`.
 
 ``` r
+
 res <- tab_multi_manager(
   list_tables = list_data_3_tabs_nn,
   list_explanatory_vars = list(
@@ -619,14 +629,13 @@ res <- tab_multi_manager(
     act_size_D_TO_M = c(ACTIVITY = "D_TO_M")
   )
 )
-#> 
---- Current table to treat: act_size | loop iter : 1 ---            
---- Current table to treat: act_size_D_TO_M | loop iter : 2 ---            
---- Current table to treat: act_cj | loop iter : 3 ---            
---- Current table to treat: act_size | loop iter : 4 ---            
---- Current table to treat: act_size_D_TO_M | loop iter : 5 ---            
---- Current table to treat: act_size | loop iter : 6 ---            
---- Current table to treat: act_cj | loop iter : 7 ---
+#> --- Current table to treat:  act_size ---
+#> --- Current table to treat:  act_size_D_TO_M ---
+#> --- Current table to treat:  act_cj ---
+#> --- Current table to treat:  act_size ---
+#> --- Current table to treat:  act_size_D_TO_M ---
+#> --- Current table to treat:  act_size ---
+#> --- Current table to treat:  act_cj ---
 ```
 
 ##### Détail de la vignette
@@ -634,9 +643,9 @@ res <- tab_multi_manager(
 - Authors: **[Julien Jamme](mailto:julien.jamme@insee.fr)** &
   **[Nathanael Rastout](mailto:nathanael.rastout@insee.fr)**
 
-  - Last update: **27/10/2026**
-  - Version of rtauargus used: **1.3.6**
+  - Last update: **17/02/2025**
+  - Version of rtauargus used: **1.2.999**
   - Version of τ-Argus used : **TauArgus 4.2.3**
-  - R version used : **4.5.3**
+  - R version used : **4.3.3**
 
   [summary ↑](#TOC "Back to summary")

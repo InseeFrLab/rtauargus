@@ -52,6 +52,16 @@ package définissent les comportements par défaut des fonctions.
 If the user inadvertently removes some options, the functions will use
 the default values of the package.  
 
+The location of Tau-Argus (`rtauargus.tauargus_exe`) has no hard-coded
+default: it is read from the `TAUARGUS_EXE` environment variable. The
+recommended way to set it once and for all is
+`set_tauargus_exe("C:/path/to/TauArgus.exe", install = TRUE)`, which
+writes it to your `.Renviron` file.  
+(L'emplacement de Tau-Argus n'a pas de valeur par défaut codée en dur :
+il est lu dans la variable d'environnement `TAUARGUS_EXE`, idéalement
+définie dans le fichier `.Renviron` via
+`set_tauargus_exe(..., install = TRUE)`.)  
+
 (Ces options sont utilisées si un argument obligatoire d’une fonction
 n’est pas renseigné. Elles permettent de ne pas répéter systématiquement
 le même paramètre à chaque appel d'une fonction. Le nom de l’option est
@@ -94,7 +104,7 @@ fonctions utiliseront les valeurs par défaut du package.)
 | rtauargus.output_options | " " |  |
 | `------------------------` | `---------------------------------` | `-------------` |
 | rtauargus.missing_dir | "stop " | [`run_arb()`](https://inseefrlab.github.io/rtauargus/reference/run_arb.md) |
-| rtauargus.tauargus_exe | "Y:/Logiciels/TauArgus/TauArgus.exe " |  |
+| rtauargus.tauargus_exe | `Sys.getenv("TAUARGUS_EXE")` |  |
 | rtauargus.show_batch_console | FALSE |  |
 | rtauargus.import | FALSE |  |
 
@@ -145,7 +155,7 @@ rtauargus_options()
 #> [1] FALSE
 #> 
 #> $rtauargus.tauargus_exe
-#> [1] "Y:/Logiciels/TauArgus/TauArgus.exe"
+#> [1] ""
 #> 
 #> $rtauargus.totcode
 #> [1] "Total"
@@ -194,7 +204,7 @@ str(rtauargus_options())
 #>  $ rtauargus.response_var      : chr "<freq>"
 #>  $ rtauargus.separator         : chr ","
 #>  $ rtauargus.show_batch_console: logi FALSE
-#>  $ rtauargus.tauargus_exe      : chr "Y:/Logiciels/TauArgus/TauArgus.exe"
+#>  $ rtauargus.tauargus_exe      : chr ""
 #>  $ rtauargus.totcode           : chr "Total"
 #>  $ rtauargus.weighted          : logi TRUE
 
@@ -214,7 +224,7 @@ str(rtauargus_options())
 #>  $ rtauargus.response_var      : chr "<freq>"
 #>  $ rtauargus.separator         : chr ","
 #>  $ rtauargus.show_batch_console: logi FALSE
-#>  $ rtauargus.tauargus_exe      : chr "Y:/Logiciels/TauArgus/TauArgus.exe"
+#>  $ rtauargus.tauargus_exe      : chr ""
 #>  $ rtauargus.totcode           : chr "Total"
 #>  $ rtauargus.weighted          : logi FALSE
 ```

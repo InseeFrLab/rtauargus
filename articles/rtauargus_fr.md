@@ -23,9 +23,9 @@ La syntaxe de certains des arguments correspond étroitement à la syntaxe
 fonctions sans multiplier les arguments des fonctions. Le package pourra
 également s’adapter plus facilement aux éventuelles modifications du
 logiciel (nouveaux algorithmes disponibles, options supplémentaires…).
-Les règles de syntaxes d’écriture du batch sont détaillées dans le
-manuel de référence de τ-Argus et sont également précisées dans la
-vignette *options_safety_rules*.
+Les règles de syntaxes d’écriture du batch sont détaillés dans le manuel
+de référence de τ-Argus et sont égalements précisées dans la vignette
+*options_safety_rules*.
 
 > Le package a été développé sur la base de versions open source de
 > τ-Argus (versions 4.2 et supérieures), en particulier la dernière
@@ -61,16 +61,16 @@ peuvent être téléchargées ici :
 *rtauargus* nécessite quelques autres packages R. Voici les dépendances
 à installer.
 
-    • purrr (>= 0.2),
-    • dplyr (>= 0.7),
-    • tidyr,
-    • data.table,
+    • purrr (>= 0.2)
+    • dplyr (>= 0.7)
+    • tidyr
+    • data.table
     • gdata,
-    • stringr,
-    • rlang,
-    • zoo,
-    • sdcHierarchies,
-    • igraph,
+    • stringr
+    • rlang
+    • zoo
+    • sdcHierarchies
+    • igraph
     • lifecycle
 
 Le package *rtauargus* peut être installé maintenant.
@@ -93,16 +93,20 @@ Lors du chargement du package, la console affiche quelques informations
 library(rtauargus)
 ```
 
-En particulier, un emplacement plausible pour le logiciel τ-Argus est
-prédéfini. Celui-ci peut être modifié pour la durée de la session R,
-comme suit :
+En particulier, elle indique l’emplacement du logiciel τ-Argus, lu dans
+la variable d’environnement `TAUARGUS_EXE`. Pour le définir une fois
+pour toutes (il est enregistré dans le fichier `.Renviron` et utilisé
+dans toutes les sessions R futures) :
 
 ``` r
 
-loc_tauargus <- "Y:/Logiciels/TauArgus/TauArgus4.2.3/TauArgus.exe"
-
-options(rtauargus.tauargus_exe = loc_tauargus)
+set_tauargus_exe("C:/path/to/TauArgus/TauArgus.exe", install = TRUE)
 ```
+
+Pour le définir uniquement pour la session R en cours, omettre
+`install = TRUE`.
+[`get_tauargus_exe()`](https://inseefrlab.github.io/rtauargus/reference/tauargus_exe.md)
+renvoie l’emplacement actuellement utilisé.
 
 Une fois ce petit ajustement effectué, le package est prêt à être
 utilisé.
@@ -190,9 +194,9 @@ ex1 <- tab_rtauargus(
   maxscore = "MAX",
   totcode = c(ACTIVITY="Total",SIZE="Total")
 )
-#> Start of batch procedure; file: Z:\confidentialite\rtauargus\vignettes\tauargus_files\ex1\ex1.arb
-#> <OPENTABLEDATA> "Z:\confidentialite\rtauargus\vignettes\tauargus_files\ex1\ex1.tab"
-#> <OPENMETADATA> "Z:\confidentialite\rtauargus\vignettes\tauargus_files\ex1\ex1.rda"
+#> Start of batch procedure; file: Z:\rtauargus\vignettes\tauargus_files\ex1\ex1.arb
+#> <OPENTABLEDATA> "Z:\rtauargus\vignettes\tauargus_files\ex1\ex1.tab"
+#> <OPENMETADATA> "Z:\rtauargus\vignettes\tauargus_files\ex1\ex1.rda"
 #> <SPECIFYTABLE> "ACTIVITY""SIZE"|"VAL"||
 #> <SAFETYRULE> FREQ(3,10)|NK(1,85)
 #> <READTABLE> 1
@@ -201,9 +205,9 @@ ex1 <- tab_rtauargus(
 #> Start of the modular protection for table ACTIVITY x SIZE | VAL
 #> End of modular protection. Time used 0 seconds
 #>                    Number of suppressions: 2
-#> <WRITETABLE> (1,4,,"Z:\confidentialite\rtauargus\vignettes\tauargus_files\ex1\ex1.csv")
+#> <WRITETABLE> (1,4,,"Z:\rtauargus\vignettes\tauargus_files\ex1\ex1.csv")
 #> Table: ACTIVITY x SIZE | VAL has been written
-#>                    Output file name: Z:\confidentialite\rtauargus\vignettes\tauargus_files\ex1\ex1.csv
+#>                    Output file name: Z:\rtauargus\vignettes\tauargus_files\ex1\ex1.csv
 #> End of TauArgus run
 ```
 
@@ -422,7 +426,7 @@ ex2 %>%
 #> 4      V 273
 ```
 
-### Protéger plusieurs tableaux en même temps, avec la fonction `tab_multi_manager()`.
+### Protéger plusieurs tableaux en même temps, avec la fonction `tab_muli_manager()`.
 
 La fonction
 [`tab_multi_manager()`](https://inseefrlab.github.io/rtauargus/reference/tab_multi_manager.md)
@@ -492,6 +496,7 @@ Maintenant que le secret primaire a été spécifié pour les deux tableaux,
 nous pouvons lancer le processus.
 
 ``` r
+
 ex3 <- tab_multi_manager(
   list_tables = list_data_2_tabs,
   list_explanatory_vars = list(
@@ -505,10 +510,9 @@ ex3 <- tab_multi_manager(
   secret_var = "is_secret_prim",
   totcode =  "Total"
 )
-#> 
---- Current table to treat: act_size | loop iter : 1 ---            
---- Current table to treat: act_cj | loop iter : 2 ---            
---- Current table to treat: act_size | loop iter : 3 ---
+#> --- Current table to treat:  act_size ---
+#> --- Current table to treat:  act_cj ---
+#> --- Current table to treat:  act_size ---
 ```
 
 Par défaut, la fonction utilise un wrapper de la fonction
@@ -533,9 +537,9 @@ présentation complète de la fonction
 
 - Authors: **[Julien Jamme](mailto:julien.jamme@insee.fr)** &
   **[Nathanael Rastout](mailto:nathanael.rastout@insee.fr)**
-- Last update: **27/10/2026**
-- Version of rtauargus used: **1.3.6**
+- Last update: **17/02/2025**
+- Version of rtauargus used: **1.2.999**
 - Version of τ-Argus used : **TauArgus 4.2.3**
-- R version used : **4.5.3**
+- R version used : **4.3.3**
 
 [summary ↑](#TOC "Back to summary")

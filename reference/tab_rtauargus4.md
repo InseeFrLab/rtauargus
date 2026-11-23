@@ -192,10 +192,7 @@ whether or not the cell has to be masked according to Tau-Argus
 ``` r
 if (FALSE) { # \dontrun{
 #Please don't forget to specify the localisation of Tau-Argus in your computer
-options(
-  rtauargus.tauargus_exe =
-    "Y:/Logiciels/TauArgus/TauArgus4.2.3/TauArgus.exe"
-)
+set_tauargus_exe("C:/path/to/TauArgus/TauArgus.exe")
 
 data(datatest1)
 expl_vars <- c("A10", "treff","type_distrib","cj")

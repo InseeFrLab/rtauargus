@@ -244,18 +244,10 @@ dimensions.</p>
 </h4>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/jabiru/tictoc" class="external-link">tictoc</a></span><span class="op">)</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Attachement du package : 'tictoc'</span></span>
-<span><span class="co">#&gt; L'objet suivant est masqué depuis 'package:rtauargus':</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;     shift</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://inseefrlab.github.io/rtauargus">rtauargus</a></span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span></span>
-<span>  rtauargus.tauargus_exe <span class="op">=</span></span>
-<span>    <span class="st">"Y:/Logiciels/TauArgus/TauArgus4.2.3/TauArgus.exe"</span></span>
-<span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/tauargus_exe.html">set_tauargus_exe</a></span><span class="op">(</span><span class="st">"C:/path/to/TauArgus/TauArgus.exe"</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"datatest1"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">datatest1</span><span class="op">)</span></span>
@@ -307,41 +299,40 @@ dimensions.</p>
 <code>tab_rtauargus</code> va découper la table originale en un certain
 nombre de tables qui seront protégées comme des tables liées avec un
 appel sous-jacent à <code>tab_multi_manager</code>.</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a>tictoc<span class="sc">::</span><span class="fu">tic</span>()</span>
-<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a>res_wi_split <span class="ot">&lt;-</span> <span class="fu">tab_rtauargus</span>(</span>
-<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a>    <span class="at">tabular =</span> datatest1_with_prim,</span>
-<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a>    <span class="at">files_name =</span> <span class="st">"datatest1"</span>,</span>
-<span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a>    <span class="at">dir_name =</span> <span class="st">"example_1"</span>,</span>
-<span id="cb8-6"><a href="#cb8-6" tabindex="-1"></a>    <span class="at">explanatory_vars =</span> explanatory_vars,</span>
-<span id="cb8-7"><a href="#cb8-7" tabindex="-1"></a>    <span class="at">totcode =</span> totcode,</span>
-<span id="cb8-8"><a href="#cb8-8" tabindex="-1"></a>    <span class="at">value =</span> <span class="st">"pizzas_tot"</span>,</span>
-<span id="cb8-9"><a href="#cb8-9" tabindex="-1"></a>    <span class="at">freq =</span> <span class="st">"nb_obs"</span>,</span>
-<span id="cb8-10"><a href="#cb8-10" tabindex="-1"></a>    <span class="at">secret_var =</span> <span class="st">"is_secret_prim"</span>,</span>
-<span id="cb8-11"><a href="#cb8-11" tabindex="-1"></a>    <span class="at">verbose =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb8-12"><a href="#cb8-12" tabindex="-1"></a>    <span class="at">split_tab =</span> <span class="cn">TRUE</span></span>
-<span id="cb8-13"><a href="#cb8-13" tabindex="-1"></a>)</span>
-<span id="cb8-14"><a href="#cb8-14" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb8-15"><a href="#cb8-15" tabindex="-1"></a><span class="co">#&gt; Reducing dims...</span></span>
-<span id="cb8-16"><a href="#cb8-16" tabindex="-1"></a><span class="co">#&gt;  datatest1 </span></span>
-<span id="cb8-17"><a href="#cb8-17" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb8-18"><a href="#cb8-18" tabindex="-1"></a><span class="co">#&gt; Choosing variables...</span></span>
-<span id="cb8-19"><a href="#cb8-19" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb8-20"><a href="#cb8-20" tabindex="-1"></a><span class="co">#&gt; Reducing from 4 to 3...</span></span>
-<span id="cb8-21"><a href="#cb8-21" tabindex="-1"></a><span class="co">#&gt; datatest1_ has generated 2 tables in total</span></span>
-<span id="cb8-22"><a href="#cb8-22" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb8-23"><a href="#cb8-23" tabindex="-1"></a><span class="co">#&gt;   Table size distribution :</span></span>
-<span id="cb8-24"><a href="#cb8-24" tabindex="-1"></a><span class="co">#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span></span>
-<span id="cb8-25"><a href="#cb8-25" tabindex="-1"></a><span class="co">#&gt;   535.0   536.5   538.0   538.0   539.5   541.0 </span></span>
-<span id="cb8-26"><a href="#cb8-26" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb8-27"><a href="#cb8-27" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb8-28"><a href="#cb8-28" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb8-29"><a href="#cb8-29" tabindex="-1"></a><span class="sc">---</span> Current table to treat<span class="sc">:</span> datatest1_1 <span class="sc">|</span> loop iter <span class="sc">:</span> <span class="dv">1</span> <span class="sc">---</span>            </span>
-<span id="cb8-30"><a href="#cb8-30" tabindex="-1"></a><span class="sc">---</span> Current table to treat<span class="sc">:</span> datatest1_2 <span class="sc">|</span> loop iter <span class="sc">:</span> <span class="dv">2</span> <span class="sc">---</span>            </span>
-<span id="cb8-31"><a href="#cb8-31" tabindex="-1"></a><span class="sc">---</span> Current table to treat<span class="sc">:</span> datatest1_1 <span class="sc">|</span> loop iter <span class="sc">:</span> <span class="dv">3</span> <span class="sc">---</span>            </span>
-<span id="cb8-32"><a href="#cb8-32" tabindex="-1"></a><span class="sc">---</span> Current table to treat<span class="sc">:</span> datatest1_2 <span class="sc">|</span> loop iter <span class="sc">:</span> <span class="dv">4</span> <span class="sc">---</span>            </span>
-<span id="cb8-33"><a href="#cb8-33" tabindex="-1"></a><span class="sc">---</span> Current table to treat<span class="sc">:</span> datatest1_1 <span class="sc">|</span> loop iter <span class="sc">:</span> <span class="dv">5</span> <span class="sc">---</span></span>
-<span id="cb8-34"><a href="#cb8-34" tabindex="-1"></a>tictoc<span class="sc">::</span><span class="fu">toc</span>()</span>
-<span id="cb8-35"><a href="#cb8-35" tabindex="-1"></a><span class="co">#&gt; 43.21 sec elapsed</span></span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">tictoc</span><span class="fu">::</span><span class="fu">tic</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">res_wi_split</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/tab_rtauargus.html">tab_rtauargus</a></span><span class="op">(</span></span>
+<span>    tabular <span class="op">=</span> <span class="va">datatest1_with_prim</span>,</span>
+<span>    files_name <span class="op">=</span> <span class="st">"datatest1"</span>,</span>
+<span>    dir_name <span class="op">=</span> <span class="st">"example_1"</span>,</span>
+<span>    explanatory_vars <span class="op">=</span> <span class="va">explanatory_vars</span>,</span>
+<span>    totcode <span class="op">=</span> <span class="va">totcode</span>,</span>
+<span>    value <span class="op">=</span> <span class="st">"pizzas_tot"</span>,</span>
+<span>    freq <span class="op">=</span> <span class="st">"nb_obs"</span>,</span>
+<span>    secret_var <span class="op">=</span> <span class="st">"is_secret_prim"</span>,</span>
+<span>    verbose <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>    split_tab <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Reducing dims...</span></span>
+<span><span class="co">#&gt;  tab </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Choosing variables...</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Reducing from 4 to 3...</span></span>
+<span><span class="co">#&gt; tab has generated 2 tables in total</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Spliting...</span></span>
+<span><span class="co">#&gt;  treff___cj </span></span>
+<span><span class="co">#&gt; tab has generated 2 tables in total</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; --- Current table to treat:  tab1 ---</span></span>
+<span><span class="co">#&gt; --- Current table to treat:  tab2 ---</span></span>
+<span><span class="co">#&gt; --- Current table to treat:  tab1 ---</span></span>
+<span><span class="co">#&gt; --- Current table to treat:  tab2 ---</span></span>
+<span><span class="co">#&gt; --- Current table to treat:  tab1 ---</span></span>
+<span><span class="fu">tictoc</span><span class="fu">::</span><span class="fu">toc</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#&gt; 45.31 sec elapsed</span></span></code></pre></div>
 <p>La réduction de dimensions a conduit à construire deux sous-tableaux
 de 3 dimensions à partir du tableau original.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
@@ -359,7 +350,7 @@ de 3 dimensions à partir du tableau original.</p>
 <span><span class="co">#&gt;  $ is_secret_prim: logi  FALSE FALSE FALSE FALSE FALSE FALSE ...</span></span>
 <span><span class="co">#&gt;  $ nb_obs_rnd    : num  115 89 21 110 6 ...</span></span>
 <span><span class="co">#&gt;  $ pizzas_tot_abs: num  8447 769 1301 532 7915 ...</span></span>
-<span><span class="co">#&gt;  $ is_secret_1   : logi  FALSE TRUE TRUE TRUE TRUE TRUE ...</span></span>
+<span><span class="co">#&gt;  $ is_secret_1   : logi  FALSE TRUE FALSE TRUE TRUE TRUE ...</span></span>
 <span><span class="co">#&gt;  $ is_secret_2   : logi  FALSE TRUE TRUE TRUE TRUE TRUE ...</span></span>
 <span><span class="co">#&gt;  $ is_secret_3   : logi  FALSE TRUE TRUE TRUE TRUE TRUE ...</span></span>
 <span><span class="co">#&gt;  $ is_secret_4   : logi  FALSE TRUE TRUE TRUE TRUE TRUE ...</span></span>
@@ -380,10 +371,10 @@ de 3 dimensions à partir du tableau original.</p>
 <span><span class="co">#&gt;   flag   n</span></span>
 <span><span class="co">#&gt; 1    A  79</span></span>
 <span><span class="co">#&gt; 2    B  35</span></span>
-<span><span class="co">#&gt; 3    D 280</span></span>
-<span><span class="co">#&gt; 4    V 295</span></span></code></pre></div>
+<span><span class="co">#&gt; 3    D 278</span></span>
+<span><span class="co">#&gt; 4    V 297</span></span></code></pre></div>
 <p>Avec l’option de découpage du tableau de départ, la pose du secret
-sur le tableau à 4 dimensions génère 280 suppressions secondaires.</p>
+sur le tableau à 4 dimensions génère 278 suppressions secondaires.</p>
 </div>
 <div class="section level4">
 <h4 id="comparaison-avec-une-pose-du-secret-sans-réduire-la-dimension-de-la-table">Comparaison avec une pose du secret sans réduire la dimension de la
@@ -416,31 +407,31 @@ issues du tableau original.</p>
 <span><span class="co">#&gt; With split_tab = FALSE, tauargus treats the table in 4 or 5 dimensions.</span></span>
 <span><span class="co">#&gt; In this case, the secondary secret may not being optimal according to tauargus itself</span></span>
 <span><span class="co">#&gt; and the process may take longer.</span></span>
-<span><span class="co">#&gt; Start of batch procedure; file: Z:\confidentialite\rtauargus\vignettes\example_1\wo_split\datatest1.arb</span></span>
-<span><span class="co">#&gt; &lt;OPENTABLEDATA&gt; "Z:\confidentialite\rtauargus\vignettes\example_1\wo_split\datatest1.tab"</span></span>
-<span><span class="co">#&gt; &lt;OPENMETADATA&gt; "Z:\confidentialite\rtauargus\vignettes\example_1\wo_split\datatest1.rda"</span></span>
+<span><span class="co">#&gt; Start of batch procedure; file: Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\example_1\wo_split\datatest1.arb</span></span>
+<span><span class="co">#&gt; &lt;OPENTABLEDATA&gt; "Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\example_1\wo_split\datatest1.tab"</span></span>
+<span><span class="co">#&gt; &lt;OPENMETADATA&gt; "Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\example_1\wo_split\datatest1.rda"</span></span>
 <span><span class="co">#&gt; &lt;SPECIFYTABLE&gt; "treff""cj""A10""type_distrib"|"pizzas_tot"||</span></span>
 <span><span class="co">#&gt; &lt;SAFETYRULE&gt; MAN(10)</span></span>
 <span><span class="co">#&gt; &lt;READTABLE&gt; 1</span></span>
 <span><span class="co">#&gt; Tables have been read</span></span>
-<span><span class="co">#&gt; &lt;APRIORI&gt; "Z:\confidentialite\rtauargus\vignettes\example_1\wo_split\datatest1.hst",1,",",0,0</span></span>
-<span><span class="co">#&gt; Apriory file: Z:\confidentialite\rtauargus\vignettes\example_1\wo_split\datatest1.hst has been applied</span></span>
+<span><span class="co">#&gt; &lt;APRIORI&gt; "Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\example_1\wo_split\datatest1.hst",1,",",0,0</span></span>
+<span><span class="co">#&gt; Apriory file: Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\example_1\wo_split\datatest1.hst has been applied</span></span>
 <span><span class="co">#&gt;                    to table: treff x cj x A10 x type_distrib | pizzas_tot</span></span>
-<span><span class="co">#&gt; Apriori file Z:\confidentialite\rtauargus\vignettes\example_1\wo_split\datatest1.hst has been read</span></span>
+<span><span class="co">#&gt; Apriori file Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\example_1\wo_split\datatest1.hst has been read</span></span>
 <span><span class="co">#&gt; &lt;SUPPRESS&gt; MOD(1,5,1,0,0)</span></span>
 <span><span class="co">#&gt; Start of the modular protection for table treff x cj x A10 x type_distrib | pizzas_tot</span></span>
 <span><span class="co">#&gt; WARNING: The table has 4 dimensions.</span></span>
 <span><span class="co">#&gt;                    Running Modular can take a lot of time and maybe it is difficult to obtain a correct result.</span></span>
 <span><span class="co">#&gt;                    Please check the results carefully.</span></span>
 <span><span class="co">#&gt;                    </span></span>
-<span><span class="co">#&gt; End of modular protection. Time used 305 seconds</span></span>
-<span><span class="co">#&gt;                    Number of suppressions: 292</span></span>
-<span><span class="co">#&gt; &lt;WRITETABLE&gt; (1,4,,"Z:\confidentialite\rtauargus\vignettes\example_1\wo_split\datatest1.csv")</span></span>
+<span><span class="co">#&gt; End of modular protection. Time used 301 seconds</span></span>
+<span><span class="co">#&gt;                    Number of suppressions: 291</span></span>
+<span><span class="co">#&gt; &lt;WRITETABLE&gt; (1,4,,"Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\example_1\wo_split\datatest1.csv")</span></span>
 <span><span class="co">#&gt; Table: treff x cj x A10 x type_distrib | pizzas_tot has been written</span></span>
-<span><span class="co">#&gt;                    Output file name: Z:\confidentialite\rtauargus\vignettes\example_1\wo_split\datatest1.csv</span></span>
+<span><span class="co">#&gt;                    Output file name: Z:\SDC\OutilsConfidentialite\rtauargus\vignettes\example_1\wo_split\datatest1.csv</span></span>
 <span><span class="co">#&gt; End of TauArgus run</span></span>
 <span><span class="fu">tictoc</span><span class="fu">::</span><span class="fu">toc</span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; 309.53 sec elapsed</span></span></code></pre></div>
+<span><span class="co">#&gt; 306.34 sec elapsed</span></span></code></pre></div>
 <p>Avec seulement 689 lignes et aucune variable hiérarchique, la pose
 directe du secret prend environ 5 minutes à <code>Tau-Argus</code>.</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
@@ -457,9 +448,9 @@ directe du secret prend environ 5 minutes à <code>Tau-Argus</code>.</p>
 <span><span class="co">#&gt;   flag   n</span></span>
 <span><span class="co">#&gt; 1    A  79</span></span>
 <span><span class="co">#&gt; 2    B  35</span></span>
-<span><span class="co">#&gt; 3    D 266</span></span>
-<span><span class="co">#&gt; 4    V 309</span></span></code></pre></div>
-<p>La pose directe du secret sur le tableau à 4 dimensions génère 266
+<span><span class="co">#&gt; 3    D 265</span></span>
+<span><span class="co">#&gt; 4    V 310</span></span></code></pre></div>
+<p>La pose directe du secret sur le tableau à 4 dimensions génère 265
 suppressions secondaires.</p>
 <p>On peut observer que le traitement de la table à 4 dimensions
 directement génère un masque un peu moins chargé en secret: 266 cellules
@@ -478,12 +469,12 @@ sous-tableaux vont être construits.</p>
 Andre-Raymond Socard </a></strong> &amp;
 <strong><a href="mailto:julien.jamme@insee.fr">Julien Jamme</a></strong>
 &amp; <strong><a>Nathanael Rastout</a></strong></p></li>
-<li><p>Last update: <strong>27/10/2026</strong></p></li>
-<li><p>Version of rtauargus used: <strong>1.3.6</strong></p></li>
+<li><p>Last update: <strong>11/01/2024</strong></p></li>
+<li><p>Version of rtauargus used: <strong>1.2.0</strong></p></li>
 <li><p>Version of τ-Argus used : <strong>TauArgus
 4.2.3</strong></p></li>
 <li>
-<p>R version used : <strong>4.5.3</strong></p>
+<p>R version used : <strong>4.2.3</strong></p>
 <p style="text-align: right">
 </p>
 <p><a href="#TOC" title="Back to summary">summary ↑</a></p>

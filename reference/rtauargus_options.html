@@ -102,6 +102,14 @@ Les options du package définissent les comportements par défaut des
 fonctions.</p>
 <p>If the user inadvertently removes some options, the functions will use
 the default values of the package. <br></p>
+<p>The location of Tau-Argus (<code>rtauargus.tauargus_exe</code>) has no hard-coded
+default: it is read from the <code>TAUARGUS_EXE</code> environment variable. The
+recommended way to set it once and for all is
+<code>set_tauargus_exe("C:/path/to/TauArgus.exe", install = TRUE)</code>, which writes
+it to your <code>.Renviron</code> file. <br>
+(L'emplacement de Tau-Argus n'a pas de valeur par défaut codée en dur : il
+est lu dans la variable d'environnement <code>TAUARGUS_EXE</code>, idéalement définie
+dans le fichier <code>.Renviron</code> via <code>set_tauargus_exe(..., install = TRUE)</code>.) <br></p>
 <p>(Ces options sont utilisées si un argument obligatoire d’une fonction n’est
 pas renseigné. Elles permettent de ne pas répéter systématiquement le même
 paramètre à chaque appel d'une fonction. Le nom de l’option est le nom de
@@ -131,8 +139,7 @@ utiliseront les valeurs par défaut du package.)</p>
 "</td><td><code><a href="micro_arb.html">micro_arb()</a></code></td></tr><tr><td>rtauargus.weighted</td><td>FALSE</td><td></td></tr><tr><td>rtauargus.linked</td><td>FALSE</td><td></td></tr><tr><td>rtauargus.output_type</td><td>"4
 "</td><td></td></tr><tr><td>rtauargus.output_options</td><td>"
 "</td><td></td></tr><tr><td><code>------------------------</code></td><td><code>---------------------------------</code></td><td><code>-------------</code></td></tr><tr><td>rtauargus.missing_dir</td><td>"stop
-"</td><td><code><a href="run_arb.html">run_arb()</a></code></td></tr><tr><td>rtauargus.tauargus_exe</td><td>"Y:/Logiciels/TauArgus/TauArgus.exe
-"</td><td></td></tr><tr><td>rtauargus.show_batch_console</td><td>FALSE</td><td></td></tr><tr><td>rtauargus.import</td><td>FALSE</td><td></td></tr></table></div>
+"</td><td><code><a href="run_arb.html">run_arb()</a></code></td></tr><tr><td>rtauargus.tauargus_exe</td><td><code>Sys.getenv("TAUARGUS_EXE")</code></td><td></td></tr><tr><td>rtauargus.show_batch_console</td><td>FALSE</td><td></td></tr><tr><td>rtauargus.import</td><td>FALSE</td><td></td></tr></table></div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
     <div class="dont-index"><p><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a>, R options system <br>
@@ -179,7 +186,7 @@ le système d'options de R dans lequel s'insèrent les options de ce package.</p
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] FALSE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $rtauargus.tauargus_exe</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Y:/Logiciels/TauArgus/TauArgus.exe"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] ""</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $rtauargus.totcode</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Total"</span>
@@ -228,7 +235,7 @@ le système d'options de R dans lequel s'insèrent les options de ce package.</p
 <span class="r-out co"><span class="r-pr">#&gt;</span>  $ rtauargus.response_var      : chr "&lt;freq&gt;"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  $ rtauargus.separator         : chr ","</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  $ rtauargus.show_batch_console: logi FALSE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  $ rtauargus.tauargus_exe      : chr "Y:/Logiciels/TauArgus/TauArgus.exe"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ rtauargus.tauargus_exe      : chr ""</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  $ rtauargus.totcode           : chr "Total"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  $ rtauargus.weighted          : logi TRUE</span>
 <span class="r-in"><span></span></span>
@@ -248,7 +255,7 @@ le système d'options de R dans lequel s'insèrent les options de ce package.</p
 <span class="r-out co"><span class="r-pr">#&gt;</span>  $ rtauargus.response_var      : chr "&lt;freq&gt;"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  $ rtauargus.separator         : chr ","</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  $ rtauargus.show_batch_console: logi FALSE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  $ rtauargus.tauargus_exe      : chr "Y:/Logiciels/TauArgus/TauArgus.exe"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ rtauargus.tauargus_exe      : chr ""</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  $ rtauargus.totcode           : chr "Total"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  $ rtauargus.weighted          : logi FALSE</span>
 </code></pre></div>
