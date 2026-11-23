@@ -188,3 +188,115 @@
 17-févr.-2025 12:15:40 : Table: V2 x V3 | VAL has been written
                        Output file name: C:\Users\KQCFFL\AppData\Local\Temp\Rtmpm05wlj\RTA_13aa836d5f26.sbs
 17-févr.-2025 12:15:40 : End of TauArgus run
+27-oct.-2026 15:41:08 : Start of batch procedure; file: C:\Users\YR4UKQ\AppData\Local\Temp\RtmpKSzpVY\RTA_110e87f223e1a.arb
+27-oct.-2026 15:41:08 : <OPENMICRODATA> "C:\Users\YR4UKQ\AppData\Local\Temp\RtmpKSzpVY\RTA_110e872ba4592.asc"
+27-oct.-2026 15:41:08 : <OPENMETADATA> "C:\Users\YR4UKQ\AppData\Local\Temp\RtmpKSzpVY\RTA_110e872ba4592.rda"
+27-oct.-2026 15:41:08 : <SPECIFYTABLE> "V1"|"<freq>"||
+27-oct.-2026 15:41:08 : <SAFETYRULE> FREQ(3,10)
+27-oct.-2026 15:41:08 : <READMICRODATA>
+27-oct.-2026 15:41:08 : Start explore file: C:\Users\YR4UKQ\AppData\Local\Temp\RtmpKSzpVY\RTA_110e872ba4592.asc
+27-oct.-2026 15:41:08 : Start computing tables
+27-oct.-2026 15:41:08 : Table: V1 | <freq> has been specified
+27-oct.-2026 15:41:08 : Tables have been computed
+27-oct.-2026 15:41:08 : Micro data file read; processing time 0 seconds
+27-oct.-2026 15:41:08 : Tables from microdata have been read
+27-oct.-2026 15:41:08 : <SUPPRESS> GH(1,100)
+27-oct.-2026 15:41:08 : Start of the hypercube protection for table V1 | <freq>
+27-oct.-2026 15:41:08 : End of hypercube protection. Time used 1 seconds
+                       Number of suppressions: 1
+27-oct.-2026 15:41:08 : The hypercube procedure has been applied
+                       1 cells have been suppressed
+27-oct.-2026 15:41:08 : <WRITETABLE> (1,4,,"C:\Users\YR4UKQ\AppData\Local\Temp\RtmpKSzpVY\RTA_110e87868754c.sbs")
+27-oct.-2026 15:41:08 : Table: V1 | <freq> has been written
+                       Output file name: C:\Users\YR4UKQ\AppData\Local\Temp\RtmpKSzpVY\RTA_110e87868754c.sbs
+27-oct.-2026 15:41:08 : End of TauArgus run
+27-oct.-2026 15:41:13 : Start of batch procedure; file: C:\Users\YR4UKQ\AppData\Local\Temp\RtmpKSzpVY\RTA_110e87b4b16fb.arb
+27-oct.-2026 15:41:13 : <OPENMICRODATA> "C:\Users\YR4UKQ\AppData\Local\Temp\RtmpKSzpVY\RTA_110e86746587e.asc"
+27-oct.-2026 15:41:13 : <OPENMETADATA> "C:\Users\YR4UKQ\AppData\Local\Temp\RtmpKSzpVY\RTA_110e86746587e.rda"
+27-oct.-2026 15:41:13 : <SPECIFYTABLE> "V1"|"<freq>"||
+27-oct.-2026 15:41:13 : <SAFETYRULE> FREQ(3,10)
+27-oct.-2026 15:41:13 : <SPECIFYTABLE> "V1""V2"|"<freq>"||
+27-oct.-2026 15:41:13 : <SAFETYRULE> FREQ(3,10)
+27-oct.-2026 15:41:13 : <READMICRODATA>
+27-oct.-2026 15:41:13 : Start explore file: C:\Users\YR4UKQ\AppData\Local\Temp\RtmpKSzpVY\RTA_110e86746587e.asc
+27-oct.-2026 15:41:13 : Start computing tables
+27-oct.-2026 15:41:13 : Table: V1 | <freq> has been specified
+27-oct.-2026 15:41:13 : Table: V1 x V2 | <freq> has been specified
+27-oct.-2026 15:41:13 : Tables have been computed
+27-oct.-2026 15:41:13 : Micro data file read; processing time 0 seconds
+27-oct.-2026 15:41:13 : Tables from microdata have been read
+27-oct.-2026 15:41:13 : <SUPPRESS> GH(1,100)
+27-oct.-2026 15:41:13 : Start of the hypercube protection for table V1 | <freq>
+27-oct.-2026 15:41:13 : End of hypercube protection. Time used 1 seconds
+                       Number of suppressions: 1
+27-oct.-2026 15:41:13 : The hypercube procedure has been applied
+                       1 cells have been suppressed
+27-oct.-2026 15:41:13 : <WRITETABLE> (1,4,,"C:\Users\YR4UKQ\AppData\Local\Temp\RtmpKSzpVY\RTA_110e841576cef.sbs")
+27-oct.-2026 15:41:13 : Table: V1 | <freq> has been written
+                       Output file name: C:\Users\YR4UKQ\AppData\Local\Temp\RtmpKSzpVY\RTA_110e841576cef.sbs
+27-oct.-2026 15:41:13 : <SUPPRESS> GH(2,100)
+27-oct.-2026 15:41:13 : Start of the hypercube protection for table V1 x V2 | <freq>
+27-oct.-2026 15:41:14 : End of hypercube protection. Time used 1 seconds
+                       Number of suppressions: 2
+27-oct.-2026 15:41:14 : The hypercube procedure has been applied
+                       2 cells have been suppressed
+27-oct.-2026 15:41:14 : <WRITETABLE> (2,4,AS+,"C:\Users\YR4UKQ\AppData\Local\Temp\RtmpKSzpVY\RTA_110e841517919.sbs")
+27-oct.-2026 15:41:14 : Table: V1 x V2 | <freq> has been written
+                       Output file name: C:\Users\YR4UKQ\AppData\Local\Temp\RtmpKSzpVY\RTA_110e841517919.sbs
+27-oct.-2026 15:41:14 : End of TauArgus run
+27-oct.-2026 15:41:19 : Start of batch procedure; file: Z:\microdata.arb
+27-oct.-2026 15:41:19 : <OPENMICRODATA> "Z:\microdata.asc"
+27-oct.-2026 15:41:19 : <OPENMETADATA> "Z:\microdata.rda"
+27-oct.-2026 15:41:19 : <SPECIFYTABLE> "V1"|"<freq>"||
+27-oct.-2026 15:41:19 : <SAFETYRULE> FREQ(3,10)
+27-oct.-2026 15:41:19 : <READMICRODATA>
+27-oct.-2026 15:41:19 : Start explore file: Z:\microdata.asc
+27-oct.-2026 15:41:19 : Start computing tables
+27-oct.-2026 15:41:19 : Table: V1 | <freq> has been specified
+27-oct.-2026 15:41:19 : Tables have been computed
+27-oct.-2026 15:41:19 : Micro data file read; processing time 0 seconds
+27-oct.-2026 15:41:19 : Tables from microdata have been read
+27-oct.-2026 15:41:19 : <SUPPRESS> GH(1,100)
+27-oct.-2026 15:41:19 : Start of the hypercube protection for table V1 | <freq>
+27-oct.-2026 15:41:19 : End of hypercube protection. Time used 1 seconds
+                       Number of suppressions: 1
+27-oct.-2026 15:41:19 : The hypercube procedure has been applied
+                       1 cells have been suppressed
+27-oct.-2026 15:41:19 : <WRITETABLE> (1,4,,"Z:\results\secretV1.csv")
+27-oct.-2026 15:41:19 : Table: V1 | <freq> has been written
+                       Output file name: Z:\results\secretV1.csv
+27-oct.-2026 15:41:19 : End of TauArgus run
+27-oct.-2026 15:43:04 : Start of batch procedure; file: Z:\donnees.arb
+27-oct.-2026 15:43:04 : <OPENMICRODATA> "Z:\donnees.asc"
+27-oct.-2026 15:43:04 : <OPENMETADATA> "Z:\donnees.rda"
+27-oct.-2026 15:43:04 : <SPECIFYTABLE> "V1"|"VAL"||
+27-oct.-2026 15:43:04 : <SAFETYRULE> FREQ(3,10)|Wgt(1)
+27-oct.-2026 15:43:04 : <SPECIFYTABLE> "V2""V3"|"VAL"||
+27-oct.-2026 15:43:04 : <SAFETYRULE> FREQ(3,10)|NK(1,85)
+27-oct.-2026 15:43:04 : <READMICRODATA>
+27-oct.-2026 15:43:04 : Start explore file: Z:\donnees.asc
+27-oct.-2026 15:43:04 : Start computing tables
+27-oct.-2026 15:43:04 : Table: V1 | VAL has been specified
+27-oct.-2026 15:43:04 : Table: V2 x V3 | VAL has been specified
+27-oct.-2026 15:43:04 : Tables have been computed
+27-oct.-2026 15:43:04 : Micro data file read; processing time 0 seconds
+27-oct.-2026 15:43:04 : Tables from microdata have been read
+27-oct.-2026 15:43:04 : <SUPPRESS> GH(1,100)
+27-oct.-2026 15:43:04 : Start of the hypercube protection for table V1 | VAL
+27-oct.-2026 15:43:04 : End of hypercube protection. Time used 1 seconds
+                       Number of suppressions: 1
+27-oct.-2026 15:43:04 : The hypercube procedure has been applied
+                       1 cells have been suppressed
+27-oct.-2026 15:43:04 : <WRITETABLE> (1,4,AS+SE+,"C:\Users\YR4UKQ\AppData\Local\Temp\RtmpKSzpVY\RTA_110e85ac86a31.sbs")
+27-oct.-2026 15:43:04 : Table: V1 | VAL has been written
+                       Output file name: C:\Users\YR4UKQ\AppData\Local\Temp\RtmpKSzpVY\RTA_110e85ac86a31.sbs
+27-oct.-2026 15:43:04 : <SUPPRESS> GH(2,100)
+27-oct.-2026 15:43:04 : Start of the hypercube protection for table V2 x V3 | VAL
+27-oct.-2026 15:43:04 : End of hypercube protection. Time used 1 seconds
+                       Number of suppressions: 2
+27-oct.-2026 15:43:04 : The hypercube procedure has been applied
+                       2 cells have been suppressed
+27-oct.-2026 15:43:04 : <WRITETABLE> (2,4,AS+SE+,"C:\Users\YR4UKQ\AppData\Local\Temp\RtmpKSzpVY\RTA_110e87e4a6f77.sbs")
+27-oct.-2026 15:43:04 : Table: V2 x V3 | VAL has been written
+                       Output file name: C:\Users\YR4UKQ\AppData\Local\Temp\RtmpKSzpVY\RTA_110e87e4a6f77.sbs
+27-oct.-2026 15:43:05 : End of TauArgus run

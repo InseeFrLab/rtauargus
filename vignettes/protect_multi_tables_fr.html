@@ -48,8 +48,9 @@ overflow: visible;
 }
 </style>
 <style type="text/css" data-origin="pandoc">
+html { -webkit-text-size-adjust: 100%; }
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -60,7 +61,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
 { counter-reset: source-line 0; }
@@ -346,16 +347,18 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <ul>
 <li><a href="#introduction" id="toc-introduction"><span class="toc-section-number">1</span> Introduction</a>
 <ul>
-<li><a href="#comment-tab_multi_manager-gère-t-il-la-protection-dun-ensemble-de-tableaux-liées" id="toc-comment-tab_multi_manager-gère-t-il-la-protection-dun-ensemble-de-tableaux-liées"><span class="toc-section-number">1.1</span> Comment
+<li><a href="#comment-tab_multi_manager-g%C3%A8re-t-il-la-protection-dun-ensemble-de-tableaux-li%C3%A9es" id="toc-comment-tab_multi_manager-gère-t-il-la-protection-dun-ensemble-de-tableaux-liées"><span class="toc-section-number">1.1</span> Comment
 <code>tab_multi_manager()</code> gère-t-il la protection d’un ensemble
 de tableaux liées ?</a></li>
-<li><a href="#résultats" id="toc-résultats"><span class="toc-section-number">1.2</span> Résultats</a></li>
-<li><a href="#quelques-détails-sur-les-paramètres-de-tab_multi_manager" id="toc-quelques-détails-sur-les-paramètres-de-tab_multi_manager"><span class="toc-section-number">1.3</span> Quelques détails sur les
+<li><a href="#r%C3%A9sultats" id="toc-résultats"><span class="toc-section-number">1.2</span> Résultats</a></li>
+<li><a href="#quelques-d%C3%A9tails-sur-les-param%C3%A8tres-de-tab_multi_manager" id="toc-quelques-détails-sur-les-paramètres-de-tab_multi_manager"><span class="toc-section-number">1.3</span> Quelques détails sur les
 paramètres de `tab_multi_manager()``</a></li>
 </ul></li>
 <li><a href="#quelques-exemples" id="toc-quelques-exemples"><span class="toc-section-number">2</span> Quelques exemples</a>
 <ul>
-<li><a href="#traiter-les-hiérarchies-non-emboitées" id="toc-traiter-les-hiérarchies-non-emboitées"><span class="toc-section-number">2.1</span> Traiter les hiérarchies non
+<li><a href="#comment-prot%C3%A9ger-4-tableaux-li%C3%A9s-en-m%C3%AAme-temps" id="toc-comment-protéger-4-tableaux-liés-en-même-temps"><span class="toc-section-number">2.1</span> Comment protéger 4 tableaux liés
+en même temps</a></li>
+<li><a href="#traiter-les-hi%C3%A9rarchies-non-emboit%C3%A9es" id="toc-traiter-les-hiérarchies-non-emboitées"><span class="toc-section-number">2.2</span> Traiter les hiérarchies non
 emboitées</a></li>
 </ul></li>
 </ul>
@@ -522,273 +525,274 @@ s’arrêter. En pratique on n’atteint jamais la limite de 10. par défaut :
 </div>
 <div id="quelques-exemples" class="section level1" number="2">
 <h1><span class="header-section-number">2</span> Quelques exemples</h1>
-<p>Spécifions l’emplacement du fichier TauArgus.exe sur notre ordinateur
-:</p>
-<p>``{r version} options( rtauargus.tauargus_exe =
-“Y:/Logiciels/TauArgus/TauArgus4.2.3/TauArgus.exe” )</p>
-<pre><code>
-## Comment protéger 4 tableaux liés en même temps
-
-Dans l&#39;exemple suivant, nous allons protéger un ensemble de 4 tableaux liés partageant
-la même variable de réponse, à savoir le chiffre d&#39;affaires.
-
-### Préparation des données
-
-
-``` r
-data(&quot;turnover_act_size&quot;)
-data(&quot;turnover_act_cj&quot;)
-data (&quot;turnover_nuts_size&quot;)
-data(&quot;turnover_nuts_cj&quot;)</code></pre>
+<p>Si ce n’est pas déjà fait (par exemple dans le fichier
+<code>.Renviron</code>, voir <code>?set_tauargus_exe</code>), spécifions
+l’emplacement du fichier TauArgus.exe sur notre ordinateur :</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">set_tauargus_exe</span>(<span class="st">&quot;C:/path/to/TauArgus/TauArgus.exe&quot;</span>)</span></code></pre></div>
+<div id="comment-protéger-4-tableaux-liés-en-même-temps" class="section level2" number="2.1">
+<h2><span class="header-section-number">2.1</span> Comment protéger 4
+tableaux liés en même temps</h2>
+<p>Dans l’exemple suivant, nous allons protéger un ensemble de 4
+tableaux liés partageant la même variable de réponse, à savoir le
+chiffre d’affaires.</p>
+<div id="préparation-des-données" class="section level3" number="2.1.1">
+<h3><span class="header-section-number">2.1.1</span> Préparation des
+données</h3>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="fu">data</span>(<span class="st">&quot;turnover_act_size&quot;</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a><span class="fu">data</span>(<span class="st">&quot;turnover_act_cj&quot;</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a><span class="fu">data</span> (<span class="st">&quot;turnover_nuts_size&quot;</span>)</span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a><span class="fu">data</span>(<span class="st">&quot;turnover_nuts_cj&quot;</span>)</span></code></pre></div>
 <p>ACTIVITY X SIZE nommé turnover_act_size ACTIVITY X CJ nommé
 turnover_act_cj NUTS X SIZE nommé turnover_nuts_size NUTS X CJ nommé
 turnover_nuts_cj</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="fu">str</span>(turnover_act_size)</span>
-<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a><span class="co">#&gt; tibble [414 x 5] (S3: tbl_df/tbl/data.frame)</span></span>
-<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a><span class="co">#&gt;  $ ACTIVITY: chr [1:414] &quot;AZ&quot; &quot;BE&quot; &quot;FZ&quot; &quot;GI&quot; ...</span></span>
-<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a><span class="co">#&gt;  $ SIZE    : chr [1:414] &quot;Total&quot; &quot;Total&quot; &quot;Total&quot; &quot;Total&quot; ...</span></span>
-<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a><span class="co">#&gt;  $ N_OBS   : int [1:414] 405 12878 28043 62053 8135 8140 11961 41359 26686 25108 ...</span></span>
-<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a><span class="co">#&gt;  $ TOT     : num [1:414] 44475 24827613 8907311 26962063 8584917 ...</span></span>
-<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a><span class="co">#&gt;  $ MAX     : num [1:414] 6212 1442029 1065833 3084242 3957364 ...</span></span></code></pre></div>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="fu">str</span>(turnover_nuts_cj)</span>
-<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a><span class="co">#&gt; tibble [452 x 5] (S3: tbl_df/tbl/data.frame)</span></span>
-<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a><span class="co">#&gt;  $ NUTS : chr [1:452] &quot;FR10&quot; &quot;FR21&quot; &quot;FR22&quot; &quot;FR23&quot; ...</span></span>
-<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a><span class="co">#&gt;  $ CJ   : chr [1:452] &quot;Total&quot; &quot;Total&quot; &quot;Total&quot; &quot;Total&quot; ...</span></span>
-<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a><span class="co">#&gt;  $ N_OBS: int [1:452] 38462 6769 4561 5090 8611 7811 5643 10411 8179 5163 ...</span></span>
-<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a><span class="co">#&gt;  $ TOT  : num [1:452] 33026385 2947560 1917663 3701935 5089279 ...</span></span>
-<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a><span class="co">#&gt;  $ MAX  : num [1:452] 3084242 544763 651848 298134 1165019 ...</span></span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="fu">str</span>(turnover_act_size)</span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a><span class="co">#&gt; tibble [414 x 5] (S3: tbl_df/tbl/data.frame)</span></span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a><span class="co">#&gt;  $ ACTIVITY: chr [1:414] &quot;AZ&quot; &quot;BE&quot; &quot;FZ&quot; &quot;GI&quot; ...</span></span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a><span class="co">#&gt;  $ SIZE    : chr [1:414] &quot;Total&quot; &quot;Total&quot; &quot;Total&quot; &quot;Total&quot; ...</span></span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a><span class="co">#&gt;  $ N_OBS   : int [1:414] 405 12878 28043 62053 8135 8140 11961 41359 26686 25108 ...</span></span>
+<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a><span class="co">#&gt;  $ TOT     : num [1:414] 44475 24827613 8907311 26962063 8584917 ...</span></span>
+<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a><span class="co">#&gt;  $ MAX     : num [1:414] 6212 1442029 1065833 3084242 3957364 ...</span></span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="fu">str</span>(turnover_nuts_cj)</span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a><span class="co">#&gt; tibble [452 x 5] (S3: tbl_df/tbl/data.frame)</span></span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a><span class="co">#&gt;  $ NUTS : chr [1:452] &quot;FR10&quot; &quot;FR21&quot; &quot;FR22&quot; &quot;FR23&quot; ...</span></span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a><span class="co">#&gt;  $ CJ   : chr [1:452] &quot;Total&quot; &quot;Total&quot; &quot;Total&quot; &quot;Total&quot; ...</span></span>
+<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a><span class="co">#&gt;  $ N_OBS: int [1:452] 38462 6769 4561 5090 8611 7811 5643 10411 8179 5163 ...</span></span>
+<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a><span class="co">#&gt;  $ TOT  : num [1:452] 33026385 2947560 1917663 3701935 5089279 ...</span></span>
+<span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a><span class="co">#&gt;  $ MAX  : num [1:452] 3084242 544763 651848 298134 1165019 ...</span></span></code></pre></div>
 <p>La première étape consiste à créer une liste contenant nos quatre
 tableaux, il est conseillé de de donner un nom à chaque table. En
 faisant cela, il sera plus facile de suivre le déroulement de la pose du
 secret secondaire.</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>list_data_4_tabs <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
-<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>  <span class="at">act_size =</span> turnover_act_size,</span>
-<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a>  <span class="at">act_cj =</span> turnover_act_cj,</span>
-<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a>  <span class="at">nuts_size =</span> turnover_nuts_size,</span>
-<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a>  <span class="at">nuts_cj =</span> turnover_nuts_cj</span>
-<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a>)</span>
-<span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a><span class="fu">str</span>(list_data_4_tabs)</span>
-<span id="cb4-8"><a href="#cb4-8" tabindex="-1"></a><span class="co">#&gt; List of 4</span></span>
-<span id="cb4-9"><a href="#cb4-9" tabindex="-1"></a><span class="co">#&gt;  $ act_size : tibble [414 x 5] (S3: tbl_df/tbl/data.frame)</span></span>
-<span id="cb4-10"><a href="#cb4-10" tabindex="-1"></a><span class="co">#&gt;   ..$ ACTIVITY: chr [1:414] &quot;AZ&quot; &quot;BE&quot; &quot;FZ&quot; &quot;GI&quot; ...</span></span>
-<span id="cb4-11"><a href="#cb4-11" tabindex="-1"></a><span class="co">#&gt;   ..$ SIZE    : chr [1:414] &quot;Total&quot; &quot;Total&quot; &quot;Total&quot; &quot;Total&quot; ...</span></span>
-<span id="cb4-12"><a href="#cb4-12" tabindex="-1"></a><span class="co">#&gt;   ..$ N_OBS   : int [1:414] 405 12878 28043 62053 8135 8140 11961 41359 26686 25108 ...</span></span>
-<span id="cb4-13"><a href="#cb4-13" tabindex="-1"></a><span class="co">#&gt;   ..$ TOT     : num [1:414] 44475 24827613 8907311 26962063 8584917 ...</span></span>
-<span id="cb4-14"><a href="#cb4-14" tabindex="-1"></a><span class="co">#&gt;   ..$ MAX     : num [1:414] 6212 1442029 1065833 3084242 3957364 ...</span></span>
-<span id="cb4-15"><a href="#cb4-15" tabindex="-1"></a><span class="co">#&gt;  $ act_cj   : tibble [406 x 5] (S3: tbl_df/tbl/data.frame)</span></span>
-<span id="cb4-16"><a href="#cb4-16" tabindex="-1"></a><span class="co">#&gt;   ..$ ACTIVITY: chr [1:406] &quot;AZ&quot; &quot;BE&quot; &quot;FZ&quot; &quot;GI&quot; ...</span></span>
-<span id="cb4-17"><a href="#cb4-17" tabindex="-1"></a><span class="co">#&gt;   ..$ CJ      : chr [1:406] &quot;Total&quot; &quot;Total&quot; &quot;Total&quot; &quot;Total&quot; ...</span></span>
-<span id="cb4-18"><a href="#cb4-18" tabindex="-1"></a><span class="co">#&gt;   ..$ N_OBS   : int [1:406] 405 12878 28043 62053 8135 8140 11961 41359 26686 25108 ...</span></span>
-<span id="cb4-19"><a href="#cb4-19" tabindex="-1"></a><span class="co">#&gt;   ..$ TOT     : num [1:406] 44475 24827613 8907311 26962063 8584917 ...</span></span>
-<span id="cb4-20"><a href="#cb4-20" tabindex="-1"></a><span class="co">#&gt;   ..$ MAX     : num [1:406] 6212 1442029 1065833 3084242 3957364 ...</span></span>
-<span id="cb4-21"><a href="#cb4-21" tabindex="-1"></a><span class="co">#&gt;  $ nuts_size: tibble [460 x 5] (S3: tbl_df/tbl/data.frame)</span></span>
-<span id="cb4-22"><a href="#cb4-22" tabindex="-1"></a><span class="co">#&gt;   ..$ NUTS : chr [1:460] &quot;FR10&quot; &quot;FR21&quot; &quot;FR22&quot; &quot;FR23&quot; ...</span></span>
-<span id="cb4-23"><a href="#cb4-23" tabindex="-1"></a><span class="co">#&gt;   ..$ SIZE : chr [1:460] &quot;Total&quot; &quot;Total&quot; &quot;Total&quot; &quot;Total&quot; ...</span></span>
-<span id="cb4-24"><a href="#cb4-24" tabindex="-1"></a><span class="co">#&gt;   ..$ N_OBS: int [1:460] 38462 6769 4561 5090 8611 7811 5643 10411 8179 5163 ...</span></span>
-<span id="cb4-25"><a href="#cb4-25" tabindex="-1"></a><span class="co">#&gt;   ..$ TOT  : num [1:460] 33026385 2947560 1917663 3701935 5089279 ...</span></span>
-<span id="cb4-26"><a href="#cb4-26" tabindex="-1"></a><span class="co">#&gt;   ..$ MAX  : num [1:460] 3084242 544763 651848 298134 1165019 ...</span></span>
-<span id="cb4-27"><a href="#cb4-27" tabindex="-1"></a><span class="co">#&gt;  $ nuts_cj  : tibble [452 x 5] (S3: tbl_df/tbl/data.frame)</span></span>
-<span id="cb4-28"><a href="#cb4-28" tabindex="-1"></a><span class="co">#&gt;   ..$ NUTS : chr [1:452] &quot;FR10&quot; &quot;FR21&quot; &quot;FR22&quot; &quot;FR23&quot; ...</span></span>
-<span id="cb4-29"><a href="#cb4-29" tabindex="-1"></a><span class="co">#&gt;   ..$ CJ   : chr [1:452] &quot;Total&quot; &quot;Total&quot; &quot;Total&quot; &quot;Total&quot; ...</span></span>
-<span id="cb4-30"><a href="#cb4-30" tabindex="-1"></a><span class="co">#&gt;   ..$ N_OBS: int [1:452] 38462 6769 4561 5090 8611 7811 5643 10411 8179 5163 ...</span></span>
-<span id="cb4-31"><a href="#cb4-31" tabindex="-1"></a><span class="co">#&gt;   ..$ TOT  : num [1:452] 33026385 2947560 1917663 3701935 5089279 ...</span></span>
-<span id="cb4-32"><a href="#cb4-32" tabindex="-1"></a><span class="co">#&gt;   ..$ MAX  : num [1:452] 3084242 544763 651848 298134 1165019 ...</span></span></code></pre></div>
-<div id="appliquer-les-règles-de-secret-primaire" class="section level3" number="2.0.1">
-<h3><span class="header-section-number">2.0.1</span> Appliquer les
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>list_data_4_tabs <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>  <span class="at">act_size =</span> turnover_act_size,</span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a>  <span class="at">act_cj =</span> turnover_act_cj,</span>
+<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a>  <span class="at">nuts_size =</span> turnover_nuts_size,</span>
+<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a>  <span class="at">nuts_cj =</span> turnover_nuts_cj</span>
+<span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a>)</span>
+<span id="cb5-7"><a href="#cb5-7" tabindex="-1"></a><span class="fu">str</span>(list_data_4_tabs)</span>
+<span id="cb5-8"><a href="#cb5-8" tabindex="-1"></a><span class="co">#&gt; List of 4</span></span>
+<span id="cb5-9"><a href="#cb5-9" tabindex="-1"></a><span class="co">#&gt;  $ act_size : tibble [414 x 5] (S3: tbl_df/tbl/data.frame)</span></span>
+<span id="cb5-10"><a href="#cb5-10" tabindex="-1"></a><span class="co">#&gt;   ..$ ACTIVITY: chr [1:414] &quot;AZ&quot; &quot;BE&quot; &quot;FZ&quot; &quot;GI&quot; ...</span></span>
+<span id="cb5-11"><a href="#cb5-11" tabindex="-1"></a><span class="co">#&gt;   ..$ SIZE    : chr [1:414] &quot;Total&quot; &quot;Total&quot; &quot;Total&quot; &quot;Total&quot; ...</span></span>
+<span id="cb5-12"><a href="#cb5-12" tabindex="-1"></a><span class="co">#&gt;   ..$ N_OBS   : int [1:414] 405 12878 28043 62053 8135 8140 11961 41359 26686 25108 ...</span></span>
+<span id="cb5-13"><a href="#cb5-13" tabindex="-1"></a><span class="co">#&gt;   ..$ TOT     : num [1:414] 44475 24827613 8907311 26962063 8584917 ...</span></span>
+<span id="cb5-14"><a href="#cb5-14" tabindex="-1"></a><span class="co">#&gt;   ..$ MAX     : num [1:414] 6212 1442029 1065833 3084242 3957364 ...</span></span>
+<span id="cb5-15"><a href="#cb5-15" tabindex="-1"></a><span class="co">#&gt;  $ act_cj   : tibble [406 x 5] (S3: tbl_df/tbl/data.frame)</span></span>
+<span id="cb5-16"><a href="#cb5-16" tabindex="-1"></a><span class="co">#&gt;   ..$ ACTIVITY: chr [1:406] &quot;AZ&quot; &quot;BE&quot; &quot;FZ&quot; &quot;GI&quot; ...</span></span>
+<span id="cb5-17"><a href="#cb5-17" tabindex="-1"></a><span class="co">#&gt;   ..$ CJ      : chr [1:406] &quot;Total&quot; &quot;Total&quot; &quot;Total&quot; &quot;Total&quot; ...</span></span>
+<span id="cb5-18"><a href="#cb5-18" tabindex="-1"></a><span class="co">#&gt;   ..$ N_OBS   : int [1:406] 405 12878 28043 62053 8135 8140 11961 41359 26686 25108 ...</span></span>
+<span id="cb5-19"><a href="#cb5-19" tabindex="-1"></a><span class="co">#&gt;   ..$ TOT     : num [1:406] 44475 24827613 8907311 26962063 8584917 ...</span></span>
+<span id="cb5-20"><a href="#cb5-20" tabindex="-1"></a><span class="co">#&gt;   ..$ MAX     : num [1:406] 6212 1442029 1065833 3084242 3957364 ...</span></span>
+<span id="cb5-21"><a href="#cb5-21" tabindex="-1"></a><span class="co">#&gt;  $ nuts_size: tibble [460 x 5] (S3: tbl_df/tbl/data.frame)</span></span>
+<span id="cb5-22"><a href="#cb5-22" tabindex="-1"></a><span class="co">#&gt;   ..$ NUTS : chr [1:460] &quot;FR10&quot; &quot;FR21&quot; &quot;FR22&quot; &quot;FR23&quot; ...</span></span>
+<span id="cb5-23"><a href="#cb5-23" tabindex="-1"></a><span class="co">#&gt;   ..$ SIZE : chr [1:460] &quot;Total&quot; &quot;Total&quot; &quot;Total&quot; &quot;Total&quot; ...</span></span>
+<span id="cb5-24"><a href="#cb5-24" tabindex="-1"></a><span class="co">#&gt;   ..$ N_OBS: int [1:460] 38462 6769 4561 5090 8611 7811 5643 10411 8179 5163 ...</span></span>
+<span id="cb5-25"><a href="#cb5-25" tabindex="-1"></a><span class="co">#&gt;   ..$ TOT  : num [1:460] 33026385 2947560 1917663 3701935 5089279 ...</span></span>
+<span id="cb5-26"><a href="#cb5-26" tabindex="-1"></a><span class="co">#&gt;   ..$ MAX  : num [1:460] 3084242 544763 651848 298134 1165019 ...</span></span>
+<span id="cb5-27"><a href="#cb5-27" tabindex="-1"></a><span class="co">#&gt;  $ nuts_cj  : tibble [452 x 5] (S3: tbl_df/tbl/data.frame)</span></span>
+<span id="cb5-28"><a href="#cb5-28" tabindex="-1"></a><span class="co">#&gt;   ..$ NUTS : chr [1:452] &quot;FR10&quot; &quot;FR21&quot; &quot;FR22&quot; &quot;FR23&quot; ...</span></span>
+<span id="cb5-29"><a href="#cb5-29" tabindex="-1"></a><span class="co">#&gt;   ..$ CJ   : chr [1:452] &quot;Total&quot; &quot;Total&quot; &quot;Total&quot; &quot;Total&quot; ...</span></span>
+<span id="cb5-30"><a href="#cb5-30" tabindex="-1"></a><span class="co">#&gt;   ..$ N_OBS: int [1:452] 38462 6769 4561 5090 8611 7811 5643 10411 8179 5163 ...</span></span>
+<span id="cb5-31"><a href="#cb5-31" tabindex="-1"></a><span class="co">#&gt;   ..$ TOT  : num [1:452] 33026385 2947560 1917663 3701935 5089279 ...</span></span>
+<span id="cb5-32"><a href="#cb5-32" tabindex="-1"></a><span class="co">#&gt;   ..$ MAX  : num [1:452] 3084242 544763 651848 298134 1165019 ...</span></span></code></pre></div>
+</div>
+<div id="appliquer-les-règles-de-secret-primaire" class="section level3" number="2.1.2">
+<h3><span class="header-section-number">2.1.2</span> Appliquer les
 règles de secret primaire</h3>
 <p>Ensuite, nous devons appliquer les règles de secret primaire pour
 chaque table. Ici, nous appliquons 2 règles : La règle de dominance à
 85% NK(1,85) et la règle de fréquence avec un seuil fixé à 3.</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>list_data_4_tabs <span class="ot">&lt;-</span> list_data_4_tabs <span class="sc">%&gt;%</span></span>
-<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>  purrr<span class="sc">::</span><span class="fu">map</span>(</span>
-<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a>    <span class="cf">function</span>(df){</span>
-<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a>      df <span class="sc">%&gt;%</span></span>
-<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a>        <span class="fu">mutate</span>(</span>
-<span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a>          <span class="at">is_secret_freq =</span> N_OBS <span class="sc">&gt;</span> <span class="dv">0</span> <span class="sc">&amp;</span> N_OBS <span class="sc">&lt;</span> <span class="dv">3</span>,</span>
-<span id="cb5-7"><a href="#cb5-7" tabindex="-1"></a>          <span class="at">is_secret_dom =</span> <span class="fu">ifelse</span>(MAX <span class="sc">==</span> <span class="dv">0</span>, <span class="cn">FALSE</span>, MAX<span class="sc">/</span>TOT<span class="sc">&gt;</span><span class="fl">0.85</span>),</span>
-<span id="cb5-8"><a href="#cb5-8" tabindex="-1"></a>          <span class="at">is_secret_prim =</span> is_secret_freq <span class="sc">|</span> is_secret_dom</span>
-<span id="cb5-9"><a href="#cb5-9" tabindex="-1"></a>        )</span>
-<span id="cb5-10"><a href="#cb5-10" tabindex="-1"></a>    }</span>
-<span id="cb5-11"><a href="#cb5-11" tabindex="-1"></a>  )</span>
-<span id="cb5-12"><a href="#cb5-12" tabindex="-1"></a><span class="fu">str</span>(list_data_4_tabs)</span>
-<span id="cb5-13"><a href="#cb5-13" tabindex="-1"></a><span class="co">#&gt; List of 4</span></span>
-<span id="cb5-14"><a href="#cb5-14" tabindex="-1"></a><span class="co">#&gt;  $ act_size : tibble [414 x 8] (S3: tbl_df/tbl/data.frame)</span></span>
-<span id="cb5-15"><a href="#cb5-15" tabindex="-1"></a><span class="co">#&gt;   ..$ ACTIVITY      : chr [1:414] &quot;AZ&quot; &quot;BE&quot; &quot;FZ&quot; &quot;GI&quot; ...</span></span>
-<span id="cb5-16"><a href="#cb5-16" tabindex="-1"></a><span class="co">#&gt;   ..$ SIZE          : chr [1:414] &quot;Total&quot; &quot;Total&quot; &quot;Total&quot; &quot;Total&quot; ...</span></span>
-<span id="cb5-17"><a href="#cb5-17" tabindex="-1"></a><span class="co">#&gt;   ..$ N_OBS         : int [1:414] 405 12878 28043 62053 8135 8140 11961 41359 26686 25108 ...</span></span>
-<span id="cb5-18"><a href="#cb5-18" tabindex="-1"></a><span class="co">#&gt;   ..$ TOT           : num [1:414] 44475 24827613 8907311 26962063 8584917 ...</span></span>
-<span id="cb5-19"><a href="#cb5-19" tabindex="-1"></a><span class="co">#&gt;   ..$ MAX           : num [1:414] 6212 1442029 1065833 3084242 3957364 ...</span></span>
-<span id="cb5-20"><a href="#cb5-20" tabindex="-1"></a><span class="co">#&gt;   ..$ is_secret_freq: logi [1:414] FALSE FALSE FALSE FALSE FALSE FALSE ...</span></span>
-<span id="cb5-21"><a href="#cb5-21" tabindex="-1"></a><span class="co">#&gt;   ..$ is_secret_dom : logi [1:414] FALSE FALSE FALSE FALSE FALSE FALSE ...</span></span>
-<span id="cb5-22"><a href="#cb5-22" tabindex="-1"></a><span class="co">#&gt;   ..$ is_secret_prim: logi [1:414] FALSE FALSE FALSE FALSE FALSE FALSE ...</span></span>
-<span id="cb5-23"><a href="#cb5-23" tabindex="-1"></a><span class="co">#&gt;  $ act_cj   : tibble [406 x 8] (S3: tbl_df/tbl/data.frame)</span></span>
-<span id="cb5-24"><a href="#cb5-24" tabindex="-1"></a><span class="co">#&gt;   ..$ ACTIVITY      : chr [1:406] &quot;AZ&quot; &quot;BE&quot; &quot;FZ&quot; &quot;GI&quot; ...</span></span>
-<span id="cb5-25"><a href="#cb5-25" tabindex="-1"></a><span class="co">#&gt;   ..$ CJ            : chr [1:406] &quot;Total&quot; &quot;Total&quot; &quot;Total&quot; &quot;Total&quot; ...</span></span>
-<span id="cb5-26"><a href="#cb5-26" tabindex="-1"></a><span class="co">#&gt;   ..$ N_OBS         : int [1:406] 405 12878 28043 62053 8135 8140 11961 41359 26686 25108 ...</span></span>
-<span id="cb5-27"><a href="#cb5-27" tabindex="-1"></a><span class="co">#&gt;   ..$ TOT           : num [1:406] 44475 24827613 8907311 26962063 8584917 ...</span></span>
-<span id="cb5-28"><a href="#cb5-28" tabindex="-1"></a><span class="co">#&gt;   ..$ MAX           : num [1:406] 6212 1442029 1065833 3084242 3957364 ...</span></span>
-<span id="cb5-29"><a href="#cb5-29" tabindex="-1"></a><span class="co">#&gt;   ..$ is_secret_freq: logi [1:406] FALSE FALSE FALSE FALSE FALSE FALSE ...</span></span>
-<span id="cb5-30"><a href="#cb5-30" tabindex="-1"></a><span class="co">#&gt;   ..$ is_secret_dom : logi [1:406] FALSE FALSE FALSE FALSE FALSE FALSE ...</span></span>
-<span id="cb5-31"><a href="#cb5-31" tabindex="-1"></a><span class="co">#&gt;   ..$ is_secret_prim: logi [1:406] FALSE FALSE FALSE FALSE FALSE FALSE ...</span></span>
-<span id="cb5-32"><a href="#cb5-32" tabindex="-1"></a><span class="co">#&gt;  $ nuts_size: tibble [460 x 8] (S3: tbl_df/tbl/data.frame)</span></span>
-<span id="cb5-33"><a href="#cb5-33" tabindex="-1"></a><span class="co">#&gt;   ..$ NUTS          : chr [1:460] &quot;FR10&quot; &quot;FR21&quot; &quot;FR22&quot; &quot;FR23&quot; ...</span></span>
-<span id="cb5-34"><a href="#cb5-34" tabindex="-1"></a><span class="co">#&gt;   ..$ SIZE          : chr [1:460] &quot;Total&quot; &quot;Total&quot; &quot;Total&quot; &quot;Total&quot; ...</span></span>
-<span id="cb5-35"><a href="#cb5-35" tabindex="-1"></a><span class="co">#&gt;   ..$ N_OBS         : int [1:460] 38462 6769 4561 5090 8611 7811 5643 10411 8179 5163 ...</span></span>
-<span id="cb5-36"><a href="#cb5-36" tabindex="-1"></a><span class="co">#&gt;   ..$ TOT           : num [1:460] 33026385 2947560 1917663 3701935 5089279 ...</span></span>
-<span id="cb5-37"><a href="#cb5-37" tabindex="-1"></a><span class="co">#&gt;   ..$ MAX           : num [1:460] 3084242 544763 651848 298134 1165019 ...</span></span>
-<span id="cb5-38"><a href="#cb5-38" tabindex="-1"></a><span class="co">#&gt;   ..$ is_secret_freq: logi [1:460] FALSE FALSE FALSE FALSE FALSE FALSE ...</span></span>
-<span id="cb5-39"><a href="#cb5-39" tabindex="-1"></a><span class="co">#&gt;   ..$ is_secret_dom : logi [1:460] FALSE FALSE FALSE FALSE FALSE FALSE ...</span></span>
-<span id="cb5-40"><a href="#cb5-40" tabindex="-1"></a><span class="co">#&gt;   ..$ is_secret_prim: logi [1:460] FALSE FALSE FALSE FALSE FALSE FALSE ...</span></span>
-<span id="cb5-41"><a href="#cb5-41" tabindex="-1"></a><span class="co">#&gt;  $ nuts_cj  : tibble [452 x 8] (S3: tbl_df/tbl/data.frame)</span></span>
-<span id="cb5-42"><a href="#cb5-42" tabindex="-1"></a><span class="co">#&gt;   ..$ NUTS          : chr [1:452] &quot;FR10&quot; &quot;FR21&quot; &quot;FR22&quot; &quot;FR23&quot; ...</span></span>
-<span id="cb5-43"><a href="#cb5-43" tabindex="-1"></a><span class="co">#&gt;   ..$ CJ            : chr [1:452] &quot;Total&quot; &quot;Total&quot; &quot;Total&quot; &quot;Total&quot; ...</span></span>
-<span id="cb5-44"><a href="#cb5-44" tabindex="-1"></a><span class="co">#&gt;   ..$ N_OBS         : int [1:452] 38462 6769 4561 5090 8611 7811 5643 10411 8179 5163 ...</span></span>
-<span id="cb5-45"><a href="#cb5-45" tabindex="-1"></a><span class="co">#&gt;   ..$ TOT           : num [1:452] 33026385 2947560 1917663 3701935 5089279 ...</span></span>
-<span id="cb5-46"><a href="#cb5-46" tabindex="-1"></a><span class="co">#&gt;   ..$ MAX           : num [1:452] 3084242 544763 651848 298134 1165019 ...</span></span>
-<span id="cb5-47"><a href="#cb5-47" tabindex="-1"></a><span class="co">#&gt;   ..$ is_secret_freq: logi [1:452] FALSE FALSE FALSE FALSE FALSE FALSE ...</span></span>
-<span id="cb5-48"><a href="#cb5-48" tabindex="-1"></a><span class="co">#&gt;   ..$ is_secret_dom : logi [1:452] FALSE FALSE FALSE FALSE FALSE FALSE ...</span></span>
-<span id="cb5-49"><a href="#cb5-49" tabindex="-1"></a><span class="co">#&gt;   ..$ is_secret_prim: logi [1:452] FALSE FALSE FALSE FALSE FALSE FALSE ...</span></span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a>list_data_4_tabs <span class="ot">&lt;-</span> list_data_4_tabs <span class="sc">%&gt;%</span></span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a>  purrr<span class="sc">::</span><span class="fu">map</span>(</span>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a>    <span class="cf">function</span>(df){</span>
+<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a>      df <span class="sc">%&gt;%</span></span>
+<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a>        <span class="fu">mutate</span>(</span>
+<span id="cb6-6"><a href="#cb6-6" tabindex="-1"></a>          <span class="at">is_secret_freq =</span> N_OBS <span class="sc">&gt;</span> <span class="dv">0</span> <span class="sc">&amp;</span> N_OBS <span class="sc">&lt;</span> <span class="dv">3</span>,</span>
+<span id="cb6-7"><a href="#cb6-7" tabindex="-1"></a>          <span class="at">is_secret_dom =</span> <span class="fu">ifelse</span>(MAX <span class="sc">==</span> <span class="dv">0</span>, <span class="cn">FALSE</span>, MAX<span class="sc">/</span>TOT<span class="sc">&gt;</span><span class="fl">0.85</span>),</span>
+<span id="cb6-8"><a href="#cb6-8" tabindex="-1"></a>          <span class="at">is_secret_prim =</span> is_secret_freq <span class="sc">|</span> is_secret_dom</span>
+<span id="cb6-9"><a href="#cb6-9" tabindex="-1"></a>        )</span>
+<span id="cb6-10"><a href="#cb6-10" tabindex="-1"></a>    }</span>
+<span id="cb6-11"><a href="#cb6-11" tabindex="-1"></a>  )</span>
+<span id="cb6-12"><a href="#cb6-12" tabindex="-1"></a><span class="fu">str</span>(list_data_4_tabs)</span>
+<span id="cb6-13"><a href="#cb6-13" tabindex="-1"></a><span class="co">#&gt; List of 4</span></span>
+<span id="cb6-14"><a href="#cb6-14" tabindex="-1"></a><span class="co">#&gt;  $ act_size : tibble [414 x 8] (S3: tbl_df/tbl/data.frame)</span></span>
+<span id="cb6-15"><a href="#cb6-15" tabindex="-1"></a><span class="co">#&gt;   ..$ ACTIVITY      : chr [1:414] &quot;AZ&quot; &quot;BE&quot; &quot;FZ&quot; &quot;GI&quot; ...</span></span>
+<span id="cb6-16"><a href="#cb6-16" tabindex="-1"></a><span class="co">#&gt;   ..$ SIZE          : chr [1:414] &quot;Total&quot; &quot;Total&quot; &quot;Total&quot; &quot;Total&quot; ...</span></span>
+<span id="cb6-17"><a href="#cb6-17" tabindex="-1"></a><span class="co">#&gt;   ..$ N_OBS         : int [1:414] 405 12878 28043 62053 8135 8140 11961 41359 26686 25108 ...</span></span>
+<span id="cb6-18"><a href="#cb6-18" tabindex="-1"></a><span class="co">#&gt;   ..$ TOT           : num [1:414] 44475 24827613 8907311 26962063 8584917 ...</span></span>
+<span id="cb6-19"><a href="#cb6-19" tabindex="-1"></a><span class="co">#&gt;   ..$ MAX           : num [1:414] 6212 1442029 1065833 3084242 3957364 ...</span></span>
+<span id="cb6-20"><a href="#cb6-20" tabindex="-1"></a><span class="co">#&gt;   ..$ is_secret_freq: logi [1:414] FALSE FALSE FALSE FALSE FALSE FALSE ...</span></span>
+<span id="cb6-21"><a href="#cb6-21" tabindex="-1"></a><span class="co">#&gt;   ..$ is_secret_dom : logi [1:414] FALSE FALSE FALSE FALSE FALSE FALSE ...</span></span>
+<span id="cb6-22"><a href="#cb6-22" tabindex="-1"></a><span class="co">#&gt;   ..$ is_secret_prim: logi [1:414] FALSE FALSE FALSE FALSE FALSE FALSE ...</span></span>
+<span id="cb6-23"><a href="#cb6-23" tabindex="-1"></a><span class="co">#&gt;  $ act_cj   : tibble [406 x 8] (S3: tbl_df/tbl/data.frame)</span></span>
+<span id="cb6-24"><a href="#cb6-24" tabindex="-1"></a><span class="co">#&gt;   ..$ ACTIVITY      : chr [1:406] &quot;AZ&quot; &quot;BE&quot; &quot;FZ&quot; &quot;GI&quot; ...</span></span>
+<span id="cb6-25"><a href="#cb6-25" tabindex="-1"></a><span class="co">#&gt;   ..$ CJ            : chr [1:406] &quot;Total&quot; &quot;Total&quot; &quot;Total&quot; &quot;Total&quot; ...</span></span>
+<span id="cb6-26"><a href="#cb6-26" tabindex="-1"></a><span class="co">#&gt;   ..$ N_OBS         : int [1:406] 405 12878 28043 62053 8135 8140 11961 41359 26686 25108 ...</span></span>
+<span id="cb6-27"><a href="#cb6-27" tabindex="-1"></a><span class="co">#&gt;   ..$ TOT           : num [1:406] 44475 24827613 8907311 26962063 8584917 ...</span></span>
+<span id="cb6-28"><a href="#cb6-28" tabindex="-1"></a><span class="co">#&gt;   ..$ MAX           : num [1:406] 6212 1442029 1065833 3084242 3957364 ...</span></span>
+<span id="cb6-29"><a href="#cb6-29" tabindex="-1"></a><span class="co">#&gt;   ..$ is_secret_freq: logi [1:406] FALSE FALSE FALSE FALSE FALSE FALSE ...</span></span>
+<span id="cb6-30"><a href="#cb6-30" tabindex="-1"></a><span class="co">#&gt;   ..$ is_secret_dom : logi [1:406] FALSE FALSE FALSE FALSE FALSE FALSE ...</span></span>
+<span id="cb6-31"><a href="#cb6-31" tabindex="-1"></a><span class="co">#&gt;   ..$ is_secret_prim: logi [1:406] FALSE FALSE FALSE FALSE FALSE FALSE ...</span></span>
+<span id="cb6-32"><a href="#cb6-32" tabindex="-1"></a><span class="co">#&gt;  $ nuts_size: tibble [460 x 8] (S3: tbl_df/tbl/data.frame)</span></span>
+<span id="cb6-33"><a href="#cb6-33" tabindex="-1"></a><span class="co">#&gt;   ..$ NUTS          : chr [1:460] &quot;FR10&quot; &quot;FR21&quot; &quot;FR22&quot; &quot;FR23&quot; ...</span></span>
+<span id="cb6-34"><a href="#cb6-34" tabindex="-1"></a><span class="co">#&gt;   ..$ SIZE          : chr [1:460] &quot;Total&quot; &quot;Total&quot; &quot;Total&quot; &quot;Total&quot; ...</span></span>
+<span id="cb6-35"><a href="#cb6-35" tabindex="-1"></a><span class="co">#&gt;   ..$ N_OBS         : int [1:460] 38462 6769 4561 5090 8611 7811 5643 10411 8179 5163 ...</span></span>
+<span id="cb6-36"><a href="#cb6-36" tabindex="-1"></a><span class="co">#&gt;   ..$ TOT           : num [1:460] 33026385 2947560 1917663 3701935 5089279 ...</span></span>
+<span id="cb6-37"><a href="#cb6-37" tabindex="-1"></a><span class="co">#&gt;   ..$ MAX           : num [1:460] 3084242 544763 651848 298134 1165019 ...</span></span>
+<span id="cb6-38"><a href="#cb6-38" tabindex="-1"></a><span class="co">#&gt;   ..$ is_secret_freq: logi [1:460] FALSE FALSE FALSE FALSE FALSE FALSE ...</span></span>
+<span id="cb6-39"><a href="#cb6-39" tabindex="-1"></a><span class="co">#&gt;   ..$ is_secret_dom : logi [1:460] FALSE FALSE FALSE FALSE FALSE FALSE ...</span></span>
+<span id="cb6-40"><a href="#cb6-40" tabindex="-1"></a><span class="co">#&gt;   ..$ is_secret_prim: logi [1:460] FALSE FALSE FALSE FALSE FALSE FALSE ...</span></span>
+<span id="cb6-41"><a href="#cb6-41" tabindex="-1"></a><span class="co">#&gt;  $ nuts_cj  : tibble [452 x 8] (S3: tbl_df/tbl/data.frame)</span></span>
+<span id="cb6-42"><a href="#cb6-42" tabindex="-1"></a><span class="co">#&gt;   ..$ NUTS          : chr [1:452] &quot;FR10&quot; &quot;FR21&quot; &quot;FR22&quot; &quot;FR23&quot; ...</span></span>
+<span id="cb6-43"><a href="#cb6-43" tabindex="-1"></a><span class="co">#&gt;   ..$ CJ            : chr [1:452] &quot;Total&quot; &quot;Total&quot; &quot;Total&quot; &quot;Total&quot; ...</span></span>
+<span id="cb6-44"><a href="#cb6-44" tabindex="-1"></a><span class="co">#&gt;   ..$ N_OBS         : int [1:452] 38462 6769 4561 5090 8611 7811 5643 10411 8179 5163 ...</span></span>
+<span id="cb6-45"><a href="#cb6-45" tabindex="-1"></a><span class="co">#&gt;   ..$ TOT           : num [1:452] 33026385 2947560 1917663 3701935 5089279 ...</span></span>
+<span id="cb6-46"><a href="#cb6-46" tabindex="-1"></a><span class="co">#&gt;   ..$ MAX           : num [1:452] 3084242 544763 651848 298134 1165019 ...</span></span>
+<span id="cb6-47"><a href="#cb6-47" tabindex="-1"></a><span class="co">#&gt;   ..$ is_secret_freq: logi [1:452] FALSE FALSE FALSE FALSE FALSE FALSE ...</span></span>
+<span id="cb6-48"><a href="#cb6-48" tabindex="-1"></a><span class="co">#&gt;   ..$ is_secret_dom : logi [1:452] FALSE FALSE FALSE FALSE FALSE FALSE ...</span></span>
+<span id="cb6-49"><a href="#cb6-49" tabindex="-1"></a><span class="co">#&gt;   ..$ is_secret_prim: logi [1:452] FALSE FALSE FALSE FALSE FALSE FALSE ...</span></span></code></pre></div>
 <p>Trois variables ont été ajoutées à chaque tableau. Seule la dernière
 sera utilisée pendant le processus de suppression. Les deux autres
 seront utiles pour indiquer l’état final des cellules.</p>
 </div>
-<div id="préparation-de-la-liste-des-variables-explicatives" class="section level3" number="2.0.2">
-<h3><span class="header-section-number">2.0.2</span> Préparation de la
+<div id="préparation-de-la-liste-des-variables-explicatives" class="section level3" number="2.1.3">
+<h3><span class="header-section-number">2.1.3</span> Préparation de la
 liste des variables explicatives</h3>
 <p>Nous allons ensuite créer la liste des variables explicatives des
 tableaux. Dans notre cas, les variables explicatives sont les 2
 premières colonnes de chaque tableau.</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a>nom_var_list <span class="ot">&lt;-</span> purrr<span class="sc">::</span><span class="fu">map</span>(</span>
-<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a>  list_data_4_tabs,</span>
-<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a>  <span class="cf">function</span>(data) <span class="fu">colnames</span>(data)[<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>]</span>
-<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a>)</span>
-<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a>nom_var_list</span>
-<span id="cb6-6"><a href="#cb6-6" tabindex="-1"></a><span class="co">#&gt; $act_size</span></span>
-<span id="cb6-7"><a href="#cb6-7" tabindex="-1"></a><span class="co">#&gt; [1] &quot;ACTIVITY&quot; &quot;SIZE&quot;    </span></span>
-<span id="cb6-8"><a href="#cb6-8" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb6-9"><a href="#cb6-9" tabindex="-1"></a><span class="co">#&gt; $act_cj</span></span>
-<span id="cb6-10"><a href="#cb6-10" tabindex="-1"></a><span class="co">#&gt; [1] &quot;ACTIVITY&quot; &quot;CJ&quot;      </span></span>
-<span id="cb6-11"><a href="#cb6-11" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb6-12"><a href="#cb6-12" tabindex="-1"></a><span class="co">#&gt; $nuts_size</span></span>
-<span id="cb6-13"><a href="#cb6-13" tabindex="-1"></a><span class="co">#&gt; [1] &quot;NUTS&quot; &quot;SIZE&quot;</span></span>
-<span id="cb6-14"><a href="#cb6-14" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb6-15"><a href="#cb6-15" tabindex="-1"></a><span class="co">#&gt; $nuts_cj</span></span>
-<span id="cb6-16"><a href="#cb6-16" tabindex="-1"></a><span class="co">#&gt; [1] &quot;NUTS&quot; &quot;CJ&quot;</span></span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a>nom_var_list <span class="ot">&lt;-</span> purrr<span class="sc">::</span><span class="fu">map</span>(</span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a>  list_data_4_tabs,</span>
+<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a>  <span class="cf">function</span>(data) <span class="fu">colnames</span>(data)[<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>]</span>
+<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a>)</span>
+<span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a>nom_var_list</span>
+<span id="cb7-6"><a href="#cb7-6" tabindex="-1"></a><span class="co">#&gt; $act_size</span></span>
+<span id="cb7-7"><a href="#cb7-7" tabindex="-1"></a><span class="co">#&gt; [1] &quot;ACTIVITY&quot; &quot;SIZE&quot;    </span></span>
+<span id="cb7-8"><a href="#cb7-8" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb7-9"><a href="#cb7-9" tabindex="-1"></a><span class="co">#&gt; $act_cj</span></span>
+<span id="cb7-10"><a href="#cb7-10" tabindex="-1"></a><span class="co">#&gt; [1] &quot;ACTIVITY&quot; &quot;CJ&quot;      </span></span>
+<span id="cb7-11"><a href="#cb7-11" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb7-12"><a href="#cb7-12" tabindex="-1"></a><span class="co">#&gt; $nuts_size</span></span>
+<span id="cb7-13"><a href="#cb7-13" tabindex="-1"></a><span class="co">#&gt; [1] &quot;NUTS&quot; &quot;SIZE&quot;</span></span>
+<span id="cb7-14"><a href="#cb7-14" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb7-15"><a href="#cb7-15" tabindex="-1"></a><span class="co">#&gt; $nuts_cj</span></span>
+<span id="cb7-16"><a href="#cb7-16" tabindex="-1"></a><span class="co">#&gt; [1] &quot;NUTS&quot; &quot;CJ&quot;</span></span></code></pre></div>
 <p>Les noms de la liste doivent être identiques aux noms des tableaux
 présent dans le paramètre <code>list_tables</code>.</p>
 </div>
-<div id="préparation-de-la-liste-des-codes-pour-les-totaux" class="section level3" number="2.0.3">
-<h3><span class="header-section-number">2.0.3</span> Préparation de la
+<div id="préparation-de-la-liste-des-codes-pour-les-totaux" class="section level3" number="2.1.4">
+<h3><span class="header-section-number">2.1.4</span> Préparation de la
 liste des codes pour les totaux</h3>
 <p>Les modalités utilisées pour mentionner le total de chaque variable
 doivent être déclarées par l’utilisateur, dans une liste nominative.
 Toutefois, lorsque toutes les variables ont la même modalité pour pour
 le total, l’information peut être spécifiée de la manière suivante :</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a>total_codes <span class="ot">&lt;-</span> <span class="st">&quot;Total&quot;</span></span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a>total_codes <span class="ot">&lt;-</span> <span class="st">&quot;Total&quot;</span></span></code></pre></div>
 </div>
-<div id="préparation-des-fichiers-hiérarchiques" class="section level3" number="2.0.4">
-<h3><span class="header-section-number">2.0.4</span> Préparation des
+<div id="préparation-des-fichiers-hiérarchiques" class="section level3" number="2.1.5">
+<h3><span class="header-section-number">2.1.5</span> Préparation des
 fichiers hiérarchiques</h3>
 <p><code>ACTIVITY</code> et <code>NUTS</code> sont duex variables
 hiérarchiques.On utilise une table de correspondance pour chacunes
 d’entre elles pour créer le fichier .hrc dont τ-Argus a besoin.</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="fu">data</span>(activity_corr_table)</span>
-<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a><span class="fu">data</span>(nuts23_fr_corr_table)</span></code></pre></div>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a>hrc_file_activity <span class="ot">&lt;-</span> <span class="fu">write_hrc2</span>(</span>
-<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a>  <span class="at">corr_table =</span> activity_corr_table,</span>
-<span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a>  <span class="at">file_name =</span> <span class="st">&quot;hrc/activity.hrc&quot;</span></span>
-<span id="cb9-4"><a href="#cb9-4" tabindex="-1"></a>)</span>
-<span id="cb9-5"><a href="#cb9-5" tabindex="-1"></a>hrc_file_nuts <span class="ot">&lt;-</span> <span class="fu">write_hrc2</span>(</span>
-<span id="cb9-6"><a href="#cb9-6" tabindex="-1"></a>  <span class="at">corr_table =</span> nuts23_fr_corr_table,</span>
-<span id="cb9-7"><a href="#cb9-7" tabindex="-1"></a>  <span class="at">file_name =</span> <span class="st">&quot;hrc/nuts.hrc&quot;</span></span>
-<span id="cb9-8"><a href="#cb9-8" tabindex="-1"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a><span class="fu">data</span>(activity_corr_table)</span>
+<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a><span class="fu">data</span>(nuts23_fr_corr_table)</span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a>hrc_file_activity <span class="ot">&lt;-</span> <span class="fu">write_hrc2</span>(</span>
+<span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a>  <span class="at">corr_table =</span> activity_corr_table,</span>
+<span id="cb10-3"><a href="#cb10-3" tabindex="-1"></a>  <span class="at">file_name =</span> <span class="st">&quot;hrc/activity.hrc&quot;</span></span>
+<span id="cb10-4"><a href="#cb10-4" tabindex="-1"></a>)</span>
+<span id="cb10-5"><a href="#cb10-5" tabindex="-1"></a>hrc_file_nuts <span class="ot">&lt;-</span> <span class="fu">write_hrc2</span>(</span>
+<span id="cb10-6"><a href="#cb10-6" tabindex="-1"></a>  <span class="at">corr_table =</span> nuts23_fr_corr_table,</span>
+<span id="cb10-7"><a href="#cb10-7" tabindex="-1"></a>  <span class="at">file_name =</span> <span class="st">&quot;hrc/nuts.hrc&quot;</span></span>
+<span id="cb10-8"><a href="#cb10-8" tabindex="-1"></a>)</span></code></pre></div>
 <p>Pour spécifier les nom des fichiers hrc, on crée un vecteur nommé (ou
 une liste) :</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a>hrc_files <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
-<span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a>  <span class="at">ACTIVITY =</span> hrc_file_activity,</span>
-<span id="cb10-3"><a href="#cb10-3" tabindex="-1"></a>  <span class="at">NUTS =</span> hrc_file_nuts</span>
-<span id="cb10-4"><a href="#cb10-4" tabindex="-1"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a>hrc_files <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb11-2"><a href="#cb11-2" tabindex="-1"></a>  <span class="at">ACTIVITY =</span> hrc_file_activity,</span>
+<span id="cb11-3"><a href="#cb11-3" tabindex="-1"></a>  <span class="at">NUTS =</span> hrc_file_nuts</span>
+<span id="cb11-4"><a href="#cb11-4" tabindex="-1"></a>)</span></code></pre></div>
 <p>Les noms du vecteur doivent être identiques aux noms des variables
 hiérarchiques présentes dans la table</p>
 </div>
-<div id="protéger-tous-les-tableaux-en-un-seul-appel" class="section level3" number="2.0.5">
-<h3><span class="header-section-number">2.0.5</span> Protéger tous les
+<div id="protéger-tous-les-tableaux-en-un-seul-appel" class="section level3" number="2.1.6">
+<h3><span class="header-section-number">2.1.6</span> Protéger tous les
 tableaux en un seul appel</h3>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a>res <span class="ot">&lt;-</span> <span class="fu">tab_multi_manager</span>(</span>
-<span id="cb11-2"><a href="#cb11-2" tabindex="-1"></a>    <span class="at">list_tables =</span> list_data_4_tabs,</span>
-<span id="cb11-3"><a href="#cb11-3" tabindex="-1"></a>    <span class="at">list_explanatory_vars =</span> nom_var_list,</span>
-<span id="cb11-4"><a href="#cb11-4" tabindex="-1"></a>    <span class="at">dir_name =</span> <span class="st">&quot;tauargus_files/ex4&quot;</span>,</span>
-<span id="cb11-5"><a href="#cb11-5" tabindex="-1"></a>    <span class="at">hrc =</span> hrc_files,</span>
-<span id="cb11-6"><a href="#cb11-6" tabindex="-1"></a>    <span class="at">totcode =</span> total_codes,</span>
-<span id="cb11-7"><a href="#cb11-7" tabindex="-1"></a>    <span class="at">value =</span> <span class="st">&quot;TOT&quot;</span>,</span>
-<span id="cb11-8"><a href="#cb11-8" tabindex="-1"></a>    <span class="at">freq =</span> <span class="st">&quot;N_OBS&quot;</span>,</span>
-<span id="cb11-9"><a href="#cb11-9" tabindex="-1"></a>    <span class="at">secret_var =</span> <span class="st">&quot;is_secret_prim&quot;</span></span>
-<span id="cb11-10"><a href="#cb11-10" tabindex="-1"></a>)</span>
-<span id="cb11-11"><a href="#cb11-11" tabindex="-1"></a><span class="co">#&gt; --- Current table to treat:  act_size ---</span></span>
-<span id="cb11-12"><a href="#cb11-12" tabindex="-1"></a><span class="co">#&gt; --- Current table to treat:  act_cj ---</span></span>
-<span id="cb11-13"><a href="#cb11-13" tabindex="-1"></a><span class="co">#&gt; --- Current table to treat:  act_size ---</span></span>
-<span id="cb11-14"><a href="#cb11-14" tabindex="-1"></a><span class="co">#&gt; --- Current table to treat:  nuts_size ---</span></span>
-<span id="cb11-15"><a href="#cb11-15" tabindex="-1"></a><span class="co">#&gt; --- Current table to treat:  nuts_cj ---</span></span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a>res <span class="ot">&lt;-</span> <span class="fu">tab_multi_manager</span>(</span>
+<span id="cb12-2"><a href="#cb12-2" tabindex="-1"></a>    <span class="at">list_tables =</span> list_data_4_tabs,</span>
+<span id="cb12-3"><a href="#cb12-3" tabindex="-1"></a>    <span class="at">list_explanatory_vars =</span> nom_var_list,</span>
+<span id="cb12-4"><a href="#cb12-4" tabindex="-1"></a>    <span class="at">dir_name =</span> <span class="st">&quot;tauargus_files/ex4&quot;</span>,</span>
+<span id="cb12-5"><a href="#cb12-5" tabindex="-1"></a>    <span class="at">hrc =</span> hrc_files,</span>
+<span id="cb12-6"><a href="#cb12-6" tabindex="-1"></a>    <span class="at">totcode =</span> total_codes,</span>
+<span id="cb12-7"><a href="#cb12-7" tabindex="-1"></a>    <span class="at">value =</span> <span class="st">&quot;TOT&quot;</span>,</span>
+<span id="cb12-8"><a href="#cb12-8" tabindex="-1"></a>    <span class="at">freq =</span> <span class="st">&quot;N_OBS&quot;</span>,</span>
+<span id="cb12-9"><a href="#cb12-9" tabindex="-1"></a>    <span class="at">secret_var =</span> <span class="st">&quot;is_secret_prim&quot;</span></span>
+<span id="cb12-10"><a href="#cb12-10" tabindex="-1"></a>)</span>
+<span id="cb12-11"><a href="#cb12-11" tabindex="-1"></a><span class="co">#&gt; --- Current table to treat:  act_size ---</span></span>
+<span id="cb12-12"><a href="#cb12-12" tabindex="-1"></a><span class="co">#&gt; --- Current table to treat:  act_cj ---</span></span>
+<span id="cb12-13"><a href="#cb12-13" tabindex="-1"></a><span class="co">#&gt; --- Current table to treat:  act_size ---</span></span>
+<span id="cb12-14"><a href="#cb12-14" tabindex="-1"></a><span class="co">#&gt; --- Current table to treat:  nuts_size ---</span></span>
+<span id="cb12-15"><a href="#cb12-15" tabindex="-1"></a><span class="co">#&gt; --- Current table to treat:  nuts_cj ---</span></span></code></pre></div>
 </div>
-<div id="résultats-1" class="section level3" number="2.0.6">
-<h3><span class="header-section-number">2.0.6</span> Résultats</h3>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a>list_with_status <span class="ot">&lt;-</span> res <span class="sc">%&gt;%</span></span>
-<span id="cb12-2"><a href="#cb12-2" tabindex="-1"></a>  purrr<span class="sc">::</span><span class="fu">map</span>(</span>
-<span id="cb12-3"><a href="#cb12-3" tabindex="-1"></a>    <span class="cf">function</span>(df){</span>
-<span id="cb12-4"><a href="#cb12-4" tabindex="-1"></a>      df <span class="sc">%&gt;%</span></span>
-<span id="cb12-5"><a href="#cb12-5" tabindex="-1"></a>        <span class="fu">rename_with</span>(<span class="sc">~</span><span class="st">&quot;final_suppress&quot;</span>, <span class="fu">last_col</span>()) <span class="sc">%&gt;%</span></span>
-<span id="cb12-6"><a href="#cb12-6" tabindex="-1"></a>        <span class="fu">mutate</span>(</span>
-<span id="cb12-7"><a href="#cb12-7" tabindex="-1"></a>          <span class="at">status =</span> <span class="fu">case_when</span>(</span>
-<span id="cb12-8"><a href="#cb12-8" tabindex="-1"></a>            is_secret_freq <span class="sc">~</span> <span class="st">&quot;A&quot;</span>,</span>
-<span id="cb12-9"><a href="#cb12-9" tabindex="-1"></a>            is_secret_dom <span class="sc">~</span> <span class="st">&quot;B&quot;</span>,</span>
-<span id="cb12-10"><a href="#cb12-10" tabindex="-1"></a>            final_suppress <span class="sc">~</span> <span class="st">&quot;D&quot;</span>,</span>
-<span id="cb12-11"><a href="#cb12-11" tabindex="-1"></a>            <span class="cn">TRUE</span> <span class="sc">~</span><span class="st">&quot;V&quot;</span></span>
-<span id="cb12-12"><a href="#cb12-12" tabindex="-1"></a>          )</span>
-<span id="cb12-13"><a href="#cb12-13" tabindex="-1"></a>        ) <span class="sc">%&gt;%</span></span>
-<span id="cb12-14"><a href="#cb12-14" tabindex="-1"></a>        <span class="fu">select</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>, TOT, N_OBS, status)</span>
-<span id="cb12-15"><a href="#cb12-15" tabindex="-1"></a>    }</span>
-<span id="cb12-16"><a href="#cb12-16" tabindex="-1"></a>  )</span>
-<span id="cb12-17"><a href="#cb12-17" tabindex="-1"></a><span class="fu">str</span>(list_with_status<span class="sc">$</span>act_size)</span>
-<span id="cb12-18"><a href="#cb12-18" tabindex="-1"></a><span class="co">#&gt; &#39;data.frame&#39;:    414 obs. of  5 variables:</span></span>
-<span id="cb12-19"><a href="#cb12-19" tabindex="-1"></a><span class="co">#&gt;  $ ACTIVITY: chr  &quot;01&quot; &quot;01&quot; &quot;02&quot; &quot;02&quot; ...</span></span>
-<span id="cb12-20"><a href="#cb12-20" tabindex="-1"></a><span class="co">#&gt;  $ SIZE    : chr  &quot;Total&quot; &quot;tr1&quot; &quot;Total&quot; &quot;tr1&quot; ...</span></span>
-<span id="cb12-21"><a href="#cb12-21" tabindex="-1"></a><span class="co">#&gt;  $ TOT     : num  853 853 43623 35503 8120 ...</span></span>
-<span id="cb12-22"><a href="#cb12-22" tabindex="-1"></a><span class="co">#&gt;  $ N_OBS   : int  18 18 387 381 6 1 1 4 4 84 ...</span></span>
-<span id="cb12-23"><a href="#cb12-23" tabindex="-1"></a><span class="co">#&gt;  $ status  : chr  &quot;V&quot; &quot;V&quot; &quot;V&quot; &quot;V&quot; ...</span></span></code></pre></div>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a>list_with_status <span class="sc">%&gt;%</span></span>
-<span id="cb13-2"><a href="#cb13-2" tabindex="-1"></a>  purrr<span class="sc">::</span><span class="fu">iwalk</span>(</span>
-<span id="cb13-3"><a href="#cb13-3" tabindex="-1"></a>    <span class="cf">function</span>(df,name){</span>
-<span id="cb13-4"><a href="#cb13-4" tabindex="-1"></a>      <span class="fu">cat</span>(name, <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
-<span id="cb13-5"><a href="#cb13-5" tabindex="-1"></a>      df <span class="sc">%&gt;%</span> <span class="fu">count</span>(status) <span class="sc">%&gt;%</span> <span class="fu">print</span>()</span>
-<span id="cb13-6"><a href="#cb13-6" tabindex="-1"></a>    }</span>
-<span id="cb13-7"><a href="#cb13-7" tabindex="-1"></a>  )</span>
-<span id="cb13-8"><a href="#cb13-8" tabindex="-1"></a><span class="co">#&gt; act_size </span></span>
-<span id="cb13-9"><a href="#cb13-9" tabindex="-1"></a><span class="co">#&gt;   status   n</span></span>
-<span id="cb13-10"><a href="#cb13-10" tabindex="-1"></a><span class="co">#&gt; 1      A  52</span></span>
-<span id="cb13-11"><a href="#cb13-11" tabindex="-1"></a><span class="co">#&gt; 2      B  25</span></span>
-<span id="cb13-12"><a href="#cb13-12" tabindex="-1"></a><span class="co">#&gt; 3      D  83</span></span>
-<span id="cb13-13"><a href="#cb13-13" tabindex="-1"></a><span class="co">#&gt; 4      V 254</span></span>
-<span id="cb13-14"><a href="#cb13-14" tabindex="-1"></a><span class="co">#&gt; act_cj </span></span>
-<span id="cb13-15"><a href="#cb13-15" tabindex="-1"></a><span class="co">#&gt;   status   n</span></span>
-<span id="cb13-16"><a href="#cb13-16" tabindex="-1"></a><span class="co">#&gt; 1      A  35</span></span>
-<span id="cb13-17"><a href="#cb13-17" tabindex="-1"></a><span class="co">#&gt; 2      B  25</span></span>
-<span id="cb13-18"><a href="#cb13-18" tabindex="-1"></a><span class="co">#&gt; 3      D  88</span></span>
-<span id="cb13-19"><a href="#cb13-19" tabindex="-1"></a><span class="co">#&gt; 4      V 258</span></span>
-<span id="cb13-20"><a href="#cb13-20" tabindex="-1"></a><span class="co">#&gt; nuts_size </span></span>
-<span id="cb13-21"><a href="#cb13-21" tabindex="-1"></a><span class="co">#&gt;   status   n</span></span>
-<span id="cb13-22"><a href="#cb13-22" tabindex="-1"></a><span class="co">#&gt; 1      A  55</span></span>
-<span id="cb13-23"><a href="#cb13-23" tabindex="-1"></a><span class="co">#&gt; 2      B  17</span></span>
-<span id="cb13-24"><a href="#cb13-24" tabindex="-1"></a><span class="co">#&gt; 3      D  82</span></span>
-<span id="cb13-25"><a href="#cb13-25" tabindex="-1"></a><span class="co">#&gt; 4      V 306</span></span>
-<span id="cb13-26"><a href="#cb13-26" tabindex="-1"></a><span class="co">#&gt; nuts_cj </span></span>
-<span id="cb13-27"><a href="#cb13-27" tabindex="-1"></a><span class="co">#&gt;   status   n</span></span>
-<span id="cb13-28"><a href="#cb13-28" tabindex="-1"></a><span class="co">#&gt; 1      A  45</span></span>
-<span id="cb13-29"><a href="#cb13-29" tabindex="-1"></a><span class="co">#&gt; 2      B  20</span></span>
-<span id="cb13-30"><a href="#cb13-30" tabindex="-1"></a><span class="co">#&gt; 3      D 101</span></span>
-<span id="cb13-31"><a href="#cb13-31" tabindex="-1"></a><span class="co">#&gt; 4      V 286</span></span></code></pre></div>
+<div id="résultats-1" class="section level3" number="2.1.7">
+<h3><span class="header-section-number">2.1.7</span> Résultats</h3>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a>list_with_status <span class="ot">&lt;-</span> res <span class="sc">%&gt;%</span></span>
+<span id="cb13-2"><a href="#cb13-2" tabindex="-1"></a>  purrr<span class="sc">::</span><span class="fu">map</span>(</span>
+<span id="cb13-3"><a href="#cb13-3" tabindex="-1"></a>    <span class="cf">function</span>(df){</span>
+<span id="cb13-4"><a href="#cb13-4" tabindex="-1"></a>      df <span class="sc">%&gt;%</span></span>
+<span id="cb13-5"><a href="#cb13-5" tabindex="-1"></a>        <span class="fu">rename_with</span>(<span class="sc">~</span><span class="st">&quot;final_suppress&quot;</span>, <span class="fu">last_col</span>()) <span class="sc">%&gt;%</span></span>
+<span id="cb13-6"><a href="#cb13-6" tabindex="-1"></a>        <span class="fu">mutate</span>(</span>
+<span id="cb13-7"><a href="#cb13-7" tabindex="-1"></a>          <span class="at">status =</span> <span class="fu">case_when</span>(</span>
+<span id="cb13-8"><a href="#cb13-8" tabindex="-1"></a>            is_secret_freq <span class="sc">~</span> <span class="st">&quot;A&quot;</span>,</span>
+<span id="cb13-9"><a href="#cb13-9" tabindex="-1"></a>            is_secret_dom <span class="sc">~</span> <span class="st">&quot;B&quot;</span>,</span>
+<span id="cb13-10"><a href="#cb13-10" tabindex="-1"></a>            final_suppress <span class="sc">~</span> <span class="st">&quot;D&quot;</span>,</span>
+<span id="cb13-11"><a href="#cb13-11" tabindex="-1"></a>            <span class="cn">TRUE</span> <span class="sc">~</span><span class="st">&quot;V&quot;</span></span>
+<span id="cb13-12"><a href="#cb13-12" tabindex="-1"></a>          )</span>
+<span id="cb13-13"><a href="#cb13-13" tabindex="-1"></a>        ) <span class="sc">%&gt;%</span></span>
+<span id="cb13-14"><a href="#cb13-14" tabindex="-1"></a>        <span class="fu">select</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>, TOT, N_OBS, status)</span>
+<span id="cb13-15"><a href="#cb13-15" tabindex="-1"></a>    }</span>
+<span id="cb13-16"><a href="#cb13-16" tabindex="-1"></a>  )</span>
+<span id="cb13-17"><a href="#cb13-17" tabindex="-1"></a><span class="fu">str</span>(list_with_status<span class="sc">$</span>act_size)</span>
+<span id="cb13-18"><a href="#cb13-18" tabindex="-1"></a><span class="co">#&gt; &#39;data.frame&#39;:    414 obs. of  5 variables:</span></span>
+<span id="cb13-19"><a href="#cb13-19" tabindex="-1"></a><span class="co">#&gt;  $ ACTIVITY: chr  &quot;01&quot; &quot;01&quot; &quot;02&quot; &quot;02&quot; ...</span></span>
+<span id="cb13-20"><a href="#cb13-20" tabindex="-1"></a><span class="co">#&gt;  $ SIZE    : chr  &quot;Total&quot; &quot;tr1&quot; &quot;Total&quot; &quot;tr1&quot; ...</span></span>
+<span id="cb13-21"><a href="#cb13-21" tabindex="-1"></a><span class="co">#&gt;  $ TOT     : num  853 853 43623 35503 8120 ...</span></span>
+<span id="cb13-22"><a href="#cb13-22" tabindex="-1"></a><span class="co">#&gt;  $ N_OBS   : int  18 18 387 381 6 1 1 4 4 84 ...</span></span>
+<span id="cb13-23"><a href="#cb13-23" tabindex="-1"></a><span class="co">#&gt;  $ status  : chr  &quot;V&quot; &quot;V&quot; &quot;V&quot; &quot;V&quot; ...</span></span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a>list_with_status <span class="sc">%&gt;%</span></span>
+<span id="cb14-2"><a href="#cb14-2" tabindex="-1"></a>  purrr<span class="sc">::</span><span class="fu">iwalk</span>(</span>
+<span id="cb14-3"><a href="#cb14-3" tabindex="-1"></a>    <span class="cf">function</span>(df,name){</span>
+<span id="cb14-4"><a href="#cb14-4" tabindex="-1"></a>      <span class="fu">cat</span>(name, <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb14-5"><a href="#cb14-5" tabindex="-1"></a>      df <span class="sc">%&gt;%</span> <span class="fu">count</span>(status) <span class="sc">%&gt;%</span> <span class="fu">print</span>()</span>
+<span id="cb14-6"><a href="#cb14-6" tabindex="-1"></a>    }</span>
+<span id="cb14-7"><a href="#cb14-7" tabindex="-1"></a>  )</span>
+<span id="cb14-8"><a href="#cb14-8" tabindex="-1"></a><span class="co">#&gt; act_size </span></span>
+<span id="cb14-9"><a href="#cb14-9" tabindex="-1"></a><span class="co">#&gt;   status   n</span></span>
+<span id="cb14-10"><a href="#cb14-10" tabindex="-1"></a><span class="co">#&gt; 1      A  52</span></span>
+<span id="cb14-11"><a href="#cb14-11" tabindex="-1"></a><span class="co">#&gt; 2      B  25</span></span>
+<span id="cb14-12"><a href="#cb14-12" tabindex="-1"></a><span class="co">#&gt; 3      D  83</span></span>
+<span id="cb14-13"><a href="#cb14-13" tabindex="-1"></a><span class="co">#&gt; 4      V 254</span></span>
+<span id="cb14-14"><a href="#cb14-14" tabindex="-1"></a><span class="co">#&gt; act_cj </span></span>
+<span id="cb14-15"><a href="#cb14-15" tabindex="-1"></a><span class="co">#&gt;   status   n</span></span>
+<span id="cb14-16"><a href="#cb14-16" tabindex="-1"></a><span class="co">#&gt; 1      A  35</span></span>
+<span id="cb14-17"><a href="#cb14-17" tabindex="-1"></a><span class="co">#&gt; 2      B  25</span></span>
+<span id="cb14-18"><a href="#cb14-18" tabindex="-1"></a><span class="co">#&gt; 3      D  88</span></span>
+<span id="cb14-19"><a href="#cb14-19" tabindex="-1"></a><span class="co">#&gt; 4      V 258</span></span>
+<span id="cb14-20"><a href="#cb14-20" tabindex="-1"></a><span class="co">#&gt; nuts_size </span></span>
+<span id="cb14-21"><a href="#cb14-21" tabindex="-1"></a><span class="co">#&gt;   status   n</span></span>
+<span id="cb14-22"><a href="#cb14-22" tabindex="-1"></a><span class="co">#&gt; 1      A  55</span></span>
+<span id="cb14-23"><a href="#cb14-23" tabindex="-1"></a><span class="co">#&gt; 2      B  17</span></span>
+<span id="cb14-24"><a href="#cb14-24" tabindex="-1"></a><span class="co">#&gt; 3      D  82</span></span>
+<span id="cb14-25"><a href="#cb14-25" tabindex="-1"></a><span class="co">#&gt; 4      V 306</span></span>
+<span id="cb14-26"><a href="#cb14-26" tabindex="-1"></a><span class="co">#&gt; nuts_cj </span></span>
+<span id="cb14-27"><a href="#cb14-27" tabindex="-1"></a><span class="co">#&gt;   status   n</span></span>
+<span id="cb14-28"><a href="#cb14-28" tabindex="-1"></a><span class="co">#&gt; 1      A  45</span></span>
+<span id="cb14-29"><a href="#cb14-29" tabindex="-1"></a><span class="co">#&gt; 2      B  20</span></span>
+<span id="cb14-30"><a href="#cb14-30" tabindex="-1"></a><span class="co">#&gt; 3      D 101</span></span>
+<span id="cb14-31"><a href="#cb14-31" tabindex="-1"></a><span class="co">#&gt; 4      V 286</span></span></code></pre></div>
 </div>
-<div id="traiter-les-hiérarchies-non-emboitées" class="section level2" number="2.1">
-<h2><span class="header-section-number">2.1</span> Traiter les
+</div>
+<div id="traiter-les-hiérarchies-non-emboitées" class="section level2" number="2.2">
+<h2><span class="header-section-number">2.2</span> Traiter les
 hiérarchies non emboitées</h2>
 <p>Supposons que l’on veuille protéger les deux tableaux croisant
 <code>ACTIVITY</code> et <code>SIZE</code> d’une part et
@@ -803,89 +807,89 @@ emboitées.</p>
 <p>Pour confirmer le non-emboîtement des deux hiérarchies, affichons un
 extrait des deux.</p>
 <p>Extrait de la hiérarchie principale :</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a>sdcHierarchies<span class="sc">::</span><span class="fu">hier_create</span>(</span>
-<span id="cb14-2"><a href="#cb14-2" tabindex="-1"></a>  <span class="at">root=</span><span class="st">&quot;Total&quot;</span>,</span>
-<span id="cb14-3"><a href="#cb14-3" tabindex="-1"></a>  <span class="at">nodes =</span> activity_corr_table<span class="sc">$</span>A10 <span class="sc">%&gt;%</span> <span class="fu">unique</span>()</span>
-<span id="cb14-4"><a href="#cb14-4" tabindex="-1"></a>) <span class="sc">%&gt;%</span></span>
-<span id="cb14-5"><a href="#cb14-5" tabindex="-1"></a>  sdcHierarchies<span class="sc">::</span><span class="fu">hier_display</span>()</span>
-<span id="cb14-6"><a href="#cb14-6" tabindex="-1"></a><span class="co">#&gt; Total</span></span>
-<span id="cb14-7"><a href="#cb14-7" tabindex="-1"></a><span class="co">#&gt; +-AZ</span></span>
-<span id="cb14-8"><a href="#cb14-8" tabindex="-1"></a><span class="co">#&gt; +-BE</span></span>
-<span id="cb14-9"><a href="#cb14-9" tabindex="-1"></a><span class="co">#&gt; +-FZ</span></span>
-<span id="cb14-10"><a href="#cb14-10" tabindex="-1"></a><span class="co">#&gt; +-GI</span></span>
-<span id="cb14-11"><a href="#cb14-11" tabindex="-1"></a><span class="co">#&gt; +-JZ</span></span>
-<span id="cb14-12"><a href="#cb14-12" tabindex="-1"></a><span class="co">#&gt; +-KZ</span></span>
-<span id="cb14-13"><a href="#cb14-13" tabindex="-1"></a><span class="co">#&gt; +-LZ</span></span>
-<span id="cb14-14"><a href="#cb14-14" tabindex="-1"></a><span class="co">#&gt; +-MN</span></span>
-<span id="cb14-15"><a href="#cb14-15" tabindex="-1"></a><span class="co">#&gt; +-OQ</span></span>
-<span id="cb14-16"><a href="#cb14-16" tabindex="-1"></a><span class="co">#&gt; \-RU</span></span></code></pre></div>
-<p>Extrait de la hiérarchie alternative:</p>
 <div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" tabindex="-1"></a>sdcHierarchies<span class="sc">::</span><span class="fu">hier_create</span>(</span>
-<span id="cb15-2"><a href="#cb15-2" tabindex="-1"></a>  <span class="at">root=</span><span class="st">&quot;D_TO_M&quot;</span>,</span>
-<span id="cb15-3"><a href="#cb15-3" tabindex="-1"></a>  <span class="at">nodes =</span> activity_corr_table_D_TO_M<span class="sc">$</span>A21</span>
+<span id="cb15-2"><a href="#cb15-2" tabindex="-1"></a>  <span class="at">root=</span><span class="st">&quot;Total&quot;</span>,</span>
+<span id="cb15-3"><a href="#cb15-3" tabindex="-1"></a>  <span class="at">nodes =</span> activity_corr_table<span class="sc">$</span>A10 <span class="sc">%&gt;%</span> <span class="fu">unique</span>()</span>
 <span id="cb15-4"><a href="#cb15-4" tabindex="-1"></a>) <span class="sc">%&gt;%</span></span>
 <span id="cb15-5"><a href="#cb15-5" tabindex="-1"></a>  sdcHierarchies<span class="sc">::</span><span class="fu">hier_display</span>()</span>
-<span id="cb15-6"><a href="#cb15-6" tabindex="-1"></a><span class="co">#&gt; D_TO_M</span></span>
-<span id="cb15-7"><a href="#cb15-7" tabindex="-1"></a><span class="co">#&gt; +-D</span></span>
-<span id="cb15-8"><a href="#cb15-8" tabindex="-1"></a><span class="co">#&gt; +-E</span></span>
-<span id="cb15-9"><a href="#cb15-9" tabindex="-1"></a><span class="co">#&gt; +-F</span></span>
-<span id="cb15-10"><a href="#cb15-10" tabindex="-1"></a><span class="co">#&gt; +-G</span></span>
-<span id="cb15-11"><a href="#cb15-11" tabindex="-1"></a><span class="co">#&gt; +-H</span></span>
-<span id="cb15-12"><a href="#cb15-12" tabindex="-1"></a><span class="co">#&gt; +-I</span></span>
-<span id="cb15-13"><a href="#cb15-13" tabindex="-1"></a><span class="co">#&gt; +-J</span></span>
-<span id="cb15-14"><a href="#cb15-14" tabindex="-1"></a><span class="co">#&gt; +-K</span></span>
-<span id="cb15-15"><a href="#cb15-15" tabindex="-1"></a><span class="co">#&gt; +-L</span></span>
-<span id="cb15-16"><a href="#cb15-16" tabindex="-1"></a><span class="co">#&gt; \-M</span></span></code></pre></div>
+<span id="cb15-6"><a href="#cb15-6" tabindex="-1"></a><span class="co">#&gt; Total</span></span>
+<span id="cb15-7"><a href="#cb15-7" tabindex="-1"></a><span class="co">#&gt; +-AZ</span></span>
+<span id="cb15-8"><a href="#cb15-8" tabindex="-1"></a><span class="co">#&gt; +-BE</span></span>
+<span id="cb15-9"><a href="#cb15-9" tabindex="-1"></a><span class="co">#&gt; +-FZ</span></span>
+<span id="cb15-10"><a href="#cb15-10" tabindex="-1"></a><span class="co">#&gt; +-GI</span></span>
+<span id="cb15-11"><a href="#cb15-11" tabindex="-1"></a><span class="co">#&gt; +-JZ</span></span>
+<span id="cb15-12"><a href="#cb15-12" tabindex="-1"></a><span class="co">#&gt; +-KZ</span></span>
+<span id="cb15-13"><a href="#cb15-13" tabindex="-1"></a><span class="co">#&gt; +-LZ</span></span>
+<span id="cb15-14"><a href="#cb15-14" tabindex="-1"></a><span class="co">#&gt; +-MN</span></span>
+<span id="cb15-15"><a href="#cb15-15" tabindex="-1"></a><span class="co">#&gt; +-OQ</span></span>
+<span id="cb15-16"><a href="#cb15-16" tabindex="-1"></a><span class="co">#&gt; \-RU</span></span></code></pre></div>
+<p>Extrait de la hiérarchie alternative:</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" tabindex="-1"></a>sdcHierarchies<span class="sc">::</span><span class="fu">hier_create</span>(</span>
+<span id="cb16-2"><a href="#cb16-2" tabindex="-1"></a>  <span class="at">root=</span><span class="st">&quot;D_TO_M&quot;</span>,</span>
+<span id="cb16-3"><a href="#cb16-3" tabindex="-1"></a>  <span class="at">nodes =</span> activity_corr_table_D_TO_M<span class="sc">$</span>A21</span>
+<span id="cb16-4"><a href="#cb16-4" tabindex="-1"></a>) <span class="sc">%&gt;%</span></span>
+<span id="cb16-5"><a href="#cb16-5" tabindex="-1"></a>  sdcHierarchies<span class="sc">::</span><span class="fu">hier_display</span>()</span>
+<span id="cb16-6"><a href="#cb16-6" tabindex="-1"></a><span class="co">#&gt; D_TO_M</span></span>
+<span id="cb16-7"><a href="#cb16-7" tabindex="-1"></a><span class="co">#&gt; +-D</span></span>
+<span id="cb16-8"><a href="#cb16-8" tabindex="-1"></a><span class="co">#&gt; +-E</span></span>
+<span id="cb16-9"><a href="#cb16-9" tabindex="-1"></a><span class="co">#&gt; +-F</span></span>
+<span id="cb16-10"><a href="#cb16-10" tabindex="-1"></a><span class="co">#&gt; +-G</span></span>
+<span id="cb16-11"><a href="#cb16-11" tabindex="-1"></a><span class="co">#&gt; +-H</span></span>
+<span id="cb16-12"><a href="#cb16-12" tabindex="-1"></a><span class="co">#&gt; +-I</span></span>
+<span id="cb16-13"><a href="#cb16-13" tabindex="-1"></a><span class="co">#&gt; +-J</span></span>
+<span id="cb16-14"><a href="#cb16-14" tabindex="-1"></a><span class="co">#&gt; +-K</span></span>
+<span id="cb16-15"><a href="#cb16-15" tabindex="-1"></a><span class="co">#&gt; +-L</span></span>
+<span id="cb16-16"><a href="#cb16-16" tabindex="-1"></a><span class="co">#&gt; \-M</span></span></code></pre></div>
 <p>Pour traiter ce cas, l’approche préférée est de créer un troisième
 tableau croisant <code>ACTIVITY</code> et <code>SIZE</code> avec les
 modalités D à M et le sous-total <code>D_TO_M</code> :</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" tabindex="-1"></a>turnover_act_size_D_TO_M <span class="ot">&lt;-</span> turnover_act_size <span class="sc">%&gt;%</span></span>
-<span id="cb16-2"><a href="#cb16-2" tabindex="-1"></a>  <span class="fu">filter</span>(</span>
-<span id="cb16-3"><a href="#cb16-3" tabindex="-1"></a>    ACTIVITY <span class="sc">%in%</span> LETTERS[<span class="dv">4</span><span class="sc">:</span><span class="dv">13</span>]</span>
-<span id="cb16-4"><a href="#cb16-4" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
-<span id="cb16-5"><a href="#cb16-5" tabindex="-1"></a>  <span class="fu">bind_rows</span>(</span>
-<span id="cb16-6"><a href="#cb16-6" tabindex="-1"></a>    turnover_act_size <span class="sc">%&gt;%</span></span>
-<span id="cb16-7"><a href="#cb16-7" tabindex="-1"></a>      <span class="fu">filter</span>(</span>
-<span id="cb16-8"><a href="#cb16-8" tabindex="-1"></a>        ACTIVITY <span class="sc">%in%</span> LETTERS[<span class="dv">4</span><span class="sc">:</span><span class="dv">13</span>]</span>
-<span id="cb16-9"><a href="#cb16-9" tabindex="-1"></a>      ) <span class="sc">%&gt;%</span></span>
-<span id="cb16-10"><a href="#cb16-10" tabindex="-1"></a>      <span class="fu">group_by</span>(SIZE) <span class="sc">%&gt;%</span></span>
-<span id="cb16-11"><a href="#cb16-11" tabindex="-1"></a>      <span class="fu">summarise</span>(<span class="at">N_OBS =</span> <span class="fu">sum</span>(N_OBS), <span class="at">TOT =</span> <span class="fu">sum</span>(TOT), <span class="at">MAX =</span> <span class="fu">max</span>(MAX)) <span class="sc">%&gt;%</span></span>
-<span id="cb16-12"><a href="#cb16-12" tabindex="-1"></a>      <span class="fu">mutate</span>(<span class="at">ACTIVITY =</span> <span class="st">&quot;D_TO_M&quot;</span>)</span>
-<span id="cb16-13"><a href="#cb16-13" tabindex="-1"></a>  )</span>
-<span id="cb16-14"><a href="#cb16-14" tabindex="-1"></a><span class="fu">str</span>(turnover_act_size_D_TO_M)</span>
-<span id="cb16-15"><a href="#cb16-15" tabindex="-1"></a><span class="co">#&gt; tibble [44 x 5] (S3: tbl_df/tbl/data.frame)</span></span>
-<span id="cb16-16"><a href="#cb16-16" tabindex="-1"></a><span class="co">#&gt;  $ ACTIVITY: chr [1:44] &quot;D&quot; &quot;E&quot; &quot;F&quot; &quot;G&quot; ...</span></span>
-<span id="cb16-17"><a href="#cb16-17" tabindex="-1"></a><span class="co">#&gt;  $ SIZE    : chr [1:44] &quot;Total&quot; &quot;Total&quot; &quot;Total&quot; &quot;Total&quot; ...</span></span>
-<span id="cb16-18"><a href="#cb16-18" tabindex="-1"></a><span class="co">#&gt;  $ N_OBS   : int [1:44] 1411 828 28043 41624 6524 13905 8135 8140 11961 28221 ...</span></span>
-<span id="cb16-19"><a href="#cb16-19" tabindex="-1"></a><span class="co">#&gt;  $ TOT     : num [1:44] 2438454 2264393 8907311 18244309 6273334 ...</span></span>
-<span id="cb16-20"><a href="#cb16-20" tabindex="-1"></a><span class="co">#&gt;  $ MAX     : num [1:44] 981369 306905 1065833 765244 3084242 ...</span></span></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" tabindex="-1"></a>turnover_act_size_D_TO_M <span class="ot">&lt;-</span> turnover_act_size <span class="sc">%&gt;%</span></span>
+<span id="cb17-2"><a href="#cb17-2" tabindex="-1"></a>  <span class="fu">filter</span>(</span>
+<span id="cb17-3"><a href="#cb17-3" tabindex="-1"></a>    ACTIVITY <span class="sc">%in%</span> LETTERS[<span class="dv">4</span><span class="sc">:</span><span class="dv">13</span>]</span>
+<span id="cb17-4"><a href="#cb17-4" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb17-5"><a href="#cb17-5" tabindex="-1"></a>  <span class="fu">bind_rows</span>(</span>
+<span id="cb17-6"><a href="#cb17-6" tabindex="-1"></a>    turnover_act_size <span class="sc">%&gt;%</span></span>
+<span id="cb17-7"><a href="#cb17-7" tabindex="-1"></a>      <span class="fu">filter</span>(</span>
+<span id="cb17-8"><a href="#cb17-8" tabindex="-1"></a>        ACTIVITY <span class="sc">%in%</span> LETTERS[<span class="dv">4</span><span class="sc">:</span><span class="dv">13</span>]</span>
+<span id="cb17-9"><a href="#cb17-9" tabindex="-1"></a>      ) <span class="sc">%&gt;%</span></span>
+<span id="cb17-10"><a href="#cb17-10" tabindex="-1"></a>      <span class="fu">group_by</span>(SIZE) <span class="sc">%&gt;%</span></span>
+<span id="cb17-11"><a href="#cb17-11" tabindex="-1"></a>      <span class="fu">summarise</span>(<span class="at">N_OBS =</span> <span class="fu">sum</span>(N_OBS), <span class="at">TOT =</span> <span class="fu">sum</span>(TOT), <span class="at">MAX =</span> <span class="fu">max</span>(MAX)) <span class="sc">%&gt;%</span></span>
+<span id="cb17-12"><a href="#cb17-12" tabindex="-1"></a>      <span class="fu">mutate</span>(<span class="at">ACTIVITY =</span> <span class="st">&quot;D_TO_M&quot;</span>)</span>
+<span id="cb17-13"><a href="#cb17-13" tabindex="-1"></a>  )</span>
+<span id="cb17-14"><a href="#cb17-14" tabindex="-1"></a><span class="fu">str</span>(turnover_act_size_D_TO_M)</span>
+<span id="cb17-15"><a href="#cb17-15" tabindex="-1"></a><span class="co">#&gt; tibble [44 x 5] (S3: tbl_df/tbl/data.frame)</span></span>
+<span id="cb17-16"><a href="#cb17-16" tabindex="-1"></a><span class="co">#&gt;  $ ACTIVITY: chr [1:44] &quot;D&quot; &quot;E&quot; &quot;F&quot; &quot;G&quot; ...</span></span>
+<span id="cb17-17"><a href="#cb17-17" tabindex="-1"></a><span class="co">#&gt;  $ SIZE    : chr [1:44] &quot;Total&quot; &quot;Total&quot; &quot;Total&quot; &quot;Total&quot; ...</span></span>
+<span id="cb17-18"><a href="#cb17-18" tabindex="-1"></a><span class="co">#&gt;  $ N_OBS   : int [1:44] 1411 828 28043 41624 6524 13905 8135 8140 11961 28221 ...</span></span>
+<span id="cb17-19"><a href="#cb17-19" tabindex="-1"></a><span class="co">#&gt;  $ TOT     : num [1:44] 2438454 2264393 8907311 18244309 6273334 ...</span></span>
+<span id="cb17-20"><a href="#cb17-20" tabindex="-1"></a><span class="co">#&gt;  $ MAX     : num [1:44] 981369 306905 1065833 765244 3084242 ...</span></span></code></pre></div>
 <p>Créons le fichier correspondant à cette hiérarchie :</p>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" tabindex="-1"></a>activity_corr_table_D_TO_M <span class="ot">&lt;-</span> activity_corr_table <span class="sc">%&gt;%</span></span>
-<span id="cb17-2"><a href="#cb17-2" tabindex="-1"></a>  <span class="fu">filter</span>(A21 <span class="sc">%in%</span> LETTERS[<span class="dv">4</span><span class="sc">:</span><span class="dv">13</span>]) <span class="sc">%&gt;%</span></span>
-<span id="cb17-3"><a href="#cb17-3" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>A88) <span class="sc">%&gt;%</span></span>
-<span id="cb17-4"><a href="#cb17-4" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">A10 =</span> <span class="st">&quot;D_TO_M&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb17-5"><a href="#cb17-5" tabindex="-1"></a>  <span class="fu">unique</span>()</span>
-<span id="cb17-6"><a href="#cb17-6" tabindex="-1"></a></span>
-<span id="cb17-7"><a href="#cb17-7" tabindex="-1"></a>hrc_file_activity_D_TO_M <span class="ot">&lt;-</span> activity_corr_table_D_TO_M <span class="sc">%&gt;%</span></span>
-<span id="cb17-8"><a href="#cb17-8" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span><span class="dv">1</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb17-9"><a href="#cb17-9" tabindex="-1"></a>  <span class="fu">write_hrc2</span>(<span class="at">file_name =</span> <span class="st">&quot;hrc/activity_D_TO_M&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" tabindex="-1"></a>activity_corr_table_D_TO_M <span class="ot">&lt;-</span> activity_corr_table <span class="sc">%&gt;%</span></span>
+<span id="cb18-2"><a href="#cb18-2" tabindex="-1"></a>  <span class="fu">filter</span>(A21 <span class="sc">%in%</span> LETTERS[<span class="dv">4</span><span class="sc">:</span><span class="dv">13</span>]) <span class="sc">%&gt;%</span></span>
+<span id="cb18-3"><a href="#cb18-3" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>A88) <span class="sc">%&gt;%</span></span>
+<span id="cb18-4"><a href="#cb18-4" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">A10 =</span> <span class="st">&quot;D_TO_M&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb18-5"><a href="#cb18-5" tabindex="-1"></a>  <span class="fu">unique</span>()</span>
+<span id="cb18-6"><a href="#cb18-6" tabindex="-1"></a></span>
+<span id="cb18-7"><a href="#cb18-7" tabindex="-1"></a>hrc_file_activity_D_TO_M <span class="ot">&lt;-</span> activity_corr_table_D_TO_M <span class="sc">%&gt;%</span></span>
+<span id="cb18-8"><a href="#cb18-8" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span><span class="dv">1</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb18-9"><a href="#cb18-9" tabindex="-1"></a>  <span class="fu">write_hrc2</span>(<span class="at">file_name =</span> <span class="st">&quot;hrc/activity_D_TO_M&quot;</span>)</span></code></pre></div>
 <p>Ensuite, construisons la liste des tableaux et appliquons les règles
 de secret primaire dessus.</p>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" tabindex="-1"></a>list_data_3_tabs_nn <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
-<span id="cb18-2"><a href="#cb18-2" tabindex="-1"></a>  <span class="at">act_size =</span> turnover_act_size,</span>
-<span id="cb18-3"><a href="#cb18-3" tabindex="-1"></a>  <span class="at">act_size_D_TO_M =</span> turnover_act_size_D_TO_M,</span>
-<span id="cb18-4"><a href="#cb18-4" tabindex="-1"></a>  <span class="at">act_cj =</span> turnover_act_cj</span>
-<span id="cb18-5"><a href="#cb18-5" tabindex="-1"></a>) <span class="sc">%&gt;%</span></span>
-<span id="cb18-6"><a href="#cb18-6" tabindex="-1"></a>  purrr<span class="sc">::</span><span class="fu">map</span>(</span>
-<span id="cb18-7"><a href="#cb18-7" tabindex="-1"></a>    <span class="cf">function</span>(df){</span>
-<span id="cb18-8"><a href="#cb18-8" tabindex="-1"></a>      df <span class="sc">%&gt;%</span></span>
-<span id="cb18-9"><a href="#cb18-9" tabindex="-1"></a>        <span class="fu">mutate</span>(</span>
-<span id="cb18-10"><a href="#cb18-10" tabindex="-1"></a>          <span class="at">is_secret_freq =</span> N_OBS <span class="sc">&gt;</span> <span class="dv">0</span> <span class="sc">&amp;</span> N_OBS <span class="sc">&lt;</span> <span class="dv">3</span>,</span>
-<span id="cb18-11"><a href="#cb18-11" tabindex="-1"></a>          <span class="at">is_secret_dom =</span> <span class="fu">ifelse</span>(MAX <span class="sc">==</span> <span class="dv">0</span>, <span class="cn">FALSE</span>, MAX<span class="sc">/</span>TOT<span class="sc">&gt;</span><span class="fl">0.85</span>),</span>
-<span id="cb18-12"><a href="#cb18-12" tabindex="-1"></a>          <span class="at">is_secret_prim =</span> is_secret_freq <span class="sc">|</span> is_secret_dom</span>
-<span id="cb18-13"><a href="#cb18-13" tabindex="-1"></a>        )</span>
-<span id="cb18-14"><a href="#cb18-14" tabindex="-1"></a>    }</span>
-<span id="cb18-15"><a href="#cb18-15" tabindex="-1"></a>  )</span></code></pre></div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" tabindex="-1"></a>list_data_3_tabs_nn <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb19-2"><a href="#cb19-2" tabindex="-1"></a>  <span class="at">act_size =</span> turnover_act_size,</span>
+<span id="cb19-3"><a href="#cb19-3" tabindex="-1"></a>  <span class="at">act_size_D_TO_M =</span> turnover_act_size_D_TO_M,</span>
+<span id="cb19-4"><a href="#cb19-4" tabindex="-1"></a>  <span class="at">act_cj =</span> turnover_act_cj</span>
+<span id="cb19-5"><a href="#cb19-5" tabindex="-1"></a>) <span class="sc">%&gt;%</span></span>
+<span id="cb19-6"><a href="#cb19-6" tabindex="-1"></a>  purrr<span class="sc">::</span><span class="fu">map</span>(</span>
+<span id="cb19-7"><a href="#cb19-7" tabindex="-1"></a>    <span class="cf">function</span>(df){</span>
+<span id="cb19-8"><a href="#cb19-8" tabindex="-1"></a>      df <span class="sc">%&gt;%</span></span>
+<span id="cb19-9"><a href="#cb19-9" tabindex="-1"></a>        <span class="fu">mutate</span>(</span>
+<span id="cb19-10"><a href="#cb19-10" tabindex="-1"></a>          <span class="at">is_secret_freq =</span> N_OBS <span class="sc">&gt;</span> <span class="dv">0</span> <span class="sc">&amp;</span> N_OBS <span class="sc">&lt;</span> <span class="dv">3</span>,</span>
+<span id="cb19-11"><a href="#cb19-11" tabindex="-1"></a>          <span class="at">is_secret_dom =</span> <span class="fu">ifelse</span>(MAX <span class="sc">==</span> <span class="dv">0</span>, <span class="cn">FALSE</span>, MAX<span class="sc">/</span>TOT<span class="sc">&gt;</span><span class="fl">0.85</span>),</span>
+<span id="cb19-12"><a href="#cb19-12" tabindex="-1"></a>          <span class="at">is_secret_prim =</span> is_secret_freq <span class="sc">|</span> is_secret_dom</span>
+<span id="cb19-13"><a href="#cb19-13" tabindex="-1"></a>        )</span>
+<span id="cb19-14"><a href="#cb19-14" tabindex="-1"></a>    }</span>
+<span id="cb19-15"><a href="#cb19-15" tabindex="-1"></a>  )</span></code></pre></div>
 <p>Les arguments <code>hrc</code> et <code>alt_hrc</code> sont utilisés
 pour mentionner les deux hiérarchies de la variable
 <code>ACTIVITY</code> :</p>
@@ -902,35 +906,35 @@ appliquées.</li>
 </ul>
 <p>Le même raisonnement est utilisé pour remplir l’argument
 <code>alt_totcode</code>.</p>
-<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" tabindex="-1"></a>res <span class="ot">&lt;-</span> <span class="fu">tab_multi_manager</span>(</span>
-<span id="cb19-2"><a href="#cb19-2" tabindex="-1"></a>  <span class="at">list_tables =</span> list_data_3_tabs_nn,</span>
-<span id="cb19-3"><a href="#cb19-3" tabindex="-1"></a>  <span class="at">list_explanatory_vars =</span> <span class="fu">list</span>(</span>
-<span id="cb19-4"><a href="#cb19-4" tabindex="-1"></a>    <span class="at">act_size =</span> <span class="fu">c</span>(<span class="st">&quot;ACTIVITY&quot;</span>, <span class="st">&quot;SIZE&quot;</span>),</span>
-<span id="cb19-5"><a href="#cb19-5" tabindex="-1"></a>    <span class="at">act_size_D_TO_M =</span> <span class="fu">c</span>(<span class="st">&quot;ACTIVITY&quot;</span>, <span class="st">&quot;SIZE&quot;</span>),</span>
-<span id="cb19-6"><a href="#cb19-6" tabindex="-1"></a>    <span class="at">act_cj =</span> <span class="fu">c</span>(<span class="st">&quot;ACTIVITY&quot;</span>, <span class="st">&quot;CJ&quot;</span>)</span>
-<span id="cb19-7"><a href="#cb19-7" tabindex="-1"></a>  ),</span>
-<span id="cb19-8"><a href="#cb19-8" tabindex="-1"></a>  <span class="at">hrc =</span> <span class="fu">c</span>(<span class="at">ACTIVITY =</span> hrc_file_activity),</span>
-<span id="cb19-9"><a href="#cb19-9" tabindex="-1"></a>  <span class="at">alt_hrc =</span> <span class="fu">list</span>(</span>
-<span id="cb19-10"><a href="#cb19-10" tabindex="-1"></a>    <span class="at">act_size_D_TO_M =</span> <span class="fu">c</span>(<span class="at">ACTIVITY =</span> hrc_file_activity_D_TO_M)</span>
-<span id="cb19-11"><a href="#cb19-11" tabindex="-1"></a>  ),</span>
-<span id="cb19-12"><a href="#cb19-12" tabindex="-1"></a>  <span class="at">dir_name =</span> <span class="st">&quot;tauargus_files/ex5&quot;</span>,</span>
-<span id="cb19-13"><a href="#cb19-13" tabindex="-1"></a>  <span class="at">value =</span> <span class="st">&quot;TOT&quot;</span>,</span>
-<span id="cb19-14"><a href="#cb19-14" tabindex="-1"></a>  <span class="at">freq =</span> <span class="st">&quot;N_OBS&quot;</span>,</span>
-<span id="cb19-15"><a href="#cb19-15" tabindex="-1"></a>  <span class="at">secret_var =</span> <span class="st">&quot;is_secret_prim&quot;</span>,</span>
-<span id="cb19-16"><a href="#cb19-16" tabindex="-1"></a>  <span class="at">totcode =</span>  <span class="st">&quot;Total&quot;</span>,</span>
-<span id="cb19-17"><a href="#cb19-17" tabindex="-1"></a>  <span class="at">alt_totcode =</span> <span class="fu">list</span>(</span>
-<span id="cb19-18"><a href="#cb19-18" tabindex="-1"></a>    <span class="at">act_size_D_TO_M =</span> <span class="fu">c</span>(<span class="at">ACTIVITY =</span> <span class="st">&quot;D_TO_M&quot;</span>)</span>
-<span id="cb19-19"><a href="#cb19-19" tabindex="-1"></a>  )</span>
-<span id="cb19-20"><a href="#cb19-20" tabindex="-1"></a>)</span>
-<span id="cb19-21"><a href="#cb19-21" tabindex="-1"></a><span class="co">#&gt; --- Current table to treat:  act_size ---</span></span>
-<span id="cb19-22"><a href="#cb19-22" tabindex="-1"></a><span class="co">#&gt; --- Current table to treat:  act_size_D_TO_M ---</span></span>
-<span id="cb19-23"><a href="#cb19-23" tabindex="-1"></a><span class="co">#&gt; --- Current table to treat:  act_cj ---</span></span>
-<span id="cb19-24"><a href="#cb19-24" tabindex="-1"></a><span class="co">#&gt; --- Current table to treat:  act_size ---</span></span>
-<span id="cb19-25"><a href="#cb19-25" tabindex="-1"></a><span class="co">#&gt; --- Current table to treat:  act_size_D_TO_M ---</span></span>
-<span id="cb19-26"><a href="#cb19-26" tabindex="-1"></a><span class="co">#&gt; --- Current table to treat:  act_size ---</span></span>
-<span id="cb19-27"><a href="#cb19-27" tabindex="-1"></a><span class="co">#&gt; --- Current table to treat:  act_cj ---</span></span></code></pre></div>
-<div id="détail-de-la-vignette" class="section level4" number="2.1.0.1">
-<h4><span class="header-section-number">2.1.0.1</span> Détail de la
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" tabindex="-1"></a>res <span class="ot">&lt;-</span> <span class="fu">tab_multi_manager</span>(</span>
+<span id="cb20-2"><a href="#cb20-2" tabindex="-1"></a>  <span class="at">list_tables =</span> list_data_3_tabs_nn,</span>
+<span id="cb20-3"><a href="#cb20-3" tabindex="-1"></a>  <span class="at">list_explanatory_vars =</span> <span class="fu">list</span>(</span>
+<span id="cb20-4"><a href="#cb20-4" tabindex="-1"></a>    <span class="at">act_size =</span> <span class="fu">c</span>(<span class="st">&quot;ACTIVITY&quot;</span>, <span class="st">&quot;SIZE&quot;</span>),</span>
+<span id="cb20-5"><a href="#cb20-5" tabindex="-1"></a>    <span class="at">act_size_D_TO_M =</span> <span class="fu">c</span>(<span class="st">&quot;ACTIVITY&quot;</span>, <span class="st">&quot;SIZE&quot;</span>),</span>
+<span id="cb20-6"><a href="#cb20-6" tabindex="-1"></a>    <span class="at">act_cj =</span> <span class="fu">c</span>(<span class="st">&quot;ACTIVITY&quot;</span>, <span class="st">&quot;CJ&quot;</span>)</span>
+<span id="cb20-7"><a href="#cb20-7" tabindex="-1"></a>  ),</span>
+<span id="cb20-8"><a href="#cb20-8" tabindex="-1"></a>  <span class="at">hrc =</span> <span class="fu">c</span>(<span class="at">ACTIVITY =</span> hrc_file_activity),</span>
+<span id="cb20-9"><a href="#cb20-9" tabindex="-1"></a>  <span class="at">alt_hrc =</span> <span class="fu">list</span>(</span>
+<span id="cb20-10"><a href="#cb20-10" tabindex="-1"></a>    <span class="at">act_size_D_TO_M =</span> <span class="fu">c</span>(<span class="at">ACTIVITY =</span> hrc_file_activity_D_TO_M)</span>
+<span id="cb20-11"><a href="#cb20-11" tabindex="-1"></a>  ),</span>
+<span id="cb20-12"><a href="#cb20-12" tabindex="-1"></a>  <span class="at">dir_name =</span> <span class="st">&quot;tauargus_files/ex5&quot;</span>,</span>
+<span id="cb20-13"><a href="#cb20-13" tabindex="-1"></a>  <span class="at">value =</span> <span class="st">&quot;TOT&quot;</span>,</span>
+<span id="cb20-14"><a href="#cb20-14" tabindex="-1"></a>  <span class="at">freq =</span> <span class="st">&quot;N_OBS&quot;</span>,</span>
+<span id="cb20-15"><a href="#cb20-15" tabindex="-1"></a>  <span class="at">secret_var =</span> <span class="st">&quot;is_secret_prim&quot;</span>,</span>
+<span id="cb20-16"><a href="#cb20-16" tabindex="-1"></a>  <span class="at">totcode =</span>  <span class="st">&quot;Total&quot;</span>,</span>
+<span id="cb20-17"><a href="#cb20-17" tabindex="-1"></a>  <span class="at">alt_totcode =</span> <span class="fu">list</span>(</span>
+<span id="cb20-18"><a href="#cb20-18" tabindex="-1"></a>    <span class="at">act_size_D_TO_M =</span> <span class="fu">c</span>(<span class="at">ACTIVITY =</span> <span class="st">&quot;D_TO_M&quot;</span>)</span>
+<span id="cb20-19"><a href="#cb20-19" tabindex="-1"></a>  )</span>
+<span id="cb20-20"><a href="#cb20-20" tabindex="-1"></a>)</span>
+<span id="cb20-21"><a href="#cb20-21" tabindex="-1"></a><span class="co">#&gt; --- Current table to treat:  act_size ---</span></span>
+<span id="cb20-22"><a href="#cb20-22" tabindex="-1"></a><span class="co">#&gt; --- Current table to treat:  act_size_D_TO_M ---</span></span>
+<span id="cb20-23"><a href="#cb20-23" tabindex="-1"></a><span class="co">#&gt; --- Current table to treat:  act_cj ---</span></span>
+<span id="cb20-24"><a href="#cb20-24" tabindex="-1"></a><span class="co">#&gt; --- Current table to treat:  act_size ---</span></span>
+<span id="cb20-25"><a href="#cb20-25" tabindex="-1"></a><span class="co">#&gt; --- Current table to treat:  act_size_D_TO_M ---</span></span>
+<span id="cb20-26"><a href="#cb20-26" tabindex="-1"></a><span class="co">#&gt; --- Current table to treat:  act_size ---</span></span>
+<span id="cb20-27"><a href="#cb20-27" tabindex="-1"></a><span class="co">#&gt; --- Current table to treat:  act_cj ---</span></span></code></pre></div>
+<div id="détail-de-la-vignette" class="section level4" number="2.2.0.1">
+<h4><span class="header-section-number">2.2.0.1</span> Détail de la
 vignette</h4>
 <ul>
 <li>Authors: <strong><a href="mailto:julien.jamme@insee.fr">Julien

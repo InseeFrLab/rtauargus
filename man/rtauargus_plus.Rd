@@ -75,7 +75,7 @@ croisements (ayant tous les mêmes paramètres).)
 \details{
 In interactive mode, Tau-Argus can process up to 10 tabs
 simultaneously for the same microdata set. In batch mode, a larger number of
-of crossings can be specified. However, doing so
+crossings can be specified. However, doing so
 can be particularly time consuming, as Tau-Argus takes a lot of time
 to read large text files of microdata.
 
@@ -83,7 +83,7 @@ to read large text files of microdata.
 splits the list of tabs into groups of size \code{grp_size} and
 makes a call to \code{micro_rtauargus()} for each group. It writes an
 asc file restricted to the only variables actually used within a
-of a group.
+group.
 
 The results are then aggregated into a single list, as if Tau-Argus
 had been called only once.
@@ -91,7 +91,7 @@ had been called only once.
 Modifying \code{grp_size} will not change the result, only the time
 execution time. A value around 5 (default) seems to be a good compromise
 between reading too large asc files and calling Tau-Argus too often.
-Tau-Argus too much. It can be adjusted according to the number of
+It can be adjusted according to the number of
 common variables within each tab group.
 (En mode interactif, Tau-Argus peut traiter jusqu'à 10 tabulations
 simultanément pour un même jeu de microdonnées. En mode batch, un nombre plus
@@ -119,7 +119,7 @@ variables communes à l'intérieur de chaque groupe de tabulations.)
 
 In return for the speed of execution, the crossings must have the
 same characteristics (same primary secret rules, same secondary secret method,
-same secondary secret, same weighting variable, etc.). The parameters
+same weighting variable, etc.). The parameters
 \code{safety_rules}, \code{supress}, ..., must therefore contain a
 unique value.
 

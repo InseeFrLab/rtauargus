@@ -11,7 +11,7 @@ journal_add_line <- function(journal,...){
 #' @inheritParams tab_rtauargus
 #' @param list_tables named list of `data.frame` or `data.table` representing the tables to protect
 #' @param list_explanatory_vars named list of character vectors of explanatory
-#' variables of each table mentionned in list_tables. Names of the list are the same as of the list of tables.
+#' variables of each table mentioned in list_tables. Names of the list are the same as of the list of tables.
 #' @param alt_hrc named list for alternative hierarchies (useful for non nested-hierarchies)
 #' @param alt_totcode named list for alternative codes
 #' @param ip_start integer: Interval protection level to apply at first treatment of each table
@@ -56,10 +56,7 @@ journal_add_line <- function(journal,...){
 #'   }
 #' )
 #' \dontrun{
-#' options(
-#'   rtauargus.tauargus_exe =
-#'     "Y:/Logiciels/TauArgus/TauArgus4.2.3/TauArgus.exe"
-#' )
+#' set_tauargus_exe("C:/path/to/TauArgus/TauArgus.exe")
 #' res_1 <- tab_multi_manager(
 #'   list_tables = list_data_2_tabs,
 #'   list_explanatory_vars = list(

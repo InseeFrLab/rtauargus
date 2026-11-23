@@ -48,8 +48,9 @@ overflow: visible;
 }
 </style>
 <style type="text/css" data-origin="pandoc">
+html { -webkit-text-size-adjust: 100%; }
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -60,7 +61,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
 { counter-reset: source-line 0; }
@@ -346,22 +347,21 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <ul>
 <li><a href="#introduction" id="toc-introduction">Introduction</a>
 <ul>
-<li><a href="#présentation-du-package" id="toc-présentation-du-package">Présentation du package</a></li>
+<li><a href="#pr%C3%A9sentation-du-package" id="toc-présentation-du-package">Présentation du package</a></li>
 <li><a href="#but-de-ce-document" id="toc-but-de-ce-document">But de ce
 document</a></li>
 </ul></li>
 <li><a href="#configuration" id="toc-configuration">Configuration</a>
 <ul>
-<li><a href="#τ-argus" id="toc-τ-argus">τ-Argus</a></li>
-<li><a href="#dépendances" id="toc-dépendances">Dépendances</a></li>
+<li><a href="#%CF%84-argus" id="toc-τ-argus">τ-Argus</a></li>
+<li><a href="#d%C3%A9pendances" id="toc-dépendances">Dépendances</a></li>
 </ul></li>
 <li><a href="#prise-en-main" id="toc-prise-en-main">Prise en main</a>
 <ul>
-<li><a href="#location-de-τ-argus" id="toc-location-de-τ-argus">Location
-de τ-Argus</a></li>
-<li><a href="#protéger-un-seul-tableau-avec-la-fonction-tab_rtauargus." id="toc-protéger-un-seul-tableau-avec-la-fonction-tab_rtauargus.">Protéger
+<li><a href="#location-de-%CF%84-argus" id="toc-location-de-τ-argus">Location de τ-Argus</a></li>
+<li><a href="#prot%C3%A9ger-un-seul-tableau-avec-la-fonction-tab_rtauargus." id="toc-protéger-un-seul-tableau-avec-la-fonction-tab_rtauargus.">Protéger
 un seul tableau avec la fonction <code>tab_rtauargus()</code>.</a></li>
-<li><a href="#protéger-plusieurs-tableaux-en-même-temps-avec-la-fonction-tab_muli_manager." id="toc-protéger-plusieurs-tableaux-en-même-temps-avec-la-fonction-tab_muli_manager.">Protéger
+<li><a href="#prot%C3%A9ger-plusieurs-tableaux-en-m%C3%AAme-temps-avec-la-fonction-tab_muli_manager." id="toc-protéger-plusieurs-tableaux-en-même-temps-avec-la-fonction-tab_muli_manager.">Protéger
 plusieurs tableaux en même temps, avec la fonction
 <code>tab_muli_manager()</code>.</a></li>
 </ul></li>
@@ -460,12 +460,15 @@ instruction.</p>
 <p>Lors du chargement du package, la console affiche quelques
 informations :</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="fu">library</span>(rtauargus)</span></code></pre></div>
-<p>En particulier, un emplacement plausible pour le logiciel τ-Argus est
-prédéfini. Celui-ci peut être modifié pour la durée de la session R,
-comme suit :</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>loc_tauargus <span class="ot">&lt;-</span> <span class="st">&quot;Y:/Logiciels/TauArgus/TauArgus4.2.3/TauArgus.exe&quot;</span></span>
-<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a></span>
-<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a><span class="fu">options</span>(<span class="at">rtauargus.tauargus_exe =</span> loc_tauargus)</span></code></pre></div>
+<p>En particulier, elle indique l’emplacement du logiciel τ-Argus, lu
+dans la variable d’environnement <code>TAUARGUS_EXE</code>. Pour le
+définir une fois pour toutes (il est enregistré dans le fichier
+<code>.Renviron</code> et utilisé dans toutes les sessions R futures)
+:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="fu">set_tauargus_exe</span>(<span class="st">&quot;C:/path/to/TauArgus/TauArgus.exe&quot;</span>, <span class="at">install =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<p>Pour le définir uniquement pour la session R en cours, omettre
+<code>install = TRUE</code>. <code>get_tauargus_exe()</code> renvoie
+l’emplacement actuellement utilisé.</p>
 <p>Une fois ce petit ajustement effectué, le package est prêt à être
 utilisé.</p>
 <blockquote>
