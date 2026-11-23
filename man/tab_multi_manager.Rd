@@ -119,7 +119,7 @@ data(activity_corr_table)
 
 #0-Making hrc file of business sectors ----
 hrc_file_activity <- activity_corr_table \%>\%
-  write_hrc2(file_name = "hrc/activity")
+  write_hrc2(file_name = file.path(tempdir(), "activity"))
 
 #1-Prepare data ----
 #Indicate whether each cell complies with the primary rules
